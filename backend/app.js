@@ -7,7 +7,7 @@ const bodyparser = require("body-parser");
 app.use(bodyparser.json());
 //start server
 app.listen(8080, () => {
-    console.log("up and running");
+    console.log("connected to server");
 });
 //connect to mongodb
 mongoose
