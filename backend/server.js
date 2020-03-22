@@ -6,9 +6,6 @@ const bodyparser = require("body-parser");
 const flash = require("connect-flash");
 const cors = require("cors");
 
-//start server
-const app = express();
-
 //Using cors to enable request from thrid party api's
 app.use(cors());
 
