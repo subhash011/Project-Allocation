@@ -17,10 +17,10 @@ const UserSchema=new mongoose.Schema({
         required:true
     },
     project_list:{
-        type:[]
+        type:[mongoose.SchemaTypes.ObjectId]
     },
     student_preference:{
-        type:[]
+        type:[mongoose.SchemaTypes.ObjectId]
     },
     date:{
         type:Date,

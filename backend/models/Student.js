@@ -22,10 +22,10 @@ const UserSchema=new mongoose.Schema({
       required:true
    },
    projects_chosen:{
-      type:[]
+      type:[mongoose.SchemaTypes.ObjectId]
    },
    project_alloted:{
-        type:[]
+        type:mongoose.SchemaTypes.ObjectId
    },
    date:{
       type:Date,
