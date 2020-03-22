@@ -40,6 +40,7 @@ app.use(flash());
 //define all routes below this
 const auth = require("./gmail/index");
 const home = require("./routes/home");
+const student = require("./routes/student");
 app.use("/", home);
 app.use("/auth", auth);
 
