@@ -6,7 +6,7 @@ class ValidationError extends Error {
         this.name = "InvalidEmailId"; // (2)
     }
 }
-module.exports = passport => {
+module.exports = (passport) => {
     passport.serializeUser((user, done) => {
         done(null, user);
     });
@@ -21,12 +21,13 @@ module.exports = passport => {
             },
             (token, refreshToken, profile, done) => {
                 var endid = profile["_json"]["hd"];
-                if (endid != "smail.iitpkd.ac.in") {
+                if (endid != "smail.iitpkd.ac.in" || "iitpkd.ac.in") {
                     return done(new ValidationError("Invalid Email Id"), {
                         profile: profile,
                         token: token
                     });
                 }
+                
                 return done(null, {
                     profile: profile,
                     token: token

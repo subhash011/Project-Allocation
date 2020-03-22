@@ -1,8 +1,15 @@
 const express = require("express");
-const app = express.Router();
+const router = express.Router();
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
-app.get("/", (req, res) => {
-    res.json({ message: "home page" });
+
+router.get("/", (req, res) => {
+    var str = req.flash("login_error")
+    res.json({msg:str})
 });
-module.exports = app;
+
+
+
+
+
+module.exports = router;
