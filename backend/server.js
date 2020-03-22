@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
+const session = require("express-session");
 const flash = require("connect-flash");
 const cors = require("cors");
 
@@ -24,6 +25,17 @@ mongoose
     .catch(err => {
         console.log(err);
     });
+//express session
+app.use(
+    session({
+        cookie: { maxAge: 60000 },
+        secret: "woot",
+        resave: false,
+        saveUninitialized: false
+    })
+);
+//use flash
+app.use(flash());
 
 //define all routes below this
 const auth = require("./gmail/index");

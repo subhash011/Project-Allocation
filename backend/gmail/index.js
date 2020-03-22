@@ -27,12 +27,14 @@ app.get(
         if (err.name === "TokenError") {
             res.redirect("/auth/google"); // redirect them back to the login page
         } else {
-            res.redirect("/auth/google");
+            req.flash("login_error", "Use the Institute mail ID");
+            res.redirect("/");
             // res.json({ message: "Use the Institute mail ID" }); //invalid mail id
         }
     },
     (req, res) => {
         // On success, redirect back to '/'
+        req.flash("login_error", "Login Success");
         res.redirect("/");
     }
 );
