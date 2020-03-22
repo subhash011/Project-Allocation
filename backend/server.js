@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
+const flash = require("connect-flash");
 //use body-parser
 app.use(bodyparser.json());
 //start server
@@ -21,3 +22,8 @@ mongoose
     .catch(err => {
         console.log(err);
     });
+//define all routes below this
+const auth = require("./gmail/index");
+const home = require("./routes/home");
+app.use("/", home);
+app.use("/auth", auth);
