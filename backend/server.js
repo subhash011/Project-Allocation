@@ -43,6 +43,7 @@ const home = require("./routes/home");
 const student = require("./routes/student");
 app.use("/", home);
 app.use("/auth", auth);
+app.use("/student", student);
 
 const PORT = process.env.PORT || 3000;
 
