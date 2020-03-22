@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
+const session = require("express-session");
 const flash = require("connect-flash");
 const cors = require("cors");
 const session =require('express-session')
@@ -41,6 +42,7 @@ mongoose
 
 //define all routes below this
 const home = require("./routes/home");
+const student = require("./routes/student");
 app.use("/", home);
 const auth = require("./config/oauth");
 app.use("/auth", auth);
