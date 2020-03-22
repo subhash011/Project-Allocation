@@ -1,5 +1,11 @@
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const axios = require("axios");
+
+var CLIENT_ID =
+    "1027643503922-k31j2ap8mgiomq0dda5vmhf8hbprv8ve.apps.googleusercontent.com";
+var CLIENT_SECRET = "yyrSdMIymskkU2xCeRF5OJGp";
+var CALLBACK_URL = "http://localhost:3000/auth/google/callback";
+
 class ValidationError extends Error {
     constructor(message) {
         super(message); // (1)
@@ -15,9 +21,9 @@ module.exports = passport => {
     });
     passport.use(
         new GoogleStrategy({
-                clientID: "1027643503922-k31j2ap8mgiomq0dda5vmhf8hbprv8ve.apps.googleusercontent.com",
-                clientSecret: "yyrSdMIymskkU2xCeRF5OJGp",
-                callbackURL: "http://localhost:3000/auth/google/callback"
+                clientID: CLIENT_ID,
+                clientSecret: CLIENT_SECRET,
+                callbackURL: CALLBACK_URL
             },
             (token, refreshToken, profile, done) => {
                 var endid = profile["_json"]["hd"];
