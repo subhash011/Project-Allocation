@@ -16,19 +16,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-<<<<<<< HEAD
     project_list: {
-        type: []
+        type: [mongoose.SchemaTypes.ObjectId]
     },
     student_preference: {
-        type: []
-=======
-    project_list:{
-        type:[mongoose.SchemaTypes.ObjectId]
-    },
-    student_preference:{
-        type:[mongoose.SchemaTypes.ObjectId]
->>>>>>> c6c54aacb7461555ed7a7b589dd82626fc9dcefb
+        type: [mongoose.SchemaTypes.ObjectId]
     },
     date: {
         type: Date,
