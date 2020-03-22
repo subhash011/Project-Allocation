@@ -17,7 +17,7 @@ module.exports = passport => {
         new GoogleStrategy({
                 clientID: "1027643503922-k31j2ap8mgiomq0dda5vmhf8hbprv8ve.apps.googleusercontent.com",
                 clientSecret: "yyrSdMIymskkU2xCeRF5OJGp",
-                callbackURL: "http://localhost:8080/auth/google/callback"
+                callbackURL: "http://localhost:3000/auth/google/callback"
             },
             (token, refreshToken, profile, done) => {
                 var endid = profile["_json"]["hd"];

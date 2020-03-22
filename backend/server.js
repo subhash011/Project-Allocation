@@ -31,7 +31,7 @@ const home = require("./routes/home");
 app.use("/", home);
 app.use("/auth", auth);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 //Error Response for routes not registered
 app.get("*", (req, res) => {
@@ -41,6 +41,6 @@ app.get("*", (req, res) => {
 });
 
 //start server
-app.listen(8080, () => {
+app.listen(3000, () => {
     console.log("connected to server");
 });
