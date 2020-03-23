@@ -41,9 +41,11 @@ app.use(flash());
 const auth = require("./gmail/index");
 const home = require("./routes/home");
 const student = require("./routes/student");
+const faculty = require("./routes/faculty");
 app.use("/", home);
 app.use("/auth", auth);
 app.use("/student", student);
+app.use("/faculty", faculty);
 
 const PORT = process.env.PORT || 3000;
 

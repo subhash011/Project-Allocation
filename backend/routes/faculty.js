@@ -2,31 +2,26 @@ const express = require("express");
 const app = express.Router();
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
-const Student = require("../models/Student");
+const Faculty = require("../models/Faculty");
 
 app.get("/", (req, res) => {
-    res.json(req.params);
+    res.send(req.body);
 });
-app.get("/register", (req, res) => {
-    res.json({ message: "register yourself" });
-});
+
 app.post("/", (req, res) => {
-    res.json(req.body);
-});
-app.post("/register", (req, res) => {
-    var new_student = {
+    var new_faculty = {
         name: req.body.name,
-        roll_no: req.body.roll_no,
         email: req.body.email,
-        gpa: req.body.gpa,
+        isAdmin: false,
         stream: req.body.stream,
         date: Date.now()
     };
-    var student = new Student(new_student);
-    student
+
+    var faculty = new Faculty(new_faculty);
+    faculty
         .save()
         .then(() => {
-            res.json({ message: "student added successfully" });
+            res.json({ message: "faculty added successfully" });
         })
         .catch(err => {
             if (err) {
