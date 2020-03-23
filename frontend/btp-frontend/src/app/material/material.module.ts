@@ -6,6 +6,13 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatCardModule } from "@angular/material/card";
+import { ReactiveFormsModule } from "@angular/forms";
+
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -13,7 +20,13 @@ const MaterialComponents = [
   MatSliderModule,
   LayoutModule,
   MatSidenavModule,
-  MatListModule
+  MatListModule,
+  MatMenuModule,
+  MatCardModule,
+  MatInputModule,
+  MatSelectModule,
+  MatRadioModule,
+  ReactiveFormsModule
 ];
 
 @NgModule({

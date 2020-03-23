@@ -1,5 +1,6 @@
 import { MaterialModule } from "./material/material.module";
 import { BrowserModule } from "@angular/platform-browser";
+import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -7,6 +8,8 @@ import { SocialLoginModule } from "angularx-social-login";
 import { AuthServiceConfig, GoogleLoginProvider } from "angularx-social-login";
 import { LoginComponent } from "./login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NavbarComponent } from "./navbar/navbar.component";
+import { RegisterComponent } from "./register/register.component";
 
 const config = new AuthServiceConfig([
   {
@@ -20,13 +23,19 @@ export function provideConfig() {
   return config;
 }
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    NavbarComponent,
+    RegisterComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SocialLoginModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    HttpClientModule
   ],
   exports: [],
   providers: [

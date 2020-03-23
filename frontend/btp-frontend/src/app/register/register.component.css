@@ -1,0 +1,26 @@
+.full-width {
+    width: 40%;
+}
+
+.cgpa-field {
+    width: 20%;
+}
+
+.shipping-card {
+    min-width: 120px;
+    margin: 20px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    flex: 3;
+    margin-right: 20px;
+}
+
+.col:last-child {
+    margin-right: 0;
+}
