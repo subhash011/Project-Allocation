@@ -42,10 +42,16 @@ mongoose
 
 //define all routes below this
 const home = require("./routes/home");
-const student = require("./routes/student");
 app.use("/", home);
+
 const auth_check = require("./routes/auth_check");
 app.use("/auth", auth_check);
+
+const student = require("./routes/student");
+app.use("/student", student);
+
+const faculty = require("./routes/faculty");
+app.use("/faculty", faculty);
 // const auth = require("./config/oauth");
 // app.use("/auth", auth);
 

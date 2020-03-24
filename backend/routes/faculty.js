@@ -10,7 +10,6 @@ router.post('/register/:id',(req,res)=>{
 })
 
 
-
 router.get('/details/:id',(req,res)=>{
 
     const id = req.params
