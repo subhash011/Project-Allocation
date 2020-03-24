@@ -1,4 +1,11 @@
 <div>
-    <button mat-button (click)="signInWithGoogle()">Google</button>
+    <button mat-button class="loginBtn loginBtn--google" (click)="signInWithGoogle()">
+    <div id="gSignInWrapper">
+      <div id="customBtn" class="customGPlusSignIn">
+        <span class="icon"></span>
+        <span class="buttonText">Google</span>
+      </div>
+    </div>
+  </button>
     <button mat-button (click)="signOut()">Sign out</button>
 </div>
