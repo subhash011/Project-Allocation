@@ -30,7 +30,7 @@ module.exports = passport => {
                 var info = profile["_json"]["email"].split("@");
                 var emailid = profile["_json"]["email"];
                 var endid = profile["_json"]["hd"];
-                if (endid != "smail.iitpkd.ac.in") {
+                if (endid != "smail.iitpkd.ac.in" || "iitpkd.ac.in") {
                     return done(new ValidationError("Invalid Email Id"), {
                         profile: profile,
                         token: token
