@@ -30,8 +30,3 @@ a {
 .text {
     font-size: medium;
 }
-
-.example-header-image {
-    background-image: url("../../../../images/IITPKD_Logo.jpg");
-    background-size: cover;
-}

@@ -6,16 +6,19 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const cors = require("cors");
 
+const path = require("path");
+
+
 const app = express();
 
 //express session
 app.use(
-    session({
-        cookie: { maxAge: 60000 },
-        secret: "woot",
-        resave: false,
-        saveUninitialized: false
-    })
+  session({
+    cookie: { maxAge: 60000 },
+    secret: "woot",
+    resave: false,
+    saveUninitialized: false
+  })
 );
 //use flash
 app.use(flash());
@@ -41,15 +44,30 @@ mongoose
 
 //define all routes below this
 const home = require("./routes/home");
-const student = require("./routes/student");
-const faculty = require("./routes/faculty");
-app.use("/", home);
-const auth = require("./config/oauth");
-app.use("/auth", auth);
-app.use("/student", student);
-app.use("/faculty", faculty);
 
-const PORT = process.env.PORT || 3000;
+app.use("/", home);
+
+// const student = require("./routes/student");
+// const faculty = require("./routes/faculty");
+// app.use("/", home);
+// const auth = require("./config/oauth");
+// app.use("/auth", auth);
+// app.use("/student", student);
+// app.use("/faculty", faculty);
+
+
+const auth_check = require("./routes/auth_check");
+app.use("/auth", auth_check);
+
+const student = require("./routes/student");
+app.use("/student", student);
+
+const faculty = require("./routes/faculty");
+app.use("/faculty", faculty);
+// const auth = require("./config/oauth");
+// app.use("/auth", auth);
+
+const PORT = process.env.PORT || 8080;
 
 //Error Response for routes not registered
 app.get("*", (req, res) => {
