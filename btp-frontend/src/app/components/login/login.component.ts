@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(x => {
       this.userService.user = x;
       this.userService.isLoggedIn = true;
-      this.router.navigate(["/user"]);
+      // this.router.navigate(["/user"]);
       console.log(this.userService.user);
     });
   }
