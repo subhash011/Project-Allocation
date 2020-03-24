@@ -1,7 +1,46 @@
-<mat-toolbar color="primary" class="navbar">
-    <button mat-button (click)="redirectToHome()" class="navhead">
-    IIT Palakkad
-  </button>
-    <button mat-button>Home</button>
+<mat-toolbar color="primary">
+    <div>
+        <button mat-button (click)="redirectToHome()" class="navhead">
+      IIT Palakkad
+    </button>
+    </div>
+    <div *ngIf="role === 'student' || role === 'admin' || role === 'faculty'">
+        <div class="flex-grow-left"></div>
+        <button mat-button routerLink="/" class="nav-text">
+      My Projects
+    </button>
+    </div>
+    <div *ngIf="role === 'admin' || role === 'faculty'">
+        <div class="flex-grow-left"></div>
+        <button mat-button routerLink="/" class="nav-text">
+      Add Projects
+    </button>
+    </div>
+    <div *ngIf="role === 'student' || role === 'admin' || role === 'faculty'">
+        <div class="flex-grow-left"></div>
+        <button mat-button routerLink="/" class="nav-text">
+      Preferences
+    </button>
+    </div>
+    <div class="flex-space"></div>
+    <div>
+        <div>
+            <button mat-button [matMenuTriggerFor]="beforeMenu">
+        <span class="nav-text">Options</span>
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+            <mat-menu #beforeMenu="matMenu" xPosition="before">
+                <button mat-menu-item routerLink="/">Profile</button>
+                <button mat-menu-item routerLink="/" *ngIf="role == 'admin' || role == 'faculty'">
+          Admin
+        </button>
+                <button mat-menu-item routerLink="/" *ngIf="role == 'super_admin'">
+          Super Admin
+        </button>
+            </mat-menu>
+        </div>
+    </div>
+    <div class="flex-grow-right"></div>
     <app-login></app-login>
 </mat-toolbar>
+<router-outlet></router-outlet>

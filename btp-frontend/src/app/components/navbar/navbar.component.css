@@ -7,6 +7,22 @@ a {
     padding-right: 10px;
 }
 
+.flex-space {
+    flex: auto;
+}
+
+.flex-grow-right {
+    flex-grow: 0.02;
+}
+
+.flex-grow-left {
+    flex-grow: 0.02;
+}
+
+.nav-text {
+    font-size: large;
+}
+
 .navhead {
     font-size: larger;
 }
