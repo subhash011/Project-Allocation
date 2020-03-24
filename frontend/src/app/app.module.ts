@@ -10,6 +10,7 @@ import { HomeComponent } from './components/home/home.component';
 import { SocialLoginModule } from 'angularx-social-login'
 import { AuthServiceConfig,GoogleLoginProvider } from 'angularx-social-login'
 import { LocalAuthService } from './services/local-auth.service';
+import { RegisterComponent } from './components/register/register.component';
 
 
 const config = new AuthServiceConfig([{
@@ -24,7 +25,8 @@ export function provideConfig(){
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
