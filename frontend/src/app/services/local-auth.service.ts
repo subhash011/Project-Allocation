@@ -32,13 +32,13 @@ export class LocalAuthService {
     } else if (!data.isRegistered) {
       if (data.position === "student") {
         return {
-          route: "/student/register/" + data.user_details.id,
+          route: "/register/" + data.user_details.id,
           error: "none"
         };
         // this.router.navigate(["/student/register"]);
       } else if (data.position === "faculty") {
         return {
-          route: "/faculty/register/" + data.user_details.id,
+          route: "/register/" + data.user_details.id,
           error: "none"
         };
         // this.router.navigate(["/faculty/register"]);

@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(user => {
       this.localAuth.checkUser(user).subscribe(data => {
         // console.log(data);
-        localStorage.setItem("token", data.user_details.id);
+        localStorage.setItem("token", data.user_details.idToken);
 
         const navObj = this.localAuth.validate(data);
         if (navObj.error === "none") {

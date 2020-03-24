@@ -11,7 +11,7 @@ router.post("/user_check", (req, res) => {
   //   console.log(userDetails);
   oauth(userDetails.idToken)
     .then(user => {
-      console.log(user);
+      // console.log(user);
       const email = userDetails.email.split("@");
       const email_check = email[1];
 
@@ -91,6 +91,40 @@ router.post("/user_check", (req, res) => {
         user_details: userDetails
       });
     });
+});
+
+router.get("/details/:id", (req, res) => {
+  const id = req.params.id;
+  const idToken = req.headers.authorization;
+
+  oauth(idToken).then(user => {
+
+    const User = {
+      name:user.name,
+      email:user.email
+    }
+
+
+    const email = user.email.split("@");
+    if (email[1] === "smail.iitpkd.ac.in") {
+      res.json({
+        position: "student",
+        user_details: User
+      });
+    } else if (email[1] === "iitpkd.ac.in") {
+      res.json({
+        position: "faculty",
+        user_details: User
+      });
+    }
+  })
+  .catch((err)=>{
+    res.json({
+      position:'error',
+      user_details: err
+    })
+  })
+
 });
 
 module.exports = router;

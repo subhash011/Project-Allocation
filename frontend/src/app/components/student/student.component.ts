@@ -1,5 +1,6 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserDetailsService } from 'src/app/services/user-details.service';
 
 
@@ -14,20 +15,21 @@ export class StudentComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private userDetails:UserDetailsService
+    private userDetails:UserDetailsService,
+    private router : Router
   ) { }
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params:ParamMap)=>{
        this.id = params.get('id')
-       console.log(id)
+       console.log(this.id)
     });
 
-    this.userDetails.getStudentDetails(id)
+    this.userDetails.getStudentDetails(this.id)
       .subscribe((data)=>{
-        console.log(data)
+        console.log(data) //Gets all student details --> Bind it to the template
       },(error)=>{
-        console.log(err)
+        console.log(error)
       })
 
 
