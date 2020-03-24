@@ -1,7 +1,9 @@
 <mat-toolbar color="primary">
+    <!-- <div mat-card-avatar class="example-header-image"></div> -->
+    <!--for logo-->
     <div>
-        <button mat-button (click)="redirectToHome()" class="navhead">
-      IIT Palakkad
+        <button mat-button (click)="redirectToHome()">
+      <span class="navhead">IIT Palakkad</span>
     </button>
     </div>
     <div *ngIf="role === 'student' || role === 'admin' || role === 'faculty'">
@@ -31,7 +33,7 @@
       </button>
             <mat-menu #beforeMenu="matMenu" xPosition="before">
                 <button mat-menu-item routerLink="/">Profile</button>
-                <button mat-menu-item routerLink="/" *ngIf="role == 'admin' || role == 'faculty'">
+                <button mat-menu-item routerLink="/" *ngIf="role == 'admin'">
           Admin
         </button>
                 <button mat-menu-item routerLink="/" *ngIf="role == 'super_admin'">
