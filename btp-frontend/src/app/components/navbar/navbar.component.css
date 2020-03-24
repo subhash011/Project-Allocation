@@ -1,0 +1,37 @@
+.navbar {
+    justify-content: space-between;
+}
+
+a {
+    float: right;
+    padding-right: 10px;
+}
+
+.flex-space {
+    flex: auto;
+}
+
+.flex-grow-right {
+    flex-grow: 0.02;
+}
+
+.flex-grow-left {
+    flex-grow: 0.02;
+}
+
+.nav-text {
+    font-size: large;
+}
+
+.navhead {
+    font-size: x-large;
+}
+
+.text {
+    font-size: medium;
+}
+
+.example-header-image {
+    background-image: url("../../../../images/IITPKD_Logo.jpg");
+    background-size: cover;
+}
