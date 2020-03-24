@@ -26,11 +26,11 @@ app.post("/register", (req, res) => {
     student
         .save()
         .then(() => {
-            res.json({ message: "student added successfully" });
+            res.json({ message: "success" });
         })
         .catch(err => {
             if (err) {
-                throw err;
+                res.json({ message: "fail" });
             }
         });
 });

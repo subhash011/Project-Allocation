@@ -11,7 +11,6 @@ import { ActivatedRoute, Router } from "@angular/router";
   styleUrls: ["./login.component.css"]
 })
 export class LoginComponent implements OnInit {
-  user: SocialUser;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -28,10 +27,10 @@ export class LoginComponent implements OnInit {
   }
   signInWithGoogle(): void {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(x => {
-      this.user = x;
+      this.userService.user = x;
       this.userService.isLoggedIn = true;
       this.router.navigate(["/user"]);
-      console.log(this.user);
+      console.log(this.userService.user);
     });
   }
 

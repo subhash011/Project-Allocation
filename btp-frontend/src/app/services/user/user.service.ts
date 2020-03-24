@@ -1,3 +1,4 @@
+import { SocialUser } from "angularx-social-login";
 import { Injectable } from "@angular/core";
 
 @Injectable({
@@ -5,5 +6,6 @@ import { Injectable } from "@angular/core";
 })
 export class UserService {
   public isLoggedIn: boolean;
+  public user: SocialUser;
   constructor() {}
 }

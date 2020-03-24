@@ -8,7 +8,7 @@ app.get("/", (req, res) => {
     res.send(req.body);
 });
 
-app.post("/", (req, res) => {
+app.post("/register", (req, res) => {
     var new_faculty = {
         name: req.body.name,
         email: req.body.email,
