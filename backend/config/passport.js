@@ -1,3 +1,4 @@
+
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const axios = require("axios");
 
@@ -33,7 +34,7 @@ module.exports = (passport) => {
                         token: token
                     });
                 }
-                
+
                 return done(null, {
                     profile: profile,
                     token: token

@@ -5,18 +5,18 @@ const bodyparser = require("body-parser");
 const session = require("express-session");
 const flash = require("connect-flash");
 const cors = require("cors");
-const session =require('express-session')
+const path = require("path");
 
 const app = express();
 
 //express session
 app.use(
-    session({
-        cookie: { maxAge: 60000 },
-        secret: "woot",
-        resave: false,
-        saveUninitialized: false
-    })
+  session({
+    cookie: { maxAge: 60000 },
+    secret: "woot",
+    resave: false,
+    saveUninitialized: false
+  })
 );
 //use flash
 app.use(flash());
@@ -44,10 +44,12 @@ mongoose
 const home = require("./routes/home");
 const student = require("./routes/student");
 app.use("/", home);
-const auth = require("./config/oauth");
-app.use("/auth", auth);
+const auth_check = require("./routes/auth_check");
+app.use("/auth", auth_check);
+// const auth = require("./config/oauth");
+// app.use("/auth", auth);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 //Error Response for routes not registered
 app.get("*", (req, res) => {
