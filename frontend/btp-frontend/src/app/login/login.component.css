@@ -9,10 +9,11 @@
     white-space: nowrap;
 }
 
-mat-button {
+button {
     width: 190px;
     height: 42;
-    padding: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 #customBtn:hover {
@@ -35,7 +36,7 @@ span.icon {
 span.buttonText {
     display: inline-block;
     vertical-align: middle;
-    padding-left: 42px;
+    padding-left: 17px;
     padding-right: 42px;
     font-size: 14px;
     font-weight: bold;
