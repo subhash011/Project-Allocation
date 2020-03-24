@@ -10,6 +10,8 @@ import { LoginComponent } from "./login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NavbarComponent } from "./navbar/navbar.component";
 import { RegisterComponent } from "./register/register.component";
+import { DragDropComponent } from './drag-drop/drag-drop.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const config = new AuthServiceConfig([
   {
@@ -27,7 +29,8 @@ export function provideConfig() {
     AppComponent,
     LoginComponent,
     NavbarComponent,
-    RegisterComponent
+    RegisterComponent,
+    DragDropComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +38,8 @@ export function provideConfig() {
     SocialLoginModule,
     BrowserAnimationsModule,
     MaterialModule,
-    HttpClientModule
+    HttpClientModule,
+    DragDropModule
   ],
   exports: [],
   providers: [

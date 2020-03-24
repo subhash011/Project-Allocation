@@ -1,10 +1,16 @@
-<!-- Navigation -->
-<!-- Intro Section -->
 <app-navbar></app-navbar>
 <mat-toolbar>
     <span>My Application</span>
 </mat-toolbar>
-<section id="demo" class="demo-section">
-    <app-login></app-login>
-</section>
-<app-register></app-register>
+<app-login *ngIf="login"></app-login>
+<app-register *ngIf="!login"></app-register>
+<app-drag-drop></app-drag-drop>
+
+<div id="gSignInWrapper">
+    <span class="label">Sign in with:</span>
+    <div id="customBtn" class="customGPlusSignIn">
+        <span class="icon"></span>
+        <span class="buttonText">Google</span>
+    </div>
+</div>
+<div id="name"></div>

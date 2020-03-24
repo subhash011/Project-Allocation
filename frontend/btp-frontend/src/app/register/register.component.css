@@ -2,13 +2,27 @@
     width: 40%;
 }
 
+mat-card-title {
+    margin-left: 280px;
+}
+
+mat-form-field {
+    margin-left: 80px;
+}
+
+mat-card-actions {
+    margin-left: 300px;
+}
+
 .cgpa-field {
     width: 20%;
 }
 
 .shipping-card {
     min-width: 120px;
-    margin: 20px;
+    margin-top: 100px;
+    margin-left: 600px;
+    margin-right: 600px;
 }
 
 .row {
