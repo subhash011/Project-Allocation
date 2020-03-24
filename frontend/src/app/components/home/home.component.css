@@ -1,0 +1,31 @@
+mat-card:{
+    background-color: orange;
+}
+.navbar {
+  justify-content: space-between;
+}
+
+a {
+  float: right;
+  padding-right: 10px;
+}
+
+
+
+.navhead {
+  font-size: larger;
+}
+
+.text {
+  font-size: medium;
+}
+
+.example-card {
+  max-width: 400px;
+}
+
+.example-fill-remaining-space {
+  /* This fills the remaining space, by using flexbox. 
+       Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
