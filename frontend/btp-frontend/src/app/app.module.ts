@@ -1,4 +1,4 @@
-import { MaterialModule } from "./material/material.module";
+import { MaterialModule } from "./components/material/material.module";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
@@ -6,12 +6,12 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { SocialLoginModule } from "angularx-social-login";
 import { AuthServiceConfig, GoogleLoginProvider } from "angularx-social-login";
-import { LoginComponent } from "./login/login.component";
+import { LoginComponent } from "./components/login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { NavbarComponent } from "./navbar/navbar.component";
-import { RegisterComponent } from "./register/register.component";
-import { DragDropComponent } from './drag-drop/drag-drop.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NavbarComponent } from "./components/navbar/navbar.component";
+import { RegisterComponent } from "./components/register/register.component";
+import { DragDropComponent } from "./components/drag-drop/drag-drop.component";
+import { DragDropModule } from "@angular/cdk/drag-drop";
 
 const config = new AuthServiceConfig([
   {

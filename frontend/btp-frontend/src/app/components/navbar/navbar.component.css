@@ -3,7 +3,12 @@
 }
 
 a {
-    padding-right: 1rem;
+    float: right;
+    padding-right: 10px;
+}
+
+.navhead {
+    font-size: larger;
 }
 
 .text {
