@@ -11,7 +11,7 @@ router.post("/register/:id", (req, res) => {
 
     const user = req.body;
     oauth(idToken).then(user_partial => {
-        const newUser = new Student({
+        const newUser = new Faculty({
             name: user.name,
             google_id: {
                 id: id,
@@ -67,7 +67,6 @@ router.get("/details/:id", (req, res) => {
 });
 
 module.exports = router;
-const app = express.Router();
 // const mongoose = require("mongoose");
 // const bodyparser = require("body-parser");
 // const Faculty = require("../models/Faculty");
