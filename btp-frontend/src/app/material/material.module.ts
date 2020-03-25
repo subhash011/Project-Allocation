@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatStepperModule } from "@angular/material/stepper";
 import { MatGridListModule } from "@angular/material/grid-list";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -33,7 +34,8 @@ const MaterialComponents = [
   MatDialogModule,
   MatStepperModule,
   MatGridListModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatProgressBarModule
 ];
 
 @NgModule({

@@ -3,7 +3,6 @@ import { UserService } from "./../../../services/user/user.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
-import { isNumber } from "util";
 
 @Component({
   selector: "app-register",
@@ -19,6 +18,8 @@ export class RegisterComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.userService.role = "none";
+    this.userForm.get("email").disable();
+    // this.isStudent = (this.userService.role == "student");
   }
   isStudent = true;
   branch = "";
@@ -73,7 +74,7 @@ export class RegisterComponent implements OnInit {
     if (!this.message) {
       this.userService.role = position;
     } else {
-      this.message = "fail";
+      console.log("fail");
     }
   }
 }
