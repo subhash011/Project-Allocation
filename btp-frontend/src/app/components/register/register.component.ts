@@ -50,14 +50,15 @@ export class RegisterComponent {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        authorization: this.userService.user.idToken
+        Authorization: this.userService.user.idToken
       })
     };
     var position = "";
-    if (isNumber(user["roll_no"])) {
+    if (!isNaN(Number(user["roll_no"].toString()))) {
       position = "student";
     } else {
       position = "faculty";
+      this.isStudent = false;
     }
     var id = this.userService.user.id;
     this.message = this.userService.registerUser(

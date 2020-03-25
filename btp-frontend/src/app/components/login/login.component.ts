@@ -5,6 +5,7 @@ import { AuthService } from "angularx-social-login";
 import { SocialUser } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
 import { ActivatedRoute, Router } from "@angular/router";
+import { CompileShallowModuleMetadata } from "@angular/compiler";
 
 @Component({
   selector: "app-login",

@@ -19,13 +19,12 @@ export class NavbarComponent implements OnInit {
   redirectToHome() {
     this.router.navigate([""]);
   }
-
   isUser() {
     if (this.userService.user)
       return (
         this.userService.role.toString() == "student" ||
-        this.userService.role.toString() === "admin" ||
-        this.userService.role.toString() === "faculty"
+        this.userService.role.toString() == "admin" ||
+        this.userService.role.toString() == "faculty"
       );
     else return false;
   }
@@ -33,8 +32,8 @@ export class NavbarComponent implements OnInit {
   isFaculty() {
     if (this.userService.user)
       return (
-        this.userService.role.toString() === "admin" ||
-        this.userService.role.toString() === "faculty"
+        this.userService.role.toString() == "admin" ||
+        this.userService.role.toString() == "faculty"
       );
     else return false;
   }
