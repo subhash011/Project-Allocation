@@ -68,15 +68,12 @@ router.post("/register/:id", (req, res) => {
 });
 
 router.get("/details/:id", (req, res) => {
-    const id = req.params;
-    //   console.log(id);
-    const idToken = req.headers.authorization;
-
-    Student.find({ google_id: { id: id } })
+    const id_user = req.params.id;
+    const idToken_user = req.headers.authorization;
+    Student.findOne({ google_id: { id: id_user, idToken: idToken_user } })
         .then(user => {
-            console.log("working");
-
-            if (user.google_id.idToken === idToken) {
+            console.log(user);
+            if (user) {
                 res.json({
                     status: "success",
                     user_details: user

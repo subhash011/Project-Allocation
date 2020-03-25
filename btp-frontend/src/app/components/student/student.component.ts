@@ -8,6 +8,13 @@ import { UserService } from "src/app/services/user/user.service";
 })
 export class StudentComponent implements OnInit {
   constructor(private userService: UserService) {}
-
-  ngOnInit() {}
+  user = "";
+  ngOnInit() {
+    this.userService
+      .getStudentDetails(this.userService.user.id)
+      .toPromise()
+      .then(data => {
+        console.log(data);
+      });
+  }
 }
