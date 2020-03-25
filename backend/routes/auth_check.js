@@ -6,6 +6,7 @@ const Faculty = require("../models/Faculty");
 oauth = require("../config/oauth");
 
 router.post("/user_check", (req, res) => {
+<<<<<<< HEAD
   const userDetails = req.body;
 
   oauth(userDetails.idToken)
@@ -26,6 +27,86 @@ router.post("/user_check", (req, res) => {
                   res.json({
                     isRegistered: true,
                     position: "student",
+=======
+    const userDetails = req.body;
+    oauth(userDetails.idToken)
+        .then(user => {
+            // console.log(user);
+            const email = userDetails.email.split("@");
+            const email_check = email[1];
+
+            if (email_check === "smail.iitpkd.ac.in") {
+                const rollno = email[0];
+                Student.findOne({ email: userDetails.email })
+                    .then(user => {
+                        if (user) {
+                            user.google_id.idToken = userDetails.idToken;
+                            user
+                                .save()
+                                .then(result => {
+                                    res.json({
+                                        isRegistered: true,
+                                        position: "student",
+                                        user_details: userDetails
+                                    });
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        } else {
+                            res.json({
+                                isRegistered: false,
+                                position: "student",
+                                user_details: userDetails
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else if (
+                email_check === "iitpkd.ac.in" ||
+                email_check === "gmail.com" //remove it later only for testing
+            ) {
+                Faculty.findOne({ email: userDetails.email })
+                    .then(user => {
+                        if (user) {
+                            user.google_id.idToken = userDetails.idToken;
+                            //added a block here for frontend rendering
+                            var role = "";
+                            if (user.isAdmin) {
+                                role = "admin";
+                            } else {
+                                role = "faculty";
+                            }
+                            user
+                                .save()
+                                .then(result => {
+                                    res.json({
+                                        isRegistered: true,
+                                        position: role,
+                                        user_details: userDetails
+                                    });
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        } else {
+                            res.json({
+                                isRegistered: false,
+                                position: "faculty",
+                                user_details: userDetails
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                res.json({
+                    isRegistered: false,
+                    position: "error",
+>>>>>>> subhash
                     user_details: userDetails
                   });
                 })

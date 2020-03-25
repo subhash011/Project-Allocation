@@ -26,7 +26,7 @@
     </div>
     <div class="flex-space"></div>
     <div>
-        <div *ngIf="role != 'toreg'">
+        <div *ngIf="isUser()">
             <button mat-button [matMenuTriggerFor]="beforeMenu">
         <span class="nav-text">Options</span>
         <mat-icon>keyboard_arrow_down</mat-icon>
