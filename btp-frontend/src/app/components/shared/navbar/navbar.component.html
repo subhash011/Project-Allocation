@@ -1,0 +1,48 @@
+<mat-toolbar class="mat-elevation-z6" color="primary">
+    <!-- <div mat-card-avatar class="example-header-image"></div> -->
+    <!--for logo-->
+    <div>
+        <button mat-button (click)="redirectToHome()">
+      <span class="navhead">IIT Palakkad</span>
+    </button>
+    </div>
+    <div *ngIf="isUser()">
+        <div class="flex-grow-left"></div>
+        <button mat-button routerLink="/" class="nav-text">
+      My Projects
+    </button>
+    </div>
+    <div *ngIf="isFaculty()">
+        <div class="flex-grow-left"></div>
+        <button mat-button routerLink="/" class="nav-text">
+      Add Projects
+    </button>
+    </div>
+    <div *ngIf="isUser()">
+        <div class="flex-grow-left"></div>
+        <button mat-button routerLink="/" class="nav-text">
+      Preferences
+    </button>
+    </div>
+    <div class="flex-space"></div>
+    <div>
+        <div *ngIf="isUser()">
+            <button mat-button [matMenuTriggerFor]="beforeMenu">
+        <span class="nav-text">Options</span>
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+            <mat-menu #beforeMenu="matMenu" xPosition="before">
+                <button mat-menu-item routerLink="/">Profile</button>
+                <button mat-menu-item routerLink="/" *ngIf="isAdmin()">
+          Admin
+        </button>
+                <button mat-menu-item routerLink="/" *ngIf="isSuperAdmin()">
+          Super Admin
+        </button>
+            </mat-menu>
+        </div>
+    </div>
+    <div class="flex-grow-right"></div>
+    <app-login></app-login>
+</mat-toolbar>
+<router-outlet></router-outlet>

@@ -9,11 +9,13 @@ import { MatListModule } from "@angular/material/list";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
+import { MatExpansionModule } from "@angular/material/expansion";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatCardModule } from "@angular/material/card";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatStepperModule } from "@angular/material/stepper";
+import { MatGridListModule } from "@angular/material/grid-list";
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -29,7 +31,9 @@ const MaterialComponents = [
   MatRadioModule,
   ReactiveFormsModule,
   MatDialogModule,
-  MatStepperModule
+  MatStepperModule,
+  MatGridListModule,
+  MatExpansionModule
 ];
 
 @NgModule({
