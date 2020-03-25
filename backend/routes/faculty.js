@@ -20,29 +20,26 @@ router.post("/register/:id", (req, res) => {
             email: user.email,
             stream: user.stream
         });
-
         //Saves user in the database
         newUser
             .save()
             .then(result => {
                 res.json({
-                    registration: "success"
+                    registerd: "success"
                 });
             })
             .catch(err => {
                 res.json({
-                    registration: "fail"
+                    registered: "fail"
                 });
             });
     });
 });
 
 router.get("/details/:id", (req, res) => {
-    const id = req.params.id;
-    //   console.log(id);
+    const id = req.params;
     const idToken = req.headers.authorization;
-
-    Faculty.findOne({ google_id: { id: id_user, idToken: idToken_user } })
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then(user => {
             if (user) {
                 res.json({
@@ -65,34 +62,3 @@ router.get("/details/:id", (req, res) => {
 });
 
 module.exports = router;
-// const mongoose = require("mongoose");
-// const bodyparser = require("body-parser");
-// const Faculty = require("../models/Faculty");
-
-// app.get("/", (req, res) => {
-//     res.send(req.body);
-// });
-
-// app.post("/register", (req, res) => {
-//     var new_faculty = {
-//         name: req.body.name,
-//         email: req.body.email,
-//         isAdmin: false,
-//         stream: req.body.stream,
-//         date: Date.now()
-//     };
-
-//     var faculty = new Faculty(new_faculty);
-//     faculty
-//         .save()
-//         .then(() => {
-//             res.json({ message: "faculty added successfully" });
-//         })
-//         .catch(err => {
-//             if (err) {
-//                 throw err;
-//             }
-//         });
-// });
-
-// module.exports = app;

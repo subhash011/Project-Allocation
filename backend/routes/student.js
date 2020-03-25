@@ -4,38 +4,6 @@ const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const Student = require("../models/Student");
 const oauth = require("../config/oauth");
-
-// app.get("/", (req, res) => {
-//     res.json(req.params);
-// });
-// app.get("/register", (req, res) => {
-//     res.json({ message: "register yourself" });
-// });
-// app.post("/", (req, res) => {
-//     res.json(req.body);
-// });
-// app.post("/register", (req, res) => {
-//     var new_student = {
-//         name: req.body.name,
-//         roll_no: req.body.roll_no,
-//         email: req.body.email,
-//         gpa: req.body.gpa,
-//         stream: req.body.stream,
-//         date: Date.now()
-//     };
-//     var student = new Student(new_student);
-//     student
-//         .save()
-//         .then(() => {
-//             res.json({ message: "success" });
-//         })
-//         .catch(err => {
-//             if (err) {
-//                 res.json({ message: "fail" });
-//             }
-//         });
-// });
-
 router.post("/register/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
@@ -68,12 +36,11 @@ router.post("/register/:id", (req, res) => {
 });
 
 router.get("/details/:id", (req, res) => {
-    const id_user = req.params.id;
-    const idToken_user = req.headers.authorization;
-    Student.findOne({ google_id: { id: id_user, idToken: idToken_user } })
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    Student.findOne({ google_id: { id: id, idToken: idToken } })
         .then(user => {
-            console.log(user);
-            if (user) {
+            if (user.google_id.idToken == idToken && user.google_id.id == id) {
                 res.json({
                     status: "success",
                     user_details: user

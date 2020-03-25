@@ -21,7 +21,7 @@ export class LocalAuthService {
           error: "none"
         };
       // this.router.navigate(["/student", data.user_details.id]);
-      else if (data.position === "faculty") {
+      else if (data.position == "faculty") {
         return {
           route: "/faculty/" + data.user_details.id,
           error: "none"
