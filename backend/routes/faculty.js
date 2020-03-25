@@ -65,7 +65,6 @@ router.get("/details/:id", (req, res) => {
 });
 
 module.exports = router;
-const app = express.Router();
 // const mongoose = require("mongoose");
 // const bodyparser = require("body-parser");
 // const Faculty = require("../models/Faculty");
