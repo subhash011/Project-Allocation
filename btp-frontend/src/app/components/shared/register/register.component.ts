@@ -19,7 +19,6 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
     this.userService.role = "none";
     this.userForm.get("email").disable();
-    // this.isStudent = (this.userService.role == "student");
   }
   isStudent = true;
   branch = "";
