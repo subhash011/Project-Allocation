@@ -25,12 +25,12 @@ router.post("/register/:id", (req, res) => {
             .save()
             .then(result => {
                 res.json({
-                    registerd: "success"
+                    registration: "success"
                 });
             })
             .catch(err => {
                 res.json({
-                    registered: "fail"
+                    registration: "fail"
                 });
             });
     });
