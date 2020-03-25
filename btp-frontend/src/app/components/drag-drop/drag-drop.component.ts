@@ -11,10 +11,17 @@ import {
   styleUrls: ["./drag-drop.component.css"]
 })
 export class DragDropComponent {
-  todo = ["Get to work", "Pick up groceries", "Go home", "Fall asleep"];
+  projects = ["Get to work", "Pick up groceries", "Go home", "Fall asleep"];
 
-  done = ["Get up", "Brush teeth", "Take a shower", "Check e-mail", "Walk dog"];
-
+  preferences = [
+    "Get up",
+    "Brush teeth",
+    "Take a shower",
+    "Check e-mail",
+    "Walk dog"
+  ];
+  preferenceArray = [];
+  helperArray = [];
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
@@ -30,5 +37,13 @@ export class DragDropComponent {
         event.currentIndex
       );
     }
+    if (event.container.id == "cdk-drop-list-1") {
+      this.preferenceArray = event.container.data;
+    } else {
+      this.helperArray = event.container.data;
+    }
+  }
+  onSubmit() {
+    console.log(this.preferenceArray);
   }
 }
