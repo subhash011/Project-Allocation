@@ -1,3 +1,4 @@
+import { LocalAuthService } from "../../services/local-auth/local-auth.service";
 import { UserService } from "./../../services/user/user.service";
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "angularx-social-login";
@@ -14,7 +15,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private localAuth: LocalAuthService
   ) {}
 
   ngOnInit() {}
@@ -26,11 +28,22 @@ export class LoginComponent implements OnInit {
     }
   }
   signInWithGoogle(): void {
-    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(x => {
-      this.userService.user = x;
+    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(user => {
+      this.userService.user = user;
       this.userService.isLoggedIn = true;
-      // this.router.navigate(["/user"]);
-      console.log(this.userService.user);
+      this.localAuth
+        .checkUser(user)
+        .toPromise()
+        .then(data => {
+          this.userService.token = data.user_details.idToken;
+          const navObj = this.localAuth.validate(data);
+          this.userService.role = data["position"];
+          if (navObj.error === "none") {
+            this.router.navigate([navObj.route]);
+          } else {
+            this.router.navigate([navObj.route, navObj.error]);
+          }
+        });
     });
   }
 

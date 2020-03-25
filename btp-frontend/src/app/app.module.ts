@@ -12,6 +12,9 @@ import { NavbarComponent } from "./components/navbar/navbar.component";
 import { RegisterComponent } from "./components/register/register.component";
 import { DragDropComponent } from "./components/drag-drop/drag-drop.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { StudentComponent } from './components/student/student.component';
+import { FacultyComponent } from './components/faculty/faculty.component';
+import { HomeComponent } from './components/home/home.component';
 const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,
@@ -29,7 +32,10 @@ export function provideConfig() {
     LoginComponent,
     NavbarComponent,
     RegisterComponent,
-    DragDropComponent
+    DragDropComponent,
+    StudentComponent,
+    FacultyComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

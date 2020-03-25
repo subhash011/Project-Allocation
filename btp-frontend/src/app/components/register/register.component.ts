@@ -1,7 +1,9 @@
+import { Router } from "@angular/router";
 import { UserService } from "./../../services/user/user.service";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
+import { isNumber } from "util";
 
 @Component({
   selector: "app-register",
@@ -12,10 +14,10 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
   isStudent = true;
-  json = "";
   branch = "";
   userForm = this.fb.group({
     firstName: [null, Validators.required],
@@ -35,7 +37,7 @@ export class RegisterComponent {
   ];
 
   onSubmit() {
-    const student = {
+    const user = {
       name:
         this.userForm.get("firstName").value +
         " " +
@@ -45,11 +47,35 @@ export class RegisterComponent {
       gpa: this.userForm.get("CGPA").value,
       stream: this.userForm.get("branch").value
     };
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        authorization: this.userService.user.idToken
+      })
+    };
+    var position = "";
+    if (!isNumber(user["roll_no"])) {
+      position = "student";
+    } else {
+      position = "student";
+    }
+    var id = this.userService.user.id;
     this.httpClient
-      .post("http://localhost:3000/student/register", student)
+      .post(
+        "http://localhost:8080/" + position + "/register/" + id,
+        user,
+        httpOptions
+      )
       .toPromise()
       .then((data: any) => {
-        this.message = data.message;
+        console.log(data);
+        if (data["registration"] == "success") {
+          this.message = "success";
+          var route = "/" + position + "/" + id;
+          this.router.navigate([route]);
+        } else {
+          this.message = "fail";
+        }
       });
   }
 }
