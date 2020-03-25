@@ -16,6 +16,16 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  getUrlPreferences() {
+    return (
+      "/" +
+      this.userService.role +
+      "/" +
+      this.userService.user.id +
+      "/preferences"
+    );
+  }
+
   redirectToHome() {
     this.router.navigate([""]);
   }

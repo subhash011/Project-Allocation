@@ -8,19 +8,19 @@
     </div>
     <div *ngIf="isUser()">
         <div class="flex-grow-left"></div>
-        <button mat-button routerLink="/" class="nav-text">
+        <button mat-button routerLink="getUrlProjects()" class="nav-text">
       My Projects
     </button>
     </div>
     <div *ngIf="isFaculty()">
         <div class="flex-grow-left"></div>
-        <button mat-button routerLink="/" class="nav-text">
+        <button mat-button routerLink="/faculty/:id/add-projects" class="nav-text">
       Add Projects
     </button>
     </div>
     <div *ngIf="isUser()">
         <div class="flex-grow-left"></div>
-        <button mat-button routerLink="/" class="nav-text">
+        <button mat-button [routerLink]="getUrlPreferences()" class="nav-text">
       Preferences
     </button>
     </div>

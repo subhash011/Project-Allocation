@@ -1,5 +1,5 @@
-import { LocalAuthService } from "../../services/local-auth/local-auth.service";
-import { UserService } from "./../../services/user/user.service";
+import { LocalAuthService } from "../../../services/local-auth/local-auth.service";
+import { UserService } from "./../../../services/user/user.service";
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "angularx-social-login";
 import { SocialUser } from "angularx-social-login";

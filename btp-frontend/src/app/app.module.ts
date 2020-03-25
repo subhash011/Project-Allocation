@@ -6,17 +6,18 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { SocialLoginModule } from "angularx-social-login";
 import { AuthServiceConfig, GoogleLoginProvider } from "angularx-social-login";
-import { LoginComponent } from "./components/login/login.component";
+import { LoginComponent } from "./components/shared/login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { NavbarComponent } from "./components/navbar/navbar.component";
-import { RegisterComponent } from "./components/register/register.component";
-import { DragDropComponent } from "./components/drag-drop/drag-drop.component";
+import { NavbarComponent } from "./components/shared/navbar/navbar.component";
+import { RegisterComponent } from "./components/shared/register/register.component";
+import { DragDropComponent } from "./components/student-components/drag-drop/drag-drop.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { StudentComponent } from './components/student/student.component';
-import { FacultyComponent } from './components/faculty/faculty.component';
-import { HomeComponent } from './components/home/home.component';
-
-
+import { StudentComponent } from "./components/student-components/student/student.component";
+import { FacultyComponent } from "./components/faculty-componenets/faculty/faculty.component";
+import { HomeComponent } from "./components/home/home.component";
+import { ShowPreferencesComponent } from "./components/student-components/show-preferences/show-preferences.component";
+import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
+import { FormsModule } from "@angular/forms";
 
 const config = new AuthServiceConfig([
   {
@@ -38,8 +39,10 @@ export function provideConfig() {
     DragDropComponent,
     StudentComponent,
     FacultyComponent,
-    HomeComponent
+    HomeComponent,
+    ShowPreferencesComponent
   ],
+  entryComponents: [ShowPreferencesComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -47,14 +50,16 @@ export function provideConfig() {
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    DragDropModule
+    DragDropModule,
+    FormsModule
   ],
   exports: [],
   providers: [
     {
       provide: AuthServiceConfig,
       useFactory: provideConfig
-    }
+    },
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } }
   ],
   bootstrap: [AppComponent]
 })

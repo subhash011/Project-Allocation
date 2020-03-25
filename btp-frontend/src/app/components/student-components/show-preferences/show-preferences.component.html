@@ -1,0 +1,24 @@
+<div class="list-item" *ngFor="let item of preferences" cdkDrag>
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title> Faculty : {{ item }} </mat-panel-title>
+                <mat-panel-description>
+                    None
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>This is testing</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="flex-space"></div>
+</div>
+<div class="flex-space-small"></div>
+<div>
+    <button mat-raised-button class="left-button" color="warn" (click)="onNoClick()">
+    Go Back
+  </button>
+    <button mat-raised-button class="right-button" (click)="savePreferences()" color="primary">
+    Confirm Preferences
+  </button>
+</div>

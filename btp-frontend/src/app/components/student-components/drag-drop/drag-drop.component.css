@@ -54,3 +54,20 @@
 .cdk-drag-placeholder {
     opacity: 0;
 }
+
+.drag-drop {
+    padding-top: 5%;
+}
+
+.col-1 {
+    width: 45%;
+}
+
+.col-2 {
+    width: 45%;
+    margin-left: 5%;
+}
+
+.space {
+    margin-top: 1%;
+}
