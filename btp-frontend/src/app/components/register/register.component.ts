@@ -54,28 +54,17 @@ export class RegisterComponent {
       })
     };
     var position = "";
-    if (!isNumber(user["roll_no"])) {
+    if (isNumber(user["roll_no"])) {
       position = "student";
     } else {
-      position = "student";
+      position = "faculty";
     }
     var id = this.userService.user.id;
-    this.httpClient
-      .post(
-        "http://localhost:8080/" + position + "/register/" + id,
-        user,
-        httpOptions
-      )
-      .toPromise()
-      .then((data: any) => {
-        console.log(data);
-        if (data["registration"] == "success") {
-          this.message = "success";
-          var route = "/" + position + "/" + id;
-          this.router.navigate([route]);
-        } else {
-          this.message = "fail";
-        }
-      });
+    this.message = this.userService.registerUser(
+      user,
+      httpOptions,
+      position,
+      id
+    );
   }
 }

@@ -9,7 +9,7 @@ import { Component, OnInit } from "@angular/core";
 })
 export class NavbarComponent implements OnInit {
   constructor(private router: Router, private userService: UserService) {}
-  role: string = "super_admin";
+  role: string = "admin";
   ngOnInit() {
     if (this.userService) {
       this.role = this.userService.role.toString();
@@ -21,22 +21,33 @@ export class NavbarComponent implements OnInit {
   }
 
   isUser() {
-    return (
-      this.role === "student" ||
-      this.role === "admin" ||
-      this.role === "faculty"
-    );
+    if (this.userService.user)
+      return (
+        this.userService.role.toString() == "student" ||
+        this.userService.role.toString() === "admin" ||
+        this.userService.role.toString() === "faculty"
+      );
+    else return false;
   }
 
   isFaculty() {
-    return this.role === "admin" || this.role === "faculty";
+    if (this.userService.user)
+      return (
+        this.userService.role.toString() === "admin" ||
+        this.userService.role.toString() === "faculty"
+      );
+    else return false;
   }
 
   isAdmin() {
-    return this.role == "admin";
+    if (this.userService.user)
+      return this.userService.role.toString() == "admin";
+    else return false;
   }
 
   isSuperAdmin() {
-    return this.role == "super_admin";
+    if (this.userService.user)
+      return this.userService.role.toString() == "super_admin";
+    else return false;
   }
 }
