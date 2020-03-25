@@ -1,7 +1,7 @@
 import { Router } from "@angular/router";
 import { UserService } from "./../../services/user/user.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { isNumber } from "util";
 
@@ -10,20 +10,23 @@ import { isNumber } from "util";
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.css"]
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
     private userService: UserService,
     private router: Router
   ) {}
+  ngOnInit() {
+    this.userService.role = "none";
+  }
   isStudent = true;
   branch = "";
   userForm = this.fb.group({
-    firstName: [null, Validators.required],
-    lastName: [null, Validators.required],
+    firstName: [this.userService.user.firstName, Validators.required],
+    lastName: [this.userService.user.lastName, Validators.required],
     CGPA: [null, Validators.required],
-    email: [null, Validators.required],
+    email: [this.userService.user.email, Validators.required],
     branch: [null, Validators.required]
   });
   message = "";
@@ -67,5 +70,10 @@ export class RegisterComponent {
       position,
       id
     );
+    if (!this.message) {
+      this.userService.role = position;
+    } else {
+      this.message = "fail";
+    }
   }
 }

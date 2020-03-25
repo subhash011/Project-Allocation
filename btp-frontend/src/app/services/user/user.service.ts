@@ -10,7 +10,7 @@ export class UserService {
   public isLoggedIn: boolean;
   public url: string;
   public token: any;
-  public role: String;
+  public role: String = "none";
   public user: SocialUser = null;
   constructor(private http: HttpClient, private router: Router) {}
   getStudentDetails(id: String) {
@@ -55,10 +55,10 @@ export class UserService {
       )
       .toPromise()
       .then((data: any) => {
-        console.log(data);
         if (data["registration"] == "success") {
           var route = "/" + position + "/" + id;
           this.router.navigate([route]);
+          return "success";
         } else {
           return "fail";
         }

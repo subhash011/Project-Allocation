@@ -13,7 +13,6 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatCardModule } from "@angular/material/card";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatDialogModule } from "@angular/material/dialog";
-
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -28,7 +27,8 @@ const MaterialComponents = [
   MatSelectModule,
   MatRadioModule,
   ReactiveFormsModule,
-  MatDialogModule
+  MatDialogModule,
+  MatStepperModule
 ];
 
 @NgModule({
