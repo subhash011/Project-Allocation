@@ -11,7 +11,7 @@ router.post("/register/:id", (req, res) => {
 
     const user = req.body;
     oauth(idToken).then(user_partial => {
-        const newUser = new Student({
+        const newUser = new Faculty({
             name: user.name,
             google_id: {
                 id: id,
