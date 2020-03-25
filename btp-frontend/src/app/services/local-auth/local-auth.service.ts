@@ -22,11 +22,10 @@ export class LocalAuthService {
         };
       // this.router.navigate(["/student", data.user_details.id]);
       else if (data.position == "faculty") {
-        if (data.position === "student")
-          return {
-            route: "/faculty/" + data.user_details.id,
-            error: "none"
-          };
+        return {
+          route: "/faculty/" + data.user_details.id,
+          error: "none"
+        };
         // this.router.navigate(["/faculty", data.user_details.id]);
       }
     } else if (!data.isRegistered) {

@@ -6,64 +6,67 @@ const bodyparser = require("body-parser");
 const Faculty = require("../models/Faculty");
 
 router.post("/register/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
+  const id = req.params.id;
+  const idToken = req.headers.authorization;
 
-    const user = req.body;
-    oauth(idToken).then(user_partial => {
-        const newUser = new Faculty({
-            name: user.name,
-            google_id: {
-                id: id,
-                idToken: idToken
-            },
-            email: user.email,
-            stream: user.stream
-        });
-
-        //Saves user in the database
-        newUser
-            .save()
-            .then(result => {
-                res.json({
-                    registerd: "success"
-                });
-            })
-            .catch(err => {
-                res.json({
-                    registered: "fail"
-                });
-            });
+  const user = req.body;
+  oauth(idToken).then(user_partial => {
+    const newUser = new Faculty({
+      name: user.name,
+      google_id: {
+        id: id,
+        idToken: idToken
+      },
+      email: user.email,
+      stream: user.stream
     });
+
+    //Saves user in the database
+    newUser
+      .save()
+      .then(result => {
+        res.json({
+          registerd: "success"
+        });
+      })
+      .catch(err => {
+        res.json({
+          registered: "fail"
+        });
+      });
+  });
 });
 
 router.get("/details/:id", (req, res) => {
-    const id = req.params;
-    //   console.log(id);
-    const idToken = req.headers.authorization;
+  const id = req.params;
+  //   console.log(id);
+  const idToken = req.headers.authorization;
 
-    Faculty.find({ google_id: { id: id } })
-        .then(user => {
-            console.log("working");
+  Faculty.find({ google_id: { id: id, idToken: idToken } })
+    .then(user => {
+      console.log("working");
 
-            if (user.google_id.idToken === idToken) {
-                res.json({
-                    status: "success",
-                    user_details: user
-                });
-            } else {
-                res.json({
-                    status: "fail",
-                    user_details: ""
-                });
-            }
-        })
-        .catch(err => {
-            res.json({
-                status: "fail",
-                user_details: err
-            });
-        });
+      user = user[0];
+
+      // if (user.google_id.idToken === idToken) {
+      res.json({
+        status: "success",
+        user_details: user
+      });
+      // }
+      //  else {
+      //     res.json({
+      //         status: "fail",
+      //         user_details: ""
+      //     });
+      // }
+    })
+    .catch(err => {
+      res.json({
+        status: "fail",
+        user_details: err
+      });
+    });
 });
 
 module.exports = router;

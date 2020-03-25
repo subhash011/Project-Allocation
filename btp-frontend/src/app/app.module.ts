@@ -15,6 +15,9 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 import { StudentComponent } from './components/student/student.component';
 import { FacultyComponent } from './components/faculty/faculty.component';
 import { HomeComponent } from './components/home/home.component';
+
+
+
 const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,

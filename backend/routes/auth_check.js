@@ -20,6 +20,10 @@ router.post("/user_check", (req, res) => {
           .then(user => {
             if (user) {
               user.google_id.idToken = userDetails.idToken;
+
+
+                
+
               user
                 .save()
                 .then(result => {
@@ -28,6 +32,7 @@ router.post("/user_check", (req, res) => {
                     position: "student",
                     user_details: userDetails
                   });
+                  console.log('saved idtoken')
                 })
                 .catch(err => {
                   console.log(err);
