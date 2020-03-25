@@ -1,5 +1,5 @@
 .full-width {
-    width: 40%;
+    width: 60%;
 }
 
 mat-card-title {
@@ -15,7 +15,7 @@ mat-card-actions {
 }
 
 .cgpa-field {
-    width: 20%;
+    width: 30%;
 }
 
 .shipping-card {

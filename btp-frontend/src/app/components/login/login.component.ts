@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
           this.userService.token = data.user_details.idToken;
           const navObj = this.localAuth.validate(data);
           this.userService.role = data["position"];
-          console.log(this.userService.role);
           if (navObj.error === "none") {
             this.router.navigate([navObj.route]);
           } else {
@@ -52,6 +51,7 @@ export class LoginComponent implements OnInit {
   signOut(): void {
     this.authService.signOut();
     this.userService.isLoggedIn = false;
+    this.userService.role = "none";
     this.router.navigate([""]);
   }
 }

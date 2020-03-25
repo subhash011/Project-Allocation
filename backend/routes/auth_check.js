@@ -7,7 +7,6 @@ oauth = require("../config/oauth");
 
 router.post("/user_check", (req, res) => {
     const userDetails = req.body;
-
     oauth(userDetails.idToken)
         .then(user => {
             // console.log(user);
@@ -52,17 +51,18 @@ router.post("/user_check", (req, res) => {
                         if (user) {
                             user.google_id.idToken = userDetails.idToken;
                             //added a block here for frontend rendering
+                            var role = "";
                             if (user.isAdmin) {
-                                position = "admin";
+                                role = "admin";
                             } else {
-                                postition = "faculty";
+                                role = "faculty";
                             }
                             user
                                 .save()
                                 .then(result => {
                                     res.json({
                                         isRegistered: true,
-                                        position: position,
+                                        position: role,
                                         user_details: userDetails
                                     });
                                 })
