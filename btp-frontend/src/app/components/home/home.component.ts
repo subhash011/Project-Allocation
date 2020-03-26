@@ -12,6 +12,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     if (localStorage.getItem("isLoggegIn") == "true") {
+      console.log("here");
       const url =
         "/" + localStorage.getItem("role") + "/" + localStorage.getItem("id");
       this.router.navigate([url]);

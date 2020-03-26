@@ -16,9 +16,7 @@ const routes: Routes = [
   { path: "faculty/:id", component: FacultyComponent },
   { path: "student/preferences/:id", component: DragDropComponent },
   { path: "profile/:id", component: ProfileComponent },
-  { path: "student/projects/:id", component: StudentProjectsComponent },
-  { path: "faculty/add-projects/:id", component: HomeComponent },
-  { path: "faculty/projects/:id", component: HomeComponent }
+  { path: "student/projects/:id", component: StudentProjectsComponent }
 ];
 
 @NgModule({
