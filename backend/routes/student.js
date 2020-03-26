@@ -40,7 +40,7 @@ router.get("/details/:id", (req, res) => {
     const idToken = req.headers.authorization;
     Student.findOne({ google_id: { id: id, idToken: idToken } })
         .then(user => {
-            if (user.google_id.idToken == idToken && user.google_id.id == id) {
+            if (user) {
                 res.json({
                     status: "success",
                     user_details: user
