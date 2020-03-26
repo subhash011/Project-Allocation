@@ -17,7 +17,6 @@
             </div>
         </div>
     </div>
-
     <div class="container col-2">
         <h2><b>My Preferences</b></h2>
         <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="preferences" [cdkDropListConnectedTo]="todoList" class="list" (cdkDropListDropped)="drop($event)">

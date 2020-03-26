@@ -15,6 +15,7 @@ import { MatCardModule } from "@angular/material/card";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatStepperModule } from "@angular/material/stepper";
+import { MatDividerModule } from "@angular/material/divider";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 const MaterialComponents = [
@@ -35,7 +36,8 @@ const MaterialComponents = [
   MatStepperModule,
   MatGridListModule,
   MatExpansionModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatDividerModule
 ];
 
 @NgModule({

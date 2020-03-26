@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit {
         .toPromise()
         .then(data => {
           const navObj = this.localAuth.validate(data);
+          localStorage.setItem("id", data["user_details"]["id"]);
           // localStorage.setItem("token", data.user_details.idToken); //is it needed
           localStorage.setItem("role", data["position"]);
           if (navObj.error === "none") {
@@ -60,6 +61,7 @@ export class LoginComponent implements OnInit {
     localStorage.setItem("role", "none");
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("id");
     this.router.navigate([""]);
   }
 }

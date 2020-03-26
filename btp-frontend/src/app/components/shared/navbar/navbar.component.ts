@@ -34,6 +34,10 @@ export class NavbarComponent implements OnInit {
     );
   }
 
+  getProfile() {
+    return "/profile/" + localStorage.getItem("id");
+  }
+
   redirectToHome() {
     this.router.navigate([""]);
   }

@@ -8,7 +8,7 @@
     </div>
     <div *ngIf="isUser()">
         <div class="flex-grow-left"></div>
-        <button mat-button routerLink="getUrlProjects()" class="nav-text">
+        <button mat-button [routerLink]="getUrlProjects()" class="nav-text">
       My Projects
     </button>
     </div>
@@ -32,7 +32,7 @@
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
             <mat-menu #beforeMenu="matMenu" xPosition="before">
-                <button mat-menu-item routerLink="/">Profile</button>
+                <button mat-menu-item [routerLink]="getProfile()">Profile</button>
                 <button mat-menu-item routerLink="/" *ngIf="isAdmin()">
           Admin
         </button>

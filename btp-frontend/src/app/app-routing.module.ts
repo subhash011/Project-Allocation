@@ -1,3 +1,4 @@
+import { ProfileComponent } from "./components/shared/profile/profile.component";
 import { DragDropComponent } from "./components/student-components/drag-drop/drag-drop.component";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
@@ -12,7 +13,9 @@ const routes: Routes = [
   { path: "register/:id", component: RegisterComponent },
   { path: "student/:id", component: StudentComponent },
   { path: "faculty/:id", component: FacultyComponent },
-  { path: "student/preferences/:id", component: DragDropComponent }
+  { path: "student/preferences/:id", component: DragDropComponent },
+  { path: "profile/:id", component: ProfileComponent },
+  { path: ":role/projects/:id", component: HomeComponent }
 ];
 
 @NgModule({
