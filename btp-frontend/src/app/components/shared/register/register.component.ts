@@ -1,9 +1,8 @@
 import { Router } from "@angular/router";
-import { UserService } from "./../../services/user/user.service";
+import { UserService } from "./../../../services/user/user.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
-import { isNumber } from "util";
 
 @Component({
   selector: "app-register",
@@ -13,20 +12,18 @@ import { isNumber } from "util";
 export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
-    private httpClient: HttpClient,
     private userService: UserService,
     private router: Router
   ) {}
   ngOnInit() {
-    this.userService.role = "none";
+    this.userForm.get("email").disable();
   }
-  isStudent = true;
-  branch = "";
+  user = JSON.parse(localStorage.getItem("user"));
   userForm = this.fb.group({
-    firstName: [this.userService.user.firstName, Validators.required],
-    lastName: [this.userService.user.lastName, Validators.required],
+    firstName: [this.user.firstName, Validators.required],
+    lastName: [this.user.lastName, Validators.required],
     CGPA: [null, Validators.required],
-    email: [this.userService.user.email, Validators.required],
+    email: [this.user.email, Validators.required],
     branch: [null, Validators.required]
   });
   message = "";
@@ -39,6 +36,14 @@ export class RegisterComponent implements OnInit {
     { name: "Civil Engineering", abbreviation: "CE" }
   ];
 
+  getRole() {
+    if (localStorage.getItem("role") == "student") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   onSubmit() {
     const user = {
       name:
@@ -50,10 +55,11 @@ export class RegisterComponent implements OnInit {
       gpa: this.userForm.get("CGPA").value,
       stream: this.userForm.get("branch").value
     };
+    const _user = JSON.parse(localStorage.getItem("user"));
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: this.userService.user.idToken
+        Authorization: _user.idToken
       })
     };
     var position = "";
@@ -61,9 +67,8 @@ export class RegisterComponent implements OnInit {
       position = "student";
     } else {
       position = "faculty";
-      this.isStudent = false;
     }
-    var id = this.userService.user.id;
+    var id = _user.id;
     this.message = this.userService.registerUser(
       user,
       httpOptions,
@@ -71,9 +76,9 @@ export class RegisterComponent implements OnInit {
       id
     );
     if (!this.message) {
-      this.userService.role = position;
+      localStorage.setItem("role", position);
     } else {
-      this.message = "fail";
+      console.log("fail");
     }
   }
 }
