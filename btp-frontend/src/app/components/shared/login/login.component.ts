@@ -16,29 +16,35 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private userService: UserService,
     private localAuth: LocalAuthService
   ) {}
 
   ngOnInit() {}
   userActivity() {
-    if (this.userService.isLoggedIn) {
+    if (localStorage.getItem("isLoggedIn") == "true") {
       this.signOut();
     } else {
       this.signInWithGoogle();
     }
   }
+  getCondition() {
+    if (localStorage.getItem("isLoggedIn") == "false") {
+      return false;
+    } else {
+      return true;
+    }
+  }
   signInWithGoogle(): void {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(user => {
-      this.userService.user = user;
-      this.userService.isLoggedIn = true;
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("isLoggedIn", "true");
       this.localAuth
         .checkUser(user)
         .toPromise()
         .then(data => {
-          this.userService.token = data.user_details.idToken;
           const navObj = this.localAuth.validate(data);
-          this.userService.role = data["position"];
+          // localStorage.setItem("token", data.user_details.idToken); //is it needed
+          localStorage.setItem("role", data["position"]);
           if (navObj.error === "none") {
             this.router.navigate([navObj.route]);
           } else {
@@ -50,8 +56,10 @@ export class LoginComponent implements OnInit {
 
   signOut(): void {
     this.authService.signOut();
-    this.userService.isLoggedIn = false;
-    this.userService.role = "none";
+    localStorage.setItem("isLoggedIn", "false");
+    localStorage.setItem("role", "none");
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     this.router.navigate([""]);
   }
 }

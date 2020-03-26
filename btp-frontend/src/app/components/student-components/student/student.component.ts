@@ -8,10 +8,11 @@ import { UserService } from "src/app/services/user/user.service";
 })
 export class StudentComponent implements OnInit {
   constructor(private userService: UserService) {}
-  user = "";
+  user: any;
   ngOnInit() {
+    this.user = JSON.parse(localStorage.getItem("user"));
     this.userService
-      .getStudentDetails(this.userService.user.id)
+      .getStudentDetails(this.user.id)
       .toPromise()
       .then(data => {
         console.log(data);

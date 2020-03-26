@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: "register/:id", component: RegisterComponent },
   { path: "student/:id", component: StudentComponent },
   { path: "faculty/:id", component: FacultyComponent },
-  { path: "student/:id/preferences", component: DragDropComponent }
+  { path: "student/preferences/:id", component: DragDropComponent }
 ];
 
 @NgModule({

@@ -19,7 +19,7 @@ export class ShowPreferencesComponent implements OnInit {
     this.dialogRef.close();
   }
   getUrl() {
-    return "/student/" + this.userService.user.id + "/preferences";
+    return "/student/" + localStorage.getItem("id") + "/preferences";
   }
   savePreferences() {
     //code to save preferences

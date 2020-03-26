@@ -7,40 +7,39 @@ import { HttpHeaders, HttpClient } from "@angular/common/http";
   providedIn: "root"
 })
 export class UserService {
-  public isLoggedIn: boolean;
   public url: string;
-  public token: any;
-  public role: String = "none";
-  public user: SocialUser = null;
   constructor(private http: HttpClient, private router: Router) {}
   getStudentDetails(id: String) {
+    const user = JSON.parse(localStorage.getItem("user"));
     this.url = "http://localhost:8080/student/details/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: this.token
+        Authorization: user.idToken
       })
     };
     return this.http.get(this.url, httpOptions);
   }
 
   getDetailsById(id: String) {
+    const user = JSON.parse(localStorage.getItem("user"));
     this.url = "http://localhost:8080/auth/details/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: this.token
+        Authorization: user.idToken
       })
     };
     return this.http.get(this.url, httpOptions);
   }
 
   getFacultyDetails(id: String) {
+    const user = JSON.parse(localStorage.getItem("user"));
     this.url = "http://localhost:8080/faculty/details/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: this.token
+        Authorization: user.idToken
       })
     };
     return this.http.get(this.url, httpOptions);
@@ -58,7 +57,6 @@ export class UserService {
         if (data["registration"] == "success") {
           var route = "/" + position + "/" + id;
           this.router.navigate([route]);
-          return "success";
         } else {
           return "fail";
         }

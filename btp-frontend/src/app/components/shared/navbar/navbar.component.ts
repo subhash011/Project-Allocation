@@ -11,18 +11,26 @@ export class NavbarComponent implements OnInit {
   constructor(private router: Router, private userService: UserService) {}
   role: string = "admin";
   ngOnInit() {
-    if (this.userService) {
-      this.role = this.userService.role.toString();
+    if (localStorage.getItem("isLoggedIn") == "true") {
+      this.role = localStorage.getItem("role");
     }
   }
 
   getUrlPreferences() {
     return (
       "/" +
-      this.userService.role +
+      localStorage.getItem("role") +
+      "/preferences/" +
+      localStorage.getItem("id")
+    );
+  }
+
+  getUrlProjects() {
+    return (
       "/" +
-      this.userService.user.id +
-      "/preferences"
+      localStorage.getItem("role") +
+      "/projects/" +
+      localStorage.getItem("id")
     );
   }
 
@@ -30,33 +38,33 @@ export class NavbarComponent implements OnInit {
     this.router.navigate([""]);
   }
   isUser() {
-    if (this.userService.user)
+    if (localStorage.getItem("isLoggedIn") == "true")
       return (
-        this.userService.role.toString() == "student" ||
-        this.userService.role.toString() == "admin" ||
-        this.userService.role.toString() == "faculty"
+        localStorage.getItem("role") == "student" ||
+        localStorage.getItem("role") == "admin" ||
+        localStorage.getItem("role") == "faculty"
       );
     else return false;
   }
 
   isFaculty() {
-    if (this.userService.user)
+    if (localStorage.getItem("isLoggedIn") == "true")
       return (
-        this.userService.role.toString() == "admin" ||
-        this.userService.role.toString() == "faculty"
+        localStorage.getItem("role") == "admin" ||
+        localStorage.getItem("role") == "faculty"
       );
     else return false;
   }
 
   isAdmin() {
-    if (this.userService.user)
-      return this.userService.role.toString() == "admin";
+    if (localStorage.getItem("isLoggedIn") == "true")
+      return localStorage.getItem("role") == "admin";
     else return false;
   }
 
   isSuperAdmin() {
-    if (this.userService.user)
-      return this.userService.role.toString() == "super_admin";
+    if (localStorage.getItem("isLoggedIn") == "true")
+      return localStorage.getItem("role") == "super_admin";
     else return false;
   }
 }
