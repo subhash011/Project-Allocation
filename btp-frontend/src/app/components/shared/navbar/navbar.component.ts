@@ -25,6 +25,10 @@ export class NavbarComponent implements OnInit {
     );
   }
 
+  getAddProjects() {
+    return "/faculty/add-projects/" + localStorage.getItem("id");
+  }
+
   getUrlProjects() {
     return (
       "/" +
@@ -35,14 +39,17 @@ export class NavbarComponent implements OnInit {
   }
 
   getProfile() {
-    return "/profile/" + localStorage.getItem("id");
+    return "profile/" + localStorage.getItem("id");
   }
 
   redirectToHome() {
     this.router.navigate([""]);
   }
   isUser() {
-    if (localStorage.getItem("isLoggedIn") == "true")
+    if (
+      localStorage.getItem("isLoggedIn") == "true" &&
+      localStorage.getItem("isRegistered") != "false"
+    )
       return (
         localStorage.getItem("role") == "student" ||
         localStorage.getItem("role") == "admin" ||

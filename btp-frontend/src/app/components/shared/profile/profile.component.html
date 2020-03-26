@@ -1,1 +1,6 @@
-<p>profile works!</p>
+<div *ngIf="getStudentDiv()">
+    <p>student-profile</p>
+</div>
+<div *ngIf="!getStudentDiv()">
+    <p>faculty-profile</p>
+</div>

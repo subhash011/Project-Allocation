@@ -13,12 +13,12 @@ const app = express();
 
 //express session
 app.use(
-  session({
-    cookie: { maxAge: 60000 },
-    secret: "woot",
-    resave: false,
-    saveUninitialized: false
-  })
+    session({
+        cookie: { maxAge: 60000 },
+        secret: "woot",
+        resave: false,
+        saveUninitialized: false
+    })
 );
 //use flash
 app.use(flash());
@@ -66,6 +66,8 @@ const faculty = require("./routes/faculty");
 app.use("/faculty", faculty);
 // const auth = require("./config/oauth");
 // app.use("/auth", auth);
+const project = require("./routes/project");
+app.use("/project", project);
 
 const PORT = process.env.PORT || 8080;
 

@@ -28,7 +28,10 @@ export class LoginComponent implements OnInit {
     }
   }
   getCondition() {
-    if (localStorage.getItem("isLoggedIn") == "false") {
+    if (
+      localStorage.getItem("isLoggedIn") == "false" ||
+      localStorage.length == 0
+    ) {
       return false;
     } else {
       return true;
@@ -44,8 +47,11 @@ export class LoginComponent implements OnInit {
         .then(data => {
           const navObj = this.localAuth.validate(data);
           localStorage.setItem("id", data["user_details"]["id"]);
-          // localStorage.setItem("token", data.user_details.idToken); //is it needed
           localStorage.setItem("role", data["position"]);
+          const route = navObj.route.split("/");
+          if (route[1] == "register") {
+            localStorage.setItem("isRegistered", "false");
+          }
           if (navObj.error === "none") {
             this.router.navigate([navObj.route]);
           } else {

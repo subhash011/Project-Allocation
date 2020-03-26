@@ -77,6 +77,7 @@ export class RegisterComponent implements OnInit {
     );
     if (!this.message) {
       localStorage.setItem("role", position);
+      localStorage.removeItem("isRegistered");
     } else {
       console.log("fail");
     }
