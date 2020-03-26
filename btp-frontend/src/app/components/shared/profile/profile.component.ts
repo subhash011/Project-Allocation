@@ -7,26 +7,32 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./profile.component.css"]
 })
 export class ProfileComponent implements OnInit {
+  user_info: any;
+  role = "";
   constructor(private userService: UserService) {}
   ngOnInit() {
-    var user: any;
-    const role = localStorage.getItem("role");
-    if (role == "student") {
+    this.role = localStorage.getItem("role");
+    if (this.role == "student") {
       user = this.userService
         .getStudentDetails(localStorage.getItem("id"))
         .subscribe(data => {
-          user = data;
+          this.user_info = data["user_details"];
         });
-      console.log(user);
-    } else if (role == "faculty" || role == "admin") {
+    } else if (this.role == "faculty" || this.role == "admin") {
       var user: any;
       this.userService
         .getFacultyDetails(localStorage.getItem("id"))
         .toPromise()
         .then(data => {
-          console.log(data);
-          user = data["user_details"];
+          this.user_info = data["user_details"];
         });
+    }
+  }
+  getStudentDiv() {
+    if (this.role == "student" && this.user_info != null) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

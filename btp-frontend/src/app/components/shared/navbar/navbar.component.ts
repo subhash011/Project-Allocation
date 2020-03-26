@@ -25,6 +25,10 @@ export class NavbarComponent implements OnInit {
     );
   }
 
+  getAddProjects() {
+    return "/faculty/add-projects/" + localStorage.getItem("id");
+  }
+
   getUrlProjects() {
     return (
       "/" +

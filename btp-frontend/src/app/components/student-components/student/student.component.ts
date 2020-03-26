@@ -15,7 +15,7 @@ export class StudentComponent implements OnInit {
       .getStudentDetails(this.user.id)
       .toPromise()
       .then(data => {
-        console.log(data);
+        // console.log(data);
       });
   }
 }

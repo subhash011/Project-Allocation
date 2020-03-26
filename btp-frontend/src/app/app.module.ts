@@ -18,8 +18,8 @@ import { HomeComponent } from "./components/home/home.component";
 import { ShowPreferencesComponent } from "./components/student-components/show-preferences/show-preferences.component";
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 import { FormsModule } from "@angular/forms";
-import { ProfileComponent } from './components/shared/profile/profile.component';
-import { StudentProjectsComponent } from './components/student-components/student-projects/student-projects.component';
+import { ProfileComponent } from "./components/shared/profile/profile.component";
+import { StudentProjectsComponent } from "./components/student-components/student-projects/student-projects.component";
 
 const config = new AuthServiceConfig([
   {
