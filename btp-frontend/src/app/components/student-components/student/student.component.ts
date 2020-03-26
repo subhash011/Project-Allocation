@@ -11,7 +11,7 @@ export class StudentComponent implements OnInit {
   user: any;
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem("user"));
-    this.userService
+    this.user = this.userService
       .getStudentDetails(this.user.id)
       .toPromise()
       .then(data => {

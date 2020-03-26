@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
   }
 
   getProfile() {
-    return "/profile/" + localStorage.getItem("id");
+    return "profile/" + localStorage.getItem("id");
   }
 
   redirectToHome() {
