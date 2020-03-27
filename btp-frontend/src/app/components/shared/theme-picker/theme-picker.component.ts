@@ -39,7 +39,8 @@ export class ThemePickerComponent implements OnInit {
   constructor(public styleManager: StyleManagerService) {}
 
   ngOnInit() {
-    this.installTheme("indigo-pink");
+    // this.installTheme("indigo-pink");
+    this.installTheme(localStorage.getItem("current-theme"));
   }
 
   installTheme(themeName: string) {
@@ -53,6 +54,7 @@ export class ThemePickerComponent implements OnInit {
     if (theme.isDefault) {
       this.styleManager.removeStyle("theme");
     } else {
+      localStorage.setItem("current-theme", theme.name);
       this.styleManager.setStyle("theme", `/assets/${theme.name}.css`);
     }
   }
