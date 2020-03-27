@@ -8,7 +8,6 @@ const cors = require("cors");
 
 const path = require("path");
 
-
 const app = express();
 
 //express session
@@ -28,6 +27,7 @@ app.use(cors());
 
 //use body-parser
 app.use(bodyparser.json());
+mongoose.set("useFindAndModify", false);
 
 //connect to mongodb
 mongoose
@@ -55,7 +55,6 @@ app.use("/", home);
 // app.use("/student", student);
 // app.use("/faculty", faculty);
 
-
 const auth_check = require("./routes/auth_check");
 app.use("/auth", auth_check);
 
@@ -66,8 +65,8 @@ const faculty = require("./routes/faculty");
 app.use("/faculty", faculty);
 // const auth = require("./config/oauth");
 // app.use("/auth", auth);
-const project = require("./routes/project");
-app.use("/project", project);
+const student_project = require("./routes/student_project");
+app.use("/student/project", student_project);
 
 const PORT = process.env.PORT || 8080;
 
