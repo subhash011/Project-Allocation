@@ -30,9 +30,9 @@ export class DragDropComponent implements OnInit {
   projects: any = [];
   preferenceArray: any = [];
   count = 0;
-  preferences: any;
+  preferences: any = [];
   disable = true;
-  helperArray = [];
+  helperArray: any = [];
   lastDropped;
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -92,8 +92,10 @@ export class DragDropComponent implements OnInit {
       .getStudentPreference()
       .toPromise()
       .then(details => {
-        this.preferences = details;
-        tempPref = this.preferences.map(val => val._id);
+        if (details) {
+          this.preferences = details;
+          tempPref = this.preferences.map(val => val._id);
+        }
         return details;
       })
       .then(preferences => {
