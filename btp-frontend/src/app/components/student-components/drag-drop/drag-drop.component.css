@@ -7,9 +7,9 @@
 }
 
 .list {
-    border: solid 1px #ccc;
+    /* border: solid 1px #ccc; */
     min-height: 60px;
-    background: white;
+    /* background: white; */
     border-radius: 4px;
     display: block;
     overflow: hidden;
@@ -17,10 +17,10 @@
 
 .list-item {
     padding: 20px 10px;
-    border-bottom: solid 1px #ccc;
+    /* border-bottom: solid 1px #ccc; */
     box-sizing: border-box;
     cursor: move;
-    background: white;
+    /* background: white; */
     color: black;
     font-size: 14px;
 }
