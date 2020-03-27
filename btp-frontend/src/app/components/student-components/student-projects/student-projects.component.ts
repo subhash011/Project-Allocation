@@ -20,7 +20,7 @@ export class StudentProjectsComponent implements OnInit {
   }
   projects: any;
   preferences: any;
-  bacground: ThemePalette = "primary";
+  background: ThemePalette = "primary";
   getStudentProjects() {
     const user = this.projectService
       .getAllStudentProjects()
