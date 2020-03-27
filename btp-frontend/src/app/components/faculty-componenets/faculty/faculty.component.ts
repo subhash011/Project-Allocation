@@ -5,7 +5,7 @@ import { UserService } from "src/app/services/user/user.service";
 @Component({
   selector: "app-faculty",
   templateUrl: "./faculty.component.html",
-  styleUrls: ["./faculty.component.css"]
+  styleUrls: ["./faculty.component.scss"]
 })
 export class FacultyComponent implements OnInit {
   constructor(

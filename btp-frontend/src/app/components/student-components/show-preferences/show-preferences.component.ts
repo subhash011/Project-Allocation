@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 @Component({
   selector: "app-show-preferences",
   templateUrl: "./show-preferences.component.html",
-  styleUrls: ["./show-preferences.component.css"]
+  styleUrls: ["./show-preferences.component.scss"]
 })
 export class ShowPreferencesComponent implements OnInit {
   constructor(

@@ -1,3 +1,4 @@
+import { ThemePickerComponent } from "./components/shared/theme-picker/theme-picker.component";
 import { MaterialModule } from "./material/material.module";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
@@ -44,7 +45,8 @@ export function provideConfig() {
     HomeComponent,
     ShowPreferencesComponent,
     ProfileComponent,
-    StudentProjectsComponent
+    StudentProjectsComponent,
+    ThemePickerComponent
   ],
   entryComponents: [ShowPreferencesComponent],
   imports: [
