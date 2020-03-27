@@ -62,11 +62,13 @@
 
 .col-1 {
     width: 45%;
+    min-height: fit-content;
 }
 
 .col-2 {
     width: 45%;
     margin-left: 5%;
+    min-height: fit-content;
 }
 
 .space {

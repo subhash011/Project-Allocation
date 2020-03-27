@@ -1,3 +1,4 @@
+import { Router } from "@angular/router";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { UserService } from "./../../../services/user/user.service";
 import { Component, OnInit, Inject } from "@angular/core";
@@ -19,13 +20,14 @@ export class ShowPreferencesComponent implements OnInit {
   constructor(
     private userService: UserService,
     private projectService: ProjectsService,
+    private router: Router,
     public dialogRef: MatDialogRef<ShowPreferencesComponent>,
     @Inject(MAT_DIALOG_DATA) public preferences: any
   ) {}
 
   ngOnInit() {}
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close("closed");
   }
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -45,10 +47,10 @@ export class ShowPreferencesComponent implements OnInit {
     }
   }
   getUrl() {
-    return "/student/" + localStorage.getItem("id") + "/preferences";
+    return "/student" + "/preferences/" + localStorage.getItem("id");
   }
   savePreferences() {
     this.projectService.storeStudentPreferences(this.preferences);
-    this.dialogRef.close();
+    this.dialogRef.close("saved");
   }
 }
