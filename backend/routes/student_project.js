@@ -20,25 +20,22 @@ router.get("/:id", (req, res) => {
         })
         .then(stream => {
             Project.find({ stream: stream })
+                .populate("faculty_id")
                 .then(projects => {
                     for (const project of projects) {
                         var details = {
+                            _id: project["_id"],
                             title: project["title"],
                             description: project["description"],
                             duration: project["duration"],
                             studentIntake: project["studentIntake"],
-                            faculty_id: project["faculty_id"]
+                            faculty_name: project["faculty_id"]["name"],
+                            faculty_email: project["faculty_id"]["email"]
                         };
                         student_projects.push(details);
                     }
                     res.json(student_projects);
-                })
-                .catch(err => {
-                    res.json(err);
                 });
-        })
-        .catch(err => {
-            res.json(err);
         });
 });
 
@@ -64,8 +61,18 @@ router.get("/preference/:id", (req, res) => {
             for (const project of project_id) {
                 promises.push(
                     Project.findById(project)
-                    .then(details => {
-                        return details;
+                    .populate("faculty_id")
+                    .then(project => {
+                        var new_details = {
+                            _id: project["_id"],
+                            title: project["title"],
+                            description: project["description"],
+                            duration: project["duration"],
+                            studentIntake: project["studentIntake"],
+                            faculty_name: project["faculty_id"]["name"],
+                            faculty_email: project["faculty_id"]["email"]
+                        };
+                        return new_details;
                     })
                     .catch(err => {
                         res.json(err);
@@ -96,7 +103,7 @@ router.post("/preference/:id", (req, res) => {
         })
         .then(project_id => {
             Student.findOneAndUpdate({ google_id: { id: id, idToken: idToken } }, { projects_preference: project_id }).then(user => {
-                res.json(user["projects_preference"]);
+                res.json({ message: "success" });
             });
         });
 });

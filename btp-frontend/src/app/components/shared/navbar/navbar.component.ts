@@ -46,10 +46,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate([""]);
   }
   isUser() {
-    if (
-      localStorage.getItem("isLoggedIn") == "true" &&
-      localStorage.getItem("isRegistered") != "false"
-    )
+    if (localStorage.getItem("isLoggedIn") == "true")
       return (
         localStorage.getItem("role") == "student" ||
         localStorage.getItem("role") == "admin" ||

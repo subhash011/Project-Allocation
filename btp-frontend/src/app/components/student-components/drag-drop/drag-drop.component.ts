@@ -1,3 +1,4 @@
+import { ProjectsService } from "src/app/services/projects/projects.service";
 import { ShowPreferencesComponent } from "./../show-preferences/show-preferences.component";
 import { Component, OnInit } from "@angular/core";
 import {
@@ -16,27 +17,32 @@ import {
   templateUrl: "./drag-drop.component.html",
   styleUrls: ["./drag-drop.component.scss"]
 })
-export class DragDropComponent {
-  constructor(private dialog: MatDialog) {}
-  projects = ["Get to work", "Pick up groceries", "Go home", "Fall asleep"];
-
-  preferences = [
-    "Get up",
-    "Brush teeth",
-    "Take a shower",
-    "Check e-mail",
-    "Walk dog"
-  ];
-  preferenceArray = this.preferences;
+export class DragDropComponent implements OnInit {
+  preferenceArray: any;
+  constructor(
+    private dialog: MatDialog,
+    private projectService: ProjectsService
+  ) {}
+  ngOnInit() {
+    this.getAllStudentProjects();
+    this.getAllStudentPreferences();
+  }
+  projects: any;
+  preferences: any;
+  disable = true;
   helperArray = [];
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
+      if (event.container.id == "cdk-drop-list-1") {
+        this.disable = false;
+      }
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
     } else {
+      this.disable = false;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -58,7 +64,23 @@ export class DragDropComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("The dialog was closed");
+      // console.log("The dialog was closed");
     });
+  }
+  getAllStudentProjects() {
+    const user = this.projectService
+      .getAllStudentProjects()
+      .toPromise()
+      .then(details => {
+        this.projects = details;
+      });
+  }
+  getAllStudentPreferences() {
+    const user = this.projectService
+      .getStudentPreference()
+      .toPromise()
+      .then(details => {
+        this.preferences = details;
+      });
   }
 }

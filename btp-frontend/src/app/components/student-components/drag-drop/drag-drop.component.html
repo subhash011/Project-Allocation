@@ -2,16 +2,19 @@
     <div class="container col-1">
         <h2><b>Available Projects</b></h2>
         <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="projects" [cdkDropListConnectedTo]="doneList" class="list" (cdkDropListDropped)="drop($event)">
-            <div class="list-item" *ngFor="let item of projects" cdkDrag>
+            <div class="list-item" *ngFor="let project of projects" cdkDrag>
                 <mat-accordion>
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
-                            <mat-panel-title> Faculty : {{ item }} </mat-panel-title>
+                            <mat-panel-title>
+                                Faculty : {{ project["faculty_name"] }}
+                            </mat-panel-title>
                             <mat-panel-description>
-                                None
+                                Project Title : {{ project["title"] }}
                             </mat-panel-description>
                         </mat-expansion-panel-header>
-                        <p>This is testing</p>
+                        <p>Faculty Email : {{ project["faculty_email"] }}</p>
+                        <p>Description : {{ project["description"] }}</p>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>
@@ -20,22 +23,25 @@
     <div class="container col-2">
         <h2><b>My Preferences</b></h2>
         <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="preferences" [cdkDropListConnectedTo]="todoList" class="list" (cdkDropListDropped)="drop($event)">
-            <div class="list-item" *ngFor="let item of preferences" cdkDrag>
+            <div class="list-item" *ngFor="let preference of preferences" cdkDrag>
                 <mat-accordion>
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
-                            <mat-panel-title> Faculty : {{ item }} </mat-panel-title>
+                            <mat-panel-title>
+                                Faculty : {{ preference["faculty_name"] }}
+                            </mat-panel-title>
                             <mat-panel-description>
-                                None
+                                Project Title : {{ preference["title"] }}
                             </mat-panel-description>
                         </mat-expansion-panel-header>
-                        <p>This is testing</p>
+                        <p>Faculty Email : {{ preference["faculty_email"] }}</p>
+                        <p>Description : {{ preference["description"] }}</p>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>
         </div>
         <div class="space"></div>
-        <button color="primary" mat-flat-button (click)="onSubmit()">
+        <button color="primary" [disabled]="disable" mat-flat-button (click)="onSubmit()">
       Save Preferenves
     </button>
     </div>

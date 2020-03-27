@@ -5,10 +5,51 @@ import { HttpHeaders, HttpClient } from "@angular/common/http";
   providedIn: "root"
 })
 export class ProjectsService {
-  public url: string;
+  private url: string;
+  private url_pref: string;
+  private url_post: string;
   constructor(private http: HttpClient, private router: Router) {}
-  getAllProjects() {
-    this.url = "http://localhost:8080/project";
-    return this.http.get(this.url);
+  getAllStudentProjects() {
+    const id = localStorage.getItem("id");
+    this.url = "http://localhost:8080/student/project/" + id;
+    const user = JSON.parse(localStorage.getItem("user"));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken
+      })
+    };
+    return this.http.get(this.url, httpOptions);
+  }
+  getStudentPreference() {
+    const id = localStorage.getItem("id");
+    this.url_pref = "http://localhost:8080/student/project/preference/" + id;
+    const user = JSON.parse(localStorage.getItem("user"));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken
+      })
+    };
+    return this.http.get(this.url_pref, httpOptions);
+  }
+  storeStudentPreferences(preferences) {
+    const id = localStorage.getItem("id");
+    this.url_post = "http://localhost:8080/student/project/preference/" + id;
+    const user = JSON.parse(localStorage.getItem("user"));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken
+      })
+    };
+    this.http
+      .post(this.url_post, preferences, httpOptions)
+      .toPromise()
+      .then(res => {
+        if (res["message"] == "success") {
+          return "success";
+        }
+      });
   }
 }
