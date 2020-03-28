@@ -16,26 +16,33 @@ router.get("/:id", (req, res) => {
         .then(student => {
             if (student) {
                 return student["stream"];
+            } else {
+                res.json({
+                    message: "token-expired"
+                });
+                return null;
             }
         })
         .then(stream => {
-            Project.find({ stream: stream })
-                .populate("faculty_id")
-                .then(projects => {
-                    for (const project of projects) {
-                        var details = {
-                            _id: project["_id"],
-                            title: project["title"],
-                            description: project["description"],
-                            duration: project["duration"],
-                            studentIntake: project["studentIntake"],
-                            faculty_name: project["faculty_id"]["name"],
-                            faculty_email: project["faculty_id"]["email"]
-                        };
-                        student_projects.push(details);
-                    }
-                    res.json(student_projects);
-                });
+            if (stream) {
+                Project.find({ stream: stream })
+                    .populate("faculty_id")
+                    .then(projects => {
+                        for (const project of projects) {
+                            var details = {
+                                _id: project["_id"],
+                                title: project["title"],
+                                description: project["description"],
+                                duration: project["duration"],
+                                studentIntake: project["studentIntake"],
+                                faculty_name: project["faculty_id"]["name"],
+                                faculty_email: project["faculty_id"]["email"]
+                            };
+                            student_projects.push(details);
+                        }
+                        res.json(student_projects);
+                    });
+            }
         });
 });
 
@@ -51,37 +58,40 @@ router.get("/preference/:id", (req, res) => {
             if (student) {
                 return student["projects_preference"];
             } else {
-                res.json({ message: "Student not Registered" });
+                res.json({ message: "token-expired" });
+                return null;
             }
         })
         .catch(err => {
             res.json(err);
         })
         .then(project_id => {
-            for (const project of project_id) {
-                promises.push(
-                    Project.findById(project)
-                    .populate("faculty_id")
-                    .then(project => {
-                        var new_details = {
-                            _id: project["_id"],
-                            title: project["title"],
-                            description: project["description"],
-                            duration: project["duration"],
-                            studentIntake: project["studentIntake"],
-                            faculty_name: project["faculty_id"]["name"],
-                            faculty_email: project["faculty_id"]["email"]
-                        };
-                        return new_details;
-                    })
-                    .catch(err => {
-                        res.json(err);
-                    })
-                );
+            if (project_id) {
+                for (const project of project_id) {
+                    promises.push(
+                        Project.findById(project)
+                        .populate("faculty_id")
+                        .then(project => {
+                            var new_details = {
+                                _id: project["_id"],
+                                title: project["title"],
+                                description: project["description"],
+                                duration: project["duration"],
+                                studentIntake: project["studentIntake"],
+                                faculty_name: project["faculty_id"]["name"],
+                                faculty_email: project["faculty_id"]["email"]
+                            };
+                            return new_details;
+                        })
+                        .catch(err => {
+                            res.json(err);
+                        })
+                    );
+                }
+                Promise.all(promises).then(result => {
+                    res.json(result);
+                });
             }
-            Promise.all(promises).then(result => {
-                res.json(result);
-            });
         });
 });
 //store student preferences
