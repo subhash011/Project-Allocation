@@ -35,7 +35,7 @@ export class ThemePickerComponent implements OnInit {
       isDark: true
     }
   ];
-
+  currentTheme: any;
   constructor(public styleManager: StyleManagerService) {}
 
   ngOnInit() {
@@ -53,8 +53,11 @@ export class ThemePickerComponent implements OnInit {
 
     if (theme.isDefault) {
       this.styleManager.removeStyle("theme");
+      localStorage.setItem("current-theme", theme.name);
+      this.currentTheme = theme;
     } else {
       localStorage.setItem("current-theme", theme.name);
+      this.currentTheme = theme;
       this.styleManager.setStyle("theme", `/assets/${theme.name}.css`);
     }
   }
