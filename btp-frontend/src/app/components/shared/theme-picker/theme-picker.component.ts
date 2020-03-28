@@ -8,6 +8,7 @@ import { StyleManagerService } from "../style-manager/style-manager.service";
   encapsulation: ViewEncapsulation.None
 })
 export class ThemePickerComponent implements OnInit {
+  currentTheme: any;
   themes: CustomTheme[] = [
     {
       primary: "#673AB7",
@@ -39,7 +40,6 @@ export class ThemePickerComponent implements OnInit {
   constructor(public styleManager: StyleManagerService) {}
 
   ngOnInit() {
-    // this.installTheme("indigo-pink");
     this.installTheme(localStorage.getItem("current-theme"));
   }
 
@@ -52,6 +52,8 @@ export class ThemePickerComponent implements OnInit {
     }
 
     if (theme.isDefault) {
+      this.currentTheme = theme;
+      localStorage.setItem("current-theme", theme.name);
       this.styleManager.removeStyle("theme");
       localStorage.setItem("current-theme", theme.name);
       this.currentTheme = theme;

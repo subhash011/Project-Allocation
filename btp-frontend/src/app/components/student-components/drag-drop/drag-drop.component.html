@@ -11,6 +11,8 @@
                             </mat-panel-title>
                             <mat-panel-description>
                                 Project Title : {{ project["title"] }}
+                                <div class="flex-space"></div>
+                                Maximum Intake : {{project["studentIntake"]}}
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <p>Faculty Email : {{ project["faculty_email"] }}</p>
@@ -32,6 +34,8 @@
                             </mat-panel-title>
                             <mat-panel-description>
                                 Project Title : {{ preference["title"] }}
+                                <div class="flex-space"></div>
+                                Maximum Intake : {{preference["studentIntake"]}}
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <p>Faculty Email : {{ preference["faculty_email"] }}</p>
@@ -41,8 +45,10 @@
             </div>
         </div>
         <div class="space"></div>
-        <button color="primary" [disabled]="disable" mat-flat-button (click)="onSubmit()">
-      Save Preferenves
+        <div class="btn-align">
+            <button color="primary" [disabled]="getDisable()" mat-flat-button (click)="onSubmit()">
+      Save Preferences
     </button>
+        </div>
     </div>
 </div>
