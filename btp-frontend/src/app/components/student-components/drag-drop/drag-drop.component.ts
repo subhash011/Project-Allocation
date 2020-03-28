@@ -13,6 +13,7 @@ import {
   CdkDragEnter,
   CdkDragExit
 } from "@angular/cdk/drag-drop";
+import { MatAccordion } from "@angular/material/expansion";
 
 @Component({
   selector: "app-drag-drop",
