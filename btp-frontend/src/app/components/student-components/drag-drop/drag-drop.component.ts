@@ -1,3 +1,4 @@
+import { LoginComponent } from "./../../shared/login/login.component";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { ShowPreferencesComponent } from "./../show-preferences/show-preferences.component";
 import { Component, OnInit } from "@angular/core";
@@ -18,12 +19,14 @@ import { MatAccordion } from "@angular/material/expansion";
 @Component({
   selector: "app-drag-drop",
   templateUrl: "./drag-drop.component.html",
-  styleUrls: ["./drag-drop.component.scss"]
+  styleUrls: ["./drag-drop.component.scss"],
+  providers: [LoginComponent]
 })
 export class DragDropComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
-    private projectService: ProjectsService
+    private projectService: ProjectsService,
+    private loginObject: LoginComponent
   ) {}
   ngOnInit() {
     this.getAllStudentPreferences();
@@ -93,24 +96,30 @@ export class DragDropComponent implements OnInit {
       .getStudentPreference()
       .toPromise()
       .then(details => {
+        if (details["message"] == "token-expired") {
+          this.loginObject.signOut();
+          return null;
+        }
         if (details) {
           this.preferences = details;
           tempPref = this.preferences.map(val => val._id);
+          return details;
         }
-        return details;
       })
       .then(preferences => {
-        this.projectService
-          .getAllStudentProjects()
-          .toPromise()
-          .then(projects => {
-            tempArray = projects;
-            for (const project of tempArray) {
-              if (!tempPref.includes(project._id)) {
-                this.projects.push(project);
+        if (preferences) {
+          this.projectService
+            .getAllStudentProjects()
+            .toPromise()
+            .then(projects => {
+              tempArray = projects;
+              for (const project of tempArray) {
+                if (!tempPref.includes(project._id)) {
+                  this.projects.push(project);
+                }
               }
-            }
-          });
+            });
+        }
       });
   }
 }

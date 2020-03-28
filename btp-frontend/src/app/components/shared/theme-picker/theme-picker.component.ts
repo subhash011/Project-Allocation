@@ -36,7 +36,6 @@ export class ThemePickerComponent implements OnInit {
       isDark: true
     }
   ];
-  currentTheme: any;
   constructor(public styleManager: StyleManagerService) {}
 
   ngOnInit() {
