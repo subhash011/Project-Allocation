@@ -47,7 +47,7 @@ router.get("/details/:id", (req, res) => {
                 });
             } else {
                 res.json({
-                    status: "fail",
+                    status: "invalid-token",
                     user_details: ""
                 });
             }
