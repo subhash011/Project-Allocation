@@ -1,18 +1,26 @@
-<div class="list-item" *ngFor="let item of preferences">
-    <mat-accordion>
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title> Faculty : {{ item }} </mat-panel-title>
-                <mat-panel-description>
-                    None
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <p>This is testing</p>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <div class="flex-space"></div>
+<div class="drag-drop">
+    <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="preferences" class="list" (cdkDropListDropped)="drop($event)">
+        <div class="list-item" *ngFor="let preference of preferences" cdkDrag>
+            <mat-accordion>
+                <mat-expansion-panel expanded="true">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Faculty : {{ preference["faculty_name"] }}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            Project Title : {{ preference["title"] }}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <p>Faculty Email : {{ preference["faculty_email"] }}</p>
+                    <p>Description : {{ preference["description"] }}</p>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <div class="flex-space"></div>
+        </div>
+        <div class="flex-space-small"></div>
+    </div>
 </div>
-<div class="flex-space-small"></div>
+
 <div>
     <button mat-raised-button class="left-button" color="warn" (click)="onNoClick()">
     Go Back

@@ -62,13 +62,27 @@
 
 .col-1 {
     width: 45%;
+    min-height: fit-content;
 }
 
 .col-2 {
     width: 45%;
     margin-left: 5%;
+    min-height: fit-content;
 }
 
 .space {
     margin-top: 1%;
+}
+
+.flex-space {
+    flex-grow: 1;
+}
+
+h2 {
+    padding-left: 40%;
+}
+
+.btn-align {
+    padding-left: 40%;
 }

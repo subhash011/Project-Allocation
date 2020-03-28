@@ -13,12 +13,5 @@ export class AppComponent implements OnInit {
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer
   ) {}
-  ngOnInit() {
-    this.matIconRegistry.addSvgIcon(
-      "iit_pkd",
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        "../../../../../../images/IITPKD_Logo.svg"
-      )
-    );
-  }
+  ngOnInit() {}
 }
