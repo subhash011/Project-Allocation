@@ -18,6 +18,10 @@ import { MatStepperModule } from "@angular/material/stepper";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatTableModule } from "@angular/material/table";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -37,7 +41,10 @@ const MaterialComponents = [
   MatGridListModule,
   MatExpansionModule,
   MatProgressBarModule,
-  MatDividerModule
+  MatDividerModule,
+  MatTabsModule,
+  MatTableModule,
+  MatSlideToggleModule
 ];
 
 @NgModule({

@@ -43,6 +43,7 @@ export class UserService {
         Authorization: user.idToken
       })
     };
+    
     return this.http.get(this.url, httpOptions);
   }
 

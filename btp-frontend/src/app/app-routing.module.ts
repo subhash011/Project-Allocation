@@ -8,6 +8,7 @@ import { FacultyComponent } from "./components/faculty-componenets/faculty/facul
 import { StudentComponent } from "./components/student-components/student/student.component";
 import { RegisterComponent } from "./components/shared/register/register.component";
 import { HomeComponent } from "./components/home/home.component";
+import { ContentComponent } from "./components/faculty-componenets/content/content.component";
 
 const routes: Routes = [
   { path: "", component: HomeComponent },

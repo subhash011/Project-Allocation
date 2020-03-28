@@ -29,9 +29,6 @@ const UserSchema = new mongoose.Schema({
   project_list: {
     type: [mongoose.SchemaTypes.ObjectId]
   },
-  student_preference: {
-    type: [mongoose.SchemaTypes.ObjectId]
-  },
   date: {
     type: Date,
     default: Date.now
