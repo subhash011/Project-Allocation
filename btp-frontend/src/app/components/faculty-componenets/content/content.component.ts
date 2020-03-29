@@ -53,89 +53,92 @@ export class ContentComponent implements OnInit {
   }
 
   onSubmit() {
-    const project = {
-      title: this.ProjectForm.get("title").value,
-      duration: this.ProjectForm.get("duration").value,
-      studentIntake: this.ProjectForm.get("studentIntake").value,
-      description: this.ProjectForm.get("description").value,
-      stream: this.stream
-    };
+    if (this.ProjectForm.valid) {
+      const project = {
+        title: this.ProjectForm.get("title").value,
+        duration: this.ProjectForm.get("duration").value,
+        studentIntake: this.ProjectForm.get("studentIntake").value,
+        description: this.ProjectForm.get("description").value,
+        stream: this.stream
+      };
 
-    this.projectService.saveProject(project).subscribe(data => {
-      console.log(data);
+      this.projectService.saveProject(project).subscribe(data => {
+        console.log(data);
 
-      if (data["save"] == "success") {
-        let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
-          duration: 3000
-        });
-        snackBarRef.afterDismissed().subscribe(() => {
-          // console.log("The snack-bar was dismissed");
+        if (data["save"] == "success") {
+          let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+            duration: 3000
+          });
+          snackBarRef.afterDismissed().subscribe(() => {
+            // console.log("The snack-bar was dismissed");
 
-          this.router
-            .navigateByUrl("/refresh", { skipLocationChange: true })
-            .then(() => {
-              this.router.navigate([decodeURI(this.location.path())]);
-            });
-        });
+            this.router
+              .navigateByUrl("/refresh", { skipLocationChange: true })
+              .then(() => {
+                this.router.navigate([decodeURI(this.location.path())]);
+              });
+          });
 
-        snackBarRef.onAction().subscribe(() => {
-          // console.log("The snack-bar was dismissed");
-          this.router
-            .navigateByUrl("/refresh", { skipLocationChange: true })
-            .then(() => {
-              this.router.navigate([decodeURI(this.location.path())]);
-            });
-        });
-      } else {
-        //Go to the error page
-      }
-      //Display the messages using flash messages
-    });
+          snackBarRef.onAction().subscribe(() => {
+            // console.log("The snack-bar was dismissed");
+            this.router
+              .navigateByUrl("/refresh", { skipLocationChange: true })
+              .then(() => {
+                this.router.navigate([decodeURI(this.location.path())]);
+              });
+          });
+        } else {
+          //Go to the error page
+        }
+        //Display the messages using flash messages
+      });
+    }
   }
 
   onEditSubmit(param) {
-    // console.log(param);
-    const project = {
-      title: this.EditForm.get("title").value,
-      duration: this.EditForm.get("duration").value,
-      studentIntake: this.EditForm.get("studentIntake").value,
-      description: this.EditForm.get("description").value,
-      // stream: this.stream,
-      project_id: param._id
-    };
+    if (this.EditForm.valid) {
+      const project = {
+        title: this.EditForm.get("title").value,
+        duration: this.EditForm.get("duration").value,
+        studentIntake: this.EditForm.get("studentIntake").value,
+        description: this.EditForm.get("description").value,
+        // stream: this.stream,
+        project_id: param._id
+      };
 
-    console.log(project);
+      console.log(project);
 
-    let dialogRef = this.dialog.open(SubmitPopUpComponent, {
-      height: "60%",
-      width: "800px",
-      data: project
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result["message"] == "submit") {
-        let snackBarRef = this.snackBar.open("Successfully Updated", "Ok", {
-          duration: 3000
-        });
-        snackBarRef.afterDismissed().subscribe(() => {
-          // console.log("The snack-bar was dismissed");
+      let dialogRef = this.dialog.open(SubmitPopUpComponent, {
+        height: "60%",
+        width: "800px",
+        data: project
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result["message"] == "submit") {
+          let snackBarRef = this.snackBar.open("Successfully Updated", "Ok", {
+            duration: 3000
+          });
+          snackBarRef.afterDismissed().subscribe(() => {
+            // console.log("The snack-bar was dismissed");
 
-          this.router
-            .navigateByUrl("/refresh", { skipLocationChange: true })
-            .then(() => {
-              this.router.navigate([decodeURI(this.location.path())]);
-            });
-        });
+            this.router
+              .navigateByUrl("/refresh", { skipLocationChange: true })
+              .then(() => {
+                this.router.navigate([decodeURI(this.location.path())]);
+              });
+          });
 
-        snackBarRef.onAction().subscribe(() => {
-          // console.log("The snack-bar was dismissed");
-          this.router
-            .navigateByUrl("/refresh", { skipLocationChange: true })
-            .then(() => {
-              this.router.navigate([decodeURI(this.location.path())]);
-            });
-        });
-      }
-    });
+          snackBarRef.onAction().subscribe(() => {
+            // console.log("The snack-bar was dismissed");
+            this.router
+              .navigateByUrl("/refresh", { skipLocationChange: true })
+              .then(() => {
+                this.router.navigate([decodeURI(this.location.path())]);
+              });
+          });
+        }
+      });
+    }
   }
 
   deleteProject(project) {
