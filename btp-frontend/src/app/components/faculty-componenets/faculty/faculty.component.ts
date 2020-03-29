@@ -33,7 +33,7 @@ export class FacultyComponent implements OnInit {
     });
     this.userDetails.getFacultyDetails(this.id).subscribe(
       data => {
-        console.log(data);
+        // console.log(data);
         if (data["status"] == "success") {
           const user_info = data["user_details"]; //Gets all Faculty details --> Bind it to the template
           this.name = user_info.name;
@@ -42,7 +42,7 @@ export class FacultyComponent implements OnInit {
           this.projectService
             .getFacultyProjects(user_info["project_list"])
             .subscribe(data => {
-              console.log(data);
+              // console.log(data);
               this.projects = data["project_details"];
             });
         }
@@ -63,12 +63,12 @@ export class FacultyComponent implements OnInit {
   // }
 
   displayProject(project) {
-    console.log(project);
+    // console.log(project);
 
     this.projectService
       .getStudentsApplied(project.students_id)
       .subscribe(data => {
-          this.student_list = data["students"]
+        this.student_list = data["students"];
       });
 
     this.project = project;
@@ -76,7 +76,7 @@ export class FacultyComponent implements OnInit {
     this.empty = false;
   }
   addProject(state) {
-    console.log(state);
+    // console.log(state);
     this.add = state;
     this.empty = false;
   }
