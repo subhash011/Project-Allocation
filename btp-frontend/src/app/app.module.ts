@@ -26,6 +26,7 @@ import { ContentComponent } from "./components/faculty-componenets/content/conte
 import { SidenavComponent } from "./components/faculty-componenets/sidenav/sidenav.component";
 import { StudentTableComponent } from "./components/faculty-componenets/student-table/student-table.component";
 import { SubmitPopUpComponent } from "./components/faculty-componenets/submit-pop-up/submit-pop-up.component";
+import { DeletePopUpComponent } from "./components/faculty-componenets/delete-pop-up/delete-pop-up.component";
 
 const config = new AuthServiceConfig([
   {
@@ -55,9 +56,14 @@ export function provideConfig() {
     ContentComponent,
     SidenavComponent,
     StudentTableComponent,
-    SubmitPopUpComponent
+    SubmitPopUpComponent,
+    DeletePopUpComponent
   ],
-  entryComponents: [ShowPreferencesComponent, SubmitPopUpComponent],
+  entryComponents: [
+    ShowPreferencesComponent,
+    SubmitPopUpComponent,
+    DeletePopUpComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

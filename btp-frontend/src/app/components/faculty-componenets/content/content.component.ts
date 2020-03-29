@@ -6,6 +6,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Component, OnInit, Input } from "@angular/core";
 import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
 
 @Component({
   selector: "app-content",
@@ -103,10 +104,17 @@ export class ContentComponent implements OnInit {
   }
 
   deleteProject(project) {
-    console.log(project);
-    this.projectService.deleteProject(project._id)
-      .subscribe(data=>{
-        console.log(data) //Reload the page
-      })
+    let dialogRef = this.dialog.open(DeletePopUpComponent, {
+      height: "200px",
+      width: "400px",
+      data: project._id
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result["message"] == "submit") {
+        this.snackBar.open("Successfully Delted", "Ok", {
+          duration: 3000
+        });
+      }
+    });
   }
 }

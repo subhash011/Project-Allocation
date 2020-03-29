@@ -1,228 +1,158 @@
 <div class="container" *ngIf="empty; else notEmpty">
-  <h1>
-    Your workspace is empty
-  </h1>
+    <h1>
+        Your workspace is empty
+    </h1>
 </div>
 
 <ng-template #notEmpty>
-  <div class="container-add" *ngIf="add; else display">
-    <form
-      [formGroup]="ProjectForm"
-      novalidate
-      (ngSubmit)="onSubmit()"
-      class="form-card"
-    >
-      <mat-card class="add-card mat-elevation-z12">
-        <mat-card-title>
-          Add Project
-        </mat-card-title>
+    <div class="container-add" *ngIf="add; else display">
+        <form [formGroup]="ProjectForm" novalidate (ngSubmit)="onSubmit()" class="form-card">
+            <mat-card class="add-card mat-elevation-z12">
+                <mat-card-title>
+                    Add Project
+                </mat-card-title>
 
-        <mat-card-content class="add-card-content">
-          <div class="row">
-            <mat-form-field class="full-width">
-              <input matInput placeholder="Title" formControlName="title" />
-              <mat-error
-                *ngIf="ProjectForm.controls['title'].hasError('required')"
-              >
-                Title is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-          </div>
+                <mat-card-content class="add-card-content">
+                    <div class="row">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Title" formControlName="title" />
+                            <mat-error *ngIf="ProjectForm.controls['title'].hasError('required')">
+                                Title is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
 
-          <div class="row">
-            <mat-form-field class="full-width">
-              <input
-                matInput
-                placeholder="Duration"
-                formControlName="duration"
-              />
-              <mat-error
-                *ngIf="ProjectForm.controls['duration'].hasError('required')"
-              >
-                Duration is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-          </div>
+                    <div class="row">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="Duration" formControlName="duration" />
+                            <mat-error *ngIf="ProjectForm.controls['duration'].hasError('required')">
+                                Duration is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
 
-          <div class="row">
-            <mat-form-field class="full-width">
-              <input
-                matInput
-                placeholder="No. of Students"
-                formControlName="studentIntake"
-              />
-              <mat-error
-                *ngIf="
+                    <div class="row">
+                        <mat-form-field class="full-width">
+                            <input matInput placeholder="No. of Students" formControlName="studentIntake" />
+                            <mat-error *ngIf="
                   ProjectForm.controls['studentIntake'].hasError('required')
-                "
-              >
-                StudentIntake is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-          </div>
+                ">
+                                StudentIntake is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
 
-          <div class="row">
-            <!-- <div class="col"> -->
-            <mat-form-field class="full-width">
-              <textarea
-                matInput
-                placeholder="Description"
-                formControlName="description"
-              ></textarea>
-            </mat-form-field>
-            <!-- </div> -->
-          </div>
-        </mat-card-content>
-        <!-- <mat-card-actions> -->
-        <button
-          mat-raised-button
-          class="submit_button"
-          color="primary"
-          type="submit"
-        >
+                    <div class="row">
+                        <!-- <div class="col"> -->
+                        <mat-form-field class="full-width">
+                            <textarea matInput placeholder="Description" formControlName="description"></textarea>
+                        </mat-form-field>
+                        <!-- </div> -->
+                    </div>
+                </mat-card-content>
+                <!-- <mat-card-actions> -->
+                <button mat-raised-button class="submit_button" color="primary" type="submit">
           Submit
         </button>
-        <!-- </mat-card-actions> -->
-      </mat-card>
-    </form>
-  </div>
+                <!-- </mat-card-actions> -->
+            </mat-card>
+        </form>
+    </div>
 
-  <ng-template #display>
-    <mat-tab-group color="accent" (selectedTabChange)="tabChange($event)">
-      <mat-tab label="Project Details" class="project_tab">
-        <div class="project-container">
-          <mat-card class="project-card">
-            <mat-card-title>
-              {{ project.title }}
-            </mat-card-title>
+    <ng-template #display>
+        <mat-tab-group color="accent" (selectedTabChange)="tabChange($event)">
+            <mat-tab label="Project Details" class="project_tab">
+                <div class="project-container">
+                    <mat-card class="project-card">
+                        <mat-card-title>
+                            {{ project.title }}
+                        </mat-card-title>
 
-            <mat-card-content class="add-card-content">
-              <div class="card-text">
-                <strong>Duration: </strong>{{ project.duration }}
-              </div>
+                        <mat-card-content class="add-card-content">
+                            <div class="card-text">
+                                <strong>Duration: </strong>{{ project.duration }}
+                            </div>
 
-              <div class="card-text">
-                <strong>No of Students: </strong>{{ project.studentIntake }}
-              </div>
+                            <div class="card-text">
+                                <strong>No of Students: </strong>{{ project.studentIntake }}
+                            </div>
 
-              <div class="card-text">
-                <strong>Description: </strong>{{ project.description }}
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-tab>
-
-      <mat-tab label="Students">
-        <app-student-table [project]="project" [student_list]="student_list">
-        </app-student-table>
-      </mat-tab>
-
-      <mat-tab class="editPage" label="Edit">
-        <div class="container-edit">
-          <form
-            [formGroup]="EditForm"
-            novalidate
-            (ngSubmit)="onEditSubmit(project)"
-            class="form-card"
-          >
-            <mat-card class="add-card mat-elevation-z12">
-              <mat-card-title>
-                Edit Project
-              </mat-card-title>
-
-              <mat-card-content class="add-card-content">
-                <div class="row">
-                  <mat-form-field class="full-width">
-                    <input
-                      matInput
-                      placeholder="Title"
-                      formControlName="title"
-                      value="{{ project.title }}"
-                    />
-                    <mat-error
-                      *ngIf="ProjectForm.controls['title'].hasError('required')"
-                    >
-                      Title is <strong>required</strong>
-                    </mat-error>
-                  </mat-form-field>
+                            <div class="card-text">
+                                <strong>Description: </strong>{{ project.description }}
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
                 </div>
+            </mat-tab>
 
-                <div class="row">
-                  <mat-form-field class="full-width">
-                    <input
-                      matInput
-                      placeholder="Duration"
-                      formControlName="duration"
-                      value="{{ project.duration }}"
-                    />
-                    <mat-error
-                      *ngIf="
+            <mat-tab label="Students">
+                <app-student-table [project]="project" [student_list]="student_list">
+                </app-student-table>
+            </mat-tab>
+
+            <mat-tab class="editPage" label="Edit">
+                <div class="container-edit">
+                    <form [formGroup]="EditForm" novalidate (ngSubmit)="onEditSubmit(project)" class="form-card">
+                        <mat-card class="add-card mat-elevation-z12">
+                            <mat-card-title>
+                                Edit Project
+                            </mat-card-title>
+
+                            <mat-card-content class="add-card-content">
+                                <div class="row">
+                                    <mat-form-field class="full-width">
+                                        <input matInput placeholder="Title" formControlName="title" value="{{ project.title }}" />
+                                        <mat-error *ngIf="ProjectForm.controls['title'].hasError('required')">
+                                            Title is <strong>required</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="row">
+                                    <mat-form-field class="full-width">
+                                        <input matInput placeholder="Duration" formControlName="duration" value="{{ project.duration }}" />
+                                        <mat-error *ngIf="
                         ProjectForm.controls['duration'].hasError('required')
-                      "
-                    >
-                      Duration is <strong>required</strong>
-                    </mat-error>
-                  </mat-form-field>
-                </div>
+                      ">
+                                            Duration is <strong>required</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
 
-                <div class="row">
-                  <mat-form-field class="full-width">
-                    <input
-                      matInput
-                      placeholder="No. of Students"
-                      formControlName="studentIntake"
-                      value="{{ project.studentIntake }}"
-                    />
-                    <mat-error
-                      *ngIf="
+                                <div class="row">
+                                    <mat-form-field class="full-width">
+                                        <input matInput placeholder="No. of Students" formControlName="studentIntake" value="{{ project.studentIntake }}" />
+                                        <mat-error *ngIf="
                         ProjectForm.controls['studentIntake'].hasError(
                           'required'
                         )
-                      "
-                    >
-                      StudentIntake is <strong>required</strong>
-                    </mat-error>
-                  </mat-form-field>
-                </div>
+                      ">
+                                            StudentIntake is <strong>required</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
 
-                <div class="row">
-                  <!-- <div class="col"> -->
-                  <mat-form-field class="full-width">
-                    <textarea
-                      matInput
-                      placeholder="Description"
-                      formControlName="description"
-                      value="{{ project.description }}"
-                    ></textarea>
-                  </mat-form-field>
-                  <!-- </div> -->
-                </div>
-              </mat-card-content>
-              <!-- <mat-card-actions> -->
-              <button
-                mat-raised-button
-                class="edit-submit"
-                color="primary"
-                type="submit"
-              >
+                                <div class="row">
+                                    <!-- <div class="col"> -->
+                                    <mat-form-field class="full-width">
+                                        <textarea matInput placeholder="Description" formControlName="description" value="{{ project.description }}"></textarea>
+                                    </mat-form-field>
+                                    <!-- </div> -->
+                                </div>
+                            </mat-card-content>
+                            <!-- <mat-card-actions> -->
+                            <button mat-raised-button class="edit-submit" color="primary" type="submit">
                 Submit
               </button>
-              <button
-                mat-raised-button
-                class="deleteButton"
-                type="button"
-                color="primary"
-                (click)="deleteProject(project)"
-              >
+                            <button mat-raised-button class="deleteButton" type="button" color="primary" (click)="deleteProject(project)">
                 Delete
               </button>
 
-              <!-- </mat-card-actions> -->
-            </mat-card>
-          </form>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-  </ng-template>
+                            <!-- </mat-card-actions> -->
+                        </mat-card>
+                    </form>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </ng-template>
 </ng-template>
