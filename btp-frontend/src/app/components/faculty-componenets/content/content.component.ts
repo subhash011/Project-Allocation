@@ -93,7 +93,7 @@ export class ContentComponent implements OnInit {
     console.log(project);
     this.projectService.deleteProject(project._id)
       .subscribe(data=>{
-        console.log(data)
+        console.log(data) //Reload the page
       })
   }
 }
