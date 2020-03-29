@@ -12,12 +12,12 @@ const app = express();
 
 //express session
 app.use(
-    session({
-        cookie: { maxAge: 60000 },
-        secret: "woot",
-        resave: false,
-        saveUninitialized: false
-    })
+  session({
+    cookie: { maxAge: 60000 },
+    secret: "woot",
+    resave: false,
+    saveUninitialized: false
+  })
 );
 //use flash
 app.use(flash());
@@ -31,16 +31,16 @@ mongoose.set("useFindAndModify", false);
 
 //connect to mongodb
 mongoose
-    .connect("mongodb://localhost:27017/ProjectAllocationTest", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => {
-        console.log("connected to mongodb");
-    })
-    .catch(err => {
-        console.log(err);
-    });
+  .connect("mongodb://localhost:27017/ProjectAllocationTest", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("connected to mongodb");
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
 //define all routes below this
 const home = require("./routes/home");
@@ -68,16 +68,19 @@ app.use("/faculty", faculty);
 const student_project = require("./routes/student_project");
 app.use("/student/project", student_project);
 
+const faculty_project = require("./routes/faculty_project");
+app.use("/faculty/project", faculty_project);
+
 const PORT = process.env.PORT || 8080;
 
 //Error Response for routes not registered
 app.get("*", (req, res) => {
-    res.status(404).json({
-        error: "Page Not found"
-    });
+  res.status(404).json({
+    error: "Page Not found"
+  });
 });
 
 //start server
 app.listen(PORT, () => {
-    console.log("Server connected to port " + PORT);
+  console.log("Server connected to port " + PORT);
 });

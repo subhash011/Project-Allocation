@@ -1,3 +1,4 @@
+import { UserService } from './services/user/user.service';
 import { ThemePickerComponent } from "./components/shared/theme-picker/theme-picker.component";
 import { MaterialModule } from "./material/material.module";
 import { BrowserModule } from "@angular/platform-browser";
@@ -21,6 +22,9 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 import { FormsModule } from "@angular/forms";
 import { ProfileComponent } from "./components/shared/profile/profile.component";
 import { StudentProjectsComponent } from "./components/student-components/student-projects/student-projects.component";
+import { ContentComponent } from './components/faculty-componenets/content/content.component';
+import { SidenavComponent } from './components/faculty-componenets/sidenav/sidenav.component';
+import { StudentTableComponent } from './components/faculty-componenets/student-table/student-table.component';
 
 const config = new AuthServiceConfig([
   {
@@ -46,7 +50,10 @@ export function provideConfig() {
     ShowPreferencesComponent,
     ProfileComponent,
     StudentProjectsComponent,
-    ThemePickerComponent
+    ThemePickerComponent,
+    ContentComponent,
+    SidenavComponent,
+    StudentTableComponent
   ],
   entryComponents: [ShowPreferencesComponent],
   imports: [
@@ -65,7 +72,8 @@ export function provideConfig() {
       provide: AuthServiceConfig,
       useFactory: provideConfig
     },
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } }
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
+    UserService
   ],
   bootstrap: [AppComponent]
 })

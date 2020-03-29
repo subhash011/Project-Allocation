@@ -56,12 +56,14 @@ export class RegisterComponent implements OnInit {
       stream: this.userForm.get("branch").value
     };
     const _user = JSON.parse(localStorage.getItem("user"));
+
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         Authorization: _user.idToken
       })
     };
+
     var position = "";
     if (!isNaN(Number(user["roll_no"].toString()))) {
       position = "student";

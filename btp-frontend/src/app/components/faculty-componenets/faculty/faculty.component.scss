@@ -1,6 +1,37 @@
-.example-container {
-  width: 100%;
+mat-sidenav-container {
+  position: fixed;
   height: 100%;
-  margin: 10px;
-  border: 1px solid #555;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
+
+  // background-color: yellow;
+}
+
+mat-sidenav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+
+  /* background: rgba(255, 0, 0, 0.5); */
+}
+
+mat-sidenav-content {
+  // height: 100%;
+  // bottom: 0;
+  // display: flex;
+  position: relative;
+  top: 6.5%;
+
+}
+
+.fill-remaining-space {
+  flex: 1 auto 1;
+}
+
+
+
+mat-toolbar{
+  justify-content: center;
 }
