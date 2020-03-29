@@ -38,9 +38,12 @@ export class DragDropComponent implements OnInit {
   disable = true;
   helperArray: any = [];
   lastDropped;
+  contID: any;
   drop(event: CdkDragDrop<string[]>) {
+    this.contID = Number(event.container.id.split("-")[3]);
+    console.log(this.contID);
     if (event.previousContainer === event.container) {
-      if (event.container.id == "cdk-drop-list-1") {
+      if (this.contID % 2 != 0) {
         this.disable = false;
       }
       moveItemInArray(
@@ -48,7 +51,7 @@ export class DragDropComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      if (event.container.id == "cdk-drop-list-1") {
+      if (this.contID % 2 != 0) {
         this.preferenceArray = event.container.data;
       } else {
         this.helperArray = event.container.data;
@@ -62,7 +65,7 @@ export class DragDropComponent implements OnInit {
         event.currentIndex
       );
       console.log(event.container.id);
-      if (event.container.id == "cdk-drop-list-1") {
+      if (this.contID % 2 != 0) {
         this.preferenceArray = event.container.data;
         this.helperArray = event.previousContainer.data;
       } else {
