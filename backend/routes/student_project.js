@@ -98,23 +98,39 @@ router.get("/preference/:id", (req, res) => {
 router.post("/preference/:id", (req, res) => {
     const id = req.params.id;
     const projects = req.body;
-    var project_id = [];
+    const project_idArr = projects.map(val => mongoose.Types.ObjectId(val["_id"]));
+    // console.log(project_id)
+    var promises = []
+    var studentStream;
     const idToken = req.headers.authorization;
-    var promise = Student.findOne({ google_id: { id: id, idToken: idToken } })
+    var promise = Student.findOneAndUpdate({ google_id: { id: id, idToken: idToken } }, { projects_preference: project_idArr })
         .then(student => {
             if (student) {
-                for (const project of projects) {
-                    project_id.push(mongoose.Types.ObjectId(project["_id"]));
-                }
-                return project_id;
+                studentStream = student.stream;
+                return student._id;
             } else {
                 res.json({ message: "Student not Registered" });
             }
-        })
-        .then(project_id => {
-            Student.findOneAndUpdate({ google_id: { id: id, idToken: idToken } }, { projects_preference: project_id }).then(user => {
-                res.json({ message: "success" });
-            });
+        }).then(student => {
+            Project.find({ stream: studentStream }).then(projects => {
+                for (const project of projects) {
+                    var projIsInArr = project_idArr.some(function(val) {
+                        return val.equals(project._id);
+                    });
+                    var stdIsInProj = project.students_id.some(function(val) {
+                        return val.equals(student);
+                    })
+                    if (projIsInArr && !stdIsInProj) {
+                        project.students_id.push(student);
+                    } else if (!projIsInArr && stdIsInProj) {
+                        project.students_id = project.students_id.filter(val =>
+                            !val.equals(student));
+                    }
+                    project.save().then(proj => {
+                        res.json({ message: "success" });
+                    })
+                }
+            })
         });
 });
 
