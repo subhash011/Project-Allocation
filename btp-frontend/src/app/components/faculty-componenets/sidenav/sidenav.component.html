@@ -1,7 +1,7 @@
-<mat-nav-list *ngFor="let project of projects">
-    <a mat-list-item (click)="onClick(project)">
-      {{ project.title }}
+<mat-nav-list *ngFor="let project of projects;let i = index">
+    <a mat-list-item (click)="onClick(project,i)"  [class.active]="i == selectedRow">
+      {{ project.title }} 
     </a>
-  </mat-nav-list>
+</mat-nav-list>
 
 <button color="warn" mat-raised-button class="add-button" (click)="displayAdd(true)" >ADD</button>

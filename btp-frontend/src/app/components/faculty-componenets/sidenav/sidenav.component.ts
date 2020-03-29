@@ -11,17 +11,26 @@ export class SidenavComponent implements OnInit {
   @Output() projectClicked = new EventEmitter<Event>();
   @Output() addButton = new EventEmitter<Event>();
 
-  constructor() {}
+  public selectedRow;
+
+
+
+
+  constructor() {
+
+  }
 
   ngOnInit() {}
 
   displayAdd(event) {
     this.addButton.emit(event);
     this.empty = false;
+    this.selectedRow = null;
   }
 
-  onClick(project) {
+  onClick(project,index) {
     this.projectClicked.emit(project);
     this.empty = false;
+    this.selectedRow = index;
   }
 }
