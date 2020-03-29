@@ -99,7 +99,6 @@ export class ContentComponent implements OnInit {
   }
 
   deleteProject(project) {
-    console.log(project);
     this.projectService.deleteProject(project._id).subscribe(data => {
       console.log(data);
     });
