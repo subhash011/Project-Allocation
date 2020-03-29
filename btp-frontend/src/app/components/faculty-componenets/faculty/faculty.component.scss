@@ -13,25 +13,16 @@ mat-sidenav {
   align-items: center;
   justify-content: center;
   width: 30%;
-
-  /* background: rgba(255, 0, 0, 0.5); */
 }
 
 mat-sidenav-content {
-  // height: 100%;
-  // bottom: 0;
-  // display: flex;
   position: relative;
-  top: 6.5%;
-
 }
 
 .fill-remaining-space {
   flex: 1 auto 1;
 }
 
-
-
-mat-toolbar{
+mat-toolbar {
   justify-content: center;
 }
