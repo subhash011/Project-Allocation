@@ -74,6 +74,10 @@ export class ContentComponent implements OnInit {
       // stream: this.stream,
       project_id: param._id
     };
+
+    console.log(project);
+
+
     let dialogRef = this.dialog.open(SubmitPopUpComponent, {
       height: "60%",
       width: "800px",
@@ -88,14 +92,14 @@ export class ContentComponent implements OnInit {
     });
   }
   tabChange(event) {
-    if (event.index == 2) {
-      this.EditForm = this.formBuilder.group({
-        title: [this.project.title, Validators.required],
-        duration: [this.project.duration, Validators.required],
-        studentIntake: [this.project.studentIntake, Validators.required],
-        description: [this.project.description, Validators.required]
-      });
-    }
+    // if (event.index == 2) {
+    //   this.EditForm = this.formBuilder.group({
+    //     title: [this.project.title, Validators.required],
+    //     duration: [this.project.duration, Validators.required],
+    //     studentIntake: [this.project.studentIntake, Validators.required],
+    //     description: [this.project.description, Validators.required]
+    //   });
+    // }
   }
 
   deleteProject(project) {
