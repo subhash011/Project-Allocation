@@ -14,9 +14,7 @@ export class SubmitPopUpComponent implements OnInit {
     private dialogRef: MatDialogRef<SubmitPopUpComponent>
   ) {}
 
-  ngOnInit() {
-    console.log(this.data);
-  }
+  ngOnInit() {}
   onNoClick(): void {
     this.dialogRef.close({ message: "closed" });
   }
