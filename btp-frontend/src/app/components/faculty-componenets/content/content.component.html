@@ -60,7 +60,7 @@
     </div>
 
     <ng-template #display>
-        <mat-tab-group color="accent" (selectedTabChange)="tabChange($event)">
+        <mat-tab-group color="accent" dynamicHeight="true" (selectedTabChange)="tabChange($event)">
             <mat-tab label="Project Details" class="project_tab">
                 <div class="project-container">
                     <mat-card class="project-card">
