@@ -14,14 +14,14 @@ const routes: Routes = [
   { path: "", component: HomeComponent },
   { path: "register/:id", component: RegisterComponent },
   { path: "student/:id", component: StudentComponent },
-  { path: "faculty/:id", component: FacultyComponent },
+  { path: "faculty/:id", component: FacultyComponent,runGuardsAndResolvers: 'always' },
   { path: "student/preferences/:id", component: DragDropComponent },
   { path: "profile/:id", component: ProfileComponent },
   { path: "student/projects/:id", component: StudentProjectsComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes,{onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
