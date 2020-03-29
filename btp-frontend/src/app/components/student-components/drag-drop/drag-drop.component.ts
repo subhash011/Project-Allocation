@@ -86,7 +86,6 @@ export class DragDropComponent implements OnInit {
         data: this.preferenceArray
       });
     }
-
     dialogRef.afterClosed().subscribe(result => {
       if (result == "saved") {
         this.disable = true;

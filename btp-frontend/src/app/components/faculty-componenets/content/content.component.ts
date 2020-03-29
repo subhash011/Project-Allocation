@@ -5,7 +5,7 @@ import { FormBuilder } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Component, OnInit, Input } from "@angular/core";
 import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
 
 @Component({
@@ -52,16 +52,25 @@ export class ContentComponent implements OnInit {
       description: this.ProjectForm.get("description").value,
       stream: this.stream
     };
-
-    this.projectService.saveProject(project).subscribe(data => {
-      console.log(data);
-
-      if (data["save"] == "success") {
-        this.empty = true;
-      } else {
-        this.empty = false;
+    let dialogRef = this.dialog.open(DeletePopUpComponent, {
+      height: "200px",
+      width: "400px",
+      data: "add the project"
+    });
+    dialogRef.afterClosed().subscribe(res => {
+      if (res["message"] == "submit") {
+        this.projectService.saveProject(project).subscribe(data => {
+          // console.log(data);
+          if (data["save"] == "success") {
+            this.empty = true;
+          } else {
+            this.empty = false;
+          }
+          this.snackBar.open("Successfully Added Project", "Ok", {
+            duration: 3000
+          });
+        });
       }
-      //Display the messages using flash messages
     });
   }
 
@@ -78,7 +87,6 @@ export class ContentComponent implements OnInit {
 
     console.log(project);
 
-
     let dialogRef = this.dialog.open(SubmitPopUpComponent, {
       height: "60%",
       width: "800px",
@@ -86,33 +94,25 @@ export class ContentComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result["message"] == "submit") {
-        this.snackBar.open("Successfully Updated", "Ok", {
+        this.snackBar.open("Successfully Deleted Project", "Ok", {
           duration: 3000
         });
       }
     });
-  }
-  tabChange(event) {
-    // if (event.index == 2) {
-    //   this.EditForm = this.formBuilder.group({
-    //     title: [this.project.title, Validators.required],
-    //     duration: [this.project.duration, Validators.required],
-    //     studentIntake: [this.project.studentIntake, Validators.required],
-    //     description: [this.project.description, Validators.required]
-    //   });
-    // }
   }
 
   deleteProject(project) {
     let dialogRef = this.dialog.open(DeletePopUpComponent, {
       height: "200px",
       width: "400px",
-      data: project._id
+      data: "delete the project"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result["message"] == "submit") {
-        this.snackBar.open("Successfully Delted", "Ok", {
-          duration: 3000
+        this.projectService.deleteProject(project._id).subscribe(data => {
+          this.snackBar.open("Successfully Deleted", "Ok", {
+            duration: 3000
+          });
         });
       }
     });

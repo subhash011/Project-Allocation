@@ -7,20 +7,15 @@
 }
 
 .list {
-    /* border: solid 1px #ccc; */
     min-height: 60px;
-    /* background: white; */
     border-radius: 4px;
     display: block;
-    overflow: hidden;
 }
 
 .list-item {
     padding: 20px 10px;
-    /* border-bottom: solid 1px #ccc; */
     box-sizing: border-box;
     cursor: move;
-    /* background: white; */
     color: black;
     font-size: 14px;
 }
@@ -58,6 +53,7 @@
 .drag-drop {
     padding-top: 5%;
     padding-bottom: 5%;
+    overflow: scroll;
 }
 
 .col-1 {
@@ -85,4 +81,16 @@ h2 {
 
 .btn-align {
     padding-left: 40%;
+}
+
+.drag-drop::-webkit-scrollbar {
+    width: 0 !important;
+}
+
+.drag-drop {
+    overflow: -moz-scrollbars-none;
+}
+
+.drag-drop {
+    -ms-overflow-style: none;
 }

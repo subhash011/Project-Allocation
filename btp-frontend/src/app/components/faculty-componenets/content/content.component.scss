@@ -61,7 +61,7 @@ mat-form-field {
 .project_tab {
     padding-top: 50%;
     height: 810px;
-    overflow: hidden;
+    overflow-y: hidden;
     background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
 }
 
@@ -75,5 +75,6 @@ mat-form-field {
     padding-left: 15%;
     padding-right: 15%;
     height: 650px;
+    overflow: hidden;
     background-image: url("https://superdevresources.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg");
 }

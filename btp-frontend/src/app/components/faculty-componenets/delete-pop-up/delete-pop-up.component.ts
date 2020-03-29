@@ -21,8 +21,6 @@ export class DeletePopUpComponent implements OnInit {
   }
 
   onSubmit() {
-    this.projectService.deleteProject(this.data).subscribe(data => {
-      this.dialogRef.close({ message: "submit" });
-    });
+    this.dialogRef.close({ message: "submit" });
   }
 }
