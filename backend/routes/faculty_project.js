@@ -218,6 +218,51 @@ router.delete("/delete/:id", (req, res) => {
 
   Project.findByIdAndRemove({ _id: id })
     .then(result => {
+
+
+      let students_id = result.students_id;
+      let faculty_id = result.faculty_id;
+
+      console.log(faculty_id);
+
+      Faculty.findById({_id:faculty_id})
+        .then(faculty=>{
+
+          let project_list = faculty.project_list;
+          
+          let new_list = project_list.filter((project=>{
+              if(project.toString() != id){
+                  return project;
+              }              
+          }))
+          console.log(new_list);        
+          
+          faculty.project_list = new_list;
+
+          faculty.save()
+            .then((result)=>{
+
+              Student.find({
+                _id: { $in:students_id }
+              })
+                .then(students => {
+
+                  console.log(students);
+                  
+                  students.forEach((student)=>{
+
+                    let project_pref = student.projects_preference;
+                    student.projects_preference = project_pref.filter((project_id)=>{
+                      if(project_id.toString() != id){
+                        return project_id;
+                      }
+                    })   
+                  })
+
+                  students.forEach(student=>{
+                     student.save()
+                  })
+
       res.json({
         status: "success",
         msg: "Project has been removed"
