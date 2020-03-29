@@ -30,16 +30,16 @@ router.post("/:id", (req, res) => {
               //     mongoose.Types.ObjectId(pr)
               //   );
 
-              //   Student.find({
-              //     _id: { $in: project.students_id }
+              // Student.find({
+              //   _id: { $in: project.students_id }
+              // })
+              //   .then(students => {
+              //     console.log(students);
+              //     student_applied.push(students);
               //   })
-              //     .then(students => {
-              //       console.log(students);
-              //       student_applied.push(students);
-              //     })
-              //     .catch(err => {
-              //       console.log(err);
-              //     });
+              //   .catch(err => {
+              //     console.log(err);
+              //   });
               // });
               // console.log(student_applied);
               res.json({
@@ -263,10 +263,23 @@ router.delete("/delete/:id", (req, res) => {
                      student.save()
                   })
 
-      res.json({
-        status: "success",
-        msg: "Project has been removed"
-      });
+                  res.json({
+                    status:'success',
+                    msg:'The project has been successfully deleted'
+                  })
+
+
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+
+            })
+            .catch(err=>{
+              console.log(err)
+            })
+
+        })
     })
     .catch(err => console.log(err));
 });
