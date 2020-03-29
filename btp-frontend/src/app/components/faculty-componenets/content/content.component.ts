@@ -107,7 +107,7 @@ export class ContentComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result["message"] == "submit") {
-        this.snackBar.open("Successfully Updated", "Ok", {
+        this.snackBar.open("Successfully Delted", "Ok", {
           duration: 3000
         });
       }
