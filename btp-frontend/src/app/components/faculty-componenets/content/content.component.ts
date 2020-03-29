@@ -3,7 +3,7 @@ import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Validators } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, DoCheck } from "@angular/core";
 import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
@@ -14,7 +14,7 @@ import { Location } from "@angular/common";
   templateUrl: "./content.component.html",
   styleUrls: ["./content.component.scss"]
 })
-export class ContentComponent implements OnInit {
+export class ContentComponent implements OnInit, DoCheck {
   @Input() public project;
   @Input() public add: boolean;
   @Input() public empty = true;
@@ -50,6 +50,17 @@ export class ContentComponent implements OnInit {
 
   initialiseInvites(project) {
     console.log("This works");
+  }
+
+  ngDoCheck(): void {
+    if (this.project) {
+      this.EditForm.setValue({
+        title: this.project.title,
+        duration: this.project.duration,
+        studentIntake: this.project.studentIntake,
+        description: this.project.description
+      });
+    }
   }
 
   onSubmit() {
