@@ -1,22 +1,18 @@
 <mat-sidenav-container>
-    <mat-sidenav mode="side" opened position="end" role="navigation" [fixedInViewport]="true" [fixedTopGap]="64" [fixedBottomGap]="0">
+    <mat-sidenav mode="side" disableClose="true" opened position="end" role="navigation" [fixedInViewport]="true" [fixedTopGap]="64" [fixedBottomGap]="0">
         <mat-toolbar class="mat-elevation-z6" color="accent">
             <span class="fill-remaining-space"></span>
             <h1 class="fill-remaining-space">My Projects</h1>
         </mat-toolbar>
 
         <app-sidenav [projects]="projects" [empty]="empty" (projectClicked)="displayProject($event)" (addButton)="addProject($event)"></app-sidenav>
-
     </mat-sidenav>
 
     <mat-sidenav-content>
-
-
         <mat-toolbar class="mat-elevation-z6" color="accent">
-            <h1>Welcome {{name}}</h1>
+            <h1>Welcome {{ name }}</h1>
         </mat-toolbar>
 
         <app-content [student_list]="student_list" [add]="add" [empty]="empty" [project]="project" [stream]="stream"></app-content>
-
     </mat-sidenav-content>
 </mat-sidenav-container>

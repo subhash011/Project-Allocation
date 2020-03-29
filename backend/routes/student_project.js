@@ -98,9 +98,11 @@ router.get("/preference/:id", (req, res) => {
 router.post("/preference/:id", (req, res) => {
     const id = req.params.id;
     const projects = req.body;
-    const project_idArr = projects.map(val => mongoose.Types.ObjectId(val["_id"]));
+    const project_idArr = projects.map(val =>
+        mongoose.Types.ObjectId(val["_id"])
+    );
     // console.log(project_id)
-    var promises = []
+    var promises = [];
     var studentStream;
     const idToken = req.headers.authorization;
     var promise = Student.findOneAndUpdate({ google_id: { id: id, idToken: idToken } }, { projects_preference: project_idArr })
@@ -109,28 +111,39 @@ router.post("/preference/:id", (req, res) => {
                 studentStream = student.stream;
                 return student._id;
             } else {
-                res.json({ message: "Student not Registered" });
+                return null;
             }
-        }).then(student => {
-            Project.find({ stream: studentStream }).then(projects => {
-                for (const project of projects) {
-                    var projIsInArr = project_idArr.some(function(val) {
-                        return val.equals(project._id);
-                    });
-                    var stdIsInProj = project.students_id.some(function(val) {
-                        return val.equals(student);
-                    })
-                    if (projIsInArr && !stdIsInProj) {
-                        project.students_id.push(student);
-                    } else if (!projIsInArr && stdIsInProj) {
-                        project.students_id = project.students_id.filter(val =>
-                            !val.equals(student));
+        })
+        .then(student => {
+            if (student) {
+                Project.find({ stream: studentStream }).then(projects => {
+                    for (const project of projects) {
+                        var projIsInArr = project_idArr.some(function(val) {
+                            return val.equals(project._id);
+                        });
+                        var stdIsInProj = project.students_id.some(function(val) {
+                            return val.equals(student);
+                        });
+                        if (projIsInArr && !stdIsInProj) {
+                            project.students_id.push(student);
+                        } else if (!projIsInArr && stdIsInProj) {
+                            project.students_id = project.students_id.filter(
+                                val => !val.equals(student)
+                            );
+                        }
+                        project
+                            .save()
+                            .then(proj => {
+                                // res.json({ message: "success" });
+                            })
+                            .catch(err => {
+                                res.json(err);
+                            });
                     }
-                    project.save().then(proj => {
-                        res.json({ message: "success" });
-                    })
-                }
-            })
+                });
+            } else {
+                res.json({ message: "invalid-token" });
+            }
         });
 });
 

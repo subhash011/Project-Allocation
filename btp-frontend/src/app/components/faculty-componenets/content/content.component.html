@@ -34,7 +34,9 @@
                     <div class="row">
                         <mat-form-field class="full-width">
                             <input matInput placeholder="No. of Students" formControlName="studentIntake" />
-                            <mat-error *ngIf="ProjectForm.controls['studentIntake'].hasError('required')">
+                            <mat-error *ngIf="
+                  ProjectForm.controls['studentIntake'].hasError('required')
+                ">
                                 StudentIntake is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -88,7 +90,7 @@
                 </app-student-table>
             </mat-tab>
 
-            <mat-tab label="Edit">
+            <mat-tab class="editPage" label="Edit">
                 <div class="container-edit">
                     <form [formGroup]="EditForm" novalidate (ngSubmit)="onEditSubmit(project)" class="form-card">
                         <mat-card class="add-card mat-elevation-z12">
@@ -109,7 +111,9 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <input matInput placeholder="Duration" formControlName="duration" />
-                                        <mat-error *ngIf="ProjectForm.controls['duration'].hasError('required')">
+                                        <mat-error *ngIf="
+                        ProjectForm.controls['duration'].hasError('required')
+                      ">
                                             Duration is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -118,7 +122,11 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <input matInput placeholder="No. of Students" formControlName="studentIntake" />
-                                        <mat-error *ngIf="ProjectForm.controls['studentIntake'].hasError('required')">
+                                        <mat-error *ngIf="
+                        ProjectForm.controls['studentIntake'].hasError(
+                          'required'
+                        )
+                      ">
                                             StudentIntake is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>

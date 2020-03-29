@@ -62,10 +62,7 @@ export class DragDropComponent implements OnInit {
         event.currentIndex
       );
       console.log(event.container.id);
-      if (
-        event.container.id == "cdk-drop-list-1" ||
-        event.container.id == "cdk-drop-list-3" //check why
-      ) {
+      if (event.container.id == "cdk-drop-list-1") {
         this.preferenceArray = event.container.data;
         this.helperArray = event.previousContainer.data;
       } else {

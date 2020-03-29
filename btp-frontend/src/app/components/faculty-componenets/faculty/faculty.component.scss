@@ -20,7 +20,7 @@ mat-sidenav-content {
     // bottom: 0;
     // display: flex;
     position: relative;
-    top: 6.5%;
+    top: 0;
 }
 
 .fill-remaining-space {
@@ -29,9 +29,4 @@ mat-sidenav-content {
 
 mat-toolbar {
     justify-content: center;
-}
-
-mat-sidenav-content {
-    top: 0px;
-    overflow: hidden; //changed this
 }

@@ -31,9 +31,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    projects_chosen: {
-        type: [mongoose.SchemaTypes.ObjectId]
-    },
     projects_preference: {
         type: [mongoose.SchemaTypes.ObjectId]
     },
