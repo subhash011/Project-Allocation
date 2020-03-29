@@ -53,15 +53,6 @@ export class FacultyComponent implements OnInit {
     );
   }
 
-  // displayAdd() {
-  //   // this.router.navigate(["project", "add"], {
-  //   //   relativeTo: this.activatedRoute,
-  //   //   queryParams: {
-  //   //     stream: this.stream
-  //   //   }
-  //   // });
-  // }
-
   displayProject(project) {
     // console.log(project);
 

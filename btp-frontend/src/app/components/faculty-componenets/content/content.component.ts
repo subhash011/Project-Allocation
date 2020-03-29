@@ -36,7 +36,6 @@ export class ContentComponent implements OnInit {
     studentIntake: ["", Validators.required],
     description: ["", Validators.required]
   });
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -80,19 +79,13 @@ export class ContentComponent implements OnInit {
         });
 
         snackBarRef.onAction().subscribe(() => {
-          
-            // console.log("The snack-bar was dismissed");
+          // console.log("The snack-bar was dismissed");
           this.router
-          .navigateByUrl("/refresh", { skipLocationChange: true })
-          .then(() => {
-            this.router.navigate([decodeURI(this.location.path())]);
-          });
-
+            .navigateByUrl("/refresh", { skipLocationChange: true })
+            .then(() => {
+              this.router.navigate([decodeURI(this.location.path())]);
+            });
         });
-
-
-
-
       } else {
         //Go to the error page
       }
@@ -134,17 +127,13 @@ export class ContentComponent implements OnInit {
         });
 
         snackBarRef.onAction().subscribe(() => {
-          
           // console.log("The snack-bar was dismissed");
           this.router
-          .navigateByUrl("/refresh", { skipLocationChange: true })
-          .then(() => {
-            this.router.navigate([decodeURI(this.location.path())]);
-          });
-
+            .navigateByUrl("/refresh", { skipLocationChange: true })
+            .then(() => {
+              this.router.navigate([decodeURI(this.location.path())]);
+            });
         });
-
-        
       }
     });
   }
@@ -153,7 +142,7 @@ export class ContentComponent implements OnInit {
     let dialogRef = this.dialog.open(DeletePopUpComponent, {
       height: "200px",
       width: "400px",
-      data: project._id
+      data: "delete the project"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result["message"] == "submit") {
@@ -169,14 +158,12 @@ export class ContentComponent implements OnInit {
             });
         });
         snackBarRef.onAction().subscribe(() => {
-          
-            // console.log("The snack-bar was dismissed");
+          // console.log("The snack-bar was dismissed");
           this.router
-          .navigateByUrl("/refresh", { skipLocationChange: true })
-          .then(() => {
-            this.router.navigate([decodeURI(this.location.path())]);
-          });
-
+            .navigateByUrl("/refresh", { skipLocationChange: true })
+            .then(() => {
+              this.router.navigate([decodeURI(this.location.path())]);
+            });
         });
       }
     });

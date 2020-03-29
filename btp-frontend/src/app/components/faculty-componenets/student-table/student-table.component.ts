@@ -5,6 +5,9 @@ import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { MatTableDataSource, MatTable } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
+import clonedeep from "lodash";
+import { MatDialog } from "@angular/material/dialog";
+import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
 
 @Component({
   selector: "app-student-table",
