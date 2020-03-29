@@ -4,7 +4,7 @@ mat-sidenav-container {
   min-height: 100%;
   width: 100%;
   min-width: 100%;
-  // background-color: yellow;
+  //   background-color: yellow;
 }
 
 mat-sidenav {
@@ -16,6 +16,7 @@ mat-sidenav {
 
 mat-sidenav-content {
   position: relative;
+  margin-right: 30%;
 }
 
 .fill-remaining-space {
