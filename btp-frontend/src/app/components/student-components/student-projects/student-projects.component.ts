@@ -1,3 +1,4 @@
+import { LoginComponent } from "./../../shared/login/login.component";
 import { UserService } from "./../../../services/user/user.service";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { Component, OnInit } from "@angular/core";
@@ -7,12 +8,14 @@ import { ThemePalette } from "@angular/material/core";
 @Component({
   selector: "app-student-projects",
   templateUrl: "./student-projects.component.html",
-  styleUrls: ["./student-projects.component.scss"]
+  styleUrls: ["./student-projects.component.scss"],
+  providers: [LoginComponent]
 })
 export class StudentProjectsComponent implements OnInit {
   constructor(
     private projectService: ProjectsService,
-    private userService: UserService
+    private userService: UserService,
+    private loginObject: LoginComponent
   ) {}
   ngOnInit() {
     this.getStudentProjects();
@@ -26,7 +29,11 @@ export class StudentProjectsComponent implements OnInit {
       .getAllStudentProjects()
       .toPromise()
       .then(details => {
-        this.projects = details;
+        if (details["message"] == "token-expired") {
+          this.loginObject.signOut();
+        } else {
+          this.projects = details;
+        }
       });
   }
   getStudentPreferences() {
@@ -34,7 +41,11 @@ export class StudentProjectsComponent implements OnInit {
       .getStudentPreference()
       .toPromise()
       .then(details => {
-        this.preferences = details;
+        if (details["message"] == "token-expired") {
+          this.loginObject.signOut();
+        } else {
+          this.preferences = details;
+        }
       });
   }
 }

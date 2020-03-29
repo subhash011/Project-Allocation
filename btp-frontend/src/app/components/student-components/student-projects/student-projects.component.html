@@ -1,7 +1,7 @@
-<mat-tab-group mat-align-tabs="center" [backgroundColor]="background">
+<mat-tab-group dynamicHeight="true" mat-align-tabs="center" [backgroundColor]="background">
     <mat-tab label="List Of Available Projects">
-        <div *ngIf="projects">
-            <div *ngFor="let project of projects">
+        <div class="list" *ngIf="projects">
+            <div class="list-item" *ngFor="let project of projects">
                 <mat-accordion>
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
@@ -22,8 +22,8 @@
         </div>
     </mat-tab>
     <mat-tab label="My Preferences">
-        <div *ngIf="preferences">
-            <div *ngFor="let preference of preferences">
+        <div class="list" *ngIf="preferences">
+            <div class="list-item" *ngFor="let preference of preferences">
                 <mat-accordion>
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
@@ -43,4 +43,7 @@
             </div>
         </div>
     </mat-tab>
+    <!-- <mat-tab label="Change Preferences">
+        <app-drag-drop></app-drag-drop>
+    </mat-tab> -->
 </mat-tab-group>

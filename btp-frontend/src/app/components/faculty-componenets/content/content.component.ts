@@ -1,8 +1,11 @@
+import { MatDialog } from "@angular/material/dialog";
 import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Validators } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Component, OnInit, Input } from "@angular/core";
+import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-content",
@@ -33,7 +36,9 @@ export class ContentComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private projectService: ProjectsService
+    private projectService: ProjectsService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {}
@@ -60,9 +65,7 @@ export class ContentComponent implements OnInit {
   }
 
   onEditSubmit(param) {
-    
-    console.log(param)
-
+    // console.log(param);
     const project = {
       title: this.EditForm.get("title").value,
       duration: this.EditForm.get("duration").value,
@@ -71,13 +74,19 @@ export class ContentComponent implements OnInit {
       // stream: this.stream,
       project_id: param._id
     };
-
-    this.projectService.updateProject(project).subscribe(data => {
-      console.log(data);
-      //Refresh the page......navigate to the same page
+    let dialogRef = this.dialog.open(SubmitPopUpComponent, {
+      height: "60%",
+      width: "800px",
+      data: project
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result["message"] == "submit") {
+        this.snackBar.open("Successfully Updated", "Ok", {
+          duration: 3000
+        });
+      }
     });
   }
-
   tabChange(event) {
     if (event.index == 2) {
       this.EditForm = this.formBuilder.group({
@@ -90,10 +99,8 @@ export class ContentComponent implements OnInit {
   }
 
   deleteProject(project) {
-    console.log(project);
-    this.projectService.deleteProject(project._id)
-      .subscribe(data=>{
-        console.log(data)
-      })
+    this.projectService.deleteProject(project._id).subscribe(data => {
+      console.log(data);
+    });
   }
 }

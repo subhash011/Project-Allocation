@@ -84,49 +84,37 @@ export class ProjectsService {
     return this.http.post(this.url, project, httpOptions);
   }
 
-
-  getStudentsApplied(students_id){
+  getStudentsApplied(students_id) {
     const student_data = {
       student: students_id
-    }
+    };
     let id = localStorage.getItem("id");
     this.url = "http://localhost:8080/faculty/project/applied/" + id;
 
-    return this.http.post(this.url,student_data);
+    return this.http.post(this.url, student_data);
   }
 
-  savePreference(student_order,project_id){
-
+  savePreference(student_order, project_id) {
     const student_data = {
       student: student_order,
-      project_id:project_id
-    }
+      project_id: project_id
+    };
 
     let id = localStorage.getItem("id");
     this.url = "http://localhost:8080/faculty/project/save_preference/" + id;
 
-    return this.http.post(this.url,student_data);
-
+    return this.http.post(this.url, student_data);
   }
 
-  updateProject(project){
-
-    this.url = "http://localhost:8080/faculty/project/update/" + project.project_id;
+  updateProject(project) {
+    this.url =
+      "http://localhost:8080/faculty/project/update/" + project.project_id;
 
     return this.http.post(this.url, project);
-
-
   }
 
-  deleteProject(project_id){
-
-   this.url = "http://localhost:8080/faculty/project/delete/" + project_id;
-
-
+  deleteProject(project_id) {
+    this.url = "http://localhost:8080/faculty/project/delete/" + project_id;
     return this.http.delete(this.url);
-
-
   }
-
-
 }

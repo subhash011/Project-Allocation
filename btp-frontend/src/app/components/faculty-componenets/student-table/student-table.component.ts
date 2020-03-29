@@ -1,12 +1,8 @@
-import { ProjectsService } from './../../../services/projects/projects.service';
+import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Component, OnInit, Input, ViewChild } from "@angular/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { MatTableDataSource, MatTable } from "@angular/material/table";
 import clonedeep from "lodash";
-
-
-
-
 
 @Component({
   selector: "app-student-table",
@@ -18,13 +14,9 @@ export class StudentTableComponent implements OnInit {
   public checked: boolean = false;
   @Input() public project;
 
+  constructor(private projectService: ProjectsService) {}
 
-  constructor(
-    private projectService : ProjectsService
-  ) {}
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.student_list, event.previousIndex, event.currentIndex);
@@ -33,14 +25,10 @@ export class StudentTableComponent implements OnInit {
   onSubmit() {
     this.checked = false;
     console.log(this.student_list);
-
-    
-    this.projectService.savePreference(this.student_list,this.project._id)
-      .subscribe((data)=>{
-        console.log(data)
-
-      })
-
-
+    this.projectService
+      .savePreference(this.student_list, this.project._id)
+      .subscribe(data => {
+        console.log(data);
+      });
   }
 }
