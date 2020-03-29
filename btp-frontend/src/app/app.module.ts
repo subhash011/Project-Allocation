@@ -1,4 +1,4 @@
-import { UserService } from './services/user/user.service';
+import { UserService } from "./services/user/user.service";
 import { ThemePickerComponent } from "./components/shared/theme-picker/theme-picker.component";
 import { MaterialModule } from "./material/material.module";
 import { BrowserModule } from "@angular/platform-browser";
@@ -22,9 +22,10 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 import { FormsModule } from "@angular/forms";
 import { ProfileComponent } from "./components/shared/profile/profile.component";
 import { StudentProjectsComponent } from "./components/student-components/student-projects/student-projects.component";
-import { ContentComponent } from './components/faculty-componenets/content/content.component';
-import { SidenavComponent } from './components/faculty-componenets/sidenav/sidenav.component';
-import { StudentTableComponent } from './components/faculty-componenets/student-table/student-table.component';
+import { ContentComponent } from "./components/faculty-componenets/content/content.component";
+import { SidenavComponent } from "./components/faculty-componenets/sidenav/sidenav.component";
+import { StudentTableComponent } from "./components/faculty-componenets/student-table/student-table.component";
+import { SubmitPopUpComponent } from "./components/faculty-componenets/submit-pop-up/submit-pop-up.component";
 
 const config = new AuthServiceConfig([
   {
@@ -53,9 +54,10 @@ export function provideConfig() {
     ThemePickerComponent,
     ContentComponent,
     SidenavComponent,
-    StudentTableComponent
+    StudentTableComponent,
+    SubmitPopUpComponent
   ],
-  entryComponents: [ShowPreferencesComponent],
+  entryComponents: [ShowPreferencesComponent, SubmitPopUpComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

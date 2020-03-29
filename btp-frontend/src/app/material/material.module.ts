@@ -21,7 +21,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatTableModule } from "@angular/material/table";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -44,7 +44,8 @@ const MaterialComponents = [
   MatDividerModule,
   MatTabsModule,
   MatTableModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatSnackBarModule
 ];
 
 @NgModule({

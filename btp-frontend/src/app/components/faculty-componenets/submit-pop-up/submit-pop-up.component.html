@@ -1,0 +1,24 @@
+<div class="mat-dialog">
+    <h1 mat-dialog-title>Confirm Submission</h1>
+    <div mat-dialog-content>
+        <h4>Title</h4>
+        <p>{{ data.title }}</p>
+        <mat-divider></mat-divider>
+        <h4>Duration</h4>
+        <p>{{ data.duration }}</p>
+        <mat-divider></mat-divider>
+        <h4>No. of Students</h4>
+        <p>{{ data.studentIntake }}</p>
+        <mat-divider></mat-divider>
+        <h4>Description</h4>
+        <p>{{ data.description }}</p>
+    </div>
+    <div>
+        <button mat-raised-button class="mat-btn-1" color="warn" (click)="onNoClick()">
+      No Thanks
+    </button>
+        <button mat-raised-button class="mat-btn-2" color="primary" (click)="onSubmit()">
+      Confirm Submission
+    </button>
+    </div>
+</div>
