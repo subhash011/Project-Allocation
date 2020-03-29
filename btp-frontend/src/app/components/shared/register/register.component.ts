@@ -17,12 +17,17 @@ export class RegisterComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.userForm.get("email").disable();
+    if (localStorage.getItem("role") == "student") {
+      this.userForm.get("CGPA").setValidators(Validators.required);
+    } else {
+      this.userForm.get("CGPA").clearValidators();
+    }
   }
   user = JSON.parse(localStorage.getItem("user"));
   userForm = this.fb.group({
     firstName: [this.user.firstName, Validators.required],
     lastName: [this.user.lastName, Validators.required],
-    CGPA: [null, Validators.required],
+    CGPA: [null],
     email: [this.user.email, Validators.required],
     branch: [null, Validators.required]
   });
@@ -45,43 +50,45 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    const user = {
-      name:
-        this.userForm.get("firstName").value +
-        " " +
-        this.userForm.get("lastName").value,
-      roll_no: String(this.userForm.get("email").value).split("@")[0],
-      email: this.userForm.get("email").value,
-      gpa: this.userForm.get("CGPA").value,
-      stream: this.userForm.get("branch").value
-    };
-    const _user = JSON.parse(localStorage.getItem("user"));
+    if (this.userForm.valid) {
+      const user = {
+        name:
+          this.userForm.get("firstName").value +
+          " " +
+          this.userForm.get("lastName").value,
+        roll_no: String(this.userForm.get("email").value).split("@")[0],
+        email: this.userForm.get("email").value,
+        gpa: this.userForm.get("CGPA").value,
+        stream: this.userForm.get("branch").value
+      };
+      const _user = JSON.parse(localStorage.getItem("user"));
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        "Content-Type": "application/json",
-        Authorization: _user.idToken
-      })
-    };
+      const httpOptions = {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+          Authorization: _user.idToken
+        })
+      };
 
-    var position = "";
-    if (!isNaN(Number(user["roll_no"].toString()))) {
-      position = "student";
-    } else {
-      position = "faculty";
-    }
-    var id = _user.id;
-    this.message = this.userService.registerUser(
-      user,
-      httpOptions,
-      position,
-      id
-    );
-    if (!this.message) {
-      localStorage.setItem("role", position);
-      localStorage.removeItem("isRegistered");
-    } else {
-      console.log("fail");
+      var position = "";
+      if (!isNaN(Number(user["roll_no"].toString()))) {
+        position = "student";
+      } else {
+        position = "faculty";
+      }
+      var id = _user.id;
+      this.message = this.userService.registerUser(
+        user,
+        httpOptions,
+        position,
+        id
+      );
+      if (!this.message) {
+        localStorage.setItem("role", position);
+        localStorage.removeItem("isRegistered");
+      } else {
+        console.log("fail");
+      }
     }
   }
 }

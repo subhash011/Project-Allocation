@@ -51,7 +51,7 @@
                     </div>
                 </mat-card-content>
                 <!-- <mat-card-actions> -->
-                <button mat-raised-button class="submit_button" color="primary" type="submit">
+                <button mat-raised-button class="submit_button" [disabled]="!ProjectForm.valid" color="primary" type="submit">
           Submit
         </button>
                 <!-- </mat-card-actions> -->
@@ -141,7 +141,7 @@
                                 </div>
                             </mat-card-content>
                             <!-- <mat-card-actions> -->
-                            <button mat-raised-button class="edit-submit" color="primary" type="submit">
+                            <button mat-raised-button class="edit-submit" color="primary" [disabled]="!EditForm.valid" type="submit">
                 Submit
               </button>
                             <button mat-raised-button class="deleteButton" type="button" color="primary" (click)="deleteProject(project)">

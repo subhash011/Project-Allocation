@@ -33,7 +33,6 @@ export class ContentComponent implements OnInit {
     studentIntake: ["", Validators.required],
     description: ["", Validators.required]
   });
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -43,62 +42,63 @@ export class ContentComponent implements OnInit {
   ) {}
 
   ngOnInit() {}
-
   onSubmit() {
-    const project = {
-      title: this.ProjectForm.get("title").value,
-      duration: this.ProjectForm.get("duration").value,
-      studentIntake: this.ProjectForm.get("studentIntake").value,
-      description: this.ProjectForm.get("description").value,
-      stream: this.stream
-    };
-    let dialogRef = this.dialog.open(DeletePopUpComponent, {
-      height: "200px",
-      width: "400px",
-      data: "add the project"
-    });
-    dialogRef.afterClosed().subscribe(res => {
-      if (res["message"] == "submit") {
-        this.projectService.saveProject(project).subscribe(data => {
-          // console.log(data);
-          if (data["save"] == "success") {
-            this.empty = true;
-          } else {
-            this.empty = false;
-          }
-          this.snackBar.open("Successfully Added Project", "Ok", {
-            duration: 3000
+    if (this.ProjectForm.valid) {
+      const project = {
+        title: this.ProjectForm.get("title").value,
+        duration: this.ProjectForm.get("duration").value,
+        studentIntake: this.ProjectForm.get("studentIntake").value,
+        description: this.ProjectForm.get("description").value,
+        stream: this.stream
+      };
+      let dialogRef = this.dialog.open(DeletePopUpComponent, {
+        height: "200px",
+        width: "400px",
+        data: "add the project"
+      });
+      dialogRef.afterClosed().subscribe(res => {
+        if (res["message"] == "submit") {
+          this.projectService.saveProject(project).subscribe(data => {
+            if (data["save"] == "success") {
+              this.empty = true;
+            } else {
+              this.empty = false;
+            }
+            this.snackBar.open("Successfully Added Project", "Ok", {
+              duration: 3000
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    }
   }
 
   onEditSubmit(param) {
     // console.log(param);
-    const project = {
-      title: this.EditForm.get("title").value,
-      duration: this.EditForm.get("duration").value,
-      studentIntake: this.EditForm.get("studentIntake").value,
-      description: this.EditForm.get("description").value,
-      // stream: this.stream,
-      project_id: param._id
-    };
+    if (this.EditForm.valid) {
+      const project = {
+        title: this.EditForm.get("title").value,
+        duration: this.EditForm.get("duration").value,
+        studentIntake: this.EditForm.get("studentIntake").value,
+        description: this.EditForm.get("description").value,
+        project_id: param._id
+      };
+      let dialogRef = this.dialog.open(SubmitPopUpComponent, {
+        height: "60%",
+        width: "800px",
+        data: project
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result["message"] == "submit") {
+          this.EditForm.reset();
 
-    console.log(project);
-
-    let dialogRef = this.dialog.open(SubmitPopUpComponent, {
-      height: "60%",
-      width: "800px",
-      data: project
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result["message"] == "submit") {
-        this.snackBar.open("Successfully Deleted Project", "Ok", {
-          duration: 3000
-        });
-      }
-    });
+          this.snackBar.open("Successfully Edited Project", "Ok", {
+            duration: 3000
+          });
+          this.EditForm.reset();
+        }
+      });
+    }
   }
 
   deleteProject(project) {
@@ -110,7 +110,7 @@ export class ContentComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result["message"] == "submit") {
         this.projectService.deleteProject(project._id).subscribe(data => {
-          this.snackBar.open("Successfully Deleted", "Ok", {
+          this.snackBar.open("Successfully Deleted Project", "Ok", {
             duration: 3000
           });
         });
