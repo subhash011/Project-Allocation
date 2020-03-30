@@ -215,7 +215,6 @@ router.post("/update/:id", (req, res) => {
 
 router.delete("/delete/:id", (req, res) => {
     const id = req.params.id;
-
     Project.findByIdAndRemove({ _id: id })
         .then(result => {
             let students_id = result.students_id;

@@ -48,8 +48,6 @@ router.get("/:id", (req, res) => {
 
 //fetch student preferences
 router.get("/preference/:id", (req, res) => {
-    var project_id = [];
-    var projects = [];
     var promises = [];
     const id = req.params.id;
     const idToken = req.headers.authorization;
@@ -101,8 +99,7 @@ router.post("/preference/:id", (req, res) => {
     const project_idArr = projects.map(val =>
         mongoose.Types.ObjectId(val["_id"])
     );
-    // console.log(project_id)
-    var promises = [];
+    var message;
     var studentStream;
     const idToken = req.headers.authorization;
     var promise = Student.findOneAndUpdate({ google_id: { id: id, idToken: idToken } }, { projects_preference: project_idArr })
@@ -134,15 +131,15 @@ router.post("/preference/:id", (req, res) => {
                         project
                             .save()
                             .then(proj => {
-                                // res.json({ message: "success" });
+                                res.json({ message: "success" });
                             })
                             .catch(err => {
-                                res.json(err);
+                                res.status(500);
                             });
                     }
                 });
             } else {
-                res.json({ message: "invalid-token" });
+                res.json({ message: "invalid-token" })
             }
         });
 });
