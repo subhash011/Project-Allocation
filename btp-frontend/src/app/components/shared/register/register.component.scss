@@ -2,9 +2,8 @@
     width: 60%;
 }
 
-mat-card-title {
-    margin-left: 280px;
-    margin-right: 280px;
+mat-card-header {
+    margin-left: 40%;
 }
 
 mat-form-field {
@@ -12,18 +11,12 @@ mat-form-field {
 }
 
 mat-card-actions {
-    margin-left: 300px;
+    margin-left: 40%;
+    bottom: 2%;
 }
 
 mat-card-content {
-    padding-left: 10%;
-}
-
-.shipping-card {
-    min-width: 120px;
-    margin-top: 100px;
-    margin-left: 30%;
-    margin-right: 30%;
+    padding-left: 12%;
 }
 
 .row {
@@ -41,6 +34,15 @@ mat-card-content {
 }
 
 .register {
-    padding-top: 6%;
     z-index: 8;
+}
+
+.register-page {
+    margin-left: 24%;
+    width: 50%;
+    margin-top: 10%;
+}
+
+button {
+    bottom: 5%;
 }
