@@ -19,7 +19,7 @@ import { FacultyComponent } from "./components/faculty-componenets/faculty/facul
 import { HomeComponent } from "./components/home/home.component";
 import { ShowPreferencesComponent } from "./components/student-components/show-preferences/show-preferences.component";
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ProfileComponent } from "./components/shared/profile/profile.component";
 import { StudentProjectsComponent } from "./components/student-components/student-projects/student-projects.component";
 import { ContentComponent } from "./components/faculty-componenets/content/content.component";
@@ -27,7 +27,7 @@ import { SidenavComponent } from "./components/faculty-componenets/sidenav/siden
 import { StudentTableComponent } from "./components/faculty-componenets/student-table/student-table.component";
 import { SubmitPopUpComponent } from "./components/faculty-componenets/submit-pop-up/submit-pop-up.component";
 import { DeletePopUpComponent } from "./components/faculty-componenets/delete-pop-up/delete-pop-up.component";
-import { RefreshComponent } from './components/faculty-componenets/refresh/refresh.component';
+import { RefreshComponent } from "./components/faculty-componenets/refresh/refresh.component";
 
 const config = new AuthServiceConfig([
   {
@@ -74,7 +74,8 @@ export function provideConfig() {
     MaterialModule,
     HttpClientModule,
     DragDropModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [],
   providers: [

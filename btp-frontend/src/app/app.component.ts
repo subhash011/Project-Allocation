@@ -9,9 +9,6 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class AppComponent implements OnInit {
   title = "btp-frontend";
   login = true;
-  constructor(
-    private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
-  ) {}
+  constructor() {}
   ngOnInit() {}
 }

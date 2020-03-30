@@ -3,7 +3,7 @@ import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Validators } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, DoCheck } from "@angular/core";
 import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
@@ -14,7 +14,7 @@ import { Location } from "@angular/common";
   templateUrl: "./content.component.html",
   styleUrls: ["./content.component.scss"]
 })
-export class ContentComponent implements OnInit {
+export class ContentComponent implements OnInit, DoCheck {
   @Input() public project;
   @Input() public add: boolean;
   @Input() public empty = true;
@@ -46,6 +46,17 @@ export class ContentComponent implements OnInit {
   ) {}
 
   ngOnInit() {}
+
+  ngDoCheck(): void {
+    if (this.project) {
+      this.EditForm.setValue({
+        title: this.project.title,
+        duration: this.project.duration,
+        studentIntake: this.project.studentIntake,
+        description: this.project.description
+      });
+    }
+  }
 
   onSubmit() {
     if (this.ProjectForm.valid) {
@@ -93,7 +104,6 @@ export class ContentComponent implements OnInit {
         description: this.EditForm.get("description").value,
         project_id: param._id
       };
-
       let dialogRef = this.dialog.open(SubmitPopUpComponent, {
         height: "60%",
         width: "800px",
@@ -111,7 +121,6 @@ export class ContentComponent implements OnInit {
                 this.router.navigate([decodeURI(this.location.path())]);
               });
           });
-
           snackBarRef.onAction().subscribe(() => {
             this.router
               .navigateByUrl("/refresh", { skipLocationChange: true })
@@ -132,23 +141,34 @@ export class ContentComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result["message"] == "submit") {
-        let snackBarRef = this.snackBar.open("Successfully Deleted", "Ok", {
-          duration: 3000
-        });
-        snackBarRef.afterDismissed().subscribe(() => {
-          this.router
-            .navigateByUrl("/refresh", { skipLocationChange: true })
-            .then(() => {
-              this.router.navigate([decodeURI(this.location.path())]);
-            });
-        });
-        snackBarRef.onAction().subscribe(() => {
-          this.router
-            .navigateByUrl("/refresh", { skipLocationChange: true })
-            .then(() => {
-              this.router.navigate([decodeURI(this.location.path())]);
-            });
-        });
+        this.projectService
+          .deleteProject(project._id)
+          .toPromise()
+          .then(result => {
+            if (result["status"] == "success") {
+              let snackBarRef = this.snackBar.open(
+                "Successfully Deleted",
+                "Ok",
+                {
+                  duration: 3000
+                }
+              );
+              snackBarRef.afterDismissed().subscribe(() => {
+                this.router
+                  .navigateByUrl("/refresh", { skipLocationChange: true })
+                  .then(() => {
+                    this.router.navigate([decodeURI(this.location.path())]);
+                  });
+              });
+              snackBarRef.onAction().subscribe(() => {
+                this.router
+                  .navigateByUrl("/refresh", { skipLocationChange: true })
+                  .then(() => {
+                    this.router.navigate([decodeURI(this.location.path())]);
+                  });
+              });
+            }
+          });
       }
     });
   }

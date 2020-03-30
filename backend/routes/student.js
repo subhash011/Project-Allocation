@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
-const bodyparser = require("body-parser");
 const Student = require("../models/Student");
 const oauth = require("../config/oauth");
+
 router.post("/register/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const user = req.body;
-    oauth(idToken).then(user_partial => {
+    oauth(idToken).then(() => {
         const newUser = new Student({
             name: user.name,
             roll_no: user.roll_no,

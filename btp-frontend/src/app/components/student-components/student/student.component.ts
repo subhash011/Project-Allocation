@@ -1,5 +1,5 @@
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../shared/login/login.component";
-import { Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { UserService } from "src/app/services/user/user.service";
 
@@ -12,10 +12,11 @@ import { UserService } from "src/app/services/user/user.service";
 export class StudentComponent implements OnInit {
   constructor(
     private userService: UserService,
-    private router: Router,
-    private loginObject: LoginComponent
+    private loginObject: LoginComponent,
+    private snackBar: MatSnackBar
   ) {}
   user: any;
+  details: any;
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.user = this.userService
@@ -24,6 +25,12 @@ export class StudentComponent implements OnInit {
       .then(data => {
         if (data["status"] == "invalid-token") {
           this.loginObject.signOut();
+        } else if (data["status"] == "success") {
+          this.details = data["user_details"];
+        } else {
+          this.snackBar.open("Some unknown Error Occured! Try again", "Ok", {
+            duration: 3000
+          });
         }
       });
   }

@@ -1,6 +1,6 @@
-import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { UserService } from "./../../../services/user/user.service";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpHeaders } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 
@@ -13,7 +13,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private snackBar: MatSnackBar
   ) {}
   ngOnInit() {
     this.userForm.get("email").disable();
@@ -87,7 +87,13 @@ export class RegisterComponent implements OnInit {
         localStorage.setItem("role", position);
         localStorage.removeItem("isRegistered");
       } else {
-        console.log("fail");
+        var snackBarRef = this.snackBar.open(
+          "Registration Failed! Please Try Again",
+          "Ok",
+          {
+            duration: 3000
+          }
+        );
       }
     }
   }

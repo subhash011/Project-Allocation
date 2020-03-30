@@ -4,19 +4,19 @@
       <span class="navhead">IIT Palakkad</span>
     </button>
     </div>
-    <div *ngIf="isUser()">
+    <div *ngIf="isUser() && !isFaculty()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getUrlProjects()" class="nav-text">
       My Projects
     </button>
     </div>
-    <div *ngIf="isFaculty()">
+    <!-- <div *ngIf="isFaculty()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getAddProjects()" class="nav-text">
       Add Projects
     </button>
-    </div>
-    <div *ngIf="isUser()">
+    </div> -->
+    <div *ngIf="isUser() && !isFaculty()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getUrlPreferences()" class="nav-text">
       Preferences
