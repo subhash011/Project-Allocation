@@ -1,7 +1,10 @@
-<div class="show">
-    <div>
+<div>
+    <mat-toolbar>
         <h4 style="padding-left: 40%;">Your Current Preferences</h4>
-    </div>
+    </mat-toolbar>
+</div>
+<div class="show">
+
 
     <div class="drag-drop">
         <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="preferences" class="list" (cdkDropListDropped)="drop($event)">

@@ -74,6 +74,7 @@ export class DragDropComponent implements OnInit {
     var dialogRef;
     if (this.preferenceArray) {
       dialogRef = this.dialog.open(ShowPreferencesComponent, {
+        panelClass: "no-toolbar-padding",
         width: "800px",
         height: "800px",
         data: this.preferenceArray
