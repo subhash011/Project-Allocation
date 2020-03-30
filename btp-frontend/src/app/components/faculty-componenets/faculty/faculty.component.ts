@@ -54,7 +54,6 @@ export class FacultyComponent implements OnInit {
       .getStudentsApplied(project.students_id)
       .subscribe(data => {
         this.student_list = data["students"];
-        console.log(data);
       });
 
     this.project = project;
