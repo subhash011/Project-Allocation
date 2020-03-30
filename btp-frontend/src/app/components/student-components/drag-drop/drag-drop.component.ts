@@ -2,11 +2,7 @@ import { LoginComponent } from "./../../shared/login/login.component";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { ShowPreferencesComponent } from "./../show-preferences/show-preferences.component";
 import { Component, OnInit } from "@angular/core";
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA
-} from "@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
 import {
   CdkDragDrop,
   moveItemInArray,

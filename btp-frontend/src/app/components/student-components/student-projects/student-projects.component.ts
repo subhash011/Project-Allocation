@@ -2,7 +2,6 @@ import { LoginComponent } from "./../../shared/login/login.component";
 import { UserService } from "./../../../services/user/user.service";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { Component, OnInit } from "@angular/core";
-import { Validators, FormGroup, FormBuilder } from "@angular/forms";
 import { ThemePalette } from "@angular/material/core";
 
 @Component({
@@ -14,7 +13,6 @@ import { ThemePalette } from "@angular/material/core";
 export class StudentProjectsComponent implements OnInit {
   constructor(
     private projectService: ProjectsService,
-    private userService: UserService,
     private loginObject: LoginComponent
   ) {}
   ngOnInit() {

@@ -1,11 +1,8 @@
 import { LocalAuthService } from "../../../services/local-auth/local-auth.service";
-import { UserService } from "./../../../services/user/user.service";
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "angularx-social-login";
-import { SocialUser } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
-import { ActivatedRoute, Router } from "@angular/router";
-import { CompileShallowModuleMetadata } from "@angular/compiler";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-login",
