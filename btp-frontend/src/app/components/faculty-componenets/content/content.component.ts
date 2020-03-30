@@ -14,7 +14,7 @@ import { Location } from "@angular/common";
   templateUrl: "./content.component.html",
   styleUrls: ["./content.component.scss"]
 })
-export class ContentComponent implements OnInit, DoCheck {
+export class ContentComponent implements OnInit {
   @Input() public project;
   @Input() public add: boolean;
   @Input() public empty = true;
@@ -52,16 +52,16 @@ export class ContentComponent implements OnInit, DoCheck {
     console.log("This works");
   }
 
-  ngDoCheck(): void {
-    if (this.project) {
-      this.EditForm.setValue({
-        title: this.project.title,
-        duration: this.project.duration,
-        studentIntake: this.project.studentIntake,
-        description: this.project.description
-      });
-    }
-  }
+  // ngDoCheck(): void {
+  //   if (this.project) {
+  //     this.EditForm.setValue({
+  //       title: this.project.title,
+  //       duration: this.project.duration,
+  //       studentIntake: this.project.studentIntake,
+  //       description: this.project.description
+  //     });
+  //   }
+  // }
 
   onSubmit() {
     if (this.ProjectForm.valid) {

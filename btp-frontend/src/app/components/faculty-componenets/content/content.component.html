@@ -101,7 +101,7 @@
                             <mat-card-content class="add-card-content">
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="Title" formControlName="title" value="{{ project.title }}" />
+                                        <input matInput placeholder="Title" [(ngModel)]="project.title" formControlName="title" />
                                         <mat-error *ngIf="ProjectForm.controls['title'].hasError('required')">
                                             Title is <strong>required</strong>
                                         </mat-error>
@@ -110,7 +110,7 @@
 
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="Duration" formControlName="duration" value="{{ project.duration }}" />
+                                        <input matInput placeholder="Duration" [(ngModel)]="project.duration" formControlName="duration" />
                                         <mat-error *ngIf="
                         ProjectForm.controls['duration'].hasError('required')
                       ">
@@ -121,7 +121,7 @@
 
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="No. of Students" formControlName="studentIntake" value="{{ project.studentIntake }}" />
+                                        <input matInput placeholder="No. of Students" [(ngModel)]="project.studentIntake" formControlName="studentIntake" />
                                         <mat-error *ngIf="
                         ProjectForm.controls['studentIntake'].hasError(
                           'required'
@@ -135,7 +135,7 @@
                                 <div class="row">
                                     <!-- <div class="col"> -->
                                     <mat-form-field class="full-width">
-                                        <textarea matInput placeholder="Description" formControlName="description" value="{{ project.description }}"></textarea>
+                                        <textarea matInput placeholder="Description" [(ngModel)]="project.description" formControlName="description"></textarea>
                                     </mat-form-field>
                                     <!-- </div> -->
                                 </div>

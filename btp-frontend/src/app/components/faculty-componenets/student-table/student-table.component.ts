@@ -23,7 +23,8 @@ export class StudentTableComponent implements OnInit {
     private projectService: ProjectsService,
     private location: Location,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {}
@@ -34,7 +35,6 @@ export class StudentTableComponent implements OnInit {
 
   onSubmit() {
     this.checked = false;
-    console.log(this.student_list);
     this.projectService
       .savePreference(this.student_list, this.project._id)
       .subscribe(data => {
