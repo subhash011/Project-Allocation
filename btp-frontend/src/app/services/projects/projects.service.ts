@@ -52,10 +52,7 @@ export class ProjectsService {
         }
       });
   }
-  getFacultyProjects(project_id) {
-    const obj = {
-      project_id: project_id
-    };
+  getFacultyProjects() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     const httpOptions = {
@@ -66,7 +63,7 @@ export class ProjectsService {
     };
 
     this.url = "http://localhost:8080/faculty/project/" + id;
-    return this.http.post(this.url, obj, httpOptions);
+    return this.http.get(this.url, httpOptions);
   }
 
   saveProject(project) {
@@ -89,9 +86,18 @@ export class ProjectsService {
       student: students_id
     };
     let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken
+      })
+    };
+
     this.url = "http://localhost:8080/faculty/project/applied/" + id;
 
-    return this.http.post(this.url, student_data);
+    return this.http.post(this.url, student_data, httpOptions);
   }
 
   savePreference(student_order, project_id) {
@@ -101,9 +107,17 @@ export class ProjectsService {
     };
 
     let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken
+      })
+    };
+
     this.url = "http://localhost:8080/faculty/project/save_preference/" + id;
 
-    return this.http.post(this.url, student_data);
+    return this.http.post(this.url, student_data, httpOptions);
   }
 
   updateProject(project) {

@@ -2,8 +2,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Validators } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit, Input, DoCheck } from "@angular/core";
+import { Router } from "@angular/router";
+import { Component, OnInit, Input } from "@angular/core";
 import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
@@ -37,7 +37,6 @@ export class ContentComponent implements OnInit {
     description: ["", Validators.required]
   });
   constructor(
-    private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private projectService: ProjectsService,
     private dialog: MatDialog,
@@ -81,8 +80,6 @@ export class ContentComponent implements OnInit {
             duration: 3000
           });
           snackBarRef.afterDismissed().subscribe(() => {
-            // console.log("The snack-bar was dismissed");
-
             this.router
               .navigateByUrl("/refresh", { skipLocationChange: true })
               .then(() => {
@@ -91,7 +88,6 @@ export class ContentComponent implements OnInit {
           });
 
           snackBarRef.onAction().subscribe(() => {
-            // console.log("The snack-bar was dismissed");
             this.router
               .navigateByUrl("/refresh", { skipLocationChange: true })
               .then(() => {
@@ -101,7 +97,6 @@ export class ContentComponent implements OnInit {
         } else {
           //Go to the error page
         }
-        //Display the messages using flash messages
       });
     }
   }
@@ -113,11 +108,8 @@ export class ContentComponent implements OnInit {
         duration: this.EditForm.get("duration").value,
         studentIntake: this.EditForm.get("studentIntake").value,
         description: this.EditForm.get("description").value,
-        // stream: this.stream,
         project_id: param._id
       };
-
-      // console.log(project);
 
       let dialogRef = this.dialog.open(SubmitPopUpComponent, {
         height: "60%",
@@ -130,8 +122,6 @@ export class ContentComponent implements OnInit {
             duration: 3000
           });
           snackBarRef.afterDismissed().subscribe(() => {
-            // console.log("The snack-bar was dismissed");
-
             this.router
               .navigateByUrl("/refresh", { skipLocationChange: true })
               .then(() => {
@@ -140,7 +130,6 @@ export class ContentComponent implements OnInit {
           });
 
           snackBarRef.onAction().subscribe(() => {
-            // console.log("The snack-bar was dismissed");
             this.router
               .navigateByUrl("/refresh", { skipLocationChange: true })
               .then(() => {
@@ -164,7 +153,6 @@ export class ContentComponent implements OnInit {
           duration: 3000
         });
         snackBarRef.afterDismissed().subscribe(() => {
-          // console.log("The snack-bar was dismissed");
           this.router
             .navigateByUrl("/refresh", { skipLocationChange: true })
             .then(() => {
@@ -172,7 +160,6 @@ export class ContentComponent implements OnInit {
             });
         });
         snackBarRef.onAction().subscribe(() => {
-          // console.log("The snack-bar was dismissed");
           this.router
             .navigateByUrl("/refresh", { skipLocationChange: true })
             .then(() => {

@@ -101,7 +101,7 @@ router.post("/preference/:id", (req, res) => {
     const project_idArr = projects.map(val =>
         mongoose.Types.ObjectId(val["_id"])
     );
-    // console.log(project_id)
+
     var promises = [];
     var studentStream;
     const idToken = req.headers.authorization;
