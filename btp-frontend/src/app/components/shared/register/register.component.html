@@ -3,14 +3,14 @@
   >
   <strong>Registration Failed</strong>
 </div>
-<form [formGroup]="userForm" novalidate (ngSubmit)="onSubmit()">
+<form class="register" [formGroup]="userForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-header>
-      <mat-card-title><strong>Register</strong></mat-card-title>
+      <mat-card-title><strong><h4>Register</h4></strong></mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="row">
-        <div class="col">
+      <!-- <div class="row"> -->
+        <div class="row">
           <mat-form-field class="full-width">
             <input
               matInput
@@ -24,7 +24,7 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col">
+        <div class="row">
           <mat-form-field class="full-width">
             <input
               matInput
@@ -38,20 +38,11 @@
             </mat-error>
           </mat-form-field>
         </div>
-      </div>
+      <!-- </div> -->
       <div class="row" *ngIf="hasUnitNumber">
-        <div class="col">
-          <mat-form-field class="full-width">
-            <textarea
-              matInput
-              placeholder="Address 2"
-              formControlName="address2"
-            ></textarea>
-          </mat-form-field>
-        </div>
       </div>
-      <div class="row">
-        <div class="col">
+      <!-- <div class="row"> -->
+        <div class="row">
           <mat-form-field class="full-width">
             <input matInput placeholder="Email-ID" formControlName="email" />
             <mat-error *ngIf="userForm.controls['email'].hasError('required')">
@@ -59,7 +50,7 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col">
+        <div class="row">
           <mat-form-field class="full-width">
             <mat-select placeholder="Branch" formControlName="branch">
               <mat-option
@@ -74,16 +65,14 @@
             </mat-error>
           </mat-form-field>
         </div>
-      </div>
-      <div class="row">
-        <div class="col" *ngIf="getRole()">
-          <mat-form-field class="cgpa-field">
+      <!-- </div> -->
+      <div class="row" *ngIf="getRole()">
+          <mat-form-field class="full-width">
             <input matInput placeholder="CGPA" formControlName="CGPA" />
             <mat-error *ngIf="userForm.controls['CGPA'].hasError('required')">
               CGPA is <strong>required</strong>
             </mat-error>
           </mat-form-field>
-        </div>
       </div>
     </mat-card-content>
     <mat-card-actions>
