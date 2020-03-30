@@ -2,8 +2,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Validators } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit, Input, DoCheck } from "@angular/core";
+import { Router } from "@angular/router";
+import { Component, OnInit, Input } from "@angular/core";
 import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
@@ -37,7 +37,6 @@ export class ContentComponent implements OnInit, DoCheck {
     description: ["", Validators.required]
   });
   constructor(
-    private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private projectService: ProjectsService,
     private dialog: MatDialog,
@@ -88,7 +87,6 @@ export class ContentComponent implements OnInit, DoCheck {
           });
 
           snackBarRef.onAction().subscribe(() => {
-            // console.log("The snack-bar was dismissed");
             this.router
               .navigateByUrl("/refresh", { skipLocationChange: true })
               .then(() => {

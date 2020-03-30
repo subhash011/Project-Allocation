@@ -99,7 +99,6 @@ router.post("/preference/:id", (req, res) => {
     const project_idArr = projects.map(val =>
         mongoose.Types.ObjectId(val["_id"])
     );
-    var message;
     var studentStream;
     const idToken = req.headers.authorization;
     var promise = Student.findOneAndUpdate({ google_id: { id: id, idToken: idToken } }, { projects_preference: project_idArr })

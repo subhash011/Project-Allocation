@@ -3,7 +3,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const session = require("express-session");
-const flash = require("connect-flash");
 const cors = require("cors");
 
 const path = require("path");
@@ -19,10 +18,7 @@ app.use(
     saveUninitialized: false
   })
 );
-//use flash
-app.use(flash());
 
-//Using cors to enable request from thrid party api's
 app.use(cors());
 
 //use body-parser
@@ -44,16 +40,7 @@ mongoose
 
 //define all routes below this
 const home = require("./routes/home");
-
 app.use("/", home);
-
-// const student = require("./routes/student");
-// const faculty = require("./routes/faculty");
-// app.use("/", home);
-// const auth = require("./config/oauth");
-// app.use("/auth", auth);
-// app.use("/student", student);
-// app.use("/faculty", faculty);
 
 const auth_check = require("./routes/auth_check");
 app.use("/auth", auth_check);
@@ -63,8 +50,7 @@ app.use("/student", student);
 
 const faculty = require("./routes/faculty");
 app.use("/faculty", faculty);
-// const auth = require("./config/oauth");
-// app.use("/auth", auth);
+
 const student_project = require("./routes/student_project");
 app.use("/student/project", student_project);
 
@@ -76,7 +62,8 @@ const PORT = process.env.PORT || 8080;
 //Error Response for routes not registered
 app.get("*", (req, res) => {
   res.status(404).json({
-    error: "Page Not found"
+    status: "fail",
+    error: "Authentication failed - server error"
   });
 });
 
