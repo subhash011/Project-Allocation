@@ -101,8 +101,8 @@
                             <mat-card-content class="add-card-content">
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="Title" [(ngModel)]="project.title" formControlName="title" />
-                                        <mat-error *ngIf="ProjectForm.controls['title'].hasError('required')">
+                                        <input matInput placeholder="Title" formControlName="title" value="project.title" />
+                                        <mat-error *ngIf="EditForm.controls['title'].hasError('required')">
                                             Title is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -110,9 +110,9 @@
 
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="Duration" [(ngModel)]="project.duration" formControlName="duration" />
+                                        <input matInput placeholder="Duration" formControlName="duration" />
                                         <mat-error *ngIf="
-                        ProjectForm.controls['duration'].hasError('required')
+                        EditForm.controls['duration'].hasError('required')
                       ">
                                             Duration is <strong>required</strong>
                                         </mat-error>
@@ -121,9 +121,9 @@
 
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="No. of Students" [(ngModel)]="project.studentIntake" formControlName="studentIntake" />
+                                        <input matInput placeholder="No. of Students" formControlName="studentIntake" />
                                         <mat-error *ngIf="
-                        ProjectForm.controls['studentIntake'].hasError(
+                        EditForm.controls['studentIntake'].hasError(
                           'required'
                         )
                       ">
@@ -135,7 +135,7 @@
                                 <div class="row">
                                     <!-- <div class="col"> -->
                                     <mat-form-field class="full-width">
-                                        <textarea matInput placeholder="Description" [(ngModel)]="project.description" formControlName="description"></textarea>
+                                        <textarea matInput placeholder="Description" formControlName="description"></textarea>
                                     </mat-form-field>
                                     <!-- </div> -->
                                 </div>
