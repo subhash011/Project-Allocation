@@ -25,9 +25,7 @@ export class ShowPreferencesComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public preferences: any
   ) {}
 
-  ngOnInit() {
-    // console.log(this.preferences);
-  }
+  ngOnInit() {}
   onNoClick(): void {
     this.dialogRef.close("closed");
   }

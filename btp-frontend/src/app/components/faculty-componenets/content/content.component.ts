@@ -47,21 +47,6 @@ export class ContentComponent implements OnInit {
 
   ngOnInit() {}
 
-  initialiseInvites(project) {
-    console.log("This works");
-  }
-
-  // ngDoCheck(): void {
-  //   if (this.project) {
-  //     this.EditForm.setValue({
-  //       title: this.project.title,
-  //       duration: this.project.duration,
-  //       studentIntake: this.project.studentIntake,
-  //       description: this.project.description
-  //     });
-  //   }
-  // }
-
   onSubmit() {
     if (this.ProjectForm.valid) {
       const project = {
@@ -73,8 +58,6 @@ export class ContentComponent implements OnInit {
       };
 
       this.projectService.saveProject(project).subscribe(data => {
-        // console.log(data);
-
         if (data["save"] == "success") {
           let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
             duration: 3000

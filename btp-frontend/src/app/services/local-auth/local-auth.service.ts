@@ -20,13 +20,11 @@ export class LocalAuthService {
           route: "/student/" + data.user_details.id,
           error: "none"
         };
-      // this.router.navigate(["/student", data.user_details.id]);
       else if (data.position == "faculty") {
         return {
           route: "/faculty/" + data.user_details.id,
           error: "none"
         };
-        // this.router.navigate(["/faculty", data.user_details.id]);
       }
     } else if (!data.isRegistered) {
       if (data.position === "student") {
@@ -34,13 +32,11 @@ export class LocalAuthService {
           route: "/register/" + data.user_details.id,
           error: "none"
         };
-        // this.router.navigate(["/student/register"]);
       } else if (data.position === "faculty") {
         return {
           route: "/register/" + data.user_details.id,
           error: "none"
         };
-        // this.router.navigate(["/faculty/register"]);
       } else if (data.position === "error") {
         return {
           route: "/error",

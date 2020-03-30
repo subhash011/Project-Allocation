@@ -1,5 +1,5 @@
 import { ProjectsService } from "./../../../services/projects/projects.service";
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import { UserService } from "src/app/services/user/user.service";
 
@@ -50,8 +50,6 @@ export class FacultyComponent implements OnInit {
   }
 
   displayProject(project) {
-    // console.log(project);
-
     this.projectService
       .getStudentsApplied(project.students_id)
       .subscribe(data => {
@@ -64,7 +62,6 @@ export class FacultyComponent implements OnInit {
     this.empty = false;
   }
   addProject(state) {
-    // console.log(state);
     this.add = state;
     this.empty = false;
   }

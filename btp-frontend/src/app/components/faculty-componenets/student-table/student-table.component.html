@@ -1,44 +1,56 @@
 <div class="controls">
-    <div>
-        <mat-slide-toggle [(ngModel)]="checked" class="example-margin" color="primary">
-            Enable Drag
-        </mat-slide-toggle>
-    </div>
+  <div>
+    <mat-slide-toggle
+      [(ngModel)]="checked"
+      class="example-margin"
+      color="primary"
+    >
+      Enable Drag
+    </mat-slide-toggle>
+  </div>
 
-    <div>
-        <button class="saveButton" mat-raised-button color="warn" (click)="onSubmit()">
+  <div>
+    <button
+      class="saveButton"
+      mat-raised-button
+      color="warn"
+      (click)="onSubmit()"
+    >
       Save Preferences
     </button>
-    </div>
+  </div>
 </div>
 
-<div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)" cdkDropListDisabled="{{ !checked }}">
-    <mat-list-item>
-        <div class="row header">
-            <div><strong>Name</strong></div>
-            <div><strong>CGPA</strong></div>
-            <div><strong>Roll No</strong></div>
-        </div>
-    </mat-list-item>
-    <mat-divider></mat-divider>
-
-    <div class="example-box" *ngFor="let student of student_list" cdkDrag>
-        <mat-list-item>
-            <!-- <mat-card-content> -->
-            <div class="row">
-                <div>
-                    {{ student.name }}
-                </div>
-
-                <div>
-                    {{ student.gpa }}
-                </div>
-
-                <div>
-                    {{ student.roll_no }}
-                </div>
-            </div>
-            <!-- </mat-card-content> -->
-        </mat-list-item>
+<div
+  cdkDropList
+  class="example-list"
+  (cdkDropListDropped)="drop($event)"
+  cdkDropListDisabled="{{ !checked }}"
+>
+  <mat-list-item>
+    <div class="row header">
+      <div><strong>Name</strong></div>
+      <div><strong>CGPA</strong></div>
+      <div><strong>Roll No</strong></div>
     </div>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+
+  <div class="example-box" *ngFor="let student of student_list" cdkDrag>
+    <mat-list-item>
+      <div class="row">
+        <div>
+          {{ student.name }}
+        </div>
+
+        <div>
+          {{ student.gpa }}
+        </div>
+
+        <div>
+          {{ student.roll_no }}
+        </div>
+      </div>
+    </mat-list-item>
+  </div>
 </div>

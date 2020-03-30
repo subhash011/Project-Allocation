@@ -1,96 +1,94 @@
 .container {
-    width: 400px;
-    max-width: 100%;
-    margin: 0 20px;
-    display: inline-block;
-    vertical-align: top;
+  width: 400px;
+  max-width: 100%;
+  margin: 0 20px;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .list {
-    min-height: 60px;
-    border-radius: 4px;
-    display: block;
+  min-height: 60px;
+  border-radius: 4px;
+  display: block;
 }
 
 .list-item {
-    padding: 20px 10px;
-    box-sizing: border-box;
-    cursor: move;
-    color: black;
-    font-size: 14px;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  cursor: move;
+  color: black;
+  font-size: 14px;
 }
 
 .list-item:last-child {
-    border: none;
+  border: none;
 }
-
 
 /* Highlight the list item that is being dragged. */
 
 .cdk-drag-preview {
-    border-radius: 4px;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
-
 
 /* Animate items as they're being sorted. */
 
 .cdk-drop-dragging .cdk-drag {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
-
 
 /* Animate an item that has been dropped. */
 
 .cdk-drag-animating {
-    transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .cdk-drag-placeholder {
-    opacity: 0;
+  opacity: 0;
 }
 
 .drag-drop {
-    padding-top: 5%;
-    padding-bottom: 5%;
-    overflow: scroll;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  overflow: scroll;
 }
 
 .col-1 {
-    width: 45%;
-    min-height: fit-content;
+  width: 45%;
+  min-height: fit-content;
 }
 
 .col-2 {
-    width: 45%;
-    margin-left: 5%;
-    min-height: fit-content;
+  width: 45%;
+  margin-left: 5%;
+  min-height: fit-content;
 }
 
 .space {
-    margin-top: 1%;
+  margin-top: 1%;
 }
 
 .flex-space {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 h2 {
-    padding-left: 40%;
+  padding-left: 40%;
 }
 
 .btn-align {
-    padding-left: 40%;
+  padding-left: 40%;
 }
 
 .drag-drop::-webkit-scrollbar {
-    width: 0 !important;
+  width: 0 !important;
 }
 
 .drag-drop {
-    overflow: -moz-scrollbars-none;
+  overflow: -moz-scrollbars-none;
 }
 
 .drag-drop {
-    -ms-overflow-style: none;
+  -ms-overflow-style: none;
 }

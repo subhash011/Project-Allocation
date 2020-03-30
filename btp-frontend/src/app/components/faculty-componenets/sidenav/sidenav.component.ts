@@ -13,12 +13,7 @@ export class SidenavComponent implements OnInit {
 
   public selectedRow;
 
-
-
-
-  constructor() {
-
-  }
+  constructor() {}
 
   ngOnInit() {}
 
@@ -28,7 +23,7 @@ export class SidenavComponent implements OnInit {
     this.selectedRow = null;
   }
 
-  onClick(project,index) {
+  onClick(project, index) {
     this.projectClicked.emit(project);
     this.empty = false;
     this.selectedRow = index;
