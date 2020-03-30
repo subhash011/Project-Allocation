@@ -3,7 +3,7 @@ import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Validators } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, DoCheck } from "@angular/core";
 import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
@@ -53,13 +53,12 @@ export class ContentComponent implements OnInit, DoCheck {
 
   ngDoCheck(): void {
     if (this.project) {
-      // this.EditForm.setValue
-      // this.EditForm.patchValue({
-      //   title: this.project.title,
-      //   duration: this.project.duration,
-      //   studentIntake: this.project.studentIntake,
-      //   description: this.project.description
-      // });
+      this.EditForm.setValue({
+        title: this.project.title,
+        duration: this.project.duration,
+        studentIntake: this.project.studentIntake,
+        description: this.project.description
+      });
     }
   }
 
