@@ -41,7 +41,6 @@ export class DragDropComponent implements OnInit {
   contID: any;
   drop(event: CdkDragDrop<string[]>) {
     this.contID = Number(event.container.id.split("-")[3]);
-    console.log(this.contID);
     if (event.previousContainer === event.container) {
       if (this.contID % 2 != 0) {
         this.disable = false;
@@ -64,7 +63,6 @@ export class DragDropComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      console.log(event.container.id);
       if (this.contID % 2 != 0) {
         this.preferenceArray = event.container.data;
         this.helperArray = event.previousContainer.data;

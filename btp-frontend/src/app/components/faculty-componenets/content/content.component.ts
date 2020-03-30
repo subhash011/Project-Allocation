@@ -74,7 +74,7 @@ export class ContentComponent implements OnInit, DoCheck {
       };
 
       this.projectService.saveProject(project).subscribe(data => {
-        console.log(data);
+        // console.log(data);
 
         if (data["save"] == "success") {
           let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
@@ -117,7 +117,7 @@ export class ContentComponent implements OnInit, DoCheck {
         project_id: param._id
       };
 
-      console.log(project);
+      // console.log(project);
 
       let dialogRef = this.dialog.open(SubmitPopUpComponent, {
         height: "60%",
