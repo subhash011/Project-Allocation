@@ -24,9 +24,7 @@ export class ShowPreferencesComponent implements OnInit {
     private loginComponent: LoginComponent
   ) {}
 
-  ngOnInit() {
-    // console.log(this.preferences);
-  }
+  ngOnInit() {}
   onNoClick(): void {
     this.dialogRef.close("closed");
   }
