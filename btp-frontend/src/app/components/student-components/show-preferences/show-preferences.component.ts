@@ -1,3 +1,5 @@
+import { LoginComponent } from "./../../shared/login/login.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { UserService } from "./../../../services/user/user.service";
@@ -12,17 +14,17 @@ import {
 @Component({
   selector: "app-show-preferences",
   templateUrl: "./show-preferences.component.html",
-  styleUrls: ["./show-preferences.component.scss"]
+  styleUrls: ["./show-preferences.component.scss"],
+  providers: [LoginComponent]
 })
 export class ShowPreferencesComponent implements OnInit {
   preferenceArray: string[];
   helperArray: string[];
   constructor(
-    private userService: UserService,
     private projectService: ProjectsService,
-    private router: Router,
     public dialogRef: MatDialogRef<ShowPreferencesComponent>,
-    @Inject(MAT_DIALOG_DATA) public preferences: any
+    @Inject(MAT_DIALOG_DATA) public preferences: any,
+    private loginComponent: LoginComponent
   ) {}
 
   ngOnInit() {
@@ -52,7 +54,20 @@ export class ShowPreferencesComponent implements OnInit {
     return "/student" + "/preferences/" + localStorage.getItem("id");
   }
   savePreferences() {
-    this.projectService.storeStudentPreferences(this.preferences);
-    this.dialogRef.close("saved");
+    this.projectService
+      .storeStudentPreferences(this.preferences)
+      .toPromise()
+      .then(res => {
+        return res["message"];
+      })
+      .then(message => {
+        if (message == "success") {
+          this.dialogRef.close("success");
+        } else if (message == "invalid-token") {
+          this.loginComponent.signOut();
+        } else {
+          this.dialogRef.close("error");
+        }
+      });
   }
 }

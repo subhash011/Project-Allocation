@@ -43,14 +43,7 @@ export class ProjectsService {
         Authorization: user.idToken
       })
     };
-    this.http
-      .post(this.url_post, preferences, httpOptions)
-      .toPromise()
-      .then(res => {
-        if (res["message"] == "success") {
-          return "success";
-        }
-      });
+    return this.http.post(this.url_post, preferences, httpOptions);
   }
   getFacultyProjects(project_id) {
     const obj = {

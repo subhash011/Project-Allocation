@@ -10,11 +10,9 @@ import {
 import {
   CdkDragDrop,
   moveItemInArray,
-  transferArrayItem,
-  CdkDragEnter,
-  CdkDragExit
+  transferArrayItem
 } from "@angular/cdk/drag-drop";
-import { MatAccordion } from "@angular/material/expansion";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-drag-drop",
@@ -26,7 +24,8 @@ export class DragDropComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private projectService: ProjectsService,
-    private loginObject: LoginComponent
+    private loginObject: LoginComponent,
+    private snackBar: MatSnackBar
   ) {}
   ngOnInit() {
     this.getAllStudentPreferences();
@@ -73,7 +72,7 @@ export class DragDropComponent implements OnInit {
     }
   }
   getDisable() {
-    return this.disable || this.preferenceArray == [];
+    return this.disable;
   }
   onSubmit() {
     var dialogRef;
@@ -85,8 +84,15 @@ export class DragDropComponent implements OnInit {
       });
     }
     dialogRef.afterClosed().subscribe(result => {
-      if (result == "saved") {
+      if (result == "success") {
         this.disable = true;
+        this.snackBar.open("Preferences Saved Successfully", "OK", {
+          duration: 3000
+        });
+      } else if (result == "error") {
+        this.snackBar.open("Some Error Occured! Try Again.", "OK", {
+          duration: 3000
+        });
       }
     });
   }

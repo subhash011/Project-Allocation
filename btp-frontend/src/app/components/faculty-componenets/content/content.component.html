@@ -3,7 +3,6 @@
         Your workspace is empty
     </h1>
 </div>
-
 <ng-template #notEmpty>
     <div class="container-add" *ngIf="add; else display">
         <form [formGroup]="ProjectForm" novalidate (ngSubmit)="onSubmit()" class="form-card">
@@ -11,7 +10,6 @@
                 <mat-card-title>
                     Add Project
                 </mat-card-title>
-
                 <mat-card-content class="add-card-content">
                     <div class="row">
                         <mat-form-field class="full-width">
@@ -21,7 +19,6 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-
                     <div class="row">
                         <mat-form-field class="full-width">
                             <input matInput placeholder="Duration" formControlName="duration" />
@@ -34,31 +31,21 @@
                     <div class="row">
                         <mat-form-field class="full-width">
                             <input matInput placeholder="No. of Students" formControlName="studentIntake" />
-                            <mat-error *ngIf="
-                  ProjectForm.controls['studentIntake'].hasError('required')
-                ">
+                            <mat-error *ngIf="ProjectForm.controls['studentIntake'].hasError('required')">
                                 StudentIntake is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
                     </div>
-
                     <div class="row">
-                        <!-- <div class="col"> -->
                         <mat-form-field class="full-width">
                             <textarea matInput placeholder="Description" formControlName="description"></textarea>
                         </mat-form-field>
-                        <!-- </div> -->
                     </div>
                 </mat-card-content>
-                <!-- <mat-card-actions> -->
-                <button mat-raised-button class="submit_button" [disabled]="!ProjectForm.valid" color="primary" type="submit">
-          Submit
-        </button>
-                <!-- </mat-card-actions> -->
+                <button mat-raised-button class="submit_button" [disabled]="!ProjectForm.valid" color="primary" type="submit">Submit</button>
             </mat-card>
         </form>
     </div>
-
     <ng-template #display>
         <mat-tab-group color="accent" dynamicHeight="true">
             <mat-tab label="Project Details" class="project_tab">
@@ -101,7 +88,7 @@
                             <mat-card-content class="add-card-content">
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="Title" formControlName="title" value="project.title" />
+                                        <input matInput placeholder="Title" formControlName="title" [(ngModel)]="project.title" />
                                         <mat-error *ngIf="EditForm.controls['title'].hasError('required')">
                                             Title is <strong>required</strong>
                                         </mat-error>
@@ -110,10 +97,8 @@
 
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="Duration" formControlName="duration" />
-                                        <mat-error *ngIf="
-                        EditForm.controls['duration'].hasError('required')
-                      ">
+                                        <input matInput placeholder="Duration" formControlName="duration" [(ngModel)]="project.duration" />
+                                        <mat-error *ngIf="EditForm.controls['duration'].hasError('required')">
                                             Duration is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -121,34 +106,23 @@
 
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="No. of Students" formControlName="studentIntake" />
-                                        <mat-error *ngIf="
-                        EditForm.controls['studentIntake'].hasError(
-                          'required'
-                        )
-                      ">
+                                        <input matInput placeholder="No. of Students" formControlName="studentIntake" [(ngModel)]="project.studentIntake" />
+                                        <mat-error *ngIf="EditForm.controls['studentIntake'].hasError('required')">
                                             StudentIntake is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
                                 </div>
-
                                 <div class="row">
-                                    <!-- <div class="col"> -->
                                     <mat-form-field class="full-width">
-                                        <textarea matInput placeholder="Description" formControlName="description"></textarea>
+                                        <textarea matInput placeholder="Description" formControlName="description" [(ngModel)]="project.description"></textarea>
                                     </mat-form-field>
-                                    <!-- </div> -->
+                                    <mat-error *ngIf="EditForm.controls['description'].hasError('required')">
+                                        Description is <strong>required</strong>
+                                    </mat-error>
                                 </div>
                             </mat-card-content>
-                            <!-- <mat-card-actions> -->
-                            <button mat-raised-button class="edit-submit" [disabled]="!EditForm.valid" color="primary" type="submit">
-                Submit
-              </button>
-                            <button mat-raised-button class="deleteButton" type="button" color="primary" (click)="deleteProject(project)">
-                Delete
-              </button>
-
-                            <!-- </mat-card-actions> -->
+                            <button mat-raised-button class="edit-submit" [disabled]="!EditForm.valid" color="primary" type="submit">Submit</button>
+                            <button mat-raised-button class="deleteButton" type="button" color="primary" (click)="deleteProject(project)">Delete</button>
                         </mat-card>
                     </form>
                 </div>
