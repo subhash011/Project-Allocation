@@ -29,7 +29,7 @@ export class FacultyComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
       this.id = params.get("id");
-      console.log(this.id);
+      // console.log(this.id);
     });
     this.userDetails.getFacultyDetails(this.id).subscribe(
       data => {
