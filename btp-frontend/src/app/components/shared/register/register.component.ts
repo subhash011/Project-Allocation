@@ -86,6 +86,9 @@ export class RegisterComponent implements OnInit {
       if (!this.message) {
         localStorage.setItem("role", position);
         localStorage.removeItem("isRegistered");
+        var snackBarRef = this.snackBar.open("Registration Successful", "Ok", {
+          duration: 3000
+        });
       } else {
         var snackBarRef = this.snackBar.open(
           "Registration Failed! Please Try Again",

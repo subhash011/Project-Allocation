@@ -9,6 +9,8 @@ import { Component, OnInit } from "@angular/core";
 export class ProfileComponent implements OnInit {
   user_info: any;
   role = "";
+  checked = false;
+  editStatus = "Edit";
   constructor(private userService: UserService) {}
   ngOnInit() {
     this.role = localStorage.getItem("role");
@@ -28,6 +30,11 @@ export class ProfileComponent implements OnInit {
         });
     }
   }
+  getUrl() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user["photoUrl"];
+  }
+
   getStudentDiv() {
     if (this.role == "student" && this.user_info != null) {
       return true;
