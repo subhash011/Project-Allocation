@@ -92,8 +92,11 @@ export class DragDropComponent implements OnInit {
         this.snackBar.open("Some Error Occured! Try Again.", "OK", {
           duration: 3000
         });
-      } else {
+      } else if (result == "invalid-token") {
         this.disable = false;
+        this.snackBar.open("Please Sign In Again", "OK", {
+          duration: 3000
+        });
       }
     });
   }

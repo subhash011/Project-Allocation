@@ -62,6 +62,7 @@ export class ShowPreferencesComponent implements OnInit {
         if (message == "success") {
           this.dialogRef.close("success");
         } else if (message == "invalid-token") {
+          this.dialogRef.close("invalid-token");
           this.loginComponent.signOut();
         } else {
           this.dialogRef.close("error");
