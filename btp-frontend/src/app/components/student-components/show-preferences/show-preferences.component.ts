@@ -55,6 +55,9 @@ export class ShowPreferencesComponent implements OnInit {
       .then(res => {
         return res["message"];
       })
+      .catch(err => {
+        this.dialogRef.close("failed");
+      })
       .then(message => {
         if (message == "success") {
           this.dialogRef.close("success");
