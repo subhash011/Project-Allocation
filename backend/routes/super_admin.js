@@ -27,47 +27,54 @@ Array.prototype.unique = function() {
 
 
 router.delete("/student/:id", (req, res) => {
+    //start authentication here
     const id = mongoose.Types.ObjectId(req.params.id);
     var promises = [];
     Student.findByIdAndDelete(id).then(student => {
-        if (student)
-            return student.projects_preference;
-        else
-            return null;
-    }).then(projects => {
-        if (projects) {
-            for (const project of projects) {
-                var projectid = mongoose.Types.ObjectId(project);
-                promises.push(
-                    Project.findById(projectid).then(project => {
-                        project.students_id = project.students_id.filter(val => !val.equals(id));
-                        project.save().then((project) => {
-                            return project;
-                        });
-                    })
-                );
+            if (student)
+                return student.projects_preference;
+            else
+                return null;
+        }).then(projects => {
+            if (projects) {
+                for (const project of projects) {
+                    var projectid = mongoose.Types.ObjectId(project);
+                    promises.push(
+                        Project.findById(projectid).then(project => {
+                            project.students_id = project.students_id.filter(val => !val.equals(id));
+                            project.save().then((project) => {
+                                return project;
+                            });
+                        })
+                    );
+                }
+                Promise.all(promises).then(result => {
+                    res.json({ result: result, message: "success" });
+                });
+            } else {
+                res.json({ message: "error" });
             }
-            Promise.all(promises).then(result => {
-                res.json({ result: result, message: "success" });
-            });
-        } else {
-            res.json({ message: "error" });
-        }
-    }).catch(err => {
-        res.status(500);
-    })
+        }).catch(err => {
+            res.status(500);
+        })
+        //end authentication here
 });
 
 router.delete("/faculty/:id", (req, res) => {
+    //start authentication here
     const id = mongoose.Types.ObjectId(req.params.id);
-    Faculty.findById(id).then(faculty => {
+    Faculty.findByIdAndDelete(id).then(faculty => {
+        if (!faculty) {
+            res.json({ message: "success" });
+            return;
+        }
         var projects = faculty.project_list;
         var promises = [];
         var projectArr = [];
         for (const project of projects) {
             var project_id = mongoose.Types.ObjectId(project);
             promises.push(
-                Project.findById(project_id).then(project => {
+                Project.findByIdAndDelete(project_id).then(project => {
                     return project;
                 })
             );
@@ -97,7 +104,7 @@ router.delete("/faculty/:id", (req, res) => {
                         student.save().then(student => {
                             return student;
                         });
-                        return student;
+                        return student._id;
                     })
                 );
             }
@@ -110,6 +117,7 @@ router.delete("/faculty/:id", (req, res) => {
             res.status(500);
         })
     });
+    //end authentication here
 });
 
 module.exports = router;
