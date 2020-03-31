@@ -1,0 +1,45 @@
+<mat-tab-group [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
+    <mat-tab label="Faculty">
+        <mat-tab-group>
+            <mat-tab *ngFor="let branch of branches" [label]="branch.name">
+                <div class="searchBox">
+                    <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search ... " name="search" [(ngModel)]="faculty" />
+                    <button class="searchButton" href="#">
+                    <i class="material-icons">search</i>
+          </button>
+                </div>
+                <div class="display">
+                    <div *ngFor="let faculty of branches['faculties'] | filter: faculty">
+                        <div *ngIf="faculty.stream == branch.short">
+                            <!-- display faculty details -->
+                            <p>{{ faculty.name }}</p>
+                            <p>{{ faculty.email }}</p>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-tab>
+    <mat-tab label="Student">
+        <mat-tab-group>
+            <mat-tab *ngFor="let branch of branches" [label]="branch.name">
+                <div class="searchBox">
+                    <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search ... " name="search" [(ngModel)]="student" />
+                    <button class="searchButton" href="#">
+                    <i class="material-icons">search</i>
+          </button>
+                </div>
+                <div class="display">
+                    <div *ngFor="let student of branches['students'] | filter: student">
+                        <div *ngIf="student.stream == branch.short">
+                            <!-- display student details -->
+                            <p>{{ student.name }}</p>
+                            <p>{{ student.email }}</p>
+                            <p>{{ student.roll_no }}</p>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-tab>
+</mat-tab-group>

@@ -7,7 +7,7 @@ const Project = require("../models/Project");
 const oauth = require("../config/oauth");
 
 var email = ["subhash011011@gmail.com"];
-
+var branches = ["CSE", "EE", "ME", "CE"];
 Array.prototype.contains = function(v) {
     for (var i = 0; i < this.length; i++) {
         if (this[i] === v) return true;
@@ -25,6 +25,84 @@ Array.prototype.unique = function() {
     return arr;
 }
 
+router.get("/faculty/details/:name", (req, res) => {
+    var str = req.params.name;
+    console.log(str);
+    if (str == "" || str == null) {
+        Faculty.find().then(faculties => {
+            res.json({
+                message: "success",
+                result: faculties
+            })
+        }).catch(() => {
+            res.status(500);
+        })
+    } else {
+        Faculty.find({ name: { $regex: str, $options: 'i' } }).then(faculty => {
+            res.json({
+                message: "success",
+                result: faculty
+            })
+        }).catch(() => {
+            res.status(500);
+        })
+    }
+});
+
+router.get("/student/details", (req, res) => {
+    var streamwise = [];
+    var student = [];
+    Student.find().then(students => {
+        if (students) {
+            for (const branch of branches) {
+                var temp = students.filter(student => {
+                    return student.stream == branch;
+                });
+                if (temp[0] != null) {
+                    streamwise.push(temp[0]);
+                }
+            }
+            res.json({
+                message: "success",
+                result: streamwise
+            });
+        } else {
+            res.json({
+                message: "success",
+                result: "no-students"
+            })
+        }
+    }).catch(err => {
+        res.status(500);
+    })
+});
+
+router.get("/faculty/details", (req, res) => {
+    var streamwise = [];
+    Faculty.find().then(faculties => {
+        if (faculties) {
+            for (const branch of branches) {
+                var temp = faculties.filter(faculty => {
+                    return faculty.stream == branch;
+                });
+                if (temp[0] != null) {
+                    streamwise.push(temp[0]);
+                }
+            }
+            res.json({
+                message: "success",
+                result: streamwise
+            });
+        } else {
+            res.json({
+                message: "success",
+                result: "no-faculties"
+            })
+        }
+    }).catch(err => {
+        res.status(500);
+    })
+})
 
 router.delete("/student/:id", (req, res) => {
     //start authentication here
@@ -65,12 +143,11 @@ router.delete("/faculty/:id", (req, res) => {
     const id = mongoose.Types.ObjectId(req.params.id);
     Faculty.findByIdAndDelete(id).then(faculty => {
         if (!faculty) {
-            res.json({ message: "success" });
+            res.json({ result: "no-faculty", message: "success" });
             return;
         }
         var projects = faculty.project_list;
         var promises = [];
-        var projectArr = [];
         for (const project of projects) {
             var project_id = mongoose.Types.ObjectId(project);
             promises.push(

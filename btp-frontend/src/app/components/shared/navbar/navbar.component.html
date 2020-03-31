@@ -4,25 +4,26 @@
       <span class="navhead">IIT Palakkad</span>
     </button>
     </div>
-    <div *ngIf="isUser() && !isFaculty()">
+    <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getUrlProjects()" class="nav-text">
       My Projects
     </button>
     </div>
-    <!-- <div *ngIf="isFaculty()">
+    <div *ngIf="isFaculty() && !isFaculty()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getAddProjects()" class="nav-text">
       Add Projects
     </button>
-    </div> -->
-    <div *ngIf="isUser() && !isFaculty()">
+    </div>
+    <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getUrlPreferences()" class="nav-text">
       Preferences
     </button>
     </div>
     <div class="flex-space"></div>
+    <div class="flex-grow-right"></div>
     <div>
         <div *ngIf="isUser()">
             <button mat-button [matMenuTriggerFor]="beforeMenu">
@@ -34,7 +35,7 @@
                 <button mat-menu-item routerLink="/" *ngIf="isAdmin()">
           Admin
         </button>
-                <button mat-menu-item routerLink="/" *ngIf="isSuperAdmin()">
+                <button mat-menu-item routerLink="/super" *ngIf="isSuperAdmin()">
           Super Admin
         </button>
             </mat-menu>

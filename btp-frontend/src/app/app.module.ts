@@ -28,7 +28,8 @@ import { StudentTableComponent } from "./components/faculty-componenets/student-
 import { SubmitPopUpComponent } from "./components/faculty-componenets/submit-pop-up/submit-pop-up.component";
 import { DeletePopUpComponent } from "./components/faculty-componenets/delete-pop-up/delete-pop-up.component";
 import { RefreshComponent } from "./components/faculty-componenets/refresh/refresh.component";
-
+import { SuperAdminComponent } from "./components/shared/super-admin/super-admin.component";
+import { Ng2SearchPipeModule } from "ng2-search-filter";
 const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,
@@ -59,7 +60,8 @@ export function provideConfig() {
     StudentTableComponent,
     SubmitPopUpComponent,
     DeletePopUpComponent,
-    RefreshComponent
+    RefreshComponent,
+    SuperAdminComponent
   ],
   entryComponents: [
     ShowPreferencesComponent,
@@ -75,7 +77,8 @@ export function provideConfig() {
     HttpClientModule,
     DragDropModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    Ng2SearchPipeModule
   ],
   exports: [],
   providers: [
