@@ -56,7 +56,7 @@ router.get("/preference/:id", (req, res) => {
             if (student) {
                 return student["projects_preference"];
             } else {
-                res.json({ message: "token-expired" });
+                res.json({ message: "invalid-token" });
                 return null;
             }
         })
