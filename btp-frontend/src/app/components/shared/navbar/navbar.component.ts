@@ -49,7 +49,8 @@ export class NavbarComponent implements OnInit {
       return (
         localStorage.getItem("role") == "student" ||
         localStorage.getItem("role") == "admin" ||
-        localStorage.getItem("role") == "faculty"
+        localStorage.getItem("role") == "faculty" ||
+        localStorage.getItem("role") == "super_admin"
       );
     else return false;
   }

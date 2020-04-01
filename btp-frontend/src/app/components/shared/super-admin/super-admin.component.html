@@ -1,0 +1,94 @@
+<mat-tab-group [(selectedIndex)]="index" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
+    <mat-tab label="Faculty">
+        <mat-tab-group>
+            <mat-tab *ngFor="let branch of branches" [label]="branch.name">
+                <div class="searchBox">
+                    <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search ... " name="search" [(ngModel)]="faculty" />
+                    <button class="searchButton" href="#">
+            <i class="material-icons">search</i>
+          </button>
+                </div>
+                <div class="display">
+                    <table mat-table [dataSource]="faculties[branch.short] | filter: faculty" class="mat-elevation-z8">
+                        <ng-container matColumnDef="Name">
+                            <th mat-header-cell *matHeaderCellDef [style.color]="background">
+                                Name
+                            </th>
+                            <td mat-cell *matCellDef="let faculty">{{ faculty.name }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Stream">
+                            <th mat-header-cell *matHeaderCellDef>Stream</th>
+                            <td mat-cell *matCellDef="let faculty">{{ faculty.stream }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Email-ID">
+                            <th mat-header-cell *matHeaderCellDef>Email-ID</th>
+                            <td mat-cell *matCellDef="let faculty">{{ faculty.email }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="isAdmin">
+                            <th mat-header-cell *matHeaderCellDef>Admin</th>
+                            <td mat-cell *matCellDef="let faculty">
+                                {{ faculty.isAdmin ? "YES" : "NO" }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Actions">
+                            <th mat-header-cell *matHeaderCellDef>Actions</th>
+                            <td mat-cell *matCellDef="let faculty">
+                                <button color="warn" mat-raised-button (click)="deleteFaculty(faculty._id)">
+                  Remove
+                </button>
+                                <button class="admin-button" color="primary" *ngIf="!faculty.isAdmin" mat-raised-button (click)="addAdmin(faculty._id)">
+                  Make Admin
+                </button>
+                                <button class="remove-admin-button" color="primary" *ngIf="faculty.isAdmin" mat-raised-button (click)="removeAdmin(faculty._id)">
+                  Remove Admin
+                </button>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsFaculty"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsFaculty"></tr>
+                    </table>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-tab>
+    <mat-tab label="Student">
+        <mat-tab-group *ngIf="index == 1" [selectedIndex]="0">
+            <mat-tab *ngFor="let branch of branches" [label]="branch.name">
+                <div class="searchBox">
+                    <input class="searchInput" autocomplete="off" type="search" placeholder="Search ... " name="search" [(ngModel)]="student" />
+                    <button class="searchButton" href="#">
+            <i class="material-icons">search</i>
+          </button>
+                </div>
+                <div class="display">
+                    <table mat-table [dataSource]="students[branch.short] | filter: student" class="mat-elevation-z8">
+                        <ng-container matColumnDef="Name">
+                            <th mat-header-cell *matHeaderCellDef [style.color]="background">
+                                Name
+                            </th>
+                            <td mat-cell *matCellDef="let student">{{ student.name }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Stream">
+                            <th mat-header-cell *matHeaderCellDef>Stream</th>
+                            <td mat-cell *matCellDef="let student">{{ student.stream }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Email-ID">
+                            <th mat-header-cell *matHeaderCellDef>Email-ID</th>
+                            <td mat-cell *matCellDef="let student">{{ student.email }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Actions">
+                            <th mat-header-cell *matHeaderCellDef>Actions</th>
+                            <td mat-cell *matCellDef="let student">
+                                <button color="warn" mat-raised-button (click)="deleteStudent(student._id)">
+                  Remove
+                </button>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsStudent"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsStudent"></tr>
+                    </table>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-tab>
+</mat-tab-group>

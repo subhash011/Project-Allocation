@@ -104,72 +104,76 @@ export class ContentComponent implements OnInit, DoCheck {
         description: this.EditForm.get("description").value,
         project_id: param._id
       };
-      let dialogRef = this.dialog.open(SubmitPopUpComponent, {
-        height: "60%",
-        width: "800px",
-        data: project
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if (result["message"] == "submit") {
-          let snackBarRef = this.snackBar.open("Successfully Updated", "Ok", {
-            duration: 3000
-          });
-          snackBarRef.afterDismissed().subscribe(() => {
-            this.router
-              .navigateByUrl("/refresh", { skipLocationChange: true })
-              .then(() => {
-                this.router.navigate([decodeURI(this.location.path())]);
-              });
-          });
-          snackBarRef.onAction().subscribe(() => {
-            this.router
-              .navigateByUrl("/refresh", { skipLocationChange: true })
-              .then(() => {
-                this.router.navigate([decodeURI(this.location.path())]);
-              });
-          });
-        }
-      });
+      if (this.dialog.openDialogs.length == 0) {
+        let dialogRef = this.dialog.open(SubmitPopUpComponent, {
+          height: "60%",
+          width: "800px",
+          data: project
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (result["message"] == "submit") {
+            let snackBarRef = this.snackBar.open("Successfully Updated", "Ok", {
+              duration: 3000
+            });
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.router
+                .navigateByUrl("/refresh", { skipLocationChange: true })
+                .then(() => {
+                  this.router.navigate([decodeURI(this.location.path())]);
+                });
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.router
+                .navigateByUrl("/refresh", { skipLocationChange: true })
+                .then(() => {
+                  this.router.navigate([decodeURI(this.location.path())]);
+                });
+            });
+          }
+        });
+      }
     }
   }
 
   deleteProject(project) {
-    let dialogRef = this.dialog.open(DeletePopUpComponent, {
-      height: "200px",
-      width: "400px",
-      data: "delete the project"
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result["message"] == "submit") {
-        this.projectService
-          .deleteProject(project._id)
-          .toPromise()
-          .then(result => {
-            if (result["status"] == "success") {
-              let snackBarRef = this.snackBar.open(
-                "Successfully Deleted",
-                "Ok",
-                {
-                  duration: 3000
-                }
-              );
-              snackBarRef.afterDismissed().subscribe(() => {
-                this.router
-                  .navigateByUrl("/refresh", { skipLocationChange: true })
-                  .then(() => {
-                    this.router.navigate([decodeURI(this.location.path())]);
-                  });
-              });
-              snackBarRef.onAction().subscribe(() => {
-                this.router
-                  .navigateByUrl("/refresh", { skipLocationChange: true })
-                  .then(() => {
-                    this.router.navigate([decodeURI(this.location.path())]);
-                  });
-              });
-            }
-          });
-      }
-    });
+    if (this.dialog.openDialogs.length == 0) {
+      let dialogRef = this.dialog.open(DeletePopUpComponent, {
+        height: "200px",
+        width: "400px",
+        data: "delete the project"
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result["message"] == "submit") {
+          this.projectService
+            .deleteProject(project._id)
+            .toPromise()
+            .then(result => {
+              if (result["status"] == "success") {
+                let snackBarRef = this.snackBar.open(
+                  "Successfully Deleted",
+                  "Ok",
+                  {
+                    duration: 3000
+                  }
+                );
+                snackBarRef.afterDismissed().subscribe(() => {
+                  this.router
+                    .navigateByUrl("/refresh", { skipLocationChange: true })
+                    .then(() => {
+                      this.router.navigate([decodeURI(this.location.path())]);
+                    });
+                });
+                snackBarRef.onAction().subscribe(() => {
+                  this.router
+                    .navigateByUrl("/refresh", { skipLocationChange: true })
+                    .then(() => {
+                      this.router.navigate([decodeURI(this.location.path())]);
+                    });
+                });
+              }
+            });
+        }
+      });
+    }
   }
 }

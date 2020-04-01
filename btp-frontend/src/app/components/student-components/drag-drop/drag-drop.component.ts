@@ -72,8 +72,10 @@ export class DragDropComponent implements OnInit {
   }
   onSubmit() {
     var dialogRef;
-    if (this.preferenceArray) {
+    if (this.dialog.openDialogs.length == 0) {
+      this.disable = true;
       dialogRef = this.dialog.open(ShowPreferencesComponent, {
+        panelClass: "no-toolbar-padding",
         width: "800px",
         height: "800px",
         data: this.preferenceArray
@@ -86,7 +88,13 @@ export class DragDropComponent implements OnInit {
           duration: 3000
         });
       } else if (result == "error") {
+        this.disable = false;
         this.snackBar.open("Some Error Occured! Try Again.", "OK", {
+          duration: 3000
+        });
+      } else if (result == "invalid-token") {
+        this.disable = false;
+        this.snackBar.open("Please Sign In Again", "OK", {
           duration: 3000
         });
       }
@@ -99,7 +107,7 @@ export class DragDropComponent implements OnInit {
       .getStudentPreference()
       .toPromise()
       .then(details => {
-        if (details["message"] == "token-expired") {
+        if (details["message"] == "invalid-token") {
           this.loginObject.signOut();
           return null;
         }

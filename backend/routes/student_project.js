@@ -48,56 +48,49 @@ router.get("/:id", (req, res) => {
 
 //fetch student preferences
 router.get("/preference/:id", (req, res) => {
-  var promises = [];
-  const id = req.params.id;
-  const idToken = req.headers.authorization;
-  var promise = Student.findOne({ google_id: { id: id, idToken: idToken } })
-    .then(student => {
-      if (student) {
-        return student["projects_preference"];
-      } else {
-        res.json({ message: "token-expired" });
-        return null;
-      }
-    })
-    .catch(err => {
-      res.json(err);
-    })
-    .then(project_id => {
-      if (project_id) {
-        for (const project of project_id) {
-          promises.push(
-            Project.findById(project)
-              .populate("faculty_id")
-              .then(project => {
-                var new_details = {
-                  _id: project["_id"],
-                  title: project["title"],
-                  description: project["description"],
-                  duration: project["duration"],
-                  studentIntake: project["studentIntake"],
-                  faculty_name: project["faculty_id"]["name"],
-                  faculty_email: project["faculty_id"]["email"]
-                };
-                return new_details;
-              })
-              .catch(err => {
-                res.json(err);
-              })
-          );
-        }
-        Promise.all(promises)
-          .then(result => {
-            res.ggggggggggjson(result);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    var promises = [];
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    var promise = Student.findOne({ google_id: { id: id, idToken: idToken } })
+        .then(student => {
+            if (student) {
+                return student["projects_preference"];
+            } else {
+                res.json({ message: "invalid-token" });
+                return null;
+            }
+        })
+        .catch(err => {
+            res.json(err);
+        })
+        .then(project_id => {
+            if (project_id) {
+                for (const project of project_id) {
+                    promises.push(
+                        Project.findById(project)
+                        .populate("faculty_id")
+                        .then(project => {
+                            var new_details = {
+                                _id: project["_id"],
+                                title: project["title"],
+                                description: project["description"],
+                                duration: project["duration"],
+                                studentIntake: project["studentIntake"],
+                                faculty_name: project["faculty_id"]["name"],
+                                faculty_email: project["faculty_id"]["email"]
+                            };
+                            return new_details;
+                        })
+                        .catch(err => {
+                            res.json(err);
+                        })
+                    );
+                }
+                Promise.all(promises).then(result => {
+                    res.json(result);
+                });
+            }
+        });
 });
 //store student preferences
 router.post("/preference/:id", (req, res) => {

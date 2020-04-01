@@ -1,8 +1,6 @@
-// .list-item {
-//     padding-left: 100px;
-// }
 .right-button {
     margin-left: 50%;
+    margin-right: 5%;
 }
 
 .left-button {
@@ -73,6 +71,11 @@
 .drag-drop {
     padding-top: 5%;
     padding-bottom: 5%;
+}
+
+.show {
+    overflow-y: scroll;
+    height: 736px;
 }
 
 .col-1 {
