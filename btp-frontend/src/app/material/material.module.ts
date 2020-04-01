@@ -22,6 +22,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatTableModule } from "@angular/material/table";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatPaginatorModule } from "@angular/material/paginator";
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -45,7 +46,8 @@ const MaterialComponents = [
   MatTabsModule,
   MatTableModule,
   MatSlideToggleModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatPaginatorModule
 ];
 
 @NgModule({
