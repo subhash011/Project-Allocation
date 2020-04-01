@@ -23,104 +23,86 @@ Array.prototype.unique = function() {
         }
     }
     return arr;
-}
-
-router.get("/faculty/details/:name", (req, res) => {
-    var str = req.params.name;
-    console.log(str);
-    if (str == "" || str == null) {
-        Faculty.find().then(faculties => {
-            res.json({
-                message: "success",
-                result: faculties
-            })
-        }).catch(() => {
-            res.status(500);
-        })
-    } else {
-        Faculty.find({ name: { $regex: str, $options: 'i' } }).then(faculty => {
-            res.json({
-                message: "success",
-                result: faculty
-            })
-        }).catch(() => {
-            res.status(500);
-        })
-    }
-});
+};
 
 router.get("/student/details", (req, res) => {
     var streamwise = [];
     var student = [];
-    Student.find().then(students => {
-        if (students) {
-            for (const branch of branches) {
-                var temp = students.filter(student => {
-                    return student.stream == branch;
-                });
-                if (temp[0] != null) {
-                    streamwise.push(temp[0]);
+    Student.find()
+        .then(students => {
+            if (students) {
+                for (const branch of branches) {
+                    var temp = students.filter(student => {
+                        return student.stream == branch;
+                    });
+                    // if (temp[0] != null) {
+                    streamwise.push(temp);
+                    // }
                 }
+                res.json({
+                    message: "success",
+                    result: streamwise
+                });
+            } else {
+                res.json({
+                    message: "success",
+                    result: "no-students"
+                });
             }
-            res.json({
-                message: "success",
-                result: streamwise
-            });
-        } else {
-            res.json({
-                message: "success",
-                result: "no-students"
-            })
-        }
-    }).catch(err => {
-        res.status(500);
-    })
+        })
+        .catch(err => {
+            res.status(500);
+        });
 });
 
 router.get("/faculty/details", (req, res) => {
     var streamwise = [];
-    Faculty.find().then(faculties => {
-        if (faculties) {
-            for (const branch of branches) {
-                var temp = faculties.filter(faculty => {
-                    return faculty.stream == branch;
-                });
-                if (temp[0] != null) {
-                    streamwise.push(temp[0]);
+    Faculty.find()
+        .then(faculties => {
+            if (faculties) {
+                for (const branch of branches) {
+                    var temp = faculties.filter(faculty => {
+                        return faculty.stream == branch;
+                    });
+                    // if (temp[0] != null) {
+                    streamwise.push(temp);
+                    // }
                 }
+                res.json({
+                    message: "success",
+                    result: streamwise
+                });
+            } else {
+                res.json({
+                    message: "success",
+                    result: "no-faculties"
+                });
             }
-            res.json({
-                message: "success",
-                result: streamwise
-            });
-        } else {
-            res.json({
-                message: "success",
-                result: "no-faculties"
-            })
-        }
-    }).catch(err => {
-        res.status(500);
-    })
-})
+        })
+        .catch(err => {
+            res.status(500);
+        });
+});
 
 router.delete("/student/:id", (req, res) => {
     //start authentication here
     const id = mongoose.Types.ObjectId(req.params.id);
     var promises = [];
-    Student.findByIdAndDelete(id).then(student => {
-            if (student)
-                return student.projects_preference;
-            else
-                return null;
-        }).then(projects => {
+    Student.findByIdAndDelete(id)
+        .then(student => {
+            if (student) return student.projects_preference;
+            else return null;
+        })
+        .then(projects => {
             if (projects) {
                 for (const project of projects) {
                     var projectid = mongoose.Types.ObjectId(project);
                     promises.push(
                         Project.findById(projectid).then(project => {
-                            project.students_id = project.students_id.filter(val => !val.equals(id));
-                            project.save().then((project) => {
+                            project.students_id = project.students_id.filter(
+                                val => !val.equals(id)
+                            );
+                            project.save().then(project => {
                                 return project;
                             });
                         })
@@ -132,10 +114,11 @@ router.delete("/student/:id", (req, res) => {
             } else {
                 res.json({ message: "error" });
             }
-        }).catch(err => {
-            res.status(500);
         })
-        //end authentication here
+        .catch(err => {
+            res.status(500);
+        });
+    //end authentication here
 });
 
 router.delete("/faculty/:id", (req, res) => {
@@ -156,45 +139,103 @@ router.delete("/faculty/:id", (req, res) => {
                 })
             );
         }
-        Promise.all(promises).then(result => {
-            return result;
-        }).catch(err => {
-            res.status(500);
-        }).then(projects => {
-            promises = []
-            projects_id = projects.map(val => String(val._id));
-            students_id = projects.map(val => val.students_id);
-            var students = []
-            for (const ids of students_id) {
-                var studentid = [String(ids)];
-                students = [...students, ...studentid];
-            }
-            students_id = students.unique();
-            for (const student of students_id) {
-                studentID = mongoose.Types.ObjectId(student);
-                promises.push(
-                    Student.findById(studentID).then(student => {
-                        student.projects_preference = student.projects_preference.filter(
-                            val => !projects_id.includes(String(val))
-                        );
-                        student.projects_preference.map(val => mongoose.Types.ObjectId(val));
-                        student.save().then(student => {
-                            return student;
-                        });
-                        return student._id;
-                    })
-                );
-            }
-            Promise.all(promises).then(result => {
-                res.json({ result: result, message: "success" });
-            }).catch(err => {
+        Promise.all(promises)
+            .then(result => {
+                return result;
+            })
+            .catch(err => {
                 res.status(500);
             })
-        }).catch(err => {
-            res.status(500);
-        })
+            .then(projects => {
+                promises = [];
+                projects_id = projects.map(val => String(val._id));
+                students_id = projects.map(val => val.students_id);
+                var students = [];
+                for (const ids of students_id) {
+                    var studentid = [String(ids)];
+                    students = [...students, ...studentid];
+                }
+                students_id = students.unique();
+                for (const student of students_id) {
+                    studentID = mongoose.Types.ObjectId(student);
+                    promises.push(
+                        Student.findById(studentID).then(student => {
+                            student.projects_preference = student.projects_preference.filter(
+                                val => !projects_id.includes(String(val))
+                            );
+                            student.projects_preference.map(val =>
+                                mongoose.Types.ObjectId(val)
+                            );
+                            student.save().then(student => {
+                                return student;
+                            });
+                            return student._id;
+                        })
+                    );
+                }
+                Promise.all(promises)
+                    .then(result => {
+                        res.json({ result: result, message: "success" });
+                    })
+                    .catch(err => {
+                        res.status(500);
+                    });
+            })
+            .catch(err => {
+                res.status(500);
+            });
     });
     //end authentication here
+});
+
+router.post("/addAdmin/:id", (req, res) => {
+    const id = req.params.id;
+    Faculty.findById(id)
+        .then(faculty => {
+            if (faculty) {
+                faculty.isAdmin = true;
+                faculty.save().then(faculty => {
+                    // console.log(faculty);
+                });
+                res.json({
+                    message: "success",
+                    result: faculty.isAdmin
+                });
+            } else {
+                res.json({
+                    message: "success",
+                    result: "no-faculty"
+                });
+            }
+        })
+        .catch(() => {
+            res.status(500);
+        });
+});
+
+router.post("/removeAdmin/:id", (req, res) => {
+    const id = req.params.id;
+    Faculty.findById(id)
+        .then(faculty => {
+            if (faculty) {
+                faculty.isAdmin = false;
+                faculty.save().then(faculty => {
+                    // console.log(faculty);
+                });
+                res.json({
+                    message: "success",
+                    result: faculty.isAdmin
+                });
+            } else {
+                res.json({
+                    message: "success",
+                    result: "no-faculty"
+                });
+            }
+        })
+        .catch(() => {
+            res.status(500);
+        });
 });
 
 module.exports = router;

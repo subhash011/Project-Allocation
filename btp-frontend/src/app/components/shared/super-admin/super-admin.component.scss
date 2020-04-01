@@ -46,4 +46,26 @@
 
 .display {
     padding-top: 5%;
+    padding-left: 10%;
+    padding-right: 1%;
+}
+
+table {
+    width: 80%;
+}
+
+th,
+td {
+    overflow: hidden;
+    width: 10%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-button {
+    margin-left: 5px;
+}
+
+.remove-admin-button {
+    margin-left: 5px;
 }

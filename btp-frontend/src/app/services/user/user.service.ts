@@ -11,16 +11,51 @@ export class UserService {
   public url: string;
   constructor(private http: HttpClient, private router: Router) {}
 
-  getFacultiesByName(name) {
+  addAdmin(id) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/super/faculty/details/" + name;
+    this.url = "http://localhost:8080/super/addAdmin/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         Authorization: "user.idToken" //change it later
       })
     };
-    return this.http.get(this.url, httpOptions);
+    return this.http.post(this.url, httpOptions);
+  }
+
+  removeFaculty(id) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    this.url = "http://localhost:8080/super/faculty/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: "user.idToken" //change it later
+      })
+    };
+    return this.http.delete(this.url, httpOptions);
+  }
+  removeStudent(id) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    this.url = "http://localhost:8080/super/student/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: "user.idToken" //change it later
+      })
+    };
+    return this.http.delete(this.url, httpOptions);
+  }
+
+  removeAdmin(id) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    this.url = "http://localhost:8080/super/removeAdmin/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: "user.idToken" //change it later
+      })
+    };
+    return this.http.post(this.url, httpOptions);
   }
 
   getAllStudents() {
