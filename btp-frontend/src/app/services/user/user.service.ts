@@ -137,4 +137,24 @@ export class UserService {
       });
     return "";
   }
+
+
+
+  Admin_getStreamDetails(){
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = "http://localhost:8080/admin/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken //change it later
+      })
+    };
+    return this.http.get(this.url, httpOptions);
+  } 
+
+
+
 }

@@ -30,6 +30,7 @@ import { DeletePopUpComponent } from "./components/faculty-componenets/delete-po
 import { RefreshComponent } from "./components/faculty-componenets/refresh/refresh.component";
 import { SuperAdminComponent } from "./components/shared/super-admin/super-admin.component";
 import { Ng2SearchPipeModule } from "ng2-search-filter";
+import { AdminComponent } from './components/faculty-componenets/admin/admin.component';
 const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,
@@ -61,7 +62,8 @@ export function provideConfig() {
     SubmitPopUpComponent,
     DeletePopUpComponent,
     RefreshComponent,
-    SuperAdminComponent
+    SuperAdminComponent,
+    AdminComponent
   ],
   entryComponents: [
     ShowPreferencesComponent,

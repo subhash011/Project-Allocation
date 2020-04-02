@@ -32,7 +32,7 @@
       </button>
             <mat-menu #beforeMenu="matMenu" xPosition="before">
                 <button mat-menu-item [routerLink]="getProfile()">Profile</button>
-                <button mat-menu-item routerLink="/" *ngIf="isAdmin()">
+                <button mat-menu-item [routerLink]="getAdmin()" *ngIf="isAdmin()">
           Admin
         </button>
                 <button mat-menu-item routerLink="/super" *ngIf="isSuperAdmin()">

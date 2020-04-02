@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const Student = require("../models/Student");
-const Faculty = require("./Faculty.js");
+const Student = require("./Student");
+const Faculty = require("./Faculty");
 const UserSchema = new mongoose.Schema({
   title: {
     type: String,

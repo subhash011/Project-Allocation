@@ -75,4 +75,8 @@ export class NavbarComponent implements OnInit {
       return localStorage.getItem("role") == "super_admin";
     else return false;
   }
+
+  getAdmin() {
+    return "admin/" + localStorage.getItem("id");
+  }
 }
