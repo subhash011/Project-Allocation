@@ -2,6 +2,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
+
+// start the server
 const session = require("express-session");
 const cors = require("cors");
 
