@@ -26,7 +26,7 @@ const routes: Routes = [
   { path: "student/preferences/:id", component: DragDropComponent },
   { path: "profile/:id", component: ProfileComponent },
   { path: "student/projects/:id", component: StudentProjectsComponent },
-  { path: "super", component: SuperAdminComponent }
+  { path: "super_admin/:id", component: SuperAdminComponent }
 ];
 
 @NgModule({

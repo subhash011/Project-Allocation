@@ -6,7 +6,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { SocialLoginModule } from "angularx-social-login";
+import { SocialLoginModule, LoginOpt } from "angularx-social-login";
 import { AuthServiceConfig, GoogleLoginProvider } from "angularx-social-login";
 import { LoginComponent } from "./components/shared/login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -30,11 +30,17 @@ import { DeletePopUpComponent } from "./components/faculty-componenets/delete-po
 import { RefreshComponent } from "./components/faculty-componenets/refresh/refresh.component";
 import { SuperAdminComponent } from "./components/shared/super-admin/super-admin.component";
 import { Ng2SearchPipeModule } from "ng2-search-filter";
+
+const googleLoginOption: LoginOpt = {
+  scope: "https://mail.google.com/"
+};
+
 const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,
     provider: new GoogleLoginProvider(
-      "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com"
+      "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com",
+      googleLoginOption
     )
   }
 ]);

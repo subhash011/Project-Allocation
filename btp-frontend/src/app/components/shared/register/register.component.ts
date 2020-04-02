@@ -1,3 +1,4 @@
+import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UserService } from "./../../../services/user/user.service";
 import { HttpHeaders } from "@angular/common/http";
@@ -13,10 +14,14 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
   ngOnInit() {
     this.userForm.get("email").disable();
+    if (localStorage.getItem("role") == "super_admin") {
+      this.userForm.get("branch").clearValidators();
+    }
     if (localStorage.getItem("role") == "student") {
       this.userForm.get("CGPA").setValidators(Validators.required);
     } else {
@@ -49,6 +54,14 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  isSuperAdmin() {
+    if (localStorage.getItem("role") == "super_admin") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   onSubmit() {
     if (this.userForm.valid) {
       const user = {
@@ -71,33 +84,43 @@ export class RegisterComponent implements OnInit {
       };
 
       var position = "";
-      if (!isNaN(Number(user["roll_no"].toString()))) {
-        position = "student";
-      } else {
-        position = "faculty";
-      }
+      position = localStorage.getItem("role");
       var id = _user.id;
-      this.message = this.userService.registerUser(
-        user,
-        httpOptions,
-        position,
-        id
-      );
-      if (!this.message) {
-        localStorage.setItem("role", position);
-        localStorage.removeItem("isRegistered");
-        var snackBarRef = this.snackBar.open("Registration Successful", "Ok", {
-          duration: 3000
-        });
-      } else {
-        var snackBarRef = this.snackBar.open(
-          "Registration Failed! Please Try Again",
-          "Ok",
-          {
-            duration: 3000
+      this.userService
+        .registerUser(user, httpOptions, position, id)
+        .toPromise()
+        .then((data: any) => {
+          if (data["registration"] == "success") {
+            localStorage.setItem("role", position);
+            localStorage.removeItem("isRegistered");
+            var snackBarRef = this.snackBar.open(
+              "Registration Successful",
+              "Ok",
+              {
+                duration: 3000
+              }
+            );
+            var route = "/" + position + "/" + id;
+            this.router.navigate([route]);
+          } else {
+            var snackBarRef = this.snackBar.open(
+              "Registration Failed! Please Try Again",
+              "Ok",
+              {
+                duration: 3000
+              }
+            );
           }
-        );
-      }
+        })
+        .catch(() => {
+          var snackBarRef = this.snackBar.open(
+            "Registration Failed! Please Try Again",
+            "Ok",
+            {
+              duration: 3000
+            }
+          );
+        });
     }
   }
 }

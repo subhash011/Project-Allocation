@@ -1,3 +1,5 @@
+import { HttpClient } from "@angular/common/http";
+import { MailService } from "./../../../services/mailing/mail.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { Component, OnInit } from "@angular/core";
@@ -13,7 +15,9 @@ export class StudentComponent implements OnInit {
   constructor(
     private userService: UserService,
     private loginObject: LoginComponent,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private mailService: MailService,
+    private http: HttpClient
   ) {}
   user: any;
   details: any;
@@ -31,6 +35,27 @@ export class StudentComponent implements OnInit {
           this.snackBar.open("Some unknown Error Occured! Try again", "Ok", {
             duration: 3000
           });
+        }
+      });
+  }
+
+  onSubmit() {
+    this.mailService
+      .testMethod()
+      .toPromise()
+      .then(res => {
+        if (res["message"] == "success") {
+          this.snackBar.open("Successfully Sent Mail", "Ok", {
+            duration: 3000
+          });
+        } else {
+          this.snackBar.open(
+            "Mail Not Sent! Please Logout and then Login.",
+            "Ok",
+            {
+              duration: 3000
+            }
+          );
         }
       });
   }

@@ -1,3 +1,4 @@
+import { HttpClient } from "@angular/common/http";
 import { LocalAuthService } from "../../../services/local-auth/local-auth.service";
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "angularx-social-login";
@@ -13,7 +14,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private localAuth: LocalAuthService
+    private localAuth: LocalAuthService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {}

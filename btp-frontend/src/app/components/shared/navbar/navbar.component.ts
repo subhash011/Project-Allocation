@@ -41,8 +41,12 @@ export class NavbarComponent implements OnInit {
     return "profile/" + localStorage.getItem("id");
   }
 
-  redirectToHome() {
-    this.router.navigate([""]);
+  getURLHome() {
+    if (localStorage.getItem("role") == "student") {
+      return "student/" + localStorage.getItem("id");
+    } else if (localStorage.getItem("role") == "faculty") {
+      return "faculty/" + localStorage.getItem("id");
+    }
   }
   isUser() {
     if (localStorage.getItem("isLoggedIn") == "true")

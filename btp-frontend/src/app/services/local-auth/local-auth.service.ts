@@ -25,6 +25,11 @@ export class LocalAuthService {
           route: "/faculty/" + data.user_details.id,
           error: "none"
         };
+      } else if (data.position == "super_admin") {
+        return {
+          route: "/super_admin/" + data.user_details.id,
+          error: "none"
+        };
       }
     } else if (!data.isRegistered) {
       if (data.position === "student") {
@@ -33,6 +38,11 @@ export class LocalAuthService {
           error: "none"
         };
       } else if (data.position === "faculty") {
+        return {
+          route: "/register/" + data.user_details.id,
+          error: "none"
+        };
+      } else if (data.position == "super_admin") {
         return {
           route: "/register/" + data.user_details.id,
           error: "none"
