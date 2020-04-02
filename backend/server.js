@@ -62,6 +62,9 @@ app.use("/faculty/project", faculty_project);
 const super_admin = require("./routes/super_admin");
 app.use("/super", super_admin);
 
+const mail = require("./routes/email");
+app.use("/email", mail);
+
 const PORT = process.env.PORT || 8080;
 
 //Error Response for routes not registered

@@ -19,10 +19,10 @@ var trans = nodemailer.createTransport({
     secure: true,
     auth: {
         type: "OAuth2",
-        user: "subhash011011@gmail.com",
+        user: "111801042@smail.iitpkd.ac.in",
         clientId: "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com",
         clientSecret: "SMhGzWI6YS741l0Urs-a3yAH",
-        accessToken: "ya29.a0Ae4lvC2uoygsDXiGkGndAZDxJyIloZVTxYE09ykRz3b5CJTqEar3j5bDKlAd62sztle4dIwwuixe-mm6Cok9_Dp6ClKXGRQ0YQQkpJumiPfkB8CHGM_OLQi4Xxqcrd7NI252PA-vMJpQRLP-CKROED6eopB0Pb49pgIj"
+        accessToken: "ya29.a0Ae4lvC2CqN8PhKDwdWV2xUo7_tZH8YVUzbCQzAEQ91EBK2GyXjDjpQNa8-7Py0PpCUtwfnLRYPbBZn0kXjnFHcHSgSkWeO8GWhhV_RwqZulQuxtFicQJ2MR935eYUkc1t3AOcOFSwZXJFS4yK3Bxn1r2Vb9TJGrae-c"
     }
 });
 
@@ -36,7 +36,7 @@ app.post("/send", (req, res) => {
             res.json("success");
         })
         .catch(err => {
-            console.log(err);
+            res.json(err);
         });
 });
 

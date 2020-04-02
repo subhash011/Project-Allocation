@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Student = require("../models/Student");
 const Faculty = require("../models/Faculty");
 const Project = require("../models/Project");
+const SuperAdmin = require("../models/SuperAdmin");
 const oauth = require("../config/oauth");
 
 var email = ["subhash011011@gmail.com"];
@@ -24,6 +25,34 @@ Array.prototype.unique = function() {
     }
     return arr;
 };
+
+router.post("/register/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const user = req.body;
+    oauth(idToken).then(() => {
+        const newUser = new SuperAdmin({
+            name: user.name,
+            google_id: {
+                id: id,
+                idToken: idToken
+            },
+            email: user.email
+        });
+        newUser
+            .save()
+            .then(result => {
+                res.json({
+                    registration: "success"
+                });
+            })
+            .catch(err => {
+                res.json({
+                    registration: "fail"
+                });
+            });
+    });
+})
 
 router.get("/student/details", (req, res) => {
     var streamwise = [];
