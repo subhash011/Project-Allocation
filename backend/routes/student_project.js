@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const bodyparser = require("body-parser");
 const Project = require("../models/Project");
 const Student = require("../models/Student");
 const oauth = require("../config/oauth");

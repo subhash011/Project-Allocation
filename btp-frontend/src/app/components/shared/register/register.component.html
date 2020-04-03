@@ -1,15 +1,5 @@
-<div
-  *ngIf="message == 'fail'"
-  class="alert alert-danger fade in alert-dismissible"
-  style="margin-top:18px;"
->
-  <a
-    href="#"
-    class="close"
-    data-dismiss="alert"
-    aria-label="close"
-    title="close"
-    >×</a
+<div *ngIf="message == 'fail'" class="alert alert-danger fade in alert-dismissible" style="margin-top:18px;">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a
   >
   <strong>Registration Failed</strong>
 </div>
@@ -51,7 +41,7 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="!isSuperAdmin()">
           <mat-form-field class="full-width">
             <mat-select placeholder="Branch" formControlName="branch">
               <mat-option *ngFor="let branch of branches" [value]="branch.abbreviation">

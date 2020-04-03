@@ -2,6 +2,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
+
+// start the server
 const session = require("express-session");
 const cors = require("cors");
 
@@ -62,6 +64,9 @@ app.use("/super", super_admin);
 
 const admin = require("./routes/admin");
 app.use("/admin", admin);
+
+const mail = require("./routes/email");
+app.use("/email", mail);
 
 const PORT = process.env.PORT || 8080;
 

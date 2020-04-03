@@ -22,6 +22,7 @@ export class SuperAdminComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {}
+  index = 0;
   background = "primary";
   displayedColumnsFaculty: string[] = [
     "Name",

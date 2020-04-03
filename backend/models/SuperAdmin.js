@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
     google_id: {
         id: {
             type: String,
@@ -12,10 +16,6 @@ const UserSchema = new mongoose.Schema({
         }
     },
     email: {
-        type: String,
-        required: true
-    },
-    token: {
         type: String,
         required: true
     }

@@ -51,8 +51,8 @@ export class ThemePickerComponent implements OnInit {
     }
 
     if (theme.isDefault) {
-      this.currentTheme = theme;
-      localStorage.setItem("current-theme", theme.name);
+      // this.currentTheme = theme; //dont uncomment this for now
+      // localStorage.setItem("current-theme", theme.name);
       this.styleManager.removeStyle("theme");
       localStorage.setItem("current-theme", theme.name);
       this.currentTheme = theme;

@@ -119,23 +119,15 @@ export class UserService {
     return this.http.get(this.url, httpOptions);
   }
 
-  registerUser(user, httpOptions, position, id): string {
-    this.http
-      .post(
-        "http://localhost:8080/" + position + "/register/" + id,
-        user,
-        httpOptions
-      )
-      .toPromise()
-      .then((data: any) => {
-        if (data["registration"] == "success") {
-          var route = "/" + position + "/" + id;
-          this.router.navigate([route]);
-        } else {
-          return "fail";
-        }
-      });
-    return "";
+  registerUser(user, httpOptions, position, id) {
+    if (position == "super_admin") {
+      position = "super";
+    }
+    return this.http.post(
+      "http://localhost:8080/" + position + "/register/" + id,
+      user,
+      httpOptions
+    );
   }
 
   Admin_getStreamDetails() {
