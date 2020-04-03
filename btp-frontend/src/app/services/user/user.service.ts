@@ -181,9 +181,7 @@ export class UserService {
     return this.http.post(this.url, obj, httpOptions);
   }
 
-
-
-  setDeadline(date){
+  setDeadline(date) {
     const obj = {
       deadline: date
     };
@@ -200,6 +198,24 @@ export class UserService {
     };
 
     return this.http.post(this.url, obj, httpOptions);
+  }
+
+
+  getFacultyStreamEmails(){
+
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = "http://localhost:8080/admin/stream_email/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken //change it later
+      })
+    };
+
+    return this.http.get(this.url, httpOptions);
 
 
   }

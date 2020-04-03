@@ -30,6 +30,12 @@ body {
   background-size: 100% 100%;
 }
 
+
+::ng-deep .mat-horizontal-stepper-header{
+  pointer-events: none !important;
+}
+
+
 @mixin styleStepLine($index) {
   .mat-horizontal-stepper-header {
     & + .mat-stepper-horizontal-line:nth-child(#{$index}) {
@@ -100,3 +106,4 @@ body {
 // .mat-stepper-horizontal-line {
 // 	top: 20px !important;
 // }
+

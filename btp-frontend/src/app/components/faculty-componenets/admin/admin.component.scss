@@ -15,8 +15,6 @@
   margin-left: 2%;
 }
 
-
-
 mat-sidenav-container {
   position: fixed;
   height: 100%;
@@ -44,3 +42,12 @@ mat-sidenav-content {
 mat-toolbar {
   justify-content: center;
 }
+
+.datelabel {
+  margin-top: 8%;
+}
+
+::ng-deep .mat-horizontal-stepper-header{
+  pointer-events: none !important;
+}
+

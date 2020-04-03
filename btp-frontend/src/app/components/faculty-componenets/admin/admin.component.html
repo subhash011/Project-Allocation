@@ -25,11 +25,11 @@
         <form [formGroup]="firstFormGroup">
           <ng-template matStepLabel>
             Creating Projects
-              <div *ngIf="stage_no>0">{{dateSet[0]}}</div>
+              <div *ngIf="stage_no>0" class="datelabel">{{dateSet[0].toDateString()}}</div>
           </ng-template>
           
             <mat-form-field class="example-full-width">
-              <mat-label>Choose Date</mat-label>
+              <mat-label>Choose Date1</mat-label>
               <input matInput [min]="minDate" [matDatepicker]="picker1" formControlName="firstCtrl" [disabled]="input1">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
@@ -37,7 +37,7 @@
           
           <div>
 
-            <button mat-button (click)="setDeadline()">Set DeadLine</button>
+            <button mat-button [disabled]="input1" (click)="setDeadline()">Set DeadLine</button>
             <button mat-button matStepperNext (click)="proceed()">Proceed</button>
           </div>
         
@@ -47,18 +47,18 @@
         <form [formGroup]="secondFormGroup">
           <ng-template matStepLabel>
             Student Preferences
-            <div *ngIf="stage_no>1">{{dateSet[1]}}</div>
+            <div *ngIf="stage_no>1" class="datelabel">{{dateSet[1].toDateString()}}</div>
           </ng-template>
 
           <mat-form-field class="example-full-width">
             <mat-label>Choose a date 2</mat-label>
             <input matInput [min]="minDate" [matDatepicker]="picker2" formControlName="secondCtrl" [disabled]="input2">
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker-toggle matSuffix [for]="picker2"  ></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
           
           <div>
-            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button [disabled]="input2" (click)="setDeadline()">Set DeadLine</button>
             <button mat-button matStepperNext [disabled]="proceedButton2"  (click)="proceed()">Proceed</button>
           </div>
         
@@ -68,7 +68,7 @@
         <form [formGroup]="thirdFormGroup">
           <ng-template matStepLabel>Faculty Preferences
 
-            <div *ngIf="stage_no>2">{{dateSet[2]}}</div>
+            <div *ngIf="stage_no>2" class="datelabel">{{dateSet[2].toDateString()}}</div>
 
           </ng-template>
           
@@ -80,6 +80,7 @@
           </mat-form-field>
           
           <div>
+            <button mat-button [disabled]="input3" (click)="setDeadline()">Set DeadLine</button>
             <button mat-button matStepperNext [disabled]="proceedButton3" (click)="proceed()">Proceed</button>
           
           </div>
@@ -90,7 +91,7 @@
         <form [formGroup]="fourthFormGroup">
           <ng-template matStepLabel>Project Allocation</ng-template>
           <div>
-            <button mat-button>Start Allocation</button>
+            <button mat-button (click)="startAllocation()">Start Allocation</button>
           </div>
         
         </form>

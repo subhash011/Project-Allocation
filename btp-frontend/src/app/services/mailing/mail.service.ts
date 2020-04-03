@@ -26,4 +26,77 @@ export class MailService {
     };
     return this.http.post(url, body, httpOptions);
   }
+
+  adminToFaculty(stage, emails, curr_deadline, stream) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    var url = this.base_url + "send";
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken
+      })
+    };
+
+    if (stage == 0) {
+      var body = {
+        user: user,
+        mailBody: `
+        Dear Faculty Member,
+          I kindly request you to start creating projects for the 4th BTech Projects.
+          Please do note that the deadline is ${curr_deadline.toDateString()}.
+
+        With Regards,
+        ${user.name},
+        ${stream} Admin  
+          
+        `,
+        to: emails,
+        subject: "BTech Project Phase 1"
+      };
+    } else if (stage == 2) {
+      var body = {
+        user: user,
+        mailBody: `
+        Dear Faculty Member,
+          I kindly request you to fill in your preference students for your projects.
+          Please do note that the deadline is ${curr_deadline.toDateString()}.
+
+        With Regards,
+        ${user.name},
+        ${stream} Admin  
+          
+        `,
+        to: emails,
+        subject: "BTech Project Phase 3"
+      };
+    }
+    return this.http.post(url, body, httpOptions);
+  }
+
+  adminToStudents(emails, curr_deadline, stream) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    var url = this.base_url + "send";
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken
+      })
+    };
+    const body = {
+      user: user,
+      mailBody: `
+      Dear Students,
+        I kindly request you to fill in your preferences of projects.
+        Please do note that the deadline is ${curr_deadline.toDateString()}.
+
+      With Regards,
+      ${user.name},
+      ${stream} Admin  
+        
+      `,
+      to: emails,
+      subject: "BTech Project Phase 3"
+    };
+    return this.http.post(url, body, httpOptions);
+  }
 }
