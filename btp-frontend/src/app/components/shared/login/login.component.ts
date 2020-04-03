@@ -1,3 +1,4 @@
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpClient } from "@angular/common/http";
 import { LocalAuthService } from "../../../services/local-auth/local-auth.service";
 import { Component, OnInit } from "@angular/core";
@@ -15,7 +16,7 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private localAuth: LocalAuthService,
-    private http: HttpClient
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {}
@@ -37,27 +38,34 @@ export class LoginComponent implements OnInit {
     }
   }
   signInWithGoogle(): void {
-    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(user => {
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("isLoggedIn", "true");
-      this.localAuth
-        .checkUser(user)
-        .toPromise()
-        .then(data => {
-          const navObj = this.localAuth.validate(data);
-          localStorage.setItem("id", data["user_details"]["id"]);
-          localStorage.setItem("role", data["position"]);
-          const route = navObj.route.split("/");
-          if (route[1] == "register") {
-            localStorage.setItem("isRegistered", "false");
-          }
-          if (navObj.error === "none") {
-            this.router.navigate([navObj.route]);
-          } else {
-            this.router.navigate([navObj.route, navObj.error]);
-          }
+    this.authService
+      .signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(user => {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("isLoggedIn", "true");
+        this.localAuth
+          .checkUser(user)
+          .toPromise()
+          .then(data => {
+            const navObj = this.localAuth.validate(data);
+            localStorage.setItem("id", data["user_details"]["id"]);
+            localStorage.setItem("role", data["position"]);
+            const route = navObj.route.split("/");
+            if (route[1] == "register") {
+              localStorage.setItem("isRegistered", "false");
+            }
+            if (navObj.error === "none") {
+              this.router.navigate([navObj.route]);
+            } else {
+              this.router.navigate([navObj.route, navObj.error]);
+            }
+          });
+      })
+      .catch(() => {
+        this.snackBar.open("Cancelled Sign In!", "Ok", {
+          duration: 3000
         });
-    });
+      });
   }
 
   signOut(): void {

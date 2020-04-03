@@ -32,7 +32,8 @@ import { SuperAdminComponent } from "./components/shared/super-admin/super-admin
 import { Ng2SearchPipeModule } from "ng2-search-filter";
 
 const googleLoginOption: LoginOpt = {
-  scope: "https://mail.google.com/"
+  scope: "https://mail.google.com/",
+  prompt: "select_account"
 };
 
 const config = new AuthServiceConfig([
