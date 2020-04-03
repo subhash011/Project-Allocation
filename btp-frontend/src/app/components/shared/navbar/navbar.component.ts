@@ -15,9 +15,12 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  getSuperAdminURL() {
+    return "super_admin/" + localStorage.getItem("id");
+  }
+
   getUrlPreferences() {
     return (
-      "/" +
       localStorage.getItem("role") +
       "/preferences/" +
       localStorage.getItem("id")
@@ -30,10 +33,7 @@ export class NavbarComponent implements OnInit {
 
   getUrlProjects() {
     return (
-      "/" +
-      localStorage.getItem("role") +
-      "/projects/" +
-      localStorage.getItem("id")
+      localStorage.getItem("role") + "/projects/" + localStorage.getItem("id")
     );
   }
 
@@ -42,11 +42,7 @@ export class NavbarComponent implements OnInit {
   }
 
   getURLHome() {
-    if (localStorage.getItem("role") == "student") {
-      return "student/" + localStorage.getItem("id");
-    } else if (localStorage.getItem("role") == "faculty") {
-      return "faculty/" + localStorage.getItem("id");
-    }
+    return localStorage.getItem("role") + "/" + localStorage.getItem("id");
   }
   isUser() {
     if (localStorage.getItem("isLoggedIn") == "true")

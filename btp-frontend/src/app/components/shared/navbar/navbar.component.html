@@ -35,7 +35,7 @@
                 <button mat-menu-item routerLink="/" *ngIf="isAdmin()">
           Admin
         </button>
-                <button mat-menu-item routerLink="/super" *ngIf="isSuperAdmin()">
+                <button mat-menu-item [routerLink]="getSuperAdminURL()" *ngIf="isSuperAdmin()">
           Super Admin
         </button>
             </mat-menu>

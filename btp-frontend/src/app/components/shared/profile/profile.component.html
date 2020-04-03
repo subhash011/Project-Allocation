@@ -2,7 +2,10 @@
     <div *ngIf="getStudentDiv()">
         <p>Student Profile</p>
     </div>
-    <div *ngIf="!getStudentDiv()">
+    <div *ngIf="!getStudentDiv() && !getSuperAdminDiv()">
         <p>Faculty Profile</p>
+    </div>
+    <div *ngIf="getSuperAdminDiv()">
+        <p>Super Admin Profile</p>
     </div>
 </div>

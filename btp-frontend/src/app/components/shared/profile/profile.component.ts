@@ -42,4 +42,12 @@ export class ProfileComponent implements OnInit {
       return false;
     }
   }
+
+  getSuperAdminDiv() {
+    if (localStorage.getItem("role") == "super_admin") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

@@ -21,7 +21,7 @@ export class MailService {
     const body = {
       user: user,
       mailBody: "this is the mail",
-      to: ["111801042@smail.iitpkd.ac.in", "subhash011011@gmail.com"],
+      to: ["111801042+acc1@smail.iitpkd.ac.in", "subhash011011@gmail.com"],
       subject: "this is the subject"
     };
     return this.http.post(url, body, httpOptions);
