@@ -132,4 +132,77 @@ export class UserService {
       httpOptions
     );
   }
+
+  Admin_getStreamDetails() {
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = "http://localhost:8080/admin/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken //change it later
+      })
+    };
+    return this.http.get(this.url, httpOptions);
+  }
+
+  getAdminInfo() {
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = "http://localhost:8080/admin/info/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken //change it later
+      })
+    };
+
+    return this.http.get(this.url, httpOptions);
+  }
+
+  updateStage(stage) {
+    const obj = {
+      stage: stage
+    };
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = "http://localhost:8080/admin/update_stage/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken //change it later
+      })
+    };
+
+    return this.http.post(this.url, obj, httpOptions);
+  }
+
+
+
+  setDeadline(date){
+    const obj = {
+      deadline: date
+    };
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = "http://localhost:8080/admin/setDeadline/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken //change it later
+      })
+    };
+
+    return this.http.post(this.url, obj, httpOptions);
+
+
+  }
+
+
 }

@@ -22,6 +22,9 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatTableModule } from "@angular/material/table";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatNativeDateModule } from "@angular/material";
+
 import { MatPaginatorModule } from "@angular/material/paginator";
 const MaterialComponents = [
   MatButtonModule,
@@ -47,6 +50,8 @@ const MaterialComponents = [
   MatTableModule,
   MatSlideToggleModule,
   MatSnackBarModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
   MatPaginatorModule
 ];
 
