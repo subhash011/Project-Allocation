@@ -9,7 +9,6 @@ router.get("/:id", (req, res) => {
   const id = String(req.params.id);
   const idToken = req.headers.authorization;
   console.log(id);
-  const response_obj = [];
   const promises = [];
 
   Faculty.findOne({ google_id: { id: id, idToken: idToken } })
@@ -62,11 +61,12 @@ router.get("/info/:id", (req, res) => {
   const idToken = req.headers.authorization;
 
   Faculty.find({ google_id: { id: id, idToken: idToken } }).then(faculty => {
-    Admin.findById({ admin_id: faculty._id })
+    Admin.find({ admin_id: faculty._id })
       .then(admin => {
+        admin = admin[0];
         if (admin) {
           let startDate;
-          if (admin.deadlines.length != 0) {
+          if (admin.startDate) {
             startDate = admin.startDate;
           }
 
@@ -98,8 +98,9 @@ router.post("/update_stage/:id", (req, res) => {
 
   Faculty.find({ google_id: { id: id, idToken: idToken } })
     .then(faculty => {
-      Admin.findById({ _id: faculty._id })
+      Admin.find({ _id: faculty._id })
         .then(admin => {
+          admin = admin[0];
           admin.stage_no = stage;
 
           admin
@@ -130,8 +131,9 @@ router.post("/setDeadline/:id", (req, res) => {
 
   Faculty.find({ google_id: { id: id, idToken: idToken } })
     .then(faculty => {
-      Admin.findById({ _id: faculty._id })
+      Admin.find({ _id: faculty._id })
         .then(admin => {
+          admin = admin[0];
           if (admin.deadlines.length == 0) {
             admin.startDate = date;
           }
