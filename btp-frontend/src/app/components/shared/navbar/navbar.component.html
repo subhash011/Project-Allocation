@@ -4,6 +4,12 @@
       <span class="navhead">IIT Palakkad</span>
     </button>
     </div>
+    <div *ngIf="isFaculty()">
+        <div class="flex-grow-left"></div>
+        <button mat-button [routerLink]="getURLHome()" class="nav-text">
+      Home
+    </button>
+    </div>
     <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getUrlProjects()" class="nav-text">

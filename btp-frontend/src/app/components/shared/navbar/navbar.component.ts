@@ -42,7 +42,11 @@ export class NavbarComponent implements OnInit {
   }
 
   getURLHome() {
-    return localStorage.getItem("role") + "/" + localStorage.getItem("id");
+    if (localStorage.getItem("role") == "admin") {
+      return "faculty" + "/" + localStorage.getItem("id");
+    } else {
+      return localStorage.getItem("role") + "/" + localStorage.getItem("id");
+    }
   }
   isUser() {
     if (localStorage.getItem("isLoggedIn") == "true")
