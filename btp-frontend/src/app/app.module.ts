@@ -33,7 +33,8 @@ import { Ng2SearchPipeModule } from "ng2-search-filter";
 import { AdminComponent } from './components/faculty-componenets/admin/admin.component';
 
 const googleLoginOption: LoginOpt = {
-  scope: "https://mail.google.com/"
+  scope: "https://mail.google.com/",
+  prompt: "select_account"
 };
 
 const config = new AuthServiceConfig([

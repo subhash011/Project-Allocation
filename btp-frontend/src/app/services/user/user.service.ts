@@ -8,39 +8,42 @@ import { Observable } from "rxjs";
   providedIn: "root"
 })
 export class UserService {
-  public url: string;
+  private url: string;
+  private base_url = "http://localhost:8080/";
   constructor(private http: HttpClient, private router: Router) {}
 
   addAdmin(id) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/super/addAdmin/" + id;
+    this.url = this.base_url + "super/addAdmin/" + user.id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: "user.idToken" //change it later
+        Authorization: user.idToken
       })
     };
-    return this.http.post(this.url, httpOptions);
+    return this.http.post(this.url, { id: id }, httpOptions);
   }
 
   removeFaculty(id) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/super/faculty/" + id;
+    this.url = this.base_url + "super/faculty/" + user.id; // + "/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: "user.idToken" //change it later
+        Authorization: user.idToken,
+        body: id
       })
     };
     return this.http.delete(this.url, httpOptions);
   }
   removeStudent(id) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/super/student/" + id;
+    this.url = this.base_url + "super/student/" + user.id; // + "/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: "user.idToken" //change it later
+        Authorization: user.idToken,
+        body: id
       })
     };
     return this.http.delete(this.url, httpOptions);
@@ -48,23 +51,23 @@ export class UserService {
 
   removeAdmin(id) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/super/removeAdmin/" + id;
+    this.url = this.base_url + "super/removeAdmin/" + user.id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: "user.idToken" //change it later
+        Authorization: user.idToken
       })
     };
-    return this.http.post(this.url, httpOptions);
+    return this.http.post(this.url, { id: id }, httpOptions);
   }
 
   getAllStudents() {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/super/student/details";
+    this.url = this.base_url + "super/student/details/" + user.id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: "user.idToken" //change it later
+        Authorization: user.idToken
       })
     };
     return this.http.get(this.url, httpOptions);
@@ -72,11 +75,11 @@ export class UserService {
 
   getAllFaculties() {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/super/faculty/details";
+    this.url = this.base_url + "super/faculty/details/" + user.id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: "user.idToken" //change it later
+        Authorization: user.idToken
       })
     };
     return this.http.get(this.url, httpOptions);
@@ -84,7 +87,7 @@ export class UserService {
 
   getStudentDetails(id: String) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/student/details/" + id;
+    this.url = this.base_url + "student/details/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -96,7 +99,7 @@ export class UserService {
 
   getDetailsById(id: String) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/auth/details/" + id;
+    this.url = this.base_url + "auth/details/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -108,7 +111,7 @@ export class UserService {
 
   getFacultyDetails(id: String) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = "http://localhost:8080/faculty/details/" + id;
+    this.url = this.base_url + "faculty/details/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -124,7 +127,7 @@ export class UserService {
       position = "super";
     }
     return this.http.post(
-      "http://localhost:8080/" + position + "/register/" + id,
+      this.base_url + position + "/register/" + id,
       user,
       httpOptions
     );

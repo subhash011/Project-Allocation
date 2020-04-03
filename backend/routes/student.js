@@ -31,32 +31,44 @@ router.post("/register/:id", (req, res) => {
                     registration: "fail"
                 });
             });
+    }).catch(() => {
+        res.json({
+            message: "invalid-client",
+            result: null
+        })
     });
 });
 
 router.get("/details/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    Student.findOne({ google_id: { id: id, idToken: idToken } })
-        .then(user => {
-            if (user) {
+    oauth(idToken).then(user => {
+        Student.findOne({ google_id: { id: id, idToken: idToken } })
+            .then(user => {
+                if (user) {
+                    res.json({
+                        status: "success",
+                        user_details: user
+                    });
+                } else {
+                    res.json({
+                        status: "invalid-token",
+                        user_details: ""
+                    });
+                }
+            })
+            .catch(err => {
                 res.json({
-                    status: "success",
-                    user_details: user
+                    status: "fail",
+                    user_details: err
                 });
-            } else {
-                res.json({
-                    status: "invalid-token",
-                    user_details: ""
-                });
-            }
-        })
-        .catch(err => {
-            res.json({
-                status: "fail",
-                user_details: err
             });
-        });
+    }).catch(() => {
+        res.json({
+            message: "invalid-client",
+            result: null
+        })
+    })
 });
 
 module.exports = router;

@@ -10,5 +10,13 @@ import { Component, OnInit } from "@angular/core";
 export class HomeComponent implements OnInit {
   constructor(private httpClient: HttpClient, private router: Router) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (localStorage.getItem("isLoggedIn") == "true") {
+      var position = localStorage.getItem("role");
+      if (position == "admin") {
+        position = "faculty";
+      }
+      this.router.navigate([position + "/" + localStorage.getItem("id")]);
+    }
+  }
 }

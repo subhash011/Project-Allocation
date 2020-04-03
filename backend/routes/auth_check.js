@@ -6,6 +6,9 @@ const Faculty = require("../models/Faculty");
 const SuperAdmin = require("../models/SuperAdmin");
 oauth = require("../config/oauth");
 
+//add your email here if you want to be a super admin
+const superAdmins = ["s4589012@gmail.com"];
+
 router.post("/user_check", (req, res) => {
     const userDetails = req.body;
     oauth(userDetails.idToken)
@@ -50,7 +53,7 @@ router.post("/user_check", (req, res) => {
                             user_details: "Student Not Found"
                         });
                     });
-            } else if (userDetails.email == "s4589012@gmail.com") {
+            } else if (superAdmins.includes(userDetails.email)) {
                 SuperAdmin.findOne({ email: userDetails.email }).then(user => {
                     if (user) {
                         user.google_id.idToken = userDetails.idToken;
@@ -153,7 +156,12 @@ router.get("/details/:id", (req, res) => {
             };
 
             const email = user.email.split("@");
-            if (email[1] === "smail.iitpkd.ac.in") {
+            if (superAdmins.includes(user.email)) {
+                res.json({
+                    position: "super_admin",
+                    user_details: User
+                });
+            } else if (email[1] === "smail.iitpkd.ac.in") {
                 res.json({
                     position: "student",
                     user_details: User

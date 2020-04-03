@@ -7,9 +7,11 @@ import { Injectable } from "@angular/core";
 export class MailService {
   constructor(private http: HttpClient) {}
 
+  base_url = "http://localhost:8080/email/";
+
   testMethod() {
     const user = JSON.parse(localStorage.getItem("user"));
-    var url = "http://localhost:8080/email/send";
+    var url = this.base_url + "send";
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -19,7 +21,7 @@ export class MailService {
     const body = {
       user: user,
       mailBody: "this is the mail",
-      to: ["111801042@smail.iitpkd.ac.in", "subhash011011@gmail.com"],
+      to: ["111801042+acc1@smail.iitpkd.ac.in", "subhash011011@gmail.com"],
       subject: "this is the subject"
     };
     return this.http.post(url, body, httpOptions);

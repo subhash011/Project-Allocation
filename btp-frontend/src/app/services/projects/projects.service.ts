@@ -8,10 +8,12 @@ export class ProjectsService {
   private url: string;
   private url_pref: string;
   private url_post: string;
+  private studentBaseURL = "http://localhost:8080/student/project/";
+  private facultyBaseURL = "http://localhost:8080/faculty/project/";
   constructor(private http: HttpClient, private router: Router) {}
   getAllStudentProjects() {
     const id = localStorage.getItem("id");
-    this.url = "http://localhost:8080/student/project/" + id;
+    this.url = this.studentBaseURL + id;
     const user = JSON.parse(localStorage.getItem("user"));
     const httpOptions = {
       headers: new HttpHeaders({
@@ -23,7 +25,7 @@ export class ProjectsService {
   }
   getStudentPreference() {
     const id = localStorage.getItem("id");
-    this.url_pref = "http://localhost:8080/student/project/preference/" + id;
+    this.url_pref = this.studentBaseURL + "preference/" + id;
     const user = JSON.parse(localStorage.getItem("user"));
     const httpOptions = {
       headers: new HttpHeaders({
@@ -35,7 +37,7 @@ export class ProjectsService {
   }
   storeStudentPreferences(preferences) {
     const id = localStorage.getItem("id");
-    this.url_post = "http://localhost:8080/student/project/preference/" + id;
+    this.url_post = this.studentBaseURL + "preference/" + id;
     const user = JSON.parse(localStorage.getItem("user"));
     const httpOptions = {
       headers: new HttpHeaders({
@@ -55,7 +57,7 @@ export class ProjectsService {
       })
     };
 
-    this.url = "http://localhost:8080/faculty/project/" + id;
+    this.url = this.facultyBaseURL + id;
     return this.http.get(this.url, httpOptions);
   }
 
@@ -69,7 +71,7 @@ export class ProjectsService {
       })
     };
 
-    this.url = "http://localhost:8080/faculty/project/add/" + id;
+    this.url = this.facultyBaseURL + "add/" + id;
 
     return this.http.post(this.url, project, httpOptions);
   }
@@ -88,7 +90,7 @@ export class ProjectsService {
       })
     };
 
-    this.url = "http://localhost:8080/faculty/project/applied/" + id;
+    this.url = this.facultyBaseURL + "applied/" + id;
 
     return this.http.post(this.url, student_data, httpOptions);
   }
@@ -108,20 +110,19 @@ export class ProjectsService {
       })
     };
 
-    this.url = "http://localhost:8080/faculty/project/save_preference/" + id;
+    this.url = this.facultyBaseURL + "save_preference/" + id;
 
     return this.http.post(this.url, student_data, httpOptions);
   }
 
   updateProject(project) {
-    this.url =
-      "http://localhost:8080/faculty/project/update/" + project.project_id;
+    this.url = this.facultyBaseURL + "update/" + project.project_id;
 
     return this.http.post(this.url, project);
   }
 
   deleteProject(project_id) {
-    this.url = "http://localhost:8080/faculty/project/delete/" + project_id;
+    this.url = this.facultyBaseURL + "delete/" + project_id;
     return this.http.delete(this.url);
   }
 }
