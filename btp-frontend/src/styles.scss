@@ -2,19 +2,17 @@
 
 html,
 body {
-  height: 100%;
-  margin: 0;
-  overflow-x: hidden;
-  height: 100%;
-  margin: 0;
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden;
 }
 
-html::-webkit-scrollbar {
-  display: none;
+body::-webkit-scrollbar {
+    display: none;
 }
 
-html {
-  -ms-overflow-style: none;
+body {
+    -ms-overflow-style: none;
 }
 
 .no-toolbar-padding .mat-dialog-container {
