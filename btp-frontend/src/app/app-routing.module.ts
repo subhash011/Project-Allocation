@@ -28,7 +28,7 @@ const routes: Routes = [
   { path: "profile/:id", component: ProfileComponent },
   { path: "student/projects/:id", component: StudentProjectsComponent },
   { path: "super", component: SuperAdminComponent },
-  { path: "admin/:id", component: AdminComponent }
+  { path: "admin/:id", component: AdminComponent },
   { path: "super_admin/:id", component: SuperAdminComponent }
 ];
 
