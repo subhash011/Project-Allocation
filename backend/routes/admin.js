@@ -98,7 +98,7 @@ router.post("/update_stage/:id", (req, res) => {
 
     Faculty.find({ google_id: { id: id, idToken: idToken } })
         .then(faculty => {
-            Admin.findById({ _id: faculty._id })
+            Admin.find({ admin_id: faculty._id })
                 .then(admin => {
                     admin.stage_no = stage;
 
