@@ -65,16 +65,23 @@ router.get("/info/:id", (req, res) => {
     Admin.findById({ admin_id: faculty._id })
       .then(admin => {
         if (admin) {
+          let startDate;
+          if (admin.deadlines.length != 0) {
+            startDate = admin.startDate;
+          }
+
           res.json({
             status: "success",
             stage: admin.stage_no,
-            deadlines: admin.deadlines
+            deadlines: admin.deadlines,
+            startDate: startDate
           });
         } else {
           res.json({
             status: "success",
             stage: 0,
-            deadlines: ""
+            deadlines: "",
+            startDate: startDate
           });
         }
       })
@@ -116,11 +123,8 @@ router.post("/update_stage/:id", (req, res) => {
     });
 });
 
-
-router.post('/setDeadline/:id',(req,res)=>{
-
-
-const id = req.params.id;
+router.post("/setDeadline/:id", (req, res) => {
+  const id = req.params.id;
   const idToken = req.headers.authorization;
   const date = req.body.deadline;
 
@@ -128,8 +132,14 @@ const id = req.params.id;
     .then(faculty => {
       Admin.findById({ _id: faculty._id })
         .then(admin => {
+          if (admin.deadlines.length == 0) {
+            admin.startDate = date;
+          }
 
-          if(admin.stage_no - 1 == admin.deadlines.length || admin.stage_no == 0)
+          if (
+            admin.stage_no - 1 == admin.deadlines.length ||
+            admin.stage_no == 0
+          )
             admin.deadlines.push(date);
 
           admin
@@ -151,8 +161,6 @@ const id = req.params.id;
     .catch(err => {
       console.log(err);
     });
-
-})
-
+});
 
 module.exports = router;

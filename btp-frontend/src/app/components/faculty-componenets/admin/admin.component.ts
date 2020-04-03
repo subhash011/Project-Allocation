@@ -26,6 +26,7 @@ export class AdminComponent implements OnInit {
 
   //Progress Bar
   progress_value=0;
+  startDate;
 
 
   //Buttons
@@ -66,7 +67,8 @@ export class AdminComponent implements OnInit {
 
         console.log(data)
           this.stage_no = data["stage"];
-          this.dateSet = data["deadlines"]
+          this.dateSet = data["deadlines"];
+          this.startDate = data["startDate"];
       })
 
     this.curr_deadline = this.dateSet[this.dateSet.length - 1];
