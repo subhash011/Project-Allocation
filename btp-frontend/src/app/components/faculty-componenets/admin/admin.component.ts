@@ -13,6 +13,7 @@ import { ThrowStmt, IfStmt } from '@angular/compiler';
 export class AdminComponent implements OnInit {
 
   public details; // For displaying the projects tab
+  public faculty_projects;
  
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -162,6 +163,15 @@ export class AdminComponent implements OnInit {
     //Backend Call for setting the deadline only on confirmation
 
   }
+
+
+  displayFaculty(faculty){
+
+
+    // console.log(faculty)
+    this.faculty_projects = faculty["projects"]
+  }
+
 
 
 } 

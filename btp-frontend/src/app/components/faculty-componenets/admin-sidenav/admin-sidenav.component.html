@@ -1,0 +1,6 @@
+<mat-nav-list *ngFor="let faculty of details; let i = index">
+    <a mat-list-item (click)="onClick(faculty, i)" [class.active]="i == selectedRow">
+    {{ faculty.faculty_name }}
+  </a>
+</mat-nav-list>
+

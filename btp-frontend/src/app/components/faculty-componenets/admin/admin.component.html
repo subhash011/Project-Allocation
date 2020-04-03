@@ -28,16 +28,12 @@
               <div *ngIf="stage_no>0">{{dateSet[0]}}</div>
           </ng-template>
           
-
-          <!-- <mat-form-field> -->
-
             <mat-form-field class="example-full-width">
               <mat-label>Choose Date</mat-label>
               <input matInput [min]="minDate" [matDatepicker]="picker1" formControlName="firstCtrl" [disabled]="input1">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-          <!-- </mat-form-field> -->
           
           <div>
 
@@ -108,6 +104,22 @@
   <mat-tab label="Projects">
   
   
+    <mat-sidenav-container>
+      <mat-sidenav mode="side" opened position="end" role="navigation" [disableClose]="true" [fixedInViewport]="true" [fixedTopGap]="111" [fixedBottomGap]="0">
+          <mat-toolbar class="mat-elevation-z6" color="accent">
+              <span class="fill-remaining-space"></span>
+              <h1 class="fill-remaining-space">Faculty</h1>
+          </mat-toolbar>
+  
+          <app-admin-sidenav [details]="details" (facultyClicked)="displayFaculty($event)"></app-admin-sidenav>
+      </mat-sidenav>
+  
+      <mat-sidenav-content>
+          
+        <app-admin-content [faculty_projects]="faculty_projects"> </app-admin-content>
+
+      </mat-sidenav-content>
+  </mat-sidenav-container>
   
   
   
