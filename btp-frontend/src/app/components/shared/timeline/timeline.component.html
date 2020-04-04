@@ -1,0 +1,39 @@
+<div class="group">
+    <a matTooltip="Here the Admins Pick the first Deadline" matTooltipPosition="above" class="stage-1-icon start icon">
+        <mat-icon *ngIf="!startCompleted">check_circle_outline</mat-icon>
+        <mat-icon *ngIf="startCompleted">check_circle</mat-icon>
+    </a>
+    <mat-progress-bar class="stage-1" mode="determinate" [value]="stageOne"></mat-progress-bar>
+    <a matTooltip="Projects are decided by the faculties" matTooltipPosition="above" class="stage-1-icon icon">
+        <mat-icon *ngIf="stageOneCompleted">check_circle</mat-icon>
+        <mat-icon *ngIf="!stageOneCompleted">check_circle_outline</mat-icon>
+    </a>
+    <mat-progress-bar class="stage-1" mode="determinate" [value]="stageTwo"></mat-progress-bar>
+    <a matTooltip="Students finish submitting their preferences" matTooltipPosition="above" class="stage-1-icon icon">
+        <mat-icon *ngIf="stageTwoCompleted">check_circle</mat-icon>
+        <mat-icon *ngIf="!stageTwoCompleted">check_circle_outline</mat-icon>
+    </a>
+    <mat-progress-bar class="stage-1" mode="determinate" [value]="stageThree"></mat-progress-bar>
+    <a matTooltip="Faculties finish submitting their preferences" matTooltipPosition="above" class="stage-1-icon icon">
+        <mat-icon *ngIf="stageThreeCompleted">check_circle</mat-icon>
+        <mat-icon *ngIf="!stageThreeCompleted">check_circle_outline</mat-icon>
+    </a>
+    <mat-progress-bar class="stage-1" mode="determinate" [value]="stageFour"></mat-progress-bar>
+    <a matTooltip="Projects are alloted" matTooltipPosition="above" class="stage-1-icon icon">
+        <mat-icon *ngIf="stageFourCompleted">check_circle</mat-icon>
+        <mat-icon *ngIf="!stageFourCompleted">check_circle_outline</mat-icon>
+    </a>
+</div>
+<div class="card">
+    <mat-card class="example-card">
+        <mat-card-header>
+            <mat-card-title>Shiba Inu</mat-card-title>
+            <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>
+                The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.
+            </p>
+        </mat-card-content>
+    </mat-card>
+</div>

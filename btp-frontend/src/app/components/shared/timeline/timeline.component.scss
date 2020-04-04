@@ -1,0 +1,55 @@
+.group {
+    justify-content: center;
+    height: 15%;
+}
+
+.stage-1 {
+    max-width: 20%;
+    float: left;
+    padding-top: 5%;
+}
+
+.stage-1-icon {
+    float: left;
+    margin-top: 4.5%;
+    left: 0;
+}
+
+.example-card {
+    max-width: 400px;
+}
+
+.example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+}
+
+.start {
+    padding-left: 5%;
+}
+
+.icon:hover {
+    cursor: pointer;
+}
+
+.card {
+    visibility: hidden;
+}
+
+.icon:hover .card {
+    visibility: visible;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 400px;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

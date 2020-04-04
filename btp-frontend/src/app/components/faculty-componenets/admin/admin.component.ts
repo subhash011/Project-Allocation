@@ -154,7 +154,7 @@ export class AdminComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result["message"] == "success") {
+      if (result["message"] == "submit") {
         //do it here
         console.log("submitted");
       }
