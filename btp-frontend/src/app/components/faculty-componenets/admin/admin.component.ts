@@ -72,7 +72,6 @@ export class AdminComponent implements OnInit {
       fourthCtrl: [this.dateSet[3]]
     });
 
-
   }
 
   ngAfterViewInit() {
@@ -80,18 +79,12 @@ export class AdminComponent implements OnInit {
       for (let step = 0; step < this.stage_no; step++) {
         this.stepper.next();
       }
-          
-      if(this.stage_no == 0){
-        this.minDate = new Date()
-      }
-      else{
-        this.minDate = this.dateSet[this.dateSet.length - 1];;
-      }
 
     });
   }
 
   ngOnInit() {
+  
     this.userService.getAdminInfo().subscribe(data => {
       console.log(data);
       this.stage_no = data["stage"];
@@ -110,6 +103,13 @@ export class AdminComponent implements OnInit {
       }
       if(this.dateSet.length == 3){
         this.input3 = true;
+      }
+
+      if(this.stage_no == 0){
+        this.minDate = new Date()
+      }
+      else{
+        this.minDate = this.dateSet[this.dateSet.length - 1];;
       }
 
       this.firstFormGroup.controls['firstCtrl'].setValue(this.dateSet[0]);
@@ -178,6 +178,7 @@ export class AdminComponent implements OnInit {
     // console.log(formGroup.get('firstCtrl').value)
     //Backend Call for setting the deadline only on confirmation
     // console.log(this.stage_no)
+    this.curr_deadline = this.dateSet[this.dateSet.length - 1]
 
     if (this.stage_no == 0) {
       var date = this.firstFormGroup.get("firstCtrl").value;
@@ -208,24 +209,47 @@ export class AdminComponent implements OnInit {
               if(data["status"] == "success"){
 
 
+                if(this.stage_no == 1){
 
-                this.userService.getFacultyStreamEmails()
-                  .subscribe(data=>{
-                    if(data["status"] == 'success'){
+                  this.userService.getStudentStreamEmails()
+                    .subscribe(data1=>{
+                      console.log(data1)
+                      if(data1["status"] == 'success'){
+
+                        this.mailer.adminToStudents(data1["result"],this.curr_deadline,data1["stream"])
+                          .subscribe(data=>{
+                            console.log(data)
+
+                          })
+
+                      }
+
+
+
+                    })
+
+                }
+
+                else{
+                  this.userService.getFacultyStreamEmails()
+                  .subscribe(data1=>{
+                    if(data1["status"] == 'success'){
                       console.log(data)
-                      this.mailer.adminToFaculty(this.stage_no,data["result"],this.curr_deadline,data["stream"])
-                      .subscribe(data=>{
+                      this.mailer.adminToFaculty(this.stage_no,data1["result"],this.curr_deadline,data1["stream"])
+                      .subscribe(data2=>{
+                        console.log(data2)
                         this.router
                         .navigateByUrl("/refresh", { skipLocationChange: true })
                         .then(() => {
                           this.router.navigate([decodeURI(this.location.path())]);
                         });
                       })
-  
-
                     }
-
                   })
+
+                }
+
+                   
 
                 
               }
