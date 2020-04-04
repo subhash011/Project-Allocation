@@ -34,6 +34,7 @@ export class MailService {
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
+      hour12: true
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -49,11 +50,11 @@ export class MailService {
       var body = {
         user: user,
         mailBody: `Dear Faculty Member,
-    I kindly request you to start creating projects for the 4th year BTech Projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
-
-    With Regards,
-    ${user.name},
-    ${stream} Admin        
+    I kindly request you to start creating projects for the 4th year BTech Projects. Please do note that the deadline is ${fmt1.format(curr_deadline) + " " + this.formatAMPM(curr_deadline)}.
+    
+With Regards,
+${user.name},
+{stream} Admin        
 `,
         to: emails,
         subject: "BTech Project Phase 1",
@@ -62,11 +63,11 @@ export class MailService {
       var body = {
         user: user,
         mailBody: `Dear Faculty Member,
-    I kindly request you to fill in your preference students for your projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
+    I kindly request you to fill in your preference students for your projects. Please do note that the deadline is ${fmt1.format(curr_deadline)+" "+this.formatAMPM(curr_deadline) }.
 
-    With Regards,
-    ${user.name},
-    ${stream} Admin  
+With Regards,
+${user.name},
+${stream} Admin  
 `,
         to: emails,
         subject: "BTech Project Phase 3",
@@ -83,6 +84,7 @@ export class MailService {
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
+      hour12: true
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -96,15 +98,28 @@ export class MailService {
     const body = {
       user: user,
       mailBody: `Dear Students,
-    I kindly request you to fill in your preferences of projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
+    I kindly request you to fill in your preferences of projects. Please do note that the deadline is ${fmt1.format(curr_deadline) +" " +this.formatAMPM(curr_deadline)}.
 
-    With Regards,
-    ${user.name},
-    ${stream} Admin
+With Regards,
+${user.name},
+${stream} Admin
 `,
       to: emails,
       subject: "BTech Project Phase 3",
     };
     return this.http.post(url, body, httpOptions);
   }
+
+  formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return ampm;
+  }
+
+
 }
