@@ -28,13 +28,17 @@ export class StudentComponent implements OnInit {
       .toPromise()
       .then(data => {
         if (data["status"] == "invalid-token") {
+          this.snackBar.open("Session Timed Out! Sign-in again", "Ok", {
+            duration: 3000
+          });
           this.loginObject.signOut();
         } else if (data["status"] == "success") {
           this.details = data["user_details"];
         } else {
-          this.snackBar.open("Some unknown Error Occured! Try again", "Ok", {
+          this.snackBar.open("Session Timed Out! Sign-in again", "Ok", {
             duration: 3000
           });
+          this.loginObject.signOut();
         }
       });
   }

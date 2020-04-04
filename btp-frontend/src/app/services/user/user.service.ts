@@ -208,7 +208,7 @@ export class UserService {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: idToken //change it later
+        Authorization: idToken
       })
     };
 

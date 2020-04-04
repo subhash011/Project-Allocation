@@ -182,7 +182,7 @@ export class AdminComponent implements OnInit {
     if (date != null && date != "") {
       const dialogRef = this.dialog.open(DeletePopUpComponent, {
         width: "400px",
-        height: "200px",
+        height: "250px",
         data: {
           heading: "Confirm Deadline",
           message:

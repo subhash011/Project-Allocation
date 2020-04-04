@@ -1,128 +1,124 @@
-<mat-tab-group
-  [backgroundColor]="'primary'"
-  dynamicHeight="true"
-  mat-align-tabs="center"
->
-  <mat-tab label="Admin">
+<mat-tab-group [backgroundColor]="'primary'" dynamicHeight="true" mat-align-tabs="center">
+    <mat-tab label="Admin">
 
-  <div class="header">
+        <div class="header">
 
-    <h1 *ngIf="stage_no==0">Creating Projects</h1>
-    <h1 *ngIf="stage_no==1">Student Preferences</h1>
-    <h1 *ngIf="stage_no==2">Faculty Preferences</h1>
-    <h1 *ngIf="stage_no==3">Project Allocation</h1>
-    
-  </div>
+            <h1 *ngIf="stage_no==0">Creating Projects</h1>
+            <h1 *ngIf="stage_no==1">Student Preferences</h1>
+            <h1 *ngIf="stage_no==2">Faculty Preferences</h1>
+            <h1 *ngIf="stage_no==3">Project Allocation</h1>
+
+        </div>
 
 
 
-<div class="progress-bar">
-  <mat-progress-bar mode="determinate" [value]="progress_value"></mat-progress-bar>
-</div>
-<span class="days_left"><strong>Days Left:</strong> {{days_left}}</span>
-    <mat-horizontal-stepper [linear]="'true'" #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no}}">
-      <mat-step [stepControl]="firstFormGroup" [editable]="'false'">
-        <form [formGroup]="firstFormGroup">
-          <ng-template matStepLabel>
-            Creating Projects
-              <div *ngIf="stage_no>0" class="datelabel">{{dateSet[0].toDateString()}}</div>
-          </ng-template>
-          
-            <mat-form-field class="example-full-width">
-              <mat-label>Choose Date1</mat-label>
-              <input matInput [min]="minDate" [matDatepicker]="picker1" formControlName="firstCtrl" [disabled]="input1">
-              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-              <mat-datepicker #picker1></mat-datepicker>
-            </mat-form-field>
-          
-          <div>
+        <div class="progress-bar">
+            <mat-progress-bar mode="determinate" [value]="progress_value"></mat-progress-bar>
+        </div>
+        <span class="days_left"><strong>Days Left:</strong> {{days_left}}</span>
+        <mat-horizontal-stepper [linear]="'true'" #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no}}">
+            <mat-step [stepControl]="firstFormGroup" [editable]="'false'">
+                <form [formGroup]="firstFormGroup">
+                    <ng-template matStepLabel>
+                        Creating Projects
+                        <div *ngIf="stage_no>0" class="datelabel">{{dateSet[0].toDateString()}}</div>
+                    </ng-template>
 
-            <button mat-button [disabled]="input1" (click)="setDeadline()">Set DeadLine</button>
-            <button mat-button matStepperNext (click)="proceed()">Proceed</button>
-          </div>
-        
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="secondFormGroup" [editable]="'false'">
-        <form [formGroup]="secondFormGroup">
-          <ng-template matStepLabel>
-            Student Preferences
-            <div *ngIf="stage_no>1" class="datelabel">{{dateSet[1].toDateString()}}</div>
-          </ng-template>
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Choose Date1</mat-label>
+                        <input matInput [min]="minDate" [matDatepicker]="picker1" formControlName="firstCtrl" [disabled]="input1">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
 
-          <mat-form-field class="example-full-width">
-            <mat-label>Choose a date 2</mat-label>
-            <input matInput [min]="minDate" [matDatepicker]="picker2" formControlName="secondCtrl" [disabled]="input2">
-            <mat-datepicker-toggle matSuffix [for]="picker2"  ></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
-          </mat-form-field>
-          
-          <div>
-            <button mat-button [disabled]="input2" (click)="setDeadline()">Set DeadLine</button>
-            <button mat-button matStepperNext [disabled]="proceedButton2"  (click)="proceed()">Proceed</button>
-          </div>
-        
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="thirdFormGroup" [editable]="'false'">
-        <form [formGroup]="thirdFormGroup">
-          <ng-template matStepLabel>Faculty Preferences
+                    <div>
 
-            <div *ngIf="stage_no>2" class="datelabel">{{dateSet[2].toDateString()}}</div>
+                        <button mat-button [disabled]="input1" (click)="setDeadline()">Set DeadLine</button>
+                        <button mat-button matStepperNext (click)="proceed()">Proceed</button>
+                    </div>
 
-          </ng-template>
-          
-          <mat-form-field class="example-full-width">
-            <mat-label>Choose a date 3</mat-label>
-            <input matInput [min]="minDate" [matDatepicker]="picker3" formControlName="thirdCtrl" [disabled]="input3">
-            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-            <mat-datepicker #picker3></mat-datepicker>
-          </mat-form-field>
-          
-          <div>
-            <button mat-button [disabled]="input3" (click)="setDeadline()">Set DeadLine</button>
-            <button mat-button matStepperNext [disabled]="proceedButton3" (click)="proceed()">Proceed</button>
-          
-          </div>
-        </form>
-      </mat-step>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="secondFormGroup" [editable]="'false'">
+                <form [formGroup]="secondFormGroup">
+                    <ng-template matStepLabel>
+                        Student Preferences
+                        <div *ngIf="stage_no>1" class="datelabel">{{dateSet[1].toDateString()}}</div>
+                    </ng-template>
 
-      <mat-step [stepControl]="fourthFormGroup" [editable]="'false'">
-        <form [formGroup]="fourthFormGroup">
-          <ng-template matStepLabel>Project Allocation</ng-template>
-          <div>
-            <button mat-button (click)="startAllocation()">Start Allocation</button>
-          </div>
-        
-        </form>
-      </mat-step>
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Choose a date 2</mat-label>
+                        <input matInput [min]="minDate" [matDatepicker]="picker2" formControlName="secondCtrl" [disabled]="input2">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+
+                    <div>
+                        <button mat-button [disabled]="input2" (click)="setDeadline()">Set DeadLine</button>
+                        <button mat-button matStepperNext [disabled]="proceedButton2" (click)="proceed()">Proceed</button>
+                    </div>
+
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="thirdFormGroup" [editable]="'false'">
+                <form [formGroup]="thirdFormGroup">
+                    <ng-template matStepLabel>Faculty Preferences
+
+                        <div *ngIf="stage_no>2" class="datelabel">{{dateSet[2].toDateString()}}</div>
+
+                    </ng-template>
+
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Choose a date 3</mat-label>
+                        <input matInput [min]="minDate" [matDatepicker]="picker3" formControlName="thirdCtrl" [disabled]="input3">
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker #picker3></mat-datepicker>
+                    </mat-form-field>
+
+                    <div>
+                        <button mat-button [disabled]="input3" (click)="setDeadline()">Set DeadLine</button>
+                        <button mat-button matStepperNext [disabled]="proceedButton3" (click)="proceed()">Proceed</button>
+
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="fourthFormGroup" [editable]="'false'">
+                <form [formGroup]="fourthFormGroup">
+                    <ng-template matStepLabel>Project Allocation</ng-template>
+                    <div>
+                        <button mat-button (click)="startAllocation()">Start Allocation</button>
+                    </div>
+
+                </form>
+            </mat-step>
 
 
 
-    </mat-horizontal-stepper>
-  </mat-tab>
+        </mat-horizontal-stepper>
+    </mat-tab>
 
-  <mat-tab label="Projects">
-  
-  
-    <mat-sidenav-container>
-      <mat-sidenav mode="side" opened position="end" role="navigation" [disableClose]="true" [fixedInViewport]="true" [fixedTopGap]="111" [fixedBottomGap]="0">
-          <mat-toolbar class="mat-elevation-z6" color="accent">
-              <span class="fill-remaining-space"></span>
-              <h1 class="fill-remaining-space">Faculty</h1>
-          </mat-toolbar>
-  
-          <app-admin-sidenav [details]="details" (facultyClicked)="displayFaculty($event)"></app-admin-sidenav>
-      </mat-sidenav>
-  
-      <mat-sidenav-content>
-          
-        <app-admin-content [faculty_projects]="faculty_projects"> </app-admin-content>
+    <mat-tab label="Projects">
 
-      </mat-sidenav-content>
-  </mat-sidenav-container>
-  
-  
-  
-  </mat-tab>
+
+        <mat-sidenav-container>
+            <mat-sidenav mode="side" opened position="end" role="navigation" [disableClose]="true" [fixedInViewport]="true" [fixedTopGap]="111" [fixedBottomGap]="0">
+                <mat-toolbar class="mat-elevation-z6" color="accent">
+                    <span class="fill-remaining-space"></span>
+                    <h1 class="fill-remaining-space">Faculty</h1>
+                </mat-toolbar>
+
+                <app-admin-sidenav [details]="details" (facultyClicked)="displayFaculty($event)"></app-admin-sidenav>
+            </mat-sidenav>
+
+            <mat-sidenav-content>
+
+                <app-admin-content [faculty_projects]="faculty_projects"> </app-admin-content>
+
+            </mat-sidenav-content>
+        </mat-sidenav-container>
+
+
+
+    </mat-tab>
 </mat-tab-group>
