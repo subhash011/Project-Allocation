@@ -33,8 +33,8 @@ export class AdminComponent implements OnInit {
   startDate;
   minDate;
   //Buttons
-  proceedButton1 = false;
-  proceedButton2 = true;  
+  proceedButton1 = true;
+  proceedButton2 = true;
   proceedButton3 = true;
 
   //Input
@@ -83,7 +83,7 @@ export class AdminComponent implements OnInit {
       this.stage_no = data["stage"];
 
       this.dateSet = data["deadlines"];
-      this.curr_deadline = this.dateSet[this.dateSet.length - 1];
+      // this.curr_deadline = this.dateSet[this.dateSet.length - 1];
       this.dateSet = this.dateSet.map((date) => {
         return new Date(date);
       });
@@ -110,23 +110,24 @@ export class AdminComponent implements OnInit {
       this.thirdFormGroup.controls["secondCtrl"].setValue(this.dateSet[2]);
     });
 
-    // this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-
-    if (this.dateSet.length != 0) {
-      let today = new Date();
-
-      this.days_left = this.daysBetween(today, this.curr_deadline);
-
-      if (this.days_left == 0) {
-        this.proceedButton1 = true;
-        this.proceedButton2 = true;
-        this.proceedButton3 = true;
-      }
-    }
-
     this.userService.Admin_getStreamDetails().subscribe((data) => {
       console.log(data);
       this.details = data["project_details"];
+
+      this.curr_deadline = this.dateSet[this.dateSet.length - 1];
+      console.log(this.curr_deadline);
+      if (this.dateSet.length != 0) {
+        let today = new Date();
+
+        this.days_left = this.daysBetween(today, this.curr_deadline);
+        console.log(this.days_left);
+
+        if (this.days_left <= 0) {
+          this.proceedButton1 = false;
+          this.proceedButton2 = false;
+          this.proceedButton3 = false;
+        }
+      }
     });
   }
 
@@ -139,6 +140,9 @@ export class AdminComponent implements OnInit {
 
     this.progress_value = 0;
     this.days_left = "Please Set the deadline";
+    this.proceedButton1 = true;
+    this.proceedButton2 = true;
+    this.proceedButton3 = true;
   }
 
   daysBetween(date1, date2) {
@@ -174,7 +178,6 @@ export class AdminComponent implements OnInit {
     } else if (this.stage_no == 2) {
       var date = this.thirdFormGroup.get("thirdCtrl").value;
     }
-
 
     if (date != null && date != "") {
       const dialogRef = this.dialog.open(DeletePopUpComponent, {
