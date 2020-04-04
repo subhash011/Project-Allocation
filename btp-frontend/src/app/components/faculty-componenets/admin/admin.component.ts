@@ -91,12 +91,15 @@ export class AdminComponent implements OnInit {
       this.ngAfterViewInit();
       if (this.dateSet.length == 1) {
         this.input1 = true;
+        this.firstFormGroup.controls["firstCtrl"].disable({ onlySelf: true });
       }
       if (this.dateSet.length == 2) {
         this.input2 = true;
+        this.firstFormGroup.controls["secondCtrl"].disable({ onlySelf: true });
       }
       if (this.dateSet.length == 3) {
         this.input3 = true;
+        this.firstFormGroup.controls["thirdCtrl"].disable({ onlySelf: true });
       }
 
       if (this.stage_no == 0) {
@@ -159,12 +162,12 @@ export class AdminComponent implements OnInit {
     // Calculate the difference in milliseconds
     var difference_ms = date2_ms - date1_ms;
 
-    if (difference_ms < 0) {
-      return 0;
-    }
+    // if (difference_ms < 0) {
+    //   return 0;
+    // }
 
     // Convert back to days and return
-    return Math.round(difference_ms / one_day);
+    return Math.abs(difference_ms) / one_day;
   }
 
   setDeadline() {
