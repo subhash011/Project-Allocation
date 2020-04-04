@@ -144,7 +144,7 @@ router.post("/setDeadline/:id", (req, res) => {
 
                     // console.log(admin.startDate)
                     if (admin.stage == 0) {
-                        admin.startDate = date;
+                        admin.startDate = new Date();
                     }
 
                     if (admin.stage == admin.deadlines.length || admin.stage == 0)
