@@ -5,10 +5,11 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Admin = require("../models/Admin_Info");
 
+var branches = ["CSE", "EE", "ME", "CE"];
+
 router.get("/:id", (req, res) => {
     const id = String(req.params.id);
     const idToken = req.headers.authorization;
-    console.log(id);
     const response_obj = [];
     const promises = [];
 
@@ -161,6 +162,41 @@ router.post("/setDeadline/:id", (req, res) => {
         .catch(err => {
             console.log(err);
         });
+});
+
+router.get("/all/info", (req, res) => {
+    var result = {
+        CSE: {},
+        EE: {},
+        ME: {},
+        CE: {}
+    };
+    var promises = [];
+    Admin.find().then(admins => {
+        if (admins.length == branches.length) {
+            for (const branch of branches) {
+                promises.push(
+                    Admin.findOne({ stream: branch })
+                    .populate("admin_id")
+                    .then(admin => {
+                        result[branch] = admin;
+                        return admin;
+                    })
+                );
+            }
+            Promise.all(promises).then(prom => {
+                return res.json({
+                    message: "success",
+                    result: result
+                });
+            });
+        } else {
+            res.json({
+                message: "error",
+                result: "atleastOneAdminNeeded"
+            });
+        }
+    });
 });
 
 module.exports = router;

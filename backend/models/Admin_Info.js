@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Faculty = require("../models/Faculty");
 const UserSchema = new mongoose.Schema({
     stream: {
         type: String,
@@ -10,7 +11,8 @@ const UserSchema = new mongoose.Schema({
     },
     admin_id: {
         type: mongoose.Types.ObjectId,
-        required: true
+        required: true,
+        ref: Faculty
     },
     stage: {
         type: Number,
