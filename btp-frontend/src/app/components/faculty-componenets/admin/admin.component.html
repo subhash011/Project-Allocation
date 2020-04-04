@@ -38,7 +38,7 @@
           <div>
 
             <button mat-button [disabled]="input1" (click)="setDeadline()">Set DeadLine</button>
-            <button mat-button matStepperNext (click)="proceed()">Proceed</button>
+            <button mat-button matStepperNext [disabled]="proceedButton1" (click)="proceed()">Proceed</button>
           </div>
         
         </form>

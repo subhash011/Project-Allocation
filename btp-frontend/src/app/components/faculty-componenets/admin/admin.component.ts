@@ -34,7 +34,7 @@ export class AdminComponent implements OnInit {
   minDate;
   //Buttons
   proceedButton1 = false;
-  proceedButton2 = true;
+  proceedButton2 = true;  
   proceedButton3 = true;
 
   //Input
@@ -42,7 +42,7 @@ export class AdminComponent implements OnInit {
   input2;
   input3;
 
-  days_left: any = "Please Set the deadline";
+  days_left;
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
 
@@ -83,6 +83,7 @@ export class AdminComponent implements OnInit {
       this.stage_no = data["stage"];
 
       this.dateSet = data["deadlines"];
+      this.curr_deadline = this.dateSet[this.dateSet.length - 1];
       this.dateSet = this.dateSet.map((date) => {
         return new Date(date);
       });
@@ -109,7 +110,7 @@ export class AdminComponent implements OnInit {
       this.thirdFormGroup.controls["secondCtrl"].setValue(this.dateSet[2]);
     });
 
-    this.curr_deadline = this.dateSet[this.dateSet.length - 1];
+    // this.curr_deadline = this.dateSet[this.dateSet.length - 1];
 
     if (this.dateSet.length != 0) {
       let today = new Date();
