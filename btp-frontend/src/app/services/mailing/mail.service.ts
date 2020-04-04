@@ -29,7 +29,7 @@ export class MailService {
 
   adminToFaculty(stage, emails, curr_deadline, stream) {
     let fmt1 = new Intl.DateTimeFormat("en-GB", {
-      year: "4-digit",
+      year: "2-digit",
       month: "numeric",
       day: "numeric",
       hour: "numeric",
@@ -49,7 +49,7 @@ export class MailService {
       var body = {
         user: user,
         mailBody: `Dear Faculty Member,
-    I kindly request you to start creating projects for the 4th BTech Projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
+    I kindly request you to start creating projects for the 4th year BTech Projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
 
     With Regards,
     ${user.name},
@@ -78,7 +78,7 @@ export class MailService {
   adminToStudents(emails, curr_deadline, stream) {
     console.log(curr_deadline);
     let fmt1 = new Intl.DateTimeFormat("en-GB", {
-      year: "4-digit",
+      year: "2-digit",
       month: "numeric",
       day: "numeric",
       hour: "numeric",
