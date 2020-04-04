@@ -174,7 +174,6 @@ export class AdminComponent implements OnInit {
       var date = this.thirdFormGroup.get("thirdCtrl").value;
     }
 
-    // console.log(typeof(date))
 
     if (date != null && date != "") {
       const dialogRef = this.dialog.open(DeletePopUpComponent, {
