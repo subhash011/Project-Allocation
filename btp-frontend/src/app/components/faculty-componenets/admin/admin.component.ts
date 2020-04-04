@@ -1,4 +1,4 @@
-import { MailService } from './../../../services/mailing/mail.service';
+import { MailService } from "./../../../services/mailing/mail.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "./../delete-pop-up/delete-pop-up.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -8,8 +8,8 @@ import { UserService } from "src/app/services/user/user.service";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatStepper, DateAdapter } from "@angular/material";
 import { ThrowStmt, IfStmt } from "@angular/compiler";
-import { Router } from '@angular/router';
-import { Location } from '@angular/common'
+import { Router } from "@angular/router";
+import { Location } from "@angular/common";
 
 @Component({
   selector: "app-admin",
@@ -20,12 +20,10 @@ export class AdminComponent implements OnInit {
   public details; // For displaying the projects tab
   public faculty_projects;
 
-
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
   fourthFormGroup: FormGroup;
- 
 
   public stage_no;
   dateSet = [];
@@ -49,15 +47,14 @@ export class AdminComponent implements OnInit {
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
 
-  
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private mailer: MailService,
-    private location:Location,
-    private router:Router
+    private location: Location,
+    private router: Router
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]]
@@ -71,7 +68,6 @@ export class AdminComponent implements OnInit {
     this.fourthFormGroup = this.formBuilder.group({
       fourthCtrl: [this.dateSet[3]]
     });
-
   }
 
   ngAfterViewInit() {
@@ -79,12 +75,10 @@ export class AdminComponent implements OnInit {
       for (let step = 0; step < this.stage_no; step++) {
         this.stepper.next();
       }
-
     });
   }
 
   ngOnInit() {
-  
     this.userService.getAdminInfo().subscribe(data => {
       console.log(data);
       this.stage_no = data["stage"];
@@ -95,27 +89,25 @@ export class AdminComponent implements OnInit {
       });
       this.startDate = data["startDate"];
       this.ngAfterViewInit();
-      if(this.dateSet.length == 1){
+      if (this.dateSet.length == 1) {
         this.input1 = true;
       }
-      if(this.dateSet.length == 2){
+      if (this.dateSet.length == 2) {
         this.input2 = true;
       }
-      if(this.dateSet.length == 3){
+      if (this.dateSet.length == 3) {
         this.input3 = true;
       }
 
-      if(this.stage_no == 0){
-        this.minDate = new Date()
-      }
-      else{
-        this.minDate = this.dateSet[this.dateSet.length - 1];;
+      if (this.stage_no == 0) {
+        this.minDate = new Date();
+      } else {
+        this.minDate = this.dateSet[this.dateSet.length - 1];
       }
 
-      this.firstFormGroup.controls['firstCtrl'].setValue(this.dateSet[0]);
-      this.secondFormGroup.controls['secondCtrl'].setValue(this.dateSet[1]);
-      this.thirdFormGroup.controls['secondCtrl'].setValue(this.dateSet[2]);
- 
+      this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
+      this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
+      this.thirdFormGroup.controls["secondCtrl"].setValue(this.dateSet[2]);
     });
 
     this.curr_deadline = this.dateSet[this.dateSet.length - 1];
@@ -124,7 +116,6 @@ export class AdminComponent implements OnInit {
       let today = new Date();
 
       this.days_left = this.daysBetween(today, this.curr_deadline);
-
 
       if (this.days_left == 0) {
         this.proceedButton1 = true;
@@ -138,9 +129,6 @@ export class AdminComponent implements OnInit {
       this.details = data["project_details"];
     });
   }
-
-  
-
 
   proceed() {
     this.stage_no++;
@@ -178,7 +166,7 @@ export class AdminComponent implements OnInit {
     // console.log(formGroup.get('firstCtrl').value)
     //Backend Call for setting the deadline only on confirmation
     // console.log(this.stage_no)
-    this.curr_deadline = this.dateSet[this.dateSet.length - 1]
+    this.curr_deadline = this.dateSet[this.dateSet.length - 1];
 
     if (this.stage_no == 0) {
       var date = this.firstFormGroup.get("firstCtrl").value;
@@ -205,54 +193,49 @@ export class AdminComponent implements OnInit {
         if (result["message"] == "submit") {
           // console.log(date)
           this.userService.setDeadline(date).subscribe(data => {
-              
-              if(data["status"] == "success"){
-
-
-                if(this.stage_no == 1){
-
-                  this.userService.getStudentStreamEmails()
-                    .subscribe(data1=>{
-                      console.log(data1)
-                      if(data1["status"] == 'success'){
-
-                        this.mailer.adminToStudents(data1["result"],this.curr_deadline,data1["stream"])
-                          .subscribe(data=>{
-                            console.log(data)
-
-                          })
-
-                      }
-
-
-
-                    })
-
-                }
-
-                else{
-                  this.userService.getFacultyStreamEmails()
-                  .subscribe(data1=>{
-                    if(data1["status"] == 'success'){
-                      console.log(data)
-                      this.mailer.adminToFaculty(this.stage_no,data1["result"],this.curr_deadline,data1["stream"])
-                      .subscribe(data2=>{
-                        console.log(data2)
+            if (data["status"] == "success") {
+              if (this.stage_no == 1) {
+                this.userService.getStudentStreamEmails().subscribe(data1 => {
+                  console.log(data1);
+                  if (data1["status"] == "success") {
+                    this.mailer
+                      .adminToStudents(
+                        data1["result"],
+                        this.curr_deadline,
+                        data1["stream"]
+                      )
+                      .subscribe(data => {
+                        console.log(data);
+                      });
+                  }
+                });
+              } else {
+                this.userService.getFacultyStreamEmails().subscribe(data1 => {
+                  if (data1["status"] == "success") {
+                    console.log(data);
+                    this.mailer
+                      .adminToFaculty(
+                        this.stage_no,
+                        data1["result"],
+                        this.curr_deadline,
+                        data1["stream"]
+                      )
+                      .subscribe(data2 => {
+                        console.log(data2);
                         this.router
-                        .navigateByUrl("/refresh", { skipLocationChange: true })
-                        .then(() => {
-                          this.router.navigate([decodeURI(this.location.path())]);
-                        });
-                      })
-                    }
-                  })
-
-                }
-
-                   
-
-                
+                          .navigateByUrl("/refresh", {
+                            skipLocationChange: true
+                          })
+                          .then(() => {
+                            this.router.navigate([
+                              decodeURI(this.location.path())
+                            ]);
+                          });
+                      });
+                  }
+                });
               }
+            }
           });
 
           // console.log("submitted");
@@ -271,10 +254,5 @@ export class AdminComponent implements OnInit {
     this.faculty_projects = faculty["projects"];
   }
 
-  startAllocation(){
-
-  }
-
-
-
+  startAllocation() {}
 }

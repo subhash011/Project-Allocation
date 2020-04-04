@@ -136,12 +136,12 @@ export class UserService {
   Admin_getStreamDetails() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = "http://localhost:8080/admin/" + id;
+    this.url = this.base_url + "admin/" + id;
 
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: idToken //change it later
+        Authorization: idToken
       })
     };
     return this.http.get(this.url, httpOptions);
@@ -155,7 +155,7 @@ export class UserService {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: idToken //change it later
+        Authorization: idToken
       })
     };
 
@@ -169,12 +169,12 @@ export class UserService {
 
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = "http://localhost:8080/admin/update_stage/" + id;
+    this.url = this.base_url + "admin/update_stage/" + id;
 
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: idToken //change it later
+        Authorization: idToken
       })
     };
 
@@ -188,22 +188,19 @@ export class UserService {
 
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = "http://localhost:8080/admin/setDeadline/" + id;
+    this.url = this.base_url + "admin/setDeadline/" + id;
 
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: idToken //change it later
+        Authorization: idToken
       })
     };
 
     return this.http.post(this.url, obj, httpOptions);
   }
 
-
-  getFacultyStreamEmails(){
-
-
+  getFacultyStreamEmails() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = "http://localhost:8080/admin/stream_email/faculty/" + id;
@@ -216,12 +213,9 @@ export class UserService {
     };
 
     return this.http.get(this.url, httpOptions);
-
-
   }
 
-  getStudentStreamEmails(){
-
+  getStudentStreamEmails() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = "http://localhost:8080/admin/stream_email/student/" + id;
@@ -234,8 +228,10 @@ export class UserService {
     };
 
     return this.http.get(this.url, httpOptions);
-
   }
 
-
+  getAllAdminDetails() {
+    this.url = this.base_url + "admin/all/info";
+    return this.http.get(this.url);
+  }
 }
