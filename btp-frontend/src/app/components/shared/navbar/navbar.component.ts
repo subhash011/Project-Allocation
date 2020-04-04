@@ -83,4 +83,18 @@ export class NavbarComponent implements OnInit {
   getAdmin() {
     return "admin/" + localStorage.getItem("id");
   }
+  goToHome(){
+
+    let id = localStorage.getItem("id");
+    this.router
+      .navigateByUrl("/refresh", {
+        skipLocationChange: true
+      })
+      .then(() => {
+        this.router.navigate([
+          decodeURI('/faculty/'+id)
+        ]);
+      });
+
+  }
 }
