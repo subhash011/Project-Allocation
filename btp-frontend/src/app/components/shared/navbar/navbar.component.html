@@ -6,7 +6,7 @@
     </div>
     <div *ngIf="isFaculty()">
         <div class="flex-grow-left"></div>
-        <button mat-button [routerLink]="getURLHome()" class="nav-text">
+        <button mat-button (click)="goToHome()" class="nav-text">
       Home
     </button>
     </div>
