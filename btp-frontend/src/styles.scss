@@ -16,87 +16,78 @@ body {
 }
 
 .no-toolbar-padding .mat-dialog-container {
-  padding-top: 0;
-  padding-left: 0;
-  padding-right: 0;
-  overflow: hidden;
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden;
 }
 
 body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  // background: url("https://i.pinimg.com/originals/c9/96/3d/c9963d0174460bc09f4d591cd8219852.png")
-    // no-repeat center center fixed;
-  background-size: 100% 100%;
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background: url("https://i.pinimg.com/originals/c9/96/3d/c9963d0174460bc09f4d591cd8219852.png") no-repeat center center fixed;
+    background-size: 100% 100%;
 }
 
-
-::ng-deep .mat-horizontal-stepper-header{
-  pointer-events: none !important;
+::ng-deep .mat-horizontal-stepper-header {
+    pointer-events: none !important;
 }
-
 
 @mixin styleStepLine($index) {
-  .mat-horizontal-stepper-header {
-    & + .mat-stepper-horizontal-line:nth-child(#{$index}) {
-      height: 2px;
-      background-image: linear-gradient(to right, #f03e81, #f03e81);
+    .mat-horizontal-stepper-header {
+        &+.mat-stepper-horizontal-line:nth-child(#{$index}) {
+            height: 2px;
+            background-image: linear-gradient(to right, #f03e81, #f03e81);
+        }
     }
-  }
 }
 
 @mixin styleEditedStepIcon($index) {
-  .mat-horizontal-stepper-header:nth-child(#{$index}) {
-    .mat-step-icon:not(.mat-step-icon-selected) {
-      background-color: red;
+    .mat-horizontal-stepper-header:nth-child(#{$index}) {
+        .mat-step-icon:not(.mat-step-icon-selected) {
+            background-color: red;
+        }
     }
-  }
 }
 
 @mixin styleUnEditedStepIcon($index) {
-  .mat-horizontal-stepper-header:nth-child(#{$index}) {
-    .mat-step-icon:not(.mat-step-icon-selected) {
-      background-color: #e8e8e8;
+    .mat-horizontal-stepper-header:nth-child(#{$index}) {
+        .mat-step-icon:not(.mat-step-icon-selected) {
+            background-color: #e8e8e8;
+        }
     }
-  }
 }
 
 .last-edited-step-1 {
-  @include styleStepLine(2);
+    @include styleStepLine(2);
 }
 
 .last-edited-step-2 {
-  @include styleStepLine(2);
-  @include styleStepLine(4);
+    @include styleStepLine(2);
+    @include styleStepLine(4);
 }
 
 .last-edited-step-3 {
-  @include styleStepLine(2);
-  @include styleStepLine(4);
-  @include styleStepLine(6);
+    @include styleStepLine(2);
+    @include styleStepLine(4);
+    @include styleStepLine(6);
 }
 
-.mat-stepper-label-position-bottom
-  .mat-horizontal-stepper-header:not(:first-child)::before,
-.mat-stepper-label-position-bottom
-  .mat-horizontal-stepper-header:not(:last-child)::after,
-[dir="rtl"]
-  .mat-stepper-label-position-bottom
-  .mat-horizontal-stepper-header:not(:first-child)::after,
-[dir="rtl"]
-  .mat-stepper-label-position-bottom
-  .mat-horizontal-stepper-header:not(:last-child)::before {
-  width: 0 !important;
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before,
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after,
+[dir="rtl"] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after,
+[dir="rtl"] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before {
+    width: 0 !important;
 }
 
 .mat-step-header .mat-step-header-ripple {
-  display: none;
+    display: none;
 }
 
 .mat-step-header.cdk-keyboard-focused,
 .mat-step-header.cdk-program-focused,
 .mat-step-header:hover {
-  background-color: #fff;
+    background-color: #fff;
 }
 
 // .mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
@@ -106,4 +97,3 @@ body {
 // .mat-stepper-horizontal-line {
 // 	top: 20px !important;
 // }
-
