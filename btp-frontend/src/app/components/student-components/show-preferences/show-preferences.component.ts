@@ -1,3 +1,4 @@
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { Component, OnInit, Inject } from "@angular/core";
@@ -21,7 +22,8 @@ export class ShowPreferencesComponent implements OnInit {
     private projectService: ProjectsService,
     public dialogRef: MatDialogRef<ShowPreferencesComponent>,
     @Inject(MAT_DIALOG_DATA) public preferences: any,
-    private loginComponent: LoginComponent
+    private loginComponent: LoginComponent,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {}
@@ -63,6 +65,9 @@ export class ShowPreferencesComponent implements OnInit {
           this.dialogRef.close("success");
         } else if (message == "invalid-token") {
           this.dialogRef.close("invalid-token");
+          this.snackBar.open("Session Timed Out! Sign-In Again", "Ok", {
+            duration: 3000
+          });
           this.loginComponent.signOut();
         } else {
           this.dialogRef.close("error");

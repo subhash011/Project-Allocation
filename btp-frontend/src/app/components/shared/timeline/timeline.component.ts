@@ -44,9 +44,9 @@ export class TimelineComponent implements OnInit {
                   this.startDate = new Date(this.admins.startDate);
                   this.startCompleted = true;
                   this.stage = this.admins.stage;
-                  for (let i = 0; i < this.stage; i++) {
+                  for (let i = 0; i <= this.stage; i++) {
                     this.dates.push(new Date(this.admins["deadlines"][i]));
-                    if (this.stage == 1 && i == 0) {
+                    if (this.stage == 0 && i == 0) {
                       const now = new Date();
                       this.stageOne =
                         Math.abs(now.getTime() - this.startDate.getTime()) /
@@ -54,11 +54,11 @@ export class TimelineComponent implements OnInit {
                           this.dates[0].getTime() - this.startDate.getTime()
                         );
                       this.stageOne = this.stageOne * 100;
-                      if (this.stageOne == 100) {
+                      if (this.stageOne >= 100) {
                         this.stageOneCompleted = true;
                       }
                     }
-                    if (this.stage == 2 && i == 1) {
+                    if (this.stage == 1 && i == 1) {
                       this.stageOneCompleted = true;
                       this.stageOne = 100;
                       const now = new Date();
@@ -68,11 +68,11 @@ export class TimelineComponent implements OnInit {
                           this.dates[1].getTime() - this.dates[0].getTime()
                         );
                       this.stageTwo *= 100;
-                      if (this.stageTwo == 100) {
+                      if (this.stageTwo >= 100) {
                         this.stageTwoCompleted = true;
                       }
                     }
-                    if (this.stage == 3 && i == 2) {
+                    if (this.stage == 2 && i == 2) {
                       this.stageOneCompleted = true;
                       this.stageOne = 100;
                       this.stageTwoCompleted = true;
@@ -84,7 +84,7 @@ export class TimelineComponent implements OnInit {
                           this.dates[2].getTime() - this.dates[1].getTime()
                         );
                       this.stageThree *= 100;
-                      if (this.stageThree == 100) {
+                      if (this.stageThree >= 100) {
                         this.stageThreeCompleted = true;
                       }
                     }
@@ -102,7 +102,7 @@ export class TimelineComponent implements OnInit {
                           this.dates[3].getTime() - this.dates[2].getTime()
                         );
                       this.stageFour *= 100;
-                      if (this.stageFour == 100) {
+                      if (this.stageFour >= 100) {
                         this.stageFourCompleted = true;
                       }
                     }
@@ -132,9 +132,9 @@ export class TimelineComponent implements OnInit {
                   this.startDate = new Date(this.admins.startDate);
                   this.startCompleted = true;
                   this.stage = this.admins.stage;
-                  for (let i = 0; i < this.stage; i++) {
+                  for (let i = 0; i <= this.stage; i++) {
                     this.dates.push(new Date(this.admins["deadlines"][i]));
-                    if (this.stage == 1 && i == 0) {
+                    if (this.stage == 0 && i == 0) {
                       const now = new Date();
                       this.stageOne =
                         Math.abs(now.getTime() - this.startDate.getTime()) /
@@ -142,11 +142,11 @@ export class TimelineComponent implements OnInit {
                           this.dates[0].getTime() - this.startDate.getTime()
                         );
                       this.stageOne = this.stageOne * 100;
-                      if (this.stageOne == 100) {
+                      if (this.stageOne >= 100) {
                         this.stageOneCompleted = true;
                       }
                     }
-                    if (this.stage == 2 && i == 1) {
+                    if (this.stage == 1 && i == 1) {
                       this.stageOneCompleted = true;
                       this.stageOne = 100;
                       const now = new Date();
@@ -156,11 +156,11 @@ export class TimelineComponent implements OnInit {
                           this.dates[1].getTime() - this.dates[0].getTime()
                         );
                       this.stageTwo *= 100;
-                      if (this.stageTwo == 100) {
+                      if (this.stageTwo >= 100) {
                         this.stageTwoCompleted = true;
                       }
                     }
-                    if (this.stage == 3 && i == 2) {
+                    if (this.stage == 2 && i == 2) {
                       this.stageOneCompleted = true;
                       this.stageOne = 100;
                       this.stageTwoCompleted = true;
@@ -172,7 +172,7 @@ export class TimelineComponent implements OnInit {
                           this.dates[2].getTime() - this.dates[1].getTime()
                         );
                       this.stageThree *= 100;
-                      if (this.stageThree == 100) {
+                      if (this.stageThree >= 100) {
                         this.stageThreeCompleted = true;
                       }
                     }
@@ -190,7 +190,7 @@ export class TimelineComponent implements OnInit {
                           this.dates[3].getTime() - this.dates[2].getTime()
                         );
                       this.stageFour *= 100;
-                      if (this.stageFour == 100) {
+                      if (this.stageFour >= 100) {
                         this.stageFourCompleted = true;
                       }
                     }

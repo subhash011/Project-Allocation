@@ -13,7 +13,7 @@ import { Location } from "@angular/common";
 @Component({
   selector: "app-admin",
   templateUrl: "./admin.component.html",
-  styleUrls: ["./admin.component.scss"],
+  styleUrls: ["./admin.component.scss"]
 })
 export class AdminComponent implements OnInit {
   public details; // For displaying the projects tab
@@ -56,16 +56,16 @@ export class AdminComponent implements OnInit {
     private router: Router
   ) {
     this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: [this.dateSet[0]],
+      firstCtrl: [this.dateSet[0]]
     });
     this.secondFormGroup = this.formBuilder.group({
-      secondCtrl: [this.dateSet[1]],
+      secondCtrl: [this.dateSet[1]]
     });
     this.thirdFormGroup = this.formBuilder.group({
-      thirdCtrl: [this.dateSet[2]],
+      thirdCtrl: [this.dateSet[2]]
     });
     this.fourthFormGroup = this.formBuilder.group({
-      fourthCtrl: [this.dateSet[3]],
+      fourthCtrl: [this.dateSet[3]]
     });
   }
 
@@ -78,25 +78,28 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userService.getAdminInfo().subscribe((data) => {
+    this.userService.getAdminInfo().subscribe(data => {
       console.log(data);
       this.stage_no = data["stage"];
 
       this.dateSet = data["deadlines"];
       // this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-      this.dateSet = this.dateSet.map((date) => {
+      this.dateSet = this.dateSet.map(date => {
         return new Date(date);
       });
       this.startDate = data["startDate"];
       this.ngAfterViewInit();
       if (this.dateSet.length == 1) {
         this.input1 = true;
+        this.firstFormGroup.controls["firstCtrl"].disable({ onlySelf: true });
       }
       if (this.dateSet.length == 2) {
         this.input2 = true;
+        this.firstFormGroup.controls["secondCtrl"].disable({ onlySelf: true });
       }
       if (this.dateSet.length == 3) {
         this.input3 = true;
+        this.firstFormGroup.controls["thirdCtrl"].disable({ onlySelf: true });
       }
 
       if (this.stage_no == 0) {
@@ -105,12 +108,15 @@ export class AdminComponent implements OnInit {
         this.minDate = this.dateSet[this.dateSet.length - 1];
       }
 
-      this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
-      this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
-      this.thirdFormGroup.controls["secondCtrl"].setValue(this.dateSet[2]);
+      if (this.firstFormGroup.controls["firstCtrl"])
+        this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
+      if (this.firstFormGroup.controls["secondCtrl"])
+        this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
+      if (this.firstFormGroup.controls["secondCtrl"])
+        this.thirdFormGroup.controls["secondCtrl"].setValue(this.dateSet[2]);
     });
 
-    this.userService.Admin_getStreamDetails().subscribe((data) => {
+    this.userService.Admin_getStreamDetails().subscribe(data => {
       console.log(data);
       this.details = data["project_details"];
 
@@ -134,7 +140,7 @@ export class AdminComponent implements OnInit {
   proceed() {
     this.stage_no++;
 
-    this.userService.updateStage(this.stage_no).subscribe((data) => {
+    this.userService.updateStage(this.stage_no).subscribe(data => {
       console.log(data);
     });
 
@@ -156,12 +162,12 @@ export class AdminComponent implements OnInit {
     // Calculate the difference in milliseconds
     var difference_ms = date2_ms - date1_ms;
 
-    if (difference_ms < 0) {
-      return 0;
-    }
+    // if (difference_ms < 0) {
+    //   return 0;
+    // }
 
     // Convert back to days and return
-    return Math.round(difference_ms / one_day);
+    return Math.abs(difference_ms) / one_day;
   }
 
   setDeadline() {
@@ -182,20 +188,20 @@ export class AdminComponent implements OnInit {
     if (date != null && date != "") {
       const dialogRef = this.dialog.open(DeletePopUpComponent, {
         width: "400px",
-        height: "200px",
+        height: "250px",
         data: {
           heading: "Confirm Deadline",
           message:
-            "Are you sure you want to fix the deadline? On confirmation emails will be sent.",
-        },
+            "Are you sure you want to fix the deadline? On confirmation emails will be sent."
+        }
       });
-      dialogRef.afterClosed().subscribe((result) => {
+      dialogRef.afterClosed().subscribe(result => {
         if (result["message"] == "submit") {
           // console.log(date)
-          this.userService.setDeadline(date).subscribe((data) => {
+          this.userService.setDeadline(date).subscribe(data => {
             if (data["status"] == "success") {
               if (this.stage_no == 1) {
-                this.userService.getStudentStreamEmails().subscribe((data1) => {
+                this.userService.getStudentStreamEmails().subscribe(data1 => {
                   console.log(data1);
                   if (data1["status"] == "success") {
                     this.mailer
@@ -204,14 +210,14 @@ export class AdminComponent implements OnInit {
                         this.curr_deadline,
                         data1["stream"]
                       )
-                      .subscribe((data) => {
+                      .subscribe(data => {
                         console.log(data);
 
                         let snackBarRef = this.snackBar.open(
                           "Mails have been sent",
                           "Ok",
                           {
-                            duration: 3000,
+                            duration: 3000
                           }
                         );
                         snackBarRef.afterDismissed().subscribe(() => {
@@ -224,7 +230,7 @@ export class AdminComponent implements OnInit {
                   }
                 });
               } else {
-                this.userService.getFacultyStreamEmails().subscribe((data1) => {
+                this.userService.getFacultyStreamEmails().subscribe(data1 => {
                   if (data1["status"] == "success") {
                     console.log(data);
                     this.mailer
@@ -234,14 +240,14 @@ export class AdminComponent implements OnInit {
                         this.curr_deadline,
                         data1["stream"]
                       )
-                      .subscribe((data2) => {
+                      .subscribe(data2 => {
                         console.log(data2);
 
                         let snackBarRef = this.snackBar.open(
                           "Mails have been sent",
                           "Ok",
                           {
-                            duration: 3000,
+                            duration: 3000
                           }
                         );
                         snackBarRef.afterDismissed().subscribe(() => {
@@ -263,7 +269,7 @@ export class AdminComponent implements OnInit {
     } else {
       //Snack bar
       let snackBarRef = this.snackBar.open("Plese choose the deadline", "Ok", {
-        duration: 3000,
+        duration: 3000
       });
     }
   }

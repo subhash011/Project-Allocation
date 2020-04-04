@@ -3,7 +3,7 @@ import { SocialUser } from "angularx-social-login";
 import { Injectable } from "@angular/core";
 import { HttpHeaders, HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import * as moment from 'moment';
+import * as moment from "moment";
 
 @Injectable({
   providedIn: "root"
@@ -183,7 +183,7 @@ export class UserService {
   }
 
   setDeadline(date) {
-    const str = date.toISOString()
+    const str = date.toISOString();
     const obj = {
       deadline: moment(str).format("YYYY-MM-DD")
     };
@@ -210,7 +210,7 @@ export class UserService {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: idToken //change it later
+        Authorization: idToken
       })
     };
 

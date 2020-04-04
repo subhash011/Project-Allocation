@@ -1,53 +1,52 @@
 .progress-bar {
-  margin-top: 4%;
-  margin-left: 2%;
-  margin-right: 2%;
-  margin-bottom: 2%;
-  display: block;
+    margin-top: 4%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 2%;
+    display: block;
 }
 
 .header {
-  margin-left: 2%;
+    margin-left: 2%;
 }
 
 .days_left {
-  margin-top: 2%;
-  margin-left: 2%;
+    margin-top: 2%;
+    margin-left: 2%;
 }
 
 mat-sidenav-container {
-  position: fixed;
-  height: 100%;
-  min-height: 100%;
-  width: 100%;
-  min-width: 100%;
+    position: fixed;
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    min-width: 100%;
 }
 
 mat-sidenav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
 }
 
 mat-sidenav-content {
-  position: relative;
-  margin-right: 30%;
+    position: relative;
+    margin-right: 30%;
 }
 
 .fill-remaining-space {
-  flex: 1 auto 1;
+    flex: 1 auto 1;
 }
 
 mat-toolbar {
-  justify-content: center;
+    justify-content: center;
 }
 
 .datelabel {
-  margin-top: 8%;
+    margin-top: 8%;
 }
 
-::ng-deep .mat-horizontal-stepper-header{
-  pointer-events: none !important;
+::ng-deep .mat-horizontal-stepper-header {
+    pointer-events: none !important;
 }
-
