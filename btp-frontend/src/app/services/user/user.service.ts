@@ -111,7 +111,6 @@ export class UserService {
 
   getFacultyDetails(id: String) {
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
     this.url = this.base_url + "faculty/details/" + id;
     const httpOptions = {
       headers: new HttpHeaders({
