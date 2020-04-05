@@ -11,7 +11,7 @@
             <mat-progress-bar mode="determinate" [value]="progress_value"></mat-progress-bar>
         </div>
         <span class="days_left"><strong>Days Left:</strong> {{ days_left }}</span>
-        <mat-horizontal-stepper [linear]="'true'" #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no }}">
+        <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no }}">
             <mat-step [stepControl]="firstFormGroup" [editable]="'false'">
                 <form [formGroup]="firstFormGroup">
                     <ng-template matStepLabel>

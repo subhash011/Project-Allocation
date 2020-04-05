@@ -4,7 +4,7 @@ import { Component, OnInit } from "@angular/core";
 @Component({
   selector: "app-timeline",
   templateUrl: "./timeline.component.html",
-  styleUrls: ["./timeline.component.scss"]
+  styleUrls: ["./timeline.component.scss"],
 })
 export class TimelineComponent implements OnInit {
   constructor(private userService: UserService) {}
@@ -22,22 +22,28 @@ export class TimelineComponent implements OnInit {
   stageTwo: number;
   stageThree: number;
   stageFour: number;
+  icon;
   ngOnInit() {
     if (localStorage.getItem("role") == "student") {
+      this.icon = {
+        float: "left",
+        "margin-top.%": "4.5",
+        left: "0",
+      };
       this.userService
         .getStudentDetails(localStorage.getItem("id"))
         .toPromise()
-        .then(student => {
+        .then((student) => {
           if (student["status"] == "success") {
             this.stream = student["user_details"]["stream"];
             return this.stream;
           }
         })
-        .then(stream => {
+        .then((stream) => {
           this.userService
             .getAllAdminDetails()
             .toPromise()
-            .then(result => {
+            .then((result) => {
               if (result["message"] == "success") {
                 this.admins = result["result"][stream];
                 if (this.admins.startDate) {
@@ -112,20 +118,25 @@ export class TimelineComponent implements OnInit {
             });
         });
     } else {
+      this.icon = {
+        float: "left",
+        "margin-top.%": "4",
+        left: "0",
+      };
       this.userService
         .getFacultyDetails(localStorage.getItem("id"))
         .toPromise()
-        .then(faculty => {
+        .then((faculty) => {
           if (faculty["status"] == "success") {
             this.stream = faculty["user_details"]["stream"];
             return this.stream;
           }
         })
-        .then(stream => {
+        .then((stream) => {
           this.userService
             .getAllAdminDetails()
             .toPromise()
-            .then(result => {
+            .then((result) => {
               if (result["message"] == "success") {
                 this.admins = result["result"][stream];
                 if (this.admins.startDate) {
