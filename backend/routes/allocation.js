@@ -17,6 +17,7 @@ var weights = [3, 2, 1];
 cron.schedule("*/2 * * * * *", function() {
     var projects = [];
     var students = [];
+    //this allocation status is the map which is the answer
     var allocationStatus = new Map();
     var promises = [];
     promises.push(
@@ -42,6 +43,8 @@ cron.schedule("*/2 * * * * *", function() {
                     projectsList: student.projects_preference,
                     gpa: student.gpa,
                 };
+                //sorting projects according to cgpa so as to get the weight for CGPA
+                //if not needed make weights[2] = 0
                 students.sort((a, b) => {
                     return a.gpa - b.gpa;
                 });
@@ -80,19 +83,24 @@ cron.schedule("*/2 * * * * *", function() {
             }
             //here i have the ranks of all the students so i can sort now
             //student Ranks is the required map
+            //sort students according to min rank
             studentRanks.sort((a, b) => {
                 return a.rank - b.rank;
             });
             if (studentRanks[0]) {
+                //allot the project to the student
                 allocationStatus.set(studentRanks[0].id, project.project_id);
                 var studentID = studentRanks[0].id;
                 var projectID = project.project_id;
+                //remove the student
                 students = students.filter((object) => {
                     !object.student_id.equals(studentID);
                 });
+                //remove the project
                 projects = projects.filter((object) => {
                     !object.project_id.equals(projectID);
                 });
+                //remove the student from all projects
                 for (const project of projects) {
                     project.studentsList = project.studentsList.filter((object) => {
                         !object.equals(studentID);
