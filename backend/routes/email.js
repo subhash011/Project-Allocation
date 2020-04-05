@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const express = require("express");
 const router = express.Router();
-// const cron = require("node-cron");
+const cron = require("node-cron");
 const mongoose = require("mongoose");
 const Project = require("../models/Project");
 const Student = require("../models/Student");
@@ -61,146 +61,146 @@ router.post("/send", (req, res) => {
 });
 
 //here change the time frequency
-// cron.schedule("*/2 * * * * *", function() {
-//     var schedule = [];
-//     var faculty = {};
-//     var student = {};
-//     var adminStreamWise = {};
-//     var deadlinesStreamWise = {};
-//     var startStreamWise = {};
-//     var stagesStreamWise = {};
-//     var studentEmail = {
-//         CSE: [],
-//         EE: [],
-//         ME: [],
-//         CE: [],
-//     };
-//     var facultyEmail = {
-//         CSE: [],
-//         EE: [],
-//         ME: [],
-//         CE: [],
-//     };
-//     Admin.find()
-//         .then((admins) => {
-//             for (const admin of admins) {
-//                 adminStreamWise[admin.stream] = admin;
-//                 deadlinesStreamWise[admin.stream] =
-//                     admin.deadlines[admin.deadlines.length - 1];
-//                 startStreamWise[admin.stream] = admin.startDate ?
-//                     admin.startDate :
-//                     null;
-//                 stagesStreamWise[admin.stream] = admin.stage;
-//             }
-//             return adminStreamWise;
-//         })
-//         .then((admins) => {
-//             var now = new Date();
-//             for (const branch of branches) {
-//                 if (deadlinesStreamWise[branch]) {
-//                     if (stagesStreamWise[branch] == 0 || stagesStreamWise[branch] == 2) {
-//                         if (
-//                             Math.abs(deadlinesStreamWise[branch].getTime() - now.getTime()) /
-//                             (1000 * 3600 * 24) <=
-//                             1
-//                         ) {
-//                             var schedulerFaculty = new Scheduler(
-//                                 "faculty",
-//                                 branch,
-//                                 true,
-//                                 stagesStreamWise[branch]
-//                             );
-//                             faculty[branch] = stagesStreamWise[branch];
-//                             schedule.push(schedulerFaculty);
-//                         }
-//                     } else if (stagesStreamWise[branch] == 1) {
-//                         if (
-//                             Math.abs(deadlinesStreamWise[branch].getTime() - now.getTime()) /
-//                             (1000 * 3600 * 24) <=
-//                             1
-//                         ) {
-//                             var schedulerStudent = new Scheduler(
-//                                 "student",
-//                                 branch,
-//                                 true,
-//                                 stagesStreamWise[branch]
-//                             );
-//                             student[branch] = stagesStreamWise[branch];
-//                             schedule.push(schedulerStudent);
-//                         }
-//                     }
-//                 }
-//             }
-//             return schedule;
-//         })
-//         .then((schedules) => {
-//             var promises = [];
-//             var promisesStudent = [];
-//             for (const branch of branches) {
-//                 promises.push(
-//                     Faculty.find({ stream: branch }).then((faculties) => {
-//                         facultyEmail[branch] = faculties.map((faculty) => faculty.email);
-//                         return branch;
-//                     })
-//                 );
-//             }
-//             Promise.all(promises)
-//                 .then((result) => {
-//                     return facultyEmail;
-//                 })
-//                 .then((faculties) => {
-//                     for (const branch of branches) {
-//                         promisesStudent.push(
-//                             Student.find({ stream: branch }).then((students) => {
-//                                 studentEmail[branch] = students.map((student) => student.email);
-//                                 return branch;
-//                             })
-//                         );
-//                     }
-//                     Promise.all(promisesStudent)
-//                         .then((result) => {
-//                             return studentEmail;
-//                         })
-//                         .then((students) => {
-//                             promises = [];
-//                             var options;
-//                             stageFacultyMessage = "";
-//                             stageStudentMessage = "";
-//                             //here faculty[branch] contains the stage number using which we can send mail
-//                             //here student[branch] contains the stage number using which we can send mail
-//                             for (const branch of branches) {
-//                                 if (faculty[branch]) {
-//                                     if (faculty[branch] == 0) {
-//                                         //give the faculty message for stage zero
-//                                         options = {
-//                                             to: facultyEmail[branch],
-//                                             subject: "Gentle Remainder",
-//                                             text: stageFacultyMessage,
-//                                         };
-//                                     } else if (faculty[branch] == 2) {
-//                                         //give the faculty message for stage two
-//                                         options = {
-//                                             to: facultyEmail[branch],
-//                                             subject: "Gentle Remainder",
-//                                             text: stageFacultyMessage,
-//                                         };
-//                                     }
-//                                     promises.push();
-//                                 } else if (student[branch]) {
-//                                     if (student[branch] == 1) {
-//                                         //give the student message for stage one
-//                                         options = {
-//                                             to: studentEmail[branch],
-//                                             subject: "Gentle Remainder",
-//                                             text: stageStudentMessage,
-//                                         };
-//                                         promises.push();
-//                                     }
-//                                 }
-//                             }
-//                         });
-//                 });
-//         });
-// });
+cron.schedule("*/2 * * * * *", function() {
+    var schedule = [];
+    var faculty = {};
+    var student = {};
+    var adminStreamWise = {};
+    var deadlinesStreamWise = {};
+    var startStreamWise = {};
+    var stagesStreamWise = {};
+    var studentEmail = {
+        CSE: [],
+        EE: [],
+        ME: [],
+        CE: [],
+    };
+    var facultyEmail = {
+        CSE: [],
+        EE: [],
+        ME: [],
+        CE: [],
+    };
+    Admin.find()
+        .then((admins) => {
+            for (const admin of admins) {
+                adminStreamWise[admin.stream] = admin;
+                deadlinesStreamWise[admin.stream] =
+                    admin.deadlines[admin.deadlines.length - 1];
+                startStreamWise[admin.stream] = admin.startDate ?
+                    admin.startDate :
+                    null;
+                stagesStreamWise[admin.stream] = admin.stage;
+            }
+            return adminStreamWise;
+        })
+        .then((admins) => {
+            var now = new Date();
+            for (const branch of branches) {
+                if (deadlinesStreamWise[branch]) {
+                    if (stagesStreamWise[branch] == 0 || stagesStreamWise[branch] == 2) {
+                        if (
+                            Math.abs(deadlinesStreamWise[branch].getTime() - now.getTime()) /
+                            (1000 * 3600 * 24) <=
+                            1
+                        ) {
+                            var schedulerFaculty = new Scheduler(
+                                "faculty",
+                                branch,
+                                true,
+                                stagesStreamWise[branch]
+                            );
+                            faculty[branch] = stagesStreamWise[branch];
+                            schedule.push(schedulerFaculty);
+                        }
+                    } else if (stagesStreamWise[branch] == 1) {
+                        if (
+                            Math.abs(deadlinesStreamWise[branch].getTime() - now.getTime()) /
+                            (1000 * 3600 * 24) <=
+                            1
+                        ) {
+                            var schedulerStudent = new Scheduler(
+                                "student",
+                                branch,
+                                true,
+                                stagesStreamWise[branch]
+                            );
+                            student[branch] = stagesStreamWise[branch];
+                            schedule.push(schedulerStudent);
+                        }
+                    }
+                }
+            }
+            return schedule;
+        })
+        .then((schedules) => {
+            var promises = [];
+            var promisesStudent = [];
+            for (const branch of branches) {
+                promises.push(
+                    Faculty.find({ stream: branch }).then((faculties) => {
+                        facultyEmail[branch] = faculties.map((faculty) => faculty.email);
+                        return branch;
+                    })
+                );
+            }
+            Promise.all(promises)
+                .then((result) => {
+                    return facultyEmail;
+                })
+                .then((faculties) => {
+                    for (const branch of branches) {
+                        promisesStudent.push(
+                            Student.find({ stream: branch }).then((students) => {
+                                studentEmail[branch] = students.map((student) => student.email);
+                                return branch;
+                            })
+                        );
+                    }
+                    Promise.all(promisesStudent)
+                        .then((result) => {
+                            return studentEmail;
+                        })
+                        .then((students) => {
+                            promises = [];
+                            var options;
+                            stageFacultyMessage = "";
+                            stageStudentMessage = "";
+                            //here faculty[branch] contains the stage number using which we can send mail
+                            //here student[branch] contains the stage number using which we can send mail
+                            for (const branch of branches) {
+                                if (faculty[branch]) {
+                                    if (faculty[branch] == 0) {
+                                        //give the faculty message for stage zero
+                                        options = {
+                                            to: facultyEmail[branch],
+                                            subject: "Gentle Remainder",
+                                            text: stageFacultyMessage,
+                                        };
+                                    } else if (faculty[branch] == 2) {
+                                        //give the faculty message for stage two
+                                        options = {
+                                            to: facultyEmail[branch],
+                                            subject: "Gentle Remainder",
+                                            text: stageFacultyMessage,
+                                        };
+                                    }
+                                    promises.push();
+                                } else if (student[branch]) {
+                                    if (student[branch] == 1) {
+                                        //give the student message for stage one
+                                        options = {
+                                            to: studentEmail[branch],
+                                            subject: "Gentle Remainder",
+                                            text: stageStudentMessage,
+                                        };
+                                        promises.push();
+                                    }
+                                }
+                            }
+                        });
+                });
+        });
+});
 
 module.exports = router;
