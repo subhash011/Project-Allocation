@@ -29,14 +29,14 @@ export class StudentComponent implements OnInit {
       .then((data) => {
         if (data["status"] == "invalid-token") {
           this.loginObject.signOut();
-          this.snackBar.open("Please Sign In Again", "OK", {
+          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
         } else if (data["status"] == "success") {
           this.details = data["user_details"];
         } else {
           this.loginObject.signOut();
-          this.snackBar.open("Please Sign In Again", "OK", {
+          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
         }

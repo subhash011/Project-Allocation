@@ -14,7 +14,7 @@ var weights = [3, 2, 1];
 
 //cron is used to auto schedule the allocation process after the deadline
 //this method can be made as a get method if we need to do the allocation from the front end
-cron.schedule("*/2 * * * * *", function() {
+cron.schedule("*/200 * * * * *", function() {
     var projects = [];
     var students = [];
     //this allocation status is the map which is the answer

@@ -31,7 +31,7 @@ export class StudentProjectsComponent implements OnInit {
       .then((details) => {
         if (details["message"] == "token-expired") {
           this.loginObject.signOut();
-          this.snackBar.open("Please Sign In Again", "OK", {
+          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
         } else {
@@ -46,7 +46,7 @@ export class StudentProjectsComponent implements OnInit {
       .then((details) => {
         if (details["message"] == "token-expired") {
           this.loginObject.signOut();
-          this.snackBar.open("Please Sign In Again", "OK", {
+          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
         } else {

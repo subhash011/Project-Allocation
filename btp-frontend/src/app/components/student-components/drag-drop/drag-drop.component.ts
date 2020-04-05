@@ -101,7 +101,7 @@ export class DragDropComponent implements OnInit {
       } else if (result == "invalid-token") {
         this.disable = false;
         this.loginObject.signOut();
-        this.snackBar.open("Please Sign In Again", "OK", {
+        this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
           duration: 3000,
         });
       }
@@ -116,7 +116,7 @@ export class DragDropComponent implements OnInit {
       .then((details) => {
         if (details["message"] == "invalid-token") {
           this.loginObject.signOut();
-          this.snackBar.open("Please Sign In Again", "OK", {
+          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
           return null;
