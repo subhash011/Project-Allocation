@@ -1,3 +1,4 @@
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { UserService } from "./../../../services/user/user.service";
 import { ProjectsService } from "src/app/services/projects/projects.service";
@@ -8,12 +9,13 @@ import { ThemePalette } from "@angular/material/core";
   selector: "app-student-projects",
   templateUrl: "./student-projects.component.html",
   styleUrls: ["./student-projects.component.scss"],
-  providers: [LoginComponent]
+  providers: [LoginComponent],
 })
 export class StudentProjectsComponent implements OnInit {
   constructor(
     private projectService: ProjectsService,
-    private loginObject: LoginComponent
+    private loginObject: LoginComponent,
+    private snackBar: MatSnackBar
   ) {}
   ngOnInit() {
     this.getStudentProjects();
@@ -26,9 +28,12 @@ export class StudentProjectsComponent implements OnInit {
     const user = this.projectService
       .getAllStudentProjects()
       .toPromise()
-      .then(details => {
+      .then((details) => {
         if (details["message"] == "token-expired") {
           this.loginObject.signOut();
+          this.snackBar.open("Please Sign In Again", "OK", {
+            duration: 3000,
+          });
         } else {
           this.projects = details;
         }
@@ -38,9 +43,12 @@ export class StudentProjectsComponent implements OnInit {
     const user = this.projectService
       .getStudentPreference()
       .toPromise()
-      .then(details => {
+      .then((details) => {
         if (details["message"] == "token-expired") {
           this.loginObject.signOut();
+          this.snackBar.open("Please Sign In Again", "OK", {
+            duration: 3000,
+          });
         } else {
           this.preferences = details;
         }

@@ -6,14 +6,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import {
   transferArrayItem,
   CdkDragDrop,
-  moveItemInArray
+  moveItemInArray,
 } from "@angular/cdk/drag-drop";
 
 @Component({
   selector: "app-show-preferences",
   templateUrl: "./show-preferences.component.html",
   styleUrls: ["./show-preferences.component.scss"],
-  providers: [LoginComponent]
+  providers: [LoginComponent],
 })
 export class ShowPreferencesComponent implements OnInit {
   preferenceArray: string[];
@@ -22,7 +22,7 @@ export class ShowPreferencesComponent implements OnInit {
     private projectService: ProjectsService,
     public dialogRef: MatDialogRef<ShowPreferencesComponent>,
     @Inject(MAT_DIALOG_DATA) public preferences: any,
-    private loginComponent: LoginComponent,
+    private loginObject: LoginComponent,
     private snackBar: MatSnackBar
   ) {}
 
@@ -54,21 +54,21 @@ export class ShowPreferencesComponent implements OnInit {
     this.projectService
       .storeStudentPreferences(this.preferences)
       .toPromise()
-      .then(res => {
+      .then((res) => {
         return res["message"];
       })
-      .catch(err => {
+      .catch((err) => {
         this.dialogRef.close("failed");
       })
-      .then(message => {
+      .then((message) => {
         if (message == "success") {
           this.dialogRef.close("success");
         } else if (message == "invalid-token") {
           this.dialogRef.close("invalid-token");
-          this.snackBar.open("Session Timed Out! Sign-In Again", "Ok", {
-            duration: 3000
+          this.loginObject.signOut();
+          this.snackBar.open("Please Sign In Again", "OK", {
+            duration: 3000,
           });
-          this.loginComponent.signOut();
         } else {
           this.dialogRef.close("error");
         }
