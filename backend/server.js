@@ -13,12 +13,12 @@ const app = express();
 
 //express session
 app.use(
-  session({
-    cookie: { maxAge: 60000 },
-    secret: "woot",
-    resave: false,
-    saveUninitialized: false
-  })
+    session({
+        cookie: { maxAge: 60000 },
+        secret: "woot",
+        resave: false,
+        saveUninitialized: false,
+    })
 );
 
 app.use(cors());
@@ -29,16 +29,16 @@ mongoose.set("useFindAndModify", false);
 
 //connect to mongodb
 mongoose
-  .connect("mongodb://localhost:27017/ProjectAllocationTest", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log("connected to mongodb");
-  })
-  .catch(err => {
-    console.log(err);
-  });
+    .connect("mongodb://localhost:27017/ProjectAllocationTest", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => {
+        console.log("connected to mongodb");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 //define all routes below this
 const home = require("./routes/home");
@@ -68,17 +68,20 @@ app.use("/admin", admin);
 const mail = require("./routes/email");
 app.use("/email", mail);
 
+const allocation = require("./routes/allocation");
+app.use("/allocation", allocation);
+
 const PORT = process.env.PORT || 8080;
 
 //Error Response for routes not registered
 app.get("*", (req, res) => {
-  res.status(404).json({
-    status: "fail",
-    error: "Authentication failed - server error"
-  });
+    res.status(404).json({
+        status: "fail",
+        error: "Authentication failed - server error",
+    });
 });
 
 //start server
 app.listen(PORT, () => {
-  console.log("Server connected to port " + PORT);
+    console.log("Server connected to port " + PORT);
 });
