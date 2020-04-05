@@ -60,10 +60,14 @@ router.post("/send", (req, res) => {
         });
 });
 
+//here change the time frequency
 cron.schedule("*/2 * * * * *", function() {
     var schedule = [];
+    var faculty = {};
+    var student = {};
     var adminStreamWise = {};
     var deadlinesStreamWise = {};
+    var startStreamWise = {};
     var stagesStreamWise = {};
     var studentEmail = {
         CSE: [],
@@ -83,6 +87,9 @@ cron.schedule("*/2 * * * * *", function() {
                 adminStreamWise[admin.stream] = admin;
                 deadlinesStreamWise[admin.stream] =
                     admin.deadlines[admin.deadlines.length - 1];
+                startStreamWise[admin.stream] = admin.startDate ?
+                    admin.startDate :
+                    null;
                 stagesStreamWise[admin.stream] = admin.stage;
             }
             return adminStreamWise;
@@ -90,39 +97,37 @@ cron.schedule("*/2 * * * * *", function() {
         .then((admins) => {
             var now = new Date();
             for (const branch of branches) {
-                if (
-                    deadlinesStreamWise[branch] &&
-                    (stagesStreamWise[branch] == 0 || stagesStreamWise[branch] == 2)
-                ) {
-                    if (
-                        Math.abs(deadlinesStreamWise[branch].getTime() - now.getTime()) /
-                        (1000 * 3600 * 24) <=
-                        1
-                    ) {
-                        var schedulerFaculty = new Scheduler(
-                            "faculty",
-                            branch,
-                            true,
-                            stagesStreamWise[branch]
-                        );
-                        schedule.push(schedulerFaculty);
-                    }
-                } else if (
-                    deadlinesStreamWise[branch] &&
-                    stagesStreamWise[branch] == 1
-                ) {
-                    if (
-                        Math.abs(deadlinesStreamWise[branch].getTime() - now.getTime()) /
-                        (1000 * 3600 * 24) <=
-                        1
-                    ) {
-                        var schedulerStudent = new Scheduler(
-                            "faculty",
-                            branch,
-                            true,
-                            stagesStreamWise[branch]
-                        );
-                        schedule.push(schedulerStudent);
+                if (deadlinesStreamWise[branch]) {
+                    if (stagesStreamWise[branch] == 0 || stagesStreamWise[branch] == 2) {
+                        if (
+                            Math.abs(deadlinesStreamWise[branch].getTime() - now.getTime()) /
+                            (1000 * 3600 * 24) <=
+                            1
+                        ) {
+                            var schedulerFaculty = new Scheduler(
+                                "faculty",
+                                branch,
+                                true,
+                                stagesStreamWise[branch]
+                            );
+                            faculty[branch] = stagesStreamWise[branch];
+                            schedule.push(schedulerFaculty);
+                        }
+                    } else if (stagesStreamWise[branch] == 1) {
+                        if (
+                            Math.abs(deadlinesStreamWise[branch].getTime() - now.getTime()) /
+                            (1000 * 3600 * 24) <=
+                            1
+                        ) {
+                            var schedulerStudent = new Scheduler(
+                                "student",
+                                branch,
+                                true,
+                                stagesStreamWise[branch]
+                            );
+                            student[branch] = stagesStreamWise[branch];
+                            schedule.push(schedulerStudent);
+                        }
                     }
                 }
             }
@@ -157,10 +162,42 @@ cron.schedule("*/2 * * * * *", function() {
                             return studentEmail;
                         })
                         .then((students) => {
-                            console.log(schedule);
-                            //here i have the scheduler object which is enough to decide whom to mail
-                            //once decided i have all the mail-id's required
-                            //problem is that we have to get auth token to send mail
+                            promises = [];
+                            var options;
+                            stageFacultyMessage = "";
+                            stageStudentMessage = "";
+                            //here faculty[branch] contains the stage number using which we can send mail
+                            //here student[branch] contains the stage number using which we can send mail
+                            for (const branch of branches) {
+                                if (faculty[branch]) {
+                                    if (faculty[branch] == 0) {
+                                        //give the faculty message for stage zero
+                                        options = {
+                                            to: facultyEmail[branch],
+                                            subject: "Gentle Remainder",
+                                            text: stageFacultyMessage,
+                                        };
+                                    } else if (faculty[branch] == 2) {
+                                        //give the faculty message for stage two
+                                        options = {
+                                            to: facultyEmail[branch],
+                                            subject: "Gentle Remainder",
+                                            text: stageFacultyMessage,
+                                        };
+                                    }
+                                    promises.push();
+                                } else if (student[branch]) {
+                                    if (student[branch] == 1) {
+                                        //give the student message for stage one
+                                        options = {
+                                            to: studentEmail[branch],
+                                            subject: "Gentle Remainder",
+                                            text: stageStudentMessage,
+                                        };
+                                        promises.push();
+                                    }
+                                }
+                            }
                         });
                 });
         });
