@@ -12,6 +12,8 @@ var weights = [3, 2, 1];
 //1 --> student
 //2 --> CGPA
 
+//cron is used to auto schedule the allocation process after the deadline
+//this method can be made as a get method if we need to do the allocation from the front end
 cron.schedule("*/2 * * * * *", function() {
     var projects = [];
     var students = [];
@@ -49,7 +51,7 @@ cron.schedule("*/2 * * * * *", function() {
         })
     );
     Promise.all(promises).then(() => {
-        //here we have all students and projects sorted projects
+        //here we have all students and projects sorted projects and students with CGPA
         for (const project of projects) {
             var rank = 0;
             var studentRanks = [];
