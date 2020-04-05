@@ -282,4 +282,58 @@ router.get("/all/info", (req, res) => {
   });
 });
 
+
+router.get('/removeDeadline/:id',(req,res)=>{
+
+
+  const id = req.params.id;
+  const idToken = req.headers.idToken;
+
+  Faculty.findOne({google_id:{id:id,idToken:idToken}})
+    .then(faculty=>{
+
+      Admin.findOne({admin_id:faculty._id})
+        .then(admin=>{
+
+          admin.deadlines.pop()
+          if(admin.deadlines.length == 0){
+            admin.startDate = null;
+          }
+
+          admin.save()
+            .then(result=>{
+              res.json({
+                status:"success",
+                msg:"Please sign in again"
+              })
+            })
+            .catch(err=>{
+              res.json({
+                status:"fail",
+                msg:null
+              })
+            })
+
+        })
+        .catch(err=>{
+          res.json({
+            status:"fail",
+            msg:null
+          })
+        })
+
+
+    })
+    .catch(err=>{
+      res.json({
+        status:"fail",
+        msg:null
+      })
+    })
+
+
+
+})
+
+
 module.exports = router;

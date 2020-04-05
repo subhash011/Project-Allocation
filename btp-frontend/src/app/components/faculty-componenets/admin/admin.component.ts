@@ -1,3 +1,4 @@
+import { LoginComponent } from "./../../shared/login/login.component";
 import { MailService } from "./../../../services/mailing/mail.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "./../delete-pop-up/delete-pop-up.component";
@@ -7,7 +8,6 @@ import { FormGroup } from "@angular/forms";
 import { UserService } from "src/app/services/user/user.service";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatStepper } from "@angular/material";
-import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 
 @Component({
@@ -53,7 +53,7 @@ export class AdminComponent implements OnInit {
     private snackBar: MatSnackBar,
     private mailer: MailService,
     private location: Location,
-    private router: Router
+    private loginService: LoginComponent
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -148,7 +148,21 @@ export class AdminComponent implements OnInit {
     this.stage_no++;
 
     this.userService.updateStage(this.stage_no).subscribe((data) => {
-      console.log(data);
+      if (data["status"] == "fail") {
+        let snackBarRef = this.snackBar.open(
+          "Session Timed Out! Sign-in again",
+          "Ok",
+          {
+            duration: 3000,
+          }
+        );
+        snackBarRef.afterDismissed().subscribe(() => {
+          this.loginService.signOut();
+        });
+        snackBarRef.onAction().subscribe(() => {
+          this.loginService.signOut();
+        });
+      }
     });
 
     this.progress_value = 0;
@@ -178,15 +192,11 @@ export class AdminComponent implements OnInit {
   }
 
   setDeadline() {
-    // console.log(formGroup.get('firstCtrl').value)
-    //Backend Call for setting the deadline only on confirmation
-    // console.log(this.stage_no)
     this.curr_deadline = this.dateSet[this.dateSet.length - 1];
 
     if (this.stage_no == 0) {
       var date = this.firstFormGroup.get("firstCtrl").value;
     } else if (this.stage_no == 1) {
-      // console.log('yes')
       var date = this.secondFormGroup.get("secondCtrl").value;
     } else if (this.stage_no == 2) {
       var date = this.thirdFormGroup.get("thirdCtrl").value;
@@ -209,7 +219,6 @@ export class AdminComponent implements OnInit {
             if (data["status"] == "success") {
               if (this.stage_no == 1) {
                 this.userService.getStudentStreamEmails().subscribe((data1) => {
-                  console.log(data1);
                   if (data1["status"] == "success") {
                     this.mailer
                       .adminToStudents(
@@ -219,27 +228,62 @@ export class AdminComponent implements OnInit {
                       )
                       .subscribe((data) => {
                         console.log(data);
+                        if (data["status"] == "success") {
+                          let snackBarRef = this.snackBar.open(
+                            "Mails have been sent",
+                            "Ok",
+                            {
+                              duration: 3000,
+                            }
+                          );
 
-                        let snackBarRef = this.snackBar.open(
-                          "Mails have been sent",
-                          "Ok",
-                          {
-                            duration: 3000,
-                          }
-                        );
-                        snackBarRef.afterDismissed().subscribe(() => {
-                          this.ngOnInit();
-                        });
-                        snackBarRef.onAction().subscribe(() => {
-                          this.ngOnInit();
-                        });
+                          snackBarRef.afterDismissed().subscribe(() => {
+                            this.ngOnInit();
+                          });
+                          snackBarRef.onAction().subscribe(() => {
+                            this.ngOnInit();
+                          });
+                        } else {
+                          this.userService
+                            .removeDeadline()
+                            .subscribe((data) => {
+                              if ((data["status"] = "success")) {
+                                let snackBarRef = this.snackBar.open(
+                                  "Session Timed Out! Sign-in again",
+                                  "Ok",
+                                  {
+                                    duration: 3000,
+                                  }
+                                );
+                                snackBarRef.afterDismissed().subscribe(() => {
+                                  this.loginService.signOut();
+                                });
+                                snackBarRef.onAction().subscribe(() => {
+                                  this.loginService.signOut();
+                                });
+                              } else {
+                                let snackBarRef = this.snackBar.open(
+                                  "Server Error",
+                                  "Ok",
+                                  {
+                                    duration: 3000,
+                                  }
+                                );
+                                snackBarRef.afterDismissed().subscribe(() => {
+                                  this.loginService.signOut();
+                                });
+                                snackBarRef.onAction().subscribe(() => {
+                                  this.loginService.signOut();
+                                });
+                              }
+                            });
+                        }
                       });
                   }
                 });
               } else {
                 this.userService.getFacultyStreamEmails().subscribe((data1) => {
                   if (data1["status"] == "success") {
-                    console.log(data);
                     this.mailer
                       .adminToFaculty(
                         this.stage_no,
@@ -248,8 +292,6 @@ export class AdminComponent implements OnInit {
                         data1["stream"]
                       )
                       .subscribe((data2) => {
-                        console.log(data2);
-
                         let snackBarRef = this.snackBar.open(
                           "Mails have been sent",
                           "Ok",
@@ -267,10 +309,22 @@ export class AdminComponent implements OnInit {
                   }
                 });
               }
+            } else {
+              let snackBarRef = this.snackBar.open(
+                "Please Try Again! Sign-in again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+              snackBarRef.afterDismissed().subscribe(() => {
+                this.loginService.signOut();
+              });
+              snackBarRef.onAction().subscribe(() => {
+                this.loginService.signOut();
+              });
             }
           });
-
-          // console.log("submitted");
         }
       });
     } else {
