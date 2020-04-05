@@ -1,3 +1,4 @@
+import { UserService } from "./../../../services/user/user.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpClient } from "@angular/common/http";
 import { LocalAuthService } from "../../../services/local-auth/local-auth.service";
@@ -9,7 +10,7 @@ import { Router } from "@angular/router";
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.scss"]
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
   constructor(
@@ -40,13 +41,13 @@ export class LoginComponent implements OnInit {
   signInWithGoogle(): void {
     this.authService
       .signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then(user => {
+      .then((user) => {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("isLoggedIn", "true");
         this.localAuth
           .checkUser(user)
           .toPromise()
-          .then(data => {
+          .then((data) => {
             const navObj = this.localAuth.validate(data);
             localStorage.setItem("id", data["user_details"]["id"]);
             localStorage.setItem("role", data["position"]);
@@ -63,7 +64,7 @@ export class LoginComponent implements OnInit {
       })
       .catch(() => {
         this.snackBar.open("Cancelled Sign In!", "Ok", {
-          duration: 3000
+          duration: 3000,
         });
       });
   }

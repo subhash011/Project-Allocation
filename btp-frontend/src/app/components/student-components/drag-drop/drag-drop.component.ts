@@ -1,3 +1,4 @@
+import { UserService } from "./../../../services/user/user.service";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { ShowPreferencesComponent } from "./../show-preferences/show-preferences.component";
@@ -6,7 +7,7 @@ import { MatDialog } from "@angular/material/dialog";
 import {
   CdkDragDrop,
   moveItemInArray,
-  transferArrayItem
+  transferArrayItem,
 } from "@angular/cdk/drag-drop";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
@@ -14,14 +15,15 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   selector: "app-drag-drop",
   templateUrl: "./drag-drop.component.html",
   styleUrls: ["./drag-drop.component.scss"],
-  providers: [LoginComponent]
+  providers: [LoginComponent],
 })
 export class DragDropComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userService: UserService
   ) {}
   ngOnInit() {
     this.getAllStudentPreferences();
@@ -78,24 +80,29 @@ export class DragDropComponent implements OnInit {
         panelClass: "no-toolbar-padding",
         width: "800px",
         height: "800px",
-        data: this.preferenceArray
+        data: this.preferenceArray,
       });
     }
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result == "success") {
         this.disable = true;
         this.snackBar.open("Preferences Saved Successfully", "OK", {
-          duration: 3000
+          duration: 3000,
         });
       } else if (result == "error") {
         this.disable = false;
-        this.snackBar.open("Some Error Occured! Try Again.", "OK", {
-          duration: 3000
-        });
+        this.snackBar.open(
+          "Some Error Occured! If the Error Persists Please re-authenticate",
+          "OK",
+          {
+            duration: 3000,
+          }
+        );
       } else if (result == "invalid-token") {
         this.disable = false;
+        this.loginObject.signOut();
         this.snackBar.open("Please Sign In Again", "OK", {
-          duration: 3000
+          duration: 3000,
         });
       }
     });
@@ -106,23 +113,26 @@ export class DragDropComponent implements OnInit {
     const user = this.projectService
       .getStudentPreference()
       .toPromise()
-      .then(details => {
+      .then((details) => {
         if (details["message"] == "invalid-token") {
           this.loginObject.signOut();
+          this.snackBar.open("Please Sign In Again", "OK", {
+            duration: 3000,
+          });
           return null;
         }
         if (details) {
           this.preferences = details;
-          tempPref = this.preferences.map(val => val._id);
+          tempPref = this.preferences.map((val) => val._id);
           return details;
         }
       })
-      .then(preferences => {
+      .then((preferences) => {
         if (preferences) {
           this.projectService
             .getAllStudentProjects()
             .toPromise()
-            .then(projects => {
+            .then((projects) => {
               tempArray = projects;
               for (const project of tempArray) {
                 if (!tempPref.includes(project._id)) {
@@ -131,6 +141,12 @@ export class DragDropComponent implements OnInit {
               }
             });
         }
+      })
+      .catch(() => {
+        this.loginObject.signOut();
+        this.snackBar.open("Please Sign In Again", "OK", {
+          duration: 3000,
+        });
       });
   }
 }

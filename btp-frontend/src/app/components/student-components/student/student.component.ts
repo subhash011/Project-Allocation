@@ -9,7 +9,7 @@ import { UserService } from "src/app/services/user/user.service";
   selector: "app-student",
   templateUrl: "./student.component.html",
   styleUrls: ["./student.component.scss"],
-  providers: [LoginComponent]
+  providers: [LoginComponent],
 })
 export class StudentComponent implements OnInit {
   constructor(
@@ -26,19 +26,19 @@ export class StudentComponent implements OnInit {
     this.user = this.userService
       .getStudentDetails(this.user.id)
       .toPromise()
-      .then(data => {
+      .then((data) => {
         if (data["status"] == "invalid-token") {
-          this.snackBar.open("Session Timed Out! Sign-in again", "Ok", {
-            duration: 3000
-          });
           this.loginObject.signOut();
+          this.snackBar.open("Please Sign In Again", "OK", {
+            duration: 3000,
+          });
         } else if (data["status"] == "success") {
           this.details = data["user_details"];
         } else {
-          this.snackBar.open("Session Timed Out! Sign-in again", "Ok", {
-            duration: 3000
-          });
           this.loginObject.signOut();
+          this.snackBar.open("Please Sign In Again", "OK", {
+            duration: 3000,
+          });
         }
       });
   }
@@ -47,17 +47,17 @@ export class StudentComponent implements OnInit {
     this.mailService
       .testMethod()
       .toPromise()
-      .then(res => {
+      .then((res) => {
         if (res["message"] == "success") {
           this.snackBar.open("Successfully Sent Mail", "Ok", {
-            duration: 3000
+            duration: 3000,
           });
         } else {
           this.snackBar.open(
             "Mail Not Sent! Please Logout and then Login.",
             "Ok",
             {
-              duration: 3000
+              duration: 3000,
             }
           );
         }
