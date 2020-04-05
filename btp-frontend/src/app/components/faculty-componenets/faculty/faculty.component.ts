@@ -9,6 +9,7 @@ import { UserService } from "src/app/services/user/user.service";
   selector: "app-faculty",
   templateUrl: "./faculty.component.html",
   styleUrls: ["./faculty.component.scss"],
+  providers: [LoginComponent]
 })
 export class FacultyComponent implements OnInit {
   private id: string;

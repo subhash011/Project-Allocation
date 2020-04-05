@@ -263,4 +263,26 @@ export class UserService {
   }
 
 
+  startAllocation(){
+
+
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "allocation/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken
+      })
+    };
+
+    return this.http.get(this.url, httpOptions);
+
+
+
+  }
+
+
 }

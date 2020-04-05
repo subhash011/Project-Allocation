@@ -14,6 +14,7 @@ import { Location } from "@angular/common";
   selector: "app-admin",
   templateUrl: "./admin.component.html",
   styleUrls: ["./admin.component.scss"],
+  providers: [LoginComponent]
 })
 export class AdminComponent implements OnInit {
   public details; // For displaying the projects tab
@@ -340,5 +341,19 @@ export class AdminComponent implements OnInit {
     this.faculty_projects = faculty["projects"];
   }
 
-  startAllocation() {}
+  startAllocation() {
+
+    this.userService.startAllocation()
+      .subscribe(data=>{
+
+
+
+
+
+      })
+
+
+
+
+  }
 }

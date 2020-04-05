@@ -68,6 +68,9 @@ app.use("/admin", admin);
 const mail = require("./routes/email");
 app.use("/email", mail);
 
+const allocation = require("./routes/allocation");
+app.use("/allocation", allocation);
+
 const PORT = process.env.PORT || 8080;
 
 //Error Response for routes not registered
