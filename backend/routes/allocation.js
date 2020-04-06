@@ -17,6 +17,8 @@ var weights = [3, 2, 1];
 cron.schedule("*/2 * * * * *", function() {
     var projects = [];
     var students = [];
+    var alloted = [];
+    var free = [];
     //this allocation status is the map which is the answer
     var allocationStatus = new Map();
     var promises = [];
@@ -43,68 +45,57 @@ cron.schedule("*/2 * * * * *", function() {
                     projectsList: student.projects_preference,
                     gpa: student.gpa,
                 };
+                free.push(student._id);
                 //sorting projects according to cgpa so as to get the weight for CGPA
                 //if not needed make weights[2] = 0
-                students.sort((a, b) => {
-                    return a.gpa - b.gpa;
-                });
                 students.push(newStudent);
             }
+            students.sort((a, b) => {
+                return a.gpa - b.gpa;
+            });
             return students;
         })
     );
     Promise.all(promises).then(() => {
         //here we have all students and projects sorted projects and students with CGPA
-        for (const project of projects) {
-            var rank = 0;
-            var studentRanks = [];
-            for (
-                let i = 0; i < project.studentsList.length && students.length > 0; i++
-            ) {
-                //faculty preference order
-                rank += weights[0] * (i + 1);
-                //rank of the student according to cgpa or index of the student
-                var studentRank = students.indexOf(
-                    students.find((object) => {
-                        return object.student_id.equals(project.studentsList[i]);
-                    })
-                );
-                rank += weights[2] * (studentRank + 1);
-                //student preference number
-                var projectRank = students[studentRank].projectsList.find((object) => {
-                    return object.equals(project.project_id);
-                });
-                projectRank = students[studentRank].projectsList.indexOf(projectRank);
-                rank += weights[1] * (projectRank + 1);
-                studentRanks.push({
-                    id: project.studentsList[i],
-                    rank: rank,
-                });
-            }
-            //here i have the ranks of all the students so i can sort now
-            //student Ranks is the required map
-            //sort students according to min rank
-            studentRanks.sort((a, b) => {
-                return a.rank - b.rank;
+        while (allocationStatus.size != students.length) {
+            var curStudent = free[0];
+            var studentData = students.findIndex((val) => {
+                return val.student_id.equals(curStudent);
             });
-            if (studentRanks[0]) {
-                //allot the project to the student
-                allocationStatus.set(studentRanks[0].id, project.project_id);
-                var studentID = studentRanks[0].id;
-                var projectID = project.project_id;
-                //remove the student
-                students = students.filter((object) => {
-                    !object.student_id.equals(studentID);
+            studentData = students[studentData];
+            if (!allocationStatus.has(studentData.projectsList[0])) {
+                allocationStatus.set(studentData.projectsList[0], curStudent);
+                alloted.push(curStudent);
+                free.filter((val) => {
+                    !val.equals(curStudent);
                 });
-                //remove the project
-                projects = projects.filter((object) => {
-                    !object.project_id.equals(projectID);
+            } else {
+                var studentCurrentlyAlloted = allocationStatus.get(
+                    studentData.projectsList[0]
+                );
+                var projectData = projects.findIndex((val) => {
+                    return val.project_id.equals(studentData.projectsList[0]);
                 });
-                //remove the student from all projects
-                for (const project of projects) {
-                    project.studentsList = project.studentsList.filter((object) => {
-                        !object.equals(studentID);
+                projectData = projects[projectData];
+                var indexCurrentAllocation = projectData.studentsList.findIndex(
+                    (val) => {
+                        return val.equals(studentCurrentlyAlloted);
+                    }
+                );
+                var indexNotAlloted = projectData.studentsList.findIndex((val) => {
+                    return val.equals(curStudent);
+                });
+                if (indexCurrentAllocation > indexNotAlloted) {
+                    allocationStatus.set(studentData.projectsList[0], curStudent);
+                    alloted.filter((val) => {
+                        !val.equals(studentCurrentlyAlloted);
                     });
+                    free.filter((val) => {
+                        !val.equals(curStudent);
+                    });
+                    alloted.push(curStudent);
+                    free.push(studentCurrentlyAlloted);
                 }
             }
         }
