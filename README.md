@@ -11,5 +11,5 @@ Project Allocation Web Application for University using MEAN Stack. Projects can
 ## Usage
 Use ```npm i ``` to install all dependencies.
 Backend and frontend are separated.
-Open the backend folder in a different terminal and use ```node server.js``` to run the backend.
+Open the backend folder in a different terminal and use ```node server.js```  or ``` nodemon``` to run the backend.
 Open the btp-frontend folder in a different terminal and use ```ng serve -o``` to run the front-end
