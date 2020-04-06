@@ -99,7 +99,35 @@ cron.schedule("*/2 * * * * *", function() {
                 }
             }
         }
-        console.log(allocationStatus);
+        promises = [];
+        allocationStatus.forEach((value, key) => {
+            promises.push(
+                Project.findByIdAndUpdate(key, {
+                    student_alloted: value,
+                })
+                .then((project) => {
+                    console.log(project);
+                    return project;
+                })
+                .catch(() => {
+                    //handle errors
+                })
+            );
+            promises.push(
+                Student.findByIdAndUpdate(value, {
+                    project_alloted: key,
+                })
+                .then((student) => {
+                    return student;
+                })
+                .catch(() => {
+                    //handle error
+                })
+            );
+        });
+        Promise.all(promises).then((result) => {
+            //do whatever you want with the result
+        });
     });
 });
 
