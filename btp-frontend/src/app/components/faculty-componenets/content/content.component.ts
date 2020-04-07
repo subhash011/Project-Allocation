@@ -88,8 +88,20 @@ export class ContentComponent implements OnInit, DoCheck {
                 this.router.navigate([decodeURI(this.location.path())]);
               });
           });
-        } else {
-          //Go to the error page
+        } 
+        else if(data["save"] == "Cap"){
+          //Go to the error page  
+          let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+            duration: 3000
+          });
+        }
+        else{
+
+          let snackBarRef = this.snackBar.open( 'Server Error! Please reload the page and try again!', "Ok", {
+            duration: 3000
+          });
+
+
         }
       });
     }

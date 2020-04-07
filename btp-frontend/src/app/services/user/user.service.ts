@@ -243,25 +243,6 @@ export class UserService {
     return this.http.get(this.url);
   }
 
-  removeDeadline(){
-
-  
-
-    let id = localStorage.getItem("id");
-    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = this.base_url + "admin/removeDeadline/" + id;
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        "Content-Type": "application/json",
-        Authorization: idToken
-      })
-    };
-
-    return this.http.get(this.url, httpOptions);
-
-  }
-
 
   startAllocation(){
 
@@ -283,6 +264,30 @@ export class UserService {
 
 
   }
+
+
+  setProjectCap(cap){
+
+    const obj= {
+      cap : cap
+    }
+  
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "admin/set_projectCap/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken
+      })
+    };
+
+    return this.http.post(this.url,obj ,httpOptions);
+    
+  
+  }
+
 
 
 }

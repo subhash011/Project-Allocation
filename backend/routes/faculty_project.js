@@ -73,7 +73,16 @@ router.post("/add/:id", (req, res) => {
 
                 user.project_list.push(project._id);
 
-                project
+                if(user.project_list.length > user.project_cap){
+                    res.json({
+                        save:'Cap',
+                        msg:'You cant add more projects'
+                    })
+                }
+
+
+                else{
+                    project
                     .save()
                     .then(result => {
                         user.save().then(ans => {
@@ -89,6 +98,11 @@ router.post("/add/:id", (req, res) => {
                             msg: " There was an error, Please try again!" //Display the messages in flash messages
                         });
                     });
+
+
+                }
+
+             
             } else {
                 res.json({
                     save: "fail",

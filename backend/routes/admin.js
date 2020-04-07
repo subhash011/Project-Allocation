@@ -69,7 +69,7 @@ router.get("/info/:id", (req, res) => {
         .then((admin) => {
           if (admin) {
             var startDate;
-            // console.log(admin.deadlines.length);
+            console.log(admin);
             if (admin.deadlines.length) {
               startDate = admin.startDate;
             }
@@ -79,6 +79,7 @@ router.get("/info/:id", (req, res) => {
               stage: admin.stage,
               deadlines: admin.deadlines,
               startDate: startDate,
+              projectCap: admin.project_cap,
             });
           } else {
             res.json({
@@ -137,12 +138,11 @@ router.post("/setDeadline/:id", (req, res) => {
     .then((faculty) => {
       Admin.findOne({ admin_id: faculty._id })
         .then((admin) => {
-         
-          console.log(admin)
+          console.log(admin);
 
-          if(admin.deadlines.length == admin.stage+1){
-            admin.deadlines.pop()
-            admin.deadlines.push(new Date(date))
+          if (admin.deadlines.length == admin.stage + 1) {
+            admin.deadlines.pop();
+            admin.deadlines.push(new Date(date));
           }
 
           if (admin.stage == 0) {
@@ -289,58 +289,124 @@ router.get("/all/info", (req, res) => {
   });
 });
 
+// router.get('/removeDeadline/:id',(req,res)=>{
 
-router.get('/removeDeadline/:id',(req,res)=>{
+//   const id = req.params.id;
+//   const idToken = req.headers.idToken;
 
+//   Faculty.findOne({google_id:{id:id,idToken:idToken}})
+//     .then(faculty=>{
 
+//       Admin.findOne({admin_id:faculty._id})
+//         .then(admin=>{
+
+//           admin.deadlines.pop()
+//           if(admin.deadlines.length == 0){
+//             admin.startDate = null;
+//           }
+
+//           admin.save()
+//             .then(result=>{
+//               res.json({
+//                 status:"success",
+//                 msg:"Please sign in again"
+//               })
+//             })
+//             .catch(err=>{
+//               res.json({
+//                 status:"fail",
+//                 msg:null
+//               })
+//             })
+
+//         })
+//         .catch(err=>{
+//           res.json({
+//             status:"fail",
+//             msg:null
+//           })
+//         })
+
+//     })
+//     .catch(err=>{
+//       res.json({
+//         status:"fail",
+//         msg:null
+//       })
+//     })
+
+// })
+
+router.post("/set_projectCap/:id", (req, res) => {
   const id = req.params.id;
-  const idToken = req.headers.idToken;
+  const idToken = req.headers.authorization;
+  const cap = req.body.cap;
+  const promises = [];
 
-  Faculty.findOne({google_id:{id:id,idToken:idToken}})
-    .then(faculty=>{
+  Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+    .then((faculty) => {
+      Admin.findOne({ admin_id: faculty._id })
+        .then((admin) => {
+          admin.project_cap = cap;
 
-      Admin.findOne({admin_id:faculty._id})
-        .then(admin=>{
+          const stream = admin.stream;
 
-          admin.deadlines.pop()
-          if(admin.deadlines.length == 0){
-            admin.startDate = null;
-          }
+          Faculty.find({ stream: stream }).then((faculty_members) => {
+            for (const fac of faculty_members) {
+              fac.project_cap = cap;
 
-          admin.save()
-            .then(result=>{
-              res.json({
-                status:"success",
-                msg:"Please sign in again"
-              })
-            })
-            .catch(err=>{
-              res.json({
-                status:"fail",
-                msg:null
-              })
-            })
+              promises.push(
+                fac
+                  .save()
+                  .then((result) => {
+                    return result;
+                  })
+                  .catch((err) => {
+                    return err;
+                  })
+              );
+            }
 
+            Promise.all(promises).then((result) => {
+              for (const ans of result) {
+                if (!ans) {
+                  res.json({
+                    status: "fail",
+                    result: "saving faculty error",
+                  });
+                }
+              }
+
+              admin
+                .save()
+                .then((result) => {
+                  res.json({
+                    status: "success",
+                    msg: "Successfully updated the project cap",
+                  });
+                })
+                .catch((err) => {
+                  res.json({
+                    status: "fail",
+                    result: "save error",
+                  });
+                });
+            });
+          });
         })
-        .catch(err=>{
+        .catch((err) => {
           res.json({
-            status:"fail",
-            msg:null
-          })
-        })
-
-
+            status: "fail",
+            result: "admin error",
+          });
+        });
     })
-    .catch(err=>{
+    .catch((err) => {
       res.json({
-        status:"fail",
-        msg:null
-      })
-    })
-
-
-
-})
-
+        status: "fail",
+        result: "faculty error",
+      });
+    });
+});
 
 module.exports = router;

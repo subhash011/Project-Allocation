@@ -25,20 +25,20 @@ export class AdminComponent implements OnInit {
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
   fourthFormGroup: FormGroup;
+  fifthFormGroup: FormGroup;
 
   public stage_no;
   dateSet = [];
   curr_deadline;
-
-  //Progress Bar
-  progress_value = 0;
   startDate;
   minDate;
+
   //Buttons
   proceedButton1 = true;
   proceedButton2 = true;
   proceedButton3 = true;
 
+  projectCap;
   days_left;
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
@@ -64,12 +64,14 @@ export class AdminComponent implements OnInit {
     this.fourthFormGroup = this.formBuilder.group({
       fourthCtrl: [this.dateSet[3]],
     });
+    this.fifthFormGroup = this.formBuilder.group({
+      fifthCtrl: [this.projectCap],
+    })
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       for (let step = 0; step < this.stage_no; step++) {
-        // if(this.stage_no >= 1)
           this.stepper.next();
       }
     });
@@ -81,6 +83,7 @@ export class AdminComponent implements OnInit {
       this.stage_no = data["stage"];
 
       this.dateSet = data["deadlines"];
+      this.projectCap = data["projectCap"]
       // this.curr_deadline = this.dateSet[this.dateSet.length - 1];
       this.dateSet = this.dateSet.map((date) => {
         return new Date(date);
@@ -93,18 +96,14 @@ export class AdminComponent implements OnInit {
       this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
       this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
       this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
+      this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
  
       if (this.dateSet.length == 1) {
-        // this.input1 = true;
-
-
         if (this.firstFormGroup.controls["firstCtrl"]) {          
           this.proceedButton1 = false;   
         }
       }
       if (this.dateSet.length == 2) {
-        // this.input2 = true;
-        // this.input1 = true;
         if (this.secondFormGroup.controls["secondCtrl"]) {
               this.proceedButton2 = false;
         }
@@ -113,18 +112,22 @@ export class AdminComponent implements OnInit {
         if (this.thirdFormGroup.controls["thirdCtrl"])
           this.proceedButton3 = false;
       }
-
       if (this.stage_no == 0) {
         this.minDate = new Date();
       } else {
         this.minDate = this.dateSet[this.dateSet.length - 1];
       }
-
- 
-
       this.userService.Admin_getStreamDetails().subscribe((data) => {
         console.log(data);
         this.details = data["project_details"];
+        if(this.dateSet.length > 0){
+
+          this.curr_deadline = this.dateSet[this.dateSet.length - 1];
+          let today = new Date();
+          this.days_left= Math.round(this.daysBetween(today,this.curr_deadline));
+
+        }
+     
       });
     });
   }
@@ -150,7 +153,6 @@ export class AdminComponent implements OnInit {
         this.proceedButton3 = true;
         this.userService.updateStage(this.stage_no).subscribe((data) => {
           if (data["status"] == "success") {
-            this.progress_value = 0;
             this.days_left = "Please Set the deadline";
            
             
@@ -521,4 +523,63 @@ export class AdminComponent implements OnInit {
     })
    
   }
+
+  setProjectCap(){
+
+
+    console.log(this.fifthFormGroup.get("fifthCtrl").value)
+
+    if(this.fifthFormGroup.controls["fifthCtrl"].value){
+
+      this.userService.setProjectCap(this.fifthFormGroup.get("fifthCtrl").value)
+        .subscribe(data=>{
+          console.log(data)
+
+
+          if(data["status"]=="success"){
+
+            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000
+            });
+            this.ngOnInit(true);
+
+          }
+          else{
+
+            let snackBarRef = this.snackBar.open(
+              "Server Error! Please reload and try again!",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );      
+
+
+          }
+
+
+
+        })
+
+
+    }
+    else{
+
+      let snackBarRef = this.snackBar.open(
+        "Please enter a number",
+        "Ok",
+        {
+          duration: 3000,
+        }
+      );
+
+
+
+    }
+
+
+  }
+
+
+
 }

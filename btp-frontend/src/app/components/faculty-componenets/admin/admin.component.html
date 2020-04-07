@@ -8,7 +8,17 @@
         </div>
 
         <div class="progress-bar">
-            <mat-progress-bar mode="determinate" [value]="progress_value"></mat-progress-bar>
+            <!-- <mat-progress-bar mode="determinate" [value]="progress_value"></mat-progress-bar> -->
+
+<form [formGroup]="fifthFormGroup">
+   
+    <mat-form-field class="example-full-width"> 
+      <mat-label>Max number of projects</mat-label>
+      <input matInput placeholder="Project Cap" type="number" step="1" formControlName="fifthCtrl">
+    </mat-form-field>
+    
+    <button color="accent" mat-raised-button (click)="setProjectCap()" class="setButton">Set Project Cap</button>
+</form>
         </div>
         <span class="days_left"><strong>Days Left:</strong> {{ days_left }}</span>
         <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no }}">
@@ -141,3 +151,11 @@
         </mat-sidenav-container>
     </mat-tab>
 </mat-tab-group>
+
+
+
+
+
+
+
+
