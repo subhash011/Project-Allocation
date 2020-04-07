@@ -156,11 +156,16 @@ ${stream} Admin
     return this.http.post(url, body, httpOptions);
   }
 
-  formatAMPM(curr_date) {
-    const date = new Date(curr_date)
+   formatAMPM(curr_deadline) {
+    var date = new Date(curr_deadline);
     var hours = date.getHours();
+    var minutes = date.getMinutes();
     var ampm = hours >= 12 ? 'pm' : 'am';
-    return ampm;
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    var min = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + min + ' ' + ampm;
+    return strTime;
   }
 
 
