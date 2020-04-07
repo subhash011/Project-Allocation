@@ -66,46 +66,45 @@ export class AdminComponent implements OnInit {
     });
     this.fifthFormGroup = this.formBuilder.group({
       fifthCtrl: [this.projectCap],
-    })
+    });
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       for (let step = 0; step < this.stage_no; step++) {
-          this.stepper.next();
+        this.stepper.next();
       }
     });
   }
 
-  ngOnInit(marker=false) {
+  ngOnInit(marker = false) {
     this.userService.getAdminInfo().subscribe((data) => {
       console.log(data);
       this.stage_no = data["stage"];
 
       this.dateSet = data["deadlines"];
-      this.projectCap = data["projectCap"]
+      this.projectCap = data["projectCap"];
       // this.curr_deadline = this.dateSet[this.dateSet.length - 1];
       this.dateSet = this.dateSet.map((date) => {
         return new Date(date);
       });
       this.startDate = data["startDate"];
 
-      if(!marker)
-        this.ngAfterViewInit();
+      if (!marker) this.ngAfterViewInit();
 
       this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
       this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
       this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
       this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
- 
+
       if (this.dateSet.length == 1) {
-        if (this.firstFormGroup.controls["firstCtrl"]) {          
-          this.proceedButton1 = false;   
+        if (this.firstFormGroup.controls["firstCtrl"]) {
+          this.proceedButton1 = false;
         }
       }
       if (this.dateSet.length == 2) {
         if (this.secondFormGroup.controls["secondCtrl"]) {
-              this.proceedButton2 = false;
+          this.proceedButton2 = false;
         }
       }
       if (this.dateSet.length == 3) {
@@ -120,42 +119,38 @@ export class AdminComponent implements OnInit {
       this.userService.Admin_getStreamDetails().subscribe((data) => {
         console.log(data);
         this.details = data["project_details"];
-        if(this.dateSet.length > 0){
-
+        if (this.dateSet.length > 0) {
           this.curr_deadline = this.dateSet[this.dateSet.length - 1];
           let today = new Date();
-          this.days_left= Math.round(this.daysBetween(today,this.curr_deadline));
-
+          this.days_left = Math.round(
+            this.daysBetween(today, this.curr_deadline)
+          );
         }
-     
       });
     });
   }
 
   proceed() {
-   
-
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
       height: "250px",
       data: {
         heading: "Confirm Proceed",
-        message: "Are you sure you want to proceed to the next stage? This cannot be undone",
+        message:
+          "Are you sure you want to proceed to the next stage? This cannot be undone",
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
-
-      if(result["message"]=="submit"){
+      if (result["message"] == "submit") {
         this.stage_no++;
-        this.stepper.next()
+        this.stepper.next();
         this.proceedButton1 = true;
         this.proceedButton2 = true;
         this.proceedButton3 = true;
         this.userService.updateStage(this.stage_no).subscribe((data) => {
           if (data["status"] == "success") {
             this.days_left = "Please Set the deadline";
-           
-            
+
             let snackBarRef = this.snackBar.open(
               "SuccessFully moved to the next stage!",
               "Ok",
@@ -163,11 +158,7 @@ export class AdminComponent implements OnInit {
                 duration: 3000,
               }
             );
-
-
-
-          }
-          else{
+          } else {
             let snackBarRef = this.snackBar.open(
               "Session Timed Out! Sign-in again",
               "Ok",
@@ -184,15 +175,7 @@ export class AdminComponent implements OnInit {
           }
         });
       }
-
-
-
-
-    })
-
-
-
-    
+    });
   }
 
   daysBetween(date1, date2) {
@@ -252,11 +235,7 @@ export class AdminComponent implements OnInit {
               });
               snackBarRef.onAction().subscribe(() => {
                 this.ngOnInit(true);
-            });
-
-
-
-
+              });
             } else {
               let snackBarRef = this.snackBar.open(
                 "Please Reload and Try Again!",
@@ -289,124 +268,111 @@ export class AdminComponent implements OnInit {
   }
 
   startAllocation() {
-    this.userService.startAllocation().subscribe((data) => {});
+    // this.userService.startAllocation().subscribe((data) => {});
   }
 
   sendEmails() {
-
-
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
       height: "250px",
       data: {
         heading: "Confirm Sending Mails",
-        message: "Are you sure you want to send the mails? This cannot be undone.",
+        message:
+          "Are you sure you want to send the mails? This cannot be undone.",
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
+      if (result["message"] == "submit") {
+        if (this.stage_no == 1) {
+          this.userService.getStudentStreamEmails().subscribe((data1) => {
+            if (data1["status"] == "success") {
+              this.mailer
+                .adminToStudents(
+                  data1["result"],
+                  this.curr_deadline,
+                  data1["stream"]
+                )
+                .subscribe((data) => {
+                  console.log(data);
+                  if (data["message"] == "success") {
+                    let snackBarRef = this.snackBar.open(
+                      "Mails have been sent",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
 
-        if(result["message"]=="submit"){
-
-          if (this.stage_no == 1) {
-            this.userService.getStudentStreamEmails().subscribe((data1) => {
-              if (data1["status"] == "success") {
-                this.mailer
-                  .adminToStudents(
-                    data1["result"],
-                    this.curr_deadline,
-                    data1["stream"]
-                  )
-                  .subscribe((data) => {
-                    console.log(data);
-                    if (data["message"] == "success") {
-                      let snackBarRef = this.snackBar.open(
-                        "Mails have been sent",
-                        "Ok",
-                        {
-                          duration: 3000,
-                        }
-                      );
-      
-                      snackBarRef.afterDismissed().subscribe(() => {
-                        this.ngOnInit();
-                      });
-                      snackBarRef.onAction().subscribe(() => {
-                        this.ngOnInit();
-                      });
-                    } else {
-                      let snackBarRef = this.snackBar.open(
-                        "Session Timed Out! Please Sign in Again!",
-                        "Ok",
-                        {
-                          duration: 3000,
-                        }
-                      );
-                      snackBarRef.afterDismissed().subscribe(() => {
-                        this.loginService.signOut();
-                      });
-                      snackBarRef.onAction().subscribe(() => {
-                        this.loginService.signOut();
-                      });
-                    }
-                  });
-              }
-            });
-          } else {
-            this.userService.getFacultyStreamEmails().subscribe((data1) => {
-              if (data1["status"] == "success") {
-                this.mailer
-                  .adminToFaculty(
-                    this.stage_no,
-                    data1["result"],
-                    this.curr_deadline,
-                    data1["stream"]
-                  )
-                  .subscribe((data2) => {
-                    if (data2["message"] == "success") {
-                      let snackBarRef = this.snackBar.open(
-                        "Mails have been sent",
-                        "Ok",
-                        {
-                          duration: 3000,
-                        }
-                      );
-                      snackBarRef.afterDismissed().subscribe(() => {
-                        this.ngOnInit();
-                      });
-                      snackBarRef.onAction().subscribe(() => {
-                        this.ngOnInit();
-                      });
-                    } else {
-                      let snackBarRef = this.snackBar.open(
-                        "Session Timed Out! Please Sign in Again!",
-                        "Ok",
-                        {
-                          duration: 3000,
-                        }
-                      );
-                      snackBarRef.afterDismissed().subscribe(() => {
-                        this.loginService.signOut();
-                      });
-                      snackBarRef.onAction().subscribe(() => {
-                        this.loginService.signOut();
-                      });
-                    }
-                  });
-              }
-            });
-          }
-
-
-
+                    snackBarRef.afterDismissed().subscribe(() => {
+                      this.ngOnInit();
+                    });
+                    snackBarRef.onAction().subscribe(() => {
+                      this.ngOnInit();
+                    });
+                  } else {
+                    let snackBarRef = this.snackBar.open(
+                      "Session Timed Out! Please Sign in Again!",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                    snackBarRef.afterDismissed().subscribe(() => {
+                      this.loginService.signOut();
+                    });
+                    snackBarRef.onAction().subscribe(() => {
+                      this.loginService.signOut();
+                    });
+                  }
+                });
+            }
+          });
+        } else {
+          this.userService.getFacultyStreamEmails().subscribe((data1) => {
+            if (data1["status"] == "success") {
+              this.mailer
+                .adminToFaculty(
+                  this.stage_no,
+                  data1["result"],
+                  this.curr_deadline,
+                  data1["stream"]
+                )
+                .subscribe((data2) => {
+                  if (data2["message"] == "success") {
+                    let snackBarRef = this.snackBar.open(
+                      "Mails have been sent",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                    snackBarRef.afterDismissed().subscribe(() => {
+                      this.ngOnInit();
+                    });
+                    snackBarRef.onAction().subscribe(() => {
+                      this.ngOnInit();
+                    });
+                  } else {
+                    let snackBarRef = this.snackBar.open(
+                      "Session Timed Out! Please Sign in Again!",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                    snackBarRef.afterDismissed().subscribe(() => {
+                      this.loginService.signOut();
+                    });
+                    snackBarRef.onAction().subscribe(() => {
+                      this.loginService.signOut();
+                    });
+                  }
+                });
+            }
+          });
         }
-
-
-
-    })
-
-
-
-   
+      }
+    });
   }
 
   sendRemainder() {
@@ -415,13 +381,12 @@ export class AdminComponent implements OnInit {
       height: "250px",
       data: {
         heading: "Confirm Sending Remainders",
-        message: "Are you sure you want to send remainders? This cannot be undone.",
+        message:
+          "Are you sure you want to send remainders? This cannot be undone.",
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
-
-      if(result["message"]=="submit"){
-
+      if (result["message"] == "submit") {
         if (this.stage_no == 1) {
           this.userService.getStudentStreamEmails().subscribe((data1) => {
             if (data1["status"] == "success") {
@@ -442,7 +407,7 @@ export class AdminComponent implements OnInit {
                         duration: 3000,
                       }
                     );
-    
+
                     snackBarRef.afterDismissed().subscribe(() => {
                       this.ngOnInit();
                     });
@@ -480,7 +445,7 @@ export class AdminComponent implements OnInit {
                   true
                 )
                 .subscribe((data2) => {
-                  console.log(data2)
+                  console.log(data2);
                   if (data2["message"] == "success") {
                     let snackBarRef = this.snackBar.open(
                       "Remainders have been sent",
@@ -514,72 +479,38 @@ export class AdminComponent implements OnInit {
             }
           });
         }
-
-
       }
-
-
-
-    })
-   
+    });
   }
 
-  setProjectCap(){
+  setProjectCap() {
+    console.log(this.fifthFormGroup.get("fifthCtrl").value);
 
+    if (this.fifthFormGroup.controls["fifthCtrl"].value) {
+      this.userService
+        .setProjectCap(this.fifthFormGroup.get("fifthCtrl").value)
+        .subscribe((data) => {
+          console.log(data);
 
-    console.log(this.fifthFormGroup.get("fifthCtrl").value)
-
-    if(this.fifthFormGroup.controls["fifthCtrl"].value){
-
-      this.userService.setProjectCap(this.fifthFormGroup.get("fifthCtrl").value)
-        .subscribe(data=>{
-          console.log(data)
-
-
-          if(data["status"]=="success"){
-
+          if (data["status"] == "success") {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
-              duration: 3000
+              duration: 3000,
             });
             this.ngOnInit(true);
-
-          }
-          else{
-
+          } else {
             let snackBarRef = this.snackBar.open(
               "Server Error! Please reload and try again!",
               "Ok",
               {
                 duration: 3000,
               }
-            );      
-
-
+            );
           }
-
-
-
-        })
-
-
+        });
+    } else {
+      let snackBarRef = this.snackBar.open("Please enter a number", "Ok", {
+        duration: 3000,
+      });
     }
-    else{
-
-      let snackBarRef = this.snackBar.open(
-        "Please enter a number",
-        "Ok",
-        {
-          duration: 3000,
-        }
-      );
-
-
-
-    }
-
-
   }
-
-
-
 }
