@@ -27,15 +27,15 @@ export class MailService {
     return this.http.post(url, body, httpOptions);
   }
 
-  adminToFaculty(stage, emails, curr_deadline, stream, remainder=false) {
-    console.log(remainder)
+  adminToFaculty(stage, emails, curr_deadline, stream, remainder = false) {
+    console.log(remainder);
     let fmt1 = new Intl.DateTimeFormat("en-GB", {
       year: "2-digit",
       month: "numeric",
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
-      hour12: true
+      hour12: true,
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -47,7 +47,7 @@ export class MailService {
       }),
     };
 
-    if(remainder){
+    if (remainder) {
       var body = {
         user: user,
         mailBody: `Dear Faculty Member,
@@ -55,26 +55,23 @@ export class MailService {
 
 With Regards,
 ${user.name},
-${stream} Admin        
+${stream} Admin
 `,
         to: emails,
         subject: "Remainder",
       };
-
-    }
-
-
-    else{
-
+    } else {
       if (stage == 0) {
         var body = {
           user: user,
           mailBody: `Dear Faculty Member,
-    I kindly request you to start creating projects for the 4th year BTech Projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
-      
+    I kindly request you to start creating projects for the 4th year BTech Projects. Please do note that the deadline is ${fmt1.format(
+      curr_deadline
+    )}.
+
 With Regards,
 ${user.name},
-${stream} Admin        
+${stream} Admin
   `,
           to: emails,
           subject: "BTech Project Phase 1",
@@ -83,11 +80,13 @@ ${stream} Admin
         var body = {
           user: user,
           mailBody: `Dear Faculty Member,
-I kindly request you to fill in your preference students for your projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
-  
+I kindly request you to fill in your preference students for your projects. Please do note that the deadline is ${fmt1.format(
+            curr_deadline
+          )}.
+
 With Regards,
 ${user.name},
-${stream} Admin  
+${stream} Admin
   `,
           to: emails,
           subject: "BTech Project Phase 3",
@@ -97,7 +96,7 @@ ${stream} Admin
     return this.http.post(url, body, httpOptions);
   }
 
-  adminToStudents(emails, curr_deadline, stream,remainder=false) {
+  adminToStudents(emails, curr_deadline, stream, remainder = false) {
     console.log(curr_deadline);
     let fmt1 = new Intl.DateTimeFormat("en-GB", {
       year: "2-digit",
@@ -105,7 +104,7 @@ ${stream} Admin
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
-      hour12: true
+      hour12: true,
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -117,7 +116,7 @@ ${stream} Admin
       }),
     };
 
-    if(remainder){
+    if (remainder) {
       var body = {
         user: user,
         mailBody: `Dear Student,
@@ -125,21 +124,19 @@ ${stream} Admin
 
 With Regards,
 ${user.name},
-${stream} Admin        
+${stream} Admin
 `,
         to: emails,
         subject: "Remainder",
       };
-
-    }
-    
-    else{
-
+    } else {
       var body = {
         user: user,
         mailBody: `Dear Students,
-      I kindly request you to fill in your preferences of projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
-  
+      I kindly request you to fill in your preferences of projects. Please do note that the deadline is ${fmt1.format(
+        curr_deadline
+      )}.
+
   With Regards,
   ${user.name},
   ${stream} Admin
@@ -147,21 +144,15 @@ ${stream} Admin
         to: emails,
         subject: "BTech Project Phase 3",
       };
-
     }
 
-
-
- 
     return this.http.post(url, body, httpOptions);
   }
 
   formatAMPM(curr_date) {
-    const date = new Date(curr_date)
+    const date = new Date(curr_date);
     var hours = date.getHours();
-    var ampm = hours >= 12 ? 'pm' : 'am';
+    var ampm = hours >= 12 ? "pm" : "am";
     return ampm;
   }
-
-
 }
