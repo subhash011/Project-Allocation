@@ -1,6 +1,29 @@
 <div class="profile">
     <div *ngIf="getStudentDiv()">
-        <p>Student Profile</p>
+        <mat-card class="example-card">
+            <mat-card-header>
+                <img mat-card-avatar [src]="getUrl()" />
+                <mat-card-title>{{ user_info.name }}</mat-card-title>
+                <mat-card-subtitle>{{ user_info.roll_no }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <p>Stream : {{ user_info.stream }}</p>
+                <p>Email-ID : {{ user_info.email }}</p>
+                <p>
+                    Number of Projects Preferred : {{ user_info.projects_preference.length }}
+                </p>
+                <form class="example-form">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>CGPA</mat-label>
+                        <input matInput placeholder="CGPA" [value]="user_info.gpa" />
+                    </mat-form-field>
+                </form>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+            </mat-card-actions>
+        </mat-card>
     </div>
     <div *ngIf="!getStudentDiv() && !getSuperAdminDiv()">
         <p>Faculty Profile</p>

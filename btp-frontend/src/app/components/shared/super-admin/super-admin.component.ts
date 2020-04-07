@@ -1,3 +1,4 @@
+import { LoginComponent } from "./../login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "./../../faculty-componenets/delete-pop-up/delete-pop-up.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -8,113 +9,166 @@ import {
   DoCheck,
   OnChanges,
   SimpleChange,
-  SimpleChanges
+  SimpleChanges,
 } from "@angular/core";
 
 @Component({
   selector: "app-super-admin",
   templateUrl: "./super-admin.component.html",
-  styleUrls: ["./super-admin.component.scss"]
+  styleUrls: ["./super-admin.component.scss"],
+  providers: [LoginComponent],
 })
 export class SuperAdminComponent implements OnInit {
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private login: LoginComponent
   ) {}
   index = 0;
   background = "primary";
+  projects: any = [];
   displayedColumnsFaculty: string[] = [
     "Name",
     "Stream",
     "Email-ID",
     "isAdmin",
-    "Actions"
+    "Actions",
   ];
-  displayedColumnsStudent: string[] = ["Name", "Stream", "Email-ID", "Actions"];
+  displayedColumnsStudent: string[] = [
+    "Name",
+    "Stream",
+    "Email-ID",
+    "CGPA",
+    "Actions",
+  ];
+  displayedColumnsProjects: string[] = [
+    "Title",
+    "Faculty",
+    "Stream",
+    "NoOfStudents",
+    "Duration",
+  ];
   faculties: any = {};
   students: any = {};
   faculty;
+  project;
   student;
-  branches = [
-    { name: "Computer Science And Engineering", short: "CSE" },
-    { name: "Electrical Engineering", short: "EE" },
-    { name: "Mechanical Engineering", short: "ME" },
-    { name: "Civil Engineering", short: "CE" }
-  ];
+  maps: any = [];
+  branches: any = [];
 
   ngOnInit() {
-    localStorage.setItem("role", "super_admin"); //should be removed
-    localStorage.setItem("isLoggedIn", "true"); //should be removed
     this.userService
-      .getAllStudents()
+      .getAllMaps()
       .toPromise()
-      .then(result => {
-        if (result["message"] == "success") {
-          if (result["result"] == "no-students") {
-            this.students = {
-              CSE: [],
-              EE: [],
-              ME: [],
-              CE: []
-            };
-          } else {
-            var i = 0;
-            for (const branch of this.branches) {
-              this.students[branch.short] = result["result"][i];
-              i++;
-            }
-          }
+      .then((maps) => {
+        this.maps = maps["result"];
+        for (const map of this.maps) {
+          const newObj = {
+            name: map.full,
+            short: map.short,
+            map: map.map,
+          };
+          this.branches.push(newObj);
         }
-      });
-    this.userService
-      .getAllFaculties()
-      .toPromise()
-      .then(result => {
-        if (result["message"] == "success") {
-          if (result["result"] == "no-faculties") {
-            this.faculties = {
-              CSE: [],
-              EE: [],
-              ME: [],
-              CE: []
-            };
-          } else {
-            var i = 0;
-            for (const branch of this.branches) {
-              this.faculties[branch.short] = result["result"][i];
-              i++;
+        return this.branches;
+      })
+      .then(() => {
+        this.userService
+          .getAllProjects()
+          .toPromise()
+          .then((projects) => {
+            if (projects["message"] == "success") {
+              this.projects = projects["result"];
+            } else {
+              this.snackBar.open("Please Sign-In Again to continue", "Ok", {
+                duration: 3000,
+              });
+              this.login.signOut();
             }
-          }
-        }
+          })
+          .catch(() => {
+            this.snackBar.open("Please Sign-In Again to continue", "Ok", {
+              duration: 3000,
+            });
+            this.login.signOut();
+          });
+
+        this.userService
+          .getAllStudents()
+          .toPromise()
+          .then((result) => {
+            if (result["message"] == "success") {
+              if (result["result"] == "no-students") {
+                this.students = {};
+              } else {
+                var i = 0;
+                for (const branch of this.branches) {
+                  this.students[branch.short] = result["result"][i];
+                  i++;
+                }
+              }
+            }
+          })
+          .catch(() => {
+            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+              duration: 3000,
+            });
+            this.login.signOut();
+          });
+        this.userService
+          .getAllFaculties()
+          .toPromise()
+          .then((result) => {
+            if (result["message"] == "success") {
+              if (result["result"] == "no-faculties") {
+                this.faculties = {};
+              } else {
+                var i = 0;
+                for (const branch of this.branches) {
+                  this.faculties[branch.short] = result["result"][i];
+                  i++;
+                }
+              }
+            }
+          })
+          .catch(() => {
+            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+              duration: 3000,
+            });
+            this.login.signOut();
+          });
       });
   }
   deleteFaculty(faculty) {
     let dialogRef = this.dialog.open(DeletePopUpComponent, {
       height: "200px",
-      data: "remove faculty"
+      data: {
+        heading: "Confirm Removal",
+        message: "Are you sure you want to remove this faculty",
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.userService
           .removeFaculty(faculty)
           .toPromise()
-          .then(result => {
+          .then((result) => {
             console.log();
             if (result["message"] == "success") {
               this.snackBar.open("Successfully Deleted Faculty", "OK", {
-                duration: 3000
+                duration: 3000,
               });
             } else if (result["message"] == "error") {
               this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
-                duration: 3000
+                duration: 3000,
               });
             }
             this.ngOnInit();
           })
-          .catch(err => {
+          .catch((err) => {
             this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
-              duration: 3000
+              duration: 3000,
             });
           });
       }
@@ -124,7 +178,7 @@ export class SuperAdminComponent implements OnInit {
     this.userService
       .addAdmin(faculty)
       .toPromise()
-      .then(result => {
+      .then((result) => {
         this.ngOnInit();
       });
   }
@@ -132,36 +186,39 @@ export class SuperAdminComponent implements OnInit {
     this.userService
       .removeAdmin(faculty)
       .toPromise()
-      .then(result => {
+      .then((result) => {
         this.ngOnInit();
       });
   }
   deleteStudent(student) {
     let dialogRef = this.dialog.open(DeletePopUpComponent, {
       height: "200px",
-      data: "remove student"
+      data: {
+        heading: "Confirm Removal",
+        message: "Are you sure you want to remove this student",
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.userService
           .removeStudent(student)
           .toPromise()
-          .then(result => {
+          .then((result) => {
             console.log();
             if (result["message"] == "success") {
               this.snackBar.open("Successfully Deleted Student", "OK", {
-                duration: 3000
+                duration: 3000,
               });
             } else if (result["message"] == "error") {
               this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
-                duration: 3000
+                duration: 3000,
               });
             }
             this.ngOnInit();
           })
-          .catch(err => {
+          .catch((err) => {
             this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
-              duration: 3000
+              duration: 3000,
             });
           });
       }

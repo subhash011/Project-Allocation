@@ -243,11 +243,9 @@ export class UserService {
     return this.http.get(this.url);
   }
 
+  // startAllocation(){
 
-  startAllocation(){
-
-
-
+  removeDeadline() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "allocation/" + id;
@@ -255,23 +253,31 @@ export class UserService {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: idToken
-      })
+        Authorization: idToken,
+      }),
     };
 
     return this.http.get(this.url, httpOptions);
-
-
-
   }
 
+  getAllProjects() {
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "super/projects/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.get(this.url, httpOptions);
+  }
 
-  setProjectCap(cap){
+  setProjectCap(cap) {
+    const obj = {
+      cap: cap,
+    };
 
-    const obj= {
-      cap : cap
-    }
-  
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "admin/set_projectCap/" + id;
@@ -279,15 +285,14 @@ export class UserService {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: idToken
-      })
+        Authorization: idToken,
+      }),
     };
 
-    return this.http.post(this.url,obj ,httpOptions);
-    
-  
+    return this.http.post(this.url, obj, httpOptions);
   }
 
-
-
+  getAllMaps() {
+    return this.http.get(this.base_url + "maps");
+  }
 }

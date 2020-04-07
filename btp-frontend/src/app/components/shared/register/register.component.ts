@@ -8,25 +8,50 @@ import { FormBuilder, Validators } from "@angular/forms";
 @Component({
   selector: "app-register",
   templateUrl: "./register.component.html",
-  styleUrls: ["./register.component.scss"]
+  styleUrls: ["./register.component.scss"],
 })
 export class RegisterComponent implements OnInit {
+  maps: any;
+  branches: any = [];
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
+  branchStudent: any;
   ngOnInit() {
-    this.userForm.get("email").disable();
-    if (localStorage.getItem("role") == "super_admin") {
-      this.userForm.get("branch").clearValidators();
-    }
-    if (localStorage.getItem("role") == "student") {
-      this.userForm.get("CGPA").setValidators(Validators.required);
-    } else {
-      this.userForm.get("CGPA").clearValidators();
-    }
+    this.userService
+      .getAllMaps()
+      .toPromise()
+      .then((maps) => {
+        this.maps = maps["result"];
+        for (const map of this.maps) {
+          const newObj = {
+            name: map.full,
+            short: map.short,
+            map: map.map,
+          };
+          this.branches.push(newObj);
+        }
+        return this.branches;
+      })
+      .then(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        this.userForm.get("email").disable();
+        if (localStorage.getItem("role") == "super_admin") {
+          this.userForm.get("branch").clearValidators();
+        }
+        if (localStorage.getItem("role") == "student") {
+          this.userForm.get("branch").setValue(this.branches.short);
+          this.userForm.get("branch").disable();
+          const stream = this.getStream();
+          this.branchStudent = stream;
+          this.userForm.controls["branch"].setValue(this.branchStudent);
+        } else {
+          this.userForm.get("CGPA").clearValidators();
+        }
+      });
   }
   user = JSON.parse(localStorage.getItem("user"));
   userForm = this.fb.group({
@@ -34,17 +59,25 @@ export class RegisterComponent implements OnInit {
     lastName: [this.user.lastName, Validators.required],
     CGPA: [null],
     email: [this.user.email, Validators.required],
-    branch: [null, Validators.required]
+    branch: [null, Validators.required],
   });
   message = "";
   hasUnitNumber = false;
 
-  branches = [
-    { name: "Computer Science and Engineering", abbreviation: "CSE" },
-    { name: "Electrical Engineering", abbreviation: "EE" },
-    { name: "Mechanical Engineering", abbreviation: "ME" },
-    { name: "Civil Engineering", abbreviation: "CE" }
-  ];
+  getStream() {
+    if (localStorage.getItem("role") == "student") {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const rollno = user.email.split("@")[0];
+      for (const branch of this.branches) {
+        const pattern = new RegExp(branch.map.split("*")[0]);
+        if (pattern.exec(rollno) && pattern.exec(rollno).index == 0) {
+          return branch.short;
+        }
+      }
+      return "invalid";
+    }
+    return "invalid";
+  }
 
   getRole() {
     if (localStorage.getItem("role") == "student") {
@@ -72,15 +105,15 @@ export class RegisterComponent implements OnInit {
         roll_no: String(this.userForm.get("email").value).split("@")[0],
         email: this.userForm.get("email").value,
         gpa: this.userForm.get("CGPA").value,
-        stream: this.userForm.get("branch").value
+        stream: this.userForm.get("branch").value,
       };
       const _user = JSON.parse(localStorage.getItem("user"));
 
       const httpOptions = {
         headers: new HttpHeaders({
           "Content-Type": "application/json",
-          Authorization: _user.idToken
-        })
+          Authorization: _user.idToken,
+        }),
       };
 
       var position = "";
@@ -97,7 +130,7 @@ export class RegisterComponent implements OnInit {
               "Registration Successful",
               "Ok",
               {
-                duration: 3000
+                duration: 3000,
               }
             );
             var route = "/" + position + "/" + id;
@@ -107,7 +140,7 @@ export class RegisterComponent implements OnInit {
               "Registration Failed! Please Try Again",
               "Ok",
               {
-                duration: 3000
+                duration: 3000,
               }
             );
           }
@@ -117,7 +150,7 @@ export class RegisterComponent implements OnInit {
             "Registration Failed! Please Try Again",
             "Ok",
             {
-              duration: 3000
+              duration: 3000,
             }
           );
         });

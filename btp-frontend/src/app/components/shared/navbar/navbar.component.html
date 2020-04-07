@@ -10,12 +10,6 @@
       Home
     </button>
     </div>
-    <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin()">
-        <div class="flex-grow-left"></div>
-        <button mat-button [routerLink]="getUrlProjects()" class="nav-text">
-      My Projects
-    </button>
-    </div>
     <div *ngIf="isFaculty() && !isFaculty()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getAddProjects()" class="nav-text">
@@ -25,7 +19,7 @@
     <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getUrlPreferences()" class="nav-text">
-      Preferences
+      Edit Preferences
     </button>
     </div>
     <div class="flex-space"></div>

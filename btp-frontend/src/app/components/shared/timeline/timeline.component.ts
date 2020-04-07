@@ -46,6 +46,7 @@ export class TimelineComponent implements OnInit {
             .then((result) => {
               if (result["message"] == "success") {
                 this.admins = result["result"][stream];
+                console.log(stream);
                 if (this.admins.startDate) {
                   this.startDate = new Date(this.admins.startDate);
                   this.startCompleted = true;

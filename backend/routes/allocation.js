@@ -7,11 +7,6 @@ const Faculty = require("../models/Faculty");
 const Admin = require("../models/Admin_Info");
 const Student = require("../models/Student");
 
-var weights = [3, 2, 1];
-//0 --> faculty
-//1 --> student
-//2 --> CGPA
-
 //cron is used to auto schedule the allocation process after the deadline
 //this method can be made as a get method if we need to do the allocation from the front end
 cron.schedule("*/2 * * * * *", function() {
@@ -99,7 +94,34 @@ cron.schedule("*/2 * * * * *", function() {
                 }
             }
         }
-        console.log(allocationStatus);
+        promises = [];
+        allocationStatus.forEach((value, key) => {
+            promises.push(
+                Project.findByIdAndUpdate(key, {
+                    student_alloted: value,
+                })
+                .then((project) => {
+                    return project;
+                })
+                .catch(() => {
+                    //handle errors
+                })
+            );
+            promises.push(
+                Student.findByIdAndUpdate(value, {
+                    project_alloted: key,
+                })
+                .then((student) => {
+                    return student;
+                })
+                .catch(() => {
+                    //handle error
+                })
+            );
+        });
+        Promise.all(promises).then((result) => {
+            //do whatever you want with the result
+        });
     });
 });
 
