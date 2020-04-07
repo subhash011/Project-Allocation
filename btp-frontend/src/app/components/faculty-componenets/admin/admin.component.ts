@@ -79,7 +79,7 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(marker = false) {
     this.userService.getAdminInfo().subscribe((data) => {
-      console.log(data);
+      // console.log(data);
       this.stage_no = data["stage"];
 
       this.dateSet = data["deadlines"];
@@ -117,7 +117,7 @@ export class AdminComponent implements OnInit {
         this.minDate = this.dateSet[this.dateSet.length - 1];
       }
       this.userService.Admin_getStreamDetails().subscribe((data) => {
-        console.log(data);
+        // console.log(data);
         this.details = data["project_details"];
         if (this.dateSet.length > 0) {
           this.curr_deadline = this.dateSet[this.dateSet.length - 1];
@@ -208,6 +208,7 @@ export class AdminComponent implements OnInit {
       var date = this.thirdFormGroup.get("thirdCtrl").value;
     }
 
+
     if (date != null && date != "") {
       const dialogRef = this.dialog.open(DeletePopUpComponent, {
         width: "400px",
@@ -219,7 +220,7 @@ export class AdminComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result["message"] == "submit") {
-          console.log(date);
+
           this.userService.setDeadline(date).subscribe((data) => {
             if (data["status"] == "success") {
               let snackBarRef = this.snackBar.open(
@@ -263,7 +264,6 @@ export class AdminComponent implements OnInit {
   }
 
   displayFaculty(faculty) {
-    // console.log(faculty)
     this.faculty_projects = faculty["projects"];
   }
 
@@ -293,7 +293,7 @@ export class AdminComponent implements OnInit {
                   data1["stream"]
                 )
                 .subscribe((data) => {
-                  console.log(data);
+
                   if (data["message"] == "success") {
                     let snackBarRef = this.snackBar.open(
                       "Mails have been sent",
@@ -398,7 +398,7 @@ export class AdminComponent implements OnInit {
                   true
                 )
                 .subscribe((data) => {
-                  console.log(data);
+                  // console.log(data);
                   if (data["status"] == "success") {
                     let snackBarRef = this.snackBar.open(
                       "Remainders have been sent",
@@ -434,7 +434,7 @@ export class AdminComponent implements OnInit {
           });
         } else {
           this.userService.getFacultyStreamEmails().subscribe((data1) => {
-            console.log(data1);
+            // console.log(data1);
             if (data1["status"] == "success") {
               this.mailer
                 .adminToFaculty(
@@ -445,7 +445,7 @@ export class AdminComponent implements OnInit {
                   true
                 )
                 .subscribe((data2) => {
-                  console.log(data2);
+                  // console.log(data2);
                   if (data2["message"] == "success") {
                     let snackBarRef = this.snackBar.open(
                       "Remainders have been sent",
@@ -484,13 +484,13 @@ export class AdminComponent implements OnInit {
   }
 
   setProjectCap() {
-    console.log(this.fifthFormGroup.get("fifthCtrl").value);
+    // console.log(this.fifthFormGroup.get("fifthCtrl").value);
 
     if (this.fifthFormGroup.controls["fifthCtrl"].value) {
       this.userService
         .setProjectCap(this.fifthFormGroup.get("fifthCtrl").value)
         .subscribe((data) => {
-          console.log(data);
+          // console.log(data);
 
           if (data["status"] == "success") {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {

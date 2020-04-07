@@ -134,6 +134,11 @@ router.post("/setDeadline/:id", (req, res) => {
     const idToken = req.headers.authorization;
     const date = req.body.deadline;
 
+    const format_date = new Date(date);
+
+    format_date.setHours(17)
+    format_date.setMinutes(30)    
+
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then((faculty) => {
             Admin.findOne({ admin_id: faculty._id })
@@ -143,7 +148,7 @@ router.post("/setDeadline/:id", (req, res) => {
                     }
 
                     if (admin.stage == admin.deadlines.length || admin.stage == 0)
-                        admin.deadlines.push(new Date(date));
+                        admin.deadlines.push(format_date);
 
                     admin
                         .save()

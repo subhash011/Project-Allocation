@@ -32,10 +32,7 @@ export class MailService {
     let fmt1 = new Intl.DateTimeFormat("en-GB", {
       year: "2-digit",
       month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true
+      day: "numeric"
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -70,7 +67,7 @@ ${stream} Admin
         var body = {
           user: user,
           mailBody: `Dear Faculty Member,
-    I kindly request you to start creating projects for the 4th year BTech Projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
+    I kindly request you to start creating projects for the 4th year BTech Projects. Please do note that the deadline is ${fmt1.format(curr_deadline)+" 11:59 pm"}.
       
 With Regards,
 ${user.name},
@@ -83,7 +80,7 @@ ${stream} Admin
         var body = {
           user: user,
           mailBody: `Dear Faculty Member,
-I kindly request you to fill in your preference students for your projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
+I kindly request you to fill in your preference students for your projects. Please do note that the deadline is ${fmt1.format(curr_deadline)+" 11:59 pm"}.
   
 With Regards,
 ${user.name},
@@ -102,10 +99,7 @@ ${stream} Admin
     let fmt1 = new Intl.DateTimeFormat("en-GB", {
       year: "2-digit",
       month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true
+      day: "numeric"
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -138,7 +132,7 @@ ${stream} Admin
       var body = {
         user: user,
         mailBody: `Dear Students,
-      I kindly request you to fill in your preferences of projects. Please do note that the deadline is ${fmt1.format(curr_deadline)}.
+      I kindly request you to fill in your preferences of projects. Please do note that the deadline is ${fmt1.format(curr_deadline)+" 11:59 pm"}.
   
   With Regards,
   ${user.name},
@@ -155,18 +149,4 @@ ${stream} Admin
  
     return this.http.post(url, body, httpOptions);
   }
-
-   formatAMPM(curr_deadline) {
-    var date = new Date(curr_deadline);
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    var min = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + min + ' ' + ampm;
-    return strTime;
-  }
-
-
 }

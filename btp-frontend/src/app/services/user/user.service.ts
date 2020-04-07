@@ -189,11 +189,12 @@ export class UserService {
   }
 
   setDeadline(date) {
-    const str = date.toISOString();
+    console.log(date)
+    const str = date.toDateString();
     const obj = {
       deadline: moment(str).format("YYYY-MM-DD"),
     };
-
+    console.log(obj.deadline)
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "admin/setDeadline/" + id;
