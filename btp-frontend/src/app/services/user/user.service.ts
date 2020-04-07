@@ -243,10 +243,7 @@ export class UserService {
     return this.http.get(this.url);
   }
 
-  removeDeadline(){
-
-  
-
+  removeDeadline() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "admin/removeDeadline/" + id;
@@ -254,13 +251,27 @@ export class UserService {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: idToken
-      })
+        Authorization: idToken,
+      }),
     };
 
     return this.http.get(this.url, httpOptions);
-
   }
 
+  getAllProjects() {
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "super/projects/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.get(this.url, httpOptions);
+  }
 
+  getAllMaps() {
+    return this.http.get(this.base_url + "maps");
+  }
 }

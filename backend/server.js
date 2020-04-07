@@ -42,7 +42,7 @@ mongoose
 
 //define all routes below this
 const home = require("./routes/home");
-app.use("/", home);
+app.use("", home);
 
 const auth_check = require("./routes/auth_check");
 app.use("/auth", auth_check);

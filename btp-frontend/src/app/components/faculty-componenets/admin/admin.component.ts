@@ -14,6 +14,7 @@ import { Location } from "@angular/common";
   selector: "app-admin",
   templateUrl: "./admin.component.html",
   styleUrls: ["./admin.component.scss"],
+  providers: [LoginComponent],
 })
 export class AdminComponent implements OnInit {
   public details; // For displaying the projects tab

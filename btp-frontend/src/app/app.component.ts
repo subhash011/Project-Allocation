@@ -1,3 +1,4 @@
+import { UserService } from "./services/user/user.service";
 import { Component, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -9,6 +10,8 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class AppComponent implements OnInit {
   title = "btp-frontend";
   login = true;
-  constructor() {}
+  maps: any = [];
+  branches: any = [];
+  constructor(private userService: UserService) {}
   ngOnInit() {}
 }

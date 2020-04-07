@@ -3,7 +3,7 @@
         <mat-tab-group>
             <mat-tab *ngFor="let branch of branches" [label]="branch.name">
                 <div class="searchBox">
-                    <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search ... " name="search" [(ngModel)]="faculty" />
+                    <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="faculty" />
                     <button class="searchButton" href="#">
             <i class="material-icons">search</i>
           </button>
@@ -55,14 +55,14 @@
         <mat-tab-group *ngIf="index == 1" [selectedIndex]="0">
             <mat-tab *ngFor="let branch of branches" [label]="branch.name">
                 <div class="searchBox">
-                    <input class="searchInput" autocomplete="off" type="search" placeholder="Search ... " name="search" [(ngModel)]="student" />
+                    <input class="searchInput" autocomplete="off" type="search" placeholder="Search by any ... " name="search" [(ngModel)]="student" />
                     <button class="searchButton" href="#">
             <i class="material-icons">search</i>
           </button>
                 </div>
                 <div class="display">
                     <table mat-table [dataSource]="students[branch.short] | filter: student" class="mat-elevation-z8">
-                        <ng-container matColumnDef="Name">
+                        <ng-container tainer matColumnDef="Name">
                             <th mat-header-cell *matHeaderCellDef [style.color]="background">
                                 Name
                             </th>
@@ -75,6 +75,10 @@
                         <ng-container matColumnDef="Email-ID">
                             <th mat-header-cell *matHeaderCellDef>Email-ID</th>
                             <td mat-cell *matCellDef="let student">{{ student.email }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="CGPA">
+                            <th mat-header-cell *matHeaderCellDef>CGPA</th>
+                            <td mat-cell *matCellDef="let student">{{ student.gpa }}</td>
                         </ng-container>
                         <ng-container matColumnDef="Actions">
                             <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -90,5 +94,45 @@
                 </div>
             </mat-tab>
         </mat-tab-group>
+    </mat-tab>
+    <mat-tab label="Projects">
+        <div class="searchBox">
+            <input class="searchInput" autocomplete="off" type="search" placeholder="Search by any ... " name="search" [(ngModel)]="project" />
+            <button class="searchButton" href="#">
+        <i class="material-icons">search</i>
+      </button>
+        </div>
+        <div class="display">
+            <table mat-table [dataSource]="projects | filter: project" class="mat-elevation-z8">
+                <ng-container tainer matColumnDef="Title">
+                    <th mat-header-cell *matHeaderCellDef [style.color]="background">
+                        Title
+                    </th>
+                    <td mat-cell *matCellDef="let project">{{ project.title }}</td>
+                </ng-container>
+                <ng-container tainer matColumnDef="Faculty">
+                    <th mat-header-cell *matHeaderCellDef [style.color]="background">
+                        Faculty
+                    </th>
+                    <td mat-cell *matCellDef="let project">{{ project.faculty }}</td>
+                </ng-container>
+                <ng-container matColumnDef="Stream">
+                    <th mat-header-cell *matHeaderCellDef>Stream</th>
+                    <td mat-cell *matCellDef="let project">{{ project.stream }}</td>
+                </ng-container>
+                <ng-container matColumnDef="NoOfStudents">
+                    <th mat-header-cell *matHeaderCellDef>Number Of Students Applied</th>
+                    <td mat-cell *matCellDef="let project">
+                        {{ project.numberOfPreferences }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="Duration">
+                    <th mat-header-cell *matHeaderCellDef>Duration</th>
+                    <td mat-cell *matCellDef="let project">{{ project.duration }}</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsProjects"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsProjects"></tr>
+            </table>
+        </div>
     </mat-tab>
 </mat-tab-group>

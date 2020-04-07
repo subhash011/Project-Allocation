@@ -4,7 +4,7 @@ import { Component, OnInit } from "@angular/core";
 @Component({
   selector: "app-profile",
   templateUrl: "./profile.component.html",
-  styleUrls: ["./profile.component.scss"]
+  styleUrls: ["./profile.component.scss"],
 })
 export class ProfileComponent implements OnInit {
   user_info: any;
@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit {
     if (this.role == "student") {
       user = this.userService
         .getStudentDetails(localStorage.getItem("id"))
-        .subscribe(data => {
+        .subscribe((data) => {
           this.user_info = data["user_details"];
         });
     } else if (this.role == "faculty" || this.role == "admin") {
@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit {
       this.userService
         .getFacultyDetails(localStorage.getItem("id"))
         .toPromise()
-        .then(data => {
+        .then((data) => {
           this.user_info = data["user_details"];
         });
     }
