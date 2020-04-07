@@ -318,7 +318,7 @@ export class AdminComponent implements OnInit {
                   )
                   .subscribe((data) => {
                     console.log(data);
-                    if (data["status"] == "success") {
+                    if (data["message"] == "success") {
                       let snackBarRef = this.snackBar.open(
                         "Mails have been sent",
                         "Ok",
@@ -362,7 +362,7 @@ export class AdminComponent implements OnInit {
                     data1["stream"]
                   )
                   .subscribe((data2) => {
-                    if (data2["status"] == "success") {
+                    if (data2["message"] == "success") {
                       let snackBarRef = this.snackBar.open(
                         "Mails have been sent",
                         "Ok",
