@@ -294,7 +294,7 @@ export class AdminComponent implements OnInit {
                 )
                 .subscribe((data) => {
                   console.log(data);
-                  if (data["status"] == "success") {
+                  if (data["message"] == "success") {
                     let snackBarRef = this.snackBar.open(
                       "Mails have been sent",
                       "Ok",
@@ -329,7 +329,6 @@ export class AdminComponent implements OnInit {
           });
         } else {
           this.userService.getFacultyStreamEmails().subscribe((data1) => {
-            console.log(data1);
             if (data1["status"] == "success") {
               this.mailer
                 .adminToFaculty(
