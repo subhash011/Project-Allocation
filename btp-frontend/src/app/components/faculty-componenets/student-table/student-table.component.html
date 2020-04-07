@@ -1,40 +1,35 @@
-<div class="controls">
-  <div>
-    <mat-slide-toggle
-      [(ngModel)]="checked"
-      class="example-margin"
-      color="primary"
-    >
-      Enable Drag
-    </mat-slide-toggle>
-  </div>
+<h4 class="heading">Project Details: </h4>
+<mat-accordion>
+  <mat-expansion-panel>
+      <mat-expansion-panel-header>
+          <mat-panel-title>
+              {{ project["title"] }}
+          </mat-panel-title>
+          <mat-panel-description>
+              <div class="flex-space"></div>
+              Duration : {{ project["duration"] }}
+          </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>Description : {{ project["description"] }}</p>
+  </mat-expansion-panel>
+</mat-accordion>
+<div class="flex-space"></div>
 
-  <div>
-    <button
-      class="saveButton"
-      mat-raised-button
-      color="warn"
-      (click)="onSubmit()"
-    >
-      Save Preferences
-    </button>
-  </div>
-</div>
-
+<h4 class="heading_pref">Preferences: </h4>
 <div
   cdkDropList
   class="example-list"
   (cdkDropListDropped)="drop($event)"
-  cdkDropListDisabled="{{ !checked }}"
 >
-  <mat-list-item>
+<mat-divider></mat-divider>
+  <mat-card>
     <div class="row header">
       <div><strong>Name</strong></div>
       <div><strong>CGPA</strong></div>
       <div><strong>Roll No</strong></div>
     </div>
-  </mat-list-item>
-  <mat-divider></mat-divider>
+  </mat-card>
+  <!-- <mat-divider></mat-divider> -->
 
   <div class="example-box" *ngFor="let student of student_list" cdkDrag>
     <mat-list-item>
@@ -54,3 +49,12 @@
     </mat-list-item>
   </div>
 </div>
+
+<button
+class="saveButton"
+mat-raised-button
+color="warn"
+(click)="onSubmit()"
+>
+Save Preferences
+</button>

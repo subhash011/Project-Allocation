@@ -48,29 +48,6 @@
     </div>
     <ng-template #display>
         <mat-tab-group color="accent" dynamicHeight="true">
-            <mat-tab label="Project Details" class="project_tab">
-                <div class="project-container">
-                    <mat-card class="project-card">
-                        <mat-card-title>
-                            {{ project.title }}
-                        </mat-card-title>
-
-                        <mat-card-content class="add-card-content">
-                            <div class="card-text">
-                                <strong>Duration: </strong>{{ project.duration }}
-                            </div>
-
-                            <div class="card-text">
-                                <strong>No of Students: </strong>{{ project.studentIntake }}
-                            </div>
-
-                            <div class="card-text">
-                                <strong>Description: </strong>{{ project.description }}
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-            </mat-tab>
 
             <mat-tab label="Students">
                 <app-student-table [project]="project" [student_list]="student_list">

@@ -17,7 +17,7 @@ app.use(
     cookie: { maxAge: 60000 },
     secret: "woot",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
   })
 );
 
@@ -31,12 +31,12 @@ mongoose.set("useFindAndModify", false);
 mongoose
   .connect("mongodb://localhost:27017/ProjectAllocationTest", {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   .then(() => {
     console.log("connected to mongodb");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 
@@ -68,8 +68,8 @@ app.use("/admin", admin);
 const mail = require("./routes/email");
 app.use("/email", mail);
 
-const allocation = require("./routes/allocation");
-app.use("/allocation", allocation);
+// const allocation = require("./routes/allocation");
+// app.use("/allocation", allocation);
 
 const PORT = process.env.PORT || 8080;
 
@@ -77,7 +77,7 @@ const PORT = process.env.PORT || 8080;
 app.get("*", (req, res) => {
   res.status(404).json({
     status: "fail",
-    error: "Authentication failed - server error"
+    error: "Authentication failed - server error",
   });
 });
 

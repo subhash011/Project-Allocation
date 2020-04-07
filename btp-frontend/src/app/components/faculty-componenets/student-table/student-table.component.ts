@@ -13,7 +13,7 @@ import { MatDialog } from "@angular/material/dialog";
 })
 export class StudentTableComponent implements OnInit {
   @Input() public student_list;
-  public checked: boolean = false;
+  // public checked: boolean = false;
   @Input() public project;
 
   constructor(
@@ -31,7 +31,7 @@ export class StudentTableComponent implements OnInit {
   }
 
   onSubmit() {
-    this.checked = false;
+    // this.checked = false;
     this.projectService
       .savePreference(this.student_list, this.project._id)
       .subscribe(data => {
@@ -55,6 +55,16 @@ export class StudentTableComponent implements OnInit {
               });
           });
         }
+        else{
+
+          let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+            duration: 3000
+          });
+        
+        }
+
+
+
       });
   }
 }

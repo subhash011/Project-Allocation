@@ -137,11 +137,19 @@ router.post("/setDeadline/:id", (req, res) => {
     .then((faculty) => {
       Admin.findOne({ admin_id: faculty._id })
         .then((admin) => {
+         
+          console.log(admin)
+
+          if(admin.deadlines.length == admin.stage+1){
+            admin.deadlines.pop()
+            admin.deadlines.push(new Date(date))
+          }
+
           if (admin.stage == 0) {
             admin.startDate = new Date();
           }
 
-          if (admin.stage == admin.deadlines.length || admin.stage == 0)
+          if (admin.stage == admin.deadlines.length)
             admin.deadlines.push(new Date(date));
 
           admin
@@ -246,7 +254,6 @@ router.get("/stream_email/student/:id", (req, res) => {
     });
 });
 
-module.exports = router;
 router.get("/all/info", (req, res) => {
   var result = {
     CSE: {},

@@ -58,6 +58,12 @@ export class FacultyComponent implements OnInit {
       .subscribe((data) => {
         if (data["status"] == "success") {
           this.student_list = data["students"];
+
+          this.student_list.sort((a,b)=>{
+            return b.gpa - a.gpa;
+          })
+
+
         } else {
           let snackBarRef = this.snackBar.open("Please reload the page", "Ok", {
             duration: 3000,

@@ -1,121 +1,115 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const Faculty = require('../models/Faculty');
-const Student = require('../models/Student');
-const Project = require('../models/Project');
+const express = require("express");
+const router = express.Router();
+const cron = require("node-cron");
+const mongoose = require("mongoose");
+const Project = require("../models/Project");
+const Faculty = require("../models/Faculty");
+const Admin = require("../models/Admin_Info");
+const Student = require("../models/Student");
 
-const router = express.Router()
+var weights = [3, 2, 1];
+//0 --> faculty
+//1 --> student
+//2 --> CGPA
 
-
-
-
-router.get('/:id',(req,res)=>{
-
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-
-    Faculty.findOne({google_id:{id:id,idToken:idToken}})
-        .then(faculty=>{
-            
-            const stream = faculty.stream;
-
-            Project.find({stream:stream})
-                .then(projects=>{
-
-
-                    projects.sort((a,b)=>{
-                        return b.students_id.length - a.students_id.length;
-                    });
-
-                    const weights = [];
-                    
-
-                    for(const project of projects){
-                        let promises = [];
-                        const ids = project.students_id;
-                        
-                        for(const id of ids){
-                            promises.push(
-                                
-                                Student.findOne({_id:id})
-                                    .then(student=>{
-
-                                        const weight = student.projects_preference.indexOf(id) + 1;
-                                        return weight;
-
-                                    })
-                                    .catch(err=>{
-                                        console.log(err)
-                                    })
-                            )
-                        }
-
-                        Promise.all(promises)
-                            .then(result=>{
-                                weights = result;
-                                for(let i=0;i<weights.length;i++){
-                                    weights[i] += i;
-                                }
-                                const alloted_ind = Math.min.apply(null,weights);
-
-                                const alloted_id = ids[alloted_ind];
-
-                                project.student_alloted = alloted_id;
-                                
-                                //Remove this id from all the project.students_id
-                                for(let t_project of projects){
-
-
-                                    t_project.students_id.filter((student_id)=>{
-
-                                        if(student_id != alloted_id){
-                                            return student_id;
-                                        }
-
-                                    })
-
-                                }
-
-
-                            })
-                        
-
-
-
-
-
-
-
-                    }
-
-
-                })
-
-
-
-
-
+//cron is used to auto schedule the allocation process after the deadline
+//this method can be made as a get method if we need to do the allocation from the front end
+cron.schedule("*/2 * * * * *", function() {
+    var projects = [];
+    var students = [];
+    //this allocation status is the map which is the answer
+    var allocationStatus = new Map();
+    var promises = [];
+    promises.push(
+        Project.find().then((projectList) => {
+            for (const project of projectList) {
+                newProj = {
+                    project_id: project._id,
+                    studentsList: project.students_id,
+                };
+                projects.push(newProj);
+            }
+            projects.sort((b, a) => {
+                return a.studentsList.length - b.studentsList.length;
+            });
+            return projects;
         })
-    
-
-
+    );
+    promises.push(
+        Student.find().then((studentList) => {
+            for (const student of studentList) {
+                newStudent = {
+                    student_id: student._id,
+                    projectsList: student.projects_preference,
+                    gpa: student.gpa,
+                };
+                //sorting projects according to cgpa so as to get the weight for CGPA
+                //if not needed make weights[2] = 0
+                students.sort((a, b) => {
+                    return a.gpa - b.gpa;
+                });
+                students.push(newStudent);
+            }
+            return students;
+        })
+    );
+    Promise.all(promises).then(() => {
+        //here we have all students and projects sorted projects and students with CGPA
+        for (const project of projects) {
+            var rank = 0;
+            var studentRanks = [];
+            for (
+                let i = 0; i < project.studentsList.length && students.length > 0; i++
+            ) {
+                //faculty preference order
+                rank += weights[0] * (i + 1);
+                //rank of the student according to cgpa or index of the student
+                var studentRank = students.indexOf(
+                    students.find((object) => {
+                        return object.student_id.equals(project.studentsList[i]);
+                    })
+                );
+                rank += weights[2] * (studentRank + 1);
+                //student preference number
+                var projectRank = students[studentRank].projectsList.find((object) => {
+                    return object.equals(project.project_id);
+                });
+                projectRank = students[studentRank].projectsList.indexOf(projectRank);
+                rank += weights[1] * (projectRank + 1);
+                studentRanks.push({
+                    id: project.studentsList[i],
+                    rank: rank,
+                });
+            }
+            //here i have the ranks of all the students so i can sort now
+            //student Ranks is the required map
+            //sort students according to min rank
+            studentRanks.sort((a, b) => {
+                return a.rank - b.rank;
+            });
+            if (studentRanks[0]) {
+                //allot the project to the student
+                allocationStatus.set(studentRanks[0].id, project.project_id);
+                var studentID = studentRanks[0].id;
+                var projectID = project.project_id;
+                //remove the student
+                students = students.filter((object) => {
+                    !object.student_id.equals(studentID);
+                });
+                //remove the project
+                projects = projects.filter((object) => {
+                    !object.project_id.equals(projectID);
+                });
+                //remove the student from all projects
+                for (const project of projects) {
+                    project.studentsList = project.studentsList.filter((object) => {
+                        !object.equals(studentID);
+                    });
+                }
+            }
+        }
+        console.log(allocationStatus);
+    });
 });
 
-
-
-
-
-
-
-
 module.exports = router;
-
-
-
-
-
-
-
-
-
-

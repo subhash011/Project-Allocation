@@ -29,15 +29,19 @@
                     </mat-form-field>
 
                     <div>
-                        <button mat-button [disabled]="input1" (click)="setDeadline()">
+                        <button mat-button (click)="setDeadline()">
               Set DeadLine
             </button>
-                        <button mat-button [disabled]="proceedButton1" matStepperNext (click)="proceed()">
+
+            <button mat-button [disabled]="proceedButton1" (click)="sendEmails()">
+                Send Emails
+            </button>
+            <button mat-button [disabled]="proceedButton1" (click)="sendRemainder()">
+                Send Remainder
+            </button>
+                        <button mat-button [disabled]="proceedButton1" (click)="proceed()">
               Proceed
             </button>
-            <button mat-button (click)="startAllocation()">
-                Start Allocation
-              </button>
                     </div>
                 </form>
             </mat-step>
@@ -58,10 +62,16 @@
                     </mat-form-field>
 
                     <div>
-                        <button mat-button [disabled]="input2" (click)="setDeadline()">
+                        <button mat-button (click)="setDeadline()">
               Set DeadLine
             </button>
-                        <button mat-button matStepperNext [disabled]="proceedButton2" (click)="proceed()">
+            <button mat-button [disabled]="proceedButton2" (click)="sendEmails()">
+                Send Emails
+            </button>
+            <button mat-button [disabled]="proceedButton2" (click)="sendRemainder()">
+                Send Remainder
+            </button>
+                        <button mat-button [disabled]="proceedButton2" (click)="proceed()">
               Proceed
             </button>
                     </div>
@@ -84,10 +94,16 @@
                     </mat-form-field>
 
                     <div>
-                        <button mat-button [disabled]="input3" (click)="setDeadline()">
+                        <button mat-button (click)="setDeadline()">
               Set DeadLine
             </button>
-                        <button mat-button matStepperNext [disabled]="proceedButton3" (click)="proceed()">
+            <button mat-button [disabled]="proceedButton3" (click)="sendEmails()">
+                Send Emails
+            </button>
+            <button mat-button [disabled]="proceedButton3" (click)="sendRemainder()">
+                Send Remainder
+            </button>
+                        <button mat-button [disabled]="proceedButton3" (click)="proceed()">
               Proceed
             </button>
                     </div>

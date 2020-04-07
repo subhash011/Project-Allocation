@@ -4,7 +4,6 @@
   min-height: 60px;
   display: block;
   overflow: hidden;
-  margin-top: 5%;
 }
 
 .example-box {
@@ -48,19 +47,43 @@
 .row {
   display: flex;
   justify-content: space-around;
-  margin-right: 2%;
+  // margin-right: 2%;
 }
 
 .header {
   margin-bottom: 2%;
+  margin-top:2%; 
 }
 
 mat-list-item {
   width: 100%;
 }
 
-.controls {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 2%;
+.flex-space {
+  flex-grow: 1;
+}
+
+.list-item {
+  padding: 20px 10px;
+  /* border-bottom: solid 1px #ccc; */
+  box-sizing: border-box;
+  cursor: move;
+  /* background: white; */
+  color: black;
+  font-size: 14px;
+}
+
+.heading {
+  margin-left: 2%;
+}
+
+.heading_pref{
+  margin-left: 2%;
+  margin-top: 3%;
+}
+
+.saveButton{
+  margin-left:2%;
+  margin-top:2%;
+
 }
