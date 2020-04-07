@@ -94,6 +94,7 @@ cron.schedule("*/2 * * * * *", function() {
                 }
                 else{
                     //Pop the 0th preference from the array of the curStudent.
+                    studentData.projectsList.shift();
                 }
             }
         }
