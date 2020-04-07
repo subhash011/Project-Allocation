@@ -1,19 +1,28 @@
 const express = require("express");
 const router = express.Router();
-const Project = require("../models/Project")
-router.get("/", (req, res) => {
-    var str = req.body["search"];
-    if (str == "" || str == null) {
-        Project.find().then(projects => {
-            res.json(projects);
+const Project = require("../models/Project");
+const Mapping = require("../models/Mapping");
+router.get("/maps", (req, res) => {
+    Mapping.find()
+        .then((maps) => {
+            if (maps) {
+                res.json({
+                    message: "success",
+                    result: maps,
+                });
+            } else {
+                res.json({
+                    message: "success",
+                    result: null,
+                });
+            }
         })
-    } else {
-        Project.find({ title: { $regex: str, $options: 'i' } }).then(projects => {
-            res.json(projects)
-        }).catch(err => {
-            res.send(err);
-        })
-    }
+        .catch(() => {
+            res.json({
+                message: "error",
+                result: null,
+            });
+        });
 });
 
 module.exports = router;

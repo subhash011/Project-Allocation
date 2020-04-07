@@ -1,49 +1,25 @@
-<mat-tab-group dynamicHeight="true" mat-align-tabs="center" [backgroundColor]="background">
-    <mat-tab label="List Of Available Projects">
-        <div class="list" *ngIf="projects">
-            <div class="list-item" *ngFor="let project of projects">
-                <mat-accordion>
-                    <mat-expansion-panel>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                Faculty Name : {{ project["faculty_name"] }}
-                            </mat-panel-title>
-                            <mat-panel-description>
-                                <div class="flex-space"></div>
-                                Project Title : {{ project["title"] }}
-                                <!-- Maximum Student Intake : {{ project["studentIntake"] }} -->
-                            </mat-panel-description>
-                        </mat-expansion-panel-header>
-                        <p>Faculty Email : {{ project["faculty_email"] }}</p>
-                        <p>Description : {{ project["description"] }}</p>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
-        </div>
-    </mat-tab>
-    <mat-tab label="My Preferences">
-        <div class="list" *ngIf="preferences">
-            <div class="list-item" *ngFor="let preference of preferences">
-                <mat-accordion>
-                    <mat-expansion-panel>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                Faculty Name : {{ preference["faculty_name"] }}
-                            </mat-panel-title>
-                            <mat-panel-description>
-                                <div class="flex-space"></div>
-                                Project Title : {{ preference["title"] }}
-                                <!-- Maximum Student Intake : {{ preference["studentIntake"] }} -->
-                            </mat-panel-description>
-                        </mat-expansion-panel-header>
-                        <p>Faculty Email : {{ preference["faculty_email"] }}</p>
-                        <p>Description : {{ preference["description"] }}</p>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
-        </div>
-    </mat-tab>
-    <!-- <mat-tab label="Change Preferences">
-        <app-drag-drop></app-drag-drop>
-    </mat-tab> -->
-</mat-tab-group>
+<div class="list" *ngIf="preferences && preferences.length != 0; else empty">
+    <div class="list-item" *ngFor="let preference of preferences">
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Faculty Name : {{ preference["faculty_name"] }}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <div class="flex-space"></div>
+                        Project Title : {{ preference["title"] }}
+                        <!-- Maximum Student Intake : {{ preference["studentIntake"] }} -->
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <p>Faculty Email : {{ preference["faculty_email"] }}</p>
+                <p>Description : {{ preference["description"] }}</p>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>
+<ng-template #empty>
+    <div class="emptyBlock" style="padding-top: 10%;">
+        No Preferences To Display. Go to the 'Edit Preferences' tab to add Preferences
+    </div>
+</ng-template>

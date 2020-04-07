@@ -1,37 +1,55 @@
-<div *ngIf="message == 'fail'" class="alert alert-danger fade in alert-dismissible" style="margin-top:18px;">
+<div *ngIf="message == 'fail'" class="alert alert-danger fade in alert-dismissible" style="margin-top: 18px;">
     <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a
   >
   <strong>Registration Failed</strong>
 </div>
 <div class="register-page">
-  <form class="register" [formGroup]="userForm" novalidate (ngSubmit)="onSubmit()">
+  <form
+    class="register"
+    [formGroup]="userForm"
+    novalidate
+    (ngSubmit)="onSubmit()"
+  >
     <mat-card class="shipping-card">
       <mat-card-header>
-        <mat-card-title><strong>
+        <mat-card-title
+          ><strong>
             <h4>Register</h4>
-          </strong></mat-card-title>
+          </strong></mat-card-title
+        >
       </mat-card-header>
       <mat-card-content>
         <!-- <div class="row"> -->
         <div class="row">
           <mat-form-field class="full-width">
-            <input matInput placeholder="First name" formControlName="firstName" />
-            <mat-error *ngIf="userForm.controls['firstName'].hasError('required')">
+            <input
+              matInput
+              placeholder="First name"
+              formControlName="firstName"
+            />
+            <mat-error
+              *ngIf="userForm.controls['firstName'].hasError('required')"
+            >
               First name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Last name" formControlName="lastName" />
-            <mat-error *ngIf="userForm.controls['lastName'].hasError('required')">
+            <input
+              matInput
+              placeholder="Last name"
+              formControlName="lastName"
+            />
+            <mat-error
+              *ngIf="userForm.controls['lastName'].hasError('required')"
+            >
               Last name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
         </div>
         <!-- </div> -->
-        <div class="row" *ngIf="hasUnitNumber">
-        </div>
+        <div class="row" *ngIf="hasUnitNumber"></div>
         <!-- <div class="row"> -->
         <div class="row">
           <mat-form-field class="full-width">
@@ -43,8 +61,15 @@
         </div>
         <div class="row" *ngIf="!isSuperAdmin()">
           <mat-form-field class="full-width">
-            <mat-select placeholder="Branch" formControlName="branch">
-              <mat-option *ngFor="let branch of branches" [value]="branch.abbreviation">
+            <mat-select
+              [(value)]="branchStudent"
+              placeholder="Branch"
+              formControlName="branch"
+            >
+              <mat-option
+                *ngFor="let branch of branches"
+                [value]="branchStudent"
+              >
                 {{ branch.name }}
               </mat-option>
             </mat-select>
@@ -64,7 +89,13 @@
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button class="submit_button" color="primary" type="submit" [disabled]="!userForm.valid">
+        <button
+          mat-raised-button
+          class="submit_button"
+          color="primary"
+          type="submit"
+          [disabled]="!userForm.valid"
+        >
           Submit
         </button>
       </mat-card-actions>

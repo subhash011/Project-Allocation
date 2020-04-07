@@ -9,7 +9,7 @@ import { UserService } from "src/app/services/user/user.service";
   selector: "app-faculty",
   templateUrl: "./faculty.component.html",
   styleUrls: ["./faculty.component.scss"],
-  providers: [LoginComponent]
+  providers: [LoginComponent],
 })
 export class FacultyComponent implements OnInit {
   private id: string;
@@ -59,11 +59,9 @@ export class FacultyComponent implements OnInit {
         if (data["status"] == "success") {
           this.student_list = data["students"];
 
-          this.student_list.sort((a,b)=>{
+          this.student_list.sort((a, b) => {
             return b.gpa - a.gpa;
-          })
-
-
+          });
         } else {
           let snackBarRef = this.snackBar.open("Please reload the page", "Ok", {
             duration: 3000,

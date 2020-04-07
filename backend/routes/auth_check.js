@@ -7,85 +7,87 @@ const SuperAdmin = require("../models/SuperAdmin");
 oauth = require("../config/oauth");
 
 //add your email here if you want to be a super admin
-const superAdmins = ["s4589012@gmail.com","111801002@smail.iitpkd.ac.in"];
+const superAdmins = ["s4589012@gmail.com", "111801002@smail.iitpkd.ac.in"];
 
 router.post("/user_check", (req, res) => {
     const userDetails = req.body;
     oauth(userDetails.idToken)
-        .then(user => {
+        .then((user) => {
             const email = userDetails.email.split("@");
             const email_check = email[1];
 
             if (email_check === "smail.iitpkd.ac.in") {
                 const rollno = email[0];
                 Student.findOne({ email: userDetails.email })
-                    .then(user => {
+                    .then((user) => {
                         if (user) {
                             user.google_id.idToken = userDetails.idToken;
                             user
                                 .save()
-                                .then(result => {
+                                .then((result) => {
                                     res.json({
                                         isRegistered: true,
                                         position: "student",
-                                        user_details: userDetails
+                                        user_details: userDetails,
                                     });
                                 })
-                                .catch(err => {
+                                .catch((err) => {
                                     res.json({
                                         isRegistered: true,
                                         position: "error",
-                                        user_details: "Student Not Saved - DB Error"
+                                        user_details: "Student Not Saved - DB Error",
                                     });
                                 });
                         } else {
                             res.json({
                                 isRegistered: false,
                                 position: "student",
-                                user_details: userDetails
+                                user_details: userDetails,
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         res.json({
                             isRegistered: false,
                             position: "error",
-                            user_details: "Student Not Found"
+                            user_details: "Student Not Found",
                         });
                     });
             } else if (superAdmins.includes(userDetails.email)) {
-                SuperAdmin.findOne({ email: userDetails.email }).then(user => {
+                SuperAdmin.findOne({ email: userDetails.email }).then((user) => {
                     if (user) {
                         user.google_id.idToken = userDetails.idToken;
                         role = "super_admin";
-                        user.save().then(result => {
+                        user
+                            .save()
+                            .then((result) => {
                                 res.json({
                                     isRegistered: true,
                                     position: role,
-                                    user_details: userDetails
+                                    user_details: userDetails,
                                 });
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 res.json({
                                     isRegistered: true,
                                     position: "error",
-                                    user_details: "SuperAdmin Not Saved - DB Error"
+                                    user_details: "SuperAdmin Not Saved - DB Error",
                                 });
                             });
                     } else {
                         res.json({
                             isRegistered: false,
                             position: "super_admin",
-                            user_details: userDetails
+                            user_details: userDetails,
                         });
                     }
-                })
+                });
             } else if (
                 email_check === "iitpkd.ac.in" ||
                 email_check === "gmail.com" //remove it later only for testing
             ) {
                 Faculty.findOne({ email: userDetails.email })
-                    .then(user => {
+                    .then((user) => {
                         if (user) {
                             user.google_id.idToken = userDetails.idToken;
 
@@ -98,48 +100,48 @@ router.post("/user_check", (req, res) => {
 
                             user
                                 .save()
-                                .then(result => {
+                                .then((result) => {
                                     res.json({
                                         isRegistered: true,
                                         position: role,
-                                        user_details: userDetails
+                                        user_details: userDetails,
                                     });
                                 })
-                                .catch(err => {
+                                .catch((err) => {
                                     res.json({
                                         isRegistered: true,
                                         position: "error",
-                                        user_details: "Faculty Not Saved - DB Error"
+                                        user_details: "Faculty Not Saved - DB Error",
                                     });
                                 });
                         } else {
                             res.json({
                                 isRegistered: false,
                                 position: "faculty",
-                                user_details: userDetails
+                                user_details: userDetails,
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         res.json({
                             isRegistered: false,
                             position: "error",
-                            user_details: "Faculty Not Found"
+                            user_details: "Faculty Not Found",
                         });
                     });
             } else {
                 res.json({
                     isRegistered: false,
                     position: "error",
-                    user_details: userDetails
+                    user_details: userDetails,
                 });
             }
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 isRegistered: false,
                 position: "login-error",
-                user_details: "Server Error"
+                user_details: "Server Error",
             });
         });
 });
@@ -149,34 +151,34 @@ router.get("/details/:id", (req, res) => {
     const idToken = req.headers.authorization;
 
     oauth(idToken)
-        .then(user => {
+        .then((user) => {
             const User = {
                 name: user.name,
-                email: user.email
+                email: user.email,
             };
 
             const email = user.email.split("@");
             if (superAdmins.includes(user.email)) {
                 res.json({
                     position: "super_admin",
-                    user_details: User
+                    user_details: User,
                 });
             } else if (email[1] === "smail.iitpkd.ac.in") {
                 res.json({
                     position: "student",
-                    user_details: User
+                    user_details: User,
                 });
             } else if (email[1] === "iitpkd.ac.in") {
                 res.json({
                     position: "faculty",
-                    user_details: User
+                    user_details: User,
                 });
             }
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 position: "error",
-                user_details: err
+                user_details: err,
             });
         });
 });
