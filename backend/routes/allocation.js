@@ -92,6 +92,9 @@ cron.schedule("*/2 * * * * *", function() {
                     alloted.push(curStudent);
                     free.push(studentCurrentlyAlloted);
                 }
+                else{
+                    //Pop the 0th preference from the array of the curStudent.
+                }
             }
         }
         promises = [];
