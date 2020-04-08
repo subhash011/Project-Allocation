@@ -35,6 +35,7 @@ import { AdminSidenavComponent } from "./components/faculty-componenets/admin-si
 import { AdminContentComponent } from "./components/faculty-componenets/admin-content/admin-content.component";
 import { TimelineComponent } from "./components/shared/timeline/timeline.component";
 import { CountdownTimerModule } from "ngx-countdown-timer";
+import { LoadingBarHttpClientModule } from "@ngx-loading-bar/http-client";
 const googleLoginOption: LoginOpt = {
   scope: "https://mail.google.com/",
   prompt: "select_account",
@@ -95,6 +96,7 @@ export function provideConfig() {
     ReactiveFormsModule,
     Ng2SearchPipeModule,
     CountdownTimerModule.forRoot(),
+    LoadingBarHttpClientModule,
   ],
   exports: [],
   providers: [

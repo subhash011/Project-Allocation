@@ -21,6 +21,8 @@
         "@angular/platform-browser": "~8.2.14",
         "@angular/platform-browser-dynamic": "~8.2.14",
         "@angular/router": "~8.2.14",
+        "@ngx-loading-bar/core": "^4.2.0",
+        "@ngx-loading-bar/http-client": "^4.2.0",
         "angularx-social-login": "^2.2.1",
         "bootstrap": "^3.4.1",
         "hammerjs": "^2.0.8",
