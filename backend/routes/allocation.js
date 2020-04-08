@@ -16,7 +16,7 @@ const Student = require("../models/Student");
 router.post("/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    Faculty.find({ google_id: { id: id, idToken: idToken } }).then(faculty => {
+    Faculty.find({ google_id: { id: id, idToken: idToken } }).then((faculty) => {
         if (faculty[0]) {
             const stream = faculty[0].stream;
             var projects = [];
@@ -118,8 +118,8 @@ router.post("/:id", (req, res) => {
                         .catch(() => {
                             res.json({
                                 message: "error",
-                                result: null
-                            })
+                                result: null,
+                            });
                         })
                     );
                     promises.push(
@@ -132,25 +132,25 @@ router.post("/:id", (req, res) => {
                         .catch(() => {
                             res.json({
                                 message: "error",
-                                result: null
-                            })
+                                result: null,
+                            });
                         })
                     );
                 });
                 Promise.all(promises).then((result) => {
                     res.json({
                         message: "success",
-                        result: allocationStatus
-                    })
+                        result: allocationStatus,
+                    });
                 });
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null
-            })
+                result: null,
+            });
         }
-    })
-})
+    });
+});
 
 module.exports = router;

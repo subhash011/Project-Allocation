@@ -32,7 +32,6 @@ router.post("/register/:id", (req, res) => {
     const idToken = req.headers.authorization;
     const user = req.body;
     oauth(idToken).then((response) => {
-        console.log(response);
         const newUser = new SuperAdmin({
             name: user.name,
             google_id: {
@@ -323,7 +322,7 @@ router.post("/addAdmin/:id", (req, res) => {
                                     admin
                                         .save()
                                         .then((admin) => {
-                                            // console.log(admin);
+                                            //success here
                                         })
                                         .catch((err) => {
                                             res.json({
