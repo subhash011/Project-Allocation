@@ -43,12 +43,12 @@ export class RegisterComponent implements OnInit {
           this.userForm.get("branch").clearValidators();
         }
         if (localStorage.getItem("role") == "student") {
-          this.userForm.get("branch").setValue(this.branches.short);
           this.userForm.get("branch").disable();
           const stream = this.getStream();
           this.branchStudent = stream;
           this.userForm.controls["branch"].setValue(this.branchStudent);
         } else {
+          console.log(this.branches);
           this.userForm.get("CGPA").clearValidators();
         }
       });
