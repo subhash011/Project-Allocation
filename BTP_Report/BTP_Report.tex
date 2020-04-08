@@ -1,0 +1,129 @@
+\documentclass{article}
+
+% If you're new to LaTeX, here's some short tutorials:
+% https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes
+% https://en.wikibooks.org/wiki/LaTeX/Basics
+
+% Formatting
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage[titletoc,title]{appendix}
+
+% Math
+% https://www.overleaf.com/learn/latex/Mathematical_expressions
+% https://en.wikibooks.org/wiki/LaTeX/Mathematics
+\usepackage{amsmath,amsfonts,amssymb,mathtools}
+
+% Tables
+% https://www.overleaf.com/learn/latex/Tables
+% https://en.wikibooks.org/wiki/LaTeX/Tables
+
+% Algorithms
+% https://www.overleaf.com/learn/latex/algorithms
+% https://en.wikibooks.org/wiki/LaTeX/Algorithms
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{algorithmic}
+
+% Code syntax highlighting
+% https://www.overleaf.com/learn/latex/Code_Highlighting_with_minted
+\usepackage{minted}
+\usemintedstyle{borland}
+% References
+% https://www.overleaf.com/learn/latex/Bibliography_management_in_LaTeX
+% https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
+\usepackage{biblatex}
+\addbibresource{references.bib}
+% Title content
+\title{Project Allocation Algorithm}
+\author{Sai Vamsi Alisetti, Subhash S}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% Introduction and Overview
+\section{Introduction and Overview}
+This algorithm is developed for project allotment to students. Here we deal with two sided preference i.e students have a project preference and each project has a student preference given by the faculty which floated the project. Our approach to this is to use the generalised version of Gale Shapley's algorithm.
+% Algorithm Implementation and Development
+\section{Algorithm Implementation and Development}
+Set $S$ represents students and set $P$ represents projects.\\
+
+Let $S = \{ S_1, S_2, ... , S_m \}$ 
+where 
+$S_i = (id_i,preference_i)$ is the $i^{th}$ student
+and 
+$m \in N$ 
+
+Let $P = \{P_1, P_2, ... , P_n\}$ 
+where 
+$P_i = (id_i,preference_i)$ is the $i^{th}$ project
+and
+$n \in N$
+
+A necessary condition for this algorithm to work is $n \geq m$.
+
+\subsection{Pseudo Code}
+\begin{algorithm}[H]
+\caption{Project Allocation}
+\begin{algorithmic}
+\REQUIRE $n \geq m $
+\STATE $free \leftarrow S$
+\STATE $alloted \leftarrow [  ]$ 
+\STATE $allocationMap \leftarrow \{\}$
+\WHILE{$|allocationMap| \neq |S|$}
+\STATE $S_i \leftarrow free[0]$
+\STATE $P_j \leftarrow S_i[1][0]$
+\IF{$\neg allocationMap.hasKey(P_j)$}
+\STATE $allocationMap \leftarrow \{P_j,S_i\}$
+\STATE $alloted.push(S_i)$
+\STATE $free - \{S_i\}$
+\ELSE 
+\STATE $S_k \leftarrow allocationMap[P_j] $
+\STATE $S_{k,index} \leftarrow  findIndex \: of \: S_k \: in \: P_j[1]$ 
+\STATE $S_{i,index} \leftarrow findIndex \: of \: S_i \: in\: P_j[1]$
+\IF{$S_{k,index} > S_{i,index}$}
+\STATE $allocationMap \leftarrow {P_j,S_i}$
+\STATE $alloted - \{S_k\}$
+\STATE $free - \{S_i\}$
+\STATE $alloted.push(S_i)$
+\STATE $free.push(S_k)$
+\ELSE
+\STATE $ Pop \: the \: first \: element \: of \: S_i[1]$
+\ENDIF
+\ENDIF
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+
+
+%  Theoretical Background
+\section{Theoretical Background}
+Since this problem is similar to the admission problem (General case of Gale Shapley's algorithm) we can see that theorems also follow.
+
+
+% Computational Results
+\section{Computational Results}
+As we can see from the algorithm the worst case time complexsity is $O(n^2)$ as we have some loops inside the outer while loop.
+
+
+% Summary and Conclusions
+\section{Summary and Conclusions}
+Test run is pending.
+
+
+
+
+%\printbibliography
+\begin{thebibliography}{10}
+
+\bibitem{latexGuide} D.Gale, L.S.Shapley, 
+\emph{College Admissions and the Stability of Marriage},
+Available at \texttt{https://www.eecs.harvard.edu/cs286r/courses/fall09/papers/galeshapley.pdf}.
+
+
+\end{thebibliography}
+
+
+\end{document}
