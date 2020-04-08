@@ -8,56 +8,71 @@ const Student = require("../models/Student");
 const Service = require("../helper/serivces");
 var branches = Service.branches;
 
-router.get("/:id", (req, res) => {
-  const id = String(req.params.id);
+
+router.get("/project/:id", (req, res) => {
+  console.log('hitting')
+
+  const id = req.params.id;
   const idToken = req.headers.authorization;
-  const promises = [];
-
-  Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-      .then((faculty) => {
-          // console.log(faculty);
-          const stream = faculty.stream;
-
-          Faculty.find({ stream: stream })
-              .then((faculty) => {
-                  // console.log(faculty);
-
-                  // for (let element in faculty)
-                  faculty.forEach((element) => {
-                      // console.log(element)
-                      promises.push(
-                          Project.find({
-                              _id: { $in: element.project_list },
-                          })
-                          .then((result) => {
-                              const obj = {
-                                  faculty_name: element.name,
-                                  projects: result,
-                              };
-                              return obj;
-                          })
-                          .catch((err) => {
-                              console.log(err);
-                          })
-                      );
+  oauth(idToken)
+    .then((user) => {
+      Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
+        (faculty) => {
+          if (faculty) {
+            Admin.findOne({ admin_id: faculty._id }).then((admin) => {
+              if (admin) {
+                const stream = admin.stream;
+                Project.find({ stream: stream })
+                  .populate("faculty_id")
+                  .populate("student_alloted")
+                  .then((projects) => {
+                    var arr = [];
+                    for (const project of projects) {
+                      const newProj = {
+                        title: project.title,
+                        description: project.description,
+                        stream: project.stream,
+                        duration: project.duration,
+                        faculty: project.faculty_id.name,
+                        numberOfPreferences: project.students_id.length,
+                        student_alloted: project.student_alloted,
+                      };
+                      arr.push(newProj);
+                    }
+                    res.json({
+                      message: "success",
+                      result: arr,
+                    });
+                  })
+                  .catch(() => {
+                    res.status(500);
                   });
-
-                  Promise.all(promises)
-                      .then((result) => {
-                          res.json({
-                              project_details: result,
-                          });
-                      })
-                      .catch((err) => console.log(err));
-              })
-              .catch((err) => {
-                  console.log(err);
-              });
-      })
-      .catch((err) => {
-          console.log(err);
+              } else {
+                res.json({
+                  message: "invalid-token",
+                  result: null,
+                });
+              }
+            });
+          } else {
+            res.json({
+              message: "invalid-token",
+              result: null,
+            });
+          }
+        }
+      );
+    })
+    .catch(() => {
+      res.json({
+        message: "invalid-client",
+        result: null,
       });
+    });
 });
+
+
+
 
 router.get("/info/:id", (req, res) => {
   const id = req.params.id;
@@ -286,54 +301,6 @@ router.get("/all/info", (req, res) => {
   });
 });
 
-// router.get('/removeDeadline/:id',(req,res)=>{
-
-//   const id = req.params.id;
-//   const idToken = req.headers.idToken;
-
-//   Faculty.findOne({google_id:{id:id,idToken:idToken}})
-//     .then(faculty=>{
-
-//       Admin.findOne({admin_id:faculty._id})
-//         .then(admin=>{
-
-//           admin.deadlines.pop()
-//           if(admin.deadlines.length == 0){
-//             admin.startDate = null;
-//           }
-
-//           admin.save()
-//             .then(result=>{
-//               res.json({
-//                 status:"success",
-//                 msg:"Please sign in again"
-//               })
-//             })
-//             .catch(err=>{
-//               res.json({
-//                 status:"fail",
-//                 msg:null
-//               })
-//             })
-
-//         })
-//         .catch(err=>{
-//           res.json({
-//             status:"fail",
-//             msg:null
-//           })
-//         })
-
-//     })
-//     .catch(err=>{
-//       res.json({
-//         status:"fail",
-//         msg:null
-//       })
-//     })
-
-// })
-
 router.post("/set_projectCap/:id", (req, res) => {
   const id = req.params.id;
   const idToken = req.headers.authorization;
@@ -406,108 +373,6 @@ router.post("/set_projectCap/:id", (req, res) => {
     });
 });
 
-module.exports = router;
-router.get("/removeDeadline/:id", (req, res) => {
-  const id = req.params.id;
-  const idToken = req.headers.idToken;
 
-  Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-    .then((faculty) => {
-      Admin.findOne({ admin_id: faculty._id })
-        .then((admin) => {
-          admin.deadlines.pop();
-          if (admin.deadlines.length == 0) {
-            admin.startDate = null;
-          }
-
-          admin
-            .save()
-            .then((result) => {
-              res.json({
-                status: "success",
-                msg: "Please sign in again",
-              });
-            })
-            .catch((err) => {
-              res.json({
-                status: "fail",
-                msg: null,
-              });
-            });
-        })
-        .catch((err) => {
-          res.json({
-            status: "fail",
-            msg: null,
-          });
-        });
-    })
-    .catch((err) => {
-      res.json({
-        status: "fail",
-        msg: null,
-      });
-    });
-});
-
-router.get("/project/:id", (req, res) => {
-  const id = req.params.id;
-  const idToken = req.headers.authorization;
-  oauth(idToken)
-    .then((user) => {
-      Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
-        (faculty) => {
-          if (faculty) {
-            Admin.findOne({ admin_id: faculty._id }).then((admin) => {
-              if (admin) {
-                const stream = admin.stream;
-                Project.find({ stream: stream })
-                  .populate("faculty_id")
-                  .populate("student_alloted")
-                  .then((projects) => {
-                    var arr = [];
-                    for (const project of projects) {
-                      const newProj = {
-                        title: project.title,
-                        description: project.description,
-                        stream: project.stream,
-                        duration: project.duration,
-                        faculty: project.faculty_id.name,
-                        numberOfPreferences: project.students_id.length,
-                        student_alloted: project.student_alloted,
-                      };
-                      arr.push(newProj);
-                    }
-                    res.json({
-                      message: "success",
-                      result: arr,
-                    });
-                  })
-                  .catch(() => {
-                    res.status(500);
-                  });
-              } else {
-                res.json({
-                  message: "invalid-token",
-                  result: null,
-                });
-              }
-            });
-          } else {
-            res.json({
-              message: "invalid-token",
-              result: null,
-            });
-          }
-        }
-      );
-    })
-    .catch(() => {
-      res.json({
-        message: "invalid-client",
-        result: null,
-      });
-    });
-});
 
 module.exports = router;
