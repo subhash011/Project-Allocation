@@ -63,14 +63,14 @@ export class SuperAdminComponent implements OnInit {
       .toPromise()
       .then((maps) => {
         this.maps = maps["result"];
-        for (const map of this.maps) {
-          const newObj = {
-            name: map.full,
-            short: map.short,
-            map: map.map,
+        this.branches = this.maps.map((val) => {
+          var newMap = {
+            name: val.full,
+            short: val.short,
+            map: val.map,
           };
-          this.branches.push(newObj);
-        }
+          return newMap;
+        });
         return this.branches;
       })
       .then(() => {
@@ -179,6 +179,7 @@ export class SuperAdminComponent implements OnInit {
       .addAdmin(faculty)
       .toPromise()
       .then((result) => {
+        console.log(result);
         this.ngOnInit();
       });
   }
