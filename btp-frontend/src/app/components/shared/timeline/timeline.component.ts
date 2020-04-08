@@ -187,7 +187,7 @@ export class TimelineComponent implements OnInit {
                         this.stageThreeCompleted = true;
                       }
                     }
-                    if (i + 1 == 4) {
+                    if (this.stage == 3 && i + 1 == 4) {
                       this.stageThreeCompleted = true;
                       this.stageThree = 100;
                       this.stageOneCompleted = true;
@@ -204,6 +204,16 @@ export class TimelineComponent implements OnInit {
                       if (this.stageFour >= 100) {
                         this.stageFourCompleted = true;
                       }
+                    }
+                    if(this.stage == 4 && i == 4){
+                      this.stageThreeCompleted = true;
+                      this.stageThree = 100;
+                      this.stageOneCompleted = true;
+                      this.stageOne = 100;
+                      this.stageTwoCompleted = true;
+                      this.stageTwo = 100;
+                      this.stageFourCompleted = true;
+                      this.stageFour = 100;
                     }
                   }
                 }

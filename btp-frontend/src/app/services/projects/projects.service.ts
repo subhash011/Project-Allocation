@@ -139,4 +139,14 @@ export class ProjectsService {
     };
     return this.http.get(this.url, httpOptions);
   }
+
+  startAllocation(){
+
+    
+
+
+
+  }
+
+
 }

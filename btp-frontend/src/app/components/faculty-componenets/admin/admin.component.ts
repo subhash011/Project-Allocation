@@ -318,6 +318,14 @@ export class AdminComponent implements OnInit {
 
   startAllocation() {
     // this.userService.startAllocation().subscribe((data) => {});
+
+    // this.projectService.startAllocation()
+    //   .subscribe(data=>{
+    //     console.log(data)
+    //   })
+
+
+
   }
 
   sendEmails() {
@@ -547,12 +555,18 @@ export class AdminComponent implements OnInit {
             this.ngOnInit();
           } else {
             let snackBarRef = this.snackBar.open(
-              "Server Error! Please reload and try again!",
+              "Session Timed Out! Please Sign in Again!",
               "Ok",
               {
                 duration: 3000,
               }
             );
+             snackBarRef.afterDismissed().subscribe(() => {
+              this.loginService.signOut();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.loginService.signOut();
+            });
           }
         });
     } else {
