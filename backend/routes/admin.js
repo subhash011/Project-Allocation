@@ -10,7 +10,6 @@ var branches = Service.branches;
 
 
 router.get("/project/:id", (req, res) => {
-  console.log('hitting')
 
   const id = req.params.id;
   const idToken = req.headers.authorization;
