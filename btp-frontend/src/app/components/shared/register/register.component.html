@@ -61,14 +61,10 @@
         </div>
         <div class="row" *ngIf="!isSuperAdmin()">
           <mat-form-field class="full-width">
-            <mat-select
-              [(value)]="branchStudent"
-              placeholder="Branch"
-              formControlName="branch"
-            >
+            <mat-select placeholder="Branch" formControlName="branch">
               <mat-option
                 *ngFor="let branch of branches"
-                [value]="branchStudent"
+                [value]="branch.short"
               >
                 {{ branch.name }}
               </mat-option>
