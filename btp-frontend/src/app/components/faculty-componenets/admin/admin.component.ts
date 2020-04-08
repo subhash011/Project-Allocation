@@ -1,3 +1,4 @@
+import { Router } from "@angular/router";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { MailService } from "./../../../services/mailing/mail.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -50,7 +51,8 @@ export class AdminComponent implements OnInit {
     private snackBar: MatSnackBar,
     private mailer: MailService,
     private location: Location,
-    private loginService: LoginComponent
+    private loginService: LoginComponent,
+    private router: Router
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -71,13 +73,29 @@ export class AdminComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      for (let step = 0; step < this.stage_no; step++) {
-        this.stepper.next();
+      if (this.stage_no == 1) {
+        if (this.stepper.selectedIndex == 0) {
+          this.stepper.next();
+        }
+      }
+      if (this.stage_no == 2) {
+        if (this.stepper.selectedIndex == 0) {
+          this.stepper.next();
+          this.stepper.next();
+        }
+      }
+
+      if (this.stage_no == 3) {
+        if (this.stepper.selectedIndex == 0) {
+          this.stepper.next();
+          this.stepper.next();
+          this.stepper.next();
+        }
       }
     });
   }
 
-  ngOnInit(marker = false) {
+  ngOnInit() {
     this.userService.getAdminInfo().subscribe((data) => {
       // console.log(data);
       this.stage_no = data["stage"];
@@ -90,7 +108,7 @@ export class AdminComponent implements OnInit {
       });
       this.startDate = data["startDate"];
 
-      if (!marker) this.ngAfterViewInit();
+      this.ngAfterViewInit();
 
       this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
       this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
@@ -208,7 +226,6 @@ export class AdminComponent implements OnInit {
       var date = this.thirdFormGroup.get("thirdCtrl").value;
     }
 
-
     if (date != null && date != "") {
       const dialogRef = this.dialog.open(DeletePopUpComponent, {
         width: "400px",
@@ -220,7 +237,6 @@ export class AdminComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result["message"] == "submit") {
-
           this.userService.setDeadline(date).subscribe((data) => {
             if (data["status"] == "success") {
               let snackBarRef = this.snackBar.open(
@@ -232,10 +248,11 @@ export class AdminComponent implements OnInit {
               );
 
               snackBarRef.afterDismissed().subscribe(() => {
-                this.ngOnInit(true);
+                this.ngOnInit();
               });
               snackBarRef.onAction().subscribe(() => {
-                this.ngOnInit(true);
+                this.ngOnInit();
+ 
               });
             } else {
               let snackBarRef = this.snackBar.open(
@@ -293,7 +310,6 @@ export class AdminComponent implements OnInit {
                   data1["stream"]
                 )
                 .subscribe((data) => {
-
                   if (data["message"] == "success") {
                     let snackBarRef = this.snackBar.open(
                       "Mails have been sent",
@@ -496,7 +512,7 @@ export class AdminComponent implements OnInit {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
-            this.ngOnInit(true);
+            this.ngOnInit();
           } else {
             let snackBarRef = this.snackBar.open(
               "Server Error! Please reload and try again!",

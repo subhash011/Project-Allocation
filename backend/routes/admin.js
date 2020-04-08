@@ -136,7 +136,7 @@ router.post("/setDeadline/:id", (req, res) => {
 
     const format_date = new Date(date);
 
-    format_date.setHours(17)
+    format_date.setHours(18)
     format_date.setMinutes(30)    
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
