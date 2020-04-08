@@ -283,7 +283,6 @@ export class AdminComponent implements OnInit {
               });
               snackBarRef.onAction().subscribe(() => {
                 this.ngOnInit();
- 
               });
             } else {
               let snackBarRef = this.snackBar.open(
@@ -322,7 +321,7 @@ export class AdminComponent implements OnInit {
   sendEmails() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
-      height: "250px",
+      height: "200px",
       data: {
         heading: "Confirm Sending Mails",
         message:
@@ -425,7 +424,7 @@ export class AdminComponent implements OnInit {
   sendRemainder() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
-      height: "250px",
+      height: "200px",
       data: {
         heading: "Confirm Sending Remainders",
         message:
