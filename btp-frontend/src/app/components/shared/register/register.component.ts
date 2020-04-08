@@ -47,9 +47,14 @@ export class RegisterComponent implements OnInit {
           const stream = this.getStream();
           this.branchStudent = stream;
           this.userForm.controls["branch"].setValue(this.branchStudent);
-        } else {
-          console.log(this.branches);
+        } else if (localStorage.getItem("role") == "faculty") {
           this.userForm.get("CGPA").clearValidators();
+          this.userForm.get("CGPA").updateValueAndValidity();
+        } else {
+          this.userForm.get("CGPA").clearValidators();
+          this.userForm.get("branch").clearValidators();
+          this.userForm.get("CGPA").updateValueAndValidity();
+          this.userForm.get("branch").updateValueAndValidity();
         }
       });
   }
@@ -57,7 +62,7 @@ export class RegisterComponent implements OnInit {
   userForm = this.fb.group({
     firstName: [this.user.firstName, Validators.required],
     lastName: [this.user.lastName, Validators.required],
-    CGPA: [null],
+    CGPA: [null, Validators.required],
     email: [this.user.email, Validators.required],
     branch: [null, Validators.required],
   });

@@ -12,7 +12,7 @@ import * as moment from "moment";
 })
 export class UserService {
   private url: string;
-  private base_url = "http://localhost:8080/";
+  private base_url = "https://btech-project-allocation.herokuapp.com/";
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -157,7 +157,7 @@ export class UserService {
   getAdminInfo() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = "http://localhost:8080/admin/info/" + id;
+    this.url = this.base_url + "admin/info/" + id;
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -212,7 +212,7 @@ export class UserService {
   getFacultyStreamEmails() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = "http://localhost:8080/admin/stream_email/faculty/" + id;
+    this.url = this.base_url + "admin/stream_email/faculty/" + id;
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -227,7 +227,7 @@ export class UserService {
   getStudentStreamEmails() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = "http://localhost:8080/admin/stream_email/student/" + id;
+    this.url = this.base_url + "admin/stream_email/student/" + id;
 
     const httpOptions = {
       headers: new HttpHeaders({

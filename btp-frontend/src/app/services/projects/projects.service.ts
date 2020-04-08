@@ -8,9 +8,12 @@ export class ProjectsService {
   private url: string;
   private url_pref: string;
   private url_post: string;
-  private studentBaseURL = "http://localhost:8080/student/project/";
-  private facultyBaseURL = "http://localhost:8080/faculty/project/";
-  private adminBaseURL = "http://localhost:8080/admin/project/";
+  private studentBaseURL =
+    "https://btech-project-allocation.herokuapp.com/student/project/";
+  private facultyBaseURL =
+    "https://btech-project-allocation.herokuapp.com/faculty/project/";
+  private adminBaseURL =
+    "https://btech-project-allocation.herokuapp.com/admin/project/";
   constructor(private http: HttpClient, private router: Router) {}
   getAllStudentProjects() {
     const id = localStorage.getItem("id");
