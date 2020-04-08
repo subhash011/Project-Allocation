@@ -34,10 +34,10 @@ import { AdminComponent } from "./components/faculty-componenets/admin/admin.com
 import { AdminSidenavComponent } from "./components/faculty-componenets/admin-sidenav/admin-sidenav.component";
 import { AdminContentComponent } from "./components/faculty-componenets/admin-content/admin-content.component";
 import { TimelineComponent } from "./components/shared/timeline/timeline.component";
-
+import { CountdownTimerModule } from "ngx-countdown-timer";
 const googleLoginOption: LoginOpt = {
   scope: "https://mail.google.com/",
-  prompt: "select_account"
+  prompt: "select_account",
 };
 
 const config = new AuthServiceConfig([
@@ -46,8 +46,8 @@ const config = new AuthServiceConfig([
     provider: new GoogleLoginProvider(
       "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com",
       googleLoginOption
-    )
-  }
+    ),
+  },
 ]);
 export function provideConfig() {
   return config;
@@ -76,12 +76,12 @@ export function provideConfig() {
     AdminComponent,
     AdminSidenavComponent,
     AdminContentComponent,
-    TimelineComponent
+    TimelineComponent,
   ],
   entryComponents: [
     ShowPreferencesComponent,
     SubmitPopUpComponent,
-    DeletePopUpComponent
+    DeletePopUpComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,17 +93,18 @@ export function provideConfig() {
     DragDropModule,
     FormsModule,
     ReactiveFormsModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    CountdownTimerModule.forRoot(),
   ],
   exports: [],
   providers: [
     {
       provide: AuthServiceConfig,
-      useFactory: provideConfig
+      useFactory: provideConfig,
     },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
-    UserService
+    UserService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

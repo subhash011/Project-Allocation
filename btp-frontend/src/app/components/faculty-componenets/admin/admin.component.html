@@ -10,17 +10,20 @@
         <div class="progress-bar">
             <!-- <mat-progress-bar mode="determinate" [value]="progress_value"></mat-progress-bar> -->
 
-<form [formGroup]="fifthFormGroup">
-   
-    <mat-form-field class="example-full-width"> 
-      <mat-label>Max number of projects</mat-label>
-      <input matInput placeholder="Project Cap" type="number" step="1" formControlName="fifthCtrl">
-    </mat-form-field>
-    
-    <button color="accent" mat-raised-button (click)="setProjectCap()" class="setButton">Set Project Cap</button>
-</form>
+            <form [formGroup]="fifthFormGroup">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Max number of projects</mat-label>
+                    <input matInput placeholder="Project Cap" type="number" step="1" formControlName="fifthCtrl" />
+                </mat-form-field>
+
+                <button color="accent" mat-raised-button (click)="setProjectCap()" class="setButton">
+          Set Project Cap
+        </button>
+            </form>
         </div>
-        <span class="days_left"><strong>Days Left:</strong> {{ days_left }}</span>
+        <span class="days_left"><strong>Time Left : </strong>
+      <countdown-timer [end]="curr_deadline"></countdown-timer
+    ></span>
         <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no }}">
             <mat-step [stepControl]="firstFormGroup" [editable]="'false'">
                 <form [formGroup]="firstFormGroup">
@@ -43,11 +46,11 @@
               Set DeadLine
             </button>
 
-            <button mat-button [disabled]="proceedButton1" (click)="sendEmails()">
-                Send Emails
+                        <button mat-button [disabled]="proceedButton1" (click)="sendEmails()">
+              Send Emails
             </button>
-            <button mat-button [disabled]="proceedButton1" (click)="sendRemainder()">
-                Send Remainder
+                        <button mat-button [disabled]="proceedButton1" (click)="sendRemainder()">
+              Send Remainder
             </button>
                         <button mat-button [disabled]="proceedButton1" (click)="proceed()">
               Proceed
@@ -75,11 +78,11 @@
                         <button mat-button (click)="setDeadline()">
               Set DeadLine
             </button>
-            <button mat-button [disabled]="proceedButton2" (click)="sendEmails()">
-                Send Emails
+                        <button mat-button [disabled]="proceedButton2" (click)="sendEmails()">
+              Send Emails
             </button>
-            <button mat-button [disabled]="proceedButton2" (click)="sendRemainder()">
-                Send Remainder
+                        <button mat-button [disabled]="proceedButton2" (click)="sendRemainder()">
+              Send Remainder
             </button>
                         <button mat-button [disabled]="proceedButton2" (click)="proceed()">
               Proceed
@@ -107,11 +110,11 @@
                         <button mat-button (click)="setDeadline()">
               Set DeadLine
             </button>
-            <button mat-button [disabled]="proceedButton3" (click)="sendEmails()">
-                Send Emails
+                        <button mat-button [disabled]="proceedButton3" (click)="sendEmails()">
+              Send Emails
             </button>
-            <button mat-button [disabled]="proceedButton3" (click)="sendRemainder()">
-                Send Remainder
+                        <button mat-button [disabled]="proceedButton3" (click)="sendRemainder()">
+              Send Remainder
             </button>
                         <button mat-button [disabled]="proceedButton3" (click)="proceed()">
               Proceed
@@ -134,28 +137,49 @@
     </mat-tab>
 
     <mat-tab label="Projects">
-        <mat-sidenav-container>
-            <mat-sidenav mode="side" opened position="end" role="navigation" [disableClose]="true" [fixedInViewport]="true" [fixedTopGap]="111" [fixedBottomGap]="0">
-                <mat-toolbar class="mat-elevation-z6" color="accent">
-                    <span class="fill-remaining-space"></span>
-                    <h1 class="fill-remaining-space">Faculty</h1>
-                </mat-toolbar>
-
-                <app-admin-sidenav [details]="details" (facultyClicked)="displayFaculty($event)"></app-admin-sidenav>
-            </mat-sidenav>
-
-            <mat-sidenav-content>
-                <app-admin-content [faculty_projects]="faculty_projects">
-                </app-admin-content>
-            </mat-sidenav-content>
-        </mat-sidenav-container>
+        <div class="searchBox">
+            <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="project" />
+            <button class="searchButton" href="#">
+        <i class="material-icons">search</i>
+      </button>
+        </div>
+        <div class="display">
+            <table mat-table [dataSource]="projects | filter: project" class="mat-elevation-z8">
+                <ng-container matColumnDef="Title">
+                    <th mat-header-cell *matHeaderCellDef [style.color]="background">
+                        Title
+                    </th>
+                    <td mat-cell *matCellDef="let project">{{ project.title }}</td>
+                </ng-container>
+                <ng-container matColumnDef="Faculty">
+                    <th mat-header-cell *matHeaderCellDef>Faculty</th>
+                    <td mat-cell *matCellDef="let project">{{ project.faculty }}</td>
+                </ng-container>
+                <ng-container matColumnDef="Duration">
+                    <th mat-header-cell *matHeaderCellDef>Duration</th>
+                    <td mat-cell *matCellDef="let project">{{ project.duration }}</td>
+                </ng-container>
+                <ng-container matColumnDef="NoOfStudents">
+                    <th mat-header-cell *matHeaderCellDef>NoOfStudents</th>
+                    <td mat-cell *matCellDef="let project">
+                        {{ project.numberOfPreferences }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="Student">
+                    <th mat-header-cell *matHeaderCellDef>Alloted To</th>
+                    <td mat-cell *matCellDef="let project">
+                        {{ project.student_alloted ? project.student_alloted : "Allocation not completed" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="Description">
+                    <th mat-header-cell *matHeaderCellDef>Description</th>
+                    <td [matTooltip]="project.description" matTooltipPosition="right" mat-cell *matCellDef="let project">
+                        {{ project.description.substring(0, 15) + (project.description.substring(15) ? "..." : "") }}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                <tr mat-row *matRowDef="let row; columns: columns"></tr>
+            </table>
+        </div>
     </mat-tab>
 </mat-tab-group>
-
-
-
-
-
-
-
-

@@ -189,12 +189,12 @@ export class UserService {
   }
 
   setDeadline(date) {
-    console.log(date)
+    console.log(date);
     const str = date.toDateString();
     const obj = {
       deadline: moment(str).format("YYYY-MM-DD"),
     };
-    console.log(obj.deadline)
+    console.log(obj.deadline);
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "admin/setDeadline/" + id;
@@ -244,11 +244,17 @@ export class UserService {
     return this.http.get(this.url);
   }
 
-  // startAllocation(){
-
-
-
-  // }
+  getStreamStage() {
+    this.url = this.base_url + "student/stage/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.get(this.url, httpOptions);
+  }
 
   getAllProjects() {
     let id = localStorage.getItem("id");

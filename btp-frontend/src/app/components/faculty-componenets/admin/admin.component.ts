@@ -1,4 +1,4 @@
-import { Router } from "@angular/router";
+import { ProjectsService } from "./../../../services/projects/projects.service";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { MailService } from "./../../../services/mailing/mail.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -22,6 +22,15 @@ export class AdminComponent implements OnInit {
   public details; // For displaying the projects tab
   public faculty_projects;
 
+  columns: string[] = [
+    "Title",
+    "Description",
+    "Faculty",
+    "Duration",
+    "NoOfStudents",
+    "Student",
+  ];
+
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
@@ -33,7 +42,8 @@ export class AdminComponent implements OnInit {
   curr_deadline;
   startDate;
   minDate;
-
+  projects: any = [];
+  background = "primary";
   //Buttons
   proceedButton1 = true;
   proceedButton2 = true;
@@ -41,6 +51,7 @@ export class AdminComponent implements OnInit {
 
   projectCap;
   days_left;
+  project: any;
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
 
@@ -50,9 +61,8 @@ export class AdminComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private mailer: MailService,
-    private location: Location,
-    private loginService: LoginComponent,
-    private router: Router
+    private projectService: ProjectsService,
+    private loginService: LoginComponent
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -97,7 +107,6 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     this.userService.getAdminInfo().subscribe((data) => {
-      // console.log(data);
       this.stage_no = data["stage"];
 
       this.dateSet = data["deadlines"];
@@ -135,16 +144,23 @@ export class AdminComponent implements OnInit {
         this.minDate = this.dateSet[this.dateSet.length - 1];
       }
       this.userService.Admin_getStreamDetails().subscribe((data) => {
-        // console.log(data);
         this.details = data["project_details"];
         if (this.dateSet.length > 0) {
           this.curr_deadline = this.dateSet[this.dateSet.length - 1];
           let today = new Date();
-          this.days_left = Math.round(
-            this.daysBetween(today, this.curr_deadline)
-          );
+          this.days_left = this.daysBetween(today, this.curr_deadline);
         }
       });
+    });
+    this.projectService.getAllStreamProjects().subscribe((projects) => {
+      if (projects["message"] == "success") {
+        this.projects = projects["result"];
+      } else {
+        this.loginService.signOut();
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+          duration: 3000,
+        });
+      }
     });
   }
 
@@ -197,22 +213,37 @@ export class AdminComponent implements OnInit {
   }
 
   daysBetween(date1, date2) {
-    //Get 1 day in milliseconds
-    var one_day = 1000 * 60 * 60 * 24;
+    console.log(date2.getTime());
+    let diffInMilliSeconds = Math.abs(date2 - date1) / 1000;
 
-    // Convert both dates to milliseconds
-    var date1_ms = date1.getTime();
-    var date2_ms = date2.getTime();
+    // calculate days
+    const days = Math.floor(diffInMilliSeconds / 86400);
+    diffInMilliSeconds -= days * 86400;
 
-    // Calculate the difference in milliseconds
-    var difference_ms = date2_ms - date1_ms;
+    // calculate hours
+    const hours = Math.floor(diffInMilliSeconds / 3600) % 24;
+    diffInMilliSeconds -= hours * 3600;
 
-    if (difference_ms < 0) {
-      return 0;
+    // calculate minutes
+    const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
+    diffInMilliSeconds -= minutes * 60;
+
+    let difference = "";
+    if (days > 0) {
+      difference += days === 1 ? `${days} day, ` : `${days} days, `;
     }
 
-    // Convert back to days and return
-    return Math.abs(difference_ms) / one_day;
+    difference +=
+      hours === 0 || hours === 1 ? `${hours} hour, ` : `${hours} hours, `;
+
+    difference +=
+      minutes === 0 || hours === 1
+        ? `${minutes} minutes`
+        : `${minutes} minutes`;
+
+    difference += ", " + Math.floor(diffInMilliSeconds) + " seconds";
+
+    return difference;
   }
 
   setDeadline() {

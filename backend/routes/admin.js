@@ -69,7 +69,6 @@ router.get("/info/:id", (req, res) => {
                 .then((admin) => {
                     if (admin) {
                         var startDate;
-                        console.log(admin);
                         if (admin.deadlines.length) {
                             startDate = admin.startDate;
                         }
@@ -451,40 +450,49 @@ router.get("/removeDeadline/:id", (req, res) => {
         });
 });
 
-router.get("/projects/:id", (req, res) => {
+router.get("/project/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     oauth(idToken)
         .then((user) => {
-            Admin.findOne({ google_id: { id: id, idToken: idToken } }).then(
-                (user) => {
-                    const stream = user.stream;
-                    if (user) {
-                        Project.find({ stream: stream })
-                            .populate("faculty_id")
-                            .populate("student_alloted")
-                            .then((projects) => {
-                                var arr = [];
-                                for (const project of projects) {
-                                    const newProj = {
-                                        title: project.title,
-                                        description: project.description,
-                                        stream: project.stream,
-                                        duration: project.duration,
-                                        faculty: project.faculty_id.name,
-                                        numberOfPreferences: project.students_id.length,
-                                        student_alloted: project.student_alloted,
-                                    };
-                                    arr.push(newProj);
-                                }
+            Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
+                (faculty) => {
+                    if (faculty) {
+                        Admin.findOne({ admin_id: faculty._id }).then((admin) => {
+                            if (admin) {
+                                const stream = admin.stream;
+                                Project.find({ stream: stream })
+                                    .populate("faculty_id")
+                                    .populate("student_alloted")
+                                    .then((projects) => {
+                                        var arr = [];
+                                        for (const project of projects) {
+                                            const newProj = {
+                                                title: project.title,
+                                                description: project.description,
+                                                stream: project.stream,
+                                                duration: project.duration,
+                                                faculty: project.faculty_id.name,
+                                                numberOfPreferences: project.students_id.length,
+                                                student_alloted: project.student_alloted,
+                                            };
+                                            arr.push(newProj);
+                                        }
+                                        res.json({
+                                            message: "success",
+                                            result: arr,
+                                        });
+                                    })
+                                    .catch(() => {
+                                        res.status(500);
+                                    });
+                            } else {
                                 res.json({
-                                    message: "success",
-                                    result: arr,
+                                    message: "invalid-token",
+                                    result: null,
                                 });
-                            })
-                            .catch(() => {
-                                res.status(500);
-                            });
+                            }
+                        });
                     } else {
                         res.json({
                             message: "invalid-token",

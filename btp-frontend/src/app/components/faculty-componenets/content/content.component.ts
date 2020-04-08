@@ -12,7 +12,7 @@ import { Location } from "@angular/common";
 @Component({
   selector: "app-content",
   templateUrl: "./content.component.html",
-  styleUrls: ["./content.component.scss"]
+  styleUrls: ["./content.component.scss"],
 })
 export class ContentComponent implements OnInit, DoCheck {
   @Input() public project;
@@ -27,14 +27,14 @@ export class ContentComponent implements OnInit, DoCheck {
     title: ["", Validators.required],
     duration: ["", Validators.required],
     studentIntake: ["", Validators.required],
-    description: ["", Validators.required]
+    description: ["", Validators.required],
   });
 
   public EditForm = this.formBuilder.group({
     title: ["", Validators.required],
     duration: ["", Validators.required],
     studentIntake: ["", Validators.required],
-    description: ["", Validators.required]
+    description: ["", Validators.required],
   });
   constructor(
     private formBuilder: FormBuilder,
@@ -53,7 +53,7 @@ export class ContentComponent implements OnInit, DoCheck {
         title: this.project.title,
         duration: this.project.duration,
         studentIntake: this.project.studentIntake,
-        description: this.project.description
+        description: this.project.description,
       });
     }
   }
@@ -65,13 +65,13 @@ export class ContentComponent implements OnInit, DoCheck {
         duration: this.ProjectForm.get("duration").value,
         studentIntake: this.ProjectForm.get("studentIntake").value,
         description: this.ProjectForm.get("description").value,
-        stream: this.stream
+        stream: this.stream,
       };
 
-      this.projectService.saveProject(project).subscribe(data => {
+      this.projectService.saveProject(project).subscribe((data) => {
         if (data["save"] == "success") {
           let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
-            duration: 3000
+            duration: 3000,
           });
           snackBarRef.afterDismissed().subscribe(() => {
             this.router
@@ -88,20 +88,19 @@ export class ContentComponent implements OnInit, DoCheck {
                 this.router.navigate([decodeURI(this.location.path())]);
               });
           });
-        } 
-        else if(data["save"] == "Cap"){
-          //Go to the error page  
+        } else if (data["save"] == "Cap") {
+          //Go to the error page
           let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
-            duration: 3000
+            duration: 3000,
           });
-        }
-        else{
-
-          let snackBarRef = this.snackBar.open( 'Server Error! Please reload the page and try again!', "Ok", {
-            duration: 3000
-          });
-
-
+        } else {
+          let snackBarRef = this.snackBar.open(
+            "Server Error! Please reload the page and try again!",
+            "Ok",
+            {
+              duration: 3000,
+            }
+          );
         }
       });
     }
@@ -114,18 +113,18 @@ export class ContentComponent implements OnInit, DoCheck {
         duration: this.EditForm.get("duration").value,
         studentIntake: this.EditForm.get("studentIntake").value,
         description: this.EditForm.get("description").value,
-        project_id: param._id
+        project_id: param._id,
       };
       if (this.dialog.openDialogs.length == 0) {
         let dialogRef = this.dialog.open(SubmitPopUpComponent, {
-          height: "60%",
-          width: "800px",
-          data: project
+          height: "50%",
+          width: "700px",
+          data: project,
         });
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           if (result["message"] == "submit") {
             let snackBarRef = this.snackBar.open("Successfully Updated", "Ok", {
-              duration: 3000
+              duration: 3000,
             });
             snackBarRef.afterDismissed().subscribe(() => {
               this.router
@@ -152,20 +151,23 @@ export class ContentComponent implements OnInit, DoCheck {
       let dialogRef = this.dialog.open(DeletePopUpComponent, {
         height: "200px",
         width: "400px",
-        data: "delete the project"
+        data: {
+          message: "Are you sure you want to delete the project",
+          heading: "Confirm Deletion",
+        },
       });
-      dialogRef.afterClosed().subscribe(result => {
+      dialogRef.afterClosed().subscribe((result) => {
         if (result["message"] == "submit") {
           this.projectService
             .deleteProject(project._id)
             .toPromise()
-            .then(result => {
+            .then((result) => {
               if (result["status"] == "success") {
                 let snackBarRef = this.snackBar.open(
                   "Successfully Deleted",
                   "Ok",
                   {
-                    duration: 3000
+                    duration: 3000,
                   }
                 );
                 snackBarRef.afterDismissed().subscribe(() => {
