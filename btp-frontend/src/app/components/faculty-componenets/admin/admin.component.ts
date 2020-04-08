@@ -9,8 +9,6 @@ import { FormGroup } from "@angular/forms";
 import { UserService } from "src/app/services/user/user.service";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatStepper } from "@angular/material";
-import { Location } from "@angular/common";
-import { identifierModuleUrl } from "@angular/compiler";
 
 @Component({
   selector: "app-admin",
@@ -143,25 +141,25 @@ export class AdminComponent implements OnInit {
       } else {
         this.minDate = this.dateSet[this.dateSet.length - 1];
       }
-      this.userService.Admin_getStreamDetails().subscribe((data) => {
-        this.details = data["project_details"];
-        if (this.dateSet.length > 0) {
-          this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-          let today = new Date();
-          this.days_left = this.daysBetween(today, this.curr_deadline);
+
+      this.projectService.getAllStreamProjects().subscribe((projects) => {
+        console.log(projects)
+        if (projects["message"] == "success") {
+          this.projects = projects["result"];
+          if (this.dateSet.length > 0) {
+            this.curr_deadline = this.dateSet[this.dateSet.length - 1];
+            let today = new Date();
+            this.days_left = this.daysBetween(today, this.curr_deadline);
+          }
+        } else {
+          this.loginService.signOut();
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
         }
       });
     });
-    this.projectService.getAllStreamProjects().subscribe((projects) => {
-      if (projects["message"] == "success") {
-        this.projects = projects["result"];
-      } else {
-        this.loginService.signOut();
-        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-          duration: 3000,
-        });
-      }
-    });
+ 
   }
 
   proceed() {
