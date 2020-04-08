@@ -22,7 +22,7 @@ export class StudentProjectsComponent implements OnInit {
     this.getStudentPreferences();
   }
   projects: any;
-  preferences: any;
+  preferences: any = [];
   background: ThemePalette = "primary";
   getStudentProjects() {
     const user = this.projectService
