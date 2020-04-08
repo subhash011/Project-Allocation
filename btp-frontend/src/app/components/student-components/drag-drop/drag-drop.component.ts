@@ -27,11 +27,22 @@ export class DragDropComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.getAllStudentPreferences();
+    console.log("here");
+    this.userService
+      .getStreamStage()
+      .toPromise()
+      .then((result) => {
+        if (result["message"] == "success") {
+          this.stage = result["result"];
+          console.log(this.stage);
+        }
+      });
   }
   projects: any = [];
   preferenceArray: any = [];
   count = 0;
   preferences: any = [];
+  stage = -1;
   disable = true;
   helperArray: any = [];
   lastDropped;

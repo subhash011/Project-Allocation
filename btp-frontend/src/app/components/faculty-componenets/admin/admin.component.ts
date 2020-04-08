@@ -91,10 +91,6 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(marker = false) {
     this.userService.getAdminInfo().subscribe((data) => {
-<<<<<<< HEAD
-      // console.log(data);
-=======
->>>>>>> subhash
       this.stage_no = data["stage"];
 
       this.dateSet = data["deadlines"];
@@ -132,10 +128,6 @@ export class AdminComponent implements OnInit {
         this.minDate = this.dateSet[this.dateSet.length - 1];
       }
       this.userService.Admin_getStreamDetails().subscribe((data) => {
-<<<<<<< HEAD
-        // console.log(data);
-=======
->>>>>>> subhash
         this.details = data["project_details"];
         if (this.dateSet.length > 0) {
           this.curr_deadline = this.dateSet[this.dateSet.length - 1];
@@ -249,7 +241,6 @@ export class AdminComponent implements OnInit {
       var date = this.thirdFormGroup.get("thirdCtrl").value;
     }
 
-
     if (date != null && date != "") {
       const dialogRef = this.dialog.open(DeletePopUpComponent, {
         width: "400px",
@@ -261,7 +252,6 @@ export class AdminComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result["message"] == "submit") {
-
           this.userService.setDeadline(date).subscribe((data) => {
             if (data["status"] == "success") {
               let snackBarRef = this.snackBar.open(
@@ -334,7 +324,6 @@ export class AdminComponent implements OnInit {
                   data1["stream"]
                 )
                 .subscribe((data) => {
-
                   if (data["message"] == "success") {
                     let snackBarRef = this.snackBar.open(
                       "Mails have been sent",
