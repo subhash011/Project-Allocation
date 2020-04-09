@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: "root",
 })
 export class LocalAuthService {
-  private root = "http://localhost:8080/";
-  // private root = "https://btech-project-allocation.herokuapp.com/";
+  private root = environment.apiUrl;
   private user_url = this.root + "auth/user_check";
 
   constructor(private http: HttpClient) {}

@@ -1,6 +1,7 @@
 import { Router } from "@angular/router";
 import { Injectable } from "@angular/core";
 import { HttpHeaders, HttpClient } from "@angular/common/http";
+import { environment } from "../../../../src/environments/environment";
 @Injectable({
   providedIn: "root",
 })
@@ -8,8 +9,8 @@ export class ProjectsService {
   private url: string;
   private url_pref: string;
   private url_post: string;
-  // private root = "https://btech-project-allocation.herokuapp.com/"
-  private root = "http://localhost:8080/";
+  private root = environment.apiUrl;
+
   private studentBaseURL = this.root + "student/project/";
   private facultyBaseURL = this.root + "faculty/project/";
   private adminBaseURL = this.root + "admin/project/";

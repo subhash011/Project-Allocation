@@ -1,10 +1,10 @@
+import { environment } from "./../../../environments/environment";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../components/shared/login/login.component";
 import { Router } from "@angular/router";
 import { SocialUser } from "angularx-social-login";
 import { Injectable } from "@angular/core";
 import { HttpHeaders, HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
 import * as moment from "moment";
 
 @Injectable({
@@ -12,8 +12,7 @@ import * as moment from "moment";
 })
 export class UserService {
   private url: string;
-  // private root = "https://btech-project-allocation.herokuapp.com/"
-  private root = "http://localhost:8080/";
+  private root = environment.apiUrl;
   private base_url = this.root;
   constructor(
     private http: HttpClient,
