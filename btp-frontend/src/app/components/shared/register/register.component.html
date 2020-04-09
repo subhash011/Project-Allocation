@@ -81,6 +81,9 @@
             <mat-error *ngIf="userForm.controls['CGPA'].hasError('required')">
               CGPA is <strong>required</strong>
             </mat-error>
+            <mat-error *ngIf="userForm.controls['CGPA'].errors?.max">
+              CGPA must be less than or equal to <strong>10</strong>
+            </mat-error>
           </mat-form-field>
         </div>
       </mat-card-content>

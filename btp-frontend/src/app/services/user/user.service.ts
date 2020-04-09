@@ -13,7 +13,7 @@ import * as moment from "moment";
 export class UserService {
   private url: string;
   // private root = "https://btech-project-allocation.herokuapp.com/"
-  private root = "http://localhost:4200/";
+  private root = "http://localhost:8080/";
   private base_url = this.root;
   constructor(
     private http: HttpClient,

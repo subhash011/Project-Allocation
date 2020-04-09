@@ -9,7 +9,7 @@ export class ProjectsService {
   private url_pref: string;
   private url_post: string;
   // private root = "https://btech-project-allocation.herokuapp.com/"
-  private root = "http://localhost:4200/";
+  private root = "http://localhost:8080/";
   private studentBaseURL = this.root + "student/project/";
   private facultyBaseURL = this.root + "faculty/project/";
   private adminBaseURL = this.root + "admin/project/";

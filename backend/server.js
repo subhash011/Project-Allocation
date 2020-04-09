@@ -28,8 +28,8 @@ app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
 var mongoConnect = "mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/test";
-
-//connect to mongodb
+mongoConnect = "mongodb://localhost:27017/ProjectAllocationTest"
+    //connect to mongodb
 mongoose
     .connect(mongoConnect, {
         useNewUrlParser: true,
