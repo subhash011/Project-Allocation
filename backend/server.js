@@ -27,6 +27,9 @@ app.use(cors());
 app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
+//uncomment during production
+// app.use(express.static(__dirname + "/btp-frontend"));
+
 var mongoConnect = "mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/test";
 mongoConnect = "mongodb://localhost:27017/ProjectAllocationTest"
     //connect to mongodb
@@ -77,10 +80,7 @@ const PORT = process.env.PORT || 8080;
 
 //Error Response for routes not registered
 app.get("*", (req, res) => {
-    res.status(404).json({
-        status: "fail",
-        error: "Authentication failed - server error",
-    });
+    res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
 });
 
 //start server
