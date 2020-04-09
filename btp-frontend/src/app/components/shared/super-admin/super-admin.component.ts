@@ -144,7 +144,7 @@ export class SuperAdminComponent implements OnInit {
       });
   }
 
-  addMap(short) {
+  addMap() {
     let dialogRef = this.dialog.open(AddMapComponent, {
       width: "40%",
       data: {
