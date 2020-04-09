@@ -1,3 +1,4 @@
+import { AddMapComponent } from "./../add-map/add-map.component";
 import { LoginComponent } from "./../login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "./../../faculty-componenets/delete-pop-up/delete-pop-up.component";
@@ -49,10 +50,12 @@ export class SuperAdminComponent implements OnInit {
     "NoOfStudents",
     "Duration",
   ];
+  displayedColumnsMaps: string[] = ["Branch", "Short", "Map", "Actions"];
   faculties: any = {};
   students: any = {};
   faculty;
   project;
+  map;
   student;
   maps: any = [];
   branches: any = [];
@@ -140,6 +143,70 @@ export class SuperAdminComponent implements OnInit {
           });
       });
   }
+
+  addMap(short) {
+    let dialogRef = this.dialog.open(AddMapComponent, {
+      width: "40%",
+      data: {
+        heading: "Confirm",
+        message: "Are you sure you want to proceed to add branch",
+      },
+    });
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data && data["message"] == "submit") {
+        this.userService
+          .setMap(data["map"])
+          .toPromise()
+          .then((data) => {
+            if (data["message"] == "success") {
+              this.ngOnInit();
+              const snackBarRef = this.snackBar.open(
+                "Added Branch Suucessfully",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          });
+      }
+    });
+  }
+
+  deleteMap(short) {
+    let dialogRef = this.dialog.open(DeletePopUpComponent, {
+      height: "200px",
+      data: {
+        heading: "Confirm Deletion",
+        message: "Are you sure you want to remove the branch",
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result["message"] == "submit") {
+        this.userService
+          .removeMap(short)
+          .toPromise()
+          .then((result) => {
+            if (result["message"] == "invalid-token") {
+              this.login.signOut();
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In Again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            } else {
+              this.ngOnInit();
+              this.snackBar.open("Removed Branch", "Ok", {
+                duration: 3000,
+              });
+            }
+          });
+      }
+    });
+  }
+
   deleteFaculty(faculty) {
     let dialogRef = this.dialog.open(DeletePopUpComponent, {
       height: "200px",

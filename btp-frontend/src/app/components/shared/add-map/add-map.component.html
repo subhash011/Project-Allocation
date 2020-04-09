@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Add Branches</h2>
+
+<mat-dialog-content [formGroup]="addForm" novalidate>
+    <div class="row">
+        <mat-form-field class="full-width">
+            <input matInput placeholder="Branch name" formControlName="full" />
+            <mat-error *ngIf="addForm.controls['full'].hasError('required')">
+                Branch name is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="row">
+        <mat-form-field class="full-width">
+            <input matInput placeholder="Branch Abbrevation" formControlName="short" />
+            <mat-error *ngIf="addForm.controls['short'].hasError('required')">
+                Branch Abbrevation is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="row">
+        <mat-form-field class="full-width">
+            <input matInput placeholder="Map" formControlName="map" />
+            <mat-error *ngIf="addForm.controls['map'].hasError('required')">
+                Map is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-raised-button class="submit_button" color="primary" (click)="onSubmit()" [disabled]="!addForm.valid">
+    Submit
+  </button>
+    <button mat-raised-button class="close_button" (click)="onNoClick()" color="warn" type="submit">
+    Close
+  </button>
+</mat-dialog-actions>

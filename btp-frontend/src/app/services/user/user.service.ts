@@ -12,7 +12,8 @@ import * as moment from "moment";
 })
 export class UserService {
   private url: string;
-  private base_url = "https://btech-project-allocation.herokuapp.com/";
+  // private base_url = "https://btech-project-allocation.herokuapp.com/";
+  private base_url = "http://localhost:8080/";
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -290,5 +291,29 @@ export class UserService {
 
   getAllMaps() {
     return this.http.get(this.base_url + "maps");
+  }
+
+  setMap(map) {
+    this.url = this.base_url + "maps/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.post(this.url, map, httpOptions);
+  }
+  removeMap(map) {
+    this.url = this.base_url + "maps/remove/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+        body: map,
+      }),
+    };
+    return this.http.delete(this.url, httpOptions);
   }
 }

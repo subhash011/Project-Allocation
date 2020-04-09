@@ -37,16 +37,18 @@ import { TimelineComponent } from "./components/shared/timeline/timeline.compone
 import { CountdownTimerModule } from "ngx-countdown-timer";
 import { LoadingBarHttpClientModule } from "@ngx-loading-bar/http-client";
 import { LoadingBarRouterModule } from "@ngx-loading-bar/router";
+import { AddMapComponent } from "./components/shared/add-map/add-map.component";
 const googleLoginOption: LoginOpt = {
   scope: "https://mail.google.com/",
   prompt: "select_account",
 };
-
+//1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com
+//67608858792-4o49hhteocaank0g925hrrhbo62b8k4n.apps.googleusercontent.com
 const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,
     provider: new GoogleLoginProvider(
-      "67608858792-4o49hhteocaank0g925hrrhbo62b8k4n.apps.googleusercontent.com",
+      "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com",
       googleLoginOption
     ),
   },
@@ -79,11 +81,13 @@ export function provideConfig() {
     AdminSidenavComponent,
     AdminContentComponent,
     TimelineComponent,
+    AddMapComponent,
   ],
   entryComponents: [
     ShowPreferencesComponent,
     SubmitPopUpComponent,
     DeletePopUpComponent,
+    AddMapComponent,
   ],
   imports: [
     BrowserModule,
