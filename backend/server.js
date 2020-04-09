@@ -27,9 +27,11 @@ app.use(cors());
 app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
+var mongoConnect = "mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/test";
+
 //connect to mongodb
 mongoose
-    .connect("mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/test", {
+    .connect(mongoConnect, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
