@@ -221,7 +221,6 @@ export class SuperAdminComponent implements OnInit {
           .removeFaculty(faculty)
           .toPromise()
           .then((result) => {
-            console.log();
             if (result["message"] == "success") {
               this.snackBar.open("Successfully Deleted Faculty", "OK", {
                 duration: 3000,
@@ -230,10 +229,19 @@ export class SuperAdminComponent implements OnInit {
               this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
                 duration: 3000,
               });
+            } else {
+              this.login.signOut();
+              this.snackBar.open(
+                "Session Expired! Please Sign-In Again.",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
             }
             this.ngOnInit();
           })
-          .catch((err) => {
+          .catch(() => {
             this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
               duration: 3000,
             });
@@ -245,8 +253,7 @@ export class SuperAdminComponent implements OnInit {
     this.userService
       .addAdmin(faculty)
       .toPromise()
-      .then((result) => {
-        console.log(result);
+      .then(() => {
         this.ngOnInit();
       });
   }
@@ -254,7 +261,7 @@ export class SuperAdminComponent implements OnInit {
     this.userService
       .removeAdmin(faculty)
       .toPromise()
-      .then((result) => {
+      .then(() => {
         this.ngOnInit();
       });
   }

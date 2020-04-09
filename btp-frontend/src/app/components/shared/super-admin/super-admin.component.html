@@ -217,7 +217,12 @@
     <div class="display">
       <div class="table mat-elevation-z8">
         <div class="add-icon">
-          <mat-icon (click)="addMap()">add</mat-icon>
+          <mat-icon
+            matTooltip="Click to add branch"
+            matTooltipPosition="above"
+            (click)="addMap()"
+            >add</mat-icon
+          >
         </div>
         <table
           mat-table
@@ -243,7 +248,12 @@
           <ng-container matColumnDef="Actions">
             <th mat-header-cell *matHeaderCellDef>Delete Branch</th>
             <td mat-cell *matCellDef="let map">
-              <mat-icon (click)="deleteMap(map.short)">delete_outline</mat-icon>
+              <mat-icon
+                matTooltip="Delete Branch"
+                matTooltipPosition="right"
+                (click)="deleteMap(map.short)"
+                >delete_outline</mat-icon
+              >
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedColumnsMaps"></tr>
