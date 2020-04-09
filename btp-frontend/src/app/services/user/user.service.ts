@@ -12,8 +12,9 @@ import * as moment from "moment";
 })
 export class UserService {
   private url: string;
-  // private base_url = "https://btech-project-allocation.herokuapp.com/";
-  private base_url = "http://localhost:8080/";
+  // private root = "https://btech-project-allocation.herokuapp.com/"
+  private root = "http://localhost:4200/";
+  private base_url = this.root;
   constructor(
     private http: HttpClient,
     private router: Router,

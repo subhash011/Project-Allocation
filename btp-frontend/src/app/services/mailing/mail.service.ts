@@ -6,9 +6,9 @@ import { Injectable } from "@angular/core";
 })
 export class MailService {
   constructor(private http: HttpClient) {}
-
-  // base_url = "https://btech-project-allocation.herokuapp.com/email/";
-  base_url = "http://localhost:8080/email/";
+  private root = "http://localhost:8080/";
+  // private root = "https://btech-project-allocation.herokuapp.com/";
+  base_url = this.root + "email/";
 
   testMethod() {
     const user = JSON.parse(localStorage.getItem("user"));

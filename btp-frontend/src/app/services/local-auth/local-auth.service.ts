@@ -5,9 +5,9 @@ import { HttpClient } from "@angular/common/http";
   providedIn: "root",
 })
 export class LocalAuthService {
-  // private user_url =
-  //   "https://btech-project-allocation.herokuapp.com/auth/user_check";
-  private user_url = "http://localhost:8080/auth/user_check";
+  private root = "http://localhost:8080/";
+  // private root = "https://btech-project-allocation.herokuapp.com/";
+  private user_url = this.root + "auth/user_check";
 
   constructor(private http: HttpClient) {}
 
