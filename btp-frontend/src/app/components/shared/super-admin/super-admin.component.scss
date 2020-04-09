@@ -51,13 +51,19 @@ mat-icon:hover {
 .display {
     padding-top: 5%;
     padding-bottom: 2%;
-    padding-left: 10%;
     padding-right: 1%;
     z-index: 2;
 }
 
-table {
+.table {
+    max-height: 700px;
+    overflow: auto;
     width: 80%;
+    margin-left: 10%;
+}
+
+table {
+    width: 100%;
 }
 
 th,
