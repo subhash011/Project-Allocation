@@ -185,7 +185,7 @@
         </div>
     </mat-tab>
     <mat-tab label="Manage">
-        <mat-tab-group *ngIf="index == 2" [selectedIndex]="0">
+        <mat-tab-group animationDuration="0" *ngIf="index == 2" [selectedIndex]="0">
             <mat-tab label="Students">
                 <div class="searchBox">
                     <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="student" />
