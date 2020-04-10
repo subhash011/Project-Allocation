@@ -34,7 +34,7 @@ export class UserService {
 
   removeFaculty(id) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = this.base_url + "super/faculty/" + user.id; // + "/" + id;
+    this.url = this.base_url + "super/faculty/" + user.id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export class UserService {
   }
   removeStudent(id) {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.url = this.base_url + "super/student/" + user.id; // + "/" + id;
+    this.url = this.base_url + "super/student/" + user.id;
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -176,12 +176,10 @@ export class UserService {
   }
 
   setDeadline(date) {
-    console.log(date);
     const str = date.toDateString();
     const obj = {
       deadline: moment(str).format("YYYY-MM-DD"),
     };
-    console.log(obj.deadline);
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "admin/setDeadline/" + id;

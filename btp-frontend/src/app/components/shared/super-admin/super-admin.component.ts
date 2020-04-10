@@ -161,7 +161,7 @@ export class SuperAdminComponent implements OnInit {
             if (data["message"] == "success") {
               this.ngOnInit();
               const snackBarRef = this.snackBar.open(
-                "Added Branch Suucessfully",
+                "Added Branch Successfully",
                 "Ok",
                 {
                   duration: 3000,
