@@ -74,7 +74,7 @@ app.use("/email", mail);
 
 const PORT = process.env.PORT || 8080;
 
-//Error Response for routes not registered
+
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
 });
