@@ -155,6 +155,9 @@ export class TimelineComponent implements OnInit {
                 if (result["result"] && result["result"][stream]) {
                   this.admins = result["result"][stream];
                   if (this.admins.startDate) {
+                    this.curDeadline = new Date(
+                      this.admins.deadlines[this.admins.deadlines.length - 1]
+                    );
                     this.startDate = new Date(this.admins.startDate);
                     this.startCompleted = true;
                     this.stage = this.admins.stage;

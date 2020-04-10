@@ -1,4 +1,4 @@
-<div class="timer">
+<div class="timer" *ngIf="admins && admins.startDate">
     <span class="days_left"><strong>Time Left for this stage to end : </strong>
     <countdown-timer [end]="curDeadline"></countdown-timer>
   </span>
@@ -30,5 +30,7 @@
     </a>
 </div>
 <ng-template #elseBlock>
-    <h2>You stream does not have an admin yet so there is no timeline to display</h2>
+    <h2>
+        You stream does not have an admin yet so there is no timeline to display
+    </h2>
 </ng-template>
