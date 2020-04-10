@@ -269,7 +269,7 @@ router.get("/all/info", (req, res) => {
     };
     var promises = [];
     Admin.find().then((admins) => {
-        if (admins.length == branches.length) {
+        if (admins) {
             for (const branch of branches) {
                 promises.push(
                     Admin.findOne({ stream: branch })
@@ -285,11 +285,6 @@ router.get("/all/info", (req, res) => {
                     message: "success",
                     result: result,
                 });
-            });
-        } else {
-            res.json({
-                message: "error",
-                result: "atleastOneAdminNeeded",
             });
         }
     });
