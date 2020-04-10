@@ -1,6 +1,6 @@
-<mat-tab-group [(selectedIndex)]="index" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
+<mat-tab-group [(selectedIndex)]="index" animationDuration="0" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
     <mat-tab label="Faculty">
-        <mat-tab-group *ngIf="index == 0" [selectedIndex]="0">
+        <mat-tab-group *ngIf="index == 0" animationDuration="0" [selectedIndex]="0">
             <mat-tab *ngFor="let branch of branches" [label]="branch.name">
                 <div class="searchBox">
                     <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="faculty" />
@@ -82,7 +82,7 @@
     </mat-tab-group>
   </mat-tab>
   <mat-tab label="Student">
-    <mat-tab-group *ngIf="index == 1" [selectedIndex]="0">
+    <mat-tab-group *ngIf="index == 1" animationDuration="0" [selectedIndex]="0">
       <mat-tab *ngFor="let branch of branches" [label]="branch.name">
         <div class="searchBox">
           <input
@@ -153,7 +153,7 @@
     </mat-tab-group>
   </mat-tab>
   <mat-tab label="Projects">
-    <mat-tab-group *ngIf="index == 2" [selectedIndex]="0">
+    <mat-tab-group *ngIf="index == 2" animationDuration="0" [selectedIndex]="0">
       <mat-tab *ngFor="let branch of branches" [label]="branch.name">
         <div class="searchBox">
           <input
