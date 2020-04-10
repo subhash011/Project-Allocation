@@ -1,4 +1,9 @@
-<div class="group">
+<div class="timer">
+    <span class="days_left"><strong>Time Left for this stage to end : </strong>
+    <countdown-timer [end]="curDeadline"></countdown-timer>
+  </span>
+</div>
+<div class="group" *ngIf="admins; else elseBlock">
     <a matTooltip="Faculties Start Project Allocation" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon start icon">
         <mat-icon *ngIf="!startCompleted">check_circle_outline</mat-icon>
         <mat-icon *ngIf="startCompleted">check_circle</mat-icon>
@@ -24,3 +29,6 @@
         <mat-icon *ngIf="!stageFourCompleted">check_circle_outline</mat-icon>
     </a>
 </div>
+<ng-template #elseBlock>
+    <h2>You stream does not have an admin yet so there is no timeline to display</h2>
+</ng-template>
