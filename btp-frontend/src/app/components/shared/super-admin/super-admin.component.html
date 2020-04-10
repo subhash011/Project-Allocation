@@ -1,6 +1,6 @@
 <mat-tab-group [(selectedIndex)]="index" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
     <mat-tab label="Faculty">
-        <mat-tab-group>
+        <mat-tab-group *ngIf="index == 0" [selectedIndex]="0">
             <mat-tab *ngFor="let branch of branches" [label]="branch.name">
                 <div class="searchBox">
                     <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="faculty" />
