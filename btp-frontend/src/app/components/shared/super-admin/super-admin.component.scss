@@ -44,15 +44,30 @@
     width: 0px;
 }
 
+mat-icon:hover {
+    cursor: pointer;
+}
+
+.add-icon {
+    float: right;
+}
+
 .display {
     padding-top: 5%;
-    padding-left: 10%;
+    padding-bottom: 2%;
     padding-right: 1%;
     z-index: 2;
 }
 
-table {
+.table {
+    max-height: 600px;
+    overflow: auto;
     width: 80%;
+    margin-left: 10%;
+}
+
+table {
+    width: 100%;
 }
 
 th,

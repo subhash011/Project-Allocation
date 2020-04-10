@@ -1,15 +1,14 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: "root",
 })
 export class MailService {
   constructor(private http: HttpClient) {}
-
-  // base_url = "http://localhost:8080/email/";
-  base_url = "https://btech-project-allocation.herokuapp.com/email/";
-
+  private root = environment.apiUrl;
+  base_url = this.root + "email/";
 
   testMethod() {
     const user = JSON.parse(localStorage.getItem("user"));

@@ -1,10 +1,10 @@
+import { environment } from "./../../../environments/environment";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../components/shared/login/login.component";
 import { Router } from "@angular/router";
 import { SocialUser } from "angularx-social-login";
 import { Injectable } from "@angular/core";
 import { HttpHeaders, HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
 import * as moment from "moment";
 
 @Injectable({
@@ -12,7 +12,8 @@ import * as moment from "moment";
 })
 export class UserService {
   private url: string;
-  private base_url = "https://btech-project-allocation.herokuapp.com/";
+  private root = environment.apiUrl;
+  private base_url = this.root;
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -143,7 +144,7 @@ export class UserService {
   getAdminInfo() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = "http://localhost:8080/admin/info/" + id;
+    this.url = this.base_url + "admin/info/" + id;
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -198,7 +199,7 @@ export class UserService {
   getFacultyStreamEmails() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = "http://localhost:8080/admin/stream_email/faculty/" + id;
+    this.url = this.base_url + "admin/stream_email/faculty/" + id;
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -213,7 +214,7 @@ export class UserService {
   getStudentStreamEmails() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-    this.url = "http://localhost:8080/admin/stream_email/student/" + id;
+    this.url = this.base_url + "admin/stream_email/student/" + id;
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -276,5 +277,29 @@ export class UserService {
 
   getAllMaps() {
     return this.http.get(this.base_url + "maps");
+  }
+
+  setMap(map) {
+    this.url = this.base_url + "maps/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.post(this.url, map, httpOptions);
+  }
+  removeMap(map) {
+    this.url = this.base_url + "maps/remove/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+        body: map,
+      }),
+    };
+    return this.http.delete(this.url, httpOptions);
   }
 }

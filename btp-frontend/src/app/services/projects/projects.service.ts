@@ -1,6 +1,7 @@
 import { Router } from "@angular/router";
 import { Injectable } from "@angular/core";
 import { HttpHeaders, HttpClient } from "@angular/common/http";
+import { environment } from "../../../../src/environments/environment";
 @Injectable({
   providedIn: "root",
 })
@@ -8,9 +9,11 @@ export class ProjectsService {
   private url: string;
   private url_pref: string;
   private url_post: string;
-  private studentBaseURL = "https://btech-project-allocation.herokuapp.com/student/project/";
-  private facultyBaseURL = "https://btech-project-allocation.herokuapp.com/faculty/project/";
-  private adminBaseURL = "https://btech-project-allocation.herokuapp.com/admin/project/";
+  private root = environment.apiUrl;
+
+  private studentBaseURL = this.root + "student/project/";
+  private facultyBaseURL = this.root + "faculty/project/";
+  private adminBaseURL = this.root + "admin/project/";
   constructor(private http: HttpClient, private router: Router) {}
   getAllStudentProjects() {
     const id = localStorage.getItem("id");
