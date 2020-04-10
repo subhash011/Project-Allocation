@@ -1,15 +1,15 @@
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(
-    "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com",
-    "SMhGzWI6YS741l0Urs-a3yAH"
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET
 );
 
 module.exports = async(token) => {
     const ticket = await client.verifyIdToken({
         idToken: token,
         audience: [
-            "101490425049-2t5koea5vs4lf1qu48nfnkn3rjsd304m.apps.googleusercontent.com", // Specify the CLIENT_ID of the app that accesses the backend
-            "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com",
+            // Specify the CLIENT_ID of the app that accesses the backend
+            process.env.GOOGLE_CLIENT_ID,
         ],
         // Or, if multiple clients access the backend:
         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
