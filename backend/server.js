@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
+require("dotenv/config");
 
 // start the server
 const session = require("express-session");
@@ -30,9 +31,8 @@ mongoose.set("useFindAndModify", false);
 //uncomment during production
 // app.use(express.static(__dirname + "/btp-frontend"));
 
-var mongoConnect = "mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/test";
-mongoConnect = "mongodb://localhost:27017/ProjectAllocationTest"
-    //connect to mongodb
+var mongoConnect = process.env.MONGO_URL;
+//connect to mongodb
 mongoose
     .connect(mongoConnect, {
         useNewUrlParser: true,
