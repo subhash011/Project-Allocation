@@ -105,15 +105,26 @@ mat-toolbar {
     width: 0px;
 }
 
-table {
-    width: 80%;
+mat-icon:hover {
+    cursor: pointer;
 }
 
 .display {
     padding-top: 5%;
-    padding-left: 10%;
+    padding-bottom: 2%;
     padding-right: 1%;
     z-index: 2;
+}
+
+.table {
+    max-height: 600px;
+    overflow: auto;
+    width: 80%;
+    margin-left: 10%;
+}
+
+table {
+    width: 100%;
 }
 
 th,

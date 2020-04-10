@@ -300,4 +300,41 @@ export class UserService {
     };
     return this.http.delete(this.url, httpOptions);
   }
+
+  getMembersForAdmin() {
+    this.url = this.base_url + "admin/members/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.get(this.url, httpOptions);
+  }
+
+  removeFacultyAdmin(id) {
+    this.url = this.base_url + "admin/faculty/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+        body: id,
+      }),
+    };
+    return this.http.delete(this.url, httpOptions);
+  }
+  removeStudentAdmin(id) {
+    this.url = this.base_url + "admin/student/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+        body: id,
+      }),
+    };
+    return this.http.delete(this.url, httpOptions);
+  }
 }

@@ -428,7 +428,6 @@ router.get("/projects/:id", (req, res) => {
                                 for (const project of projects) {
                                     const newProj = {
                                         title: project.title,
-                                        description: project.description,
                                         stream: project.stream,
                                         duration: project.duration,
                                         faculty: project.faculty_id.name,
