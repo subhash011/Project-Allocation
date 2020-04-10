@@ -47,8 +47,8 @@ export class RegisterComponent implements OnInit {
           const stream = this.getStream();
           this.branchStudent = stream;
           this.userForm.controls["branch"].setValue(this.branchStudent);
-        } else {
-          this.userForm.get("CGPA").clearValidators();
+        } else if(localStorage.getItem("role")=="faculty"){
+            this.userForm.get("CGPA").clearValidators();
         }
       });
   }

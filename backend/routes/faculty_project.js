@@ -9,7 +9,6 @@ oauth = require("../config/oauth");
 router.get("/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    console.log('hitting')
 
     Faculty.find({ google_id: { id: id, idToken: idToken } })
         .then(user => {

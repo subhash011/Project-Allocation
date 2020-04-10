@@ -29,7 +29,7 @@ mongoose.set("useFindAndModify", false);
 
 //connect to mongodb
 mongoose
-    .connect("mongodb://localhost:27017/ProjectAllocationTest", {
+    .connect("mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/test", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
