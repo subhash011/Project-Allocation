@@ -1,4 +1,4 @@
-<mat-tab-group [backgroundColor]="'primary'" animationDuration="0" dynamicHeight="true" mat-align-tabs="center">
+<mat-tab-group [(selectedIndex)]="index" [backgroundColor]="'primary'" animationDuration="0" dynamicHeight="true" mat-align-tabs="center">
     <mat-tab label="Admin">
         <div class="header">
             <h1 *ngIf="stage_no == 0">Creating Projects</h1>
@@ -144,42 +144,127 @@
       </button>
         </div>
         <div class="display">
-            <table mat-table [dataSource]="projects | filter: project" class="mat-elevation-z8">
-                <ng-container matColumnDef="Title">
-                    <th mat-header-cell *matHeaderCellDef [style.color]="background">
-                        Title
-                    </th>
-                    <td mat-cell *matCellDef="let project">{{ project.title }}</td>
-                </ng-container>
-                <ng-container matColumnDef="Faculty">
-                    <th mat-header-cell *matHeaderCellDef>Faculty</th>
-                    <td mat-cell *matCellDef="let project">{{ project.faculty }}</td>
-                </ng-container>
-                <ng-container matColumnDef="Duration">
-                    <th mat-header-cell *matHeaderCellDef>Duration</th>
-                    <td mat-cell *matCellDef="let project">{{ project.duration }}</td>
-                </ng-container>
-                <ng-container matColumnDef="NoOfStudents">
-                    <th mat-header-cell *matHeaderCellDef>NoOfStudents</th>
-                    <td mat-cell *matCellDef="let project">
-                        {{ project.numberOfPreferences }}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="Student">
-                    <th mat-header-cell *matHeaderCellDef>Alloted To</th>
-                    <td mat-cell *matCellDef="let project">
-                        {{ project.student_alloted ? project.student_alloted : "Allocation not completed" }}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="Description">
-                    <th mat-header-cell *matHeaderCellDef>Description</th>
-                    <td [matTooltip]="project.description" matTooltipPosition="right" mat-cell *matCellDef="let project">
-                        {{ project.description.substring(0, 15) + (project.description.substring(15) ? "..." : "") }}
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="columns"></tr>
-                <tr mat-row *matRowDef="let row; columns: columns"></tr>
-            </table>
+            <div class="table mat-elevation-z8">
+                <table mat-table [dataSource]="projects | filter: project" class="mat-elevation-z8">
+                    <ng-container matColumnDef="Title">
+                        <th mat-header-cell *matHeaderCellDef [style.color]="background">
+                            Title
+                        </th>
+                        <td mat-cell *matCellDef="let project">{{ project.title }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="Faculty">
+                        <th mat-header-cell *matHeaderCellDef>Faculty</th>
+                        <td mat-cell *matCellDef="let project">{{ project.faculty }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="Duration">
+                        <th mat-header-cell *matHeaderCellDef>Duration</th>
+                        <td mat-cell *matCellDef="let project">{{ project.duration }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="NoOfStudents">
+                        <th mat-header-cell *matHeaderCellDef>NoOfStudents</th>
+                        <td mat-cell *matCellDef="let project">
+                            {{ project.numberOfPreferences }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Student">
+                        <th mat-header-cell *matHeaderCellDef>Alloted To</th>
+                        <td mat-cell *matCellDef="let project">
+                            {{ project.student_alloted ? project.student_alloted : "Allocation not completed" }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Description">
+                        <th mat-header-cell *matHeaderCellDef>Description</th>
+                        <td [matTooltip]="project.description" matTooltipPosition="right" mat-cell *matCellDef="let project">
+                            {{ project.description.substring(0, 15) + (project.description.substring(15) ? "..." : "") }}
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columns"></tr>
+                </table>
+            </div>
         </div>
+    </mat-tab>
+    <mat-tab label="Manage">
+        <mat-tab-group *ngIf="index == 2" [selectedIndex]="0">
+            <mat-tab label="Students">
+                <div class="searchBox">
+                    <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="student" />
+                    <button class="searchButton" href="#">
+            <i class="material-icons">search</i>
+          </button>
+                </div>
+                <div class="display">
+                    <div class="table mat-elevation-z8">
+                        <table mat-table [dataSource]="students | filter: student" class="mat-elevation-z8">
+                            <ng-container matColumnDef="Name">
+                                <th mat-header-cell *matHeaderCellDef [style.color]="background">
+                                    Name
+                                </th>
+                                <td mat-cell *matCellDef="let student">{{ student.name }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="Email">
+                                <th mat-header-cell *matHeaderCellDef>Email-ID</th>
+                                <td mat-cell *matCellDef="let student">
+                                    {{ student.email }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="GPA">
+                                <th mat-header-cell *matHeaderCellDef>CGPA</th>
+                                <td mat-cell *matCellDef="let student">
+                                    {{ student.gpa }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Actions">
+                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                <td mat-cell *matCellDef="let student">
+                                    <mat-icon matTooltip="Remove Student" matTooltipPosition="right" (click)="removeStudent(student._id)">
+                                        delete_outline</mat-icon>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="studentCols"></tr>
+                            <tr mat-row *matRowDef="let row; columns: studentCols"></tr>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Faculties">
+                <div class="searchBox">
+                    <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="project" />
+                    <button class="searchButton" href="#">
+            <i class="material-icons">search</i>
+          </button>
+                </div>
+                <div class="display">
+                    <div class="table mat-elevation-z8">
+                        <table mat-table [dataSource]="faculties | filter: faculty" class="mat-elevation-z8">
+                            <ng-container matColumnDef="Name">
+                                <th mat-header-cell *matHeaderCellDef [style.color]="background">
+                                    Name
+                                </th>
+                                <td mat-cell *matCellDef="let faculty">{{ faculty.name }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="Email">
+                                <th mat-header-cell *matHeaderCellDef>Email-ID</th>
+                                <td mat-cell *matCellDef="let faculty">{{ faculty.email }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="NoOfProjects">
+                                <th mat-header-cell *matHeaderCellDef>Number OF Projects</th>
+                                <td mat-cell *matCellDef="let faculty">
+                                    {{ faculty.noOfProjects }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Actions">
+                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                <td mat-cell *matCellDef="let faculty">
+                                    <mat-icon matTooltip="Remove Faculty" matTooltipPosition="right" (click)="removeFaculty(faculty._id)">delete_outline</mat-icon>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="facultyCols"></tr>
+                            <tr mat-row *matRowDef="let row; columns: facultyCols"></tr>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
     </mat-tab>
 </mat-tab-group>

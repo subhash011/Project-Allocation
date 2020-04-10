@@ -4,7 +4,7 @@ import { Component, OnInit } from "@angular/core";
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
-  styleUrls: ["./navbar.component.scss"]
+  styleUrls: ["./navbar.component.scss"],
 })
 export class NavbarComponent implements OnInit {
   constructor(private router: Router, private userService: UserService) {}
@@ -83,18 +83,14 @@ export class NavbarComponent implements OnInit {
   getAdmin() {
     return "admin/" + localStorage.getItem("id");
   }
-  goToHome(){
-
+  goToHome() {
     let id = localStorage.getItem("id");
     this.router
       .navigateByUrl("/refresh", {
-        skipLocationChange: true
+        skipLocationChange: true,
       })
       .then(() => {
-        this.router.navigate([
-          decodeURI('/faculty/'+id)
-        ]);
+        this.router.navigate([decodeURI("/faculty/" + id)]);
       });
-
   }
 }

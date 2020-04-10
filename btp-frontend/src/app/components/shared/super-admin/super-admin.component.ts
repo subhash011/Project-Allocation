@@ -28,7 +28,8 @@ export class SuperAdminComponent implements OnInit {
   ) {}
   index = 0;
   background = "primary";
-  projects: any = [];
+  projects: any = {};
+  csproj: any = [];
   displayedColumnsFaculty: string[] = [
     "Name",
     "Stream",
@@ -76,13 +77,18 @@ export class SuperAdminComponent implements OnInit {
         });
         return this.branches;
       })
-      .then(() => {
+      .then((branches) => {
         this.userService
           .getAllProjects()
           .toPromise()
           .then((projects) => {
             if (projects["message"] == "success") {
-              this.projects = projects["result"];
+              const project = projects["result"];
+              for (const branch of branches) {
+                this.projects[branch.short] = project.filter((val) => {
+                  return val.stream == branch.short;
+                });
+              }
             } else {
               this.snackBar.open("Please Sign-In Again to continue", "Ok", {
                 duration: 3000,
@@ -90,7 +96,8 @@ export class SuperAdminComponent implements OnInit {
               this.login.signOut();
             }
           })
-          .catch(() => {
+          .catch((err) => {
+            console.log(err);
             this.snackBar.open("Please Sign-In Again to continue", "Ok", {
               duration: 3000,
             });

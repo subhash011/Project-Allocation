@@ -135,8 +135,8 @@ router.post("/setDeadline/:id", (req, res) => {
 
     const format_date = new Date(date);
 
-    format_date.setHours(18)
-    format_date.setMinutes(30)    
+    format_date.setHours(18);
+    format_date.setMinutes(30);
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then((faculty) => {
@@ -281,6 +281,112 @@ router.get("/all/info", (req, res) => {
             res.json({
                 message: "error",
                 result: "atleastOneAdminNeeded",
+            });
+        }
+    });
+});
+
+router.get("/members/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    var promises = [];
+    var users = {};
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then((admin) => {
+        if (admin && admin.isAdmin) {
+            promises.push(
+                Faculty.find({ stream: admin.stream }).then((faculties) => {
+                    var temp = faculties.map((val) => {
+                        var newFac = {
+                            _id: val._id,
+                            name: val.name,
+                            //add number of programs here
+                            noOfProjects: val.project_list.length,
+                            email: val.email,
+                        };
+                        return newFac;
+                    });
+                    users.faculties = temp;
+                    return users.faculties;
+                })
+            );
+            promises.push(
+                Student.find({ stream: admin.stream }).then((students) => {
+                    var tempStudents = students.map((val) => {
+                        var newStud = {
+                            _id: val._id,
+                            name: val.name,
+                            email: val.email,
+                            gpa: val.gpa,
+                        };
+                        return newStud;
+                    });
+                    users.students = tempStudents;
+                    return users.students;
+                })
+            );
+            Promise.all(promises)
+                .then((result) => {
+                    res.json({
+                        message: "success",
+                        result: users,
+                    });
+                })
+                .catch(() => {
+                    res.json({
+                        message: "error",
+                        result: null,
+                    });
+                });
+        } else {
+            res.json({
+                message: "invalid-token",
+                result: null,
+            });
+        }
+    });
+});
+
+router.delete("/faculty/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const mid = req.headers.body;
+    Admin.findOne({ google_id: { id: id, idToken: idToken } }).then((admin) => {
+        if (admin) {
+            Faculty.findByIdAndDelete(mongoose.Types.ObjectId(mid)).then(
+                (faculty) => {
+                    res.json({
+                        message: "success",
+                        result: null,
+                    });
+                }
+            );
+        } else {
+            res.json({
+                message: "invalid-token",
+                result: null,
+            });
+        }
+    });
+});
+
+router.delete("/student/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const mid = req.headers.body;
+    Admin.findOne({ google_id: { id: id, idToken: idToken } }).then((admin) => {
+        if (admin) {
+            Student.findByIdAndDelete(mongoose.Types.ObjectId(mid)).then(
+                (student) => {
+                    res.json({
+                        message: "success",
+                        result: null,
+                    });
+                }
+            );
+        } else {
+            res.json({
+                message: "invalid-token",
+                result: null,
             });
         }
     });
