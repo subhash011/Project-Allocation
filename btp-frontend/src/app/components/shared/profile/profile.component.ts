@@ -48,7 +48,6 @@ export class ProfileComponent implements OnInit {
             this.facultyFormGroup.controls["name"].setValue(
               this.user_info.name
             );
-
             this.userService
               .getAllPrograms(this.user_info.stream)
               .subscribe((data) => {

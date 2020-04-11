@@ -17,16 +17,20 @@ export class NavbarComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
   role: string = "admin";
+  checkPrograms: boolean = false;
   programs;
 
   ngOnInit() {
     if (localStorage.getItem("isLoggedIn") == "true") {
       this.role = localStorage.getItem("role");
     }
-    if (this.role == "faculty") {
+    if (this.role == "faculty" || this.role == "admin") {
       this.userService.getFacultyPrograms().subscribe((data) => {
         if (data["status"] == "success") {
           this.programs = data["programs"];
+          if (this.programs.length > 0) {
+            this.checkPrograms = true;
+          }
         } else {
           let snackBarRef = this.snackBar.open(
             "Session Timed Out! Please Sign in Again!",
@@ -128,14 +132,14 @@ export class NavbarComponent implements OnInit {
       });
   }
 
-  checkPrograms() {
-    // this.
-    if (this.programs.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // checkPrograms() {
+  //   // this.
+  //   if (this.programs.length > 0) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   goToProgram(program) {
     let id = localStorage.getItem("id");

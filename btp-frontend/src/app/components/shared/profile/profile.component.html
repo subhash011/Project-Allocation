@@ -1,21 +1,25 @@
 <div class="profile">
     <div *ngIf="getStudentDiv()">
         <mat-card class="example-card">
-            <img mat-card-avatar [src]="getUrl()" class="image">
-            <div>
+            <img mat-card-avatar [src]="getUrl()" class="image" />
+            <div *ngIf="user_info">
                 <form [formGroup]="studentFormGroup" class="facultyForm">
                     <mat-form-field class="example-full-width">
                         <mat-label>Name</mat-label>
-                        <mat-card-title> <input matInput placeholder="name" formControlName="name" /></mat-card-title>
+                        <mat-card-title>
+                            <input matInput placeholder="name" formControlName="name" /></mat-card-title>
                     </mat-form-field>
                     <p class="example-full-width">Stream : {{ user_info.stream }}</p>
                     <p class="example-full-width">Email-ID : {{ user_info.email }}</p>
                     <mat-form-field class="example-full-width">
                         <mat-label>CGPA</mat-label>
-                        <mat-card-title> <input matInput placeholder="CGPA" formControlName="gpa" /></mat-card-title>
+                        <mat-card-title>
+                            <input matInput placeholder="CGPA" formControlName="gpa" /></mat-card-title>
                     </mat-form-field>
                     <mat-card-actions>
-                        <button mat-raised-button color="primary" (click)="updateStudentProfile()">Update Profile</button>
+                        <button mat-raised-button color="primary" (click)="updateStudentProfile()">
+              Update Profile
+            </button>
                     </mat-card-actions>
                 </form>
             </div>
@@ -25,17 +29,21 @@
         <mat-tab-group [backgroundColor]="'primary'" dynamicHeight="true" mat-align-tabs="center">
             <mat-tab label="About Me">
                 <mat-card class="example-card">
-                    <img mat-card-avatar [src]="getUrl()" class="image">
-                    <div>
+                    <img mat-card-avatar [src]="getUrl()" class="image" />
+                    <div *ngIf="user_info">
                         <form [formGroup]="facultyFormGroup" class="facultyForm">
                             <mat-form-field class="example-full-width">
                                 <mat-label>Name</mat-label>
-                                <mat-card-title> <input matInput placeholder="CGPA" formControlName="name" /></mat-card-title>
+                                <mat-card-title>
+                                    <input matInput placeholder="name" formControlName="name" />
+                                </mat-card-title>
                             </mat-form-field>
                             <p class="example-full-width">Stream : {{ user_info.stream }}</p>
                             <p class="example-full-width">Email-ID : {{ user_info.email }}</p>
                             <mat-card-actions>
-                                <button mat-button (click)="updateFacultyProfile()">Update Profile</button>
+                                <button mat-button (click)="updateFacultyProfile()">
+                  Update Profile
+                </button>
                             </mat-card-actions>
                         </form>
                     </div>
@@ -43,18 +51,18 @@
             </mat-tab>
             <mat-tab label="My Programs">
                 <form [formGroup]="programGroup">
-                    <mat-form-field class="select" style="width:50%">
+                    <mat-form-field class="select" style="width: 50%;">
                         <mat-label>Programs</mat-label>
                         <mat-select formControlName="programs" multiple>
-                            <mat-option *ngFor="let program of programs" [value]="[program.short,program.full]">{{program.full}}</mat-option>
+                            <mat-option *ngFor="let program of programs" [value]="[program.short, program.full]">{{ program.full }}</mat-option>
                         </mat-select>
                         <mat-error *ngIf="programGroup.controls['programs'].hasError('required')">
                             Programs are <strong>required</strong>
                         </mat-error>
                     </mat-form-field>
                     <span>
-                          <button mat-button (click)="addProgram()">Submit</button>
-                      </span>
+            <button mat-button (click)="addProgram()">Submit</button>
+          </span>
                 </form>
                 <div class="display">
                     <div class="table mat-elevation-z8">
@@ -72,7 +80,7 @@
                                 </td>
                             </ng-container>
                             <tr mat-header-row *matHeaderRowDef="programHeader"></tr>
-                            <tr mat-row *matRowDef="let row;columns: programHeader"></tr>
+                            <tr mat-row *matRowDef="let row; columns: programHeader"></tr>
                         </table>
                     </div>
                 </div>
