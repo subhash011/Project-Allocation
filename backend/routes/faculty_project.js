@@ -4,22 +4,30 @@ const mongoose = require("mongoose");
 const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
+const Admin = require('../models/Admin_Info')
 oauth = require("../config/oauth");
 
-router.get("/:id", (req, res) => {
+router.post("/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
+    const stream = req.body.stream;
 
-    Faculty.find({ google_id: { id: id, idToken: idToken } })
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then(user => {
-            user = user[0];
             if (user) {
                 Project.find({ faculty_id: user._id })
                     .then(projects => {
+                        const stream_projects = [];
                         if (projects) {
+
+                            for(const proj of projects){
+                                if(proj.stream == stream){
+                                    stream_projects.push(proj)
+                                }
+                            }
                             res.json({
                                 status: "success",
-                                project_details: projects
+                                project_details: stream_projects
                             });
                         } else {
                             res.json({
@@ -58,9 +66,9 @@ router.post("/add/:id", (req, res) => {
     const idToken = req.headers.authorization;
     const project_details = req.body;
 
-    Faculty.find({ google_id: { id: id, idToken: idToken } })
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then(user => {
-            user = user[0];
+            const stream = user.stream;
             if (user) {
                 const project = new Project({
                     title: project_details.title,
@@ -73,36 +81,72 @@ router.post("/add/:id", (req, res) => {
 
                 user.project_list.push(project._id);
 
-                if(user.project_list.length > user.project_cap){
-                    res.json({
-                        save:'Cap',
-                        msg:'You cant add more projects'
-                    })
-                }
+                Admin.findOne({stream:stream})
+                    .then(admin=>{
+
+                        if(admin){
+                            
+                            if(admin.project_cap == null){
+                                res.json({
+                                    save:'projectCap',
+                                    msg: 'Please contact the admin to set the project cap'
+                                })
+                            }
+
+                            else if(user.project_list.length > admin.project_cap){
+                                res.json({
+                                    save:'projectCap',
+                                    msg:'You cant add more projects'
+                                })
+                            }
+
+                            else{
+
+                                
+                                if(project_details.studentIntake > admin.student_cap){
+                                    res.json({
+                                        save:"studentCap",
+                                        msg: "Student Intake exceeded. Please contact your stream admin to set new student cap!!"
+                                    })
+                                }
+                                
+                                else{
 
 
-                else{
-                    project
-                    .save()
-                    .then(result => {
-                        user.save().then(ans => {
+                                project
+                                .save()
+                                .then(result => {
+                                    user.save().then(ans => {
+                                        res.json({
+                                            save: "success",
+                                            msg: "Your project has been successfully added"
+                                        });
+                                    });
+                                })
+                                .catch(err => {
+                                    res.json({
+                                        save: "fail",
+                                        msg: " There was an error, Please try again!" //Display the messages in flash messages
+                                    });
+                                }); 
+
+
+
+                                }
+           
+                            }
+
+                        }
+                        else{
+
                             res.json({
-                                save: "success",
-                                msg: "Your project has been successfully added"
-                            });
-                        });
+                                status:"fail",
+                                result:null
+                            })
+
+                        }
+
                     })
-                    .catch(err => {
-                        res.json({
-                            save: "fail",
-                            msg: " There was an error, Please try again!" //Display the messages in flash messages
-                        });
-                    });
-
-
-                }
-
-             
             } else {
                 res.json({
                     save: "fail",
@@ -228,20 +272,49 @@ router.post("/update/:id", (req, res) => {
             project.studentIntake = studentIntake;
             project.description = description;
 
-            project
-                .save()
-                .then(result => {
-                    res.json({
-                        status: "success",
-                        msg: "Your Project was successfully updated"
-                    });
+            const stream = project.stream;
+
+            Admin.findOne({stream:stream})
+                .then(admin=>{
+
+                    if(admin){
+
+                        if(project.studentIntake > admin.student_cap){
+
+                            res.json({
+                                status:"fail",
+                                msg:"Student Intake exceeded. Please contact your stream admin to set new student cap!!"
+                            })
+
+
+                        }
+                        else{
+
+                            project
+                            .save()
+                            .then(result => {
+                                res.json({
+                                    status: "success",
+                                    msg: "Your Project was successfully updated"
+                                });
+                            })
+                            .catch(err => {
+                                res.json({
+                                    status: "fail",
+                                    msg: "Project Not Saved. Please reload and try again!!!"
+                                });
+                            });
+                        }
+
+
+                    }
+
+
                 })
-                .catch(err => {
-                    res.json({
-                        status: "fail",
-                        msg: "Project Not Saved. Please reload and try again!!!"
-                    });
-                });
+
+
+
+           
         })
         .catch(err => {
             res.json({

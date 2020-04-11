@@ -3,11 +3,12 @@
     margin-left: 2%;
     margin-right: 2%;
     margin-bottom: 2%;
-    display: inline-flex;
+    display: flex;
 }
 
 .header {
     margin-left: 2%;
+    margin-top:2%;
 }
 
 .days_left {
@@ -52,12 +53,13 @@ mat-toolbar {
 }
 
 .setButton {
-    margin-left: 5%;
+    margin-left: 1%;
 }
 
-.example-full-width {
-    display: inline-flex;
+.example-full-width{
+    width: 250px; 
 }
+
 
 .searchBox {
     position: absolute;
@@ -123,3 +125,4 @@ td {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+

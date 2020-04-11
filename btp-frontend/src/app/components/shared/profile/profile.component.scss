@@ -1,8 +1,84 @@
 .example-card {
-    max-width: 400px;
+    min-width: 100%;
+    min-height: 100%;
+    position:fixed;
 }
 
 .example-header-image {
-    background-image: url("https://material.angular.io/assets/img/examples/shiba1.jpg");
+    // background-image: url("https://material.angular.io/assets/img/examples/shiba1.jpg");
     background-size: cover;
+}
+
+
+
+.example-card {
+    max-width: 100%;
+  }
+  
+.example-full-width {
+    margin-top: 4%;
+  }
+
+.image{
+    margin-left: 43%;
+    height: 10%;
+    width:10%;
+}
+
+.facultyForm{
+    margin-left:43%;
+    margin-top:2%;
+}
+
+.subtitle{
+    margin-left: 46%;
+    margin-top:5%;
+}
+
+.container{
+    display: inline-flex;
+}
+
+.add-icon {
+    float: right;
+}
+
+.display {
+    padding-top: 5%;
+    padding-bottom: 2%;
+    padding-right: 1%;
+    z-index: 2;
+}
+
+mat-icon:hover {
+    cursor: pointer;
+}
+
+.table {
+    max-height: 600px;
+    overflow: auto;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.select{
+    margin-top:3%;
+    margin-left: 25%;
+}
+
+
+table {
+    width: 100%;
+}
+
+th,
+td {
+    overflow: hidden;
+    width: 10%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mat-column-Program-Name{
+    width:80%; 
 }

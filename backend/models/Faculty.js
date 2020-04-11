@@ -30,8 +30,11 @@ const UserSchema = new mongoose.Schema({
   project_list: {
     type: [mongoose.SchemaTypes.ObjectId],
   },
-  project_cap: {
-    type: Number,
+  programs:{
+    type:[{
+      short:String,
+      full:String
+    }]
   },
   date: {
     type: Date,

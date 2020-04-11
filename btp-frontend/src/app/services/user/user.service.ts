@@ -273,6 +273,127 @@ export class UserService {
     return this.http.post(this.url, obj, httpOptions);
   }
 
+  setStudentCap(cap){
+    const obj = {
+      cap: cap,
+    };
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "admin/set_studentCap/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.post(this.url, obj, httpOptions);
+
+
+  }
+
+  setPrograms(programs){
+
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "faculty/set_programs/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.post(this.url, programs, httpOptions);
+
+
+
+  }
+
+
+  updateFacultyProfile(faculty){
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "faculty/updateProfile/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.post(this.url, faculty, httpOptions);
+
+
+
+
+  }
+
+
+  getAllPrograms(stream){
+
+    const user_stream = {
+      stream : stream
+    }
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "faculty/getAllPrograms/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.post(this.url, user_stream, httpOptions);
+
+  }
+
+
+  deleteFacultyProgram(program){
+
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "faculty/deleteProgram/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.post(this.url, program, httpOptions);
+
+  }
+
+  getFacultyPrograms(){
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "faculty/getFacultyPrograms/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.get(this.url, httpOptions);
+
+  }
+
+
   getAllMaps() {
     return this.http.get(this.base_url + "maps");
   }

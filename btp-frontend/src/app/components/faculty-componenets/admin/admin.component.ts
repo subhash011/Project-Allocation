@@ -34,6 +34,8 @@ export class AdminComponent implements OnInit {
   thirdFormGroup: FormGroup;
   fourthFormGroup: FormGroup;
   fifthFormGroup: FormGroup;
+  sixthFormGroup: FormGroup;
+
 
   public stage_no;
   dateSet = [];
@@ -48,8 +50,10 @@ export class AdminComponent implements OnInit {
   proceedButton3 = true;
 
   projectCap;
+  studentCap;
   days_left;
   project: any;
+
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
 
@@ -77,6 +81,9 @@ export class AdminComponent implements OnInit {
     this.fifthFormGroup = this.formBuilder.group({
       fifthCtrl: [this.projectCap],
     });
+    this.sixthFormGroup = this.formBuilder.group({
+      sixthCtrl:[this.studentCap]
+    })
   }
 
   ngAfterViewInit() {
@@ -109,6 +116,8 @@ export class AdminComponent implements OnInit {
 
       this.dateSet = data["deadlines"];
       this.projectCap = data["projectCap"];
+      this.studentCap = data["studentCap"];
+      console.log(this.studentCap)
       // this.curr_deadline = this.dateSet[this.dateSet.length - 1];
       this.dateSet = this.dateSet.map((date) => {
         return new Date(date);
@@ -121,6 +130,8 @@ export class AdminComponent implements OnInit {
       this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
       this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
       this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
+      this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
+
 
       if (this.dateSet.length == 1) {
         if (this.firstFormGroup.controls["firstCtrl"]) {
@@ -575,4 +586,49 @@ export class AdminComponent implements OnInit {
       });
     }
   }
+
+
+  setStudentCap(){
+  
+    console.log(this.sixthFormGroup.get("sixthCtrl").value)
+
+    if (this.sixthFormGroup.controls["sixthCtrl"].value) {
+      this.userService
+        .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
+        .subscribe((data) => {
+          console.log(data);
+
+          if (data["status"] == "success") {
+            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+            this.ngOnInit();
+          } else {
+            let snackBarRef = this.snackBar.open(
+              "Session Timed Out! Please Sign in Again!",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+             snackBarRef.afterDismissed().subscribe(() => {
+              this.loginService.signOut();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.loginService.signOut();
+            });
+          }
+        });
+    } else {
+      let snackBarRef = this.snackBar.open("Please enter a number", "Ok", {
+        duration: 3000,
+      });
+    }
+
+
+  }
+
+
+
+
 }

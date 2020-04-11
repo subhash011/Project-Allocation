@@ -8,22 +8,41 @@
         </div>
 
         <div class="progress-bar">
-            <!-- <mat-progress-bar mode="determinate" [value]="progress_value"></mat-progress-bar> -->
+            <div class="projectCapForm">
+                <form [formGroup]="fifthFormGroup">
+                    <mat-form-field class="example-full-width" style="width: 250px;">
+                        <mat-label>Max number of projects per faculty</mat-label>
+                        <input matInput placeholder="Project Cap" type="number" step="1" formControlName="fifthCtrl" class="projectCapForm"/>
+                    </mat-form-field>
+    
+                    <button color="accent" mat-raised-button (click)="setProjectCap()" class="setButton">
+              Set Project Cap
+            </button>
+                </form>
 
-            <form [formGroup]="fifthFormGroup">
-                <mat-form-field class="example-full-width">
-                    <mat-label>Max number of projects</mat-label>
-                    <input matInput placeholder="Project Cap" type="number" step="1" formControlName="fifthCtrl" />
-                </mat-form-field>
+            </div>
 
-                <button color="accent" mat-raised-button (click)="setProjectCap()" class="setButton">
-          Set Project Cap
-        </button>
-            </form>
+            <div class="studentCapForm">
+                <form [formGroup]="sixthFormGroup">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Max number of students per project</mat-label>
+                        <input matInput placeholder="Student Cap" type="number" step="1" formControlName="sixthCtrl" />
+                    </mat-form-field>
+    
+                    <button color="accent" mat-raised-button (click)="setStudentCap()" class="setButton">
+              Set Student Cap
+            </button>
+                </form>
+
+            </div>
+      
+            <span class="days_left"><strong>Time Left : </strong>
+                <countdown-timer [end]="curr_deadline"></countdown-timer
+              ></span>
+
+            
         </div>
-        <span class="days_left"><strong>Time Left : </strong>
-      <countdown-timer [end]="curr_deadline"></countdown-timer
-    ></span>
+       
         <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no }}">
             <mat-step [stepControl]="firstFormGroup" [editable]="'false'">
                 <form [formGroup]="firstFormGroup">

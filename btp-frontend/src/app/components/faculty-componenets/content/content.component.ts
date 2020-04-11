@@ -1,3 +1,4 @@
+import { LoginComponent } from './../../shared/login/login.component';
 import { MatDialog } from "@angular/material/dialog";
 import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Validators } from "@angular/forms";
@@ -13,6 +14,7 @@ import { Location } from "@angular/common";
   selector: "app-content",
   templateUrl: "./content.component.html",
   styleUrls: ["./content.component.scss"],
+  providers:[LoginComponent]
 })
 export class ContentComponent implements OnInit, DoCheck {
   @Input() public project;
@@ -42,7 +44,8 @@ export class ContentComponent implements OnInit, DoCheck {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private login:LoginComponent
   ) {}
 
   ngOnInit() {}
@@ -88,20 +91,37 @@ export class ContentComponent implements OnInit, DoCheck {
                 this.router.navigate([decodeURI(this.location.path())]);
               });
           });
-        } else if (data["save"] == "Cap") {
+        } else if (data["save"] == "projectCap") {
           //Go to the error page
           let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
             duration: 3000,
           });
-        } else {
+        } else if(data["save"] == "studentCap") {
+
           let snackBarRef = this.snackBar.open(
-            "Server Error! Please reload the page and try again!",
+            data["msg"],
             "Ok",
             {
               duration: 3000,
             }
           );
         }
+        else{
+
+          let snackBarRef = this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+            duration: 3000,
+          });
+          
+          snackBarRef.afterDismissed().subscribe(() => {
+              this.login.signOut()
+          });
+
+          snackBarRef.onAction().subscribe(() => {
+              this.login.signOut()
+          });
+
+        }
+      
       });
     }
   }
@@ -141,6 +161,45 @@ export class ContentComponent implements OnInit, DoCheck {
                 });
             });
           }
+          else if(result["message"] == "fail"){
+
+            let snackBarRef = this.snackBar.open("Student Intake exceeded. Please contact your stream admin to set new student cap!!", "Ok", {
+              duration: 3000,
+            });
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.router
+                .navigateByUrl("/refresh", { skipLocationChange: true })
+                .then(() => {
+                  this.router.navigate([decodeURI(this.location.path())]);
+                });
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.router
+                .navigateByUrl("/refresh", { skipLocationChange: true })
+                .then(() => {
+                  this.router.navigate([decodeURI(this.location.path())]);
+                });
+            });
+
+
+          }
+          else{
+            let snackBarRef = this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+              duration: 3000,
+            });
+            
+            snackBarRef.afterDismissed().subscribe(() => {
+                this.login.signOut()
+            });
+  
+            snackBarRef.onAction().subscribe(() => {
+                this.login.signOut()
+            });
+  
+          }
+
+
+
         });
       }
     }

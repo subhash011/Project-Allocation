@@ -2,7 +2,7 @@
     <mat-sidenav mode="side" opened position="end" role="navigation" [disableClose]="true" [fixedInViewport]="true" [fixedTopGap]="64" [fixedBottomGap]="0">
         <mat-toolbar class="mat-elevation-z6" color="accent">
             <span class="fill-remaining-space"></span>
-            <h1 class="fill-remaining-space">My Projects</h1>
+            <h1 class="fill-remaining-space">{{stream}}</h1>
         </mat-toolbar>
 
         <app-sidenav [projects]="projects" [empty]="empty" (projectClicked)="displayProject($event)" (addButton)="addProject($event)"></app-sidenav>

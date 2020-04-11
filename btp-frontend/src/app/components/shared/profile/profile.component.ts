@@ -1,18 +1,40 @@
+import { LoginComponent } from './../login/login.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { UserService } from "./../../../services/user/user.service";
 import { Component, OnInit } from "@angular/core";
+import { FormGroup } from '@angular/forms';
+
 
 @Component({
   selector: "app-profile",
   templateUrl: "./profile.component.html",
   styleUrls: ["./profile.component.scss"],
+  providers: [LoginComponent]
 })
 export class ProfileComponent implements OnInit {
+
+
+
+
+  programHeader: string[] = ["Program Name", "Delete"];
+  programs;
+  faculty_programs = []
   user_info: any;
   role = "";
   checked = false;
   editStatus = "Edit";
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private formBuilder:FormBuilder,
+    private snackBar :MatSnackBar,
+    private login : LoginComponent
+    ) {}
   ngOnInit() {
+
+
+
     this.role = localStorage.getItem("role");
     if (this.role == "student") {
       user = this.userService
@@ -26,10 +48,81 @@ export class ProfileComponent implements OnInit {
         .getFacultyDetails(localStorage.getItem("id"))
         .toPromise()
         .then((data) => {
-          this.user_info = data["user_details"];
+          // console.log(data)
+          if(data["status"] == "success"){
+
+            this.user_info = data["user_details"];
+           this.faculty_programs = this.user_info["programs"];
+
+            console.log(this.faculty_programs)
+
+  
+            this.facultyFormGroup.controls["name"].setValue(this.user_info.name)
+  
+            this.userService.getAllPrograms(this.user_info.stream)
+              .subscribe(data=>{
+  
+                if(data["status"] == "success"){
+                  this.programs = data["programs"]
+                }
+
+                else{
+
+                  let snackBarRef = this.snackBar.open(
+                    "Session Timed Out! Please Sign in Again!",
+                    "Ok",
+                    {
+                      duration: 3000,
+                    }
+                  );
+                  snackBarRef.afterDismissed().subscribe(() => {
+                    this.login.signOut();
+                  });
+                  snackBarRef.onAction().subscribe(() => {
+                    this.login.signOut();
+                  });
+                }
+
+              })
+            
+          }
+
+          else{
+
+
+            let snackBarRef = this.snackBar.open(
+              "Session Timed Out! Please Sign in Again!",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.login.signOut();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.login.signOut();
+            });
+
+
+          }
+          
+
         });
     }
+
   }
+
+
+  facultyFormGroup : FormGroup = this.formBuilder.group({
+    name:['',Validators.required],
+  });
+  programGroup : FormGroup = this.formBuilder.group({
+    programs:['',Validators.required]
+  });
+
+
+
   getUrl() {
     const user = JSON.parse(localStorage.getItem("user"));
     return user["photoUrl"];
@@ -50,4 +143,164 @@ export class ProfileComponent implements OnInit {
       return false;
     }
   }
+
+
+  updateProfile(){
+
+  
+
+    if(this.facultyFormGroup.valid){
+      const faculty = {
+        name : this.facultyFormGroup.get("name").value
+      }
+      this.userService.updateFacultyProfile(faculty)
+        .subscribe(data=>{
+
+      
+          if(data["status"] == "success"){
+            let snackBarRef = this.snackBar.open(
+              data["msg"],
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+
+          }
+
+          else{
+
+            let snackBarRef = this.snackBar.open(
+              "Session Timed Out! Please Sign in Again!",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.login.signOut();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.login.signOut();
+            });
+
+
+          }
+
+
+        })
+    }
+
+
+
+  }
+
+
+  addProgram(){
+
+
+    if (this.programGroup.valid) {
+      const programs = {
+        programs: this.programGroup.get("programs").value,
+      };
+      this.userService.setPrograms(programs)
+        .subscribe(data=>{
+    
+          if(data["status"] == "success"){
+
+            let snackBarRef = this.snackBar.open(
+              data["msg"],
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.ngOnInit();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.ngOnInit();
+            });
+
+
+          }
+          else{
+
+
+            let snackBarRef = this.snackBar.open(
+              "Session Timed Out! Please Sign in Again!",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.login.signOut();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.login.signOut();
+            });
+
+          }
+
+
+        })
+    }
+
+
+  }
+
+  deleteProgram(program){
+
+    const obj = {
+      program : program
+    }
+
+    this.userService.deleteFacultyProgram(obj)
+      .subscribe(data=>{
+
+          if(data["status"] == "success"){
+
+            let snackBarRef = this.snackBar.open(
+              data["msg"],
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.ngOnInit();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.ngOnInit();
+            });
+
+
+          }
+          else{
+
+
+            let snackBarRef = this.snackBar.open(
+              "Session Timed Out! Please Sign in Again!",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.login.signOut();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.login.signOut();
+            });
+
+          }
+      })
+
+
+  }
+
+
 }

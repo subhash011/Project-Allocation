@@ -93,6 +93,7 @@ router.get("/info/:id", (req, res) => {
               deadlines: admin.deadlines,
               startDate: startDate,
               projectCap: admin.project_cap,
+              studentCap: admin.student_cap
             });
           } else {
             res.json({
@@ -156,11 +157,19 @@ router.post("/setDeadline/:id", (req, res) => {
     .then((faculty) => {
       Admin.findOne({ admin_id: faculty._id })
         .then((admin) => {
+         
+          
+  
+          if (admin.deadlines.length == admin.stage + 1) {
+            admin.deadlines.pop();
+            admin.deadlines.push(new Date(date));
+          }
+         
           if (admin.stage == 0) {
             admin.startDate = new Date();
           }
 
-          if (admin.stage == admin.deadlines.length || admin.stage == 0)
+          if (admin.stage == admin.deadlines.length)
             admin.deadlines.push(format_date);
 
           admin
@@ -310,36 +319,7 @@ router.post("/set_projectCap/:id", (req, res) => {
     .then((faculty) => {
       Admin.findOne({ admin_id: faculty._id })
         .then((admin) => {
-          admin.project_cap = cap;
-
-          const stream = admin.stream;
-
-          Faculty.find({ stream: stream }).then((faculty_members) => {
-            for (const fac of faculty_members) {
-              fac.project_cap = cap;
-
-              promises.push(
-                fac
-                  .save()
-                  .then((result) => {
-                    return result;
-                  })
-                  .catch((err) => {
-                    return err;
-                  })
-              );
-            }
-
-            Promise.all(promises).then((result) => {
-              for (const ans of result) {
-                if (!ans) {
-                  res.json({
-                    status: "fail",
-                    result: "saving faculty error",
-                  });
-                }
-              }
-
+          admin.project_cap = cap;    
               admin
                 .save()
                 .then((result) => {
@@ -354,8 +334,7 @@ router.post("/set_projectCap/:id", (req, res) => {
                     result: "save error",
                   });
                 });
-            });
-          });
+          
         })
         .catch((err) => {
           res.json({
@@ -372,6 +351,51 @@ router.post("/set_projectCap/:id", (req, res) => {
     });
 });
 
+
+router.post("/set_studentCap/:id",(req,res)=>{
+
+  const id = req.params.id;
+  const idToken = req.headers.authorization;
+  const studentCap = req.body.cap;
+
+  Faculty.findOne({google_id:{id:id,idToken:idToken}})
+    .then(faculty=>{
+
+      Admin.findOne({admin_id:faculty._id})
+        .then(admin=>{
+
+          admin.student_cap = studentCap;          
+                admin
+                  .save()
+                  .then((result) => {
+                    res.json({
+                      status: "success",
+                      msg: "Successfully updated the student cap",
+                    });
+                  })
+                  .catch((err) => {
+                    res.json({
+                      status: "fail",
+                      result: "save error",
+                    });
+                  });
+        })
+        .catch((err) => {
+          res.json({
+            status: "fail",
+            result: null,
+          });
+        });
+    })
+    .catch((err) => {
+      res.json({
+        status: "fail",
+        result: null,
+      });
+    });
+
+
+});
 
 
 module.exports = router;

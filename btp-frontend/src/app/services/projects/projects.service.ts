@@ -51,7 +51,12 @@ export class ProjectsService {
     };
     return this.http.post(this.url_post, preferences, httpOptions);
   }
-  getFacultyProjects() {
+  getFacultyProjects(stream) {
+
+    const obj = {
+      stream : stream
+    }
+
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     const httpOptions = {
@@ -62,7 +67,7 @@ export class ProjectsService {
     };
 
     this.url = this.facultyBaseURL + id;
-    return this.http.get(this.url, httpOptions);
+    return this.http.post(this.url, obj, httpOptions);
   }
 
   saveProject(project) {

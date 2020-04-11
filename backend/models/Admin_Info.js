@@ -21,9 +21,13 @@ const UserSchema = new mongoose.Schema({
   project_cap: {
     type: Number
   },
+  student_cap:{
+    type:Number,
+    default: 1
+  },
   startDate: {
     type: Date,
-  },
+  }
 });
 
 module.exports = mongoose.model("Admin_Info", UserSchema);

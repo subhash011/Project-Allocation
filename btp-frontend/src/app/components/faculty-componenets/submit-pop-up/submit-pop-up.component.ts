@@ -20,7 +20,15 @@ export class SubmitPopUpComponent implements OnInit {
   }
   onSubmit() {
     this.projectService.updateProject(this.data).subscribe(data => {
-      this.dialogRef.close({ message: "submit" });
+
+      if(data["status"] == "success"){
+        this.dialogRef.close({ message: "submit" });
+      }
+      else if(data["status"] == "fail"){
+        this.dialogRef.close({ message: "fail" });
+      }
+
+     
     });
   }
 }

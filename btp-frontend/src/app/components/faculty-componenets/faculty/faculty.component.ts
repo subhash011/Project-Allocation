@@ -35,20 +35,70 @@ export class FacultyComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
       this.id = params.get("id");
     });
+
+    
+
     this.userDetails.getFacultyDetails(this.id).subscribe((data) => {
       if (data["status"] == "success") {
         const user_info = data["user_details"];
         this.name = user_info.name;
-        this.stream = user_info.stream;
+        
 
-        this.projectService.getFacultyProjects().subscribe((data) => {
+
+
+        this.activatedRoute.queryParams
+        .subscribe(params => {
+
+        if(Object.keys(params).length === 0 && params.constructor === Object){
+
+
+          this.stream = user_info.stream;
+
+        }
+        else{
+          this.stream = params.abbr;
+        }
+
+
+        this.projectService.getFacultyProjects(this.stream).subscribe((data) => {
           this.projects = data["project_details"];
         });
-      } else {
-        let snackBarRef = this.snackBar.open("Please reload the page", "Ok", {
+
+
+
+      });
+
+
+
+
+
+
+
+
+      
+    } else {
+     
+      let snackBarRef = this.snackBar.open(
+        "Session Timed Out! Please Sign in Again!",
+        "Ok",
+        {
           duration: 3000,
-        });
-      }
+        }
+      );
+      snackBarRef.afterDismissed().subscribe(() => {
+        this.loginService.signOut();
+      });
+      snackBarRef.onAction().subscribe(() => {
+        this.loginService.signOut();
+      });
+
+    }
+
+
+
+
+
+     
     });
   }
 
