@@ -100,7 +100,12 @@ router.get("/info/:id", (req, res) => {
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+                    res.json({
+                        status: "fail",
+                        stage: 0,
+                        deadlines: "",
+                        startDate: startDate,
+                    });
                 });
         }
     );
@@ -126,15 +131,24 @@ router.post("/update_stage/:id", (req, res) => {
                             });
                         })
                         .catch((err) => {
-                            console.log(err);
+                            res.json({
+                                status:"fail",
+                                result:null
+                            })
                         });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    res.json({
+                        status:"fail",
+                        result:null
+                    })
                 });
         })
         .catch((err) => {
-            console.log(err);
+            res.json({
+                status:"fail",
+                result:null
+            })
         });
 });
 

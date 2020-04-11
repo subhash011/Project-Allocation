@@ -1,3 +1,4 @@
+import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from "./../login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Validators } from "@angular/forms";
@@ -5,6 +6,7 @@ import { FormBuilder } from "@angular/forms";
 import { UserService } from "./../../../services/user/user.service";
 import { Component, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { DeletePopUpComponent } from '../../faculty-componenets/delete-pop-up/delete-pop-up.component';
 
 @Component({
   selector: "app-profile",
@@ -24,7 +26,8 @@ export class ProfileComponent implements OnInit {
     private userService: UserService,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
-    private login: LoginComponent
+    private login: LoginComponent,
+    private dialog: MatDialog
   ) {}
   ngOnInit() {
     this.role = localStorage.getItem("role");
@@ -228,33 +231,73 @@ export class ProfileComponent implements OnInit {
       program: program,
     };
 
-    this.userService.deleteFacultyProgram(obj).subscribe((data) => {
-      if (data["status"] == "success") {
-        let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
-          duration: 3000,
+
+    let dialogRef = this.dialog.open(DeletePopUpComponent, {
+      height: "200px",
+      data: {
+        heading: "Confirm Deletion",
+        message: "Are you sure you want to remove the branch",
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result["message"] == "submit") {
+        
+
+
+        this.userService.deleteFacultyProgram(obj).subscribe((data) => {
+          if (data["status"] == "success") {
+            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+    
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.ngOnInit();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.ngOnInit();
+            });
+          } else {
+            let snackBarRef = this.snackBar.open(
+              "Session Timed Out! Please Sign in Again!",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.login.signOut();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.login.signOut();
+            });
+          }
         });
 
-        snackBarRef.afterDismissed().subscribe(() => {
-          this.ngOnInit();
-        });
-        snackBarRef.onAction().subscribe(() => {
-          this.ngOnInit();
-        });
-      } else {
-        let snackBarRef = this.snackBar.open(
-          "Session Timed Out! Please Sign in Again!",
-          "Ok",
-          {
-            duration: 3000,
-          }
-        );
-        snackBarRef.afterDismissed().subscribe(() => {
-          this.login.signOut();
-        });
-        snackBarRef.onAction().subscribe(() => {
-          this.login.signOut();
-        });
+
+
+
+
+
       }
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
   }
 }

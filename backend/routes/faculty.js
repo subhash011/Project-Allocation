@@ -295,25 +295,91 @@ router.post('/deleteProgram/:id',(req,res)=>{
                         }
                     
                 })                
-
-
                 faculty.programs = new_programs;
-                faculty.save()
-                    .then(result=>{
-
-                        res.json({
-                            status:"success",
-                            msg:"Successfully removed the program!!"
-                        })
 
 
+                Project.find({faculty_id:faculty._id,stream:curr_program.short})
+                    .then(projects_temp=>{
+                        var project_list = [];
+
+                        for(const project of projects_temp){
+                            project_list.push(project._id);
+                        }
+
+
+                        var projects = project_list;
+                        var promises = [];
+                        for (const project of projects) {
+                            var project_id = mongoose.Types.ObjectId(project);
+                            promises.push(
+                                Project.findByIdAndDelete(project_id).then((project) => {
+                                    return project;
+                                })
+                            );
+                        }
+                        Promise.all(promises)
+                            .then((result) => {
+                                return result;
+                            })
+                            .catch((err) => {
+                                res.status(500);
+                            })
+                            .then((projects) => {
+                                promises = [];
+                                projects_id = projects.map((val) => String(val._id));
+                                students_id = projects.map((val) => val.students_id);
+                                var students = [];
+                                for (const ids of students_id) {
+                                    var studentid = [String(ids)];
+                                    students = [...students, ...studentid];
+                                }
+                                students_id = students.unique();
+                                for (const student of students_id) {
+                                    studentID = mongoose.Types.ObjectId(student);
+                                    promises.push(
+                                        Student.findById(studentID).then((student) => {
+                                            student.projects_preference = student.projects_preference.filter(
+                                                (val) => !projects_id.includes(String(val))
+                                            );
+                                            student.projects_preference.map((val) =>
+                                                mongoose.Types.ObjectId(val)
+                                            );
+                                            student.save().then((student) => {
+                                                return student;
+                                            });
+                                            return student._id;
+                                        })
+                                    );
+                                }
+                                Promise.all(promises)
+                                    .then((result) => {
+                                          faculty.save()
+                                            .then(result=>{
+
+                                                res.json({
+                                                    status:"success",
+                                                    msg:"Successfully removed the program!!"
+                                                })
+
+
+                                            })
+                                            .catch(err=>{
+                                                res.json({
+                                                    status:"fail",
+                                                    result:null
+                                                })
+                                            })
+                                    })
+                                    .catch((err) => {
+                                        res.status(500);
+                                    });
+                            })
+                            .catch((err) => {
+                                res.status(500);
+                            });
                     })
-                    .catch(err=>{
-                        res.json({
-                            status:"fail",
-                            result:null
-                        })
-                    })
+
+              
             }
 
 
