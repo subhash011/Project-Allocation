@@ -124,12 +124,11 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/admin',id])
 
   }
-  goToHome(){
-
+  goToHome() {
     let id = localStorage.getItem("id");
     this.router
       .navigateByUrl("/refresh", {
-        skipLocationChange: true
+        skipLocationChange: true,
       })
       .then(() => {
         this.ngOnInit()
@@ -137,7 +136,6 @@ export class NavbarComponent implements OnInit {
           decodeURI('/faculty/'+id)
         ]);
       });
-
   }
 
 

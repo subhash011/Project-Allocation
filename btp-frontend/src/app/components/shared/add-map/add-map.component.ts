@@ -22,7 +22,13 @@ export class AddMapComponent implements OnInit {
 
   addForm = this.fb.group({
     full: [null, Validators.required],
-    short: [null, Validators.required],
+    short: [
+      null,
+      Validators.compose([
+        Validators.required,
+        Validators.pattern("[a-zA-Z]*"),
+      ]),
+    ],
     map: [null, Validators.required],
   });
 
@@ -34,7 +40,7 @@ export class AddMapComponent implements OnInit {
     if (this.addForm.valid) {
       const map = {
         full: this.addForm.get("full").value,
-        short: this.addForm.get("short").value,
+        short: this.addForm.get("short").value.toUpperCase(),
         map: this.addForm.get("map").value,
       };
       this.dialogRef.close({ map: map, message: "submit" });

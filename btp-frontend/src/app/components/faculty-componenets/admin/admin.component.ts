@@ -28,6 +28,8 @@ export class AdminComponent implements OnInit {
     "NoOfStudents",
     "Student",
   ];
+  facultyCols = ["Name", "NoOfProjects", "Email", "Actions"];
+  studentCols = ["Name", "Email", "GPA", "Actions"];
 
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -48,6 +50,12 @@ export class AdminComponent implements OnInit {
   proceedButton1 = true;
   proceedButton2 = true;
   proceedButton3 = true;
+
+  index;
+  faculties: any = [];
+  students: any = [];
+  student;
+  faculty;
 
   projectCap;
   studentCap;
@@ -111,6 +119,20 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userService
+      .getMembersForAdmin()
+      .toPromise()
+      .then((result) => {
+        if (result["message"] == "success") {
+          this.faculties = result["result"]["faculties"];
+          this.students = result["result"]["students"];
+        } else {
+          this.loginService.signOut();
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
+        }
+      });
     this.userService.getAdminInfo().subscribe((data) => {
       this.stage_no = data["stage"];
 
@@ -221,6 +243,75 @@ export class AdminComponent implements OnInit {
             });
           }
         });
+      }
+    });
+  }
+
+  removeFaculty(id) {
+    let dialogRef = this.dialog.open(DeletePopUpComponent, {
+      height: "200px",
+      width: "300px",
+      data: {
+        heading: "Confirm Deletion",
+        message: "Are you sure you want to remove Faculty",
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result["message"] == "submit") {
+        this.userService
+          .removeFacultyAdmin(id)
+          .toPromise()
+          .then((result) => {
+            if (result["message"] == "success") {
+              this.snackBar.open("Removed Faculty", "Ok", {
+                duration: 3000,
+              });
+              this.ngOnInit();
+            } else {
+              this.loginService.signOut();
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          });
+      }
+    });
+  }
+  removeStudent(id) {
+    let dialogRef = this.dialog.open(DeletePopUpComponent, {
+      height: "200px",
+      width: "300px",
+      data: {
+        heading: "Confirm Deletion",
+        message: "Are you sure you want to remove Student",
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result["message"] == "submit") {
+        this.userService
+          .removeStudentAdmin(id)
+          .toPromise()
+          .then((result) => {
+            if (result["message"] == "success") {
+              this.snackBar.open("Removed Student", "Ok", {
+                duration: 3000,
+              });
+              this.ngOnInit();
+            } else {
+              this.loginService.signOut();
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          });
       }
     });
   }
