@@ -106,4 +106,32 @@ router.get("/stage/:id", (req, res) => {
     );
 });
 
+router.post("/update/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const document = req.body;
+    Student.findOne({ google_id: { id: id, idToken: idToken } }).then(student => {
+        if (student) {
+            student.name = document.name;
+            student.gpa = document.gpa;
+            student.save().then(student => {
+                res.json({
+                    message: "success",
+                    result: student
+                })
+            })
+        } else {
+            res.json({
+                message: "invalid-token",
+                result: null
+            })
+        }
+    }).catch(() => {
+        res.json({
+            message: "invalid-client",
+            result: null
+        })
+    });
+})
+
 module.exports = router;

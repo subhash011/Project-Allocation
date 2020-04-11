@@ -28,10 +28,10 @@ mongoose.set("useFindAndModify", false);
 
 //uncomment during production
 // app.use(express.static(__dirname + "/btp-frontend"));
-// var mongoConnect = process.env.MONGO_URL;
+var mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
 mongoose
-.connect("mongodb://localhost:27017/ProjectAllocationTest", {
+    .connect(mongoConnect, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })

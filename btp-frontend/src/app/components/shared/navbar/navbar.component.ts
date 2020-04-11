@@ -1,5 +1,5 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { LoginComponent } from './../login/login.component';
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { LoginComponent } from "./../login/login.component";
 import { UserService } from "../../../services/user/user.service";
 import { Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
@@ -7,15 +7,15 @@ import { Component, OnInit } from "@angular/core";
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
   styleUrls: ["./navbar.component.scss"],
-  providers: [LoginComponent]
+  providers: [LoginComponent],
 })
 export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,
     private userService: UserService,
-    private login : LoginComponent,
-    private snackBar : MatSnackBar
-    ) {}
+    private login: LoginComponent,
+    private snackBar: MatSnackBar
+  ) {}
   role: string = "admin";
   programs;
 
@@ -23,17 +23,11 @@ export class NavbarComponent implements OnInit {
     if (localStorage.getItem("isLoggedIn") == "true") {
       this.role = localStorage.getItem("role");
     }
-    
-    this.userService.getFacultyPrograms()
-      .subscribe(data=>{
-
-        if(data["status"] =="success"){
-          this.programs = data["programs"]
-
-
-        }
-
-        else{
+    if (this.role == "faculty") {
+      this.userService.getFacultyPrograms().subscribe((data) => {
+        if (data["status"] == "success") {
+          this.programs = data["programs"];
+        } else {
           let snackBarRef = this.snackBar.open(
             "Session Timed Out! Please Sign in Again!",
             "Ok",
@@ -48,9 +42,8 @@ export class NavbarComponent implements OnInit {
             this.login.signOut();
           });
         }
-      })
-
-
+      });
+    }
   }
 
   getSuperAdminURL() {
@@ -119,10 +112,9 @@ export class NavbarComponent implements OnInit {
   }
 
   getAdmin() {
-    // return "admin/" + 
+    // return "admin/" +
     let id = localStorage.getItem("id");
-    this.router.navigate(['/admin',id])
-
+    this.router.navigate(["/admin", id]);
   }
   goToHome() {
     let id = localStorage.getItem("id");
@@ -131,35 +123,25 @@ export class NavbarComponent implements OnInit {
         skipLocationChange: true,
       })
       .then(() => {
-        this.ngOnInit()
-        this.router.navigate([
-          decodeURI('/faculty/'+id)
-        ]);
+        this.ngOnInit();
+        this.router.navigate([decodeURI("/faculty/" + id)]);
       });
   }
 
-
-  checkPrograms(){
-
+  checkPrograms() {
     // this.
-  if(this.programs.length > 0){
-    return true;
-  }
-  else{
-     return false;
-  }
-
-
+    if (this.programs.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-
-  goToProgram(program){
-
+  goToProgram(program) {
     let id = localStorage.getItem("id");
 
-    this.router.navigate(['/faculty',id],{queryParams:{name:program.full,abbr:program.short}})
-
+    this.router.navigate(["/faculty", id], {
+      queryParams: { name: program.full, abbr: program.short },
+    });
   }
-
-
 }

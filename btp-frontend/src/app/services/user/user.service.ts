@@ -273,7 +273,7 @@ export class UserService {
     return this.http.post(this.url, obj, httpOptions);
   }
 
-  setStudentCap(cap){
+  setStudentCap(cap) {
     const obj = {
       cap: cap,
     };
@@ -290,13 +290,9 @@ export class UserService {
     };
 
     return this.http.post(this.url, obj, httpOptions);
-
-
   }
 
-  setPrograms(programs){
-
-
+  setPrograms(programs) {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "faculty/set_programs/" + id;
@@ -309,14 +305,9 @@ export class UserService {
     };
 
     return this.http.post(this.url, programs, httpOptions);
-
-
-
   }
 
-
-  updateFacultyProfile(faculty){
-
+  updateFacultyProfile(faculty) {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "faculty/updateProfile/" + id;
@@ -329,18 +320,12 @@ export class UserService {
     };
 
     return this.http.post(this.url, faculty, httpOptions);
-
-
-
-
   }
 
-
-  getAllPrograms(stream){
-
+  getAllPrograms(stream) {
     const user_stream = {
-      stream : stream
-    }
+      stream: stream,
+    };
 
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -354,13 +339,9 @@ export class UserService {
     };
 
     return this.http.post(this.url, user_stream, httpOptions);
-
   }
 
-
-  deleteFacultyProgram(program){
-
-
+  deleteFacultyProgram(program) {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "faculty/deleteProgram/" + id;
@@ -373,15 +354,12 @@ export class UserService {
     };
 
     return this.http.post(this.url, program, httpOptions);
-
   }
 
-  getFacultyPrograms(){
-
+  getFacultyPrograms() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "faculty/getFacultyPrograms/" + id;
-
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -390,9 +368,7 @@ export class UserService {
     };
 
     return this.http.get(this.url, httpOptions);
-
   }
-
 
   getAllMaps() {
     return this.http.get(this.base_url + "maps");
@@ -457,5 +433,19 @@ export class UserService {
       }),
     };
     return this.http.delete(this.url, httpOptions);
+  }
+
+  updateStudentProfile(document) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const id = user.id;
+    const idToken = user.idToken;
+    this.url = this.base_url + "student/update/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.post(this.url, document, httpOptions);
   }
 }
