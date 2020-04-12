@@ -51,7 +51,15 @@ export class SuperAdminComponent implements OnInit {
     "NoOfStudents",
     "Duration",
   ];
-  displayedColumnsMaps: string[] = ["Branch", "Short", "Map", "Actions"];
+  displayedColumnsMaps: string[] = [
+    "Branch",
+    "Short",
+    "Map",
+    "FacCount",
+    "StudCount",
+    "ProjCount",
+    "Actions",
+  ];
   displayedColumnsStreams: string[] = ["Stream", "Short", "Actions"];
   faculties: any = {};
   students: any = {};
