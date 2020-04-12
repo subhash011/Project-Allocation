@@ -35,9 +35,7 @@
                                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                                 <td mat-cell *matCellDef="let faculty">
                                     <span [matTooltip]="
-                      faculty.isAdmin
-                        ? 'Remove admin status to delete the faculty'
-                        : ''
+                      getToolTipToRemoveFaculty(faculty, branch.short)
                     " matTooltipPosition="above"><button
                       color="warn"
                       mat-raised-button
@@ -52,14 +50,16 @@
                     color="primary"
                     *ngIf="!faculty.isAdmin"
                     mat-raised-button
-                    (click)="addAdmin(faculty._id)"
+                    (click)="addAdmin(faculty._id, branch.short)"
                   >
                     Make Admin
                   </button>
                   <button
                     class="remove-admin-button"
                     color="primary"
-                    *ngIf="faculty.isAdmin"
+                    *ngIf="
+                      faculty.isAdmin && faculty.adminProgram == branch.short
+                    "
                     mat-raised-button
                     (click)="removeAdmin(faculty._id)"
                   >

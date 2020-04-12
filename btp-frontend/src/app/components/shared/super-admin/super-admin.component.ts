@@ -335,9 +335,9 @@ export class SuperAdminComponent implements OnInit {
       }
     });
   }
-  addAdmin(faculty) {
+  addAdmin(faculty, branch) {
     this.userService
-      .addAdmin(faculty)
+      .addAdmin(faculty, branch)
       .toPromise()
       .then(() => {
         this.ngOnInit();
@@ -351,6 +351,23 @@ export class SuperAdminComponent implements OnInit {
         this.ngOnInit();
       });
   }
+
+  getToolTipToRemoveFaculty(faculty, branch) {
+    if (faculty.isAdmin) {
+      if (faculty.adminProgram == branch) {
+        return "Remove admin Status to delete the faculty";
+      } else {
+        return (
+          "This faculty is an admin for " +
+          faculty.adminProgram +
+          " please remove the admin status to remove the faculty"
+        );
+      }
+    } else {
+      return "";
+    }
+  }
+
   deleteStudent(student) {
     let dialogRef = this.dialog.open(DeletePopUpComponent, {
       height: "200px",

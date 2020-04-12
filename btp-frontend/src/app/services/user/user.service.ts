@@ -20,7 +20,7 @@ export class UserService {
     private snackBar: MatSnackBar
   ) {}
 
-  addAdmin(id) {
+  addAdmin(id, branch) {
     const user = JSON.parse(localStorage.getItem("user"));
     this.url = this.base_url + "super/addAdmin/" + user.id;
     const httpOptions = {
@@ -29,7 +29,7 @@ export class UserService {
         Authorization: user.idToken,
       }),
     };
-    return this.http.post(this.url, { id: id }, httpOptions);
+    return this.http.post(this.url, { id: id, branch: branch }, httpOptions);
   }
 
   removeFaculty(id) {
