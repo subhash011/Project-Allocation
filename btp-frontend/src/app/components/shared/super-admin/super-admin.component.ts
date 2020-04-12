@@ -52,6 +52,7 @@ export class SuperAdminComponent implements OnInit {
     "Duration",
   ];
   displayedColumnsMaps: string[] = ["Branch", "Short", "Map", "Actions"];
+  displayedColumnsStreams: string[] = ["Stream", "Short", "Actions"];
   faculties: any = {};
   students: any = {};
   faculty;
@@ -60,10 +61,11 @@ export class SuperAdminComponent implements OnInit {
   student;
   maps: any = [];
   branches: any = [];
+  programs: any = [];
 
   ngOnInit() {
     this.userService
-      .getAllMaps()
+      .getAllBranches()
       .toPromise()
       .then((maps) => {
         this.maps = maps["result"];
@@ -71,11 +73,24 @@ export class SuperAdminComponent implements OnInit {
           var newMap = {
             name: val.full,
             short: val.short,
+          };
+          return newMap;
+        });
+      });
+    this.userService
+      .getAllMaps()
+      .toPromise()
+      .then((maps) => {
+        this.maps = maps["result"];
+        this.programs = this.maps.map((val) => {
+          var newMap = {
+            name: val.full,
+            short: val.short,
             map: val.map,
           };
           return newMap;
         });
-        return this.branches;
+        return this.programs;
       })
       .then((branches) => {
         this.userService
@@ -113,7 +128,7 @@ export class SuperAdminComponent implements OnInit {
                 this.students = {};
               } else {
                 var i = 0;
-                for (const branch of this.branches) {
+                for (const branch of this.programs) {
                   this.students[branch.short] = result["result"][i];
                   i++;
                 }
@@ -135,7 +150,7 @@ export class SuperAdminComponent implements OnInit {
                 this.faculties = {};
               } else {
                 var i = 0;
-                for (const branch of this.branches) {
+                for (const branch of this.programs) {
                   this.faculties[branch.short] = result["result"][i];
                   i++;
                 }
@@ -151,18 +166,82 @@ export class SuperAdminComponent implements OnInit {
       });
   }
 
-  addMap() {
+  addPrograms() {
     let dialogRef = this.dialog.open(AddMapComponent, {
       width: "40%",
       data: {
-        heading: "Confirm",
-        message: "Are you sure you want to proceed to add branch",
+        heading: "Program",
+        message: "Are you sure you want to proceed to add program",
+        add: "program",
       },
     });
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
         this.userService
-          .setMap(data["map"])
+          .setProgram(data["map"])
+          .toPromise()
+          .then((data) => {
+            if (data["message"] == "success") {
+              this.ngOnInit();
+              const snackBarRef = this.snackBar.open(
+                "Added Program Successfully",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          });
+      }
+    });
+  }
+  deleteProgram(short) {
+    let dialogRef = this.dialog.open(DeletePopUpComponent, {
+      height: "200px",
+      data: {
+        heading: "Confirm Deletion",
+        message: "Are you sure you want to remove the program",
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result["message"] == "submit") {
+        this.userService
+          .removeProgram(short)
+          .toPromise()
+          .then((result) => {
+            if (result["message"] == "invalid-token") {
+              this.login.signOut();
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In Again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            } else {
+              this.ngOnInit();
+              this.snackBar.open("Removed Program", "Ok", {
+                duration: 3000,
+              });
+            }
+          });
+      }
+    });
+  }
+
+  addBranches() {
+    let dialogRef = this.dialog.open(AddMapComponent, {
+      width: "40%",
+      data: {
+        heading: "Branch",
+        message: "Are you sure you want to proceed to add branch",
+        add: "branch",
+      },
+    });
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data && data["message"] == "submit") {
+        this.userService
+          .setBranch(data["map"])
           .toPromise()
           .then((data) => {
             if (data["message"] == "success") {
@@ -180,7 +259,7 @@ export class SuperAdminComponent implements OnInit {
     });
   }
 
-  deleteMap(short) {
+  deleteBranch(short) {
     let dialogRef = this.dialog.open(DeletePopUpComponent, {
       height: "200px",
       data: {
@@ -191,7 +270,7 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.userService
-          .removeMap(short)
+          .removeBranch(short)
           .toPromise()
           .then((result) => {
             if (result["message"] == "invalid-token") {
@@ -205,7 +284,7 @@ export class SuperAdminComponent implements OnInit {
               );
             } else {
               this.ngOnInit();
-              this.snackBar.open("Removed Branch", "Ok", {
+              this.snackBar.open("Removed Program", "Ok", {
                 duration: 3000,
               });
             }

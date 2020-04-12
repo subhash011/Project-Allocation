@@ -13,6 +13,7 @@ import { FormBuilder, Validators } from "@angular/forms";
 export class RegisterComponent implements OnInit {
   maps: any;
   branches: any = [];
+  programs: any = [];
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
@@ -21,6 +22,19 @@ export class RegisterComponent implements OnInit {
   ) {}
   branchStudent: any;
   ngOnInit() {
+    this.userService
+      .getAllBranches()
+      .toPromise()
+      .then((maps) => {
+        this.maps = maps["result"];
+        for (const map of this.maps) {
+          const newObj = {
+            name: map.full,
+            short: map.short,
+          };
+          this.branches.push(newObj);
+        }
+      });
     this.userService
       .getAllMaps()
       .toPromise()
@@ -31,10 +45,11 @@ export class RegisterComponent implements OnInit {
             name: map.full,
             short: map.short,
             map: map.map,
+            length: map.length,
           };
-          this.branches.push(newObj);
+          this.programs.push(newObj);
         }
-        return this.branches;
+        return this.programs;
       })
       .then(() => {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -73,9 +88,12 @@ export class RegisterComponent implements OnInit {
     if (localStorage.getItem("role") == "student") {
       const user = JSON.parse(localStorage.getItem("user"));
       const rollno = user.email.split("@")[0];
-      for (const branch of this.branches) {
-        const pattern = new RegExp(branch.map.split("*")[0]);
-        if (pattern.exec(rollno) && pattern.exec(rollno).index == 0) {
+      for (const branch of this.programs) {
+        const pattern = new RegExp(branch.map.split("*")[1]);
+        if (
+          pattern.exec(rollno) &&
+          pattern.exec(rollno).index == branch.length
+        ) {
           return branch.short;
         }
       }
@@ -86,6 +104,14 @@ export class RegisterComponent implements OnInit {
 
   getRole() {
     if (localStorage.getItem("role") == "student") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isFaculty() {
+    if (localStorage.getItem("role") == "faculty") {
       return true;
     } else {
       return false;

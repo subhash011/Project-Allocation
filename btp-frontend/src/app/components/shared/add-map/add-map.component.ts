@@ -18,7 +18,12 @@ export class AddMapComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.data.add == "branch") {
+      this.addForm.controls["map"].clearValidators();
+      this.addForm.updateValueAndValidity();
+    }
+  }
 
   addForm = this.fb.group({
     full: [null, Validators.required],

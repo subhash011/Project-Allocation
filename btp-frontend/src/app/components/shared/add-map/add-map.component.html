@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Add Branches</h2>
+<h2 mat-dialog-title>Add {{ data.heading }}</h2>
 
 <mat-dialog-content [formGroup]="addForm" novalidate>
     <div class="row">
@@ -20,7 +20,7 @@
             </mat-error>
         </mat-form-field>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="data.add == 'program'">
         <mat-form-field class="full-width">
             <input matInput placeholder="Map" formControlName="map" />
             <mat-error *ngIf="addForm.controls['map'].hasError('required')">

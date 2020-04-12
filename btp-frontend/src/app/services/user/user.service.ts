@@ -374,7 +374,31 @@ export class UserService {
     return this.http.get(this.base_url + "maps");
   }
 
-  setMap(map) {
+  setBranch(details) {
+    this.url = this.base_url + "branches/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.post(this.url, details, httpOptions);
+  }
+  removeBranch(map) {
+    this.url = this.base_url + "branches/remove/" + localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+        body: map,
+      }),
+    };
+    return this.http.delete(this.url, httpOptions);
+  }
+
+  setProgram(map) {
     this.url = this.base_url + "maps/" + localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     const httpOptions = {
@@ -385,7 +409,7 @@ export class UserService {
     };
     return this.http.post(this.url, map, httpOptions);
   }
-  removeMap(map) {
+  removeProgram(map) {
     this.url = this.base_url + "maps/remove/" + localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     const httpOptions = {
@@ -447,5 +471,8 @@ export class UserService {
       }),
     };
     return this.http.post(this.url, document, httpOptions);
+  }
+  getAllBranches() {
+    return this.http.get(this.base_url + "branches");
   }
 }

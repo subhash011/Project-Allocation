@@ -118,8 +118,12 @@ router.get("/faculty/details/:id", (req, res) => {
                             .then((faculties) => {
                                 if (faculties) {
                                     for (const branch of branches) {
+                                        //     var temp = faculties.filter((faculty) => {
+                                        //         return faculty.stream == branch;
+                                        //     });
                                         var temp = faculties.filter((faculty) => {
-                                            return faculty.stream == branch;
+                                            arr = faculty.programs.map((x) => x.short);
+                                            return arr.contains(branch);
                                         });
                                         streamwise.push(temp);
                                     }
