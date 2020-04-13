@@ -79,4 +79,47 @@ mat-form-field {
   background-image: url("https://superdevresources.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg");
 }
 
+.display {
+  margin-top: 5%;
+  padding-top: 5%;
+  padding-bottom: 2%;
+  padding-right: 1%;
+  z-index: 2;
+}
+
+
+.table {
+  max-height: 600px;
+  overflow: auto;
+  width: 80%;
+  margin-left: 10%;
+}
+
+.select{
+  margin-top:3%;
+  margin-left: 25%;
+}
+
+
+table {
+  width: 100%;
+}
+
+th,
+td {
+  overflow: hidden;
+  width: 10%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.top{
+  margin-left: 5%;
+  margin-top:5%;
+  width: 100%;
+  
+  display: inline-flex;
+  justify-content: space-around;
+}
 

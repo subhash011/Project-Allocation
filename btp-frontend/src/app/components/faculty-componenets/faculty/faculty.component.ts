@@ -21,6 +21,10 @@ export class FacultyComponent implements OnInit {
   public stream: string;
   public projects;
   public student_list;
+  public programs;
+  public programs_mode: boolean = true;
+  public program_details;
+  public routeParams;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -28,7 +32,8 @@ export class FacultyComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private loginService: LoginComponent,
-    private projectService: ProjectsService
+    private projectService: ProjectsService,
+    private userService : UserService,
   ) {}
 
   ngOnInit(): void {
@@ -43,12 +48,16 @@ export class FacultyComponent implements OnInit {
         const user_info = data["user_details"];
         this.name = user_info.name;
         
-
+        
 
 
         this.activatedRoute.queryParams
         .subscribe(params => {
 
+          this.routeParams = params;
+        if(params.mode == "programMode"){
+          this.programs_mode = false;
+        }
         if(Object.keys(params).length === 0 && params.constructor === Object){
 
 
@@ -62,6 +71,17 @@ export class FacultyComponent implements OnInit {
 
         this.projectService.getFacultyProjects(this.stream).subscribe((data) => {
           this.projects = data["project_details"];
+
+
+          this.userService.getFacultyPrograms()
+          .subscribe(data => {
+            console.log(data)
+            if(data["status"]=="success"){
+              this.programs = data["programs"];
+            }
+          })
+
+
         });
 
 
@@ -106,6 +126,7 @@ export class FacultyComponent implements OnInit {
     this.projectService
       .getStudentsApplied(project.students_id)
       .subscribe((data) => {
+        console.log(data);
         if (data["status"] == "success") {
           this.student_list = data["students"];
 
@@ -113,9 +134,16 @@ export class FacultyComponent implements OnInit {
             return b.gpa - a.gpa;
           });
         } else {
-          let snackBarRef = this.snackBar.open("Please reload the page", "Ok", {
+          let snackBarRef = this.snackBar.open("Session Timed Out! Please Sign in Again!", "Ok", {
             duration: 3000,
           });
+          snackBarRef.afterDismissed().subscribe(() => {
+            this.loginService.signOut()
+        });
+
+        snackBarRef.onAction().subscribe(() => {
+            this.loginService.signOut()
+        });
         }
       });
 
@@ -127,4 +155,23 @@ export class FacultyComponent implements OnInit {
     this.add = state;
     this.empty = false;
   }
+
+
+  displayProgram(program){
+
+    this.userService.getFacultyProgramDetails(program)
+      .subscribe(data=>{
+        if(data["status"]=="success"){
+
+          this.program_details = data["program_details"]
+
+        }
+
+      })
+
+
+
+  }
+
+
 }

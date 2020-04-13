@@ -132,20 +132,12 @@ export class NavbarComponent implements OnInit {
       });
   }
 
-  // checkPrograms() {
-  //   // this.
-  //   if (this.programs.length > 0) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
 
   goToProgram(program) {
     let id = localStorage.getItem("id");
 
     this.router.navigate(["/faculty", id], {
-      queryParams: { name: program.full, abbr: program.short },
+      queryParams: { name: program.full, abbr: program.short, mode:"programMode" },
     });
   }
 }

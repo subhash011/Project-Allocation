@@ -1,3 +1,4 @@
+import { FacultyComponent } from './../faculty/faculty.component';
 import { LoginComponent } from './../../shared/login/login.component';
 import { MatDialog } from "@angular/material/dialog";
 import { ProjectsService } from "./../../../services/projects/projects.service";
@@ -14,7 +15,7 @@ import { Location } from "@angular/common";
   selector: "app-content",
   templateUrl: "./content.component.html",
   styleUrls: ["./content.component.scss"],
-  providers:[LoginComponent]
+  providers:[LoginComponent,FacultyComponent]
 })
 export class ContentComponent implements OnInit, DoCheck {
   @Input() public project;
@@ -22,6 +23,12 @@ export class ContentComponent implements OnInit, DoCheck {
   @Input() public empty = true;
   @Input() public stream: string;
   @Input() public student_list;
+  @Input() public programs_mode:boolean;
+  @Input() public program_details;
+  @Input() public routeParams;
+  public id;
+
+  Headers = ['Project Name','#Students Applied','#Students Alloted']
 
   navigationSubscription;
 
@@ -45,10 +52,14 @@ export class ContentComponent implements OnInit, DoCheck {
     private snackBar: MatSnackBar,
     private router: Router,
     private location: Location,
-    private login:LoginComponent
+    private login:LoginComponent,
+    private facultyComponent : FacultyComponent
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    let id = localStorage.getItem("id");
+    this.id = id;
+  }
 
   ngDoCheck(): void {
     if (this.project) {
@@ -76,19 +87,24 @@ export class ContentComponent implements OnInit, DoCheck {
           let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
             duration: 3000,
           });
+
           snackBarRef.afterDismissed().subscribe(() => {
-            this.router
+            
+
+              this.router
               .navigateByUrl("/refresh", { skipLocationChange: true })
               .then(() => {
-                this.router.navigate([decodeURI(this.location.path())]);
+                this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
               });
+
           });
 
           snackBarRef.onAction().subscribe(() => {
+          
             this.router
               .navigateByUrl("/refresh", { skipLocationChange: true })
               .then(() => {
-                this.router.navigate([decodeURI(this.location.path())]);
+                this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.full, abbr: this.routeParams.short, mode:"programMode" }});
               });
           });
         } else if (data["save"] == "projectCap") {
@@ -147,18 +163,24 @@ export class ContentComponent implements OnInit, DoCheck {
               duration: 3000,
             });
             snackBarRef.afterDismissed().subscribe(() => {
+      
+
               this.router
-                .navigateByUrl("/refresh", { skipLocationChange: true })
-                .then(() => {
-                  this.router.navigate([decodeURI(this.location.path())]);
-                });
+              .navigateByUrl("/refresh", { skipLocationChange: true })
+              .then(() => {
+                this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
+              });
+
             });
             snackBarRef.onAction().subscribe(() => {
+
+
               this.router
-                .navigateByUrl("/refresh", { skipLocationChange: true })
-                .then(() => {
-                  this.router.navigate([decodeURI(this.location.path())]);
-                });
+              .navigateByUrl("/refresh", { skipLocationChange: true })
+              .then(() => {
+                this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
+              });
+
             });
           }
           else if(result["message"] == "fail"){
@@ -167,18 +189,24 @@ export class ContentComponent implements OnInit, DoCheck {
               duration: 3000,
             });
             snackBarRef.afterDismissed().subscribe(() => {
+          
+
               this.router
-                .navigateByUrl("/refresh", { skipLocationChange: true })
-                .then(() => {
-                  this.router.navigate([decodeURI(this.location.path())]);
-                });
+              .navigateByUrl("/refresh", { skipLocationChange: true })
+              .then(() => {
+                this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
+              });
+
             });
             snackBarRef.onAction().subscribe(() => {
+            
+
               this.router
-                .navigateByUrl("/refresh", { skipLocationChange: true })
-                .then(() => {
-                  this.router.navigate([decodeURI(this.location.path())]);
-                });
+              .navigateByUrl("/refresh", { skipLocationChange: true })
+              .then(() => {
+                this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
+              });
+
             });
 
 
@@ -230,18 +258,24 @@ export class ContentComponent implements OnInit, DoCheck {
                   }
                 );
                 snackBarRef.afterDismissed().subscribe(() => {
+              
+
                   this.router
-                    .navigateByUrl("/refresh", { skipLocationChange: true })
-                    .then(() => {
-                      this.router.navigate([decodeURI(this.location.path())]);
-                    });
+                  .navigateByUrl("/refresh", { skipLocationChange: true })
+                  .then(() => {
+                    this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
+                  });
+    
                 });
                 snackBarRef.onAction().subscribe(() => {
+             
+
                   this.router
-                    .navigateByUrl("/refresh", { skipLocationChange: true })
-                    .then(() => {
-                      this.router.navigate([decodeURI(this.location.path())]);
-                    });
+                  .navigateByUrl("/refresh", { skipLocationChange: true })
+                  .then(() => {
+                    this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
+                  });
+    
                 });
               }
             });

@@ -1,7 +1,73 @@
 <div class="container" *ngIf="empty; else notEmpty">
-    <h1>
-        <app-timeline></app-timeline>
-    </h1>
+
+    <div *ngIf="!programs_mode; else goProgramMode">
+        <h1>
+            <app-timeline></app-timeline>
+        </h1>
+    </div>
+
+    <ng-template #goProgramMode>
+
+
+        <div *ngIf="program_details">
+
+
+            <div class="top">
+
+                <div *ngIf="program_details.curDeadline">
+                    <span class="days_left"><strong>Time Left for this stage to end : </strong></span>
+                    <countdown-timer [end]="program_details.curDeadline"></countdown-timer>
+                </div>
+                <div *ngIf="program_details.curDeadline">
+                    
+                         <p *ngIf="program_details.admin.stage == 0"><strong> Stage {{program_details.admin.stage}} : </strong>Creating Projects</p>
+                        <p *ngIf="program_details.admin.stage == 1"><strong> Stage {{program_details.admin.stage}}:</strong>Student Preferences</p>
+                        <p *ngIf="program_details.admin.stage == 2"><strong> Stage {{program_details.admin.stage}}:</strong>Faculty Preferences</p>
+                        <p *ngIf="program_details.admin.stage == 3"><strong> Stage {{program_details.admin.stage}}:</strong>Project Allocation</p>
+
+                </div>
+
+            </div>
+
+
+          
+
+            <div class="display">
+                <div class="table mat-elevation-z8">
+                    <table mat-table #table [dataSource]="program_details.projects" class="mat-elevation-z8">
+                        <ng-container tainer matColumnDef="Project Name">
+                            <th mat-header-cell *matHeaderCellDef>
+                                Project Name
+                            </th>
+                            <td mat-cell *matCellDef="let map">{{ map.title }}</td>
+                        </ng-container>
+
+                        <ng-container tainer matColumnDef="#Students Applied">
+                            <th mat-header-cell *matHeaderCellDef>
+                                No of Students Applied
+                            </th>
+                            <td mat-cell *matCellDef="let map">{{ map.students_id.length }}</td>
+                        </ng-container>
+
+
+                        <ng-container tainer matColumnDef="#Students Alloted">
+                            <th mat-header-cell *matHeaderCellDef>
+                                No of Students Alloted
+                            </th>
+                            <td mat-cell *matCellDef="let map">{{ map.student_alloted.length }}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="Headers"></tr>
+                        <tr mat-row *matRowDef="let row; columns: Headers"></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+      
+
+    </ng-template>
+    
 </div>
 <ng-template #notEmpty>
     <div class="container-add" *ngIf="add; else display">

@@ -322,10 +322,7 @@ export class UserService {
     return this.http.post(this.url, faculty, httpOptions);
   }
 
-  getAllPrograms(stream) {
-    const user_stream = {
-      stream: stream,
-    };
+  getAllPrograms() {
 
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -338,7 +335,7 @@ export class UserService {
       }),
     };
 
-    return this.http.post(this.url, user_stream, httpOptions);
+    return this.http.get(this.url, httpOptions);
   }
 
   deleteFacultyProgram(program) {
@@ -369,6 +366,29 @@ export class UserService {
 
     return this.http.get(this.url, httpOptions);
   }
+
+
+  getFacultyProgramDetails(program){
+
+    const prog = {
+      program:program
+    }
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "faculty/getFacultyProgramDetails/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.post(this.url,prog, httpOptions);
+
+  }
+
+
 
   getAllMaps() {
     return this.http.get(this.base_url + "maps");

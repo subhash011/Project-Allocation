@@ -5,6 +5,7 @@ const bodyparser = require("body-parser");
 const Faculty = require("../models/Faculty");
 const Project = require("../models/Project");
 const Mapping = require('../models/Mapping');
+const Admin = require('../models/Admin_Info');
 
 router.post("/register/:id", (req, res) => {
     const id = req.params.id;
@@ -201,12 +202,11 @@ router.post('/updateProfile/:id',(req,res)=>{
 })
 
 
-router.post('/getAllPrograms/:id',(req,res)=>{
+router.get('/getAllPrograms/:id',(req,res)=>{
 
 
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    const stream = req.body.stream;
 
 
     Faculty.findOne({google_id:{id:id,idToken:idToken}})
@@ -219,17 +219,12 @@ router.post('/getAllPrograms/:id',(req,res)=>{
 
                         if(result){
 
-                            const allPrograms = result.filter(program=>{
-                                if(program.short != stream){
-                                    return program;
-                                }
-                            })
-
+           
                             
 
                             res.json({
                                 status:"success",
-                                programs: allPrograms
+                                programs: result
 
                             })
 
@@ -445,5 +440,97 @@ router.get('/getFacultyPrograms/:id',(req,res)=>{
 })
 
 
+router.post('/getFacultyProgramDetails/:id',(req,res)=>{
+
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const program = req.body.program;
+
+
+    Faculty.findOne({google_id:{id:id,idToken:idToken}})
+        .then(faculty=>{
+
+            Admin.findOne({stream:program.short})
+            .then(admin=>{
+
+                if(admin){
+                    var stage = admin.stage;
+                    if(admin.deadlines.length)
+                        var deadline = admin.deadlines[admin.deadlines.length - 1];
+                    else    
+                        var deadline = null;
+                    
+                   Project.find({faculty_id: faculty.id,stream:program.short})
+                        .then(result=>{
+
+                            if(result){
+
+
+                                
+                                const obj = {
+                                    program:program,    
+                                    admin : admin,
+                                    curDeadline:deadline,
+                                    projects:result
+
+                                }
+
+                                res.json({
+                                    status:"success",
+                                    program_details:obj
+                                })
+                            }
+
+                            else{
+
+                                const obj = {
+
+                                    program:program,    
+                                     admin : admin,
+                                    curDeadline:deadline,
+                                    projects:result
+
+                                }
+
+
+                                res.json({
+                                    status:"success",
+                                    program_details:obj
+                                })
+                            }
+                           
+
+
+                        })
+                        .catch(err=>{
+                            res.json({
+                                status:"failed",
+                                result:null
+                            })
+                        })
+
+                    
+
+                }
+                else{
+                    res.json({
+                        status:"failed",
+                        result:null
+                    })
+                }
+
+
+
+            })
+            .catch(err=>{
+                res.json({
+                    status:"failed",
+                    result:null
+                })
+            })
+        })
+
+
+})
 
 module.exports = router;

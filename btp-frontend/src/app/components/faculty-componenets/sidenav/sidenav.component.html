@@ -1,4 +1,6 @@
-<mat-nav-list *ngFor="let project of projects; let i = index">
+<div *ngIf="!programs_mode; else programsPanel">
+
+  <mat-nav-list *ngFor="let project of projects; let i = index" >
     <a mat-list-item (click)="onClick(project, i)" [class.active]="i == selectedRow">
     {{ project.title }}
   </a>
@@ -7,3 +9,20 @@
 <button color="warn" mat-raised-button class="add-button" (click)="displayAdd(true)">
   ADD
 </button>
+
+<button color="warn" mat-raised-button class="add-button" (click)="displayHome()">
+  Overview
+</button>
+
+</div>
+
+
+<ng-template #programsPanel>
+  <mat-nav-list *ngFor="let program of programs; let i = index" >
+    <a mat-list-item (click)="onProgramClick(program, i)" [class.active]="i == selectedRow">
+    {{ program.full }}
+  </a>
+</mat-nav-list>
+
+</ng-template>
+

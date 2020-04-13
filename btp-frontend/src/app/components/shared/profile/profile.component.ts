@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit {
               this.user_info.name
             );
             this.userService
-              .getAllPrograms(this.user_info.stream)
+              .getAllPrograms()
               .subscribe((data) => {
                 if (data["status"] == "success") {
                   this.programs = data["programs"];

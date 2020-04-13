@@ -68,7 +68,7 @@ router.post("/add/:id", (req, res) => {
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then(user => {
-            const stream = user.stream;
+            const stream = project_details.stream;
             if (user) {
                 const project = new Project({
                     title: project_details.title,
@@ -85,57 +85,75 @@ router.post("/add/:id", (req, res) => {
                     .then(admin=>{
 
                         if(admin){
-                            
-                            if(admin.project_cap == null){
-                                res.json({
-                                    save:'projectCap',
-                                    msg: 'Please contact the admin to set the project cap'
-                                })
-                            }
-
-                            else if(user.project_list.length > admin.project_cap){
-                                res.json({
-                                    save:'projectCap',
-                                    msg:'You cant add more projects'
-                                })
-                            }
-
-                            else{
-
-                                
-                                if(project_details.studentIntake > admin.student_cap){
-                                    res.json({
-                                        save:"studentCap",
-                                        msg: "Student Intake exceeded. Please contact your stream admin to set new student cap!!"
-                                    })
-                                }
-                                
-                                else{
 
 
-                                project
-                                .save()
-                                .then(result => {
-                                    user.save().then(ans => {
+
+                            Project.count({faculty_id:user._id,stream:stream})
+                                .then(count=>{
+
+                                    if(admin.project_cap == null){
                                         res.json({
-                                            save: "success",
-                                            msg: "Your project has been successfully added"
-                                        });
-                                    });
+                                            save:'projectCap',
+                                            msg: 'Please contact the admin to set the project cap'
+                                        })
+                                    }
+        
+                                    else if(count > admin.project_cap){
+                                        res.json({
+                                            save:'projectCap',
+                                            msg:'You cant add more projects since the project cap exceeded. Please contact your stream admin to set new project cap!!'
+                                        })
+                                    }
+        
+                                    else{
+        
+                                        
+                                        if(project_details.studentIntake > admin.student_cap){
+                                            res.json({
+                                                save:"studentCap",
+                                                msg: "Student Intake exceeded. Please contact your stream admin to set new student cap!!"
+                                            })
+                                        }
+                                        
+                                        else{
+        
+        
+                                        project
+                                        .save()
+                                        .then(result => {
+                                            user.save().then(ans => {
+                                                res.json({
+                                                    save: "success",
+                                                    msg: "Your project has been successfully added"
+                                                });
+                                            });
+                                        })
+                                        .catch(err => {
+                                            res.json({
+                                                save: "fail",
+                                                msg: " There was an error, Please try again!" //Display the messages in flash messages
+                                            });
+                                        }); 
+        
+        
+        
+                                        }
+                   
+                                    }
+        
+
+
                                 })
-                                .catch(err => {
+                                .catch(err=>{
                                     res.json({
                                         save: "fail",
                                         msg: " There was an error, Please try again!" //Display the messages in flash messages
                                     });
-                                }); 
 
+                                })
 
-
-                                }
-           
-                            }
-
+                            
+                            
                         }
                         else{
 

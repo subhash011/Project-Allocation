@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema({
         ref: Student
     },
     student_alloted: {
-        type: mongoose.SchemaTypes.ObjectId,
+        type: [mongoose.SchemaTypes.ObjectId],
         ref: Student
     }
 });
