@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { ProjectsService } from "./../../../services/projects/projects.service";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { MailService } from "./../../../services/mailing/mail.service";
@@ -38,6 +39,7 @@ export class AdminComponent implements OnInit {
   fifthFormGroup: FormGroup;
   sixthFormGroup: FormGroup;
 
+  public programName;
 
   public stage_no;
   dateSet = [];
@@ -72,7 +74,8 @@ export class AdminComponent implements OnInit {
     private snackBar: MatSnackBar,
     private mailer: MailService,
     private projectService: ProjectsService,
-    private loginService: LoginComponent
+    private loginService: LoginComponent,
+    private activatedRoute:ActivatedRoute
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -134,51 +137,73 @@ export class AdminComponent implements OnInit {
         }
       });
     this.userService.getAdminInfo().subscribe((data) => {
-      this.stage_no = data["stage"];
 
-      this.dateSet = data["deadlines"];
-      this.projectCap = data["projectCap"];
-      this.studentCap = data["studentCap"];
-      console.log(this.studentCap)
-      // this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-      this.dateSet = this.dateSet.map((date) => {
-        return new Date(date);
-      });
-      this.startDate = data["startDate"];
+    
+        if(data["status"] == "success"){
 
-      this.ngAfterViewInit();
+          this.programName = data["stream"];
+          this.stage_no = data["stage"];
+          this.dateSet = data["deadlines"];
+          this.projectCap = data["projectCap"];
+          this.studentCap = data["studentCap"];
+          this.dateSet = this.dateSet.map((date) => {
+            return new Date(date);
+          });
+          this.startDate = data["startDate"];
 
-      this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
-      this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
-      this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
-      this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
-      this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
+          this.ngAfterViewInit();
+
+          this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
+          this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
+          this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
+          this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
+          this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
 
 
-      if (this.dateSet.length == 1) {
-        if (this.firstFormGroup.controls["firstCtrl"]) {
-          this.proceedButton1 = false;
+          if (this.dateSet.length == 1) {
+            if (this.firstFormGroup.controls["firstCtrl"]) {
+              this.proceedButton1 = false;
+            }
+          }
+          if (this.dateSet.length == 2) {
+            if (this.secondFormGroup.controls["secondCtrl"]) {
+              this.proceedButton2 = false;
+            }
+          }
+          if (this.dateSet.length == 3) {
+            if (this.thirdFormGroup.controls["thirdCtrl"])
+              this.proceedButton3 = false;
+          }
+          if (this.stage_no == 0) {
+            this.minDate = new Date();
+          } else {
+            this.minDate = this.dateSet[this.dateSet.length - 1];
+          }
+          if (this.dateSet.length > 0) {
+            this.curr_deadline = this.dateSet[this.dateSet.length - 1];
+            let today = new Date();
+            this.days_left = this.daysBetween(today, this.curr_deadline);
+          }
+
+
+
         }
-      }
-      if (this.dateSet.length == 2) {
-        if (this.secondFormGroup.controls["secondCtrl"]) {
-          this.proceedButton2 = false;
+
+        else{
+
+
+          this.loginService.signOut();
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
+
         }
-      }
-      if (this.dateSet.length == 3) {
-        if (this.thirdFormGroup.controls["thirdCtrl"])
-          this.proceedButton3 = false;
-      }
-      if (this.stage_no == 0) {
-        this.minDate = new Date();
-      } else {
-        this.minDate = this.dateSet[this.dateSet.length - 1];
-      }
-      if (this.dateSet.length > 0) {
-        this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-        let today = new Date();
-        this.days_left = this.daysBetween(today, this.curr_deadline);
-      }
+
+
+     
+
+
+
 
 
  

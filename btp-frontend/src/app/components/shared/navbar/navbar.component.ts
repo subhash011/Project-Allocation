@@ -19,6 +19,7 @@ export class NavbarComponent implements OnInit {
   role: string = "admin";
   checkPrograms: boolean = false;
   programs;
+  adminProgram;
 
   ngOnInit() {
     if (localStorage.getItem("isLoggedIn") == "true") {

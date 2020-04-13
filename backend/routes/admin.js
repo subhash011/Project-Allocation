@@ -88,7 +88,8 @@ router.get("/info/:id", (req, res) => {
                             deadlines: admin.deadlines,
                             startDate: startDate,
                             projectCap: admin.project_cap,
-                            studentCap:admin.student_cap
+                            studentCap:admin.student_cap,
+                            stream: admin.stream
                         });
                     } else {
                         res.json({

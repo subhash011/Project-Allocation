@@ -1,10 +1,11 @@
 <mat-tab-group [(selectedIndex)]="index" [backgroundColor]="'primary'" animationDuration="0" dynamicHeight="true" mat-align-tabs="center">
     <mat-tab label="Admin">
         <div class="header">
-            <h1 *ngIf="stage_no == 0">Creating Projects</h1>
-            <h1 *ngIf="stage_no == 1">Student Preferences</h1>
-            <h1 *ngIf="stage_no == 2">Faculty Preferences</h1>
-            <h1 *ngIf="stage_no == 3">Project Allocation</h1>
+            <h1>{{programName}}</h1>
+            <h2 *ngIf="stage_no == 0">Creating Projects</h2>
+            <h2 *ngIf="stage_no == 1">Student Preferences</h2>
+            <h2 *ngIf="stage_no == 2">Faculty Preferences</h2>
+            <h2 *ngIf="stage_no == 3">Project Allocation</h2>
         </div>
 
         <div class="progress-bar">

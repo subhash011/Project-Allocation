@@ -411,9 +411,11 @@ router.get('/getFacultyPrograms/:id',(req,res)=>{
 
             if(faculty){
                 const programs = faculty.programs;
+                const adminProgram = faculty.adminProgram;
                 res.json({
                     status:"success",
                     programs: programs
+
                 })
 
             }
