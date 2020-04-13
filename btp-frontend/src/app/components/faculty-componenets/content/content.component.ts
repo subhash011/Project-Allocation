@@ -26,6 +26,7 @@ export class ContentComponent implements OnInit, DoCheck {
   @Input() public programs_mode:boolean;
   @Input() public program_details;
   @Input() public routeParams;
+  @Input() public adminStage;
   public id;
 
   Headers = ['Project Name','#Students Applied','#Students Alloted']
@@ -109,12 +110,21 @@ export class ContentComponent implements OnInit, DoCheck {
           });
         } else if (data["save"] == "projectCap") {
           //Go to the error page
-          let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+          this.snackBar.open(data["msg"], "Ok", {
             duration: 3000,
           });
         } else if(data["save"] == "studentCap") {
 
-          let snackBarRef = this.snackBar.open(
+          this.snackBar.open(
+            data["msg"],
+            "Ok",
+            {
+              duration: 3000,
+            }
+          );
+        }
+        else if(data["save"] == "studentsPerFaculty"){
+          this.snackBar.open(
             data["msg"],
             "Ok",
             {
@@ -151,6 +161,10 @@ export class ContentComponent implements OnInit, DoCheck {
         description: this.EditForm.get("description").value,
         project_id: param._id,
       };
+
+      if(project.studentIntake > 0 && project.duration > 0){
+
+
       if (this.dialog.openDialogs.length == 0) {
         let dialogRef = this.dialog.open(SubmitPopUpComponent, {
           height: "50%",
@@ -183,35 +197,23 @@ export class ContentComponent implements OnInit, DoCheck {
 
             });
           }
-          else if(result["message"] == "fail"){
+          else if(result["message"] == "studentCap"){
 
-            let snackBarRef = this.snackBar.open("Student Intake exceeded. Please contact your stream admin to set new student cap!!", "Ok", {
+            this.snackBar.open(result["msg"], "Ok", {
               duration: 3000,
             });
-            snackBarRef.afterDismissed().subscribe(() => {
-          
-
-              this.router
-              .navigateByUrl("/refresh", { skipLocationChange: true })
-              .then(() => {
-                this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
-              });
-
-            });
-            snackBarRef.onAction().subscribe(() => {
-            
-
-              this.router
-              .navigateByUrl("/refresh", { skipLocationChange: true })
-              .then(() => {
-                this.router.navigate(['/faculty',this.id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
-              });
-
-            });
-
 
           }
+          else if(result["message"] == "studentsPerFaculty"){
+            
+            this.snackBar.open(result["msg"], "Ok", {
+              duration: 3000,
+            });
+        
+          }
+
           else{
+
             let snackBarRef = this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
             });
@@ -224,12 +226,27 @@ export class ContentComponent implements OnInit, DoCheck {
                 this.login.signOut()
             });
   
+
           }
 
 
 
         });
       }
+
+
+      }
+
+      else{
+
+        let snackBarRef = this.snackBar.open("Please Enter Valid Data", "OK", {
+          duration: 3000,
+        });
+
+      }
+
+
+
     }
   }
 

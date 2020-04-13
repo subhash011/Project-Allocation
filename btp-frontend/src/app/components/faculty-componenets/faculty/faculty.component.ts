@@ -25,6 +25,7 @@ export class FacultyComponent implements OnInit {
   public programs_mode: boolean = true;
   public program_details;
   public routeParams;
+  public adminStage;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -78,6 +79,20 @@ export class FacultyComponent implements OnInit {
             console.log(data)
             if(data["status"]=="success"){
               this.programs = data["programs"];
+
+              this.userService.getAdminInfo()
+                .subscribe(data=>{
+
+                  if(data["status"] == "success"){
+
+                  this.adminStage = data["stage"]; 
+
+
+                  }
+
+                })
+
+
             }
           })
 
@@ -152,8 +167,17 @@ export class FacultyComponent implements OnInit {
     this.empty = false;
   }
   addProject(state) {
-    this.add = state;
-    this.empty = false;
+    if(this.adminStage == 0){
+      this.add = state;
+      this.empty = false;
+    }
+    else{
+      this.add = !state;
+       this.snackBar.open("Stage Deadline reached!! You can't add more projects!!", "Ok", {
+        duration: 3000,
+      });
+    }
+
   }
 
 

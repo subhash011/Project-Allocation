@@ -38,6 +38,8 @@ export class AdminComponent implements OnInit {
   fourthFormGroup: FormGroup;
   fifthFormGroup: FormGroup;
   sixthFormGroup: FormGroup;
+  seventhFormGroup:FormGroup;
+
 
   public programName;
 
@@ -59,6 +61,7 @@ export class AdminComponent implements OnInit {
   student;
   faculty;
 
+  studentsPerFaculty;
   projectCap;
   studentCap;
   days_left;
@@ -93,6 +96,9 @@ export class AdminComponent implements OnInit {
     });
     this.sixthFormGroup = this.formBuilder.group({
       sixthCtrl: [this.studentCap],
+    });
+    this.seventhFormGroup = this.formBuilder.group({
+      seventhCtrl: [this.studentsPerFaculty],
     });
   }
 
@@ -145,6 +151,7 @@ export class AdminComponent implements OnInit {
           this.dateSet = data["deadlines"];
           this.projectCap = data["projectCap"];
           this.studentCap = data["studentCap"];
+          this.studentsPerFaculty = data["studentsPerFaculty"];
           this.dateSet = this.dateSet.map((date) => {
             return new Date(date);
           });
@@ -157,6 +164,8 @@ export class AdminComponent implements OnInit {
           this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
           this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
           this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
+          this.seventhFormGroup.controls["seventhCtrl"].setValue(this.studentsPerFaculty);
+
 
 
           if (this.dateSet.length == 1) {
@@ -652,7 +661,7 @@ export class AdminComponent implements OnInit {
   setProjectCap() {
     // console.log(this.fifthFormGroup.get("fifthCtrl").value);
 
-    if (this.fifthFormGroup.controls["fifthCtrl"].value) {
+    if (this.fifthFormGroup.controls["fifthCtrl"].value > 0) {
       this.userService
         .setProjectCap(this.fifthFormGroup.get("fifthCtrl").value)
         .subscribe((data) => {
@@ -680,16 +689,15 @@ export class AdminComponent implements OnInit {
           }
         });
     } else {
-      let snackBarRef = this.snackBar.open("Please enter a number", "Ok", {
+      let snackBarRef = this.snackBar.open("Please enter a valid number", "Ok", {
         duration: 3000,
       });
     }
   }
 
   setStudentCap() {
-    console.log(this.sixthFormGroup.get("sixthCtrl").value);
 
-    if (this.sixthFormGroup.controls["sixthCtrl"].value) {
+    if (this.sixthFormGroup.controls["sixthCtrl"].value > 0) {
       this.userService
         .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
         .subscribe((data) => {
@@ -717,9 +725,55 @@ export class AdminComponent implements OnInit {
           }
         });
     } else {
-      let snackBarRef = this.snackBar.open("Please enter a number", "Ok", {
+      let snackBarRef = this.snackBar.open("Please enter a valid number", "Ok", {
         duration: 3000,
       });
     }
   }
+  
+    setStudentsPerFaculty(){
+
+      console.log(this.seventhFormGroup.controls["seventhCtrl"].value)
+
+      if (this.seventhFormGroup.controls["seventhCtrl"].value > 0) {
+        this.userService
+          .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
+          .subscribe((data) => {
+            console.log(data);
+  
+            if (data["status"] == "success") {
+              let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+                duration: 3000,
+              });
+              this.ngOnInit();
+            } else {
+              let snackBarRef = this.snackBar.open(
+                "Session Timed Out! Please Sign in Again!",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+              snackBarRef.afterDismissed().subscribe(() => {
+                this.loginService.signOut();
+              });
+              snackBarRef.onAction().subscribe(() => {
+                this.loginService.signOut();
+              });
+            }
+          });
+      } else {
+        let snackBarRef = this.snackBar.open("Please enter a valid number", "Ok", {
+          duration: 3000,
+        });
+      }
+
+
+
+
+      
+    }
+
+
+
 }

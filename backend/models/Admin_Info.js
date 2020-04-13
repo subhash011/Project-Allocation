@@ -25,6 +25,9 @@ const UserSchema = new mongoose.Schema({
     type:Number,
     default: 1
   },
+  studentsPerFaculty:{
+    type:Number
+  },
   startDate: {
     type: Date,
   }

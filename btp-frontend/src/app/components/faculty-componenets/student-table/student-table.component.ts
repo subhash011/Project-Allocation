@@ -15,6 +15,7 @@ export class StudentTableComponent implements OnInit {
   @Input() public student_list;
   // public checked: boolean = false;
   @Input() public project;
+  @Input() public adminStage;
 
   constructor(
     private projectService: ProjectsService,
@@ -32,7 +33,8 @@ export class StudentTableComponent implements OnInit {
 
   onSubmit() {
     // this.checked = false;
-    this.projectService
+    if(this.adminStage == 2){
+      this.projectService
       .savePreference(this.student_list, this.project._id)
       .subscribe(data => {
         if (data["status"] == "success") {
@@ -57,14 +59,32 @@ export class StudentTableComponent implements OnInit {
         }
         else{
 
-          let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+          this.snackBar.open(data["msg"], "Ok", {
             duration: 3000
           });
         
         }
 
-
-
       });
+    }
+    
+    else{
+
+      if(this.adminStage < 2){
+        this.snackBar.open("This will be active on stage 2", "Ok", {
+          duration: 3000
+        });
+      }
+      else{
+        this.snackBar.open("Stage deadline has ended", "Ok", {
+          duration: 3000
+        });
+
+      }
+
+
+    
+    
+    }
   }
 }

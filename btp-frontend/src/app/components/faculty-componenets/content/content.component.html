@@ -116,7 +116,7 @@
         <mat-tab-group color="accent" dynamicHeight="true">
 
             <mat-tab label="Students">
-                <app-student-table [project]="project" [student_list]="student_list">
+                <app-student-table [project]="project" [adminStage]="adminStage" [student_list]="student_list">
                 </app-student-table>
             </mat-tab>
 
@@ -140,7 +140,7 @@
 
                                 <div class="row">
                                     <mat-form-field class="full-width">
-                                        <input matInput placeholder="Duration" formControlName="duration" [(ngModel)]="project.duration" />
+                                        <input matInput placeholder="Duration (months)" formControlName="duration" [(ngModel)]="project.duration" />
                                         <mat-error *ngIf="EditForm.controls['duration'].hasError('required')">
                                             Duration is <strong>required</strong>
                                         </mat-error>
@@ -164,8 +164,8 @@
                                     </mat-error>
                                 </div>
                             </mat-card-content>
-                            <button mat-raised-button class="edit-submit" [disabled]="!EditForm.valid" color="primary" type="submit">Submit</button>
-                            <button mat-raised-button class="deleteButton" type="button" color="primary" (click)="deleteProject(project)">Delete</button>
+                            <button mat-raised-button *ngIf="adminStage == 0" class="edit-submit" [disabled]="!EditForm.valid" color="primary" type="submit">Submit</button>
+                            <button mat-raised-button *ngIf="adminStage == 0" class="deleteButton" type="button" color="primary" (click)="deleteProject(project)">Delete</button>
                         </mat-card>
                     </form>
                 </div>

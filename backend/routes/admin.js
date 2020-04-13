@@ -89,7 +89,8 @@ router.get("/info/:id", (req, res) => {
                             startDate: startDate,
                             projectCap: admin.project_cap,
                             studentCap:admin.student_cap,
-                            stream: admin.stream
+                            stream: admin.stream,
+                            studentsPerFaculty:admin.studentsPerFaculty
                         });
                     } else {
                         res.json({
@@ -506,6 +507,75 @@ router.post("/set_studentCap/:id",(req,res)=>{
 
 });
 
+
+router.post('/set_studentsPerFacuty/:id',(req,res)=>{
+
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const cap = req.body.cap;
+
+    Faculty.findOne({google_id:{id:id,idToken:idToken}})
+        .then(faculty=>{
+
+
+            if(faculty){
+
+                Admin.findOne({admin_id:faculty._id})
+                    .then(admin=>{
+
+
+                        admin.studentsPerFaculty = cap;
+
+                        admin.save()
+                            .then(result=>{
+
+                                res.json({
+                                    status:"success",
+                                    msg:"Successfully set the number of students per faculty!!"
+                                })
+
+
+                            })
+                            .catch((err) => {
+                                res.json({
+                                  status: "fail",
+                                  result: "save error",
+                                });
+                              });
+
+
+                    })
+                    .catch((err) => {
+                        res.json({
+                          status: "fail",
+                          result: "Admin error",
+                        });
+                      });
+
+
+            }
+
+            else{
+
+                res.json({
+                    status: "fail",
+                    result: "Faculty not found",
+                  });
+
+            }
+
+
+
+        })
+        .catch((err) => {
+            res.json({
+              status: "fail",
+              result: "Authentication error",
+            });
+          });
+
+
+})
 
 
 module.exports = router;

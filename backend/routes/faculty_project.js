@@ -88,8 +88,17 @@ router.post("/add/:id", (req, res) => {
 
 
 
-                            Project.count({faculty_id:user._id,stream:stream})
-                                .then(count=>{
+                            Project.find({faculty_id:user._id,stream:stream})
+                                .then(projects=>{
+                                    const count = projects.length;
+                                    var student_count = 0;
+
+                                    for(const project of projects){
+                                        student_count+=project.studentIntake;
+                                    }
+
+                                    
+
 
                                     if(admin.project_cap == null){
                                         res.json({
@@ -101,7 +110,7 @@ router.post("/add/:id", (req, res) => {
                                     else if(count > admin.project_cap){
                                         res.json({
                                             save:'projectCap',
-                                            msg:'You cant add more projects since the project cap exceeded. Please contact your stream admin to set new project cap!!'
+                                            msg:`Max number of projects that can be added are ${admin.project_cap}`
                                         })
                                     }
         
@@ -111,7 +120,14 @@ router.post("/add/:id", (req, res) => {
                                         if(project_details.studentIntake > admin.student_cap){
                                             res.json({
                                                 save:"studentCap",
-                                                msg: "Student Intake exceeded. Please contact your stream admin to set new student cap!!"
+                                                msg: `Max number of students that can be taken per project are ${admin.student_cap}`
+                                            })
+                                        }
+
+                                        if(student_count + project_details.studentIntake > admin.studentsPerFaculty){
+                                            res.json({
+                                                save:"studentsPerFaculty",
+                                                msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`
                                             })
                                         }
                                         
@@ -297,15 +313,40 @@ router.post("/update/:id", (req, res) => {
 
                     if(admin){
 
+
+
+                        Project.find({faculty_id:project.faculty_id,stream:stream})
+                        .then(projects=>{
+                            const count = projects.length;
+                            var student_count = 0;
+
+                            for(const proj of projects){
+                                student_count+=proj.studentIntake;
+                            }
+
+
+
+
                         if(project.studentIntake > admin.student_cap){
 
                             res.json({
-                                status:"fail",
-                                msg:"Student Intake exceeded. Please contact your stream admin to set new student cap!!"
+                                status:"fail1",
+                                msg:`Max number of students that can be taken per project are ${admin.student_cap}`
                             })
 
 
                         }
+
+
+                        if(student_count + studentIntake > admin.studentsPerFaculty){
+                            res.json({
+                                status:"fail2",
+                                msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`
+                            })
+                        }
+                        
+
+
                         else{
 
                             project
@@ -323,6 +364,16 @@ router.post("/update/:id", (req, res) => {
                                 });
                             });
                         }
+
+
+
+
+
+
+                        })
+
+
+
 
 
                     }

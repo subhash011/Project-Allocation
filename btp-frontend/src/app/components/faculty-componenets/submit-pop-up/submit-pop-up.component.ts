@@ -24,9 +24,17 @@ export class SubmitPopUpComponent implements OnInit {
       if(data["status"] == "success"){
         this.dialogRef.close({ message: "submit" });
       }
-      else if(data["status"] == "fail"){
-        this.dialogRef.close({ message: "fail" });
+      else if(data["status"] == "fail1"){
+        this.dialogRef.close({ message: "studentCap" , msg:data["msg"] });
       }
+      else if(data["status"]=="fail2"){
+        this.dialogRef.close({message:"studentsPerFaculty", msg:data["msg"]})
+      }
+      else{
+        this.dialogRef.close({ message: "fail" });
+        
+      }
+    
 
      
     });
