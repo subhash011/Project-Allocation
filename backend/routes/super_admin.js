@@ -118,8 +118,12 @@ router.get("/faculty/details/:id", (req, res) => {
                             .then((faculties) => {
                                 if (faculties) {
                                     for (const branch of branches) {
+                                        //     var temp = faculties.filter((faculty) => {
+                                        //         return faculty.stream == branch;
+                                        //     });
                                         var temp = faculties.filter((faculty) => {
-                                            return faculty.stream == branch;
+                                            arr = faculty.programs.map((x) => x.short);
+                                            return arr.contains(branch);
                                         });
                                         streamwise.push(temp);
                                     }
@@ -301,6 +305,7 @@ router.delete("/faculty/:id", (req, res) => {
 
 router.post("/addAdmin/:id", (req, res) => {
     const id = req.body.id;
+    const branch = req.body.branch;
     const google_user_id = req.params.id;
     const idToken = req.headers.authorization;
     oauth(idToken)
@@ -313,10 +318,11 @@ router.post("/addAdmin/:id", (req, res) => {
                         .then((faculty) => {
                             if (faculty) {
                                 faculty.isAdmin = true;
+                                faculty.adminProgram = branch;
                                 faculty.save().then((faculty) => {
                                     var admin = new Admin({
                                         admin_id: faculty._id,
-                                        stream: faculty.stream,
+                                        stream: branch,
                                         deadlines: [],
                                     });
                                     admin
@@ -375,6 +381,7 @@ router.post("/removeAdmin/:id", (req, res) => {
                         .then((faculty) => {
                             if (faculty) {
                                 faculty.isAdmin = false;
+                                faculty.adminProgram = null;
                                 faculty.save().then((faculty) => {
                                     Admin.findOneAndDelete({ admin_id: faculty._id }).then(
                                         (admin) => {

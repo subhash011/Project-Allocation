@@ -12,6 +12,6 @@ export class AppComponent implements OnInit {
   login = true;
   maps: any = [];
   branches: any = [];
-  constructor(private userService: UserService) {}
+  constructor() {}
   ngOnInit() {}
 }

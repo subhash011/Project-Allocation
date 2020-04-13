@@ -59,7 +59,22 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="row" *ngIf="!isSuperAdmin()">
+        <div class="row" *ngIf="!isSuperAdmin() && getRole()">
+          <mat-form-field class="full-width">
+            <mat-select placeholder="Branch" formControlName="branch">
+              <mat-option
+                *ngFor="let program of programs"
+                [value]="program.short"
+              >
+                {{ program.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="userForm.controls['branch'].hasError('required')">
+              Branch is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row" *ngIf="!isSuperAdmin() && isFaculty()">
           <mat-form-field class="full-width">
             <mat-select placeholder="Branch" formControlName="branch">
               <mat-option
