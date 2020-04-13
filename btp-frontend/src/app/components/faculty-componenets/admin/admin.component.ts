@@ -38,7 +38,6 @@ export class AdminComponent implements OnInit {
   fifthFormGroup: FormGroup;
   sixthFormGroup: FormGroup;
 
-
   public stage_no;
   dateSet = [];
   curr_deadline;
@@ -61,7 +60,6 @@ export class AdminComponent implements OnInit {
   studentCap;
   days_left;
   project: any;
-
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
 
@@ -90,8 +88,8 @@ export class AdminComponent implements OnInit {
       fifthCtrl: [this.projectCap],
     });
     this.sixthFormGroup = this.formBuilder.group({
-      sixthCtrl:[this.studentCap]
-    })
+      sixthCtrl: [this.studentCap],
+    });
   }
 
   ngAfterViewInit() {
@@ -139,7 +137,7 @@ export class AdminComponent implements OnInit {
       this.dateSet = data["deadlines"];
       this.projectCap = data["projectCap"];
       this.studentCap = data["studentCap"];
-      console.log(this.studentCap)
+      console.log(this.studentCap);
       // this.curr_deadline = this.dateSet[this.dateSet.length - 1];
       this.dateSet = this.dateSet.map((date) => {
         return new Date(date);
@@ -153,7 +151,6 @@ export class AdminComponent implements OnInit {
       this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
       this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
       this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
-
 
       if (this.dateSet.length == 1) {
         if (this.firstFormGroup.controls["firstCtrl"]) {
@@ -179,15 +176,11 @@ export class AdminComponent implements OnInit {
         let today = new Date();
         this.days_left = this.daysBetween(today, this.curr_deadline);
       }
-
-
- 
     });
     this.projectService.getAllStreamProjects().subscribe((projects) => {
-      console.log(projects)
       if (projects["message"] == "success") {
         this.projects = projects["result"];
-
+        console.log(this.projects);
       } else {
         this.loginService.signOut();
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
@@ -195,8 +188,6 @@ export class AdminComponent implements OnInit {
         });
       }
     });
-
- 
   }
 
   proceed() {
@@ -420,14 +411,10 @@ export class AdminComponent implements OnInit {
 
   startAllocation() {
     // this.userService.startAllocation().subscribe((data) => {});
-
     // this.projectService.startAllocation()
     //   .subscribe(data=>{
     //     console.log(data)
     //   })
-
-
-
   }
 
   sendEmails() {
@@ -663,7 +650,7 @@ export class AdminComponent implements OnInit {
                 duration: 3000,
               }
             );
-             snackBarRef.afterDismissed().subscribe(() => {
+            snackBarRef.afterDismissed().subscribe(() => {
               this.loginService.signOut();
             });
             snackBarRef.onAction().subscribe(() => {
@@ -678,10 +665,8 @@ export class AdminComponent implements OnInit {
     }
   }
 
-
-  setStudentCap(){
-  
-    console.log(this.sixthFormGroup.get("sixthCtrl").value)
+  setStudentCap() {
+    console.log(this.sixthFormGroup.get("sixthCtrl").value);
 
     if (this.sixthFormGroup.controls["sixthCtrl"].value) {
       this.userService
@@ -702,7 +687,7 @@ export class AdminComponent implements OnInit {
                 duration: 3000,
               }
             );
-             snackBarRef.afterDismissed().subscribe(() => {
+            snackBarRef.afterDismissed().subscribe(() => {
               this.loginService.signOut();
             });
             snackBarRef.onAction().subscribe(() => {
@@ -715,11 +700,5 @@ export class AdminComponent implements OnInit {
         duration: 3000,
       });
     }
-
-
   }
-
-
-
-
 }

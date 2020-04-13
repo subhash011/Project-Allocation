@@ -28,7 +28,7 @@
                             <ng-container matColumnDef="isAdmin">
                                 <th mat-header-cell *matHeaderCellDef>Admin</th>
                                 <td mat-cell *matCellDef="let faculty">
-                                    {{ faculty.isAdmin ? "YES" : "NO" }}
+                                    {{ faculty.isAdmin ? faculty.adminProgram : "NO" }}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Actions">

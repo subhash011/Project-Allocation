@@ -32,7 +32,7 @@ mongoose.set("useFindAndModify", false);
 var mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
 mongoose
-    .connect('mongodb://localhost:27017/ProjectAllocationTest', {
+    .connect(mongoConnect, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
