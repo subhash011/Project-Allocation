@@ -19,7 +19,7 @@ mongoose.set("useFindAndModify", false);
 var mongoConnect = process.env.MONGO_URL_LOCAL;
 //connect to mongodb
 mongoose
-    .connect(mongoConnect, {
+    .connect("mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/Testing", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
@@ -34,12 +34,23 @@ mongoose
 const student = require("./routes/student");
 app.use("/student", student);
 
+<<<<<<< HEAD
 const project = require("./routes/project");
 app.use("/project", project);
 
 const faculty = require("./routes/faculty");
 app.use("/faculty", faculty);
 
+=======
+const faculty = require("./routes/faculty");
+app.use("/faculty", faculty);
+
+const projects = require("./routes/project");
+app.use("/projects", projects);
+
+
+
+>>>>>>> 77401b107ca70177cbd31b83da596b42072b0f3e
 const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
