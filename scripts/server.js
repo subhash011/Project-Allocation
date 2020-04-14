@@ -34,6 +34,12 @@ mongoose
 const student = require("./routes/student");
 app.use("/student", student);
 
+const project = require("./routes/project");
+app.use("/project", project);
+
+const faculty = require("./routes/faculty");
+app.use("/faculty", faculty);
+
 const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
