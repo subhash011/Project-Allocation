@@ -19,7 +19,7 @@ mongoose.set("useFindAndModify", false);
 var mongoConnect = process.env.MONGO_URL_LOCAL;
 //connect to mongodb
 mongoose
-    .connect(mongoConnect, {
+    .connect("mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/Testing", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
@@ -33,6 +33,14 @@ mongoose
 //define all routes below this
 const student = require("./routes/student");
 app.use("/student", student);
+
+const faculty = require("./routes/faculty");
+app.use("/faculty", faculty);
+
+const projects = require("./routes/project");
+app.use("/projects", projects);
+
+
 
 const PORT = process.env.PORT || 8080;
 
