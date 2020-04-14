@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express();
 const Student = require("../models/Student");
+const Project = require("../models/Project");
 
 router.post("/add/:n", (req, res) => {
     const count = req.params.n;
@@ -22,10 +23,16 @@ router.post("/add/:n", (req, res) => {
         );
     }
     Promise.all(promises).then((result) => {
-        res.send(result);
+        res.json(result);
     });
 });
 
-router.post("/add/projects", (req, res) => {});
+router.post("/projects/add", (req, res) => {
+    Student.find()
+        .then((students) => {
+            return students;
+        })
+        .then((students) => {});
+});
 
 module.exports = router;
