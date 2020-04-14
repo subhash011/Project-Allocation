@@ -39,6 +39,7 @@ router.post("/maps/:id", (req, res) => {
                     short: map.short,
                     full: map.full,
                     map: map.map,
+                    length: map.map.split("|")[0]
                 });
                 newMap.save().then((map) => {
                     res.json({

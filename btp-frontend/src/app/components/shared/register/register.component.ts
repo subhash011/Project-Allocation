@@ -77,7 +77,14 @@ export class RegisterComponent implements OnInit {
   userForm = this.fb.group({
     firstName: [this.user.firstName, Validators.required],
     lastName: [this.user.lastName, Validators.required],
-    CGPA: [null, Validators.compose([Validators.required, Validators.max(10)])],
+    CGPA: [
+      null,
+      Validators.compose([
+        Validators.required,
+        Validators.max(10),
+        Validators.min(0),
+      ]),
+    ],
     email: [this.user.email, Validators.required],
     branch: [null, Validators.required],
   });
@@ -89,7 +96,7 @@ export class RegisterComponent implements OnInit {
       const user = JSON.parse(localStorage.getItem("user"));
       const rollno = user.email.split("@")[0];
       for (const branch of this.programs) {
-        const pattern = new RegExp(branch.map.split("*")[1]);
+        const pattern = new RegExp(branch.map.split("|")[1]);
         if (
           pattern.exec(rollno) &&
           pattern.exec(rollno).index == branch.length

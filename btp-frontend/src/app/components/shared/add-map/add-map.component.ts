@@ -31,7 +31,7 @@ export class AddMapComponent implements OnInit {
       null,
       Validators.compose([
         Validators.required,
-        Validators.pattern("[a-zA-Z]*"),
+        Validators.pattern("[a-zA-Z-_]*"),
       ]),
     ],
     map: [null, Validators.required],

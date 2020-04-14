@@ -81,7 +81,7 @@ export function provideConfig() {
     AdminSidenavComponent,
     AdminContentComponent,
     TimelineComponent,
-    AddMapComponent
+    AddMapComponent,
   ],
   entryComponents: [
     ShowPreferencesComponent,
