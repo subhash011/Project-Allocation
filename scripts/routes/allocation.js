@@ -10,11 +10,12 @@ router.post("/start", (req, res) => {
     var students = [];
     var alloted = [];
     var free = [];
-    //this allocation status is the map which is the answer
-    var allocationStatus = new Map();
+    var allocationStatus = {};
     var promises = [];
     promises.push(
-        Project.find().then((projectList) => {
+        Project.find()
+        .populate("students_id", null, Student)
+        .then((projectList) => {
             projects = projectList;
             projects.sort((b, a) => {
                 return a.students_id.length - b.students_id.length;
@@ -23,7 +24,9 @@ router.post("/start", (req, res) => {
         })
     );
     promises.push(
-        Student.find().then((studentList) => {
+        Student.find()
+        .populate("projects_preference", null, Project)
+        .then((studentList) => {
             students = studentList;
             students.sort((a, b) => {
                 return a.gpa - b.gpa;
@@ -35,46 +38,59 @@ router.post("/start", (req, res) => {
     Promise.all(promises).then(() => {
         //here we have all students and projects sorted projects and students with CGPA
         while (free.length > 0) {
-            var curStudent = free[0];
-            var firstPreference = curStudent.projects_preference[0];
-            if (!allocationStatus.has(firstPreference.toString())) {
-                allocationStatus.set(firstPreference.toString(), curStudent);
-                alloted.push(curStudent);
+            const curStudent = free[0];
+            const firstPreference = curStudent.projects_preference[0];
+            if (!allocationStatus[firstPreference._id]) {
+                allocationStatus[firstPreference._id] = [];
+                allocationStatus[firstPreference._id].push(curStudent);
                 free = free.filter((val) => {
                     return !val.equals(curStudent);
                 });
+                alloted.push(curStudent);
             } else {
-                var studentCurrentlyAlloted = allocationStatus.get(
-                    firstPreference.toString()
-                );
-                var projectPreference = projects.find((val) => {
-                    return val.equals(firstPreference);
-                });
-
-                var studentPreference = projectPreference.students_id;
-
-                var curStudent_index = studentPreference.indexOf(curStudent._id);
-                var studentCurrentlyAlloted_index = studentPreference.indexOf(
-                    studentCurrentlyAlloted._id
-                );
-
-                if (curStudent_index < studentCurrentlyAlloted_index) {
-                    allocationStatus.delete(firstPreference.toString());
-                    allocationStatus.set(firstPreference.toString(), curStudent);
-                    alloted = alloted.filter((val) => {
-                        return !val.equals(studentCurrentlyAlloted);
+                if (
+                    allocationStatus[firstPreference._id].length <
+                    firstPreference.studentIntake
+                ) {
+                    allocationStatus[firstPreference._id].push(curStudent);
+                    allocationStatus[firstPreference._id].sort((a, b) => {
+                        return (
+                            firstPreference.students_id.indexOf(b) -
+                            firstPreference.students_id.indexOf(a)
+                        );
                     });
                     free = free.filter((val) => {
                         return !val.equals(curStudent);
                     });
-                    free.push(studentCurrentlyAlloted);
                     alloted.push(curStudent);
                 } else {
-                    curStudent.projects_preference.shift();
+                    var studentCurrentlyAlloted =
+                        allocationStatus[firstPreference._id][
+                            allocationStatus[firstPreference._id].length - 1
+                        ];
+                    var currentlyAllotedIndex = firstPreference.students_id.indexOf(
+                        studentCurrentlyAlloted
+                    );
+                    var curStudentIndex = firstPreference.students_id.indexOf(curStudent);
+                    if (curStudentIndex < currentlyAllotedIndex) {
+                        allocationStatus[firstPreference._id].pop();
+                        allocationStatus[firstPreference._id].push(curStudent);
+                        free = free.filter((val) => {
+                            return !val.equals(curStudent);
+                        });
+                        alloted = alloted.filter((val) => {
+                            return !val.equals(studentCurrentlyAlloted);
+                        });
+                        free.push(studentCurrentlyAlloted);
+                        alloted.push(curStudent);
+                    } else {
+                        curStudent.projects_preference.shift();
+                    }
                 }
             }
         }
-        res.json({ message: Array.from(allocationStatus) });
+        console.log(allocationStatus);
+        res.json(alloted);
     });
 });
 
