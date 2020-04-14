@@ -34,13 +34,14 @@ mongoose
 const student = require("./routes/student");
 app.use("/student", student);
 
+const project = require("./routes/project");
+app.use("/project", project);
+
 const faculty = require("./routes/faculty");
 app.use("/faculty", faculty);
 
-const projects = require("./routes/project");
-app.use("/projects", projects);
-
-
+const allocation = require("./routes/allocation");
+app.use("/allocation", allocation);
 
 const PORT = process.env.PORT || 8080;
 
