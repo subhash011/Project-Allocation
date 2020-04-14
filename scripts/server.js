@@ -19,7 +19,7 @@ mongoose.set("useFindAndModify", false);
 var mongoConnect = process.env.MONGO_URL_LOCAL;
 //connect to mongodb
 mongoose
-    .connect("mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/Testing", {
+    .connect(mongoConnect, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })

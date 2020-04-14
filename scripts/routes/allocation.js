@@ -6,7 +6,6 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 
 router.post("/start", (req, res) => {
-    const stream = faculty[0].stream;
     var projects = [];
     var students = [];
     var alloted = [];
@@ -21,6 +20,7 @@ router.post("/start", (req, res) => {
                     project_id: project._id,
                     studentsList: project.students_id,
                 };
+                console.log(newProj);
                 projects.push(newProj);
             }
             projects.sort((b, a) => {
