@@ -6,7 +6,7 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 
 router.post("/start", (req, res) => {
-    const stream = faculty[0].stream;
+    // const stream = faculty[0].stream;
     var projects = [];
     var students = [];
     var alloted = [];

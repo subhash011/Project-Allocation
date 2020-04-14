@@ -51,7 +51,7 @@ router.post("/projects/add", (req, res) => {
     );
     promises.push(
         Project.find().then((projects) => {
-            return projects._id;
+            return projects;
         })
     );
     Promise.all(promises).then((result) => {

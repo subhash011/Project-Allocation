@@ -18,8 +18,10 @@ mongoose.set("useFindAndModify", false);
 
 var mongoConnect = process.env.MONGO_URL_LOCAL;
 //connect to mongodb
+// mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/Testing
+
 mongoose
-    .connect("mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/Testing", {
+    .connect('mongodb://localhost:27017/Testing', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
