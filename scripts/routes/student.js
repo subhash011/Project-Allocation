@@ -66,7 +66,10 @@ router.post("/projects/add", (req, res) => {
             for (const project of arr) {
                 promises.push(
                     Project.findOne(project).then((result) => {
-                        return result;
+                        project.students_id.push(student);
+                        project.save().then((result) => {
+                            return result;
+                        });
                     })
                 );
             }
