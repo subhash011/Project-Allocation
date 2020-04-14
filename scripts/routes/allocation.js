@@ -89,8 +89,10 @@ router.post("/start", (req, res) => {
                 }
             }
         }
-        console.log(allocationStatus);
-        res.json(alloted);
+        Object.keys(allocationStatus).map(function(key, value) {
+            allocationStatus[key] = allocationStatus[key].map((val) => val.name);
+        });
+        res.send(allocationStatus);
     });
 });
 
