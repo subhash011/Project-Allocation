@@ -63,15 +63,12 @@ router.post("/projects/add", (req, res) => {
             const number = Math.floor(Math.random() * 5);
             const arr = getRandom(projects, number);
             student.projects_preference = arr;
-            for (const project of projects) {
-                if (arr.indexOf(project) != -1) {
-                    project.students_id.push(student);
-                    promises.push(
-                        project.save().then((result) => {
-                            return result;
-                        })
-                    );
-                }
+            for (const project of arr) {
+                promises.push(
+                    Project.findOne(project).then((result) => {
+                        return result;
+                    })
+                );
             }
             promises.push(
                 student.save().then((student) => {
