@@ -40,6 +40,9 @@ app.use("/project", project);
 const faculty = require("./routes/faculty");
 app.use("/faculty", faculty);
 
+const allocation = require("./routes/allocation");
+app.use("/allocation", allocation);
+
 const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
