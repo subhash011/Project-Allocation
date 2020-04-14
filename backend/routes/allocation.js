@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const cron = require("node-cron");
 const mongoose = require("mongoose");
 const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");

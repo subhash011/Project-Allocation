@@ -88,9 +88,9 @@ router.get("/info/:id", (req, res) => {
                             deadlines: admin.deadlines,
                             startDate: startDate,
                             projectCap: admin.project_cap,
-                            studentCap:admin.student_cap,
+                            studentCap: admin.student_cap,
                             stream: admin.stream,
-                            studentsPerFaculty:admin.studentsPerFaculty
+                            studentsPerFaculty: admin.studentsPerFaculty,
                         });
                     } else {
                         res.json({
@@ -134,23 +134,23 @@ router.post("/update_stage/:id", (req, res) => {
                         })
                         .catch((err) => {
                             res.json({
-                                status:"fail",
-                                result:null
-                            })
+                                status: "fail",
+                                result: null,
+                            });
                         });
                 })
                 .catch((err) => {
                     res.json({
-                        status:"fail",
-                        result:null
-                    })
+                        status: "fail",
+                        result: null,
+                    });
                 });
         })
         .catch((err) => {
             res.json({
-                status:"fail",
-                result:null
-            })
+                status: "fail",
+                result: null,
+            });
         });
 });
 
@@ -168,12 +168,11 @@ router.post("/setDeadline/:id", (req, res) => {
         .then((faculty) => {
             Admin.findOne({ admin_id: faculty._id })
                 .then((admin) => {
-                    
                     if (admin.deadlines.length == admin.stage + 1) {
                         admin.deadlines.pop();
                         admin.deadlines.push(format_date);
                     }
-                    
+
                     if (admin.stage == 0) {
                         admin.startDate = new Date();
                     }
@@ -313,7 +312,6 @@ router.get("/all/info", (req, res) => {
     });
 });
 
-
 router.get("/members/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
@@ -430,21 +428,21 @@ router.post("/set_projectCap/:id", (req, res) => {
             Admin.findOne({ admin_id: faculty._id })
                 .then((admin) => {
                     admin.project_cap = cap;
-                    
+
                     admin
-                    .save()
-                    .then((result) => {
-                        res.json({
-                            status: "success",
-                            msg: "Successfully updated the project cap",
+                        .save()
+                        .then((result) => {
+                            res.json({
+                                status: "success",
+                                msg: "Successfully updated the project cap",
+                            });
+                        })
+                        .catch((err) => {
+                            res.json({
+                                status: "fail",
+                                result: "save error",
+                            });
                         });
-                    })
-                    .catch((err) => {
-                        res.json({
-                            status: "fail",
-                            result: "save error",
-                        });
-                    });
                 })
                 .catch((err) => {
                     res.json({
@@ -452,7 +450,6 @@ router.post("/set_projectCap/:id", (req, res) => {
                         result: "admin error",
                     });
                 });
-          
         })
         .catch((err) => {
             res.json({
@@ -462,120 +459,92 @@ router.post("/set_projectCap/:id", (req, res) => {
         });
 });
 
-router.post("/set_studentCap/:id",(req,res)=>{
+router.post("/set_studentCap/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const studentCap = req.body.cap;
 
-  const id = req.params.id;
-  const idToken = req.headers.authorization;
-  const studentCap = req.body.cap;
-
-  Faculty.findOne({google_id:{id:id,idToken:idToken}})
-    .then(faculty=>{
-
-      Admin.findOne({admin_id:faculty._id})
-        .then(admin=>{
-
-          admin.student_cap = studentCap;          
-                admin
-                  .save()
-                  .then((result) => {
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .then((faculty) => {
+            Admin.findOne({ admin_id: faculty._id })
+                .then((admin) => {
+                    admin.student_cap = studentCap;
+                    admin
+                        .save()
+                        .then((result) => {
+                            res.json({
+                                status: "success",
+                                msg: "Successfully updated the student cap",
+                            });
+                        })
+                        .catch((err) => {
+                            res.json({
+                                status: "fail",
+                                result: "save error",
+                            });
+                        });
+                })
+                .catch((err) => {
                     res.json({
-                      status: "success",
-                      msg: "Successfully updated the student cap",
+                        status: "fail",
+                        result: null,
                     });
-                  })
-                  .catch((err) => {
-                    res.json({
-                      status: "fail",
-                      result: "save error",
-                    });
-                  });
+                });
         })
         .catch((err) => {
-          res.json({
-            status: "fail",
-            result: null,
-          });
+            res.json({
+                status: "fail",
+                result: null,
+            });
         });
-    })
-    .catch((err) => {
-      res.json({
-        status: "fail",
-        result: null,
-      });
-    });
-
-
 });
 
-
-router.post('/set_studentsPerFacuty/:id',(req,res)=>{
-
+router.post("/set_studentsPerFacuty/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const cap = req.body.cap;
 
-    Faculty.findOne({google_id:{id:id,idToken:idToken}})
-        .then(faculty=>{
-
-
-            if(faculty){
-
-                Admin.findOne({admin_id:faculty._id})
-                    .then(admin=>{
-
-
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .then((faculty) => {
+            if (faculty) {
+                Admin.findOne({ admin_id: faculty._id })
+                    .then((admin) => {
                         admin.studentsPerFaculty = cap;
 
-                        admin.save()
-                            .then(result=>{
-
+                        admin
+                            .save()
+                            .then((result) => {
                                 res.json({
-                                    status:"success",
-                                    msg:"Successfully set the number of students per faculty!!"
-                                })
-
-
+                                    status: "success",
+                                    msg: "Successfully set the number of students per faculty!!",
+                                });
                             })
                             .catch((err) => {
                                 res.json({
-                                  status: "fail",
-                                  result: "save error",
+                                    status: "fail",
+                                    result: "save error",
                                 });
-                              });
-
-
+                            });
                     })
                     .catch((err) => {
                         res.json({
-                          status: "fail",
-                          result: "Admin error",
+                            status: "fail",
+                            result: "Admin error",
                         });
-                      });
-
-
-            }
-
-            else{
-
+                    });
+            } else {
                 res.json({
                     status: "fail",
                     result: "Faculty not found",
-                  });
-
+                });
             }
-
-
-
         })
         .catch((err) => {
             res.json({
-              status: "fail",
-              result: "Authentication error",
+                status: "fail",
+                result: "Authentication error",
             });
-          });
-
-
-})
-
+        });
+});
 
 module.exports = router;
