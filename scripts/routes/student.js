@@ -63,16 +63,6 @@ router.post("/projects/add", (req, res) => {
             const number = Math.floor(Math.random() * 5);
             const arr = getRandom(projects, number);
             student.projects_preference = arr;
-            for (const project of arr) {
-                promises.push(
-                    Project.findOne(project).then((result) => {
-                        project.students_id.push(student);
-                        project.save().then((result) => {
-                            return result;
-                        });
-                    })
-                );
-            }
             promises.push(
                 student.save().then((student) => {
                     return student;
@@ -80,7 +70,23 @@ router.post("/projects/add", (req, res) => {
             );
         }
         Promise.all(promises).then((result) => {
-            res.send(result);
+            promises = [];
+            Project.find().then((projects) => {
+                for (const project of projects) {
+                    const arr = result.filter((val) => {
+                        return val.projects_preference.indexOf(project._id) != -1;
+                    });
+                    project.students_id = arr;
+                    promises.push(
+                        project.save().then((result) => {
+                            return result;
+                        })
+                    );
+                }
+                Promise.all(promises).then((result) => {
+                    res.json(result);
+                });
+            });
         });
     });
 });
