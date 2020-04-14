@@ -60,7 +60,7 @@ router.post("/projects/add", (req, res) => {
         const students = result[0];
         const projects = result[1];
         for (const student of students) {
-            const number = Math.floor(Math.random() * 5);
+            const number = Math.floor(Math.random() * 5 + 1);
             const arr = getRandom(projects, number);
             student.projects_preference = arr;
             promises.push(

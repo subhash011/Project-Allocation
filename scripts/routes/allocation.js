@@ -29,7 +29,7 @@ router.post("/start", (req, res) => {
         .then((studentList) => {
             students = studentList;
             students.sort((a, b) => {
-                return a.gpa - b.gpa;
+                return b.gpa - a.gpa;
             });
             free = [...students];
             return students;
@@ -37,9 +37,15 @@ router.post("/start", (req, res) => {
     );
     Promise.all(promises).then(() => {
         //here we have all students and projects sorted projects and students with CGPA
+        var curStudent, firstPreference;
         while (free.length > 0) {
-            const curStudent = free[0];
-            const firstPreference = curStudent.projects_preference[0];
+            curStudent = free[0];
+            firstPreference = curStudent.projects_preference[0];
+            if (!firstPreference) {
+                free.shift();
+                curStudent = free[0];
+                firstPreference = curStudent.projects_preference[0];
+            }
             if (!allocationStatus[firstPreference._id]) {
                 allocationStatus[firstPreference._id] = [];
                 allocationStatus[firstPreference._id].push(curStudent);
@@ -92,7 +98,7 @@ router.post("/start", (req, res) => {
         Object.keys(allocationStatus).map(function(key, value) {
             allocationStatus[key] = allocationStatus[key].map((val) => val.name);
         });
-        res.send(allocationStatus);
+        res.json(allocationStatus);
     });
 });
 
