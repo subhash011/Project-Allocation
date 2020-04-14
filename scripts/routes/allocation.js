@@ -16,122 +16,118 @@ router.post("/start", (req, res) => {
   var promises = [];
   promises.push(
     Project.find().then((projectList) => {
-      for (const project of projectList) {
-        newProj = {
-          project_id: project._id,
-          studentsList: project.students_id,
-        };
-        console.log(newProj);
-        projects.push(newProj);
-      }
+        
+        projects = projectList;
       projects.sort((b, a) => {
-        return a.studentsList.length - b.studentsList.length;
+        return a.students_id.length - b.students_id.length;
       });
       return projects;
     })
   );
   promises.push(
     Student.find().then((studentList) => {
-      for (const student of studentList) {
-        newStudent = {
-          student_id: student._id,
-          projectsList: student.projects_preference,
-          gpa: student.gpa,
-        };
-        free.push(student._id);
-        //sorting projects according to cgpa so as to get the weight for CGPA
-        //if not needed make weights[2] = 0
-        students.push(newStudent);
-      }
+
+        students = studentList;
       students.sort((a, b) => {
         return a.gpa - b.gpa;
       });
+      free = [...students];
       return students;
     })
   );
   Promise.all(promises).then(() => {
     //here we have all students and projects sorted projects and students with CGPA
     while (allocationStatus.size != students.length) {
-      var curStudent = free[0];
-      var studentData = students.findIndex((val) => {
-        return val.student_id.equals(curStudent);
-      });
-      studentData = students[studentData];
-      if (!allocationStatus.has(studentData.projectsList[0])) {
-        allocationStatus.set(studentData.projectsList[0], curStudent);
-        alloted.push(curStudent);
-        free.filter((val) => {
-          !val.equals(curStudent);
-        });
-      } else {
-        var studentCurrentlyAlloted = allocationStatus.get(
-          studentData.projectsList[0]
-        );
-        var projectData = projects.findIndex((val) => {
-          return val.project_id.equals(studentData.projectsList[0]);
-        });
-        projectData = projects[projectData];
-        var indexCurrentAllocation = projectData.studentsList.findIndex(
-          (val) => {
-            return val.equals(studentCurrentlyAlloted);
-          }
-        );
-        var indexNotAlloted = projectData.studentsList.findIndex((val) => {
-          return val.equals(curStudent);
-        });
-        if (indexCurrentAllocation > indexNotAlloted) {
-          allocationStatus.set(studentData.projectsList[0], curStudent);
-          alloted.filter((val) => {
-            !val.equals(studentCurrentlyAlloted);
-          });
-          free.filter((val) => {
-            !val.equals(curStudent);
-          });
-          alloted.push(curStudent);
-          free.push(studentCurrentlyAlloted);
-        } else {
-          //Pop the 0th preference from the array of the curStudent.
-          studentData.projectsList.shift();
+        
+        var curStudent = free[0];
+        var firstPreference = curStudent.projects_preference[0];
+        
+        if(!allocationStatus.has(firstPreference)){
+            allocationStatus.set(firstPreference,curStudent);
+            console.log(allocationStatus);
+            alloted.push(curStudent);
+            free = free.filter(val=>{
+                return !val.equals(curStudent);
+            })
         }
-      }
+        else{
+
+            var studentCurrentlyAlloted = allocationStatus.get(firstPreference);
+            var projectPreference = projects.find(val=>{
+                return val.equals(firstPreference);
+            });
+
+            var studentPreference = projectPreference.students_id;
+
+            var curStudent_index = studentPreference.indexOf(curStudent._id);
+            console.log(curStudent_index);
+            var studentCurrentlyAlloted_index = studentPreference.indexOf(studentCurrentlyAlloted._id);
+            console.log(studentCurrentlyAlloted_index);
+
+            if(curStudent_index < studentCurrentlyAlloted_index){
+
+                allocationStatus.set(firstPreference,curStudent);
+                alloted = alloted.filter(val=>{
+                    return !val.equals(studentCurrentlyAlloted);
+                });
+                free = free.filter(val=>{
+                    return !val.equals(curStudent);
+                });
+                free.push(studentCurrentlyAlloted);
+                alloted.push(curStudent);
+
+            }
+            else{
+                curStudent.projects_preference.shift();
+            }
+
+
+
+        }
+
+
+
+
     }
-    promises = [];
-    allocationStatus.forEach((value, key) => {
-      promises.push(
-        Project.findByIdAndUpdate(key, {
-          student_alloted: value,
-        })
-          .then((project) => {
-            return project;
-          })
-          .catch(() => {
-            res.json({
-              message: "error",
-              result: null,
-            });
-          })
-      );
-      promises.push(
-        Student.findByIdAndUpdate(value, {
-          project_alloted: key,
-        })
-          .then((student) => {
-            return student;
-          })
-          .catch(() => {
-            res.json({
-              message: "error",
-              result: null,
-            });
-          })
-      );
-    });
-    Promise.all(promises).then((result) => {
-      res.json({
-        message: "success",
-        result: allocationStatus,
-      });
-    });
+    res.send({ans:Array.from(allocationStatus)});
+
+//     promises = [];
+//     allocationStatus.forEach((value, key) => {
+//       promises.push(
+//         Project.findByIdAndUpdate(key, {
+//           student_alloted: value,
+//         })
+//           .then((project) => {
+//             return project;
+//           })
+//           .catch(() => {
+//             res.json({
+//               message: "error",
+//               result: null,
+//             });
+//           })
+//       );
+//       promises.push(
+//         Student.findByIdAndUpdate(value, {
+//           project_alloted: key,
+//         })
+//           .then((student) => {
+//             return student;
+//           })
+//           .catch(() => {
+//             res.json({
+//               message: "error",
+//               result: null,
+//             });
+//           })
+//       );
+//     });
+//     Promise.all(promises).then((result) => {
+//       res.json({
+//         message: "success",
+//         result: allocationStatus,
+//       });
+//     });
   });
 });
 
