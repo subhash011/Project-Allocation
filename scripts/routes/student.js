@@ -55,13 +55,24 @@ router.post("/projects/add", (req, res) => {
         })
     );
     Promise.all(promises).then((result) => {
-        promises = [];
+        var promises = [];
+        var inner = [];
         const students = result[0];
         const projects = result[1];
         for (const student of students) {
             const number = Math.floor(Math.random() * 5);
             const arr = getRandom(projects, number);
             student.projects_preference = arr;
+            for (const project of projects) {
+                if (arr.indexOf(project) != -1) {
+                    project.students_id.push(student);
+                    promises.push(
+                        project.save().then((result) => {
+                            return result;
+                        })
+                    );
+                }
+            }
             promises.push(
                 student.save().then((student) => {
                     return student;
