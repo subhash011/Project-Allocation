@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
+require("dotenv/config");
 
 // start the server
 const session = require("express-session");
@@ -15,7 +16,7 @@ app.use(cors());
 app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
-var mongoConnect = process.env.MONGO_URL;
+var mongoConnect = process.env.MONGO_URL_LOCAL;
 //connect to mongodb
 mongoose
     .connect(mongoConnect, {
