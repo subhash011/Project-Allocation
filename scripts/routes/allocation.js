@@ -133,10 +133,38 @@ router.post("/start", (req, res) => {
             }
         }
         //update dbs here
-        Object.keys(allocationStatus).map(function(key, value) {
-            allocationStatus[key] = allocationStatus[key].map((val) => val.name);
-        });
-        res.json(allocationStatus);
+        promises = [];
+        for (const key in allocationStatus) {
+            if (allocationStatus.hasOwnProperty(key)) {
+                const studentsList = allocationStatus[key];
+                for (const student of studentsList) {
+                    promises.push(
+                        Student.findByIdAndUpdate(student._id, { project_alloted: mongoose.Types.ObjectId(key) }).then(student => {
+                            return student;
+                        })
+                    );
+                }
+            }
+        }
+        Promise.all(promises).then(result => {
+            promises = [];
+            for (const key in allocationStatus) {
+                if (allocationStatus.hasOwnProperty(key)) {
+                    const studentsList = allocationStatus[key].map(val => mongoose.Types.ObjectId(val._id));
+                    promises.push(
+                        Project.findByIdAndUpdate(mongoose.Types.ObjectId(key), { student_alloted: studentsList }).then(project => {
+                            return project;
+                        })
+                    );
+                }
+            }
+            Promise.all(promises).then(result => {
+                Object.keys(allocationStatus).map(function(key, value) {
+                    allocationStatus[key] = allocationStatus[key].map((val) => val._id);
+                });
+                res.json(allocationStatus);
+            })
+        })
     });
 });
 
