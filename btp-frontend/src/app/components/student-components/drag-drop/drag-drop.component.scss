@@ -39,10 +39,6 @@
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.drag-drop {
-    scrollbar-width: none;
-}
-
 
 /* Animate an item that has been dropped. */
 
@@ -57,7 +53,8 @@
 .drag-drop {
     padding-top: 5%;
     padding-bottom: 5%;
-    overflow: scroll;
+    overflow-y: scroll;
+    scrollbar-width: none;
 }
 
 .col-1 {
