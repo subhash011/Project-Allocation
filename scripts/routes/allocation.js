@@ -61,7 +61,7 @@ router.post("/start", (req, res) => {
         Student.find().then((studentList) => {
             students = studentList;
             students.sort((a, b) => {
-                return a.gpa - b.gpa;
+                return b.gpa - a.gpa;
             });
             return students;
         })
@@ -135,6 +135,7 @@ router.post("/start", (req, res) => {
 
 
         }
+        //update dbs here
         Object.keys(allocationStatus).map(function(key, value) {
             allocationStatus[key] = allocationStatus[key].map((val) => val.name);
         });

@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
-const Admin = require('../models/Admin_Info')
+const Admin = require("../models/Admin_Info");
 oauth = require("../config/oauth");
 
 router.post("/:id", (req, res) => {
@@ -13,50 +13,49 @@ router.post("/:id", (req, res) => {
     const stream = req.body.stream;
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-        .then(user => {
+        .then((user) => {
             if (user) {
                 Project.find({ faculty_id: user._id })
-                    .then(projects => {
+                    .then((projects) => {
                         const stream_projects = [];
                         if (projects) {
-
-                            for(const proj of projects){
-                                if(proj.stream == stream){
-                                    stream_projects.push(proj)
+                            for (const proj of projects) {
+                                if (proj.stream == stream) {
+                                    stream_projects.push(proj);
                                 }
                             }
                             res.json({
                                 status: "success",
-                                project_details: stream_projects
+                                project_details: stream_projects,
                             });
                         } else {
                             res.json({
                                 stauts: "fail",
                                 project_details: "Error",
-                                students: "Error"
+                                students: "Error",
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         res.json({
                             stauts: "fail",
                             project_details: "Project Not Found",
-                            students: "Error"
+                            students: "Error",
                         });
                     });
             } else {
                 res.json({
                     status: "fail",
                     project_details: "Not valid faculty id",
-                    students: "Error"
+                    students: "Error",
                 });
             }
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 stauts: "fail",
                 project_details: "Faculty Not Found",
-                students: "Error"
+                students: "Error",
             });
         });
 });
@@ -67,7 +66,7 @@ router.post("/add/:id", (req, res) => {
     const project_details = req.body;
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-        .then(user => {
+        .then((user) => {
             const stream = project_details.stream;
             if (user) {
                 const project = new Project({
@@ -76,122 +75,92 @@ router.post("/add/:id", (req, res) => {
                     studentIntake: project_details.studentIntake,
                     description: project_details.description,
                     stream: project_details.stream,
-                    faculty_id: user._id
+                    faculty_id: user._id,
                 });
 
                 user.project_list.push(project._id);
 
-                Admin.findOne({stream:stream})
-                    .then(admin=>{
+                Admin.findOne({ stream: stream }).then((admin) => {
+                    if (admin) {
+                        Project.find({ faculty_id: user._id, stream: stream })
+                            .then((projects) => {
+                                const count = projects.length;
+                                var student_count = 0;
 
-                        if(admin){
+                                for (const project of projects) {
+                                    student_count += project.studentIntake;
+                                }
 
-
-
-                            Project.find({faculty_id:user._id,stream:stream})
-                                .then(projects=>{
-                                    const count = projects.length;
-                                    var student_count = 0;
-
-                                    for(const project of projects){
-                                        student_count+=project.studentIntake;
-                                    }
-
-                                    
-
-
-                                    if(admin.project_cap == null){
+                                if (admin.project_cap == null) {
+                                    res.json({
+                                        save: "projectCap",
+                                        msg: "Please contact the admin to set the project cap",
+                                    });
+                                } else if (count > admin.project_cap) {
+                                    res.json({
+                                        save: "projectCap",
+                                        msg: `Max number of projects that can be added are ${admin.project_cap}`,
+                                    });
+                                } else {
+                                    if (project_details.studentIntake > admin.student_cap) {
                                         res.json({
-                                            save:'projectCap',
-                                            msg: 'Please contact the admin to set the project cap'
-                                        })
+                                            save: "studentCap",
+                                            msg: `Max number of students that can be taken per project are ${admin.student_cap}`,
+                                        });
                                     }
-        
-                                    else if(count > admin.project_cap){
-                                        res.json({
-                                            save:'projectCap',
-                                            msg:`Max number of projects that can be added are ${admin.project_cap}`
-                                        })
-                                    }
-        
-                                    else{
-        
-                                        
-                                        if(project_details.studentIntake > admin.student_cap){
-                                            res.json({
-                                                save:"studentCap",
-                                                msg: `Max number of students that can be taken per project are ${admin.student_cap}`
-                                            })
-                                        }
 
-                                        if(student_count + project_details.studentIntake > admin.studentsPerFaculty){
-                                            res.json({
-                                                save:"studentsPerFaculty",
-                                                msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`
-                                            })
-                                        }
-                                        
-                                        else{
-        
-        
+                                    if (
+                                        student_count + project_details.studentIntake >
+                                        admin.studentsPerFaculty
+                                    ) {
+                                        res.json({
+                                            save: "studentsPerFaculty",
+                                            msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`,
+                                        });
+                                    } else {
                                         project
-                                        .save()
-                                        .then(result => {
-                                            user.save().then(ans => {
+                                            .save()
+                                            .then((result) => {
+                                                user.save().then((ans) => {
+                                                    res.json({
+                                                        save: "success",
+                                                        msg: "Your project has been successfully added",
+                                                    });
+                                                });
+                                            })
+                                            .catch((err) => {
                                                 res.json({
-                                                    save: "success",
-                                                    msg: "Your project has been successfully added"
+                                                    save: "fail",
+                                                    msg: " There was an error, Please try again!", //Display the messages in flash messages
                                                 });
                                             });
-                                        })
-                                        .catch(err => {
-                                            res.json({
-                                                save: "fail",
-                                                msg: " There was an error, Please try again!" //Display the messages in flash messages
-                                            });
-                                        }); 
-        
-        
-        
-                                        }
-                   
                                     }
-        
-
-
-                                })
-                                .catch(err=>{
-                                    res.json({
-                                        save: "fail",
-                                        msg: " There was an error, Please try again!" //Display the messages in flash messages
-                                    });
-
-                                })
-
-                            
-                            
-                        }
-                        else{
-
-                            res.json({
-                                status:"fail",
-                                result:null
+                                }
                             })
-
-                        }
-
-                    })
+                            .catch((err) => {
+                                res.json({
+                                    save: "fail",
+                                    msg: " There was an error, Please try again!", //Display the messages in flash messages
+                                });
+                            });
+                    } else {
+                        res.json({
+                            status: "fail",
+                            result: null,
+                        });
+                    }
+                });
             } else {
                 res.json({
                     save: "fail",
-                    msg: "User not found"
+                    msg: "User not found",
                 });
             }
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 save: "fail",
-                msg: "Error in finding user"
+                msg: "Error in finding user",
             });
         });
 });
@@ -202,38 +171,38 @@ router.post("/applied/:id", (req, res) => {
     const idToken = req.headers.authorization;
 
     oauth(idToken)
-        .then(user => {
+        .then((user) => {
             if (user["sub"] == String(id)) {
-                student_ids.map(id => {
+                student_ids.map((id) => {
                     mongoose.Types.ObjectId(id);
                 });
 
                 Student.find({
-                        _id: { $in: student_ids }
+                        _id: { $in: student_ids },
                     })
-                    .then(students => {
+                    .then((students) => {
                         res.json({
                             status: "success",
-                            students: students
+                            students: students,
                         });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         res.json({
                             status: "fail",
-                            students: "Server Error"
+                            students: "Server Error",
                         });
                     });
             } else {
                 res.json({
                     status: "fail",
-                    students: "Server Error"
+                    students: "Server Error",
                 });
             }
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 status: "fail",
-                students: "Authentication Error"
+                students: "Authentication Error",
             });
         });
 });
@@ -246,48 +215,48 @@ router.post("/save_preference/:id", (req, res) => {
 
     let student_ids = [];
 
-    student.forEach(per => {
+    student.forEach((per) => {
         student_ids.push(mongoose.Types.ObjectId(per._id));
     });
 
     oauth(idToken)
-        .then(user => {
+        .then((user) => {
             if (user["sub"] == String(id)) {
                 Project.findById({ _id: project_id })
-                    .then(project => {
+                    .then((project) => {
                         project.students_id = student_ids;
                         project
                             .save()
-                            .then(result => {
+                            .then((result) => {
                                 res.json({
                                     status: "success",
-                                    msg: "Your preferences are saved"
+                                    msg: "Your preferences are saved",
                                 });
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 res.json({
                                     status: "fail",
-                                    msg: "Reload and Please try again !"
+                                    msg: "Reload and Please try again !",
                                 });
                             });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         res.json({
                             status: "fail",
-                            msg: "Project Not Found!!! Please Reload"
+                            msg: "Project Not Found!!! Please Reload",
                         });
                     });
             } else {
                 res.json({
                     status: "fail",
-                    msg: "Invalid Login"
+                    msg: "Invalid Login",
                 });
             }
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 status: "fail",
-                msg: "Authentication Error"
+                msg: "Authentication Error",
             });
         });
 });
@@ -300,7 +269,7 @@ router.post("/update/:id", (req, res) => {
     const description = req.body.description;
 
     Project.findById({ _id: project_id })
-        .then(project => {
+        .then((project) => {
             project.title = title;
             project.duration = duration;
             project.studentIntake = studentIntake;
@@ -308,87 +277,54 @@ router.post("/update/:id", (req, res) => {
 
             const stream = project.stream;
 
-            Admin.findOne({stream:stream})
-                .then(admin=>{
-
-                    if(admin){
-
-
-
-                        Project.find({faculty_id:project.faculty_id,stream:stream})
-                        .then(projects=>{
+            Admin.findOne({ stream: stream }).then((admin) => {
+                if (admin) {
+                    Project.find({ faculty_id: project.faculty_id, stream: stream }).then(
+                        (projects) => {
                             const count = projects.length;
                             var student_count = 0;
 
-                            for(const proj of projects){
-                                student_count+=proj.studentIntake;
+                            for (const proj of projects) {
+                                student_count += proj.studentIntake;
                             }
 
-
-
-
-                        if(project.studentIntake > admin.student_cap){
-
-                            res.json({
-                                status:"fail1",
-                                msg:`Max number of students that can be taken per project are ${admin.student_cap}`
-                            })
-
-
-                        }
-
-
-                        if(student_count + studentIntake > admin.studentsPerFaculty){
-                            res.json({
-                                status:"fail2",
-                                msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`
-                            })
-                        }
-                        
-
-
-                        else{
-
-                            project
-                            .save()
-                            .then(result => {
+                            if (project.studentIntake > admin.student_cap) {
                                 res.json({
-                                    status: "success",
-                                    msg: "Your Project was successfully updated"
+                                    status: "fail1",
+                                    msg: `Max number of students that can be taken per project are ${admin.student_cap}`,
                                 });
-                            })
-                            .catch(err => {
+                            }
+
+                            if (student_count + studentIntake > admin.studentsPerFaculty) {
                                 res.json({
-                                    status: "fail",
-                                    msg: "Project Not Saved. Please reload and try again!!!"
+                                    status: "fail2",
+                                    msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`,
                                 });
-                            });
+                            } else {
+                                project
+                                    .save()
+                                    .then((result) => {
+                                        res.json({
+                                            status: "success",
+                                            msg: "Your Project was successfully updated",
+                                        });
+                                    })
+                                    .catch((err) => {
+                                        res.json({
+                                            status: "fail",
+                                            msg: "Project Not Saved. Please reload and try again!!!",
+                                        });
+                                    });
+                            }
                         }
-
-
-
-
-
-
-                        })
-
-
-
-
-
-                    }
-
-
-                })
-
-
-
-           
+                    );
+                }
+            });
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 status: "fail",
-                msg: "Project Not Found"
+                msg: "Project Not Found",
             });
         });
 });
@@ -397,13 +333,13 @@ router.delete("/delete/:id", (req, res) => {
     const id = req.params.id;
 
     Project.findByIdAndRemove({ _id: id })
-        .then(result => {
+        .then((result) => {
             let students_id = result.students_id;
             let faculty_id = result.faculty_id;
 
-            Faculty.findById({ _id: faculty_id }).then(faculty => {
+            Faculty.findById({ _id: faculty_id }).then((faculty) => {
                 let project_list = faculty.project_list;
-                let new_list = project_list.filter(project => {
+                let new_list = project_list.filter((project) => {
                     if (project.toString() != id) {
                         return project;
                     }
@@ -412,15 +348,15 @@ router.delete("/delete/:id", (req, res) => {
 
                 faculty
                     .save()
-                    .then(result => {
+                    .then((result) => {
                         Student.find({
-                                _id: { $in: students_id }
+                                _id: { $in: students_id },
                             })
-                            .then(students => {
-                                students.forEach(student => {
+                            .then((students) => {
+                                students.forEach((student) => {
                                     let project_pref = student.projects_preference;
                                     student.projects_preference = project_pref.filter(
-                                        project_id => {
+                                        (project_id) => {
                                             if (project_id.toString() != id) {
                                                 return project_id;
                                             }
@@ -428,35 +364,35 @@ router.delete("/delete/:id", (req, res) => {
                                     );
                                 });
 
-                                students.forEach(student => {
+                                students.forEach((student) => {
                                     student.save();
                                 });
 
                                 res.json({
                                     status: "success",
-                                    msg: "The project has been successfully deleted"
+                                    msg: "The project has been successfully deleted",
                                 });
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 res.json({
                                     status: "fail",
-                                    msg: "Unable to update student preferences"
+                                    msg: "Unable to update student preferences",
                                 });
                             });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         res.json({
                             status: "fail",
-                            msg: "Unable to Update the faculty details"
+                            msg: "Unable to Update the faculty details",
                         });
                     });
             });
         })
-        .catch(err =>
-            console.log(err => {
+        .catch((err) =>
+            console.log((err) => {
                 res.json({
                     status: "fail",
-                    msg: "Please reload and try again!!!"
+                    msg: "Please reload and try again!!!",
                 });
             })
         );
