@@ -37,6 +37,7 @@ import { TimelineComponent } from "./components/shared/timeline/timeline.compone
 import { CountdownTimerModule } from "ngx-countdown-timer";
 import { LoadingBarHttpClientModule } from "@ngx-loading-bar/http-client";
 import { LoadingBarRouterModule } from "@ngx-loading-bar/router";
+import { environment } from "../environments/environment";
 import { AddMapComponent } from "./components/shared/add-map/add-map.component";
 const googleLoginOption: LoginOpt = {
   scope: "https://mail.google.com/",
@@ -48,7 +49,7 @@ const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,
     provider: new GoogleLoginProvider(
-      "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com",
+      environment.GOOGLE_CLIENT_URI,
       googleLoginOption
     ),
   },

@@ -1,7 +1,8 @@
 <div class="timer" *ngIf="admins && admins.startDate">
     <span class="days_left"><strong>Time Left for this stage to end : </strong>
     <countdown-timer [end]="curDeadline"></countdown-timer>
-  </span>
+    <span class="text"><b>About this stage :</b> {{ message }}</span>
+    </span>
 </div>
 <div class="group" *ngIf="admins; else elseBlock">
     <a matTooltip="Faculties Start Project Allocation" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon start icon">

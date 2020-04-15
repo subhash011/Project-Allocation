@@ -23,12 +23,13 @@ export class TimelineComponent implements OnInit {
   stageTwo: number;
   stageThree: number;
   stageFour: number;
+  message: String;
   icon;
   ngOnInit() {
     if (localStorage.getItem("role") == "student") {
       this.icon = {
         float: "left",
-        "margin-top.%": "4.5",
+        "margin-top.%": "3",
         left: "0",
       };
       this.userService
@@ -58,6 +59,8 @@ export class TimelineComponent implements OnInit {
                     for (let i = 0; i <= this.stage; i++) {
                       this.dates.push(new Date(this.admins["deadlines"][i]));
                       if (this.stage == 0 && i == 0) {
+                        this.message =
+                          "Faculties add projects during this period";
                         const now = new Date();
                         this.stageOne =
                           Math.abs(now.getTime() - this.startDate.getTime()) /
@@ -70,6 +73,8 @@ export class TimelineComponent implements OnInit {
                         }
                       }
                       if (this.stage == 1 && i == 1) {
+                        this.message =
+                          "You have to fill in your preferences during this period";
                         this.stageOneCompleted = true;
                         this.stageOne = 100;
                         const now = new Date();
@@ -84,6 +89,8 @@ export class TimelineComponent implements OnInit {
                         }
                       }
                       if (this.stage == 2 && i == 2) {
+                        this.message =
+                          "Faculties start giving their preferences of students for their projects";
                         this.stageOneCompleted = true;
                         this.stageOne = 100;
                         this.stageTwoCompleted = true;
@@ -100,6 +107,8 @@ export class TimelineComponent implements OnInit {
                         }
                       }
                       if (this.stage == 3 && i + 1 == 4) {
+                        this.message =
+                          "Project allocation will be done within this period";
                         this.stageThreeCompleted = true;
                         this.stageThree = 100;
                         this.stageOneCompleted = true;
