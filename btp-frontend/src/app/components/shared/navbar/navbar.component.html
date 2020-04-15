@@ -9,7 +9,7 @@
         <button mat-button (click)="goToHome()" class="nav-text">
       Home
     </button>
-        <button *ngIf="checkPrograms && programs.length != 0" mat-button [matMenuTriggerFor]="menu" class="nav-text">
+        <button *ngIf="programs && programs.length != 0" mat-button [matMenuTriggerFor]="menu" class="nav-text">
       Programs
       <mat-icon>keyboard_arrow_down</mat-icon>
     </button>

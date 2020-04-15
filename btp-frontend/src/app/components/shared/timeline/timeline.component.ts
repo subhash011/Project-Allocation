@@ -145,7 +145,7 @@ export class TimelineComponent implements OnInit {
     } else {
       this.icon = {
         float: "left",
-        "margin-top.%": "4",
+        "margin-top.%": "2.8",
         left: "0",
       };
       this.userService

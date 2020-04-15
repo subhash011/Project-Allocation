@@ -25,13 +25,13 @@ export class NavbarComponent implements OnInit {
     if (localStorage.getItem("isLoggedIn") == "true") {
       this.role = localStorage.getItem("role");
     }
-    if (this.role == "faculty" || this.role == "admin") {
+    if (
+      this.role == "faculty" ||
+      (this.role == "admin" && localStorage.getItem("isLoggedIn") == "true")
+    ) {
       this.userService.getFacultyPrograms().subscribe((data) => {
         if (data["status"] == "success") {
           this.programs = data["programs"];
-          if (this.programs.length > 0) {
-            this.checkPrograms = true;
-          }
         } else {
           let snackBarRef = this.snackBar.open(
             "Session Timed Out! Please Sign in Again!",
@@ -133,12 +133,15 @@ export class NavbarComponent implements OnInit {
       });
   }
 
-
   goToProgram(program) {
     let id = localStorage.getItem("id");
 
     this.router.navigate(["/faculty", id], {
-      queryParams: { name: program.full, abbr: program.short, mode:"programMode" },
+      queryParams: {
+        name: program.full,
+        abbr: program.short,
+        mode: "programMode",
+      },
     });
   }
 }
