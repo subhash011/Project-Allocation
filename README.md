@@ -67,16 +67,16 @@ sudo npm install -g @angular/cli
 #### 3. MongoDB & MongoDB Compass
 
 ##### Windows
-Please follow the instructions given in the documentation.
+Please follow the instructions given in the documentation - 
 [Mongo Docs Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 
 ##### Linux
-**MongoDB Community Edition**
-Please follow the instructions given in the documentation.
+*MongoDB Community Edition* : 
+Please follow the instructions given in the documentation -
 [Mongo Docs Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
 
-**MongoDB Compass**
-Please follow the instructions given in the documentation.
+*MongoDB Compass* : 
+Please follow the instructions given in the documentation -
 [MongoDB compass Ubuntu](https://docs.mongodb.com/compass/master/install/)
 
 
