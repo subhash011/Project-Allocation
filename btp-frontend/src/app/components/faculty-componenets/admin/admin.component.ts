@@ -55,6 +55,11 @@ export class AdminComponent implements OnInit {
   proceedButton2 = true;
   proceedButton3 = true;
 
+  proceedButton1_ = true;
+  proceedButton2_ = true;
+  proceedButton3_ = true;
+
+
   index;
   faculties: any = [];
   students: any = [];
@@ -127,20 +132,7 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userService
-      .getMembersForAdmin()
-      .toPromise()
-      .then((result) => {
-        if (result["message"] == "success") {
-          this.faculties = result["result"]["faculties"];
-          this.students = result["result"]["students"];
-        } else {
-          this.loginService.signOut();
-          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-            duration: 3000,
-          });
-        }
-      });
+ 
     this.userService.getAdminInfo().subscribe((data) => {
 
     
@@ -167,20 +159,47 @@ export class AdminComponent implements OnInit {
           this.seventhFormGroup.controls["seventhCtrl"].setValue(this.studentsPerFaculty);
 
 
+          this.userService
+          .getMembersForAdmin()
+          .toPromise()
+          .then((result) => {
+            if (result["message"] == "success") {
+              this.faculties = result["result"]["faculties"];
+              this.students = result["result"]["students"];
+              console.log(result);
 
+              let flag = false;
+              for(const faculty of this.faculties){
+                if(faculty.project_cap || faculty.student_cap || faculty.studentsPerFaculty){
+                  this.proceedButton1_ = true;
+                  this.proceedButton2_ = true;
+                  this.proceedButton3_ = true;
+                  flag = true;
+                  break;
+                  
+                }
+              }
+             
           if (this.dateSet.length == 1) {
             if (this.firstFormGroup.controls["firstCtrl"]) {
               this.proceedButton1 = false;
+              if(!flag)
+                this.proceedButton1_=false;
+
             }
           }
           if (this.dateSet.length == 2) {
             if (this.secondFormGroup.controls["secondCtrl"]) {
               this.proceedButton2 = false;
+              if(!flag)
+                this.proceedButton2_ = false;
             }
           }
           if (this.dateSet.length == 3) {
             if (this.thirdFormGroup.controls["thirdCtrl"])
               this.proceedButton3 = false;
+              if(!flag)
+                this.proceedButton3_ = false;
           }
           if (this.stage_no == 0) {
             this.minDate = new Date();
@@ -193,7 +212,19 @@ export class AdminComponent implements OnInit {
             this.days_left = this.daysBetween(today, this.curr_deadline);
           }
 
+            } else {
+              this.loginService.signOut();
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                duration: 3000,
+              });
+            }
 
+
+
+      });
+
+
+         
 
 
 

@@ -69,7 +69,7 @@ router.post("/add/:id", (req, res) => {
         .then((user) => {
             const stream = project_details.stream;
             if (user) {
-                const project = new Project({
+                var project = new Project({
                     title: project_details.title,
                     duration: project_details.duration,
                     studentIntake: project_details.studentIntake,
@@ -78,7 +78,7 @@ router.post("/add/:id", (req, res) => {
                     faculty_id: user._id,
                 });
 
-                user.project_list.push(project._id);
+
 
                 Admin.findOne({ stream: stream }).then((admin) => {
                     if (admin) {
@@ -87,16 +87,18 @@ router.post("/add/:id", (req, res) => {
                                 const count = projects.length;
                                 var student_count = 0;
 
-                                for (const project of projects) {
-                                    student_count += project.studentIntake;
+                                for (const proj of projects) {
+                                    student_count += proj.studentIntake;
                                 }
+
+                                console.log(student_count);
 
                                 if (admin.project_cap == null) {
                                     res.json({
                                         save: "projectCap",
                                         msg: "Please contact the admin to set the project cap",
                                     });
-                                } else if (count > admin.project_cap) {
+                                } else if (count >= admin.project_cap) {
                                     res.json({
                                         save: "projectCap",
                                         msg: `Max number of projects that can be added are ${admin.project_cap}`,
@@ -110,7 +112,7 @@ router.post("/add/:id", (req, res) => {
                                     }
 
                                     if (
-                                        student_count + project_details.studentIntake >
+                                        student_count + Number(project_details.studentIntake) >
                                         admin.studentsPerFaculty
                                     ) {
                                         res.json({
@@ -121,6 +123,7 @@ router.post("/add/:id", (req, res) => {
                                         project
                                             .save()
                                             .then((result) => {
+                                                user.project_list.push(project._id);
                                                 user.save().then((ans) => {
                                                     res.json({
                                                         save: "success",
@@ -264,8 +267,8 @@ router.post("/save_preference/:id", (req, res) => {
 router.post("/update/:id", (req, res) => {
     const project_id = mongoose.Types.ObjectId(req.params.id);
     const title = req.body.title;
-    const duration = req.body.duration;
-    const studentIntake = req.body.studentIntake;
+    const duration = Number(req.body.duration);
+    const studentIntake = Number(req.body.studentIntake);
     const description = req.body.description;
 
     Project.findById({ _id: project_id })
@@ -284,9 +287,17 @@ router.post("/update/:id", (req, res) => {
                             const count = projects.length;
                             var student_count = 0;
 
+
+
                             for (const proj of projects) {
-                                student_count += proj.studentIntake;
+                                if(proj._id.toString() == project_id.toString()){
+                                    student_count+= studentIntake;
+                                }
+                                else
+                                    student_count += proj.studentIntake;
                             }
+
+                            console.log(student_count);
 
                             if (project.studentIntake > admin.student_cap) {
                                 res.json({
@@ -295,7 +306,7 @@ router.post("/update/:id", (req, res) => {
                                 });
                             }
 
-                            if (student_count + studentIntake > admin.studentsPerFaculty) {
+                            if (student_count > admin.studentsPerFaculty) {
                                 res.json({
                                     status: "fail2",
                                     msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`,
@@ -388,14 +399,12 @@ router.delete("/delete/:id", (req, res) => {
                     });
             });
         })
-        .catch((err) =>
-            console.log((err) => {
+        .catch((err) =>{
                 res.json({
                     status: "fail",
                     msg: "Please reload and try again!!!",
                 });
-            })
-        );
+            });
 });
 
 module.exports = router;

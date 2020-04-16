@@ -83,70 +83,73 @@ export class ContentComponent implements OnInit, DoCheck {
         stream: this.stream,
       };
 
-      this.projectService.saveProject(project).subscribe((data) => {
-        if (data["save"] == "success") {
-          let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
-            duration: 3000,
-          });
 
-          snackBarRef.afterDismissed().subscribe(() => {
-            this.router
-              .navigateByUrl("/refresh", { skipLocationChange: true })
-              .then(() => {
-                this.router.navigate(["/faculty", this.id], {
-                  queryParams: {
-                    name: this.routeParams.name,
-                    abbr: this.routeParams.abbr,
-                    mode: "programMode",
-                  },
-                });
+      if(project.studentIntake > 0 && project.duration > 0){
+
+        
+              this.projectService.saveProject(project).subscribe((data) => {
+                if (data["save"] == "success") {
+                  let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+                    duration: 3000,
+                  });
+        
+                  snackBarRef.afterDismissed().subscribe(() => {
+                    this.router
+                      .navigateByUrl("/refresh", { skipLocationChange: true })
+                      .then(() => {
+                        this.router.navigate(["/faculty", this.id], {
+                          queryParams: {
+                            name: this.routeParams.name,
+                            abbr: this.routeParams.abbr,
+                            mode: "programMode",
+                          },
+                        });
+                      });
+                  });
+        
+                  snackBarRef.onAction().subscribe(() => {
+                    this.router
+                      .navigateByUrl("/refresh", { skipLocationChange: true })
+                      .then(() => {
+                        this.router.navigate(["/faculty", this.id], {
+                          queryParams: {
+                            name: this.routeParams.full,
+                            abbr: this.routeParams.short,
+                            mode: "programMode",
+                          },
+                        });
+                      });
+                  });
+                } else if (data["save"] == "projectCap") {
+                  //Go to the error page
+                  this.snackBar.open(data["msg"], "Ok", {
+                    duration: 3000,
+                  });
+                } else if (data["save"] == "studentCap") {
+                  this.snackBar.open(data["msg"], "Ok", {
+                    duration: 3000,
+                  });
+                } else if (data["save"] == "studentsPerFaculty") {
+                  this.snackBar.open(data["msg"], "Ok", {
+                    duration: 3000,
+                  });
+                } else {
+                  this.login.signOut();
+                  this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                    duration: 3000,
+                  });
+                }
               });
-          });
 
-          snackBarRef.onAction().subscribe(() => {
-            this.router
-              .navigateByUrl("/refresh", { skipLocationChange: true })
-              .then(() => {
-                this.router.navigate(["/faculty", this.id], {
-                  queryParams: {
-                    name: this.routeParams.full,
-                    abbr: this.routeParams.short,
-                    mode: "programMode",
-                  },
-                });
-              });
-          });
-        } else if (data["save"] == "projectCap") {
-          //Go to the error page
-          this.snackBar.open(data["msg"], "Ok", {
-            duration: 3000,
-          });
-        } else if (data["save"] == "studentCap") {
-          this.snackBar.open(data["msg"], "Ok", {
-            duration: 3000,
-          });
-        } else if (data["save"] == "studentsPerFaculty") {
-          this.snackBar.open(data["msg"], "Ok", {
-            duration: 3000,
-          });
-        } else {
-          let snackBarRef = this.snackBar.open(
-            "Session Expired! Please Sign In Again",
-            "OK",
-            {
-              duration: 3000,
-            }
-          );
 
-          snackBarRef.afterDismissed().subscribe(() => {
-            this.login.signOut();
-          });
+      }
+      else{
+        this.snackBar.open("Please Enter Valid Data", "OK", {
+          duration: 3000,
+        });
 
-          snackBarRef.onAction().subscribe(() => {
-            this.login.signOut();
-          });
-        }
-      });
+      }
+
     }
   }
 
@@ -211,26 +214,15 @@ export class ContentComponent implements OnInit, DoCheck {
                 duration: 3000,
               });
             } else {
-              let snackBarRef = this.snackBar.open(
-                "Session Expired! Please Sign In Again",
-                "OK",
-                {
-                  duration: 3000,
-                }
-              );
-
-              snackBarRef.afterDismissed().subscribe(() => {
-                this.login.signOut();
-              });
-
-              snackBarRef.onAction().subscribe(() => {
-                this.login.signOut();
+              this.login.signOut();
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                duration: 3000,
               });
             }
           });
         }
       } else {
-        let snackBarRef = this.snackBar.open("Please Enter Valid Data", "OK", {
+         this.snackBar.open("Please Enter Valid Data", "OK", {
           duration: 3000,
         });
       }

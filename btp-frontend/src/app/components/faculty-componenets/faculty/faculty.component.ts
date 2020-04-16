@@ -27,6 +27,7 @@ export class FacultyComponent implements OnInit {
   public routeParams;
   public adminStage;
 
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private userDetails: UserService,
@@ -164,6 +165,17 @@ export class FacultyComponent implements OnInit {
     this.userService.getFacultyProgramDetails(program).subscribe((data) => {
       if (data["status"] == "success") {
         this.program_details = data["program_details"];
+        // console.log(this.program_details);
+      }
+      else{
+        this.program_details = data["result"];
+        this.snackBar.open(
+          "No Admin assigned to this program!!",
+          "Ok",
+          {
+            duration: 3000,
+          }
+        );
       }
     });
   }

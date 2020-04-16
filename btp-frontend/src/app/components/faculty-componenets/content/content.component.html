@@ -60,9 +60,7 @@
                 </div>
             </div>
         </div>
-
-
-
+        
     </ng-template>
 
 </div>
@@ -84,7 +82,7 @@
                     </div>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input matInput placeholder="Duration" formControlName="duration" />
+                            <input matInput placeholder="Duration (months)" formControlName="duration" />
                             <mat-error *ngIf="ProjectForm.controls['duration'].hasError('required')">
                                 Duration is <strong>required</strong>
                             </mat-error>
