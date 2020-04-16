@@ -18,8 +18,6 @@ import { MatStepper } from "@angular/material";
   providers: [LoginComponent],
 })
 export class AdminComponent implements OnInit {
-
-
   public details; // For displaying the projects tab
   public faculty_projects;
 
@@ -59,7 +57,6 @@ export class AdminComponent implements OnInit {
   proceedButton1_ = true;
   proceedButton2_ = true;
   proceedButton3_ = true;
-
 
   index;
   faculties: any = [];
@@ -133,103 +130,92 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
- 
     this.userService.getAdminInfo().subscribe((data) => {
+      if (data["status"] == "success") {
+        this.programName = data["stream"];
+        this.stage_no = data["stage"];
+        this.dateSet = data["deadlines"];
+        this.projectCap = data["projectCap"];
+        this.studentCap = data["studentCap"];
+        this.studentsPerFaculty = data["studentsPerFaculty"];
+        this.dateSet = this.dateSet.map((date) => {
+          return new Date(date);
+        });
+        this.startDate = data["startDate"];
 
-    
-        if(data["status"] == "success"){
+        this.ngAfterViewInit();
 
-          this.programName = data["stream"];
-          this.stage_no = data["stage"];
-          this.dateSet = data["deadlines"];
-          this.projectCap = data["projectCap"];
-          this.studentCap = data["studentCap"];
-          this.studentsPerFaculty = data["studentsPerFaculty"];
-          this.dateSet = this.dateSet.map((date) => {
-            return new Date(date);
-          });
-          this.startDate = data["startDate"];
+        this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
+        this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
+        this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
+        this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
+        this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
+        this.seventhFormGroup.controls["seventhCtrl"].setValue(
+          this.studentsPerFaculty
+        );
 
-          this.ngAfterViewInit();
-
-          this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
-          this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
-          this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
-          this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
-          this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
-          this.seventhFormGroup.controls["seventhCtrl"].setValue(this.studentsPerFaculty);
-
-
-          this.userService
+        this.userService
           .getMembersForAdmin()
           .toPromise()
           .then((result) => {
             if (result["message"] == "success") {
               this.faculties = result["result"]["faculties"];
               this.students = result["result"]["students"];
-              console.log(result);
-
               let flag = false;
-              for(const faculty of this.faculties){
-                if(faculty.project_cap || faculty.student_cap || faculty.studentsPerFaculty){
+              for (const faculty of this.faculties) {
+                if (
+                  faculty.project_cap ||
+                  faculty.student_cap ||
+                  faculty.studentsPerFaculty
+                ) {
                   this.proceedButton1_ = true;
                   this.proceedButton2_ = true;
                   this.proceedButton3_ = true;
                   flag = true;
                   break;
-                  
                 }
               }
-             
-          if (this.dateSet.length == 1) {
-            if (this.firstFormGroup.controls["firstCtrl"]) {
-              this.proceedButton1 = false;
-              if(!flag)
-                this.proceedButton1_=false;
 
-            }
-          }
-          if (this.dateSet.length == 2) {
-            if (this.secondFormGroup.controls["secondCtrl"]) {
-              this.proceedButton2 = false;
-              if(!flag)
-                this.proceedButton2_ = false;
-            }
-          }
-          if (this.dateSet.length == 3) {
-            if (this.thirdFormGroup.controls["thirdCtrl"])
-              this.proceedButton3 = false;
-              if(!flag)
-                this.proceedButton3_ = false;
-          }
-          if (this.stage_no == 0) {
-            this.minDate = new Date();
-          } else {
-            this.minDate = this.dateSet[this.dateSet.length - 1];
-          }
-        
-      }
-      else{
+              if (this.dateSet.length == 1) {
+                if (this.firstFormGroup.controls["firstCtrl"]) {
+                  this.proceedButton1 = false;
+                  if (!flag) this.proceedButton1_ = false;
+                }
+              }
+              if (this.dateSet.length == 2) {
+                if (this.secondFormGroup.controls["secondCtrl"]) {
+                  this.proceedButton2 = false;
+                  if (!flag) this.proceedButton2_ = false;
+                }
+              }
+              if (this.dateSet.length == 3) {
+                if (this.thirdFormGroup.controls["thirdCtrl"])
+                  this.proceedButton3 = false;
+                if (!flag) this.proceedButton3_ = false;
+              }
+              if (this.stage_no == 0) {
+                this.minDate = new Date();
+              } else {
+                this.minDate = this.dateSet[this.dateSet.length - 1];
+              }
+            } else {
               this.loginService.signOut();
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
-
-        }
-       
-
-      })
-
-  }
-  else{
-    this.loginService.signOut();
-    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-      duration: 3000,
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          });
+      } else {
+        this.loginService.signOut();
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+          duration: 3000,
+        });
+      }
     });
-  }  
-
-  
- })
 
     this.projectService.getAllStreamProjects().subscribe((projects) => {
       if (projects["message"] == "success") {
@@ -242,12 +228,7 @@ export class AdminComponent implements OnInit {
         });
       }
     });
-  
-
-
-}
-
-
+  }
 
   proceed() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
@@ -279,9 +260,13 @@ export class AdminComponent implements OnInit {
             );
           } else {
             this.loginService.signOut();
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
           }
         });
       }
@@ -358,7 +343,6 @@ export class AdminComponent implements OnInit {
   }
 
   daysBetween(date1, date2) {
-
     let diffInMilliSeconds = Math.abs(date2 - date1) / 1000;
 
     // calculate days
@@ -431,9 +415,13 @@ export class AdminComponent implements OnInit {
               });
             } else {
               this.loginService.signOut();
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
             }
           });
         }
@@ -497,9 +485,13 @@ export class AdminComponent implements OnInit {
                     });
                   } else {
                     this.loginService.signOut();
-                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                      duration: 3000,
-                    });
+                    this.snackBar.open(
+                      "Session Timed Out! Please Sign-In again",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
                   }
                 });
             }
@@ -531,9 +523,13 @@ export class AdminComponent implements OnInit {
                     });
                   } else {
                     this.loginService.signOut();
-                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                      duration: 3000,
-                    });
+                    this.snackBar.open(
+                      "Session Timed Out! Please Sign-In again",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
                   }
                 });
             }
@@ -584,9 +580,13 @@ export class AdminComponent implements OnInit {
                     });
                   } else {
                     this.loginService.signOut();
-                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                      duration: 3000,
-                    });
+                    this.snackBar.open(
+                      "Session Timed Out! Please Sign-In again",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
                   }
                 });
             }
@@ -621,9 +621,13 @@ export class AdminComponent implements OnInit {
                     });
                   } else {
                     this.loginService.signOut();
-                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                      duration: 3000,
-                    });
+                    this.snackBar.open(
+                      "Session Timed Out! Please Sign-In again",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
                   }
                 });
             }
@@ -649,9 +653,13 @@ export class AdminComponent implements OnInit {
             this.ngOnInit();
           } else {
             this.loginService.signOut();
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
           }
         });
     } else {
@@ -679,9 +687,13 @@ export class AdminComponent implements OnInit {
             this.ngOnInit();
           } else {
             this.loginService.signOut();
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
           }
         });
     } else {
@@ -696,42 +708,36 @@ export class AdminComponent implements OnInit {
   }
 
   setStudentsPerFaculty() {
-  
+    if (this.seventhFormGroup.controls["seventhCtrl"].value > 0) {
+      this.userService
+        .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
+        .subscribe((data) => {
+          console.log(data);
 
-      if (this.seventhFormGroup.controls["seventhCtrl"].value > 0) {
-        this.userService
-          .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
-          .subscribe((data) => {
-            console.log(data);
-
-            if (data["status"] == "success") {
-              let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
-                duration: 3000,
-              });
-              this.ngOnInit();
-            } else {
-              this.loginService.signOut();
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
-              } 
-            });
-        } 
-        else {
-          let snackBarRef = this.snackBar.open(
-            "Please enter a valid number",
-            "Ok",
-            {
+          if (data["status"] == "success") {
+            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
-            }
-          );
+            });
+            this.ngOnInit();
+          } else {
+            this.loginService.signOut();
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+          }
+        });
+    } else {
+      let snackBarRef = this.snackBar.open(
+        "Please enter a valid number",
+        "Ok",
+        {
+          duration: 3000,
         }
-
-      
-  } 
-  
+      );
+    }
+  }
 }
-
-
-
-

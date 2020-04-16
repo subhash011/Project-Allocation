@@ -1,125 +1,120 @@
 .full-width {
-  width: 60%;
+    width: 60%;
 }
 
 .form-card {
-  padding-top: 12%;
-  padding-left: 15%;
-  padding-right: 15%;
-  //   padding-bottom: -2%;
+    padding-top: 12%;
+    padding-left: 15%;
+    padding-right: 15%;
+    //   padding-bottom: -2%;
 }
 
 mat-card-title {
-  padding-top: 5%;
-  padding-bottom: 2%;
-  padding-left: 40%;
+    padding-top: 5%;
+    padding-bottom: 2%;
+    padding-left: 40%;
 }
 
 mat-form-field {
-  padding-left: 20%;
-  padding-bottom: 2%;
+    padding-left: 20%;
+    padding-bottom: 2%;
 }
 
 .add-card {
-  //   width: 100%;
-  //   margin-top: 100px;
-  //   margin-left: 600px;
-  //   margin-right: 600px;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  // padding: 5% ;
+    //   width: 100%;
+    //   margin-top: 100px;
+    //   margin-left: 600px;
+    //   margin-right: 600px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    // padding: 5% ;
 }
 
 .submit_button {
-  margin-bottom: 3%;
-  margin-left: 42%;
+    margin-bottom: 3%;
+    margin-left: 42%;
 }
 
 .edit-submit {
-  margin-bottom: 3%;
-  margin-left: 38%;
+    margin-bottom: 3%;
+    margin-left: 38%;
 }
 
 .deleteButton {
-  margin-bottom: 3%;
-  margin-left: 2%;
+    margin-bottom: 3%;
+    margin-left: 2%;
 }
 
 .container-add {
-  height: 90%;
-  background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
+    height: 90%;
+    background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
 }
 
 .container-edit {
-  height: 800px;
-  overflow: hidden;
-  background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
+    height: 800px;
+    overflow: hidden;
+    background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
 }
 
 .project_tab {
-  padding-top: 50%;
-  height: 810px;
-  overflow-y: hidden;
-  background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
+    padding-top: 50%;
+    height: 810px;
+    overflow-y: hidden;
+    background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
 }
 
 .project-card {
-  height: 60%;
+    height: 60%;
 }
 
 .project-container {
-  // margin-top: 12%;
-  padding-top: 12%;
-  padding-left: 15%;
-  padding-right: 15%;
-  height: 650px;
-  overflow: hidden;
-  background-image: url("https://superdevresources.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg");
+    // margin-top: 12%;
+    padding-top: 12%;
+    padding-left: 15%;
+    padding-right: 15%;
+    height: 650px;
+    overflow: hidden;
+    background-image: url("https://superdevresources.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg");
 }
 
 .display {
-  margin-top: 5%;
-  padding-top: 5%;
-  padding-bottom: 2%;
-  padding-right: 1%;
-  z-index: 2;
+    margin-top: 5%;
+    padding-top: 5%;
+    padding-bottom: 2%;
+    padding-right: 1%;
+    z-index: 2;
 }
-
 
 .table {
-  max-height: 600px;
-  overflow: auto;
-  width: 80%;
-  margin-left: 10%;
+    max-height: 600px;
+    overflow: auto;
+    width: 80%;
+    margin-left: 10%;
 }
 
-.select{
-  margin-top:3%;
-  margin-left: 25%;
+.select {
+    margin-top: 3%;
+    margin-left: 25%;
 }
-
 
 table {
-  width: 100%;
+    width: 100%;
 }
 
 th,
 td {
-  overflow: hidden;
-  width: 10%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    overflow: hidden;
+    width: 10%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-
-.top{
-  margin-left: 5%;
-  margin-top:5%;
-  width: 100%;
-  
-  display: inline-flex;
-  justify-content: space-around;
+.top {
+    margin-left: 5%;
+    margin-top: 5%;
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-around;
 }
-

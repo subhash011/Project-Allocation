@@ -40,11 +40,26 @@ export class TimelineComponent implements OnInit, OnChanges {
   message: String;
   next: String;
   icon;
+  displayTimeline: boolean;
   ngOnChanges(changes: SimpleChanges) {
     this.program = changes.program.currentValue;
     this.ngOnInit();
   }
+
+  initialize() {
+    this.stageOne = 0;
+    this.stageTwo = 0;
+    this.stageThree = 0;
+    this.stageFour = 0;
+    this.startCompleted = false;
+    this.stageOneCompleted = false;
+    this.stageTwoCompleted = false;
+    this.stageThreeCompleted = false;
+    this.stageFourCompleted = false;
+  }
+
   ngOnInit() {
+    this.initialize();
     if (localStorage.getItem("role") == "student") {
       this.icon = {
         float: "left",
@@ -59,6 +74,7 @@ export class TimelineComponent implements OnInit, OnChanges {
           if (result["message"] == "success") {
             this.admins = result["result"][this.stream];
             if (result["result"] && result["result"][this.stream]) {
+              this.displayTimeline = true;
               if (this.admins.startDate) {
                 this.curDeadline = new Date(
                   this.admins.deadlines[this.admins.deadlines.length - 1]
@@ -153,6 +169,8 @@ export class TimelineComponent implements OnInit, OnChanges {
                   }
                 }
               }
+            } else {
+              this.displayTimeline = false;
             }
           }
         });
@@ -169,6 +187,7 @@ export class TimelineComponent implements OnInit, OnChanges {
           if (result["message"] == "success") {
             this.stream = this.program;
             if (result["result"] && result["result"][this.stream]) {
+              this.displayTimeline = true;
               this.admins = result["result"][this.program];
               if (this.admins.startDate) {
                 this.curDeadline = new Date(
@@ -182,6 +201,8 @@ export class TimelineComponent implements OnInit, OnChanges {
                   if (this.stage == 0 && i == 0) {
                     const now = new Date();
                     this.message = "Faculties add projects during this period";
+                    this.next =
+                      "Student have to fill in their preferences during this period";
                     this.stageOne =
                       Math.abs(now.getTime() - this.startDate.getTime()) /
                       Math.abs(
@@ -189,12 +210,18 @@ export class TimelineComponent implements OnInit, OnChanges {
                       );
                     this.stageOne = this.stageOne * 100;
                     if (this.stageOne >= 100) {
+                      this.stageOne = 100;
                       this.stageOneCompleted = true;
                     }
                   }
                   if (this.stage == 1 && i == 1) {
                     this.stageOneCompleted = true;
                     this.stageOne = 100;
+                    this.message =
+                      "Student have to fill in their preferences during this period";
+                    this.next =
+                      "Faculties start giving their preferences of students for their projects";
+                    this.stageOneCompleted = true;
                     const now = new Date();
                     this.stageTwo =
                       Math.abs(now.getTime() - this.dates[0].getTime()) /
@@ -203,12 +230,17 @@ export class TimelineComponent implements OnInit, OnChanges {
                       );
                     this.stageTwo *= 100;
                     if (this.stageTwo >= 100) {
+                      this.stageTwo = 100;
                       this.stageTwoCompleted = true;
                     }
                   }
                   if (this.stage == 2 && i == 2) {
                     this.stageOneCompleted = true;
                     this.stageOne = 100;
+                    this.message =
+                      "Faculties start giving their preferences of students for their projects";
+                    this.next =
+                      "Project allocation will be done within this period";
                     this.stageTwoCompleted = true;
                     this.stageTwo = 100;
                     const now = new Date();
@@ -219,6 +251,7 @@ export class TimelineComponent implements OnInit, OnChanges {
                       );
                     this.stageThree *= 100;
                     if (this.stageThree >= 100) {
+                      this.stageThree = 100;
                       this.stageThreeCompleted = true;
                     }
                   }
@@ -226,6 +259,8 @@ export class TimelineComponent implements OnInit, OnChanges {
                   if (this.stage == 3 && i + 1 == 4) {
                     this.stageThreeCompleted = true;
                     this.stageThree = 100;
+                    this.message =
+                      "Project allocation will be done within this period";
                     this.stageOneCompleted = true;
                     this.stageOne = 100;
                     this.stageTwoCompleted = true;
@@ -238,6 +273,7 @@ export class TimelineComponent implements OnInit, OnChanges {
                       );
                     this.stageFour *= 100;
                     if (this.stageFour >= 100) {
+                      this.stageFour = 100;
                       this.stageFourCompleted = true;
                     }
                   }
@@ -253,6 +289,8 @@ export class TimelineComponent implements OnInit, OnChanges {
                   }
                 }
               }
+            } else {
+              this.displayTimeline = false;
             }
           }
         });

@@ -26,7 +26,7 @@ export class FacultyComponent implements OnInit {
   public program_details;
   public routeParams;
   public adminStage;
-
+  projectClicked: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -50,79 +50,50 @@ export class FacultyComponent implements OnInit {
 
         this.activatedRoute.queryParams.subscribe((params) => {
           this.routeParams = params;
-        if(params.mode == "programMode"){
-          this.programs_mode = false;
-        }
-        if(Object.keys(params).length === 0 && params.constructor === Object){
+          if (params.mode == "programMode") {
+            this.programs_mode = false;
+          }
+          if (
+            Object.keys(params).length === 0 &&
+            params.constructor === Object
+          ) {
+            this.stream = user_info.stream;
+          } else {
+            this.stream = params.abbr;
+          }
 
+          this.projectService
+            .getFacultyProjects(this.stream)
+            .subscribe((data) => {
+              this.projects = data["project_details"];
 
-          this.stream = user_info.stream;
+              this.userService.getFacultyPrograms().subscribe((data) => {
+                console.log(data);
+                if (data["status"] == "success") {
+                  this.programs = data["programs"];
 
-        }
-        else{
-          this.stream = params.abbr;
-        }
-
-
-        this.projectService.getFacultyProjects(this.stream).subscribe((data) => {
-          this.projects = data["project_details"];
-
-
-          this.userService.getFacultyPrograms()
-          .subscribe(data => {
-            console.log(data)
-            if(data["status"]=="success"){
-              this.programs = data["programs"];
-
-              this.userService.getAdminInfo_program(this.stream)
-                .subscribe(data=>{
-
-                  if(data["status"] == "success"){
-
-                    this.adminStage = data["admin"].stage; 
-
-
-                  }
-
-                })
-
-
-            }
-          })
-
-
+                  this.userService
+                    .getAdminInfo_program(this.stream)
+                    .subscribe((data) => {
+                      if (data["status"] == "success") {
+                        this.adminStage = data["admin"].stage;
+                      }
+                    });
+                }
+              });
+            });
         });
-
-
-
-      });
-
-
-
-
-
-
-
-
-      
-    } else {
-     
-      this.loginService.signOut();
-      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-        duration: 3000,
-      });
-
-    }
-
-
-
-
-
-     
+      } else {
+        this.loginService.signOut();
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+          duration: 3000,
+        });
+      }
     });
   }
 
   displayProject(project) {
+    this.projectClicked = true;
     this.projectService
       .getStudentsApplied(project.students_id)
       .subscribe((data) => {
@@ -146,6 +117,7 @@ export class FacultyComponent implements OnInit {
     this.empty = false;
   }
   addProject(state) {
+    this.projectClicked = true;
     if (this.adminStage == 0) {
       this.add = state;
       this.empty = false;
@@ -166,16 +138,11 @@ export class FacultyComponent implements OnInit {
       if (data["status"] == "success") {
         this.program_details = data["program_details"];
         // console.log(this.program_details);
-      }
-      else{
+      } else {
         this.program_details = data["result"];
-        this.snackBar.open(
-          "No Admin assigned to this program!!",
-          "Ok",
-          {
-            duration: 3000,
-          }
-        );
+        this.snackBar.open("No Admin assigned to this program!!", "Ok", {
+          duration: 3000,
+        });
       }
     });
   }

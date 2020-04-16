@@ -8,24 +8,6 @@
 
         <div *ngIf="program_details">
 
-            <!--
-            <div class="top">
-
-                <div *ngIf="program_details.curDeadline">
-                    <span class="days_left"><strong>Time Left for this stage to end : </strong></span>
-                    <countdown-timer [end]="program_details.curDeadline"></countdown-timer>
-                </div>
-                <div *ngIf="program_details.curDeadline">
-
-                    <p *ngIf="program_details.admin.stage == 0"><strong> Stage {{program_details.admin.stage}} : </strong>Creating Projects</p>
-                    <p *ngIf="program_details.admin.stage == 1"><strong> Stage {{program_details.admin.stage}}:</strong>Student Preferences</p>
-                    <p *ngIf="program_details.admin.stage == 2"><strong> Stage {{program_details.admin.stage}}:</strong>Faculty Preferences</p>
-                    <p *ngIf="program_details.admin.stage == 3"><strong> Stage {{program_details.admin.stage}}:</strong>Project Allocation</p>
-
-                </div>
-
-            </div> -->
-
             <app-timeline *ngIf="program_details" [program]="program_details.program.short"></app-timeline>
 
 
@@ -60,7 +42,7 @@
                 </div>
             </div>
         </div>
-        
+
     </ng-template>
 
 </div>
@@ -82,7 +64,7 @@
                     </div>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input matInput placeholder="Duration (months)" formControlName="duration" />
+                            <input matInput type="number" placeholder="Duration (months)" formControlName="duration" />
                             <mat-error *ngIf="ProjectForm.controls['duration'].hasError('required')">
                                 Duration is <strong>required</strong>
                             </mat-error>
@@ -111,7 +93,7 @@
         <mat-tab-group color="accent" dynamicHeight="true">
 
             <mat-tab label="Students">
-                <app-student-table [project]="project" [adminStage]="adminStage" [student_list]="student_list">
+                <app-student-table *ngIf="project" [project]="project" [adminStage]="adminStage" [student_list]="student_list">
                 </app-student-table>
             </mat-tab>
 
