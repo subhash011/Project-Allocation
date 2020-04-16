@@ -1,4 +1,4 @@
-<app-timeline></app-timeline>
+<app-timeline *ngIf="details" [program]="details.stream"></app-timeline>
 
 <mat-toolbar>
     <mat-toolbar-row>
