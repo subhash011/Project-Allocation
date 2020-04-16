@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Project = require("./Project");
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -31,10 +30,7 @@ const UserSchema = new mongoose.Schema({
         type: [mongoose.SchemaTypes.ObjectId],
     },
     programs: {
-        type: [{
-            short: String,
-            full: String,
-        }, ],
+        type: [],
     },
     date: {
         type: Date,

@@ -53,7 +53,8 @@
 .drag-drop {
     padding-top: 5%;
     padding-bottom: 5%;
-    overflow: scroll;
+    overflow-y: scroll;
+    scrollbar-width: none;
 }
 
 .col-1 {

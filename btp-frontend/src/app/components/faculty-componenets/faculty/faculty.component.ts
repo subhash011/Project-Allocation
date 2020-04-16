@@ -34,7 +34,7 @@ export class FacultyComponent implements OnInit {
     private snackBar: MatSnackBar,
     private loginService: LoginComponent,
     private projectService: ProjectsService,
-    private userService : UserService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -42,19 +42,12 @@ export class FacultyComponent implements OnInit {
       this.id = params.get("id");
     });
 
-    
-
     this.userDetails.getFacultyDetails(this.id).subscribe((data) => {
       if (data["status"] == "success") {
         const user_info = data["user_details"];
         this.name = user_info.name;
-        
-        
 
-
-        this.activatedRoute.queryParams
-        .subscribe(params => {
-
+        this.activatedRoute.queryParams.subscribe((params) => {
           this.routeParams = params;
         if(params.mode == "programMode"){
           this.programs_mode = false;
@@ -152,36 +145,26 @@ export class FacultyComponent implements OnInit {
     this.empty = false;
   }
   addProject(state) {
-    if(this.adminStage == 0){
+    if (this.adminStage == 0) {
       this.add = state;
       this.empty = false;
-    }
-    else{
+    } else {
       this.add = !state;
-       this.snackBar.open("Stage Deadline reached!! You can't add more projects!!", "Ok", {
-        duration: 3000,
-      });
-    }
-
-  }
-
-
-  displayProgram(program){
-
-    this.userService.getFacultyProgramDetails(program)
-      .subscribe(data=>{
-        if(data["status"]=="success"){
-
-          this.program_details = data["program_details"];
-          // this.adminStage = this.program_details.admin.stage;
-
+      this.snackBar.open(
+        "Stage Deadline reached!! You can't add more projects!!",
+        "Ok",
+        {
+          duration: 3000,
         }
-
-      })
-
-
-
+      );
+    }
   }
 
-
+  displayProgram(program) {
+    this.userService.getFacultyProgramDetails(program).subscribe((data) => {
+      if (data["status"] == "success") {
+        this.program_details = data["program_details"];
+      }
+    });
+  }
 }

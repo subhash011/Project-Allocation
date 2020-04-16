@@ -1,20 +1,22 @@
-const express = require("express");
-const router = express.Router();
-const mongoose = require("mongoose");
-const Project = require("../models/Project");
-const Faculty = require("../models/Faculty");
-const Admin = require("../models/Admin_Info");
-const Student = require("../models/Student");
 const Mapping = require("../models/Mapping");
 
 branches = [];
+programs = [];
 
 Mapping.find().then((maps) => {
     for (const map of maps) {
         branches.push(map.short);
     }
+    for (const map of maps) {
+        const newpr = {
+            short: map.short,
+            full: map.full
+        }
+        programs.push(newpr)
+    }
 });
 
 module.exports = {
     branches: branches,
+    programs: programs
 };

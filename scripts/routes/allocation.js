@@ -96,8 +96,8 @@ router.post("/start", (req, res) => {
                     allocationStatus[firstPreference].push(curStudent);
                     allocationStatus[firstPreference].sort((a, b) => {
                         return (
-                            firstProject.students_id.indexOf(a) -
-                            firstProject.students_id.indexOf(b)
+                            firstProject.students_id.indexOf(a._id) -
+                            firstProject.students_id.indexOf(b._id)
                         );
                     });
                     free = free.filter((val) => {
@@ -117,7 +117,14 @@ router.post("/start", (req, res) => {
                     );
                     if (curStudentIndex < currentlyAllotedIndex) {
                         allocationStatus[firstPreference].pop();
+                        studentCurrentlyAlloted.projects_preference.shift();
                         allocationStatus[firstPreference].push(curStudent);
+                        allocationStatus[firstPreference].sort((a, b) => {
+                            return (
+                                firstProject.students_id.indexOf(a._id) -
+                                firstProject.students_id.indexOf(b._id)
+                            );
+                        });
                         free = free.filter((val) => {
                             return !val.equals(curStudent);
                         });
@@ -136,10 +143,44 @@ router.post("/start", (req, res) => {
 
         }
         //update dbs here
-        Object.keys(allocationStatus).map(function(key, value) {
-            allocationStatus[key] = allocationStatus[key].map((val) => val.name);
+        promises = [];
+        for (const key in allocationStatus) {
+            if (allocationStatus.hasOwnProperty(key)) {
+                const studentsList = allocationStatus[key];
+                for (const student of studentsList) {
+                    promises.push(
+                        Student.findByIdAndUpdate(student._id, {
+                            project_alloted: mongoose.Types.ObjectId(key),
+                        }).then((student) => {
+                            return student;
+                        })
+                    );
+                }
+            }
+        }
+        Promise.all(promises).then((result) => {
+            promises = [];
+            for (const key in allocationStatus) {
+                if (allocationStatus.hasOwnProperty(key)) {
+                    const studentsList = allocationStatus[key].map((val) =>
+                        mongoose.Types.ObjectId(val._id)
+                    );
+                    promises.push(
+                        Project.findByIdAndUpdate(mongoose.Types.ObjectId(key), {
+                            student_alloted: studentsList,
+                        }).then((project) => {
+                            return project;
+                        })
+                    );
+                }
+            }
+            Promise.all(promises).then((result) => {
+                Object.keys(allocationStatus).map(function(key, value) {
+                    allocationStatus[key] = allocationStatus[key].map((val) => val.name);
+                });
+                res.json(allocationStatus);
+            });
         });
-        res.json(allocationStatus);
     });
 });
 

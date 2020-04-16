@@ -7,6 +7,7 @@ const Admin = require("../models/Admin_Info");
 const Student = require("../models/Student");
 const Service = require("../helper/serivces");
 var branches = Service.branches;
+var programs = Service.programs;
 
 router.get("/project/:id", (req, res) => {
     const id = req.params.id;
@@ -283,12 +284,7 @@ router.get("/stream_email/student/:id", (req, res) => {
 });
 
 router.get("/all/info", (req, res) => {
-    var result = {
-        CSE: {},
-        EE: {},
-        ME: {},
-        CE: {},
-    };
+    var result = {};
     var promises = [];
     Admin.find().then((admins) => {
         if (admins) {
@@ -317,15 +313,20 @@ router.get("/members/:id", (req, res) => {
     const idToken = req.headers.authorization;
     var promises = [];
     var users = {};
+    var programAdmin;
     Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then((admin) => {
         if (admin && admin.isAdmin) {
+            for (const program of programs) {
+                if (admin.adminProgram == program.short) {
+                    programAdmin = program;
+                }
+            }
             promises.push(
-                Faculty.find({ programs: admin.stream }).then((faculties) => {
+                Faculty.find({ programs: { $elemMatch: programAdmin } }).then((faculties) => {
                     var temp = faculties.map((val) => {
                         var newFac = {
                             _id: val._id,
                             name: val.name,
-                            //add number of programs here
                             noOfProjects: val.project_list.length,
                             email: val.email,
                         };

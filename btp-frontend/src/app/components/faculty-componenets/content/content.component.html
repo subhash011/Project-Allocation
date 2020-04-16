@@ -1,9 +1,6 @@
 <div class="container" *ngIf="empty; else notEmpty">
 
     <div *ngIf="!programs_mode; else goProgramMode">
-        <h1>
-            <app-timeline></app-timeline>
-        </h1>
     </div>
 
     <ng-template #goProgramMode>
@@ -11,7 +8,7 @@
 
         <div *ngIf="program_details">
 
-
+            <!--
             <div class="top">
 
                 <div *ngIf="program_details.curDeadline">
@@ -19,18 +16,18 @@
                     <countdown-timer [end]="program_details.curDeadline"></countdown-timer>
                 </div>
                 <div *ngIf="program_details.curDeadline">
-                    
-                         <p *ngIf="program_details.admin.stage == 0"><strong> Stage {{program_details.admin.stage}} : </strong>Creating Projects</p>
-                        <p *ngIf="program_details.admin.stage == 1"><strong> Stage {{program_details.admin.stage}}:</strong>Student Preferences</p>
-                        <p *ngIf="program_details.admin.stage == 2"><strong> Stage {{program_details.admin.stage}}:</strong>Faculty Preferences</p>
-                        <p *ngIf="program_details.admin.stage == 3"><strong> Stage {{program_details.admin.stage}}:</strong>Project Allocation</p>
+
+                    <p *ngIf="program_details.admin.stage == 0"><strong> Stage {{program_details.admin.stage}} : </strong>Creating Projects</p>
+                    <p *ngIf="program_details.admin.stage == 1"><strong> Stage {{program_details.admin.stage}}:</strong>Student Preferences</p>
+                    <p *ngIf="program_details.admin.stage == 2"><strong> Stage {{program_details.admin.stage}}:</strong>Faculty Preferences</p>
+                    <p *ngIf="program_details.admin.stage == 3"><strong> Stage {{program_details.admin.stage}}:</strong>Project Allocation</p>
 
                 </div>
 
-            </div>
+            </div> -->
 
+            <app-timeline *ngIf="program_details" [program]="program_details.program.short"></app-timeline>
 
-          
 
             <div class="display">
                 <div class="table mat-elevation-z8">
@@ -64,10 +61,10 @@
             </div>
         </div>
 
-      
+
 
     </ng-template>
-    
+
 </div>
 <ng-template #notEmpty>
     <div class="container-add" *ngIf="add; else display">

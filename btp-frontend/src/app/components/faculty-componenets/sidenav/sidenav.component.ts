@@ -1,10 +1,10 @@
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
 import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 
 @Component({
   selector: "app-sidenav",
   templateUrl: "./sidenav.component.html",
-  styleUrls: ["./sidenav.component.scss"]
+  styleUrls: ["./sidenav.component.scss"],
 })
 export class SidenavComponent implements OnInit {
   @Input() public projects;
@@ -18,9 +18,7 @@ export class SidenavComponent implements OnInit {
 
   public selectedRow;
 
-  constructor(
-    private router:Router
-  ) {}
+  constructor(private router: Router) {}
 
   ngOnInit() {}
 
@@ -36,23 +34,23 @@ export class SidenavComponent implements OnInit {
     this.selectedRow = index;
   }
 
-
-  onProgramClick(program,index){
-
+  onProgramClick(program, index) {
     this.programClicked.emit(program);
     this.selectedRow = index;
-
   }
 
-  displayHome(){
+  displayHome() {
     let id = localStorage.getItem("id");
     this.router
       .navigateByUrl("/refresh", { skipLocationChange: true })
       .then(() => {
-        this.router.navigate(['/faculty',id],{queryParams:{ name: this.routeParams.name, abbr: this.routeParams.abbr, mode:"programMode" }});
+        this.router.navigate(["/faculty", id], {
+          queryParams: {
+            name: this.routeParams.name,
+            abbr: this.routeParams.abbr,
+            mode: "programMode",
+          },
+        });
       });
-
-
   }
-
 }

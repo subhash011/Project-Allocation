@@ -18,22 +18,22 @@ const routes: Routes = [
   {
     path: "faculty/:id",
     component: FacultyComponent,
-    runGuardsAndResolvers: "always"
+    runGuardsAndResolvers: "always",
   },
   {
     path: "refresh",
-    component: RefreshComponent
+    component: RefreshComponent,
   },
   { path: "student/preferences/:id", component: DragDropComponent },
   { path: "profile/:id", component: ProfileComponent },
   { path: "student/projects/:id", component: StudentProjectsComponent },
   { path: "super", component: SuperAdminComponent },
   { path: "admin/:id", component: AdminComponent },
-  { path: "super_admin/:id", component: SuperAdminComponent }
+  { path: "super_admin/:id", component: SuperAdminComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: "reload" })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}
