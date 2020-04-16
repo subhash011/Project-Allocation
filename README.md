@@ -6,7 +6,7 @@ Project Allocation Web Application for University using MEAN Stack. Projects can
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
+### Pre-requisites
 
 What things you need to install the software and how to install them
 
@@ -61,7 +61,7 @@ npm install -g @angular/cli
 ##### Linux
 Execute the following command on the command line :
 ```
-sudo npm install -g @angular/cli
+$ sudo npm install -g @angular/cli
 ```
 
 #### 3. MongoDB & MongoDB Compass
@@ -96,11 +96,11 @@ ng add @angular/material
 ```
 This command will open a prompt asking you questions :
 
-**Choose a prebuilt theme name, or "custom" for a custom theme:** Choose Indigo/Pink and then hit enter
+`Choose a prebuilt theme name, or "custom" for a custom theme:` Choose Indigo/Pink and then hit enter.
 
-**Set up global Angular Material typography styles?** Press Y and then hit enter
+`Set up global Angular Material typography styles?` Press Y and then hit enter.
 
-**Set up browser animations for Angular Material?** Press Y and then hit enter
+`Set up browser animations for Angular Material?` Press Y and then hit enter.
 
 
 
