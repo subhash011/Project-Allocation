@@ -4,7 +4,7 @@ Project Allocation Web Application for University using MEAN Stack. Projects can
 
 ## Requires
 
-- Angular CLI
+- Angular CLI version 8.3.25
 - Node.js
 - Angular Material
 - MongoDB
