@@ -7,7 +7,8 @@ const SuperAdmin = require("../models/SuperAdmin");
 oauth = require("../config/oauth");
 
 //add your email here if you want to be a super admin
-const superAdmins = ["s4589012@gmail.com", "111801002@smail.iitpkd.ac.in"];
+const superAdmins = process.env.SUPER_ADMINS.split(",");
+console.log(superAdmins)
 
 router.post("/user_check", (req, res) => {
     const userDetails = req.body;

@@ -322,7 +322,7 @@ router.get("/members/:id", (req, res) => {
                 }
             }
             promises.push(
-                Faculty.find({ programs: { $elemMatch: programAdmin } }).then((faculties) => {
+                Faculty.find({ programs: { $elemMatch: programAdmin } }).populate("project_list", null, Project).then((faculties) => {
                     var temp = faculties.map((val) => {
                         var newFac = {
                             _id: val._id,

@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from "@angular/router";
 import { ProjectsService } from "./../../../services/projects/projects.service";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { MailService } from "./../../../services/mailing/mail.service";
@@ -38,8 +38,7 @@ export class AdminComponent implements OnInit {
   fourthFormGroup: FormGroup;
   fifthFormGroup: FormGroup;
   sixthFormGroup: FormGroup;
-  seventhFormGroup:FormGroup;
-
+  seventhFormGroup: FormGroup;
 
   public programName;
 
@@ -77,7 +76,7 @@ export class AdminComponent implements OnInit {
     private mailer: MailService,
     private projectService: ProjectsService,
     private loginService: LoginComponent,
-    private activatedRoute:ActivatedRoute
+    private activatedRoute: ActivatedRoute
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -142,70 +141,59 @@ export class AdminComponent implements OnInit {
         }
       });
     this.userService.getAdminInfo().subscribe((data) => {
+      if (data["status"] == "success") {
+        this.programName = data["stream"];
+        this.stage_no = data["stage"];
+        this.dateSet = data["deadlines"];
+        this.projectCap = data["projectCap"];
+        this.studentCap = data["studentCap"];
+        this.studentsPerFaculty = data["studentsPerFaculty"];
+        this.dateSet = this.dateSet.map((date) => {
+          return new Date(date);
+        });
+        this.startDate = data["startDate"];
 
-    
-        if(data["status"] == "success"){
+        this.ngAfterViewInit();
 
-          this.programName = data["stream"];
-          this.stage_no = data["stage"];
-          this.dateSet = data["deadlines"];
-          this.projectCap = data["projectCap"];
-          this.studentCap = data["studentCap"];
-          this.studentsPerFaculty = data["studentsPerFaculty"];
-          this.dateSet = this.dateSet.map((date) => {
-            return new Date(date);
-          });
-          this.startDate = data["startDate"];
+        this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
+        this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
+        this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
+        this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
+        this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
+        this.seventhFormGroup.controls["seventhCtrl"].setValue(
+          this.studentsPerFaculty
+        );
 
-          this.ngAfterViewInit();
-
-          this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
-          this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
-          this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
-          this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
-          this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
-          this.seventhFormGroup.controls["seventhCtrl"].setValue(this.studentsPerFaculty);
-
-
-
-          if (this.dateSet.length == 1) {
-            if (this.firstFormGroup.controls["firstCtrl"]) {
-              this.proceedButton1 = false;
-            }
+        if (this.dateSet.length == 1) {
+          if (this.firstFormGroup.controls["firstCtrl"]) {
+            this.proceedButton1 = false;
           }
-          if (this.dateSet.length == 2) {
-            if (this.secondFormGroup.controls["secondCtrl"]) {
-              this.proceedButton2 = false;
-            }
-          }
-          if (this.dateSet.length == 3) {
-            if (this.thirdFormGroup.controls["thirdCtrl"])
-              this.proceedButton3 = false;
-          }
-          if (this.stage_no == 0) {
-            this.minDate = new Date();
-          } else {
-            this.minDate = this.dateSet[this.dateSet.length - 1];
-          }
-          if (this.dateSet.length > 0) {
-            this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-            let today = new Date();
-            this.days_left = this.daysBetween(today, this.curr_deadline);
-          }
-
-
         }
-
-        else{
-
-
-          this.loginService.signOut();
-          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-            duration: 3000,
-          });
-
+        if (this.dateSet.length == 2) {
+          if (this.secondFormGroup.controls["secondCtrl"]) {
+            this.proceedButton2 = false;
+          }
         }
- 
+        if (this.dateSet.length == 3) {
+          if (this.thirdFormGroup.controls["thirdCtrl"])
+            this.proceedButton3 = false;
+        }
+        if (this.stage_no == 0) {
+          this.minDate = new Date();
+        } else {
+          this.minDate = this.dateSet[this.dateSet.length - 1];
+        }
+        if (this.dateSet.length > 0) {
+          this.curr_deadline = this.dateSet[this.dateSet.length - 1];
+          let today = new Date();
+          this.days_left = this.daysBetween(today, this.curr_deadline);
+        }
+      } else {
+        this.loginService.signOut();
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+          duration: 3000,
+        });
+      }
     });
     this.projectService.getAllStreamProjects().subscribe((projects) => {
       if (projects["message"] == "success") {
@@ -689,14 +677,17 @@ export class AdminComponent implements OnInit {
           }
         });
     } else {
-      let snackBarRef = this.snackBar.open("Please enter a valid number", "Ok", {
-        duration: 3000,
-      });
+      let snackBarRef = this.snackBar.open(
+        "Please enter a valid number",
+        "Ok",
+        {
+          duration: 3000,
+        }
+      );
     }
   }
 
   setStudentCap() {
-
     if (this.sixthFormGroup.controls["sixthCtrl"].value > 0) {
       this.userService
         .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
@@ -725,55 +716,54 @@ export class AdminComponent implements OnInit {
           }
         });
     } else {
-      let snackBarRef = this.snackBar.open("Please enter a valid number", "Ok", {
-        duration: 3000,
-      });
+      let snackBarRef = this.snackBar.open(
+        "Please enter a valid number",
+        "Ok",
+        {
+          duration: 3000,
+        }
+      );
     }
   }
-  
-    setStudentsPerFaculty(){
 
-      console.log(this.seventhFormGroup.controls["seventhCtrl"].value)
+  setStudentsPerFaculty() {
+    console.log(this.seventhFormGroup.controls["seventhCtrl"].value);
 
-      if (this.seventhFormGroup.controls["seventhCtrl"].value > 0) {
-        this.userService
-          .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
-          .subscribe((data) => {
-            console.log(data);
-  
-            if (data["status"] == "success") {
-              let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+    if (this.seventhFormGroup.controls["seventhCtrl"].value > 0) {
+      this.userService
+        .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
+        .subscribe((data) => {
+          console.log(data);
+
+          if (data["status"] == "success") {
+            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+            this.ngOnInit();
+          } else {
+            let snackBarRef = this.snackBar.open(
+              "Session Timed Out! Please Sign in Again!",
+              "Ok",
+              {
                 duration: 3000,
-              });
-              this.ngOnInit();
-            } else {
-              let snackBarRef = this.snackBar.open(
-                "Session Timed Out! Please Sign in Again!",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-              snackBarRef.afterDismissed().subscribe(() => {
-                this.loginService.signOut();
-              });
-              snackBarRef.onAction().subscribe(() => {
-                this.loginService.signOut();
-              });
-            }
-          });
-      } else {
-        let snackBarRef = this.snackBar.open("Please enter a valid number", "Ok", {
-          duration: 3000,
+              }
+            );
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.loginService.signOut();
+            });
+            snackBarRef.onAction().subscribe(() => {
+              this.loginService.signOut();
+            });
+          }
         });
-      }
-
-
-
-
-      
+    } else {
+      let snackBarRef = this.snackBar.open(
+        "Please enter a valid number",
+        "Ok",
+        {
+          duration: 3000,
+        }
+      );
     }
-
-
-
+  }
 }

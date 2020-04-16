@@ -1,0 +1,18 @@
+This file explains on how to create the configuration file required for the application to run:
+
+1. In the backend folder create a file named ".env"
+The file should look as follows
+
+/**********************************************************************************************
+MONGO_URL = MONGODB_CONNECTION_URL
+GOOGLE_CLIENT_ID = GOOGLE_CLIENT_ID_FROM_GOOGLE_DEVELOPER_CONSOLE
+GOOGLE_CLIENT_SECRET = GOOGLE_CLIENT_SECRET_FROM_GOOGLE_DEVELOPER_CONSOLE
+SUPER_ADMINS = EMAIL_IDS_OF_SUPER_ADMINS_SEPERATED_BY_COMMA
+***********************************************************************************************/
+
+Ex:
+MONGO_URL = "123"
+GOOGLE_CLIENT_ID = "123"
+GOOGLE_CLIENT_SECRET = "123"
+SUPER_ADMINS = "abc@gmail.com,def@gmail.com"
+
