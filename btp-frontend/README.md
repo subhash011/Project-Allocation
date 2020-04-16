@@ -14,7 +14,7 @@ use `ng serve --port PORT_NO`.
 2. `apiUrl` is the base URL to which angular application will be listening, `GOOGLE_CLIENT_ID` is the ID obtained from google developer console on
    registering the application
 
-   # Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
+   #### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
 
 3. Define `apiUrl` and `GOOGLE_CLIENT_ID` in the environment.prod.ts file. During the build the environment.ts file is replaced by  
    environment.prod.ts file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
