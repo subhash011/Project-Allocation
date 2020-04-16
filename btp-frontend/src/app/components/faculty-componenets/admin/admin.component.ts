@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from "@angular/router";
 import { ProjectsService } from "./../../../services/projects/projects.service";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { MailService } from "./../../../services/mailing/mail.service";
@@ -18,6 +18,8 @@ import { MatStepper } from "@angular/material";
   providers: [LoginComponent],
 })
 export class AdminComponent implements OnInit {
+
+
   public details; // For displaying the projects tab
   public faculty_projects;
 
@@ -38,8 +40,7 @@ export class AdminComponent implements OnInit {
   fourthFormGroup: FormGroup;
   fifthFormGroup: FormGroup;
   sixthFormGroup: FormGroup;
-  seventhFormGroup:FormGroup;
-
+  seventhFormGroup: FormGroup;
 
   public programName;
 
@@ -82,7 +83,7 @@ export class AdminComponent implements OnInit {
     private mailer: MailService,
     private projectService: ProjectsService,
     private loginService: LoginComponent,
-    private activatedRoute:ActivatedRoute
+    private activatedRoute: ActivatedRoute
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -206,42 +207,30 @@ export class AdminComponent implements OnInit {
           } else {
             this.minDate = this.dateSet[this.dateSet.length - 1];
           }
-          if (this.dateSet.length > 0) {
-            this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-            let today = new Date();
-            this.days_left = this.daysBetween(today, this.curr_deadline);
-          }
-
-            } else {
+        
+      }
+      else{
               this.loginService.signOut();
               this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                 duration: 3000,
               });
-            }
-
-
-
-      });
-
-
-         
-
-
-
 
         }
+       
 
-        else{
+      })
 
-
-          this.loginService.signOut();
-          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-            duration: 3000,
-          });
-
-        }
- 
+  }
+  else{
+    this.loginService.signOut();
+    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+      duration: 3000,
     });
+  }  
+
+  
+ })
+
     this.projectService.getAllStreamProjects().subscribe((projects) => {
       if (projects["message"] == "success") {
         this.projects = projects["result"];
@@ -253,7 +242,12 @@ export class AdminComponent implements OnInit {
         });
       }
     });
-  }
+  
+
+
+}
+
+
 
   proceed() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
@@ -364,7 +358,7 @@ export class AdminComponent implements OnInit {
   }
 
   daysBetween(date1, date2) {
-    console.log(date2.getTime());
+
     let diffInMilliSeconds = Math.abs(date2 - date1) / 1000;
 
     // calculate days
@@ -661,14 +655,17 @@ export class AdminComponent implements OnInit {
           }
         });
     } else {
-      let snackBarRef = this.snackBar.open("Please enter a valid number", "Ok", {
-        duration: 3000,
-      });
+      let snackBarRef = this.snackBar.open(
+        "Please enter a valid number",
+        "Ok",
+        {
+          duration: 3000,
+        }
+      );
     }
   }
 
   setStudentCap() {
-
     if (this.sixthFormGroup.controls["sixthCtrl"].value > 0) {
       this.userService
         .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
@@ -688,22 +685,25 @@ export class AdminComponent implements OnInit {
           }
         });
     } else {
-      let snackBarRef = this.snackBar.open("Please enter a valid number", "Ok", {
-        duration: 3000,
-      });
+      let snackBarRef = this.snackBar.open(
+        "Please enter a valid number",
+        "Ok",
+        {
+          duration: 3000,
+        }
+      );
     }
   }
-  
-    setStudentsPerFaculty(){
 
-      console.log(this.seventhFormGroup.controls["seventhCtrl"].value)
+  setStudentsPerFaculty() {
+  
 
       if (this.seventhFormGroup.controls["seventhCtrl"].value > 0) {
         this.userService
           .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
           .subscribe((data) => {
             console.log(data);
-  
+
             if (data["status"] == "success") {
               let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
                 duration: 3000,
@@ -714,20 +714,24 @@ export class AdminComponent implements OnInit {
               this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                 duration: 3000,
               });
+              } 
+            });
+        } 
+        else {
+          let snackBarRef = this.snackBar.open(
+            "Please enter a valid number",
+            "Ok",
+            {
+              duration: 3000,
             }
-          });
-      } else {
-        let snackBarRef = this.snackBar.open("Please enter a valid number", "Ok", {
-          duration: 3000,
-        });
-      }
-
-
-
+          );
+        }
 
       
-    }
-
-
-
+  } 
+  
 }
+
+
+
+
