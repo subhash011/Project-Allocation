@@ -80,12 +80,12 @@ export class FacultyComponent implements OnInit {
             if(data["status"]=="success"){
               this.programs = data["programs"];
 
-              this.userService.getAdminInfo()
+              this.userService.getAdminInfo_program(this.stream)
                 .subscribe(data=>{
 
                   if(data["status"] == "success"){
 
-                  this.adminStage = data["stage"]; 
+                    this.adminStage = data["admin"].stage; 
 
 
                   }
@@ -113,18 +113,9 @@ export class FacultyComponent implements OnInit {
       
     } else {
      
-      let snackBarRef = this.snackBar.open(
-        "Session Timed Out! Please Sign in Again!",
-        "Ok",
-        {
-          duration: 3000,
-        }
-      );
-      snackBarRef.afterDismissed().subscribe(() => {
-        this.loginService.signOut();
-      });
-      snackBarRef.onAction().subscribe(() => {
-        this.loginService.signOut();
+      this.loginService.signOut();
+      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+        duration: 3000,
       });
 
     }
@@ -149,16 +140,10 @@ export class FacultyComponent implements OnInit {
             return b.gpa - a.gpa;
           });
         } else {
-          let snackBarRef = this.snackBar.open("Session Timed Out! Please Sign in Again!", "Ok", {
+          this.loginService.signOut();
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
           });
-          snackBarRef.afterDismissed().subscribe(() => {
-            this.loginService.signOut()
-        });
-
-        snackBarRef.onAction().subscribe(() => {
-            this.loginService.signOut()
-        });
         }
       });
 
@@ -187,7 +172,8 @@ export class FacultyComponent implements OnInit {
       .subscribe(data=>{
         if(data["status"]=="success"){
 
-          this.program_details = data["program_details"]
+          this.program_details = data["program_details"];
+          // this.adminStage = this.program_details.admin.stage;
 
         }
 

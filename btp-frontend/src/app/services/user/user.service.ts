@@ -414,6 +414,31 @@ export class UserService {
 
   }
 
+  getAdminInfo_program(program){
+
+
+    const prog = {
+      program:program
+    }
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "faculty/getAdminInfo_program/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.post(this.url,prog, httpOptions);
+
+
+  }
+
+
+  
+
 
 
   getAllMaps() {

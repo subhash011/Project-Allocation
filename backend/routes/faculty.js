@@ -409,4 +409,37 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
     );
 });
 
+
+router.post('/getAdminInfo_program/:id',(req,res)=>{
+
+
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const program = req.body.program;
+
+    Admin.findOne({stream:program})
+        .then(admin=>{
+            if(admin){
+                res.json({
+                    status:"success",
+                    admin:admin
+                })
+            }
+
+            else{
+                res.json({
+                    status:"fail",
+                    result:null
+                })
+            }
+        })
+        .catch(err=>{
+            res.json({
+                status:"fail",
+                result:null
+            })
+        })
+
+})
+
 module.exports = router;

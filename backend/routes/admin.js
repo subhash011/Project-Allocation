@@ -320,7 +320,7 @@ router.get("/members/:id", (req, res) => {
     Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then((admin) => {
         if (admin && admin.isAdmin) {
             promises.push(
-                Faculty.find({ stream: admin.stream }).then((faculties) => {
+                Faculty.find({ programs: admin.stream }).then((faculties) => {
                     var temp = faculties.map((val) => {
                         var newFac = {
                             _id: val._id,

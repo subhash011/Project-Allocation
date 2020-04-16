@@ -194,6 +194,10 @@ export class AdminComponent implements OnInit {
           }
 
 
+
+
+
+
         }
 
         else{
@@ -249,18 +253,9 @@ export class AdminComponent implements OnInit {
               }
             );
           } else {
-            let snackBarRef = this.snackBar.open(
-              "Session Timed Out! Sign-in again",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
-            snackBarRef.afterDismissed().subscribe(() => {
-              this.loginService.signOut();
-            });
-            snackBarRef.onAction().subscribe(() => {
-              this.loginService.signOut();
+            this.loginService.signOut();
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+              duration: 3000,
             });
           }
         });
@@ -410,19 +405,10 @@ export class AdminComponent implements OnInit {
                 this.ngOnInit();
               });
             } else {
-              let snackBarRef = this.snackBar.open(
-                "Please Reload and Try Again!",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-              // snackBarRef.afterDismissed().subscribe(() => {
-              //   this.loginService.signOut();
-              // });
-              // snackBarRef.onAction().subscribe(() => {
-              //   this.loginService.signOut();
-              // });
+              this.loginService.signOut();
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                duration: 3000,
+              });
             }
           });
         }
@@ -485,18 +471,9 @@ export class AdminComponent implements OnInit {
                       this.ngOnInit();
                     });
                   } else {
-                    let snackBarRef = this.snackBar.open(
-                      "Session Timed Out! Please Sign in Again!",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.loginService.signOut();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.loginService.signOut();
+                    this.loginService.signOut();
+                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                      duration: 3000,
                     });
                   }
                 });
@@ -528,18 +505,9 @@ export class AdminComponent implements OnInit {
                       this.ngOnInit();
                     });
                   } else {
-                    let snackBarRef = this.snackBar.open(
-                      "Session Timed Out! Please Sign in Again!",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.loginService.signOut();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.loginService.signOut();
+                    this.loginService.signOut();
+                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                      duration: 3000,
                     });
                   }
                 });
@@ -590,18 +558,9 @@ export class AdminComponent implements OnInit {
                       this.ngOnInit();
                     });
                   } else {
-                    let snackBarRef = this.snackBar.open(
-                      "Session Timed Out! Please Sign in Again!",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.loginService.signOut();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.loginService.signOut();
+                    this.loginService.signOut();
+                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                      duration: 3000,
                     });
                   }
                 });
@@ -636,18 +595,9 @@ export class AdminComponent implements OnInit {
                       this.ngOnInit();
                     });
                   } else {
-                    let snackBarRef = this.snackBar.open(
-                      "Session Timed Out! Please Sign in Again!",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.loginService.signOut();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.loginService.signOut();
+                    this.loginService.signOut();
+                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                      duration: 3000,
                     });
                   }
                 });
@@ -673,18 +623,9 @@ export class AdminComponent implements OnInit {
             });
             this.ngOnInit();
           } else {
-            let snackBarRef = this.snackBar.open(
-              "Session Timed Out! Please Sign in Again!",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
-            snackBarRef.afterDismissed().subscribe(() => {
-              this.loginService.signOut();
-            });
-            snackBarRef.onAction().subscribe(() => {
-              this.loginService.signOut();
+            this.loginService.signOut();
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+              duration: 3000,
             });
           }
         });
@@ -709,18 +650,9 @@ export class AdminComponent implements OnInit {
             });
             this.ngOnInit();
           } else {
-            let snackBarRef = this.snackBar.open(
-              "Session Timed Out! Please Sign in Again!",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
-            snackBarRef.afterDismissed().subscribe(() => {
-              this.loginService.signOut();
-            });
-            snackBarRef.onAction().subscribe(() => {
-              this.loginService.signOut();
+            this.loginService.signOut();
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+              duration: 3000,
             });
           }
         });
@@ -747,18 +679,9 @@ export class AdminComponent implements OnInit {
               });
               this.ngOnInit();
             } else {
-              let snackBarRef = this.snackBar.open(
-                "Session Timed Out! Please Sign in Again!",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-              snackBarRef.afterDismissed().subscribe(() => {
-                this.loginService.signOut();
-              });
-              snackBarRef.onAction().subscribe(() => {
-                this.loginService.signOut();
+              this.loginService.signOut();
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                duration: 3000,
               });
             }
           });
