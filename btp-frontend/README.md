@@ -21,3 +21,11 @@ use `ng serve --port PORT_NO`.
    file and under configurations, create a new configuration and define the file replacements in the file replacements array.
    This artice explains very well on how to use the file replacements array:
    `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`
+
+4. To build the application after completing all the configuration steps, run `ng build --prod` if you have not made any file replacements else
+   run the build command according. Remenber to run the ng build command in the root directory of the project i.e btp-frontend.
+
+5. After running the build command angular writes the output to the dist folder under the root directory. Inside the dist folder ther will be a
+   folder with the project name, copy that folder into the root directory of the backend (here "backend"). Once this is done in the backend folder
+   go to the server.js file and in line 29 there is a comment saying "uncomment during production", uncomment the line just below that and the app is ready for deployment. Now the backend folder will deploy angular application as static file so it is enough if we deploy the backend folder
+   on the server.
