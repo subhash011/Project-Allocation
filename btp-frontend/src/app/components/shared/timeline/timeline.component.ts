@@ -1,5 +1,12 @@
 import { UserService } from "src/app/services/user/user.service";
-import { Component, OnInit } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  AfterViewInit,
+  TemplateRef,
+  ChangeDetectorRef,
+} from "@angular/core";
 
 @Component({
   selector: "app-timeline",
@@ -7,9 +14,14 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./timeline.component.scss"],
 })
 export class TimelineComponent implements OnInit {
-  constructor(private userService: UserService) {}
+  @Input() program;
+  constructor(
+    private userService: UserService,
+    private cdRef: ChangeDetectorRef
+  ) {}
   admins: any;
   stream = "";
+  check: boolean = false;
   startCompleted: boolean;
   stageOneCompleted: boolean;
   stageTwoCompleted: boolean;
@@ -163,8 +175,9 @@ export class TimelineComponent implements OnInit {
             .toPromise()
             .then((result) => {
               if (result["message"] == "success") {
+                stream = this.program;
                 if (result["result"] && result["result"][stream]) {
-                  this.admins = result["result"][stream];
+                  this.admins = result["result"][this.program];
                   if (this.admins.startDate) {
                     this.curDeadline = new Date(
                       this.admins.deadlines[this.admins.deadlines.length - 1]
@@ -176,6 +189,8 @@ export class TimelineComponent implements OnInit {
                       this.dates.push(new Date(this.admins["deadlines"][i]));
                       if (this.stage == 0 && i == 0) {
                         const now = new Date();
+                        this.message =
+                          "Faculties add projects during this period";
                         this.stageOne =
                           Math.abs(now.getTime() - this.startDate.getTime()) /
                           Math.abs(
@@ -252,5 +267,9 @@ export class TimelineComponent implements OnInit {
             });
         });
     }
+  }
+  refresh(program) {
+    this.program = program.short;
+    this.ngOnInit();
   }
 }

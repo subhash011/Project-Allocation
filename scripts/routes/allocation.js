@@ -173,7 +173,7 @@ router.post("/start", (req, res) => {
             }
             Promise.all(promises).then((result) => {
                 Object.keys(allocationStatus).map(function(key, value) {
-                    allocationStatus[key] = allocationStatus[key].map((val) => val._id);
+                    allocationStatus[key] = allocationStatus[key].map((val) => val.name);
                 });
                 res.json(allocationStatus);
             });

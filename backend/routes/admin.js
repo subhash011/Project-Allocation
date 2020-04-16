@@ -283,12 +283,7 @@ router.get("/stream_email/student/:id", (req, res) => {
 });
 
 router.get("/all/info", (req, res) => {
-    var result = {
-        CSE: {},
-        EE: {},
-        ME: {},
-        CE: {},
-    };
+    var result = {};
     var promises = [];
     Admin.find().then((admins) => {
         if (admins) {
