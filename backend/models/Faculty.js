@@ -30,10 +30,7 @@ const UserSchema = new mongoose.Schema({
         type: [mongoose.SchemaTypes.ObjectId],
     },
     programs: {
-        type: [{
-            short: String,
-            full: String,
-        }, ],
+        type: [],
     },
     date: {
         type: Date,
