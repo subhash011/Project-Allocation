@@ -60,6 +60,7 @@ export class FacultyComponent implements OnInit {
             this.stream = user_info.stream;
           } else {
             this.stream = params.abbr;
+            this.empty = true;
           }
 
           this.projectService

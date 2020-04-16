@@ -1,6 +1,8 @@
 <div class="container" *ngIf="empty; else notEmpty">
 
     <div *ngIf="!programs_mode; else goProgramMode">
+        <app-timeline *ngIf="!programs_mode" [program]="stream"></app-timeline>
+
     </div>
 
     <ng-template #goProgramMode>
@@ -93,7 +95,7 @@
         <mat-tab-group color="accent" dynamicHeight="true">
 
             <mat-tab label="Students">
-                <app-student-table *ngIf="project" [project]="project" [adminStage]="adminStage" [student_list]="student_list">
+                <app-student-table *ngIf="!programs_mode" [project]="project" [adminStage]="adminStage" [student_list]="student_list">
                 </app-student-table>
             </mat-tab>
 
