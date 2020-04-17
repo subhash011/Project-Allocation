@@ -34,9 +34,6 @@ export class MailService {
       year: "2-digit",
       month: "numeric",
       day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -103,9 +100,6 @@ ${stream} Admin
       year: "2-digit",
       month: "numeric",
       day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
