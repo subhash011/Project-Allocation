@@ -21,8 +21,8 @@ router.get("/project/:id", (req, res) => {
                             if (admin) {
                                 const stream = admin.stream;
                                 Project.find({ stream: stream })
-                                    .populate("faculty_id",null,Faculty)
-                                    .populate("student_alloted",null,Student)
+                                    .populate("faculty_id", null, Faculty)
+                                    .populate("student_alloted", null, Student)
                                     .then((projects) => {
                                         var arr = [];
                                         for (const project of projects) {
@@ -313,7 +313,7 @@ router.get("/members/:id", (req, res) => {
     const idToken = req.headers.authorization;
     var promises = [];
     var users = {};
-    var programAdmin;
+    var programAdmin = {};
     Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
         (faculty) => {
             if (faculty) {
@@ -324,7 +324,6 @@ router.get("/members/:id", (req, res) => {
                                 programAdmin = program;
                             }
                         }
-
                         promises.push(
                             Faculty.find({ programs: { $elemMatch: programAdmin } })
                             .populate("project_list", null, Project)
@@ -334,7 +333,6 @@ router.get("/members/:id", (req, res) => {
                                     var studentCapErr = false;
                                     var studentsPerFacultyErr = false;
                                     var projects = val.project_list;
-
                                     projects = projects.filter((project) => {
                                         return project.stream == admin.stream;
                                     });
