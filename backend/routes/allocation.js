@@ -51,7 +51,7 @@ router.post("/start/:id", (req, res) => {
     var free = [];
     var allocationStatus = {};
     var promises = [];
-    Faculty.findOne({ google_id: { id, idToken } })
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then((faculty) => {
             if (faculty) {
                 if (faculty.isAdmin) {

@@ -174,6 +174,7 @@ export class TimelineComponent implements OnInit, OnChanges {
                     this.stageTwo = 100;
                     this.stageFourCompleted = true;
                     this.stageFour = 100;
+                    this.displayTimeline = false;
                   }
                 }
               }
@@ -300,6 +301,7 @@ export class TimelineComponent implements OnInit, OnChanges {
                     this.stageTwo = 100;
                     this.stageFourCompleted = true;
                     this.stageFour = 100;
+                    this.displayTimeline = false;
                   }
                 }
               }

@@ -66,7 +66,7 @@ const super_admin = require("./routes/super_admin");
 app.use("/super", super_admin);
 
 const allocation = require("./routes/allocation");
-app.use("/allocate", allocation);
+app.use("/allocation", allocation);
 
 const admin = require("./routes/admin");
 app.use("/admin", admin);

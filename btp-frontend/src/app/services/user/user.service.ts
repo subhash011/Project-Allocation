@@ -292,12 +292,10 @@ export class UserService {
     return this.http.post(this.url, obj, httpOptions);
   }
 
-
-  setStudentsPerFaculty(cap){
-
+  setStudentsPerFaculty(cap) {
     const obj = {
-      cap : cap
-    }
+      cap: cap,
+    };
 
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -311,12 +309,7 @@ export class UserService {
     };
 
     return this.http.post(this.url, obj, httpOptions);
-
-
-
   }
-
-
 
   setPrograms(programs) {
     let id = localStorage.getItem("id");
@@ -349,7 +342,6 @@ export class UserService {
   }
 
   getAllPrograms() {
-
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     this.url = this.base_url + "faculty/getAllPrograms/" + id;
@@ -393,12 +385,10 @@ export class UserService {
     return this.http.get(this.url, httpOptions);
   }
 
-
-  getFacultyProgramDetails(program){
-
+  getFacultyProgramDetails(program) {
     const prog = {
-      program:program
-    }
+      program: program,
+    };
 
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -410,16 +400,13 @@ export class UserService {
       }),
     };
 
-    return this.http.post(this.url,prog, httpOptions);
-
+    return this.http.post(this.url, prog, httpOptions);
   }
 
-  getAdminInfo_program(program){
-
-
+  getAdminInfo_program(program) {
     const prog = {
-      program:program
-    }
+      program: program,
+    };
 
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -431,15 +418,8 @@ export class UserService {
       }),
     };
 
-    return this.http.post(this.url,prog, httpOptions);
-
-
+    return this.http.post(this.url, prog, httpOptions);
   }
-
-
-  
-
-
 
   getAllMaps() {
     return this.http.get(this.base_url + "maps");
@@ -545,5 +525,18 @@ export class UserService {
   }
   getAllBranches() {
     return this.http.get(this.base_url + "branches");
+  }
+  fetchAllMails() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const id = user.id;
+    const idToken = user.idToken;
+    this.url = this.base_url + "admin/fetchAllMails/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.get(this.url, httpOptions);
   }
 }

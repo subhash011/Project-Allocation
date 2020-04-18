@@ -155,6 +155,6 @@ export class ProjectsService {
         Authorization: idToken,
       }),
     };
-    return this.http.post(this.url, httpOptions);
+    return this.http.post(this.url, { message: "hi" }, httpOptions);
   }
 }
