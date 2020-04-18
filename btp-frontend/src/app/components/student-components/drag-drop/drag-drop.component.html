@@ -1,4 +1,4 @@
-<div class="drag-drop">
+<div class="drag-drop" *ngIf="loaded">
     <div class="container col-1">
         <h2><b>Available Projects</b></h2>
         <div cdkDropList id="cdk-drop-list-0" #todoList="cdkDropList" [cdkDropListData]="projects" [cdkDropListConnectedTo]="doneList" class="list" (cdkDropListDropped)="drop($event)">

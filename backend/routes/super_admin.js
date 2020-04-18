@@ -72,6 +72,17 @@ router.get("/student/details/:id", (req, res) => {
                                         var temp = students.filter((student) => {
                                             return student.stream == branch;
                                         });
+                                        temp = temp.map((val) => {
+                                            var newStud = {
+                                                _id: val._id,
+                                                name: val.name,
+                                                gpa: val.gpa,
+                                                stream: val.stream,
+                                                email: val.email,
+                                                roll_no: val.roll_no,
+                                            };
+                                            return newStud;
+                                        });
                                         streamwise.push(temp);
                                     }
                                     res.json({
@@ -121,6 +132,17 @@ router.get("/faculty/details/:id", (req, res) => {
                                         var temp = faculties.filter((faculty) => {
                                             arr = faculty.programs.map((x) => x.short);
                                             return arr.contains(branch);
+                                        });
+                                        temp = temp.map((val) => {
+                                            var newFac = {
+                                                _id: val._id,
+                                                name: val.name,
+                                                email: val.email,
+                                                stream: val.stream,
+                                                isAdmin: val.isAdmin,
+                                                adminProgram: val.adminProgram,
+                                            };
+                                            return newFac;
                                         });
                                         streamwise.push(temp);
                                     }
