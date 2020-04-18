@@ -10,6 +10,7 @@ import { FormGroup } from "@angular/forms";
 import { UserService } from "src/app/services/user/user.service";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatStepper } from "@angular/material";
+import { LoadingBarService } from "@ngx-loading-bar/core";
 
 @Component({
   selector: "app-admin",
@@ -80,7 +81,8 @@ export class AdminComponent implements OnInit {
     private mailer: MailService,
     private projectService: ProjectsService,
     private loginService: LoginComponent,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private loadingBar: LoadingBarService
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -436,35 +438,68 @@ export class AdminComponent implements OnInit {
   }
 
   startAllocation() {
+    this.loadingBar.start();
     this.projectService.startAllocation().subscribe((data) => {
       if (data["message"] == "success") {
-        this.mailer
-          .allocateMail(data["result"], this.programName)
-          .subscribe((result) => {
-            if (result["message"] == "success") {
-              this.snackBar.open(
-                "Allocation completed successfully and mails have been sent",
-                "Ok",
-                {
-                  duration: 3000,
+        this.userService.fetchAllMails().subscribe((result) => {
+          if (result["message"] == "success") {
+            this.mailer
+              .allocateMail(result["result"], this.programName)
+              .subscribe((result) => {
+                if (result["message"] == "success") {
+                  this.userService
+                    .updateStage(this.stage_no + 1)
+                    .subscribe((data) => {
+                      if (data["status"] == "success") {
+                        this.loadingBar.stop();
+                        this.snackBar.open(
+                          "Allocation completed successfully and mails have been sent",
+                          "Ok",
+                          {
+                            duration: 3000,
+                          }
+                        );
+                      } else {
+                        this.loginService.signOut();
+                        this.snackBar.open(
+                          "Session Timed Out! Please Sign-In again",
+                          "Ok",
+                          {
+                            duration: 3000,
+                          }
+                        );
+                      }
+                    });
+                } else {
+                  this.loadingBar.stop();
+                  this.snackBar.open(
+                    "Allocation completed but mails not sent",
+                    "Ok",
+                    {
+                      duration: 3000,
+                    }
+                  );
                 }
-              );
-            } else {
-              this.snackBar.open(
-                "Allocation completed but mails not sent",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-            }
-          });
+              });
+          } else {
+            this.loadingBar.stop();
+            this.snackBar.open(
+              "Unable to fetch mails! If the error persists re-authenticate.",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+          }
+        });
       } else if (data["message"] == "invalid-token") {
+        this.loadingBar.stop();
         this.loginService.signOut();
         this.snackBar.open("Session Expired! Sign-In and try again", "Ok", {
           duration: 3000,
         });
       } else {
+        this.loadingBar.stop();
         this.snackBar.open("Some error occured! Try again", "Ok", {
           duration: 3000,
         });
