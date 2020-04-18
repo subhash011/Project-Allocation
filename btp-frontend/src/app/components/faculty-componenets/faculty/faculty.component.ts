@@ -26,7 +26,6 @@ export class FacultyComponent implements OnInit {
   public program_details;
   public routeParams;
   public adminStage;
-  public studentsAlloted;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -135,26 +134,9 @@ export class FacultyComponent implements OnInit {
 
   displayProgram(program) {
     this.userService.getFacultyProgramDetails(program).subscribe((data) => {
+      console.log(data);
       if (data["status"] == "success") {
         this.program_details = data["program_details"];
-        let names = [];
-        const students_alloted = this.program_details.projects.student_alloted;
-
-       
-
-        if(students_alloted == null || students_alloted.length == 0){
-          this.studentsAlloted = "NA"
-        }
-        else{
-
-          for(const student of students_alloted){
-            names.push(student.name);
-          }
-          this.studentsAlloted = names.join();
-        }
-
-
-        // console.log(this.program_details);
       } else {
         this.program_details = data["result"];
         this.snackBar.open("No Admin assigned to this program!!", "Ok", {

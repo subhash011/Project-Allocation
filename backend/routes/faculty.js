@@ -348,7 +348,7 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const program = req.body.program;
-
+    var facultyDetails = {};
     Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
         (faculty) => {
             Admin.findOne({ stream: program.short })
@@ -438,37 +438,31 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
         })
 });
 
-
-router.post('/getAdminInfo_program/:id',(req,res)=>{
-
-
+router.post("/getAdminInfo_program/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const program = req.body.program;
 
-    Admin.findOne({stream:program})
-        .then(admin=>{
-            if(admin){
+    Admin.findOne({ stream: program })
+        .then((admin) => {
+            if (admin) {
                 res.json({
-                    status:"success",
-                    admin:admin
-                })
-            }
-
-            else{
+                    status: "success",
+                    admin: admin,
+                });
+            } else {
                 res.json({
-                    status:"fail",
-                    result:null
-                })
+                    status: "fail",
+                    result: null,
+                });
             }
         })
-        .catch(err=>{
+        .catch((err) => {
             res.json({
-                status:"fail",
-                result:null
-            })
-        })
-
-})
+                status: "fail",
+                result: null,
+            });
+        });
+});
 
 module.exports = router;
