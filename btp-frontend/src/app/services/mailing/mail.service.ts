@@ -62,32 +62,31 @@ ${stream} Admin
       if (stage == 0) {
         var body = {
           user: user,
-          mailBody: `Dear Faculty Member,
-    I kindly request you to start creating projects for the 4th year BTech Projects. Please do note that the deadline is ${
-      fmt1.format(curr_deadline) + " 11:59 pm"
-    }.
-
-With Regards,
+          mailBody: `Dear Faculty Members,
+ 
+  Please login to the project allocation portal and add projects that you would like to offer to students of program ${stream}. Note that the deadline for this phase is ${fmt1.format(curr_deadline) + " 11:59 pm"}.
+        
+Regards,
 ${user.name},
-${stream} Admin
-  `,
+Project Coordinator (${stream})
+`,
           to: emails,
-          subject: "BTech Project Phase 1",
+          subject: `${stream}: Project Allocation Phase 1`,
         };
       } else if (stage == 2) {
         var body = {
           user: user,
-          mailBody: `Dear Faculty Member,
-I kindly request you to fill in your preference students for your projects. Please do note that the deadline is ${
-            fmt1.format(curr_deadline) + " 11:59 pm"
-          }.
-
-With Regards,
+          mailBody: `Dear Faculty Members,
+ 
+  Please login to the project allocation portal and record your preference among students who have opted to work with you. Note that the default order of preference is the decreasing order of CGPA. The deadline for this phase is ${fmt1.format(curr_deadline) + " 11:59 pm"}.
+           
+Regards,
 ${user.name},
-${stream} Admin
-  `,
+Project Coordinator (${stream})
+`,
+          
           to: emails,
-          subject: "BTech Project Phase 3",
+          subject: `${stream}: Project Allocation Phase 3`,
         };
       }
     }
@@ -128,16 +127,15 @@ ${stream} Admin
       var body = {
         user: user,
         mailBody: `Dear Students,
-      I kindly request you to fill in your preferences of projects. Please do note that the deadline is ${
-        fmt1.format(curr_deadline) + " 11:59 pm"
-      }.
-
-  With Regards,
-  ${user.name},
-  ${stream} Admin
-  `,
-        to: emails,
-        subject: "BTech Project Phase 3",
+ 
+    Please login to the project allocation portal and record your preference among projects offered to program X. Note that it is better to have as many projects as possible in your preference list. The deadline for this phase is ${fmt1.format(curr_deadline) + " 11:59 pm"}.
+    
+Regards,
+${user.name},
+Project Coordinator (${stream})
+    `,
+           to: emails,
+        subject: `${stream}: Project Allocation Phase 2`,
       };
     }
 

@@ -143,4 +143,34 @@ export class NavbarComponent implements OnInit {
       },
     });
   }
+
+  isProgram(){
+
+    if (localStorage.getItem("isLoggedIn") == "true"){
+
+      if(localStorage.getItem("role")=="faculty"){
+
+            if(this.programs && this.programs.length > 0){
+              return true;
+            }
+            else{
+              return false;
+            }
+          }
+
+      else{
+        return false
+      }
+    }
+
+
+
+    
+    else return false;
+
+
+
+  }
+
+
 }

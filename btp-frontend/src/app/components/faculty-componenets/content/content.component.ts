@@ -27,6 +27,7 @@ export class ContentComponent implements OnInit, DoCheck {
   @Input() public program_details;
   @Input() public routeParams;
   @Input() public adminStage;
+  @Input() public studentsAlloted;
   public id;
 
   Headers = ["Project Name", "#Students Applied", "#Students Alloted"];

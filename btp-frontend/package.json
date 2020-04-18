@@ -24,6 +24,7 @@
         "@ngx-loading-bar/core": "^4.2.0",
         "@ngx-loading-bar/http-client": "^4.2.0",
         "@ngx-loading-bar/router": "^4.2.0",
+        "angular-typing-animation": "^0.5.4",
         "angularx-social-login": "^2.2.1",
         "bootstrap": "^3.4.1",
         "hammerjs": "^2.0.8",

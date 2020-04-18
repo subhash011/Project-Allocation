@@ -9,16 +9,22 @@
         <button mat-button (click)="goToHome()" class="nav-text">
       Home
     </button>
-        <button *ngIf="programs && programs.length != 0" mat-button [matMenuTriggerFor]="menu" class="nav-text">
-      Programs
-      <mat-icon>keyboard_arrow_down</mat-icon>
-    </button>
-        <mat-menu #menu="matMenu">
-            <button *ngFor="let program of programs" mat-menu-item (click)="goToProgram(program)">
-        {{ program.full }}
+    <div class="flex-grow-left"></div>
+
+    <!-- <div *ngIf="isProgram()"> -->
+
+      <button  mat-button [matMenuTriggerFor]="menu" class="nav-text">
+        Programs
+        <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
+      <mat-menu #menu="matMenu">
+          <button  *ngFor="let program of programs" mat-menu-item (click)="goToProgram(program)">
+            {{ program.full }}
+          </button>
         </mat-menu>
     </div>
+
+    <!-- </div> -->
     <div *ngIf="isFaculty() && !isFaculty()">
         <div class="flex-grow-left"></div>
         <button mat-button [routerLink]="getAddProjects()" class="nav-text">
