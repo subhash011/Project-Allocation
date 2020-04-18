@@ -360,26 +360,6 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                         Project.find({ faculty_id: faculty.id, stream: program.short })
                             .populate("student_alloted",null,Student)
                             .then((result) => {
-                                
-
-                                var projects = result.map(project=>{
-
-                                    const names = project["student_alloted"].map(student=>{
-                                        return student.name;
-                                    });
-
-                                    console.log(names);
-
-                                    project["names"] = names;
-
-
-                                    return project;
-                                })
-
-                                console.log(projects[0]);
-
-
-
 
                                 if (result) {
                                     const obj = {
@@ -408,7 +388,6 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                                 }
                             })
                             .catch((err) => {
-                                console.log(err);
                                 res.json({
                                     status: "fail-student",
                                     result: null,
