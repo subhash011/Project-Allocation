@@ -26,7 +26,6 @@ export class FacultyComponent implements OnInit {
   public program_details;
   public routeParams;
   public adminStage;
-  projectClicked: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -93,11 +92,9 @@ export class FacultyComponent implements OnInit {
   }
 
   displayProject(project) {
-    this.projectClicked = true;
     this.projectService
       .getStudentsApplied(project.students_id)
       .subscribe((data) => {
-        console.log(data);
         if (data["status"] == "success") {
           this.student_list = data["students"];
 
@@ -117,7 +114,6 @@ export class FacultyComponent implements OnInit {
     this.empty = false;
   }
   addProject(state) {
-    this.projectClicked = true;
     if (this.adminStage == 0) {
       this.add = state;
       this.empty = false;
@@ -135,7 +131,6 @@ export class FacultyComponent implements OnInit {
 
   displayProgram(program) {
     this.userService.getFacultyProgramDetails(program).subscribe((data) => {
-      console.log(data);
       if (data["status"] == "success") {
         this.program_details = data["program_details"];
       } else {

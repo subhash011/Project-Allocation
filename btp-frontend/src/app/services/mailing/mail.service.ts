@@ -10,7 +10,7 @@ export class MailService {
   private root = environment.apiUrl;
   base_url = this.root + "email/";
 
-  testMethod() {
+  allocateMail(mails, program) {
     const user = JSON.parse(localStorage.getItem("user"));
     var url = this.base_url + "send";
     const httpOptions = {
@@ -21,22 +21,25 @@ export class MailService {
     };
     const body = {
       user: user,
-      mailBody: "this is the mail",
-      to: ["111801042@smail.iitpkd.ac.in", "subhash011011@gmail.com"],
-      subject: "this is the subject",
+      mailBody: `Dear Students and Faculty Members,
+
+The project allocation for program ${program} has been completed. Please login to the project allocation portal to view the projects/students allocated to you.
+
+Regards,
+${user.name},
+Project Coordinator (${program})
+ `,
+      to: mails,
+      subject: `${program}: Project Allocation Completed`,
     };
     return this.http.post(url, body, httpOptions);
   }
 
   adminToFaculty(stage, emails, curr_deadline, stream, remainder = false) {
-    console.log(remainder);
     let fmt1 = new Intl.DateTimeFormat("en-GB", {
       year: "2-digit",
       month: "numeric",
       day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -65,32 +68,35 @@ ${stream} Admin
       if (stage == 0) {
         var body = {
           user: user,
-          mailBody: `Dear Faculty Member,
-    I kindly request you to start creating projects for the 4th year BTech Projects. Please do note that the deadline is ${
-      fmt1.format(curr_deadline) + " 11:59 pm"
-    }.
+          mailBody: `Dear Faculty Members,
 
-With Regards,
+  Please login to the project allocation portal and add projects that you would like to offer to students of program ${stream}. Note that the deadline for this phase is ${
+            fmt1.format(curr_deadline) + " 11:59 pm"
+          }.
+
+Regards,
 ${user.name},
-${stream} Admin
-  `,
+Project Coordinator (${stream})
+`,
           to: emails,
-          subject: "BTech Project Phase 1",
+          subject: `${stream}: Project Allocation Phase 1`,
         };
       } else if (stage == 2) {
         var body = {
           user: user,
-          mailBody: `Dear Faculty Member,
-I kindly request you to fill in your preference students for your projects. Please do note that the deadline is ${
-            fmt1.format(curr_deadline) + " 11:59 pm"
-          }.
+          mailBody: `Dear Faculty Members,
 
-With Regards,
+  Please login to the project allocation portal and record your preference among students who have opted to work with you. Note that the default order of preference is the decreasing order of CGPA. The deadline for this phase is ${
+    fmt1.format(curr_deadline) + " 11:59 pm"
+  }.
+
+Regards,
 ${user.name},
-${stream} Admin
-  `,
+Project Coordinator (${stream})
+`,
+
           to: emails,
-          subject: "BTech Project Phase 3",
+          subject: `${stream}: Project Allocation Phase 3`,
         };
       }
     }
@@ -98,14 +104,10 @@ ${stream} Admin
   }
 
   adminToStudents(emails, curr_deadline, stream, remainder = false) {
-    console.log(curr_deadline);
     let fmt1 = new Intl.DateTimeFormat("en-GB", {
       year: "2-digit",
       month: "numeric",
       day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
     });
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -134,16 +136,17 @@ ${stream} Admin
       var body = {
         user: user,
         mailBody: `Dear Students,
-      I kindly request you to fill in your preferences of projects. Please do note that the deadline is ${
-        fmt1.format(curr_deadline) + " 11:59 pm"
-      }.
 
-  With Regards,
-  ${user.name},
-  ${stream} Admin
-  `,
+    Please login to the project allocation portal and record your preference among projects offered to program X. Note that it is better to have as many projects as possible in your preference list. The deadline for this phase is ${
+      fmt1.format(curr_deadline) + " 11:59 pm"
+    }.
+
+Regards,
+${user.name},
+Project Coordinator (${stream})
+    `,
         to: emails,
-        subject: "BTech Project Phase 3",
+        subject: `${stream}: Project Allocation Phase 2`,
       };
     }
 

@@ -50,25 +50,4 @@ export class StudentComponent implements OnInit {
         }
       });
   }
-
-  onSubmit() {
-    this.mailService
-      .testMethod()
-      .toPromise()
-      .then((res) => {
-        if (res["message"] == "success") {
-          this.snackBar.open("Successfully Sent Mail", "Ok", {
-            duration: 3000,
-          });
-        } else {
-          this.snackBar.open(
-            "Mail Not Sent! Please Logout and then Login.",
-            "Ok",
-            {
-              duration: 3000,
-            }
-          );
-        }
-      });
-  }
 }

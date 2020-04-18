@@ -197,12 +197,12 @@
                     <ng-container matColumnDef="Student">
                         <th mat-header-cell *matHeaderCellDef>Alloted To</th>
                         <td mat-cell *matCellDef="let project">
-                            <div *ngIf="!project.student_alloted || project.student_alloted <= 0">
+                            <div *ngIf="!project.student_alloted || project.student_alloted.length <= 0">
                                 N/A
                             </div>
-                            <div *ngIf="project.student_alloted && project.student_alloted > 0">
+                            <div *ngIf="project.student_alloted && project.student_alloted.length > 0">
                                 <div *ngFor="let student of project.student_alloted">
-                                    {{ student.name }},&nbsp;
+                                    {{ student.name }} &nbsp;
                                 </div>
                             </div>
                         </td>
@@ -271,8 +271,8 @@
                 </div>
                 <div class="display">
                     <div class="messages">
-                        <p>
-                            SPP : Students per project limit exceeded, PFE : Projects per faculty limit exceeded, SPF : Students per faculty limit exceeded
+                        <p class="manage-font">
+                            <strong>SPP</strong> : Students per project limit exceeded, <strong>PFE</strong> : Projects per faculty limit exceeded, <strong>SPF</strong> : Students per faculty limit exceeded
                         </p>
                     </div>
                     <div class="table mat-elevation-z8">

@@ -1,4 +1,4 @@
-<div class="timer" *ngIf="admins && admins.startDate && loaded">
+<div class="timer" *ngIf="admins && admins.startDate && displayTimeline && loaded">
     <span class="days_left"><strong>Current stage ends in : </strong>
     <countdown-timer [end]="curDeadline"></countdown-timer>
     <span class="text"><b>About this stage :</b> {{ message }}</span>
@@ -34,7 +34,3 @@
 <div class="timer-text" [ngStyle]="styles" *ngIf="admins && admins.startDate && displayTimeline && loaded">
     <span class="below-text"><b>About next stage :</b> {{ next }}</span>
 </div>
-
-<!-- <div class="noadmin" *ngIf="!displayTimeline && loaded">
-    <h1>No admins in this program to display the timeline</h1>
-</div> -->

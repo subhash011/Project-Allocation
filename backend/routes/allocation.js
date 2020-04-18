@@ -44,7 +44,7 @@ function combineStudents(projects, students) {
 
 router.post("/start/:id", (req, res) => {
     const id = req.params.id;
-    const idToken = req.params.idToken;
+    const idToken = req.headers.authorization;
     var projects = [];
     var students = [];
     var alloted = [];
@@ -180,14 +180,22 @@ router.post("/start/:id", (req, res) => {
                                     );
                                 }
                             }
-                            Promise.all(promises).then((result) => {
-                                Object.keys(allocationStatus).map(function(key, value) {
-                                    allocationStatus[key] = allocationStatus[key].map(
-                                        (val) => val.name
-                                    );
+                            Promise.all(promises)
+                                .then((result) => {
+                                    Object.keys(allocationStatus).map(function(key, value) {
+                                        allocationStatus[key] = allocationStatus[key].map(
+                                            (val) => val.name
+                                        );
+                                    });
+                                    res.json({
+                                        message: "success",
+                                    });
+                                })
+                                .catch(() => {
+                                    res.json({
+                                        message: "fail",
+                                    });
                                 });
-                                res.json(allocationStatus);
-                            });
                         });
                     });
                 }

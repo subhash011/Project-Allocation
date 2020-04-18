@@ -1,0 +1,92 @@
+.image{
+    height:100%;
+    width:100%;
+    background: url("./../../../../images/IITPKD_Modified.jpg")no-repeat center fixed;
+    background-size: 30%;
+    z-index:-10;
+    // background: url("https://iitpkd.ac.in/themes/basic/logo.png")no-repeat center fixed;
+    // mask-image: url("https://images.freecreatives.com/wp-content/uploads/2015/04/lavender-paper-texture.jpg");
+    opacity: 0.3;
+}
+
+.container{
+    background-color:white;
+    top:100;
+    height:100%;
+    width:100%;
+}
+
+.image .Info{
+    opacity: 1;
+}
+
+// h1 {
+// 	display: inline;
+// 	position: relative;
+// 	font: 200px Helvetica, Sans-Serif;
+// 	letter-spacing: -5px;
+// 	color: rgba(0,0,255,0.5); 
+// }
+
+// h1:after {
+// 	content: "Project-Allocation App";
+// 	position: absolute; left: 10px; top: 5px;
+// 	color: rgba(255,0,0,0.5);   
+// }
+
+$avatar-size: 32px;
+$body-background: #333641;
+
+@font-face {
+	font-family: "ubuntu";
+	font-style: italic;
+	font-weight: 300;
+	src: local("Lato Light Italic"), local("Lato-LightItalic"),
+		url("https://fonts.gstatic.com/s/ubuntucondensed/v8/u-4k0rCzjgs5J7oXnJcM_0kACGMtT-Dfqw.woff2")
+			format("woff2");
+}
+
+body {
+	height: 100vh;
+	margin: 0;
+	background-color: $body-background;
+	font-family: "ubuntu", Arial, sans-serif;
+	overflow-x: hidden;
+	display: grid;
+	place-items: center;
+}
+
+a {
+	text-decoration: none;
+	color: #9ca0b1;
+}
+
+.wrapper {
+    text-align: center;
+	h1 {
+		color: #fff;
+		font-size: 50px;
+		font-family: "ubuntu";
+		text-transform: uppercase;
+		font-weight: 700;
+		font-family: "Josefin Sans", sans-serif;
+		background: linear-gradient(to right, #e72a3a 10%, #fff 50%, #5bdaff 60%);
+		background-size: auto auto;
+		// background-clip: border-box;
+		background-size: 200% auto;
+		color: #fff;
+		background-clip: text;
+		text-fill-color: transparent;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		animation: textclip 2s linear infinite;
+	}
+}
+
+@keyframes textclip {
+	to {
+		background-position: 200% center;
+	}
+}
+
+
