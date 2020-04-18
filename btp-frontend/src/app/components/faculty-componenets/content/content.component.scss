@@ -81,13 +81,17 @@ mat-form-field {
 
 .display {
     margin-top: 5%;
-    padding-top: 5%;
     padding-bottom: 2%;
     padding-right: 1%;
     z-index: 2;
 }
 
+.app-timeline {
+    margin-top: 20%;
+}
+
 .table {
+    margin-top: 5%;
     max-height: 600px;
     overflow: auto;
     width: 80%;

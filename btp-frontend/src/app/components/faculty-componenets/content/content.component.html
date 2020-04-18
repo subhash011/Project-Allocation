@@ -1,17 +1,11 @@
 <div class="container" *ngIf="empty; else notEmpty">
-
-    <div *ngIf="!programs_mode; else goProgramMode">
+    <div class="app-timeline" *ngIf="!programs_mode; else goProgramMode">
         <app-timeline *ngIf="!programs_mode" [program]="stream"></app-timeline>
-
     </div>
 
     <ng-template #goProgramMode>
-
-
         <div *ngIf="program_details">
-
             <app-timeline *ngIf="program_details" [program]="program_details.program.short"></app-timeline>
-
 
             <div class="display">
                 <div class="table mat-elevation-z8">
@@ -27,15 +21,18 @@
                             <th mat-header-cell *matHeaderCellDef>
                                 No of Students Applied
                             </th>
-                            <td mat-cell *matCellDef="let map">{{ map.students_id.length }}</td>
+                            <td mat-cell *matCellDef="let map">
+                                {{ map.students_id.length }}
+                            </td>
                         </ng-container>
-
 
                         <ng-container tainer matColumnDef="#Students Alloted">
                             <th mat-header-cell *matHeaderCellDef>
                                 No of Students Alloted
                             </th>
-                            <td mat-cell *matCellDef="let map">{{ map.student_alloted.length }}</td>
+                            <td mat-cell *matCellDef="let map">
+                                {{ map.student_alloted.length }}
+                            </td>
                         </ng-container>
 
                         <tr mat-header-row *matHeaderRowDef="Headers"></tr>
@@ -44,9 +41,7 @@
                 </div>
             </div>
         </div>
-
     </ng-template>
-
 </div>
 <ng-template #notEmpty>
     <div class="container-add" *ngIf="add; else display">
@@ -76,7 +71,9 @@
                     <div class="row">
                         <mat-form-field class="full-width">
                             <input matInput placeholder="No. of Students" formControlName="studentIntake" />
-                            <mat-error *ngIf="ProjectForm.controls['studentIntake'].hasError('required')">
+                            <mat-error *ngIf="
+                  ProjectForm.controls['studentIntake'].hasError('required')
+                ">
                                 StudentIntake is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -87,13 +84,14 @@
                         </mat-form-field>
                     </div>
                 </mat-card-content>
-                <button mat-raised-button class="submit_button" [disabled]="!ProjectForm.valid" color="primary" type="submit">Submit</button>
+                <button mat-raised-button class="submit_button" [disabled]="!ProjectForm.valid" color="primary" type="submit">
+          Submit
+        </button>
             </mat-card>
         </form>
     </div>
     <ng-template #display>
         <mat-tab-group color="accent" dynamicHeight="true">
-
             <mat-tab label="Students">
                 <app-student-table *ngIf="!programs_mode" [project]="project" [adminStage]="adminStage" [student_list]="student_list">
                 </app-student-table>
@@ -129,7 +127,9 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <input matInput placeholder="No. of Students" formControlName="studentIntake" [(ngModel)]="project.studentIntake" />
-                                        <mat-error *ngIf="EditForm.controls['studentIntake'].hasError('required')">
+                                        <mat-error *ngIf="
+                        EditForm.controls['studentIntake'].hasError('required')
+                      ">
                                             StudentIntake is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -138,13 +138,19 @@
                                     <mat-form-field class="full-width">
                                         <textarea matInput placeholder="Description" formControlName="description" [(ngModel)]="project.description"></textarea>
                                     </mat-form-field>
-                                    <mat-error *ngIf="EditForm.controls['description'].hasError('required')">
+                                    <mat-error *ngIf="
+                      EditForm.controls['description'].hasError('required')
+                    ">
                                         Description is <strong>required</strong>
                                     </mat-error>
                                 </div>
                             </mat-card-content>
-                            <button mat-raised-button *ngIf="adminStage == 0" class="edit-submit" [disabled]="!EditForm.valid" color="primary" type="submit">Submit</button>
-                            <button mat-raised-button *ngIf="adminStage == 0" class="deleteButton" type="button" color="primary" (click)="deleteProject(project)">Delete</button>
+                            <button mat-raised-button *ngIf="adminStage == 0" class="edit-submit" [disabled]="!EditForm.valid" color="primary" type="submit">
+                Submit
+              </button>
+                            <button mat-raised-button *ngIf="adminStage == 0" class="deleteButton" type="button" color="primary" (click)="deleteProject(project)">
+                Delete
+              </button>
                         </mat-card>
                     </form>
                 </div>

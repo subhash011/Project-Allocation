@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../models/Student");
 const Admin = require("../models/Admin_Info");
+const Project = require("../models/Project");
+const Faculty = require("../models/Faculty");
 const oauth = require("../config/oauth");
 
 router.post("/register/:id", (req, res) => {
@@ -48,6 +50,14 @@ router.get("/details/:id", (req, res) => {
     oauth(idToken)
         .then((user) => {
             Student.findOne({ google_id: { id: id, idToken: idToken } })
+                .populate({
+                    path: "project_alloted",
+                    model: "Project",
+                    populate: {
+                        path: "faculty_id",
+                        model: "Faculty",
+                    },
+                })
                 .then((user) => {
                     if (user) {
                         res.json({
@@ -110,28 +120,30 @@ router.post("/update/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const document = req.body;
-    Student.findOne({ google_id: { id: id, idToken: idToken } }).then(student => {
-        if (student) {
-            student.name = document.name;
-            student.gpa = document.gpa;
-            student.save().then(student => {
+    Student.findOne({ google_id: { id: id, idToken: idToken } })
+        .then((student) => {
+            if (student) {
+                student.name = document.name;
+                student.gpa = document.gpa;
+                student.save().then((student) => {
+                    res.json({
+                        message: "success",
+                        result: student,
+                    });
+                });
+            } else {
                 res.json({
-                    message: "success",
-                    result: student
-                })
-            })
-        } else {
-            res.json({
-                message: "invalid-token",
-                result: null
-            })
-        }
-    }).catch(() => {
-        res.json({
-            message: "invalid-client",
-            result: null
+                    message: "invalid-token",
+                    result: null,
+                });
+            }
         })
-    });
-})
+        .catch(() => {
+            res.json({
+                message: "invalid-client",
+                result: null,
+            });
+        });
+});
 
 module.exports = router;

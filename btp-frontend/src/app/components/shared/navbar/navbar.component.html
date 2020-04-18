@@ -9,7 +9,7 @@
         <button mat-button (click)="goToHome()" class="nav-text">
       Home
     </button>
-        <button *ngIf="programs && programs.length != 0" mat-button [matMenuTriggerFor]="menu" class="nav-text">
+        <button *ngIf="programsVisible" mat-button [matMenuTriggerFor]="menu" class="nav-text">
       Programs
       <mat-icon>keyboard_arrow_down</mat-icon>
     </button>
@@ -34,18 +34,17 @@
     <div class="flex-space"></div>
     <div class="flex-grow-right"></div>
     <div>
-        <div *ngIf="isUser()">
+        <div *ngIf="isUser() && !isSuperAdmin()">
             <button mat-button [matMenuTriggerFor]="beforeMenu">
         <span class="nav-text">Options</span>
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
             <mat-menu #beforeMenu="matMenu" xPosition="before">
-                <button mat-menu-item [routerLink]="getProfile()">Profile</button>
+                <button mat-menu-item [routerLink]="getProfile()">
+          Profile
+        </button>
                 <button mat-menu-item (click)="getAdmin()" *ngIf="isAdmin()">
           Admin
-        </button>
-                <button mat-menu-item [routerLink]="getSuperAdminURL()" *ngIf="isSuperAdmin()">
-          Super Admin
         </button>
             </mat-menu>
         </div>

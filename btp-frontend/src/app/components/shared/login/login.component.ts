@@ -80,5 +80,6 @@ export class LoginComponent implements OnInit {
     localStorage.removeItem("user");
     localStorage.removeItem("id");
     this.router.navigate([""]);
+    this.loadingBar.stop();
   }
 }

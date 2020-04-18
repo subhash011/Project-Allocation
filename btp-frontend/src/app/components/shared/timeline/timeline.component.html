@@ -31,10 +31,10 @@
     </a>
 </div>
 
-<div class="timer-text" *ngIf="admins && admins.startDate && displayTimeline && loaded">
+<div class="timer-text" [ngStyle]="styles" *ngIf="admins && admins.startDate && displayTimeline && loaded">
     <span class="below-text"><b>About next stage :</b> {{ next }}</span>
 </div>
 
-<div *ngIf="!displayTimeline && loaded">
-    No admin
+<div class="noadmin" *ngIf="!displayTimeline && loaded">
+    <h1>No admins in this program to display the timeline</h1>
 </div>
