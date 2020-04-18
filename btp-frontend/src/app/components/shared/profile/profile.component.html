@@ -9,8 +9,12 @@
                         <mat-card-title>
                             <input matInput placeholder="name" formControlName="name" /></mat-card-title>
                     </mat-form-field>
-                    <p class="example-full-width"><strong>Stream</strong> : {{ user_info.stream }}</p>
-                    <p class="example-full-width"><strong>Email-ID</strong>: {{ user_info.email }}</p>
+                    <p class="example-full-width">
+                        <strong>Stream</strong> : {{ user_info.stream }}
+                    </p>
+                    <p class="example-full-width">
+                        <strong>Email-ID</strong> : {{ user_info.email }}
+                    </p>
                     <mat-form-field class="example-full-width">
                         <mat-label>CGPA</mat-label>
                         <mat-card-title>
@@ -38,12 +42,16 @@
                                     <input matInput placeholder="name" formControlName="name" />
                                 </mat-card-title>
                             </mat-form-field>
-                            <p class="example-full-width"><strong>Stream</strong> : {{ user_info.stream }}</p>
-                            <p class="example-full-width"><strong>Email-ID</strong> : {{ user_info.email }}</p>
+                            <p class="example-full-width">
+                                <strong>Stream</strong> : {{ user_info.stream }}
+                            </p>
+                            <p class="example-full-width">
+                                <strong>Email-ID</strong> : {{ user_info.email }}
+                            </p>
                             <mat-card-actions>
                                 <button mat-raised-button color="primary" (click)="updateFacultyProfile()">
-                                    Update Profile
-                                  </button>
+                  Update Profile
+                </button>
                             </mat-card-actions>
                         </form>
                     </div>
@@ -61,7 +69,14 @@
                         </mat-error>
                     </mat-form-field>
                     <span>
-            <button mat-raised-button color="primary" class="submit" (click)="addProgram()">Submit</button>
+            <button
+              class="submit"
+              mat-raised-button
+              color="primary"
+              (click)="addProgram()"
+            >
+              Submit
+            </button>
           </span>
                 </form>
                 <div class="display">

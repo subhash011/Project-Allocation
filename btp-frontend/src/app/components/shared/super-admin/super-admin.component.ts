@@ -123,7 +123,6 @@ export class SuperAdminComponent implements OnInit {
             }
           })
           .catch((err) => {
-            console.log(err);
             this.snackBar.open("Please Sign-In Again to continue", "Ok", {
               duration: 3000,
             });

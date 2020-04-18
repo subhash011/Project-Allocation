@@ -21,8 +21,8 @@ router.get("/project/:id", (req, res) => {
                             if (admin) {
                                 const stream = admin.stream;
                                 Project.find({ stream: stream })
-                                    .populate("faculty_id",null,Faculty)
-                                    .populate("student_alloted",null,Student)
+                                    .populate("faculty_id", null, Faculty)
+                                    .populate("student_alloted", null, Student)
                                     .then((projects) => {
                                         var arr = [];
                                         for (const project of projects) {
@@ -324,7 +324,6 @@ router.get("/members/:id", (req, res) => {
                                 programAdmin = program;
                             }
                         }
-
                         promises.push(
                             Faculty.find({ programs: { $elemMatch: programAdmin } })
                             .populate("project_list", null, Project)
@@ -334,7 +333,6 @@ router.get("/members/:id", (req, res) => {
                                     var studentCapErr = false;
                                     var studentsPerFacultyErr = false;
                                     var projects = val.project_list;
-
                                     projects = projects.filter((project) => {
                                         return project.stream == admin.stream;
                                     });
@@ -370,7 +368,10 @@ router.get("/members/:id", (req, res) => {
                                 return users.faculties;
                             })
                             .catch((err) => {
-                                console.log(err);
+                                res.json({
+                                    status: "fail",
+                                    result: null,
+                                });
                             })
                         );
                         promises.push(
@@ -586,6 +587,59 @@ router.post("/set_studentsPerFacuty/:id", (req, res) => {
                 result: "Authentication error",
             });
         });
+});
+
+router.get("/fetchAllMails/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    var programAdmin = {};
+    var stream;
+    var faculties;
+    var promises = [];
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
+        (faculty) => {
+            if (faculty) {
+                Admin.findOne({ admin_id: faculty._id }).then((admin) => {
+                    if (admin) {
+                        for (const program of faculty.programs) {
+                            if (program.short == admin.stream) {
+                                programAdmin = program;
+                                stream = program.short;
+                            }
+                        }
+                        promises.push(
+                            Faculty.find({ programs: { $elemMatch: programAdmin } }).then(
+                                (faculty) => {
+                                    faculties = faculty.map((val) => {
+                                        return val.email;
+                                    });
+                                    return faculties;
+                                }
+                            )
+                        );
+                        promises.push(
+                            Student.find({ stream: stream }).then((student) => {
+                                students = student.map((val) => val.email);
+                                return students;
+                            })
+                        );
+                        Promise.all(promises).then((result) => {
+                            var answer = [...result[0], ...result[1]];
+                            res.json({
+                                message: "success",
+                                result: answer,
+                            });
+                        });
+                    } else {
+                        res.json({
+                            message: "invalid-token",
+                            result: null,
+                        });
+                    }
+                });
+            }
+        }
+    );
 });
 
 module.exports = router;

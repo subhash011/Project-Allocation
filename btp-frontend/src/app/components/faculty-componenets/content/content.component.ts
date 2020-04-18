@@ -83,73 +83,69 @@ export class ContentComponent implements OnInit, DoCheck {
         stream: this.stream,
       };
 
+      if (project.studentIntake > 0 && project.duration > 0) {
+        this.projectService.saveProject(project).subscribe((data) => {
+          if (data["save"] == "success") {
+            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
 
-      if(project.studentIntake > 0 && project.duration > 0){
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.router
+                .navigateByUrl("/refresh", { skipLocationChange: true })
+                .then(() => {
+                  this.router.navigate(["/faculty", this.id], {
+                    queryParams: {
+                      name: this.routeParams.name,
+                      abbr: this.routeParams.abbr,
+                      mode: "programMode",
+                    },
+                  });
+                });
+            });
 
-        
-              this.projectService.saveProject(project).subscribe((data) => {
-                if (data["save"] == "success") {
-                  let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
-                    duration: 3000,
+            snackBarRef.onAction().subscribe(() => {
+              this.router
+                .navigateByUrl("/refresh", { skipLocationChange: true })
+                .then(() => {
+                  this.router.navigate(["/faculty", this.id], {
+                    queryParams: {
+                      name: this.routeParams.full,
+                      abbr: this.routeParams.short,
+                      mode: "programMode",
+                    },
                   });
-        
-                  snackBarRef.afterDismissed().subscribe(() => {
-                    this.router
-                      .navigateByUrl("/refresh", { skipLocationChange: true })
-                      .then(() => {
-                        this.router.navigate(["/faculty", this.id], {
-                          queryParams: {
-                            name: this.routeParams.name,
-                            abbr: this.routeParams.abbr,
-                            mode: "programMode",
-                          },
-                        });
-                      });
-                  });
-        
-                  snackBarRef.onAction().subscribe(() => {
-                    this.router
-                      .navigateByUrl("/refresh", { skipLocationChange: true })
-                      .then(() => {
-                        this.router.navigate(["/faculty", this.id], {
-                          queryParams: {
-                            name: this.routeParams.full,
-                            abbr: this.routeParams.short,
-                            mode: "programMode",
-                          },
-                        });
-                      });
-                  });
-                } else if (data["save"] == "projectCap") {
-                  //Go to the error page
-                  this.snackBar.open(data["msg"], "Ok", {
-                    duration: 3000,
-                  });
-                } else if (data["save"] == "studentCap") {
-                  this.snackBar.open(data["msg"], "Ok", {
-                    duration: 3000,
-                  });
-                } else if (data["save"] == "studentsPerFaculty") {
-                  this.snackBar.open(data["msg"], "Ok", {
-                    duration: 3000,
-                  });
-                } else {
-                  this.login.signOut();
-                  this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                    duration: 3000,
-                  });
-                }
-              });
-
-
-      }
-      else{
+                });
+            });
+          } else if (data["save"] == "projectCap") {
+            //Go to the error page
+            this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+          } else if (data["save"] == "studentCap") {
+            this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+          } else if (data["save"] == "studentsPerFaculty") {
+            this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+          } else {
+            this.login.signOut();
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+          }
+        });
+      } else {
         this.snackBar.open("Please Enter Valid Data", "OK", {
           duration: 3000,
         });
-
       }
-
     }
   }
 
@@ -171,83 +167,10 @@ export class ContentComponent implements OnInit, DoCheck {
             data: project,
           });
           dialogRef.afterClosed().subscribe((result) => {
-            if (result["message"] == "submit") {
-              let snackBarRef = this.snackBar.open(
-                "Successfully Updated",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-              snackBarRef.afterDismissed().subscribe(() => {
-                this.router
-                  .navigateByUrl("/refresh", { skipLocationChange: true })
-                  .then(() => {
-                    this.router.navigate(["/faculty", this.id], {
-                      queryParams: {
-                        name: this.routeParams.name,
-                        abbr: this.routeParams.abbr,
-                        mode: "programMode",
-                      },
-                    });
-                  });
-              });
-              snackBarRef.onAction().subscribe(() => {
-                this.router
-                  .navigateByUrl("/refresh", { skipLocationChange: true })
-                  .then(() => {
-                    this.router.navigate(["/faculty", this.id], {
-                      queryParams: {
-                        name: this.routeParams.name,
-                        abbr: this.routeParams.abbr,
-                        mode: "programMode",
-                      },
-                    });
-                  });
-              });
-            } else if (result["message"] == "studentCap") {
-              this.snackBar.open(result["msg"], "Ok", {
-                duration: 3000,
-              });
-            } else if (result["message"] == "studentsPerFaculty") {
-              this.snackBar.open(result["msg"], "Ok", {
-                duration: 3000,
-              });
-            } else {
-              this.login.signOut();
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
-            }
-          });
-        }
-      } else {
-         this.snackBar.open("Please Enter Valid Data", "OK", {
-          duration: 3000,
-        });
-      }
-    }
-  }
-
-  deleteProject(project) {
-    if (this.dialog.openDialogs.length == 0) {
-      let dialogRef = this.dialog.open(DeletePopUpComponent, {
-        height: "200px",
-        width: "400px",
-        data: {
-          message: "Are you sure you want to delete the project",
-          heading: "Confirm Deletion",
-        },
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result["message"] == "submit") {
-          this.projectService
-            .deleteProject(project._id)
-            .toPromise()
-            .then((result) => {
-              if (result["status"] == "success") {
+            if (result) {
+              if (result["message"] == "submit") {
                 let snackBarRef = this.snackBar.open(
-                  "Successfully Deleted",
+                  "Successfully Updated",
                   "Ok",
                   {
                     duration: 3000,
@@ -279,8 +202,90 @@ export class ContentComponent implements OnInit, DoCheck {
                       });
                     });
                 });
+              } else if (result["message"] == "studentCap") {
+                this.snackBar.open(result["msg"], "Ok", {
+                  duration: 3000,
+                });
+              } else if (result["message"] == "studentsPerFaculty") {
+                this.snackBar.open(result["msg"], "Ok", {
+                  duration: 3000,
+                });
+              } else if (result["message"] == "closed") {
+              } else {
+                this.login.signOut();
+                this.snackBar.open(
+                  "Session Timed Out! Please Sign-In again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
               }
-            });
+            }
+          });
+        }
+      } else {
+        this.snackBar.open("Please Enter Valid Data", "OK", {
+          duration: 3000,
+        });
+      }
+    }
+  }
+
+  deleteProject(project) {
+    if (this.dialog.openDialogs.length == 0) {
+      let dialogRef = this.dialog.open(DeletePopUpComponent, {
+        height: "200px",
+        width: "400px",
+        data: {
+          message: "Are you sure you want to delete the project",
+          heading: "Confirm Deletion",
+        },
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          if (result["message"] == "submit") {
+            this.projectService
+              .deleteProject(project._id)
+              .toPromise()
+              .then((result) => {
+                if (result["status"] == "success") {
+                  let snackBarRef = this.snackBar.open(
+                    "Successfully Deleted",
+                    "Ok",
+                    {
+                      duration: 3000,
+                    }
+                  );
+                  snackBarRef.afterDismissed().subscribe(() => {
+                    this.router
+                      .navigateByUrl("/refresh", { skipLocationChange: true })
+                      .then(() => {
+                        this.router.navigate(["/faculty", this.id], {
+                          queryParams: {
+                            name: this.routeParams.name,
+                            abbr: this.routeParams.abbr,
+                            mode: "programMode",
+                          },
+                        });
+                      });
+                  });
+                  snackBarRef.onAction().subscribe(() => {
+                    this.router
+                      .navigateByUrl("/refresh", { skipLocationChange: true })
+                      .then(() => {
+                        this.router.navigate(["/faculty", this.id], {
+                          queryParams: {
+                            name: this.routeParams.name,
+                            abbr: this.routeParams.abbr,
+                            mode: "programMode",
+                          },
+                        });
+                      });
+                  });
+                }
+              });
+          }
         }
       });
     }
