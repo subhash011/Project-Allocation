@@ -29,7 +29,7 @@ mongoose.set("useFindAndModify", false);
 //uncomment during production
 // app.use(express.static(__dirname + "/btp-frontend"));
 
-var mongoConnect = process.env.MONGO_URL_LOCAL;
+var mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
 mongoose
     .connect(mongoConnect, {

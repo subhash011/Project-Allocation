@@ -114,7 +114,16 @@ export class FacultyComponent implements OnInit {
     this.empty = false;
   }
   addProject(state) {
-    if (this.adminStage == 0) {
+    if (!this.adminStage) {
+      this.add = !state;
+      this.snackBar.open(
+        "You can't add projects till the admin sets the first deadline",
+        "Ok",
+        {
+          duration: 3000,
+        }
+      );
+    } else if (this.adminStage == 0) {
       this.add = state;
       this.empty = false;
     } else {
