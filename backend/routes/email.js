@@ -18,7 +18,6 @@ sendEmail = (mailOptions, transporter) =>
     new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, (error) => {
             if (error) {
-                console.error(error.stack || error);
                 return reject(error);
             }
             resolve();
@@ -54,7 +53,6 @@ router.post("/send", (req, res) => {
             res.json({ message: "success" });
         })
         .catch((err) => {
-            console.log(err);
             res.json({ message: "error", result: err });
         });
 });

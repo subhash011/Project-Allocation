@@ -78,8 +78,6 @@ router.post("/add/:id", (req, res) => {
                     faculty_id: user._id,
                 });
 
-
-
                 Admin.findOne({ stream: stream }).then((admin) => {
                     if (admin) {
                         Project.find({ faculty_id: user._id, stream: stream })
@@ -90,8 +88,6 @@ router.post("/add/:id", (req, res) => {
                                 for (const proj of projects) {
                                     student_count += proj.studentIntake;
                                 }
-
-                                console.log(student_count);
 
                                 if (admin.project_cap == null) {
                                     res.json({
@@ -287,17 +283,11 @@ router.post("/update/:id", (req, res) => {
                             const count = projects.length;
                             var student_count = 0;
 
-
-
                             for (const proj of projects) {
-                                if(proj._id.toString() == project_id.toString()){
-                                    student_count+= studentIntake;
-                                }
-                                else
-                                    student_count += proj.studentIntake;
+                                if (proj._id.toString() == project_id.toString()) {
+                                    student_count += studentIntake;
+                                } else student_count += proj.studentIntake;
                             }
-
-                            console.log(student_count);
 
                             if (project.studentIntake > admin.student_cap) {
                                 res.json({
@@ -399,12 +389,12 @@ router.delete("/delete/:id", (req, res) => {
                     });
             });
         })
-        .catch((err) =>{
-                res.json({
-                    status: "fail",
-                    msg: "Please reload and try again!!!",
-                });
+        .catch((err) => {
+            res.json({
+                status: "fail",
+                msg: "Please reload and try again!!!",
             });
+        });
 });
 
 module.exports = router;

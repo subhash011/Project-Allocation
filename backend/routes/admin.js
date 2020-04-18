@@ -314,127 +314,103 @@ router.get("/members/:id", (req, res) => {
     var promises = [];
     var users = {};
     var programAdmin;
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-    .then((faculty) => {
-
-        if(faculty){
-
-
-            Admin.findOne({admin_id:faculty._id})
-                .then(admin=>{
-    
-                    
-                    
-                    
-                if (admin) {
-                        for(const program of faculty.programs){
-                            if(program.short == admin.stream){
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
+        (faculty) => {
+            if (faculty) {
+                Admin.findOne({ admin_id: faculty._id }).then((admin) => {
+                    if (admin) {
+                        for (const program of faculty.programs) {
+                            if (program.short == admin.stream) {
                                 programAdmin = program;
                             }
                         }
-    
-    
-                promises.push(
-                    Faculty.find({ programs: { $elemMatch: programAdmin} })
-                    .populate("project_list",null,Project)
-                    .then((faculties) => {
-    
-                      
-                        // console.log(faculties[0].project_list);
-    
-    
-                        var temp = faculties.map((val) => {
-    
-                            var projectCapErr = false;
-                            var studentCapErr = false;
-                            var studentsPerFacultyErr = false;
-                            var projects = val.project_list;
-    
-                             projects = projects.filter((project=>{
-                                return project.stream == admin.stream;
-                             }))   
-    
-                             
-                            if(projects.length > admin.project_cap){
-                                projectCapErr = true;
-                            } 
 
-                            var student_count = 0;
-                            for(const project of projects){
+                        promises.push(
+                            Faculty.find({ programs: { $elemMatch: programAdmin } })
+                            .populate("project_list", null, Project)
+                            .then((faculties) => {
+                                var temp = faculties.map((val) => {
+                                    var projectCapErr = false;
+                                    var studentCapErr = false;
+                                    var studentsPerFacultyErr = false;
+                                    var projects = val.project_list;
 
-                                student_count += project.studentIntake;
-                                if(project.studentIntake > admin.student_cap ){
-                                    studentCapErr = true;
-                                }
-                            }
+                                    projects = projects.filter((project) => {
+                                        return project.stream == admin.stream;
+                                    });
 
-                            if(student_count > admin.studentsPerFaculty){
-                                studentsPerFacultyErr = true;
-                            }
-    
-    
-    
-                            var newFac = {
-                                _id: val._id,
-                                name: val.name,
-                                noOfProjects: val.project_list.length,
-                                email: val.email,
-                                project_cap : projectCapErr,
-                                student_cap:studentCapErr,
-                                studentsPerFaculty: studentsPerFacultyErr
-                            };
-                            return newFac;
-                        });
-                        users.faculties = temp;
-                        console.log(users);
-                        return users.faculties;
-                    })
-                    .catch(err=>{
-                        console.log(err);
-                    })
-                );
-                promises.push(
-                    Student.find({ stream: admin.stream }).then((students) => {
-                        var tempStudents = students.map((val) => {
-                            var newStud = {
-                                _id: val._id,
-                                name: val.name,
-                                email: val.email,
-                                gpa: val.gpa,
-                            };
-                            return newStud;
-                        });
-                        users.students = tempStudents;
-                        return users.students;
-                    })
-                );
-                Promise.all(promises)
-                    .then((result) => {
-                        res.json({
-                            message: "success",
-                            result: users,
-                        });
-                    })
-                    .catch(() => {
-                        res.json({
-                            message: "error",
-                            result: null,
-                        });
-                    });
-            } 
-        })
+                                    if (projects.length > admin.project_cap) {
+                                        projectCapErr = true;
+                                    }
+
+                                    var student_count = 0;
+                                    for (const project of projects) {
+                                        student_count += project.studentIntake;
+                                        if (project.studentIntake > admin.student_cap) {
+                                            studentCapErr = true;
+                                        }
+                                    }
+
+                                    if (student_count > admin.studentsPerFaculty) {
+                                        studentsPerFacultyErr = true;
+                                    }
+
+                                    var newFac = {
+                                        _id: val._id,
+                                        name: val.name,
+                                        noOfProjects: val.project_list.length,
+                                        email: val.email,
+                                        project_cap: projectCapErr,
+                                        student_cap: studentCapErr,
+                                        studentsPerFaculty: studentsPerFacultyErr,
+                                    };
+                                    return newFac;
+                                });
+                                users.faculties = temp;
+                                return users.faculties;
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            })
+                        );
+                        promises.push(
+                            Student.find({ stream: admin.stream }).then((students) => {
+                                var tempStudents = students.map((val) => {
+                                    var newStud = {
+                                        _id: val._id,
+                                        name: val.name,
+                                        email: val.email,
+                                        gpa: val.gpa,
+                                    };
+                                    return newStud;
+                                });
+                                users.students = tempStudents;
+                                return users.students;
+                            })
+                        );
+                        Promise.all(promises)
+                            .then((result) => {
+                                res.json({
+                                    message: "success",
+                                    result: users,
+                                });
+                            })
+                            .catch(() => {
+                                res.json({
+                                    message: "error",
+                                    result: null,
+                                });
+                            });
+                    }
+                });
+            } else {
+                res.json({
+                    message: "invalid-token",
+                    result: null,
+                });
+            }
         }
-
-        
-        
-        
-        else {
-            res.json({
-                message: "invalid-token",
-                result: null,
-            });
-        }
-    });
+    );
 });
 
 router.delete("/faculty/:id", (req, res) => {

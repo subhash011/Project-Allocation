@@ -402,15 +402,14 @@ router.post("/removeAdmin/:id", (req, res) => {
                                 faculty.isAdmin = false;
                                 faculty.adminProgram = null;
                                 faculty.save().then((faculty) => {
-                                    Admin.findOneAndDelete({ admin_id: faculty._id }).then(
-                                        (admin) => {
-                                            // console.log(admin);
-                                        }
-                                    );
-                                });
-                                res.json({
-                                    message: "success",
-                                    result: faculty.isAdmin,
+                                    Admin.findOneAndDelete({
+                                        admin_id: faculty._id,
+                                    }).then((admin) => {
+                                        res.json({
+                                            message: "success",
+                                            result: faculty.isAdmin,
+                                        });
+                                    });
                                 });
                             } else {
                                 res.json({
