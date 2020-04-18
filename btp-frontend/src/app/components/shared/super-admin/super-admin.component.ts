@@ -1,3 +1,4 @@
+import { LoadingBarService } from "@ngx-loading-bar/core";
 import { AddMapComponent } from "./../add-map/add-map.component";
 import { LoginComponent } from "./../login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -24,7 +25,8 @@ export class SuperAdminComponent implements OnInit {
     private userService: UserService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private login: LoginComponent
+    private login: LoginComponent,
+    private loadingBar: LoadingBarService
   ) {}
   index = 0;
   background = "primary";
@@ -72,6 +74,7 @@ export class SuperAdminComponent implements OnInit {
   programs: any = [];
 
   ngOnInit() {
+    this.loadingBar.start();
     this.userService
       .getAllBranches()
       .toPromise()
@@ -142,6 +145,7 @@ export class SuperAdminComponent implements OnInit {
                 }
               }
             }
+            this.loadingBar.stop();
           })
           .catch(() => {
             this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
@@ -185,6 +189,7 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
+        this.loadingBar.start();
         this.userService
           .setProgram(data["map"])
           .toPromise()
@@ -213,6 +218,7 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
+        this.loadingBar.start();
         this.userService
           .removeProgram(short)
           .toPromise()
@@ -248,6 +254,7 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
+        this.loadingBar.start();
         this.userService
           .setBranch(data["map"])
           .toPromise()
@@ -277,6 +284,7 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
+        this.loadingBar.start();
         this.userService
           .removeBranch(short)
           .toPromise()
@@ -311,6 +319,7 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
+        this.loadingBar.start();
         this.userService
           .removeFaculty(faculty)
           .toPromise()
@@ -344,6 +353,7 @@ export class SuperAdminComponent implements OnInit {
     });
   }
   addAdmin(faculty, branch) {
+    this.loadingBar.start();
     this.userService
       .addAdmin(faculty, branch)
       .toPromise()
@@ -352,6 +362,7 @@ export class SuperAdminComponent implements OnInit {
       });
   }
   removeAdmin(faculty) {
+    this.loadingBar.start();
     this.userService
       .removeAdmin(faculty)
       .toPromise()
@@ -386,11 +397,11 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
+        this.loadingBar.start();
         this.userService
           .removeStudent(student)
           .toPromise()
           .then((result) => {
-            console.log();
             if (result["message"] == "success") {
               this.snackBar.open("Successfully Deleted Student", "OK", {
                 duration: 3000,
