@@ -38,7 +38,7 @@ import { CountdownTimerModule } from "ngx-countdown-timer";
 import { environment } from "../environments/environment";
 import { AddMapComponent } from "./components/shared/add-map/add-map.component";
 import { LoadingBarModule } from "@ngx-loading-bar/core";
-import { TypingAnimationDirective } from 'angular-typing-animation'
+import { TypingAnimationDirective } from "angular-typing-animation";
 
 const googleLoginOption: LoginOpt = {
   scope: "https://mail.google.com/",
@@ -82,7 +82,7 @@ export function provideConfig() {
     AdminContentComponent,
     TimelineComponent,
     AddMapComponent,
-    TypingAnimationDirective
+    TypingAnimationDirective,
   ],
   entryComponents: [
     ShowPreferencesComponent,
