@@ -92,7 +92,12 @@
         <!-- </div> -->
         <div class="row" *ngIf="getRole()">
           <mat-form-field class="full-width">
-            <input matInput placeholder="CGPA" formControlName="CGPA" />
+            <input
+              matInput
+              type="number"
+              placeholder="CGPA"
+              formControlName="CGPA"
+            />
             <mat-error *ngIf="userForm.controls['CGPA'].hasError('required')">
               CGPA is <strong>required</strong>
             </mat-error>

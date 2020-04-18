@@ -52,10 +52,9 @@ export class ProjectsService {
     return this.http.post(this.url_post, preferences, httpOptions);
   }
   getFacultyProjects(stream) {
-
     const obj = {
-      stream : stream
-    }
+      stream: stream,
+    };
 
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -137,7 +136,6 @@ export class ProjectsService {
 
   getAllStreamProjects() {
     this.url = this.adminBaseURL + localStorage.getItem("id");
-    console.log(this.url)
     const idToken = JSON.parse(localStorage.getItem("user")).idToken;
     const httpOptions = {
       headers: new HttpHeaders({
@@ -148,13 +146,5 @@ export class ProjectsService {
     return this.http.get(this.url, httpOptions);
   }
 
-  startAllocation(){
-
-    
-
-
-
-  }
-
-
+  startAllocation() {}
 }

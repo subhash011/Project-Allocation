@@ -29,7 +29,7 @@ export class AdminComponent implements OnInit {
     "NoOfStudents",
     "Student",
   ];
-  facultyCols = ["Name", "NoOfProjects", "Email", "Actions"];
+  facultyCols = ["Name", "NoOfProjects", "Email", "Actions", "Violations"];
   studentCols = ["Name", "Email", "GPA", "Actions"];
 
   firstFormGroup: FormGroup;
@@ -220,7 +220,6 @@ export class AdminComponent implements OnInit {
     this.projectService.getAllStreamProjects().subscribe((projects) => {
       if (projects["message"] == "success") {
         this.projects = projects["result"];
-        console.log(this.projects);
       } else {
         this.loginService.signOut();
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {

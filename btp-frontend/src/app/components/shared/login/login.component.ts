@@ -67,6 +67,7 @@ export class LoginComponent implements OnInit {
           });
       })
       .catch(() => {
+        this.loadingBar.stop();
         this.snackBar.open("Cancelled Sign In!", "Ok", {
           duration: 3000,
         });

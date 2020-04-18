@@ -21,9 +21,11 @@
         </mat-accordion>
     </div>
 </div>
-<mat-toolbar *ngIf="loaded">
-    <mat-toolbar-row>
-        <h4>My Preferences</h4>
-    </mat-toolbar-row>
-</mat-toolbar>
-<app-student-projects *ngIf="loaded"></app-student-projects>
+<div class="preferences">
+    <mat-toolbar *ngIf="loaded">
+        <mat-toolbar-row>
+            <h4>My Preferences</h4>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <app-student-projects *ngIf="loaded"></app-student-projects>
+</div>

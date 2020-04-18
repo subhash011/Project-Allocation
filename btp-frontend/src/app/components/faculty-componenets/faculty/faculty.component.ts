@@ -69,7 +69,6 @@ export class FacultyComponent implements OnInit {
               this.projects = data["project_details"];
 
               this.userService.getFacultyPrograms().subscribe((data) => {
-                console.log(data);
                 if (data["status"] == "success") {
                   this.programs = data["programs"];
 

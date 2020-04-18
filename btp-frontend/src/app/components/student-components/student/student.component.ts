@@ -40,7 +40,6 @@ export class StudentComponent implements OnInit {
         } else if (data["status"] == "success") {
           this.details = data["user_details"];
           this.loaded = true;
-          console.log(this.details);
           this.loadingService.stop();
         } else {
           this.loginObject.signOut();

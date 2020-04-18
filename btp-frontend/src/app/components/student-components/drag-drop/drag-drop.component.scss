@@ -57,7 +57,14 @@
     scrollbar-width: none;
 }
 
-h2 {
+.display-disable {
+    margin-top: 2%;
+    width: 100%;
+    text-align: center;
+}
+
+h2,
+h1 {
     font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
@@ -70,7 +77,7 @@ h2 {
     width: 45%;
     margin-left: 5%;
     min-height: fit-content;
-    position: fixed;
+    position: absolute;
 }
 
 .space {
