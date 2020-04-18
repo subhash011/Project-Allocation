@@ -210,11 +210,6 @@ router.post("/deleteProgram/:id", (req, res) => {
     const idToken = req.headers.authorization;
     const curr_program = req.body.program;
 
-<<<<<<< HEAD
-    // console.log(curr_program);
-
-=======
->>>>>>> subhash
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then((faculty) => {
             if (faculty) {
