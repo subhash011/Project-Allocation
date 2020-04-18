@@ -313,7 +313,7 @@ router.get("/members/:id", (req, res) => {
     const idToken = req.headers.authorization;
     var promises = [];
     var users = {};
-    var programAdmin;
+    var programAdmin = {};
     Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
         (faculty) => {
             if (faculty) {

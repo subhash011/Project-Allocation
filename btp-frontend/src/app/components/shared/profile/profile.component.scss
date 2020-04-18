@@ -17,6 +17,7 @@
   
 .example-full-width {
     margin-top: 4%;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   }
 
 .image{
@@ -81,4 +82,16 @@ td {
 
 .mat-column-Program-Name{
     width:80%; 
+}
+
+mat-card-actions{
+    margin-top:3%;
+}
+
+mat-card{
+    margin-top:5%;
+}
+
+.submit{
+    margin-left:2%;
 }
