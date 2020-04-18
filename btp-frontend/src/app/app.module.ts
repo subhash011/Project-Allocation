@@ -31,8 +31,6 @@ import { RefreshComponent } from "./components/faculty-componenets/refresh/refre
 import { SuperAdminComponent } from "./components/shared/super-admin/super-admin.component";
 import { Ng2SearchPipeModule } from "ng2-search-filter";
 import { AdminComponent } from "./components/faculty-componenets/admin/admin.component";
-import { AdminSidenavComponent } from "./components/faculty-componenets/admin-sidenav/admin-sidenav.component";
-import { AdminContentComponent } from "./components/faculty-componenets/admin-content/admin-content.component";
 import { TimelineComponent } from "./components/shared/timeline/timeline.component";
 import { CountdownTimerModule } from "ngx-countdown-timer";
 import { environment } from "../environments/environment";
@@ -78,8 +76,6 @@ export function provideConfig() {
     RefreshComponent,
     SuperAdminComponent,
     AdminComponent,
-    AdminSidenavComponent,
-    AdminContentComponent,
     TimelineComponent,
     AddMapComponent,
     TypingAnimationDirective,

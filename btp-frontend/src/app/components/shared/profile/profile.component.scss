@@ -1,7 +1,7 @@
 .example-card {
     min-width: 100%;
     min-height: 100%;
-    position:fixed;
+    position: fixed;
 }
 
 .example-header-image {
@@ -9,33 +9,32 @@
     background-size: cover;
 }
 
-
-
 .example-card {
     max-width: 100%;
-  }
-  
+}
+
 .example-full-width {
     margin-top: 4%;
-  }
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
 
-.image{
+.image {
     margin-left: 43%;
     height: 10%;
-    width:10%;
+    width: 10%;
 }
 
-.facultyForm{
-    margin-left:43%;
-    margin-top:2%;
+.facultyForm {
+    margin-left: 43%;
+    margin-top: 2%;
 }
 
-.subtitle{
+.subtitle {
     margin-left: 46%;
-    margin-top:5%;
+    margin-top: 5%;
 }
 
-.container{
+.container {
     display: inline-flex;
 }
 
@@ -61,11 +60,10 @@ mat-icon:hover {
     margin-left: 10%;
 }
 
-.select{
-    margin-top:3%;
+.select {
+    margin-top: 3%;
     margin-left: 25%;
 }
-
 
 table {
     width: 100%;
@@ -79,6 +77,18 @@ td {
     white-space: nowrap;
 }
 
-.mat-column-Program-Name{
-    width:80%; 
+.mat-column-Program-Name {
+    width: 80%;
+}
+
+mat-card-actions {
+    margin-top: 3%;
+}
+
+mat-card {
+    margin-top: 5%;
+}
+
+.submit {
+    margin-left: 2%;
 }

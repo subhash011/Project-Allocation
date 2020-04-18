@@ -71,6 +71,9 @@ export class TimelineComponent implements OnInit, OnChanges {
         "margin-top.%": "3",
         left: "0",
       };
+      this.styles = {
+        "margin-left.%": "35",
+      };
       this.stream = this.program;
       this.userService
         .getAllAdminDetails()
@@ -189,6 +192,7 @@ export class TimelineComponent implements OnInit, OnChanges {
       };
       this.styles = {
         "margin-top.%": "8",
+        "margin-left.%": "30",
       };
       this.userService
         .getAllAdminDetails()

@@ -33,7 +33,9 @@ export class NavbarComponent implements OnInit {
       this.userService.getFacultyPrograms().subscribe((data) => {
         if (data["status"] == "success") {
           this.programs = data["programs"];
-          this.programsVisible = true;
+          if (this.programs.length > 0) {
+            this.programsVisible = true;
+          }
         } else {
           let snackBarRef = this.snackBar.open(
             "Session Timed Out! Please Sign in Again!",
@@ -146,33 +148,17 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  isProgram(){
-
-    if (localStorage.getItem("isLoggedIn") == "true"){
-
-      if(localStorage.getItem("role")=="faculty"){
-
-            if(this.programs && this.programs.length > 0){
-              return true;
-            }
-            else{
-              return false;
-            }
-          }
-
-      else{
-        return false
+  isProgram() {
+    if (localStorage.getItem("isLoggedIn") == "true") {
+      if (localStorage.getItem("role") == "faculty") {
+        if (this.programs && this.programs.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
       }
-    }
-
-
-
-    
-    else return false;
-
-
-
+    } else return false;
   }
-
-
 }

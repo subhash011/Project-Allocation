@@ -6,7 +6,7 @@ const Faculty = require("../models/Faculty");
 const Project = require("../models/Project");
 const Mapping = require("../models/Mapping");
 const Admin = require("../models/Admin_Info");
-const Student = require('../models/Student');
+const Student = require("../models/Student");
 
 router.post("/register/:id", (req, res) => {
     const id = req.params.id;
@@ -347,10 +347,10 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
     const idToken = req.headers.authorization;
     const program = req.body.program;
     var facultyDetails = {};
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
-        (faculty) => {
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .then((faculty) => {
             Admin.findOne({ stream: program.short })
-                .then((admin) => { 
+                .then((admin) => {
                     if (admin) {
                         var stage = admin.stage;
                         if (admin.deadlines.length)
@@ -358,34 +358,19 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                         else var deadline = null;
 
                         Project.find({ faculty_id: faculty.id, stream: program.short })
-                            .populate("student_alloted",null,Student)
+                            .populate("student_alloted", null, Student)
                             .then((result) => {
+                                const obj = {
+                                    program: program,
+                                    admin: admin,
+                                    curDeadline: deadline,
+                                    projects: result,
+                                };
 
-                                if (result) {
-                                    const obj = {
-                                        program: program,
-                                        admin: admin,
-                                        curDeadline: deadline,
-                                        projects: result,
-                                    };
-
-                                    res.json({
-                                        status: "success",
-                                        program_details: obj,
-                                    });
-                                } else {
-                                    const obj = {
-                                        program: program,
-                                        admin: admin,
-                                        curDeadline: deadline,
-                                        projects: result,
-                                    };
-
-                                    res.json({
-                                        status: "success",
-                                        program_details: obj,
-                                    });
-                                }
+                                res.json({
+                                    status: "success",
+                                    program_details: obj,
+                                });
                             })
                             .catch((err) => {
                                 res.json({
@@ -394,10 +379,25 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                                 });
                             });
                     } else {
-                        res.json({
-                            status: "No admin",
-                            result: null,
-                        });
+                        if (faculty) {
+                            Project.find({ faculty_id: faculty.id, stream: program.short })
+                                .populate("student_alloted", null, Student)
+                                .then((projects) => {
+                                    const obj = {
+                                        program: program,
+                                        projects: projects,
+                                    };
+                                    res.json({
+                                        status: "success",
+                                        program_details: obj,
+                                    });
+                                });
+                        } else {
+                            res.json({
+                                status: "fail",
+                                result: null,
+                            });
+                        }
                     }
                 })
                 .catch((err) => {
@@ -407,12 +407,12 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                     });
                 });
         })
-        .catch(err=>{
+        .catch((err) => {
             res.json({
-                status:"Faculty not found",
-                result:null
-            })
-        })
+                status: "Faculty not found",
+                result: null,
+            });
+        });
 });
 
 router.post("/getAdminInfo_program/:id", (req, res) => {
