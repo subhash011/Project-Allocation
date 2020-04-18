@@ -361,7 +361,6 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                             .populate("student_alloted",null,Student)
                             .then((result) => {
 
-                                if (result) {
                                     const obj = {
                                         program: program,
                                         admin: admin,
@@ -373,19 +372,7 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                                         status: "success",
                                         program_details: obj,
                                     });
-                                } else {
-                                    const obj = {
-                                        program: program,
-                                        admin: admin,
-                                        curDeadline: deadline,
-                                        projects: result,
-                                    };
-
-                                    res.json({
-                                        status: "success",
-                                        program_details: obj,
-                                    });
-                                }
+                             
                             })
                             .catch((err) => {
                                 res.json({
