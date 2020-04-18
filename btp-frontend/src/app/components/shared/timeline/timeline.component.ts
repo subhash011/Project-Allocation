@@ -44,6 +44,7 @@ export class TimelineComponent implements OnInit, OnChanges {
   icon;
   displayTimeline: boolean;
   loaded: boolean = false;
+  styles;
   ngOnChanges(changes: SimpleChanges) {
     this.program = changes.program.currentValue;
     this.ngOnInit();
@@ -185,6 +186,9 @@ export class TimelineComponent implements OnInit, OnChanges {
         float: "left",
         "margin-top.%": "2.8",
         left: "0",
+      };
+      this.styles = {
+        "margin-top.%": "8",
       };
       this.userService
         .getAllAdminDetails()

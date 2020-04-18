@@ -8,7 +8,12 @@
 
 .header {
     margin-left: 2%;
-    margin-top:2%;
+    margin-top: 2%;
+}
+
+.messages {
+    width: 100%;
+    text-align: center;
 }
 
 .days_left {
@@ -56,10 +61,9 @@ mat-toolbar {
     margin-left: 1%;
 }
 
-.example-full-width{
-    width: 250px; 
+.example-full-width {
+    width: 250px;
 }
-
 
 .searchBox {
     position: absolute;
@@ -136,4 +140,3 @@ td {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-

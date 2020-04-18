@@ -4,24 +4,34 @@
 }
 
 .timer {
-    margin-top: 10px;
+    margin-top: 30px;
     margin-left: 5%;
     clear: left;
 }
 
 .below-text {
     align-content: center;
-    margin-top: 0px;
     margin-left: 35%;
+}
+
+.noadmin {
+    margin-top: 2%;
+    text-align: center;
 }
 
 .timer-text {
     width: 100%;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.days_left {
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .text {
     float: right;
     margin-right: 5%;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .stage-1 {

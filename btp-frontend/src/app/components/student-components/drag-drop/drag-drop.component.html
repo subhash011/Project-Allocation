@@ -1,3 +1,9 @@
+<div class="display-disable" *ngIf="stage >= 2">
+    <h1>
+        The deadline for editing the preferences is done. You can only view your preferences here.
+    </h1>
+</div>
+
 <div class="drag-drop" *ngIf="loaded">
     <div class="container col-1">
         <h2><b>Available Projects</b></h2>
@@ -12,7 +18,8 @@
                             <mat-panel-description>
                                 <div class="flex-space"></div>
                                 Project Title : {{ project["title"] }}
-                                <!-- Maximum Intake : {{ project["studentIntake"] }} -->
+                                <div class="flex-space"></div>
+                                Maximum Intake : {{ project["studentIntake"] }}
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <p>Faculty Email : {{ project["faculty_email"] }}</p>
@@ -35,7 +42,8 @@
                             <mat-panel-description>
                                 <div class="flex-space"></div>
                                 Project Title : {{ preference["title"] }}
-                                <!-- Maximum Intake : {{ preference["studentIntake"] }} -->
+                                <div class="flex-space"></div>
+                                Maximum Intake : {{ preference["studentIntake"] }}
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <p>Faculty Email : {{ preference["faculty_email"] }}</p>

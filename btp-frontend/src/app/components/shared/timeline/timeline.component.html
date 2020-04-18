@@ -1,10 +1,10 @@
-<div class="timer" *ngIf="admins && admins.startDate && displayTimeline && loaded">
+<div class="timer" *ngIf="admins && admins.startDate && loaded">
     <span class="days_left"><strong>Current stage ends in : </strong>
     <countdown-timer [end]="curDeadline"></countdown-timer>
     <span class="text"><b>About this stage :</b> {{ message }}</span>
     </span>
 </div>
-<div class="group" *ngIf="displayTimeline && loaded">
+<div class="group" *ngIf="loaded">
     <a matTooltip="Faculties Start Project Allocation" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon start icon">
         <mat-icon *ngIf="!startCompleted">check_circle_outline</mat-icon>
         <mat-icon *ngIf="startCompleted">check_circle</mat-icon>
@@ -31,10 +31,10 @@
     </a>
 </div>
 
-<div class="timer-text" *ngIf="admins && admins.startDate && displayTimeline && loaded">
+<div class="timer-text" [ngStyle]="styles" *ngIf="admins && admins.startDate && displayTimeline && loaded">
     <span class="below-text"><b>About next stage :</b> {{ next }}</span>
 </div>
 
-<div *ngIf="!displayTimeline && loaded">
-    No admin
-</div>
+<!-- <div class="noadmin" *ngIf="!displayTimeline && loaded">
+    <h1>No admins in this program to display the timeline</h1>
+</div> -->

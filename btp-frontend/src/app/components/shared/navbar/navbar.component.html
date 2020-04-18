@@ -9,20 +9,18 @@
         <button mat-button (click)="goToHome()" class="nav-text">
       Home
     </button>
-    <div class="flex-grow-left"></div>
-
-    <!-- <div *ngIf="isProgram()"> -->
-
-      <button  mat-button [matMenuTriggerFor]="menu" class="nav-text">
-        Programs
-        <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
+        <button *ngIf="programsVisible" mat-button [matMenuTriggerFor]="menu" class="nav-text">
+      Programs
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+    
+  
       <mat-menu #menu="matMenu">
           <button  *ngFor="let program of programs" mat-menu-item (click)="goToProgram(program)">
             {{ program.full }}
           </button>
         </mat-menu>
-    </div>
+   </div>
 
     <!-- </div> -->
     <div *ngIf="isFaculty() && !isFaculty()">
@@ -40,18 +38,17 @@
     <div class="flex-space"></div>
     <div class="flex-grow-right"></div>
     <div>
-        <div *ngIf="isUser()">
+        <div *ngIf="isUser() && !isSuperAdmin()">
             <button mat-button [matMenuTriggerFor]="beforeMenu">
         <span class="nav-text">Options</span>
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
             <mat-menu #beforeMenu="matMenu" xPosition="before">
-                <button mat-menu-item [routerLink]="getProfile()">Profile</button>
+                <button mat-menu-item [routerLink]="getProfile()">
+          Profile
+        </button>
                 <button mat-menu-item (click)="getAdmin()" *ngIf="isAdmin()">
           Admin
-        </button>
-                <button mat-menu-item [routerLink]="getSuperAdminURL()" *ngIf="isSuperAdmin()">
-          Super Admin
         </button>
             </mat-menu>
         </div>
