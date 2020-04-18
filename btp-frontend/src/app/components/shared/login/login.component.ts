@@ -1,3 +1,4 @@
+import { LoadingBarService } from "@ngx-loading-bar/core";
 import { UserService } from "./../../../services/user/user.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpClient } from "@angular/common/http";
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private localAuth: LocalAuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private loadingBar: LoadingBarService
   ) {}
 
   ngOnInit() {}
@@ -39,6 +41,7 @@ export class LoginComponent implements OnInit {
     }
   }
   signInWithGoogle(): void {
+    this.loadingBar.start();
     this.authService
       .signIn(GoogleLoginProvider.PROVIDER_ID)
       .then((user) => {
@@ -60,6 +63,7 @@ export class LoginComponent implements OnInit {
             } else {
               this.router.navigate([navObj.route, navObj.error]);
             }
+            this.loadingBar.stop();
           });
       })
       .catch(() => {

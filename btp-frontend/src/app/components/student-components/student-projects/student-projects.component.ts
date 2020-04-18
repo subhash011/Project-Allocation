@@ -1,3 +1,4 @@
+import { LoadingBarService } from "@ngx-loading-bar/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { UserService } from "./../../../services/user/user.service";
@@ -15,9 +16,11 @@ export class StudentProjectsComponent implements OnInit {
   constructor(
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private loadingBar: LoadingBarService
   ) {}
   ngOnInit() {
+    this.loadingBar.start();
     this.getStudentProjects();
     this.getStudentPreferences();
   }
@@ -37,6 +40,7 @@ export class StudentProjectsComponent implements OnInit {
         } else {
           this.projects = details;
         }
+        this.loadingBar.stop();
       });
   }
   getStudentPreferences() {
@@ -52,6 +56,7 @@ export class StudentProjectsComponent implements OnInit {
         } else {
           this.preferences = details;
         }
+        this.loadingBar.stop();
       });
   }
 }

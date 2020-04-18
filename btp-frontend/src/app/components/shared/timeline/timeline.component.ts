@@ -1,3 +1,4 @@
+import { LoadingBarService } from "@ngx-loading-bar/core";
 import { UserService } from "src/app/services/user/user.service";
 import {
   Component,
@@ -19,7 +20,8 @@ export class TimelineComponent implements OnInit, OnChanges {
   @Input() program;
   constructor(
     private userService: UserService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private loadingBar: LoadingBarService
   ) {}
   admins: any;
   stream = "";
@@ -41,6 +43,7 @@ export class TimelineComponent implements OnInit, OnChanges {
   next: String;
   icon;
   displayTimeline: boolean;
+  loaded: boolean = false;
   ngOnChanges(changes: SimpleChanges) {
     this.program = changes.program.currentValue;
     this.ngOnInit();
@@ -60,6 +63,7 @@ export class TimelineComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initialize();
+    this.loadingBar.start();
     if (localStorage.getItem("role") == "student") {
       this.icon = {
         float: "left",
@@ -172,6 +176,8 @@ export class TimelineComponent implements OnInit, OnChanges {
             } else {
               this.displayTimeline = false;
             }
+            this.loadingBar.stop();
+            this.loaded = true;
           }
         });
     } else {
@@ -292,6 +298,8 @@ export class TimelineComponent implements OnInit, OnChanges {
             } else {
               this.displayTimeline = false;
             }
+            this.loadingBar.stop();
+            this.loaded = true;
           }
         });
     }

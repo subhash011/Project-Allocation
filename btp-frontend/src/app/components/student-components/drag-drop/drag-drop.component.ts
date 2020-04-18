@@ -4,6 +4,7 @@ import { ProjectsService } from "src/app/services/projects/projects.service";
 import { ShowPreferencesComponent } from "./../show-preferences/show-preferences.component";
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
+import { LoadingBarService } from "@ngx-loading-bar/core";
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -23,9 +24,12 @@ export class DragDropComponent implements OnInit {
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
+    private loadingBar: LoadingBarService
   ) {}
+  loaded: boolean = false;
   ngOnInit() {
+    this.loadingBar.start();
     this.getAllStudentPreferences();
     this.userService
       .getStreamStage()
@@ -148,6 +152,8 @@ export class DragDropComponent implements OnInit {
                   this.projects.push(project);
                 }
               }
+              this.loaded = true;
+              this.loadingBar.stop();
             });
         }
       })
