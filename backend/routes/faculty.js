@@ -6,6 +6,7 @@ const Faculty = require("../models/Faculty");
 const Project = require("../models/Project");
 const Mapping = require("../models/Mapping");
 const Admin = require("../models/Admin_Info");
+const Student = require("../models/Student");
 
 router.post("/register/:id", (req, res) => {
     const id = req.params.id;
@@ -346,8 +347,8 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
     const idToken = req.headers.authorization;
     const program = req.body.program;
     var facultyDetails = {};
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
-        (faculty) => {
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .then((faculty) => {
             Admin.findOne({ stream: program.short })
                 .then((admin) => {
                     if (admin) {
@@ -357,7 +358,18 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                         else var deadline = null;
 
                         Project.find({ faculty_id: faculty.id, stream: program.short })
+                            .populate("student_alloted", null, Student)
                             .then((result) => {
+                                var projects = result.map((project) => {
+                                    const names = project["student_alloted"].map((student) => {
+                                        return student.name;
+                                    });
+
+                                    project["names"] = names;
+
+                                    return project;
+                                });
+
                                 if (result) {
                                     const obj = {
                                         program: program,
@@ -385,26 +397,32 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                                 }
                             })
                             .catch((err) => {
+                                console.log(err);
                                 res.json({
-                                    status: "failed",
+                                    status: "fail-student",
                                     result: null,
                                 });
                             });
                     } else {
                         res.json({
-                            status: "failed",
+                            status: "No admin",
                             result: null,
                         });
                     }
                 })
                 .catch((err) => {
                     res.json({
-                        status: "failed",
+                        status: "Admin find error",
                         result: null,
                     });
                 });
-        }
-    );
+        })
+        .catch((err) => {
+            res.json({
+                status: "Faculty not found",
+                result: null,
+            });
+        });
 });
 
 router.post("/getAdminInfo_program/:id", (req, res) => {
