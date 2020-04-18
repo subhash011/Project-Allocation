@@ -21,8 +21,8 @@ router.get("/project/:id", (req, res) => {
                             if (admin) {
                                 const stream = admin.stream;
                                 Project.find({ stream: stream })
-                                    .populate("faculty_id")
-                                    .populate("student_alloted")
+                                    .populate("faculty_id",null,Faculty)
+                                    .populate("student_alloted",null,Student)
                                     .then((projects) => {
                                         var arr = [];
                                         for (const project of projects) {

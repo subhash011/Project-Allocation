@@ -135,7 +135,6 @@ export class FacultyComponent implements OnInit {
 
   displayProgram(program) {
     this.userService.getFacultyProgramDetails(program).subscribe((data) => {
-      console.log(data);
       if (data["status"] == "success") {
         this.program_details = data["program_details"];
         let names = [];

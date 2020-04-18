@@ -218,6 +218,7 @@ export class AdminComponent implements OnInit {
     });
 
     this.projectService.getAllStreamProjects().subscribe((projects) => {
+      console.log(projects);
       if (projects["message"] == "success") {
         this.projects = projects["result"];
       } else {
