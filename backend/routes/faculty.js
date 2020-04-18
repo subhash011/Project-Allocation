@@ -343,122 +343,103 @@ router.get("/getFacultyPrograms/:id", (req, res) => {
 });
 
 router.post("/getFacultyProgramDetails/:id", (req, res) => {
-            const id = req.params.id;
-            const idToken = req.headers.authorization;
-            const program = req.body.program;
-            var facultyDetails = {};
-            Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-                .then((faculty) => {
-                        Admin.findOne({ stream: program.short })
-                            .then((admin) => {
-                                    if (admin) {
-                                        var stage = admin.stage;
-                                        if (admin.deadlines.length)
-                                            var deadline = admin.deadlines[admin.deadlines.length - 1];
-                                        else var deadline = null;
-
-                                        Project.find({ faculty_id: faculty.id, stream: program.short })
-                                            .populate("student_alloted", null, Student)
-                                            .then((result) => {
-                                                const obj = {
-                                                    program: program,
-                                                    admin: admin,
-                                                    curDeadline: deadline,
-                                                    projects: result,
-                                                };
-
-                                                res.json({
-                                                    status: "success",
-                                                    program_details: obj,
-                                                });
-                                            })
-                                            .catch((err) => {
-                                                res.json({
-                                                    status: "fail-student",
-                                                    result: null,
-                                                });
-                                            });
-                                    } else {
-                                        if (faculty) {
-                                            Project.find({ faculty_id: faculty.id, stream: program.short })
-                                                .populate("student_alloted", null, Student)
-                                                .then((projects) => {
-                                                        const obj = {
-                                                            program: program,
-                                                            projects: projects,
-                                                        };
-                                                        res.json({
-                                                            status: "success",
-                                                            program_details: obj,
-                                                        }); <<
-                                                        << << < HEAD
-                                                    }
-                                                })
-                                        .catch((err) => {
-                                                console.log(err);
-                                                res.json({
-                                                    status: "fail-student",
-                                                    result: null,
-                                                    ===
-                                                    === = >>>
-                                                    >>> > master
-                                                });
-                                            } else {
-                                                res.json({
-                                                    status: "fail",
-                                                    result: null,
-                                                }); <<
-                                                << << < HEAD
-                                            } else {
-                                                res.json({
-                                                    status: "No admin",
-                                                    result: null,
-                                                }); ===
-                                                === =
-                                            } >>>
-                                            >>> > master
-                                        }
-                                    })
-                                .catch((err) => {
-                                    res.json({
-                                        status: "Admin find error",
-                                        result: null,
-                                    });
-                                });
-                            })
-                    .catch((err) => {
-                        res.json({
-                            status: "Faculty not found",
-                            result: null,
-                        });
-                    });
-                });
-
-        router.post("/getAdminInfo_program/:id", (req, res) => {
-            const id = req.params.id;
-            const idToken = req.headers.authorization;
-            const program = req.body.program;
-
-            Admin.findOne({ stream: program })
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const program = req.body.program;
+    var facultyDetails = {};
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .then((faculty) => {
+            Admin.findOne({ stream: program.short })
                 .then((admin) => {
                     if (admin) {
-                        res.json({
-                            status: "success",
-                            admin: admin,
-                        });
+                        var stage = admin.stage;
+                        if (admin.deadlines.length)
+                            var deadline = admin.deadlines[admin.deadlines.length - 1];
+                        else var deadline = null;
+
+                        Project.find({ faculty_id: faculty.id, stream: program.short })
+                            .populate("student_alloted", null, Student)
+                            .then((result) => {
+                                const obj = {
+                                    program: program,
+                                    admin: admin,
+                                    curDeadline: deadline,
+                                    projects: result,
+                                };
+
+                                res.json({
+                                    status: "success",
+                                    program_details: obj,
+                                });
+                            })
+                            .catch((err) => {
+                                res.json({
+                                    status: "fail-student",
+                                    result: null,
+                                });
+                            });
                     } else {
-                        res.json({
-                            status: "fail",
-                            result: null,
-                        });
+                        if (faculty) {
+                            Project.find({ faculty_id: faculty.id, stream: program.short })
+                                .populate("student_alloted", null, Student)
+                                .then((projects) => {
+                                    const obj = {
+                                        program: program,
+                                        projects: projects,
+                                    };
+                                    res.json({
+                                        status: "success",
+                                        program_details: obj,
+                                    });
+                                });
+                        } else {
+                            res.json({
+                                status: "fail",
+                                result: null,
+                            });
+                        }
                     }
                 })
                 .catch((err) => {
                     res.json({
-                        status: "fail",
+                        status: "Admin find error",
                         result: null,
                     });
                 });
+        })
+        .catch((err) => {
+            res.json({
+                status: "Faculty not found",
+                result: null,
+            });
         });
+});
 
-        module.exports = router;
+router.post("/getAdminInfo_program/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const program = req.body.program;
+
+    Admin.findOne({ stream: program })
+        .then((admin) => {
+            if (admin) {
+                res.json({
+                    status: "success",
+                    admin: admin,
+                });
+            } else {
+                res.json({
+                    status: "fail",
+                    result: null,
+                });
+            }
+        })
+        .catch((err) => {
+            res.json({
+                status: "fail",
+                result: null,
+            });
+        });
+});
+
+module.exports = router;
