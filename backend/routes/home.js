@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Project = require("../models/Project");
 const SuperAdmin = require("../models/SuperAdmin");
+const Student = require("../models/Student");
+const Faculty = require("../models/Faculty");
+const Admin = require("../models/Admin_Info");
 const Mapping = require("../models/Mapping");
 const Streams = require("../models/Streams");
 
@@ -175,6 +178,11 @@ router.delete("/branches/remove/:id", (req, res) => {
             }
         }
     );
+});
+
+router.get("/allDetails", (req, res) => {
+    var promises = [];
+    var students = {};
 });
 
 module.exports = router;
