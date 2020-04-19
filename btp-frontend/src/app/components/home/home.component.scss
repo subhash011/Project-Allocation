@@ -57,7 +57,7 @@ a {
     text-align: center;
     h1 {
         color: #fff;
-        font-size: 50px;
+        font-size: 40px;
         font-family: "ubuntu";
         text-transform: uppercase;
         font-weight: 700;
@@ -80,7 +80,6 @@ a {
     }
 }
 
-//my changes
 body {
     background-color: white;
     position: relative;
@@ -94,6 +93,20 @@ body {
 }
 
 .text {
-    position: absolute;
+    top: 30%;
+    left: 10%;
+    position: fixed;
     height: 100px;
+}
+
+.login-button {
+    position: fixed;
+    top: 30%;
+    left: 80%;
+    z-index: 2;
+    float: right;
+}
+
+h1 {
+    margin-top: 2%;
 }
