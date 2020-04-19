@@ -1,4 +1,5 @@
-Replacing the [ngx-countdown-timer](btp-frontend\node_modules\ngx-countdown-timer)
+1. Replacing the ngx-countdown-timer
+   Go to `btp-frontend\node_modules\ngx-countdown-timer`
 
 ```
 
