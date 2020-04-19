@@ -141,9 +141,9 @@ npm i
 
 ## Configuring Angular app
 
-The above commands will install all the required packages but some changes are to made for the application to tun as expected:
+The above commands will install all the required packages but some changes are to made for the application to run as expected:
 
-1.
+Check the instructions given in btp-frontend folder's readme for more information.
 
 ## Running the web app locally
 
