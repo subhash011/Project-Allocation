@@ -5,7 +5,7 @@ import { StyleManagerService } from "../style-manager/style-manager.service";
   selector: "app-theme-picker",
   templateUrl: "./theme-picker.component.html",
   styleUrls: ["./theme-picker.component.scss"],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class ThemePickerComponent implements OnInit {
   currentTheme: any;
@@ -14,33 +14,33 @@ export class ThemePickerComponent implements OnInit {
       primary: "#673AB7",
       accent: "#FFC107",
       name: "deeppurple-amber",
-      isDark: false
+      isDark: false,
     },
     {
       primary: "#3F51B5",
       accent: "#E91E63",
       name: "indigo-pink",
       isDark: false,
-      isDefault: true
+      isDefault: true,
     },
     {
       primary: "#E91E63",
       accent: "#607D8B",
       name: "pink-grey",
-      isDark: true
+      isDark: true,
     },
     {
       primary: "#9C27B0",
       accent: "#4CAF50",
       name: "purple-green",
-      isDark: true
+      isDark: true,
     },
     {
       primary: "#F6C109",
       accent: "#F16C06",
       name: "iitpkd-light",
-      isDark: false
-    }
+      isDark: false,
+    },
   ];
   constructor(public styleManager: StyleManagerService) {}
 
@@ -50,7 +50,7 @@ export class ThemePickerComponent implements OnInit {
 
   installTheme(themeName: string) {
     const theme = this.themes.find(
-      currentTheme => currentTheme.name === themeName
+      (currentTheme) => currentTheme.name === themeName
     );
     if (!theme) {
       return;

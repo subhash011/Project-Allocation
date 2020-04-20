@@ -7,7 +7,9 @@
         "build": "ng build",
         "test": "ng test",
         "lint": "ng lint",
-        "e2e": "ng e2e"
+        "e2e": "ng e2e",
+        "build-css": "node-sass --include-path scss src/assets/custom-themes/iitpkd-light.scss   src/assets/iitpkd-light.css",
+        "watch-css": "nodemon -e scss -x \"npm run build-css\""
     },
     "private": true,
     "dependencies": {
