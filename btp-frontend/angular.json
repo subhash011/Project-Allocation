@@ -24,7 +24,9 @@
                         "tsConfig": "tsconfig.app.json",
                         "aot": false,
                         "assets": ["src/favicon.ico", "src/assets"],
-                        "styles": [{
+                        "styles": [
+                            "src/styles.scss",
+                            {
                                 "input": "src/assets/pink-grey.css",
                                 "lazy": true,
                                 "bundleName": "pink-grey"
