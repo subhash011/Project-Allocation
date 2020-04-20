@@ -16,50 +16,64 @@ What things you need to install the software and how to install them
 - [MongoDB](https://github.com/mongodb/mongo)
 - MongoDB Compass (optional)
 
-
 ### Installing
 
 Install the following step by step in order to get a development environment up and running.
 
-
 #### 1. Node.js
 
 ##### Windows
+
 Visit the nodejs website here ([Install Node](https://nodejs.org/en/download/)) and choose the windows installer option with the appropriate architecture of your computer.
 
 ##### Linux
+
 Refresh your local package index by typing :
+
 ```
 $ sudo apt update
 ```
+
 Adding the PPA of Node Source Repository :
+
 ```
 $ curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 ```
+
 Installing Node js. This will also install **npm** long with node so there is no need to download npm separately.
+
 ```
 $ sudo apt-get install nodejs
 ```
+
 After installation verify and check the installed verison :
+
 ```
 $ node -v
 ```
+
 Also check the npm version :
+
 ```
 $ npm -v
 ```
+
 For more reference - [installation instructions](https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/)
 
 #### 2. Angular CLI
 
 ##### Windows
+
 Execute the following command on the command line :
+
 ```
 npm install -g @angular/cli
 ```
 
 ##### Linux
+
 Execute the following command on the command line :
+
 ```
 $ sudo npm install -g @angular/cli
 ```
@@ -67,33 +81,40 @@ $ sudo npm install -g @angular/cli
 #### 3. MongoDB & MongoDB Compass
 
 ##### Windows
-Please follow the instructions given in the documentation - 
+
+Please follow the instructions given in the documentation -
 [Mongo Docs Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 
 ##### Linux
-*MongoDB Community Edition* : 
+
+_MongoDB Community Edition_ :
 Please follow the instructions given in the documentation -
 [Mongo Docs Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
 
-*MongoDB Compass* : 
+_MongoDB Compass_ :
 Please follow the instructions given in the documentation -
 [MongoDB compass Ubuntu](https://docs.mongodb.com/compass/master/install/)
-
 
 #### 4. Angular Material
 
 Clone the repository to your local machine
+
 ```sh
 git clone https://github.com/subhash011/Project-Allocation.git
 ```
+
 Navigate to the angular app which is the btp-frontend folder.
+
 ```
 cd Project-Allocation/btp-frontend
 ```
+
 Execute the following command to add angular material :
+
 ```
 ng add @angular/material
 ```
+
 This command will open a prompt asking you questions :
 
 `Choose a prebuilt theme name, or "custom" for a custom theme:` Choose Indigo/Pink and then hit enter.
@@ -102,11 +123,11 @@ This command will open a prompt asking you questions :
 
 `Set up browser animations for Angular Material?` Press Y and then hit enter.
 
-
-
 #### 5. Other Dependencies
+
 Go to the main directory of the project that is Project-Allocation
 Execute the following commands :
+
 ```
 cd btp-frontend
 npm i
@@ -115,31 +136,42 @@ cd ..
 cd backend
 npm i
 ```
-> All the dependencies will be installed which otherwise have to be installed with ```npm i --save packagename```.
 
+> All the dependencies will be installed which otherwise have to be installed with `npm i --save packagename`.
+
+## Configuring Angular app
+
+The above commands will install all the required packages but some changes are to made for the application to run as expected:
+
+Check the instructions given in btp-frontend folder's readme for more information.
 
 ## Running the web app locally
 
-Open two terminal windows and locate to Project-Allocation/btp-frontend and Project-Allocation/backend respectively one in each of the terminal. 
+Open two terminal windows and locate to Project-Allocation/btp-frontend and Project-Allocation/backend respectively one in each of the terminal.
 
-In the terminal where you navigated to btp-frontend folder execute the following command : 
+In the terminal where you navigated to btp-frontend folder execute the following command :
+
 ```
-ng serve 
+ng serve
 ```
->Angular will listen to the port 4200 by default and to change the port and run use ```ng serve --port PORT_NO```
+
+> Angular will listen to the port 4200 by default and to change the port and run use `ng serve --port PORT_NO`
 
 In the terminal where you navigated to backend folder execute the following command :
+
 ```
-node server.js 
+node server.js
 ```
+
 or
+
 ```
 nodemon
 ```
->If nodemon is not installed then use ```npm i --save nodemon``` in the same terminal to install it.
+
+> If nodemon is not installed then use `npm i --save nodemon` in the same terminal to install it.
 
 Now open a web browser and go to the url <http://localhost:4200> to use the web app.
-
 
 ## Deployment
 
@@ -167,18 +199,17 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 ## Built With
 
 **MEAN STACK**
-* [MongoDB](https://github.com/mongodb/mongo) - DataBase 
-* [Express.js](https://rometools.github.io/rome/) -  Backend web application framework 
-* [Angular](http://www.dropwizard.io/1.0.2/docs/) - Frontend web application framework 
-* [Node.js](https://maven.apache.org/) - Backend web framework
+
+- [MongoDB](https://github.com/mongodb/mongo) - DataBase
+- [Express.js](https://rometools.github.io/rome/) - Backend web application framework
+- [Angular](http://www.dropwizard.io/1.0.2/docs/) - Frontend web application framework
+- [Node.js](https://maven.apache.org/) - Backend web framework
 
 ## Authors
 
-* **Sai Vamsi Alisetti** - [Vamsi995](https://github.com/Vamsi995)
-* **Subhash S** - [subhash011](https://github.com/subhash011)
+- **Sai Vamsi Alisetti** - [Vamsi995](https://github.com/Vamsi995)
+- **Subhash S** - [subhash011](https://github.com/subhash011)
 
 ## Acknowledgments
 
-* Albert Sunny
-
-
+- Albert Sunny

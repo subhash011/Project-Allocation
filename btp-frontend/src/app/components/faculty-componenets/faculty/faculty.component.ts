@@ -76,6 +76,8 @@ export class FacultyComponent implements OnInit {
                     .subscribe((data) => {
                       if (data["status"] == "success") {
                         this.adminStage = data["admin"].stage;
+                      } else {
+                        this.adminStage = undefined;
                       }
                     });
                 }
@@ -114,7 +116,17 @@ export class FacultyComponent implements OnInit {
     this.empty = false;
   }
   addProject(state) {
-    if (this.adminStage == 0) {
+    console.log(this.adminStage);
+    if (this.adminStage == undefined || this.adminStage == null) {
+      this.add = !state;
+      this.snackBar.open(
+        "You can't add projects till the admin sets the first deadline",
+        "Ok",
+        {
+          duration: 3000,
+        }
+      );
+    } else if (this.adminStage == 0) {
       this.add = state;
       this.empty = false;
     } else {
