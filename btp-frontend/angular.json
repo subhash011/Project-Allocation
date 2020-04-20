@@ -25,10 +25,6 @@
                         "aot": false,
                         "assets": ["src/favicon.ico", "src/assets"],
                         "styles": [{
-                                "input": "_app-theme.scss"
-                            },
-                            "src/styles.scss",
-                            {
                                 "input": "src/assets/pink-grey.css",
                                 "lazy": true,
                                 "bundleName": "pink-grey"

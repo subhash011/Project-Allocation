@@ -1,7 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "~@angular/material/theming";
-@import "./app-theme";
 html,
 body,
 app-root {
@@ -91,12 +89,6 @@ body {
     background-color: #fff;
 }
 
-@include mat-core();
-$primary: mat-palette($mat-indigo);
-$accent: mat-palette($mat-pink, A200, A100, A400);
-$theme: mat-light-theme($primary, $accent);
-@include angular-material-theme($theme);
-@include material-custom-theme($theme);
 // .mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
 // 	padding: 8px 0 8px 0 !important;
 // 	width: 35px !important;
