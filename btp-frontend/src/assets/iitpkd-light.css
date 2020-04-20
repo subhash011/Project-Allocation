@@ -2070,3 +2070,7 @@ td.mat-footer-cell {
 .mat-simple-snackbar-action {
     color: #ff4081;
 }
+
+app-home .container {
+    background: linear-gradient(125deg, white 25%, #ff9800 25%);
+}

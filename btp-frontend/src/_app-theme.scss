@@ -1,5 +1,5 @@
 @import "../node_modules/@angular/material/theming";
-@import "./app/components/home/home";
+// @import "./app/components/home/home";
 @mixin material-custom-theme($theme) {
     $primary: map-get($theme, primary);
     $accent: map-get($theme, accent);

@@ -7,13 +7,28 @@
 }
 
 .container {
-    background-color: white;
-    height: 100%;
     width: 100%;
     position: fixed;
-    height: 500vh;
+    height: 400vh;
 }
 
 .image .Info {
     opacity: 1;
+}
+
+.heading {
+    margin-bottom: 25%;
+}
+
+.line {
+    margin-top: 10%;
+}
+
+h1 {
+    font-size: 70px;
+    color: white;
+}
+
+h2 {
+    color: white;
 }

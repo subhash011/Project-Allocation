@@ -23,7 +23,7 @@ export class ThemePickerComponent implements OnInit {
       accent: "#E91E63",
       name: "indigo-pink",
       isDark: false,
-      isDefault: true,
+      // isDefault: true,
     },
     {
       primary: "#E91E63",
@@ -66,11 +66,9 @@ export class ThemePickerComponent implements OnInit {
       // localStorage.setItem("current-theme", theme.name);
       this.styleManager.removeStyle("theme");
       localStorage.setItem("current-theme", theme.name);
-      this.home.ngOnInit(false);
       this.currentTheme = theme;
     } else {
       localStorage.setItem("current-theme", theme.name);
-      this.home.ngOnInit(false);
       this.currentTheme = theme;
       this.styleManager.setStyle("theme", `/assets/${theme.name}.css`);
     }
