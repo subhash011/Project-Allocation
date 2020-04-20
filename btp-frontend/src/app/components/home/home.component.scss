@@ -1,22 +1,22 @@
-.image{
-    height:100%;
-    width:100%;
+.image {
+    height: 100%;
+    width: 100%;
     background: url("./../../../../images/IITPKD_Modified.jpg")no-repeat center fixed;
     background-size: 30%;
-    z-index:-10;
+    z-index: -10;
     // background: url("https://iitpkd.ac.in/themes/basic/logo.png")no-repeat center fixed;
     // mask-image: url("https://images.freecreatives.com/wp-content/uploads/2015/04/lavender-paper-texture.jpg");
     // opacity: 0.3;
 }
 
-.container{
-    background-color:white;
-    top:100;
-    height:100%;
-    width:100%;
+.container {
+    background-color: white;
+    top: 100;
+    height: 100%;
+    width: 100%;
 }
 
-.image .Info{
+.image .Info {
     opacity: 1;
 }
 
@@ -25,18 +25,15 @@
 // // 	position: relative;
 // // 	font: 200px Helvetica, Sans-Serif;
 // // 	letter-spacing: -5px;
-// // 	color: rgba(0,0,255,0.5); 
+// // 	color: rgba(0,0,255,0.5);
 // // }
-
 // // h1:after {
 // // 	content: "Project-Allocation App";
 // // 	position: absolute; left: 10px; top: 5px;
-// // 	color: rgba(255,0,0,0.5);   
+// // 	color: rgba(255,0,0,0.5);
 // // }
-
 // $avatar-size: 32px;
 // $body-background: #333641;
-
 // @font-face {
 // 	font-family: "ubuntu";
 // 	font-style: italic;
@@ -45,7 +42,6 @@
 // 		url("https://fonts.gstatic.com/s/ubuntucondensed/v8/u-4k0rCzjgs5J7oXnJcM_0kACGMtT-Dfqw.woff2")
 // 			format("woff2");
 // }
-
 // body {
 // 	height: 100vh;
 // 	margin: 0;
@@ -55,12 +51,10 @@
 // 	display: grid;
 // 	place-items: center;
 // }
-
 // a {
 // 	text-decoration: none;
 // 	color: #9ca0b1;
 // }
-
 // .wrapper {
 //     text-align: center;
 // 	h1 {
@@ -82,13 +76,11 @@
 // 		animation: textclip 2s linear infinite;
 // 	}
 // }
-
 // @keyframes textclip {
 // 	to {
 // 		background-position: 200% center;
 // 	}
 // }
-
 // .headlines{
 // 	left:38%;
 // 	width:100%;
@@ -97,16 +89,13 @@
 // 	flex-direction: row;
 // 	// justify-content: space-evenly;
 // }
-
 // .login{
 // 	width: 100%;
 // }
-
 // .title{
 // 	font-size: 50px;
 // 	font-family: serif;
 // }
-
 // .toolbar{
 // 	height: 30%;
 // }

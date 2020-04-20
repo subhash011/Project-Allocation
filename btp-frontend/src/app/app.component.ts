@@ -14,4 +14,11 @@ export class AppComponent implements OnInit {
   branches: any = [];
   constructor() {}
   ngOnInit() {}
+  getCondition() {
+    if (localStorage.getItem("isLoggedIn") == "true") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

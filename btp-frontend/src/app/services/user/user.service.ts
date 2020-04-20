@@ -539,4 +539,8 @@ export class UserService {
     };
     return this.http.get(this.url, httpOptions);
   }
+  getCompleteDetails() {
+    this.url = this.base_url + "allDetails";
+    return this.http.get(this.url);
+  }
 }
