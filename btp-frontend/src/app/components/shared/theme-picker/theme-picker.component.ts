@@ -34,6 +34,12 @@ export class ThemePickerComponent implements OnInit {
       accent: "#4CAF50",
       name: "purple-green",
       isDark: true
+    },
+    {
+      primary: "#F6C109",
+      accent: "#F16C06",
+      name: "iitpkd-light",
+      isDark: false
     }
   ];
   constructor(public styleManager: StyleManagerService) {}

@@ -47,6 +47,11 @@
                                 "input": "src/assets/deeppurple-amber.css",
                                 "lazy": true,
                                 "bundleName": "deeppurple-amber"
+                            },
+                            {
+                                "input": "src/assets/iitpkd-light.css",
+                                "lazy": true,
+                                "bundleName": "iitpkd-light"
                             }
                         ],
                         "scripts": []
