@@ -1,3 +1,4 @@
+import { HomeComponent } from "./../../home/home.component";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { StyleManagerService } from "../style-manager/style-manager.service";
 
@@ -5,14 +6,15 @@ import { StyleManagerService } from "../style-manager/style-manager.service";
   selector: "app-theme-picker",
   templateUrl: "./theme-picker.component.html",
   styleUrls: ["./theme-picker.component.scss"],
+  providers: [HomeComponent],
   encapsulation: ViewEncapsulation.None,
 })
 export class ThemePickerComponent implements OnInit {
   currentTheme: any;
   themes: CustomTheme[] = [
     {
-      primary: "#673AB7",
-      accent: "#FFC107",
+      primary: "#d32f2f",
+      accent: "#42a5f5",
       name: "deeppurple-amber",
       isDark: false,
     },
@@ -42,7 +44,10 @@ export class ThemePickerComponent implements OnInit {
       isDark: false,
     },
   ];
-  constructor(public styleManager: StyleManagerService) {}
+  constructor(
+    public styleManager: StyleManagerService,
+    private home: HomeComponent
+  ) {}
 
   ngOnInit() {
     this.installTheme(localStorage.getItem("current-theme"));
@@ -61,9 +66,11 @@ export class ThemePickerComponent implements OnInit {
       // localStorage.setItem("current-theme", theme.name);
       this.styleManager.removeStyle("theme");
       localStorage.setItem("current-theme", theme.name);
+      this.home.ngOnInit(false);
       this.currentTheme = theme;
     } else {
       localStorage.setItem("current-theme", theme.name);
+      this.home.ngOnInit(false);
       this.currentTheme = theme;
       this.styleManager.setStyle("theme", `/assets/${theme.name}.css`);
     }

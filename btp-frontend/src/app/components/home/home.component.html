@@ -1,36 +1,14 @@
 <div class="container">
-    <div class="Info wrapper">
-
-
-        <h1>
-            <span typingAnimation [typeSpeed]="100" [startDelay]="500" (complete)="onComplete()">
-
-                Project-Allocation App
-            </span>
-        </h1>
-
-
-    </div>
-    <app-login></app-login>
-
-    <div class="image">
-
-    </div>
-
+    <mat-grid-list cols="2" rowHeight="1:1">
+        <mat-grid-tile>
+            <mat-grid-tile-header class="image"></mat-grid-tile-header>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <div class="heading">
+                <h1>
+                    Project Allocation App
+                </h1>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
 </div>
-<!-- <div class="container">
-
-    <mat-toolbar color="primary" class="toolbar">
-
-        <div class="headlines">
-            <h1 class="title">Project-Allocation Portal</h1>
-        </div>
-
-        <div class="login">
-        <app-login></app-login>
-        </div>
-
-
-
-    </mat-toolbar>
-</div> -->

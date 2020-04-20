@@ -1,9 +1,11 @@
-@import "../node_modules/@angular/material/theming";
-@import "./app/components/home/home";
-@mixin material-custom-theme($theme) {
+@mixin home-theme($theme) {
     $primary: map-get($theme, primary);
     $accent: map-get($theme, accent);
     $background: map-get($theme, background);
     $foreground: map-get($theme, foreground);
-    // @include home-theme($theme);
+    app-home {
+        .container {
+            background: "linear-gradient(125deg, white 25%," + $primary + "25%)";
+        }
+    }
 }
