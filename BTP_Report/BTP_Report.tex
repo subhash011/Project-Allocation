@@ -9,6 +9,8 @@
 \usepackage[margin=1in]{geometry}
 \usepackage[titletoc,title]{appendix}
 
+\usepackage{hyperref}
+
 % Math
 % https://www.overleaf.com/learn/latex/Mathematical_expressions
 % https://en.wikibooks.org/wiki/LaTeX/Mathematics
@@ -34,8 +36,8 @@
 \usepackage{biblatex}
 \addbibresource{references.bib}
 % Title content
-\title{Project Allocation Algorithm}
-\author{Sai Vamsi Alisetti, Subhash S}
+\title{Project Allocation Portal}
+\author{Albert Sunny, Sai Vamsi Alisetti, Subhash S}
 \date{}
 
 \begin{document}
@@ -43,24 +45,48 @@
 \maketitle
 
 % Introduction and Overview
-\section{Introduction and Overview}
-This algorithm is developed for project allotment to students. Here we deal with two sided preference i.e students have a project preference and each project has a student preference given by the faculty which floated the project. Our approach to this is to use the generalised version of Gale Shapley's algorithm.
+\section{Introduction}
+
+Web Apps have been there since time being and with today's technology and opens source libraries there is a boost in the making of web apps. Our initial motivations of making this web portal was to reduce the drudgery people have to go through doing the project allocation manually in this modern era where everything is code driven. We have seen that most of the project allocations have been going on using Google Docs or Excel which is a very tiresome and time taking process. So we came up with an automated solution to this by making a web portal to collect everyones preferences and use an algorithm to allocate the projects. We will dive into the workings of the algorithm in the later sections. We made a web app as it is the most accessible thing these days. 
+
+\section{Overview}
+We have four positions namely Students, Faculty, Admin, Super Admin. Every individual falls into any of these four positions. Each stream is called a program. As of now the programs are extended to pg programs as well.
+\\ \\ 
+\textbf{Registraion $\&$ Login}: Once they sign in with their institute email id we parse it and        decide whether he/she is a student or faculty and redirect him/her accordingly.
+\\ \\
+\textbf{Super Admin}: Super Admin is given certain priviliges. She/he can view or delete all the projects, all the faculty, all the students, all the programs. Super Admin is the one who can add more programs by assigning it to a particular roll number map. Super Admin is the one who can set the status of admin to the faculty of the respective program.
+\\ \\
+\textbf{Admin}: Only faculty can be a admin to any program. Each program will have an admin. Admin is responsible for setting the deadlines of the allocation and sending mails to the respective members. Admin can also set certain other parameters like max number of projects per faculty, max number of student intake per faculty,total number of students per faculty, and admin can also view or delete students and faculty of the program.
+\\ \\
+\textbf{Faculty}: Faculty can choose to support more than one program by adding more programs in their profile. Each faculty has the eligibility to add, edit, delete projects and give a student preference order to each of their projects.
+\\ \\
+\textbf{Students}: Students page has a very minimalistic UI i.e it is very intuitive to use. All the students have to do is when the appropriate stage comes to pass they have to start choosing the projects they prefer.
+\\ \\
+Here we deal with taking preferences from two sides that is from the students (the projects preffered by them) and the faculty (the preference of students who applied to that particular project). Each project provided by the faculty have a student intake number i.e the number of students they wish to take for the project. Now we use the modified general version of Gale Shapley's Algorithm for stable matching of projects to students. 
 % Algorithm Implementation and Development
 \section{Algorithm Implementation and Development}
-Set $S$ represents students and set $P$ represents projects.\\
-
+Set $S$ represents set of all students and set $P$ represents set of all projects.
+\\ \\
 Let $S = \{ S_1, S_2, ... , S_m \}$ 
 where 
-$S_i = (id_i,preference_i)$ is the $i^{th}$ student
-and 
 $m \in N$ 
-
+and
+$S_i = (id_i,preference_i)$ is the $i^{th}$ student
+and
+$preference_i = \{P_i, ... ,P_j\}$ where 
+$|preference_i| = |P|$
+since the remaining projects which the $i^{th}$ student didnt choose are sorted in the increasing order of number of students applied to the project, and have been appended to the $i^{th}$ student preference.
+\\ \\
 Let $P = \{P_1, P_2, ... , P_n\}$ 
 where 
-$P_i = (id_i,preference_i)$ is the $i^{th}$ project
-and
 $n \in N$
-
+and
+$P_i = (id_i,preference_i,studentIntake_i)$ is the $i^{th}$ project 
+and
+$preference_i = \{S_i, ... ,S_j\}$ where 
+$|preference_i| = |S|$
+since the remaining students who didnt apply to the $i^{th}$ project are sorted in the decreasing order of CGPA and have been appended to the ${i^{th}}$ project preference.
+\\ \\
 A necessary condition for this algorithm to work is $n \geq m$.
 
 \subsection{Pseudo Code}
@@ -69,27 +95,37 @@ A necessary condition for this algorithm to work is $n \geq m$.
 \begin{algorithmic}
 \REQUIRE $n \geq m $
 \STATE $free \leftarrow S$
-\STATE $alloted \leftarrow [  ]$ 
+\STATE $alloted \leftarrow [\:]$ 
 \STATE $allocationMap \leftarrow \{\}$
-\WHILE{$|allocationMap| \neq |S|$}
+\WHILE{$|free| > 0$}
 \STATE $S_i \leftarrow free[0]$
-\STATE $P_j \leftarrow S_i[1][0]$
+\STATE $P_j \leftarrow first \: preference \: of \: S_i$
 \IF{$\neg allocationMap.hasKey(P_j)$}
+\STATE $allocationMap[P_j] = [\:]$
 \STATE $allocationMap \leftarrow \{P_j,S_i\}$
 \STATE $alloted.push(S_i)$
 \STATE $free - \{S_i\}$
 \ELSE 
-\STATE $S_k \leftarrow allocationMap[P_j] $
-\STATE $S_{k,index} \leftarrow  findIndex \: of \: S_k \: in \: P_j[1]$ 
-\STATE $S_{i,index} \leftarrow findIndex \: of \: S_i \: in\: P_j[1]$
+\IF{$|allocationMap[P_j]| < P_j.studentIntake $}
+\STATE $allocationMap[P_j].push(S_i)$
+\STATE $Sort \: allocationMap[P_j] \: according \: to \: the \: index \: of \: S_i \: in \: the \: project \: preference$
+\STATE $alloted.push(S_i)$
+\STATE $free - \{S_i\}$
+\ELSE
+\STATE $S_k \leftarrow last \: element \: of \: the \: allocationMap[P_j]$
+\STATE $S_{k,index} \leftarrow  findIndex \: of \: S_k \: in \: preferences \: of \:P_j$ 
+\STATE $S_{i,index} \leftarrow findIndex \: of \: S_i \: in\: preferences \: of \:P_j$
 \IF{$S_{k,index} > S_{i,index}$}
-\STATE $allocationMap \leftarrow {P_j,S_i}$
+\STATE $allocationMap[P_j].push(S_i)$
+\STATE $Pop \: the \: first \: preference \: of \: S_k$
+\STATE $Sort \: allocationMap[P_j] \: according \: to \: the \: index \: of \: S_i \: in \: the \: project \: preference$
 \STATE $alloted - \{S_k\}$
 \STATE $free - \{S_i\}$
 \STATE $alloted.push(S_i)$
 \STATE $free.push(S_k)$
 \ELSE
-\STATE $ Pop \: the \: first \: element \: of \: S_i[1]$
+\STATE $ Pop \: the \: first \: preference \: of \: S_i$
+\ENDIF
 \ENDIF
 \ENDIF
 \ENDWHILE
@@ -100,18 +136,28 @@ A necessary condition for this algorithm to work is $n \geq m$.
 
 %  Theoretical Background
 \section{Theoretical Background}
-Since this problem is similar to the admission problem (General case of Gale Shapley's algorithm) we can see that theorems also follow.
+Gale–Shapley algorithm provides a solution for finding stable relationships given a set of men and women. This algorithm can be used to solve a large number of problems, one such use case is matching interns to companies such that each company finds a suitable intern and each intern gets a desirable company.Suppose there are two couples (w1, m1) and (w2, m2). The relationship is unstable when w1 wants to be with m2 and vice versa. However, if w1 wants to be with m2 but m2 wants to be with w2 then it’s sad for w1 but the relationship is stable. Please refer [2] for more insights on the algorithm.
+
+
+
 
 
 % Computational Results
-\section{Computational Results}
-As we can see from the algorithm the worst case time complexsity is $O(n^2)$ as we have some loops inside the outer while loop.
+\section{Built With}
+\textbf{MEAN STACK}
+\\ \\
+\textbf{MongoDB}: MongoDB is a cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema. MongoDB is developed by MongoDB Inc. and licensed under the Server Side Public License (SSPL).
+\\ \\
+\textbf{Express JS}: Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+\\ \\
+\textbf{Angular}: Angular is a TypeScript-based open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations.
+\\ \\ 
+\textbf{Node JS}: Node.js is an open-source, cross-platform, JavaScript runtime environment that executes JavaScript code outside of a web browser. Node.js lets developers use JavaScript to write command line tools and for server-side scripting—running scripts server-side to produce dynamic web page content before the page is sent to the user's web browser. Consequently, Node.js represents a "JavaScript everywhere" paradigm, unifying web-application development around a single programming language, rather than different languages for server- and client-side scripts
 
 
 % Summary and Conclusions
 \section{Summary and Conclusions}
-Test run is pending.
-
+In this way we made the project allocation easier with the help of this algorithm and the web portal setup. To culminate this we have made many tests to check the efficiency of the algorithm and it works well with all the test cases. 
 
 
 
@@ -120,7 +166,15 @@ Test run is pending.
 
 \bibitem{latexGuide} D.Gale, L.S.Shapley, 
 \emph{College Admissions and the Stability of Marriage},
+
+
 Available at \texttt{https://www.eecs.harvard.edu/cs286r/courses/fall09/papers/galeshapley.pdf}.
+
+\bibitem{latexGuide} 
+\emph{Applications of Gale-Shapley},
+
+
+Available at \texttt{https://medium.com/@UofCalifornia/how-a-matchmaking-algorithm-saved-lives-2a65ac448698}.
 
 
 \end{thebibliography}
