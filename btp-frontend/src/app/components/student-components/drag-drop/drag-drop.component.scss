@@ -10,6 +10,16 @@
     min-height: 400px;
     border-radius: 4px;
     display: block;
+    max-height: 600px;
+    overflow-y: scroll;
+}
+
+.list::-webkit-scrollbar {
+    display: none;
+}
+
+.list {
+    -ms-overflow-style: none;
 }
 
 .list-item {
