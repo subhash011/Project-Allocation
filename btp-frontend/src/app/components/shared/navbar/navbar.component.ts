@@ -29,7 +29,10 @@ export class NavbarComponent implements OnInit, DoCheck {
   programsVisible: boolean = false;
   curRole;
   ngDoCheck(): void {
-    this.curRole = localStorage.getItem("role");
+    if (localStorage.getItem("isLoggedIn") == "true") {
+      this.role = localStorage.getItem("role");
+      this.curRole = this.role;
+    }
     if (
       this.curRole == "admin" ||
       (this.curRole == "faculty" &&
