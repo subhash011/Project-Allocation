@@ -21,7 +21,7 @@
         "mongoose": "^5.9.5",
         "node-cron": "^2.0.3",
         "nodemailer": "^6.4.6",
-        "nodemon": "^2.0.2",
+        "nodemon": "^2.0.3",
         "passport": "^0.4.1",
         "passport-google-id-token": "^0.4.6",
         "passport-google-oauth": "^2.0.0",
