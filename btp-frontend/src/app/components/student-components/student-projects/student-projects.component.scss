@@ -26,3 +26,18 @@
 .list-item:last-child {
     border: none;
 }
+
+@media (min-width: 300px) and (max-width: 600px) {
+    .list-item {
+        width: 100%;
+        padding-left: 0px;
+        margin-left: 0px;
+        padding-right: 0px;
+    }
+    .ep {
+        font-size: x-small;
+    }
+    .list {
+        margin-left: 0px;
+    }
+}

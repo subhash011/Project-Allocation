@@ -68,3 +68,17 @@
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+
+@media (min-width: 300px) and (max-width: 600px) {
+    .mobile {
+        display: none;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 992px) {
+    .stage-1 {
+        max-width: 18%;
+        float: left;
+        padding-top: 3.5%;
+    }
+}

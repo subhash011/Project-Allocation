@@ -1,62 +1,68 @@
 <mat-toolbar class="mat-elevation-z8" color="primary">
-    <div>
-        <button mat-button [routerLink]="getURLHome()">
-      <span class="navhead">IIT Palakkad</span>
-    </button>
-    </div>
-    <div *ngIf="isFaculty()">
-        <div class="flex-grow-left"></div>
-        <button mat-button (click)="goToHome()" class="nav-text">
-      Home
-    </button>
-        <button *ngIf="programsVisible" mat-button [matMenuTriggerFor]="menu" class="nav-text">
-      Programs
-      <mat-icon>keyboard_arrow_down</mat-icon>
-    </button>
-    
-  
-      <mat-menu #menu="matMenu">
-          <button  *ngFor="let program of programs" mat-menu-item (click)="goToProgram(program)">
-            {{ program.full }}
-          </button>
-        </mat-menu>
-   </div>
-
-    <!-- </div> -->
-    <div *ngIf="isFaculty() && !isFaculty()">
-        <div class="flex-grow-left"></div>
-        <button mat-button [routerLink]="getAddProjects()" class="nav-text">
-      Add Projects
-    </button>
-    </div>
-    <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin()">
-        <div class="flex-grow-left"></div>
-        <button mat-button [routerLink]="getUrlPreferences()" class="nav-text">
-      Edit Preferences
-    </button>
-    </div>
-    <div class="flex-space"></div>
-    <div class="flex-grow-right"></div>
-    <div>
-        <div *ngIf="isUser() && !isSuperAdmin()">
-            <button mat-button [matMenuTriggerFor]="beforeMenu">
-        <span class="nav-text">Options</span>
+    <mat-toolbar-row>
+        <div>
+            <button mat-button [routerLink]="getURLHome()">
+        <span class="navhead">IIT Palakkad</span>
+      </button>
+        </div>
+        <div *ngIf="isFaculty()">
+            <div class="flex-grow-left"></div>
+            <button mat-button (click)="goToHome()" class="nav-text">
+        Home
+      </button>
+            <button *ngIf="programsVisible" mat-button [matMenuTriggerFor]="menu" class="nav-text">
+        Programs
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
-            <mat-menu #beforeMenu="matMenu" xPosition="before">
-                <button mat-menu-item [routerLink]="getProfile()">
-          Profile
-        </button>
-                <button mat-menu-item (click)="getAdmin()" *ngIf="isAdmin()">
-          Admin
+
+            <mat-menu #menu="matMenu">
+                <button *ngFor="let program of programs" mat-menu-item (click)="goToProgram(program)">
+          {{ program.full }}
         </button>
             </mat-menu>
         </div>
-    </div>
-    <div class="flex-grow-right"></div>
-    <app-theme-picker></app-theme-picker>
-    <div class="flex-grow-right"></div>
-    <app-login></app-login>
+
+        <!-- </div> -->
+        <div *ngIf="isFaculty() && !isFaculty()">
+            <div class="flex-grow-left"></div>
+            <button mat-button [routerLink]="getAddProjects()" class="nav-text">
+        Add Projects
+      </button>
+        </div>
+        <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin()">
+            <div class="flex-grow-left"></div>
+            <button mat-button [routerLink]="getUrlPreferences()" class="nav-text">
+        Edit Preferences
+      </button>
+        </div>
+        <div class="flex-space"></div>
+        <div class="flex-grow-right"></div>
+        <div>
+            <div *ngIf="isUser() && !isSuperAdmin()">
+                <button mat-button [matMenuTriggerFor]="beforeMenu">
+          <span class="nav-text">Options</span>
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+                <mat-menu #beforeMenu="matMenu" xPosition="before">
+                    <button mat-menu-item [routerLink]="getProfile()">
+            Profile
+          </button>
+                    <button mat-menu-item (click)="getAdmin()" *ngIf="isAdmin()">
+            Admin
+          </button>
+                </mat-menu>
+            </div>
+        </div>
+        <div class="flex-grow-right"></div>
+        <app-theme-picker></app-theme-picker>
+        <div class="flex-grow-right primary-toolbar"></div>
+        <app-login class="primary-toolbar"></app-login>
+    </mat-toolbar-row>
+    <mat-toolbar-row class="mobile">
+        <div class="flex-grow-login">
+            <app-login></app-login>
+        </div>
+    </mat-toolbar-row>
 </mat-toolbar>
 
 <router-outlet></router-outlet>

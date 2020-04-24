@@ -24,10 +24,10 @@
         <mat-icon *ngIf="stageThreeCompleted">check_circle</mat-icon>
         <mat-icon *ngIf="!stageThreeCompleted">check_circle_outline</mat-icon>
     </a>
-    <mat-progress-bar class="stage-1" mode="determinate" [value]="stageFour"></mat-progress-bar>
-    <a matTooltip="Projects are alloted" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon icon">
-        <mat-icon *ngIf="stageFourCompleted">check_circle</mat-icon>
-        <mat-icon *ngIf="!stageFourCompleted">check_circle_outline</mat-icon>
+    <mat-progress-bar class="stage-1 mobile" mode="determinate" [value]="stageFour"></mat-progress-bar>
+    <a class="mobile" matTooltip="Projects are alloted" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon icon">
+        <mat-icon class="mobile" *ngIf="stageFourCompleted">check_circle</mat-icon>
+        <mat-icon class="mobile" *ngIf="!stageFourCompleted">check_circle_outline</mat-icon>
     </a>
 </div>
 

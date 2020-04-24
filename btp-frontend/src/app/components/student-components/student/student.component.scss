@@ -36,3 +36,9 @@ mat-toolbar {
     padding: 1px 1px;
     font-size: 14px;
 }
+
+@media screen and (max-width: 600px) {
+    h4 {
+        padding-left: 30%;
+    }
+}

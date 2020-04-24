@@ -38,3 +38,31 @@ mat-toolbar {
     left: 0%;
     z-index: 2;
 }
+
+.mobile {
+    display: none;
+}
+
+@media (min-width: 300px) and (max-width: 700px) {
+    .primary-toolbar {
+        display: none;
+    }
+    .nav-text {
+        font-size: x-small;
+    }
+    .navhead {
+        font-size: small;
+    }
+    .flex-grow-right {
+        flex-grow: 0.01;
+    }
+    .flex-grow-left {
+        flex-grow: 0.01;
+    }
+    .mobile {
+        display: block;
+    }
+    .flex-grow-login {
+        margin-left: 20%;
+    }
+}
