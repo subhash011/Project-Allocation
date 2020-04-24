@@ -39,7 +39,16 @@ h2 {
     color: white;
 }
 
-@media (min-width: 1000px) {
+@media only screen and (min-width: 1501px) {
+    .container {
+        height: 400vh;
+    }
+    .mobile {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1500px) {
     .container {
         height: 300vh;
     }
@@ -57,12 +66,13 @@ h2 {
     }
 }
 
-@media (min-width: 300px) and (max-width: 1000px) {
+@media only screen and (min-width: 300px) and (max-width: 967px) {
     .container {
-        visibility: hidden;
+        display: none;
     }
     .mobile {
-        visibility: visible;
+        display: block;
+        position: fixed;
     }
     h1 {
         font-size: 20px;
