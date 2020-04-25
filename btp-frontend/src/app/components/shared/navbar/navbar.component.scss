@@ -60,8 +60,10 @@ mat-toolbar {
     }
     .mobile {
         display: block;
+        width: 100%;
+        text-align: center;
     }
     .flex-grow-login {
-        margin-left: 20%;
+        display: inline-block;
     }
 }

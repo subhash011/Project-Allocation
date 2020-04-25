@@ -93,14 +93,20 @@ mat-card {
     margin-left: 2%;
 }
 
-mat-card-actions{
-    margin-top:3%;
+mat-card-actions {
+    margin-top: 3%;
 }
 
-mat-card{
-    margin-top:5%;
+mat-card {
+    margin-top: 5%;
 }
 
-.submit{
-    margin-left:2%;
+.submit {
+    margin-left: 2%;
+}
+
+@media only screen and (min-width: 300px) and (max-width: 700px) {
+    .facultyForm {
+        margin-left: 10%;
+    }
 }

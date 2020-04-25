@@ -4,7 +4,7 @@
     </h1>
 </div>
 
-<div class="drag-drop" *ngIf="loaded">
+<div class="drag-drop primary-drag" *ngIf="loaded">
     <div class="container col-1">
         <h2><b>Available Projects</b></h2>
         <div cdkDropList id="cdk-drop-list-0" #todoList="cdkDropList" [cdkDropListData]="projects" [cdkDropListConnectedTo]="doneList" class="list" (cdkDropListDropped)="drop($event)">
@@ -58,5 +58,26 @@
         Save Preferences
       </button>
         </div>
+    </div>
+</div>
+<div class="mobile-drag">
+    <div class="example-container">
+        <h2>Available Projects</h2>
+
+        <div cdkDropList id="cdk-drop-list-0" #todoList="cdkDropList" [cdkDropListData]="projects" [cdkDropListConnectedTo]="doneList" class="example-list" (cdkDropListDropped)="drop($event)">
+            <div class="example-box" [cdkDragDisabled]="stage >= 2 ? true : false" *ngFor="let project of projects" cdkDrag>{{project["title"]}}</div>
+        </div>
+    </div>
+
+    <div class="example-container">
+        <h2>My Preferences</h2>
+        <div cdkDropList id="cdk-drop-list-1" #doneList="cdkDropList" [cdkDropListData]="preferences" [cdkDropListConnectedTo]="todoList" class="example-list" (cdkDropListDropped)="drop($event)">
+            <div class="example-box" [cdkDragDisabled]="stage >= 2 ? true : false" *ngFor="let preference of preferences" cdkDrag>{{preference["title"]}}</div>
+        </div>
+    </div>
+    <div class="btn-align-mobile">
+        <button color="primary" [disabled]="getDisable()" mat-flat-button (click)="onSubmit()">
+        Save Preferences
+      </button>
     </div>
 </div>
