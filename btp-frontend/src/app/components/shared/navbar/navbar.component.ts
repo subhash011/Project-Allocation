@@ -29,9 +29,42 @@ export class NavbarComponent implements OnInit, DoCheck {
   programsVisible: boolean = false;
   curRole;
   ngDoCheck(): void {
+    // if (
+    //   (localStorage.getItem("role") == "admin" ||
+    //     localStorage.getItem("role") == "faculty") &&
+    //   localStorage.getItem("isLoggedIn") == "true"
+    // ) {
+    //   this.userService.getFacultyPrograms().subscribe((data) => {
+    //     if (data["status"] == "success") {
+    //       this.programs = data["programs"];
+    //       if (this.programs.length > 0) {
+    //         this.programsVisible = true;
+    //       }
+    //     } else {
+    //       let snackBarRef = this.snackBar.open(
+    //         "Session Timed Out! Please Sign in Again!",
+    //         "Ok",
+    //         {
+    //           duration: 3000,
+    //         }
+    //       );
+    //       snackBarRef.afterDismissed().subscribe(() => {
+    //         this.login.signOut();
+    //       });
+    //       snackBarRef.onAction().subscribe(() => {
+    //         this.login.signOut();
+    //       });
+    //     }
+    //   });
+    // }
+  }
+
+  ngOnInit() {
+    if (localStorage.getItem("isLoggedIn") == "true") {
+      this.role = localStorage.getItem("role");
+    }
     if (
-      (localStorage.getItem("role") == "admin" ||
-        localStorage.getItem("role") == "faculty") &&
+      (this.role == "faculty" || this.role == "admin") &&
       localStorage.getItem("isLoggedIn") == "true"
     ) {
       this.userService.getFacultyPrograms().subscribe((data) => {
@@ -57,39 +90,6 @@ export class NavbarComponent implements OnInit, DoCheck {
         }
       });
     }
-  }
-
-  ngOnInit() {
-    // if (localStorage.getItem("isLoggedIn") == "true") {
-    //   this.role = localStorage.getItem("role");
-    // }
-    // if (
-    //   this.role == "faculty" ||
-    //   (this.role == "admin" && localStorage.getItem("isLoggedIn") == "true")
-    // ) {
-    //   this.userService.getFacultyPrograms().subscribe((data) => {
-    //     if (data["status"] == "success") {
-    //       this.programs = data["programs"];
-    //       if (this.programs.length > 0) {
-    //         this.programsVisible = true;
-    //       }
-    //     } else {
-    //       let snackBarRef = this.snackBar.open(
-    //         "Session Timed Out! Please Sign in Again!",
-    //         "Ok",
-    //         {
-    //           duration: 3000,
-    //         }
-    //       );
-    //       snackBarRef.afterDismissed().subscribe(() => {
-    //         this.login.signOut();
-    //       });
-    //       snackBarRef.onAction().subscribe(() => {
-    //         this.login.signOut();
-    //       });
-    //     }
-    //   });
-    // }
   }
 
   getSuperAdminURL() {
