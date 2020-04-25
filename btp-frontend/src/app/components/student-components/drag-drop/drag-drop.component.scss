@@ -154,7 +154,7 @@ h2 {
     font-size: 14px;
 }
 
-@media (min-width: 300px) and (max-width: 600px) {
+@media (min-width: 300px) and (max-width: 768px) {
     .primary-drag {
         display: none;
     }
@@ -162,6 +162,7 @@ h2 {
         display: block;
         overflow-y: scroll;
         height: 100%;
+        text-align: center;
     }
     .example-container {
         width: 400px;

@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/btp-frontend",
+                        "outputPath": "C:\\Users\\subha\\Desktop\\Subhash\\BTech Proj Alloc\\backend\\btp-frontend",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
