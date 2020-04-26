@@ -17,6 +17,7 @@ mat-sidenav {
 
 mat-sidenav-content {
     position: relative;
+    overflow-x: hidden;
     // margin-right: 30%;
 }
 
