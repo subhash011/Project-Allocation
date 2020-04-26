@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-    <mat-sidenav #sidenav mode="side" opened position="end" role="navigation" [disableClose]="true" [fixedInViewport]="true" [fixedBottomGap]="0">
+    <mat-sidenav #sidenav mode="side" opened position="end" role="navigation" [disableClose]="true">
         <mat-toolbar class="mat-elevation-z6" color="accent">
             <span class="fill-remaining-space"></span>
 
@@ -7,7 +7,12 @@
             <ng-template #programsHeading>
                 <h1 class="fill-remaining-space">My Programs</h1>
             </ng-template>
-
+            <div class="mobile">
+                <span class="example-spacer"></span>
+                <button mat-button (click)="sidenav.toggle()">
+                <mat-icon>list</mat-icon>
+              </button>
+            </div>
         </mat-toolbar>
         <app-sidenav [projects]="projects" [routeParams]="routeParams" [programs]="programs" [empty]="empty" (projectClicked)="displayProject($event)" [programs_mode]="programs_mode" (addButton)="addProject($event)" (programClicked)="displayProgram($event)"></app-sidenav>
     </mat-sidenav>
@@ -17,9 +22,9 @@
             <span class="example-spacer"></span>
             <h1>Welcome {{ name }}</h1>
             <span class="example-spacer"></span>
-            <button mat-button (click)="sidenav.toggle()" ><mat-icon>list</mat-icon></button>
+            <button mat-button (click)="sidenav.toggle()"><mat-icon>list</mat-icon></button>
         </mat-toolbar>
         <!-- <app-timeline *ngIf="!programs_mode && !projectClicked" [program]="stream"></app-timeline> -->
-        <app-content [student_list]="student_list" [adminStage]="adminStage" [routeParams]="routeParams" [add]="add" [empty]="empty" [programs_mode]="programs_mode" [program_details]="program_details" [project]="project" [stream]="stream" ></app-content>
+        <app-content [student_list]="student_list" [adminStage]="adminStage" [routeParams]="routeParams" [add]="add" [empty]="empty" [programs_mode]="programs_mode" [program_details]="program_details" [project]="project" [stream]="stream"></app-content>
     </mat-sidenav-content>
 </mat-sidenav-container>

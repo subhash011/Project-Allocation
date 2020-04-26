@@ -29,24 +29,11 @@ export class NavbarComponent implements OnInit, DoCheck {
   programsVisible: boolean = false;
   curRole;
   ngDoCheck(): void {
-<<<<<<< HEAD
     // if (
     //   (localStorage.getItem("role") == "admin" ||
     //     localStorage.getItem("role") == "faculty") &&
     //   localStorage.getItem("isLoggedIn") == "true"
     // ) {
-=======
-    // if (localStorage.getItem("isLoggedIn") == "true") {
-    //   this.role = localStorage.getItem("role");
-    //   this.curRole = this.role;
-    // }
-    // if (
-    //   (this.curRole == "admin" ||
-    //   this.curRole == "faculty") &&
-    //     localStorage.getItem("isLoggedIn") == "true"
-    // ) {
-    //   this.role = this.curRole;
->>>>>>> master
     //   this.userService.getFacultyPrograms().subscribe((data) => {
     //     if (data["status"] == "success") {
     //       this.programs = data["programs"];
@@ -77,13 +64,8 @@ export class NavbarComponent implements OnInit, DoCheck {
       this.role = localStorage.getItem("role");
     }
     if (
-<<<<<<< HEAD
       (this.role == "faculty" || this.role == "admin") &&
       localStorage.getItem("isLoggedIn") == "true"
-=======
-      (this.role == "faculty" ||
-      this.role == "admin" )&& localStorage.getItem("isLoggedIn") == "true"
->>>>>>> master
     ) {
       this.userService.getFacultyPrograms().subscribe((data) => {
         if (data["status"] == "success") {
