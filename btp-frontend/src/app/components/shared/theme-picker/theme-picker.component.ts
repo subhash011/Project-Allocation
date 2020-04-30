@@ -50,6 +50,9 @@ export class ThemePickerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if(!localStorage.getItem("current-theme")){
+      localStorage.setItem("current-theme","indigo-pink");
+    }
     this.installTheme(localStorage.getItem("current-theme"));
   }
 

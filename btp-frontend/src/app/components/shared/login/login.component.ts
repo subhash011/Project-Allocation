@@ -22,7 +22,11 @@ export class LoginComponent implements OnInit {
     private loadingBar: LoadingBarService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if(!localStorage.getItem("isLoggedIn")){
+      localStorage.setItem("isLoggedIn","false");
+    }
+  }
   userActivity() {
     if (localStorage.getItem("isLoggedIn") == "true") {
       this.signOut();
@@ -31,10 +35,7 @@ export class LoginComponent implements OnInit {
     }
   }
   getCondition() {
-    if (
-      localStorage.getItem("isLoggedIn") == "false" ||
-      localStorage.length == 0
-    ) {
+    if (localStorage.getItem("isLoggedIn") == "false") {
       return false;
     } else {
       return true;
