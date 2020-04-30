@@ -23,7 +23,6 @@ export class ThemePickerComponent implements OnInit {
       accent: "#E91E63",
       name: "indigo-pink",
       isDark: false,
-      // isDefault: true,
     },
     {
       primary: "#E91E63",
