@@ -75,7 +75,11 @@ export class LoginComponent implements OnInit {
   }
 
   signOut(): void {
-    this.authService.signOut();
+    this.authService.signOut().then(() => {
+      this.snackBar.open("Signed Out", "Ok", {
+        duration: 3000,
+      });
+    });
     localStorage.setItem("isLoggedIn", "false");
     localStorage.setItem("role", "none");
     localStorage.removeItem("user");

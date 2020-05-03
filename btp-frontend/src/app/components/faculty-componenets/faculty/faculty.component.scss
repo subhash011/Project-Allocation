@@ -1,27 +1,47 @@
 mat-sidenav-container {
-  position: fixed;
-  height: 100%;
-  min-height: 100%;
-  width: 100%;
-  min-width: 100%;
+    position: absolute;
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    min-width: 100%;
+    overflow-x: hidden;
 }
 
 mat-sidenav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30%;
+    // position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
 }
 
 mat-sidenav-content {
-  position: relative;
-  margin-right: 30%;
+    position: relative;
+    // margin-right: 30%;
+}
+
+.example-spacer {
+    // flex: 2 1 auto;
+    flex-grow: 1;
 }
 
 .fill-remaining-space {
-  flex: 1 auto 1;
+    flex: 1 auto 1;
 }
 
 mat-toolbar {
-  justify-content: center;
+    justify-content: center;
+}
+
+.mobile {
+    display: none;
+}
+
+@media only screen and (max-width:768px) {
+    mat-sidenav {
+        width: 100%;
+    }
+    .mobile {
+        display: block;
+    }
 }

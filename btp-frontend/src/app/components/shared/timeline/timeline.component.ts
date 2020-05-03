@@ -89,6 +89,7 @@ export class TimelineComponent implements OnInit, OnChanges {
                 );
                 this.startDate = new Date(this.admins.startDate);
                 this.startCompleted = true;
+                this.dates = [];
                 this.stage = this.admins.stage;
                 for (let i = 0; i <= this.stage; i++) {
                   this.dates.push(new Date(this.admins["deadlines"][i]));
@@ -211,6 +212,7 @@ export class TimelineComponent implements OnInit, OnChanges {
                 this.startDate = new Date(this.admins.startDate);
                 this.startCompleted = true;
                 this.stage = this.admins.stage;
+                this.dates = [];
                 for (let i = 0; i <= this.stage; i++) {
                   this.dates.push(new Date(this.admins["deadlines"][i]));
                   if (this.stage == 0 && i == 0) {
