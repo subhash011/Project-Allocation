@@ -1,3 +1,4 @@
+import { HelpComponent } from "./components/shared/help/help.component";
 import { AdminComponent } from "./components/faculty-componenets/admin/admin.component";
 import { SuperAdminComponent } from "./components/shared/super-admin/super-admin.component";
 import { RefreshComponent } from "./components/faculty-componenets/refresh/refresh.component";
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: "super", component: SuperAdminComponent },
   { path: "admin/:id", component: AdminComponent },
   { path: "super_admin/:id", component: SuperAdminComponent },
+  { path: "help", component: HelpComponent },
 ];
 
 @NgModule({

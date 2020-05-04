@@ -40,7 +40,10 @@ router.get("/:id", (req, res) => {
                                     };
                                     student_projects.push(details);
                                 }
-                                res.json(student_projects);
+                                res.json({
+                                    message: "success",
+                                    result: student_projects,
+                                });
                             });
                     }
                 });
@@ -91,12 +94,18 @@ router.get("/preference/:id", (req, res) => {
                                     return new_details;
                                 })
                                 .catch((err) => {
-                                    res.json(err);
+                                    res.json({
+                                        message: "error",
+                                        result: err,
+                                    });
                                 })
                             );
                         }
                         Promise.all(promises).then((result) => {
-                            res.json(result);
+                            res.json({
+                                message: "success",
+                                result: result,
+                            });
                         });
                     }
                 });

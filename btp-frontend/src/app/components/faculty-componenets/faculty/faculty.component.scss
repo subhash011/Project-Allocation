@@ -21,6 +21,14 @@ mat-sidenav-content {
     // margin-right: 30%;
 }
 
+mat-sidenav-content::-webkit-scrollbar {
+    display: none;
+}
+
+mat-sidenav-content {
+    -ms-overflow-style: none;
+}
+
 .example-spacer {
     // flex: 2 1 auto;
     flex-grow: 1;
