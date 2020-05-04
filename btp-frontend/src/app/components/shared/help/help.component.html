@@ -1,14 +1,101 @@
 <mat-tab-group [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
     <mat-tab label="Student">
         <div class="container">
-            <iframe class="video" width="967" height="544" src="https://www.youtube.com/embed/Fny2NCDX73s" frameborder="0" allowfullscreen></iframe>
+            <h1 class="head"><b><u>Student's guide for the application.</u></b></h1>
+            <video class="video" #helpvid controls autoplay name="media">
+                <source src="../../../assets/Student.mp4" type="video/mp4">
+            </video>
+            <!-- <iframe #helpvid class="video" width="967" height="544" src="../../../assets/Student.mp4" frameborder="0" allowfullscreen></iframe> -->
             <br>
+            <div class="timestamps">
+                <h4>Timestamps : </h4>
+                <p><a class="link" id="viewpref" (click)="gotost(1)">1. View preferences, check the timeline and select a theme</a></p><br>
+                <p><a class="link" id="editpref" (click)="gotost(2)">2. Edit preferences</a></p><br>
+                <p><a class="link" id="editProfile" (click)="gotost(3)">3. Edit profile</a></p>
+            </div>
         </div>
     </mat-tab>
     <mat-tab label="Faculty/Admin">
 
     </mat-tab>
     <mat-tab label="Super Admin">
+        <div class="container">
+            <h1 class="head"><b><u>Super admin's guide for the application.</u></b></h1>
+            <video class="video" #helpvidsa controls autoplay name="media">
+                <source src="../../../assets/SuperAdminVideo.mp4" type="video/mp4">
+            </video>
+            <!-- <iframe #helpvid class="video" width="967" height="544" src="../../../assets/Student.mp4" frameborder="0" allowfullscreen></iframe> -->
+            <br>
+            <div class="timestamps">
+                <h4>Timestamps : </h4>
+                <p><a class="link" id="viewpref" (click)="gotosa(1)">1. Faculty guide.</a></p><br>
+                <p><a class="link" id="editpref" (click)="gotosa(2)">2. Student guide.</a></p><br>
+                <p><a class="link" id="editProfile" (click)="gotosa(3)">3. Project guide</a></p><br>
+                <p><a class="link" id="editProfile" (click)="gotosa(4)">4. Streams and programs</a></p>
+            </div>
+        </div>
+        <hr>
+        <div class="instructions">
+            <h1 class="supertext"><b><u>The below text is the information on how to add streams or programs.</u></b></h1>
+        </div>
 
+            <pre>
+
+                Streams Tab : This tab is for adding any new streams in the institute.
+
+                        The “+” button on the top of the table can be used to add a new branch and the delete button can be used to remove the branch.
+                    
+                Programs Tab : This tab is for adding any new programs within the provided streams. This tab requires 
+
+                        Mapping to the roll.no of the students of that particular program. The “+” button on the top of the table can be used to add a new program and the delete 
+                        button can be used to remove the program.
+
+                Explanation:
+	
+                    Now let us consider that IIT Palakkad has four core streams
+                        1. Computer Science and Engineering(CSE)
+                        2. Electrical Engineering(EE)
+                        3. Mechanical Engineering(ME)
+                        4. Civil Engineering(CE)
+
+                    The above four streams must be added one by one in the streams tab:
+
+                    For CSE:  
+
+                        name : Computer Science and Engineering
+                        short :  CSE
+                        Similarly add all the other streams.
+                    
+
+                    
+                    Now these streams further contain many programs such as UG, PG etc. For now let us consider that there are only two programs UG and PG.
+                    
+                    These programs will have to be registered under the programs tab.
+                        Click on the “+” button to add programs  and in the pop-up fill in the required details.
+                        Example:
+                            Let us consider the UG and PG programs must be added in the CSE stream.
+                            Now click on “+” button, In the pop-up the fill the required details,
+                            
+                    For UG:
+
+                        Name: UG-Computer Science and Engineering or any other suitable name.
+                        Short: UG-CSE or any other suitable name. (allowed characters are letters, underscore and hyphen).
+                        Map: This field needs a simple regex to identify the students of that particular program from their roll number.
+                        Example:
+                            For UG-CSE the current roll numbers are 111801***
+                            So here the map would be 0|11
+                            For UG-EE the current roll numbers are 121801***
+                            So here the map would be 0|12
+                        Split up of the map:
+                        The numbers to the left of the pipe must tell the number of characters in the roll number before the occurrence of the unique pattern for that 
+                        program.
+                        For UG-CSE, UG-EE, UG-ME, UG-CE the roll numbers are 11…, 12…., 13…., 10… respectively the unique patterns are 11,12,13,10 respectively and the 
+                        number of characters before that is 0 so the map for each program would be 0|11, 0|12, 0|13, 0|10 respectively.
+
+                        Similarly the CSE program for PG can also be added.
+
+
+            </pre>
     </mat-tab>
+    
 </mat-tab-group>
