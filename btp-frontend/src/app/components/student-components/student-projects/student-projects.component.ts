@@ -38,7 +38,7 @@ export class StudentProjectsComponent implements OnInit {
             duration: 3000,
           });
         } else {
-          this.projects = details;
+          this.projects = details["result"];
         }
         this.loadingBar.stop();
       });
@@ -54,7 +54,7 @@ export class StudentProjectsComponent implements OnInit {
             duration: 3000,
           });
         } else {
-          this.preferences = details;
+          this.preferences = details["result"];
         }
         this.loadingBar.stop();
       });

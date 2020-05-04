@@ -135,7 +135,7 @@ export class DragDropComponent implements OnInit {
           return null;
         }
         if (details) {
-          this.preferences = details;
+          this.preferences = details["result"];
           tempPref = this.preferences.map((val) => val._id);
           return details;
         }
@@ -146,7 +146,7 @@ export class DragDropComponent implements OnInit {
             .getAllStudentProjects()
             .toPromise()
             .then((projects) => {
-              tempArray = projects;
+              tempArray = projects["result"];
               for (const project of tempArray) {
                 if (!tempPref.includes(project._id)) {
                   this.projects.push(project);

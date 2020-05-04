@@ -273,7 +273,7 @@ router.delete("/faculty/:id", (req, res) => {
                                 students_id = projects.map((val) => val.students_id);
                                 var students = [];
                                 for (const ids of students_id) {
-                                    var studentid = [String(ids)];
+                                    var studentid = ids.map((val) => val.toString());
                                     students = [...students, ...studentid];
                                 }
                                 students_id = students.unique();
