@@ -246,8 +246,8 @@ export class SuperAdminComponent implements OnInit {
     let dialogRef = this.dialog.open(AddMapComponent, {
       width: "40%",
       data: {
-        heading: "Branch",
-        message: "Are you sure you want to proceed to add branch",
+        heading: "Stream",
+        message: "Are you sure you want to proceed to add stream",
         add: "branch",
       },
     });
@@ -278,7 +278,7 @@ export class SuperAdminComponent implements OnInit {
       height: "200px",
       data: {
         heading: "Confirm Deletion",
-        message: "Are you sure you want to remove the branch",
+        message: "Are you sure you want to remove the stream",
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -299,7 +299,7 @@ export class SuperAdminComponent implements OnInit {
               );
             } else {
               this.ngOnInit();
-              this.snackBar.open("Removed Program", "Ok", {
+              this.snackBar.open("Removed Stream", "Ok", {
                 duration: 3000,
               });
             }

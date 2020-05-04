@@ -3,20 +3,20 @@
 <mat-dialog-content [formGroup]="addForm" novalidate>
     <div class="row">
         <mat-form-field class="full-width">
-            <input matInput placeholder="Branch name" formControlName="full" />
+            <input matInput placeholder="Stream/Program name" formControlName="full" />
             <mat-error *ngIf="addForm.controls['full'].hasError('required')">
-                Branch name is <strong>required</strong>
+                Stream/Program name is <strong>required</strong>
             </mat-error>
         </mat-form-field>
     </div>
     <div class="row">
         <mat-form-field class="full-width">
-            <input matInput placeholder="Branch Abbrevation" formControlName="short" />
+            <input matInput placeholder="Stream/Program Abbrevation" formControlName="short" />
             <mat-error *ngIf="addForm.controls['short'].hasError('required')">
-                Branch Abbrevation is <strong>required</strong>
+                Stream/Program Abbrevation is <strong>required</strong>
             </mat-error>
             <mat-error *ngIf="addForm.controls['short'].errors?.pattern">
-                Branch Abbrevation can only consist of <strong>letters</strong>
+                Stream/Program Abbrevation can only consist of <strong>letters</strong>
             </mat-error>
         </mat-form-field>
     </div>
