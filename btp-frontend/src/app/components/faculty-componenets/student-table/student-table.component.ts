@@ -48,14 +48,6 @@ export class StudentTableComponent implements OnInit {
                 this.router.navigate([decodeURI(this.location.path())]);
               });
           });
-
-          snackBarRef.onAction().subscribe(() => {
-            this.router
-              .navigateByUrl("/refresh", { skipLocationChange: true })
-              .then(() => {
-                this.router.navigate([decodeURI(this.location.path())]);
-              });
-          });
         }
         else{
 

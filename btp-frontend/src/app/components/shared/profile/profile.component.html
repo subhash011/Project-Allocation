@@ -42,12 +42,14 @@
                                     <input matInput placeholder="name" formControlName="name" />
                                 </mat-card-title>
                             </mat-form-field>
+
                             <p class="example-full-width">
                                 <strong>Stream</strong> : {{ user_info.stream }}
                             </p>
                             <p class="example-full-width">
                                 <strong>Email-ID</strong> : {{ user_info.email }}
                             </p>
+                            
                             <mat-card-actions>
                                 <button mat-raised-button color="primary" (click)="updateFacultyProfile()">
                   Update Profile

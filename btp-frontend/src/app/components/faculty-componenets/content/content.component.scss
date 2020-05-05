@@ -3,10 +3,9 @@
 }
 
 .form-card {
-    padding-top: 12%;
+    padding-top: 6%;
     padding-left: 15%;
     padding-right: 15%;
-    //   padding-bottom: -2%;
 }
 
 mat-card-title {
@@ -21,15 +20,10 @@ mat-form-field {
 }
 
 .add-card {
-    //   width: 100%;
-    //   margin-top: 100px;
-    //   margin-left: 600px;
-    //   margin-right: 600px;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    // padding: 5% ;
 }
 
 .submit_button {
@@ -49,13 +43,11 @@ mat-form-field {
 
 .container-add {
     height: 90%;
-    background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
 }
 
 .container-edit {
-    height: 800px;
+    height: 900px;
     overflow: hidden;
-    background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
 }
 
 .project_tab {
@@ -70,7 +62,6 @@ mat-form-field {
 }
 
 .project-container {
-    // margin-top: 12%;
     padding-top: 12%;
     padding-left: 15%;
     padding-right: 15%;
