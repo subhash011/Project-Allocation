@@ -149,6 +149,7 @@ export class TimelineComponent implements OnInit, OnChanges {
                   if (this.stage == 3 && i + 1 == 4) {
                     this.message =
                       "Project allocation will be done within this period";
+                    this.next = null;
                     this.stageThreeCompleted = true;
                     this.stageThree = 100;
                     this.stageOneCompleted = true;
@@ -278,6 +279,7 @@ export class TimelineComponent implements OnInit, OnChanges {
                     this.stageThree = 100;
                     this.message =
                       "Project allocation will be done within this period";
+                    this.next = null;
                     this.stageOneCompleted = true;
                     this.stageOne = 100;
                     this.stageTwoCompleted = true;
