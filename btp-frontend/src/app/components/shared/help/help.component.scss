@@ -8,6 +8,43 @@ code {
     background: rgba(0, 0, 0, 0.03)
 }
 
+.head {
+    margin-top: 2%;
+}
+
+
 .video {
+    display: inline-block;
+    width: 967px;
+    height: 544px;
+}
+
+a {
+    color:blue;
+}
+
+a:hover{
+    cursor: pointer;
+    color: green;
+}
+
+a:active {
+    color: red;
+}
+
+.timestamps {
+    margin-top: 2%;
+    text-align: left;
+    display: inline-block;
+}
+
+.instructions {
+    text-align: center;
+}
+.supertext {
+    display: inline-block;
+}
+
+p {
     display: inline-block;
 }
