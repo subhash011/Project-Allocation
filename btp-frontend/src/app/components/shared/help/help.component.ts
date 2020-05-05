@@ -33,4 +33,39 @@ export class HelpComponent implements OnInit {
       video.currentTime = 67;
     }
   }
+
+  gotofa(i){
+    const video = this.helpsa.nativeElement;
+    if(i == 1){
+      video.currentTime = 0;
+    } else if(i == 2){
+      video.currentTime = 26;
+    } else if(i == 3) {
+      video.currentTime = 51;
+    } 
+    else if(i==4){
+      video.currentTime=101;
+    }
+    else {
+      video.currentTime = 128;
+    }
+  }
+
+  gotoad(i){
+    const video = this.helpsa.nativeElement;
+    if(i == 1){
+      video.currentTime = 0;
+    } else if(i == 2){
+      video.currentTime = 91;
+    } else if(i == 3) {
+      video.currentTime = 104;
+    } 
+    else {
+      video.currentTime = 137;
+    }
+  }
+
+
+
+
 }
