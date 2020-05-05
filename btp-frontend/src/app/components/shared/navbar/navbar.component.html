@@ -55,6 +55,11 @@
           </button>
                 </mat-menu>
             </div>
+            <div *ngIf="isSuperAdmin()">
+                <button mat-button routerLink="/help">
+          Help
+        </button>
+            </div>
         </div>
         <div class="flex-grow-right"></div>
         <app-theme-picker class="primary-toolbar"></app-theme-picker>
