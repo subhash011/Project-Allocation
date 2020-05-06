@@ -173,10 +173,10 @@
             <button class="searchButton" href="#">
         <i class="material-icons">search</i>
       </button>
-        </div>
+    </div>
         <div class="display">
             <div class="table mat-elevation-z8">
-                <table mat-table [dataSource]="projects | filter: project" class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource | filter: project" class="mat-elevation-z8">
 
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>

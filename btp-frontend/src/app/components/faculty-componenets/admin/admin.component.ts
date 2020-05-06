@@ -857,7 +857,9 @@ export class AdminComponent implements OnInit {
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    var numRows;
+    if(this.dataSource)
+       numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
@@ -865,7 +867,8 @@ export class AdminComponent implements OnInit {
   masterToggle() {
     this.isAllSelected() ?
         this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+        this.dataSource ?
+        this.dataSource.data.forEach(row => this.selection.select(row)) : 0;
   }
 
   /** The label for the checkbox on the passed row */
@@ -876,6 +879,13 @@ export class AdminComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
+
+  getSelectedProjects(){
+
+    const selectedProjects = this.selection.selected;
+    console.log(selectedProjects);
+
+  }
 
 
 
