@@ -311,6 +311,30 @@ export class UserService {
     return this.http.post(this.url, obj, httpOptions);
   }
 
+  setStudentCount(cap){
+
+    const obj = {
+      cap: cap,
+    };
+
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "admin/set_StudentCount/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.post(this.url, obj, httpOptions);
+
+
+  }
+
+
+
   setPrograms(programs) {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -543,4 +567,8 @@ export class UserService {
     this.url = this.base_url + "allDetails";
     return this.http.get(this.url);
   }
+
+
+
+
 }
