@@ -645,29 +645,14 @@ export class AdminComponent implements OnInit {
                 .allocateMail(result["result"], this.programName)
                 .subscribe((result) => {
                   if (result["message"] == "success") {
-                    this.userService
-                      .updateStage(this.stage_no + 1)
-                      .subscribe((data) => {
-                        if (data["status"] == "success") {
-                          this.loadingBar.stop();
-                          this.snackBar.open(
-                            "Allocation completed successfully and mails have been sent",
-                            "Ok",
-                            {
-                              duration: 3000,
-                            }
-                          );
-                        } else {
-                          this.loginService.signOut();
-                          this.snackBar.open(
-                            "Session Timed Out! Please Sign-In again",
-                            "Ok",
-                            {
-                              duration: 3000,
-                            }
-                          );
-                        }
-                      });
+                    this.loadingBar.stop();
+                    this.snackBar.open(
+                      "Allocation completed successfully and mails have been sent",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
                   } else {
                     this.loadingBar.stop();
                     this.snackBar.open(
@@ -953,7 +938,11 @@ export class AdminComponent implements OnInit {
   getSelectedProjects(){
 
     const selectedProjects = this.selection.selected;
+
+    
+
     console.log(selectedProjects);
+    this.ngOnInit();
 
   }
 

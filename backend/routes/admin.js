@@ -746,7 +746,6 @@ router.get("/validateAllocation/:id",(req,res)=>{
                                     for(const project of projects){
                                         count += project.studentIntake;
                                     }
-                                    console.log(count);
 
                                     if(count >= admin.studentCount){
 
