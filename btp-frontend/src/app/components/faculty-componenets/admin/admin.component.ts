@@ -461,57 +461,43 @@ export class AdminComponent implements OnInit {
     this.loadingBar.start();
     this.projectService.startAllocation().subscribe((data) => {
       if (data["message"] == "success") {
-        this.userService.fetchAllMails().subscribe((result) => {
-          if (result["message"] == "success") {
-            this.mailer
-              .allocateMail(result["result"], this.programName)
-              .subscribe((result) => {
-                if (result["message"] == "success") {
-                  // this.userService
-                  //   .updateStage(this.stage_no + 1)
-                  //   .subscribe((data) => {
-                  //     if (data["status"] == "success") {
-                  //       this.loadingBar.stop();
-                  //       this.snackBar.open(
-                  //         "Allocation completed successfully and mails have been sent",
-                  //         "Ok",
-                  //         {
-                  //           duration: 3000,
-                  //         }
-                  //       );
-                  //     } else {
-                  //       this.loginService.signOut();
-                  //       this.snackBar.open(
-                  //         "Session Timed Out! Please Sign-In again",
-                  //         "Ok",
-                  //         {
-                  //           duration: 3000,
-                  //         }
-                  //       );
-                  //     }
-                  //   });
-                } else {
-                  this.loadingBar.stop();
-                  this.snackBar.open(
-                    "Allocation completed but mails not sent",
-                    "Ok",
-                    {
-                      duration: 3000,
-                    }
-                  );
-                }
-              });
-          } else {
+          if(this.stage_no == 3){
+              this.userService
+            .updateStage(this.stage_no + 1)
+            .subscribe((data) => {
+              if (data["status"] == "success") {
+                this.loadingBar.stop();
+                this.snackBar.open(
+                  "Allocation completed successfully",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
+              } else {
+                this.loginService.signOut();
+                this.snackBar.open(
+                  "Session Timed Out! Please Sign-In again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
+              }
+            });
+          }
+          else{
+
             this.loadingBar.stop();
             this.snackBar.open(
-              "Unable to fetch mails! If the error persists re-authenticate.",
+              "Allocation completed successfully",
               "Ok",
               {
                 duration: 3000,
               }
             );
+
           }
-        });
       } 
       else if (data["message"] == "invalid-token") {
         this.loadingBar.stop();
