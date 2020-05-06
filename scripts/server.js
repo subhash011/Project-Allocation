@@ -16,12 +16,12 @@ app.use(cors());
 app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
-var mongoConnect = process.env.MONGO_URL_LOCAL_1;
+var mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
 // mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/Testing
 
 mongoose
-    .connect('mongodb://localhost:27017/Testing', {
+    .connect('mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false/ProjectAllocationTest', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
@@ -45,7 +45,7 @@ app.use("/faculty", faculty);
 const allocation = require("./routes/allocation");
 app.use("/allocation", allocation);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));

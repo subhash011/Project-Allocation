@@ -78,9 +78,8 @@ router.post("/start", (req, res) => {
                 return val.equals(firstPreference.toString());
             });
             if (!firstPreference) {
-                free.shift();
-                curStudent = free[0];
-                firstPreference = curStudent.projects_preference[0];
+                curStudent.projects_preference.shift();
+                continue;
             }
             if (!allocationStatus[firstPreference]) {
                 allocationStatus[firstPreference] = [];
