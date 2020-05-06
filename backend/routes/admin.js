@@ -720,4 +720,100 @@ router.post("/set_StudentCount/:id",(req,res)=>{
 
 })
 
+
+router.get("/validateAllocation/:id",(req,res)=>{
+
+    const id = req.params.id;
+    const idToken = req.authorization.headers;
+
+    Faculty.findOne({google_id:{id:id,idToken:idToken}})
+        .then(faculty=>{
+
+            if(facutly){
+
+                Admin.findOne({admin_id:faculty._id})
+                    .then(admin=>{
+
+                        if(admin){
+
+                            Project.find({stream:admin.stream})
+                                .then(projects=>{
+
+                                    var count = 0;
+
+                                    for(const project of projects){
+                                        count += project.studentIntake;
+                                    }
+
+                                    if(count >= admin.studentCap){
+
+                                        res.json({
+                                            status:"success",
+                                            msg:"Allocation can start"
+                                        })
+
+                                    }
+
+                                    else{
+                                        res.json({
+                                            status:"fail",
+                                            result:null
+                                        })
+                                    }
+
+
+                                })
+                           
+
+                        }
+
+                        else{
+
+
+                            res.json({
+                                status:"fail",
+                                result:null
+                            })
+
+                        }
+
+
+
+                    })
+                    .catch(err=>{
+                        res.json({
+                            status:"fail",
+                            result:null
+                        })
+
+                    })
+
+            }
+            else{
+
+                res.json({
+                    status:"fail",
+                    result:null
+                })
+
+            }
+
+
+        })
+        .catch(err=>{
+            res.json({
+                status:"fail",
+                result:null
+            })
+
+        })
+
+
+
+
+
+})
+
+
+
 module.exports = router;
