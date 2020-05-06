@@ -10,6 +10,7 @@ export class HelpComponent implements OnInit {
   @ViewChild('helpvidsa',{static:false}) helpsa : ElementRef
   constructor() {}
   background = "primary";
+  index;
   ngOnInit() {}
   gotost(i){
     const video = this.help.nativeElement;

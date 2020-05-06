@@ -1,4 +1,4 @@
-<mat-tab-group [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
+<mat-tab-group [(selectedIndex)]="index" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
     <mat-tab label="Overview">
 
 
@@ -146,13 +146,11 @@
                 </li>
             </ul>
             <br>
-            </mat-card-content>
 
             
             <h2><strong>2 &nbsp;&nbsp;  Stages</strong></h2>
             <hr>
             <br>
-            <mat-card-content>
               <p>
                 The project allocation consists of four stages namely Creating Projects, Student Preference, Faculty Preference and Project Allocation. This is a quick overview as to understand the process.
               </p>
@@ -234,8 +232,10 @@
             <pre>
 
             </pre>
+            <mat-card-actions>
+               For more information on the project allocation algorithm and it's implementation you can download the report form the given link : <a href="../../../../assets/BTP_Report.pdf" download>Report</a>
+            </mat-card-actions>
           </mat-card>
-
 
     </mat-tab>
     <mat-tab label="Student">
@@ -256,7 +256,7 @@
     </mat-tab>
     <mat-tab label="Faculty/Admin">
 
-        <mat-tab-group [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
+        <mat-tab-group *ngIf="index == 2" [selectedIndex]="0" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
 
             <mat-tab  label="Faculty">
                 <div class="container">
@@ -329,15 +329,16 @@
             </div>
         </div>
         <hr>
-        
+
 
         <mat-card class="stages-card">
-            <div class="instructions">
-                <h1 class="supertext"><b>The below text is the information on how to add streams or programs.</b></h1>
-            </div>
-            <hr>
-            <br>
+            
             <mat-card-content>
+                <div class="instructions">
+                    <h1 class="supertext"><b>The below text is the information on how to add streams or programs.</b></h1>
+                </div>
+                <hr>
+                <br>
             <pre>
             <b><u>Streams Tab</u></b> : This tab is for adding any new streams in the institute.
 
