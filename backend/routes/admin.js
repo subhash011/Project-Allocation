@@ -92,6 +92,7 @@ router.get("/info/:id", (req, res) => {
                             studentCap: admin.student_cap,
                             stream: admin.stream,
                             studentsPerFaculty: admin.studentsPerFaculty,
+                            studentCount: admin.studentCount
                         });
                     } else {
                         res.json({
@@ -646,21 +647,23 @@ router.get("/fetchAllMails/:id", (req, res) => {
 router.post("/set_StudentCount/:id",(req,res)=>{
 
     const id = req.params.id;
-    const idToken = req.authorization.headers;
+    const idToken = req.headers.authorization;
     const cap = req.body.cap;
 
 
     Faculty.findOne({google_id:{id:id,idToken:idToken}})
         .then(faculty=>{
 
-            if(facutly){
+            if(faculty){
 
                 Admin.findOne({admin_id:faculty._id})
                     .then(admin=>{
 
+                        console.log(admin)
+
                         if(admin){
 
-                            admin.studentCap = cap;
+                            admin.studentCount = cap;
 
                             admin.save()
                                 .then(result=>{

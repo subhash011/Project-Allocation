@@ -111,7 +111,7 @@ export class AdminComponent implements OnInit {
     this.seventhFormGroup = this.formBuilder.group({
       seventhCtrl: [this.studentsPerFaculty],
     });
-    this.seventhFormGroup = this.formBuilder.group({
+    this.eighthFormGroup = this.formBuilder.group({
       eighthCtrl: [this.studentCount],
     });
   }
@@ -135,10 +135,6 @@ export class AdminComponent implements OnInit {
           this.stepper.next();
           this.stepper.next();
           this.stepper.next();
-            this.snackBar.open("Please go to the Project tab to start the Allocation", "Ok", {
-              duration: 3000,
-            });
-          
         }
       }
     });
@@ -152,6 +148,7 @@ export class AdminComponent implements OnInit {
         this.dateSet = data["deadlines"];
         this.projectCap = data["projectCap"];
         this.studentCap = data["studentCap"];
+        this.studentCount = data["studentCount"];
         this.studentsPerFaculty = data["studentsPerFaculty"];
         this.dateSet = this.dateSet.map((date) => {
           return new Date(date);
@@ -812,7 +809,7 @@ export class AdminComponent implements OnInit {
         .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
         .subscribe((data) => {
           if (data["status"] == "success") {
-            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+            this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
             this.ngOnInit();
@@ -844,7 +841,7 @@ export class AdminComponent implements OnInit {
         .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
         .subscribe((data) => {
           if (data["status"] == "success") {
-            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+            this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
             this.ngOnInit();
@@ -860,7 +857,7 @@ export class AdminComponent implements OnInit {
           }
         });
     } else {
-      let snackBarRef = this.snackBar.open(
+      this.snackBar.open(
         "Please enter a valid number",
         "Ok",
         {
@@ -872,10 +869,13 @@ export class AdminComponent implements OnInit {
 
   setStudentCount(){
 
+    console.log(this.eighthFormGroup.get("eighthCtrl").value);
+
     if (this.eighthFormGroup.controls["eighthCtrl"].value > 0) {
       this.userService
         .setStudentCount(this.eighthFormGroup.get("eighthCtrl").value)
         .subscribe((data) => {
+          console.log(data);
           if (data["status"] == "success") {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
