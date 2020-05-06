@@ -659,7 +659,6 @@ router.post("/set_StudentCount/:id",(req,res)=>{
                 Admin.findOne({admin_id:faculty._id})
                     .then(admin=>{
 
-                        console.log(admin)
 
                         if(admin){
 
