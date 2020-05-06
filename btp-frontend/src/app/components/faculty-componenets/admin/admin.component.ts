@@ -9,8 +9,9 @@ import { FormBuilder, Validators, FormControl } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { UserService } from "src/app/services/user/user.service";
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatStepper } from "@angular/material";
+import { MatStepper, MatTableDataSource } from "@angular/material";
 import { LoadingBarService } from "@ngx-loading-bar/core";
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: "app-admin",
@@ -23,8 +24,8 @@ export class AdminComponent implements OnInit {
   public faculty_projects;
 
   columns: string[] = [
+    "select",
     "Title",
-    "Description",
     "Faculty",
     "Duration",
     "NoOfStudents",
@@ -70,6 +71,9 @@ export class AdminComponent implements OnInit {
   studentCap;
   days_left;
   project: any;
+
+  dataSource;
+  selection = new SelectionModel(true, []);
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
 
@@ -221,6 +225,7 @@ export class AdminComponent implements OnInit {
     this.projectService.getAllStreamProjects().subscribe((projects) => {
       if (projects["message"] == "success") {
         this.projects = projects["result"];
+        this.dataSource= new MatTableDataSource(this.projects);
       } else {
         this.loginService.signOut();
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
@@ -846,4 +851,34 @@ export class AdminComponent implements OnInit {
       );
     }
   }
+
+
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+
+
+
+
+
 }
