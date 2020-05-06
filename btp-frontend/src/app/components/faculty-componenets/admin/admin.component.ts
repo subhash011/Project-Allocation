@@ -656,7 +656,7 @@ export class AdminComponent implements OnInit {
             }
           });
         }
-        else if(this.stage_no == 3){
+        else {
           this.userService.fetchAllMails().subscribe((result) => {
             if (result["message"] == "success") {
               this.mailer
@@ -665,7 +665,7 @@ export class AdminComponent implements OnInit {
                   if (result["message"] == "success") {
                     this.loadingBar.stop();
                     this.snackBar.open(
-                      "Allocation completed successfully and mails have been sent",
+                      "Mails have been sent succesfully.",
                       "Ok",
                       {
                         duration: 3000,
@@ -674,7 +674,7 @@ export class AdminComponent implements OnInit {
                   } else {
                     this.loadingBar.stop();
                     this.snackBar.open(
-                      "Allocation completed but mails not sent",
+                      "Mails not sent! Please try again.",
                       "Ok",
                       {
                         duration: 3000,

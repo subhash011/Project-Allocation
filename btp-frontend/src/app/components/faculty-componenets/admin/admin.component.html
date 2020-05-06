@@ -16,7 +16,7 @@
                         <input matInput placeholder="Project Cap" type="number" step="1" formControlName="fifthCtrl" class="projectCapForm" />
                     </mat-form-field>
 
-                    <button color="accent" mat-raised-button (click)="setProjectCap()" class="setButton">
+                    <button color="primary" mat-raised-button (click)="setProjectCap()" class="setButton">
             Set Project Cap
           </button>
                 </form>
@@ -41,7 +41,7 @@
                         <input matInput placeholder="Number of students" type="number" step="1" formControlName="seventhCtrl" />
                     </mat-form-field>
 
-                    <button color="accent" mat-raised-button (click)="setStudentsPerFaculty()" class="setButton">
+                    <button color="primary" mat-raised-button (click)="setStudentsPerFaculty()" class="setButton">
             Submit
           </button>
                 </form>
@@ -187,14 +187,14 @@
         <div class="finalStageButtons" *ngIf="stage_no >= 3">
 
             <div class="startAllocationButton">
-                <button mat-raised-button [disabled]="allocationButton" (click)="startAllocation()">
+                <button mat-raised-button color="primary" [disabled]="allocationButton" (click)="startAllocation()">
                     Start Allocation
                 </button>
                 
             </div>
             <div class="sendEmailsButton">
                 
-                <button mat-raised-button [disabled]="allocationMail" (click)="sendEmails()">
+                <button mat-raised-button color="accent" [disabled]="allocationMail" (click)="sendEmails()">
                     Send Emails
                 </button>
             </div>
