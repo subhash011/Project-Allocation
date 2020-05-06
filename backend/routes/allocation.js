@@ -42,6 +42,8 @@ function combineStudents(projects, students) {
     return students;
 }
 
+
+
 router.post("/start/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
@@ -59,6 +61,7 @@ router.post("/start/:id", (req, res) => {
         .then((faculty) => {
             if (faculty) {
                 if (faculty.isAdmin) {
+<<<<<<< HEAD
                     stream = faculty.adminProgram;
                     Project.find({stream:stream}).then(projects => {
                         for (const project of projects) {
@@ -68,6 +71,104 @@ router.post("/start/:id", (req, res) => {
                                     return project;
                                 })
                             );
+=======
+                    const stream = faculty.adminProgram;
+                    promises.push(
+                        Project.find({ stream: stream }).then((projectList) => {
+                            projects = projectList;
+                            projects.sort((b, a) => {
+                                return a.students_id.length - b.students_id.length;
+                            });
+                            return projects;
+                        })
+                    );
+                    promises.push(
+                        Student.find({ stream: stream }).then((studentList) => {
+                            students = studentList;
+                            students.sort((a, b) => {
+                                return b.gpa - a.gpa;
+                            });
+                            return students;
+                        })
+                    );
+                    Promise.all(promises).then(() => {
+                        combineStudents(projects, students);
+                        combineProjects(projects, students);
+                        free = [...students];
+                        var curStudent, firstPreference, firstProject;
+                        while (free.length > 0) {
+                            curStudent = free[0];
+                            firstPreference = curStudent.projects_preference[0];
+                            firstProject = projects.find((val) => {
+                                return val.equals(firstPreference.toString());
+                            });
+                            if (!firstPreference) {
+                                free.shift();
+                                curStudent = free[0];
+                                firstPreference = curStudent.projects_preference[0];
+                            }
+                            if(!project){
+                                curStudent.projects_preference.shift();
+                                continue;
+                            }
+                            if (!allocationStatus[firstPreference]) {
+                                allocationStatus[firstPreference] = [];
+                                allocationStatus[firstPreference].push(curStudent);
+                                free = free.filter((val) => {
+                                    return !val.equals(curStudent);
+                                });
+                                alloted.push(curStudent);
+                            } else {
+                                if (
+                                    allocationStatus[firstPreference].length <
+                                    firstProject.studentIntake
+                                ) {
+                                    allocationStatus[firstPreference].push(curStudent);
+                                    allocationStatus[firstPreference].sort((a, b) => {
+                                        return (
+                                            firstProject.students_id.indexOf(a._id) -
+                                            firstProject.students_id.indexOf(b._id)
+                                        );
+                                    });
+                                    free = free.filter((val) => {
+                                        return !val.equals(curStudent);
+                                    });
+                                    alloted.push(curStudent);
+                                } else {
+                                    var studentCurrentlyAlloted =
+                                        allocationStatus[firstPreference._id][
+                                            allocationStatus[firstPreference._id].length - 1
+                                        ];
+                                    var currentlyAllotedIndex = firstProject.students_id.indexOf(
+                                        studentCurrentlyAlloted._id
+                                    );
+                                    var curStudentIndex = firstProject.students_id.indexOf(
+                                        curStudent._id
+                                    );
+                                    if (curStudentIndex < currentlyAllotedIndex) {
+                                        allocationStatus[firstPreference].pop();
+                                        studentCurrentlyAlloted.projects_preference.shift();
+                                        allocationStatus[firstPreference].push(curStudent);
+                                        allocationStatus[firstPreference].sort((a, b) => {
+                                            return (
+                                                firstProject.students_id.indexOf(a._id) -
+                                                firstProject.students_id.indexOf(b._id)
+                                            );
+                                        });
+                                        free = free.filter((val) => {
+                                            return !val.equals(curStudent);
+                                        });
+                                        alloted = alloted.filter((val) => {
+                                            return !val.equals(studentCurrentlyAlloted);
+                                        });
+                                        free.push(studentCurrentlyAlloted);
+                                        alloted.push(curStudent);
+                                    } else {
+                                        curStudent.projects_preference.shift();
+                                    }
+                                }
+                            }
+>>>>>>> subhash
                         }
                         Promise.all(promises).then(result => {
                             promises = [];
