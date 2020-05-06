@@ -125,7 +125,7 @@ export class AdminComponent implements OnInit {
         }
       }
 
-      if (this.stage_no == 3) {
+      if (this.stage_no >= 3) {
         if (this.stepper.selectedIndex == 0) {
           this.stepper.next();
           this.stepper.next();
@@ -269,7 +269,7 @@ export class AdminComponent implements OnInit {
             );
 
             snackBarRef.afterDismissed().subscribe(() => {
-              if(this.stage_no == 3){
+              if(this.stage_no >= 3){
                 this.snackBar.open("Please go to the Project tab to start the Allocation", "Ok", {
                   duration: 3000,
                 });

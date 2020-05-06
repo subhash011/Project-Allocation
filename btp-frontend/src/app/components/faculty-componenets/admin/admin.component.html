@@ -171,7 +171,7 @@
         </div>
       
 
-        <div class="finalStageButtons">
+        <div class="finalStageButtons" *ngIf="stage_no >= 3">
 
             <div class="startAllocationButton">
                 <button mat-raised-button (click)="getSelectedProjects()">
