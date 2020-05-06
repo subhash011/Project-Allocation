@@ -642,4 +642,82 @@ router.get("/fetchAllMails/:id", (req, res) => {
     );
 });
 
+
+router.post("/set_StudentCount/:id",(req,res)=>{
+
+    const id = req.params.id;
+    const idToken = req.authorization.headers;
+    const cap = req.body.cap;
+
+
+    Faculty.findOne({google_id:{id:id,idToken:idToken}})
+        .then(faculty=>{
+
+            if(facutly){
+
+                Admin.findOne({admin_id:faculty._id})
+                    .then(admin=>{
+
+                        if(admin){
+
+                            admin.studentCap = cap;
+
+                            admin.save()
+                                .then(result=>{
+
+                                    res.json({
+                                        status:"success",
+                                        msg:"Number of Students set successfully!!"
+                                    })
+
+
+                                })
+                           
+
+                        }
+
+                        else{
+
+
+                            res.json({
+                                status:"fail",
+                                result:null
+                            })
+
+                        }
+
+
+
+                    })
+                    .catch(err=>{
+                        res.json({
+                            status:"fail",
+                            result:null
+                        })
+
+                    })
+
+            }
+            else{
+
+                res.json({
+                    status:"fail",
+                    result:null
+                })
+
+            }
+
+
+        })
+        .catch(err=>{
+            res.json({
+                status:"fail",
+                result:null
+            })
+
+        })
+
+
+})
+
 module.exports = router;
