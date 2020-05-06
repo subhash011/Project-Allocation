@@ -42,6 +42,8 @@ function combineStudents(projects, students) {
     return students;
 }
 
+
+
 router.post("/start/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
@@ -89,6 +91,10 @@ router.post("/start/:id", (req, res) => {
                                 free.shift();
                                 curStudent = free[0];
                                 firstPreference = curStudent.projects_preference[0];
+                            }
+                            if(!project){
+                                curStudent.projects_preference.shift();
+                                continue;
                             }
                             if (!allocationStatus[firstPreference]) {
                                 allocationStatus[firstPreference] = [];

@@ -230,6 +230,14 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  getAllotedStudents(alloted){
+    var ans = "";
+    for (const allot of alloted) {
+      ans += allot.name + ", ";
+    }
+    return ans;
+  }
+
   proceed() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
