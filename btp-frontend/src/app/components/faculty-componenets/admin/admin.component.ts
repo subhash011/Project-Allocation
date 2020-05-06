@@ -41,6 +41,7 @@ export class AdminComponent implements OnInit {
   fifthFormGroup: FormGroup;
   sixthFormGroup: FormGroup;
   seventhFormGroup: FormGroup;
+  eighthFormGroup: FormGroup;
 
   public programName;
 
@@ -69,6 +70,7 @@ export class AdminComponent implements OnInit {
   studentsPerFaculty;
   projectCap;
   studentCap;
+  studentCount;
   days_left;
   project: any;
 
@@ -108,6 +110,9 @@ export class AdminComponent implements OnInit {
     });
     this.seventhFormGroup = this.formBuilder.group({
       seventhCtrl: [this.studentsPerFaculty],
+    });
+    this.seventhFormGroup = this.formBuilder.group({
+      eighthCtrl: [this.studentCount],
     });
   }
 
@@ -159,9 +164,8 @@ export class AdminComponent implements OnInit {
         this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
         this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
         this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
-        this.seventhFormGroup.controls["seventhCtrl"].setValue(
-          this.studentsPerFaculty
-        );
+        this.seventhFormGroup.controls["seventhCtrl"].setValue(this.studentsPerFaculty);
+        this.eighthFormGroup.controls["eighthCtrl"].setValue(this.studentCount);
 
         this.userService
           .getMembersForAdmin()
@@ -866,6 +870,39 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  setStudentCount(){
+
+    if (this.eighthFormGroup.controls["eighthCtrl"].value > 0) {
+      this.userService
+        .setStudentCount(this.eighthFormGroup.get("eighthCtrl").value)
+        .subscribe((data) => {
+          if (data["status"] == "success") {
+            this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+            this.ngOnInit();
+          } else {
+            this.loginService.signOut();
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+          }
+        });
+    } else {
+       this.snackBar.open(
+        "Please enter a valid number",
+        "Ok",
+        {
+          duration: 3000,
+        }
+      );
+    }
+  }
+
 
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -901,6 +938,13 @@ export class AdminComponent implements OnInit {
 
   }
 
+  validateAllocation(){
+
+
+
+
+
+  }
 
 
 
