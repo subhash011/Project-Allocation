@@ -61,17 +61,6 @@ router.post("/start/:id", (req, res) => {
         .then((faculty) => {
             if (faculty) {
                 if (faculty.isAdmin) {
-<<<<<<< HEAD
-                    stream = faculty.adminProgram;
-                    Project.find({stream:stream}).then(projects => {
-                        for (const project of projects) {
-                            project.student_alloted = [];
-                            promises.push(
-                                project.save().then(project => {
-                                    return project;
-                                })
-                            );
-=======
                     const stream = faculty.adminProgram;
                     promises.push(
                         Project.find({ stream: stream }).then((projectList) => {
@@ -168,7 +157,6 @@ router.post("/start/:id", (req, res) => {
                                     }
                                 }
                             }
->>>>>>> subhash
                         }
                         Promise.all(promises).then(result => {
                             promises = [];
