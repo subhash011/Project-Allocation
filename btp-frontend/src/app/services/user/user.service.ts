@@ -568,6 +568,20 @@ export class UserService {
     return this.http.get(this.url);
   }
 
+  validateAllocation(){
+    const user = JSON.parse(localStorage.getItem("user"));
+    const id = user.id;
+    const idToken = user.idToken;
+    this.url = this.base_url + "admin/validateAllocation/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    return this.http.get(this.url, httpOptions);
+  }
 
 
 
