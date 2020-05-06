@@ -1,4 +1,243 @@
 <mat-tab-group [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
+    <mat-tab label="Overview">
+
+
+        <mat-card class="stages-card">
+
+           
+            <h2><strong>1 &nbsp;&nbsp;  About the Process</strong></h2>
+            <hr>
+            <br>
+            <mat-card-content>
+              <p>
+                There are three types of users namely <b>Student, Faculty, Super Admin</b>. And there are four roles namely <b>Student, Faculty, Admin, Super Admin</b>. We will have a quick glance on how the process works.                        
+                We will go through these roles in detail first.
+              </p>
+              <ul>
+                  <li>
+                    <h4>Students</h4>
+                    <p>
+                        No special priviliges given. They have to give their preferences of projects. 
+                    </p>
+                  </li>
+
+                  <li>
+                    <h4>Faculty</h4>
+                    <p>
+                        No special priviliges given. Faculty have to select the programs which they wish to support i.e the programs in which they would like to float their projects.
+                        They are responsible for giving the student preference for the projects they floated.
+                    </p>
+                  </li>
+
+                  <li>
+                    <h4>Admin</h4>
+                    <p>
+                        Presets help to control the number of students assigned to each faculty. These are assigned by the Admin of each program and is unique to a program.
+                        Admin is responsible for setting the deadlines of the programs. Mails will be sent to the particilar groups of users about the deadline. Please note
+                        that this is not automated for the first three stages i.e you have to hit the Send Mails button to send the mails. Only for the last stage this is automated.
+                    </p>
+                    <ol>
+                        <li>
+                            <h4>Presets</h4>
+                            
+                            <ul>
+                                <li>
+                                    
+                                    <b>Project Cap</b>: This is the maximum number of projects each faculty can float. This is not set to anything in the start. If not set, no faculty will be able to add projects.
+                                </li>
+                                <li>
+                                    <b>Student Cap</b>: 
+                                    This is the maximum number of students each project can intake. This is set to 1 by default. 
+                                </li>
+                                
+                                <li>
+                                    <b>Students Per Faculty</b>: 
+                                    This is the maximum number of students each faculty can intake considering all the projects they floated. This is not set to anything in the start. 
+                                </li>
+
+                            </ul>
+                        </li>
+                        <li>
+                            <h4>Priviliges</h4>
+                            <ul>
+                                <li>
+                                    Admin can access the details of students & faculty who opted for the program.
+                                </li>
+                                <li>
+                                    Admin can remove any student or faculty who opted for that program.
+                                </li>
+                                <li>
+                                    Admin has the access to deadlines and can change deadlines.
+                                </li>
+                            </ul>
+                        </li>
+
+                    </ol>
+
+                  </li>
+
+                  <li>
+                    <h4>Super Admin</h4>
+                    <ul>
+                      
+                        <li>
+                            Super Admin has the access to the database.
+                        </li>
+                        <li>
+                            Super Admin is responsible for selecting the program Admins before the start of the Allocation.
+                        </li>
+                        <li>
+                            They have the privilige to add programs.
+                        </li>
+                    </ul>
+
+                  </li>
+
+
+              </ul>
+
+             <br>
+             <h4>Flow of the Process</h4>
+            <ul>  
+                <li>
+                    Before the start of the allocation all the students and faculty have to register into the application.
+                </li>
+                <li>
+                    The Super Admin has to choose the Admins of each program. Note that every program should have a unique Admin.
+                </li>
+                <li>
+                    The Admins of each program have to start the allocation by setting the first deadline and fillng in the presets. On setting the first deadine the stages start i.e it will go to stage 1. 
+                </li>
+                <li>
+                    <b>Start of Stage 1</b>
+                </li>
+                <li>
+                    Now the faculty have to add their projects to the programs they chose to support.
+                </li>
+                <li>
+                    <b>End of Stage 1</b>
+                </li>
+                <li>
+                    Admins have to proceed to the next stage by hitting the proceed button. Admins have to make sure that no faculty have violated the presets, otherwise you wont be able to move to the next stage.
+                </li>
+                <li>
+                    <b>Start of Stage 2</b>
+                </li>
+                <li>
+                    Students have to fill in their preferences.
+                </li>
+                <li>
+                    <b>End of Stage 2</b>
+                </li>
+                <li>
+                    Admin has to proceed to the next stage and set the deadline for this stage.
+                </li>
+                <li>
+                    <b>Start of Stage 3</b>
+                </li>
+                <li>
+                    Faculty have to fill in their preferences of students for each project they floated.
+                </li>
+                <li>
+                    <b>End of Stage 3</b>
+                </li>
+                <li>
+                    <b>Stage 4 is Allocation</b>
+                </li>
+            </ul>
+            <br>
+            </mat-card-content>
+
+            
+            <h2><strong>2 &nbsp;&nbsp;  Stages</strong></h2>
+            <hr>
+            <br>
+            <mat-card-content>
+              <p>
+                The project allocation consists of four stages namely Creating Projects, Student Preference, Faculty Preference and Project Allocation. This is a quick overview as to understand the process.
+              </p>
+              <ul>
+
+                <li>
+                    <h4>Stage 1 : Creating Projects</h4>
+                    <p> 
+                        In this stage : 
+                    </p>
+                    <ol>
+                        <li>
+                            The faculty can <b>ADD/EDIT/DELETE</b> projects. Note that these options will be disabled in the further stages.
+                        </li>
+                        <li>
+                            Sometimes you wont be able to add any projects because you may be violating certain presets set by the Admin of that program. In such case you need to communicate with the Admin and take necessary steps.
+                        </li>
+                        <li>
+                            The Save Preferences button in the Students Tab in each project will be disabled. Please refrain from clicking it.
+                        </li>
+                        <li>
+                            Students preferences will be locked i.e students wont be able to edit their preferences.
+                        </li>
+                        <li>
+                            Sometimes you will be logged out of the application. Dont worry this is because of session expiry or because of any server error. In the later case please contact us.
+                        </li>
+                    </ol>
+
+                </li>
+                <br>
+                <li>
+                    <h4>Stage 2 : Student Preferences</h4>
+                    <p> 
+                        In this stage :
+                    </p>
+                    <ol>
+                        <li>
+                            Faculty's <b>ADD/EDIT/DELETE</b> options are disabled from this stage and through out.
+                        </li>
+                        <li>
+                            Students can now give their preferences. <b>Please do note that if you dont give any preference, you will be alloted a random project</b>.
+                        </li>
+                    </ol>
+                </li>
+                <br>
+                <li>
+                    <h4>Stage 3 : Faculty Preferences</h4>
+                    <p> 
+                        In this stage :
+                    </p>
+                    <ol>
+                        <li>
+                            Faculty have to give their preference in the Student tab in each project section. You can Save Preferences how many ever times you want. Note that the latest save will be considered for the allocation.
+                        </li>
+                        <li>
+                            Students wont be able to edit their preferences further.
+                        </li>
+                    </ol>
+                </li>
+                <br>
+                <li>
+                    <h4>Stage 4 : Project Allocation</h4>
+                    <p> 
+                        In this stage :
+                    </p>
+                    <ol>
+                        <li>
+                           Project Allocation happens program wise, and after the allocation mails will be sent automatically to all the members involved in that particular program indicating the end of the allocation.
+                        </li>
+                        <li>
+                            Students will be able to see their project alloted in their home page. It will appear as an expansion panel in place of the timeline.
+                        </li>
+                    </ol>
+                </li>
+
+              </ul>
+
+            </mat-card-content>
+            <pre>
+
+            </pre>
+          </mat-card>
+
+
+    </mat-tab>
     <mat-tab label="Student">
         <div class="container">
             <h1 class="head"><b><u>Student's guide for the application.</u></b></h1>
@@ -18,245 +257,6 @@
     <mat-tab label="Faculty/Admin">
 
         <mat-tab-group [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
-
-            <mat-tab label="Overview">
-
-
-                <mat-card class="stages-card">
-
-                   
-                    <h2><strong>1 &nbsp;&nbsp;  About the Process</strong></h2>
-                    <hr>
-                    <br>
-                    <mat-card-content>
-                      <p>
-                        There are three types of users namely <b>Student, Faculty, Super Admin</b>. And there are four roles namely <b>Student, Faculty, Admin, Super Admin</b>. We will have a quick glance on how the process works.                        
-                        We will go through these roles in detail first.
-                      </p>
-                      <ul>
-                          <li>
-                            <h4>Students</h4>
-                            <p>
-                                No special priviliges given. They have to give their preferences of projects. 
-                            </p>
-                          </li>
-
-                          <li>
-                            <h4>Faculty</h4>
-                            <p>
-                                No special priviliges given. Faculty have to select the programs which they wish to support i.e the programs in which they would like to float their projects.
-                                They are responsible for giving the student preference for the projects they floated.
-                            </p>
-                          </li>
-
-                          <li>
-                            <h4>Admin</h4>
-                            <p>
-                                Presets help to control the number of students assigned to each faculty. These are assigned by the Admin of each program and is unique to a program.
-                                Admin is responsible for setting the deadlines of the programs. Mails will be sent to the particilar groups of users about the deadline. Please note
-                                that this is not automated for the first three stages i.e you have to hit the Send Mails button to send the mails. Only for the last stage this is automated.
-                            </p>
-                            <ol>
-                                <li>
-                                    <h4>Presets</h4>
-                                    
-                                    <ul>
-                                        <li>
-                                            
-                                            <b>Project Cap</b>: This is the maximum number of projects each faculty can float. This is not set to anything in the start. If not set, no faculty will be able to add projects.
-                                        </li>
-                                        <li>
-                                            <b>Student Cap</b>: 
-                                            This is the maximum number of students each project can intake. This is set to 1 by default. 
-                                        </li>
-                                        
-                                        <li>
-                                            <b>Students Per Faculty</b>: 
-                                            This is the maximum number of students each faculty can intake considering all the projects they floated. This is not set to anything in the start. 
-                                        </li>
-
-                                    </ul>
-                                </li>
-                                <li>
-                                    <h4>Priviliges</h4>
-                                    <ul>
-                                        <li>
-                                            Admin can access the details of students & faculty who opted for the program.
-                                        </li>
-                                        <li>
-                                            Admin can remove any student or faculty who opted for that program.
-                                        </li>
-                                        <li>
-                                            Admin has the access to deadlines and can change deadlines.
-                                        </li>
-                                    </ul>
-                                </li>
-
-                            </ol>
-
-                          </li>
-
-                          <li>
-                            <h4>Super Admin</h4>
-                            <ul>
-                              
-                                <li>
-                                    Super Admin has the access to the database.
-                                </li>
-                                <li>
-                                    Super Admin is responsible for selecting the program Admins before the start of the Allocation.
-                                </li>
-                                <li>
-                                    They have the privilige to add programs.
-                                </li>
-                            </ul>
-
-                          </li>
-
-
-                      </ul>
-
-                     <br>
-                     <h4>Flow of the Process</h4>
-                    <ul>  
-                        <li>
-                            Before the start of the allocation all the students and faculty have to register into the application.
-                        </li>
-                        <li>
-                            The Super Admin has to choose the Admins of each program. Note that every program should have a unique Admin.
-                        </li>
-                        <li>
-                            The Admins of each program have to start the allocation by setting the first deadline and fillng in the presets. On setting the first deadine the stages start i.e it will go to stage 1. 
-                        </li>
-                        <li>
-                            <b>Start of Stage 1</b>
-                        </li>
-                        <li>
-                            Now the faculty have to add their projects to the programs they chose to support.
-                        </li>
-                        <li>
-                            <b>End of Stage 1</b>
-                        </li>
-                        <li>
-                            Admins have to proceed to the next stage by hitting the proceed button. Admins have to make sure that no faculty have violated the presets, otherwise you wont be able to move to the next stage.
-                        </li>
-                        <li>
-                            <b>Start of Stage 2</b>
-                        </li>
-                        <li>
-                            Students have to fill in their preferences.
-                        </li>
-                        <li>
-                            <b>End of Stage 2</b>
-                        </li>
-                        <li>
-                            Admin has to proceed to the next stage and set the deadline for this stage.
-                        </li>
-                        <li>
-                            <b>Start of Stage 3</b>
-                        </li>
-                        <li>
-                            Faculty have to fill in their preferences of students for each project they floated.
-                        </li>
-                        <li>
-                            <b>End of Stage 3</b>
-                        </li>
-                        <li>
-                            <b>Stage 4 is Allocation</b>
-                        </li>
-                    </ul>
-                    <br>
-                    </mat-card-content>
-
-                    
-                    <h2><strong>2 &nbsp;&nbsp;  Stages</strong></h2>
-                    <hr>
-                    <br>
-                    <mat-card-content>
-                      <p>
-                        The project allocation consists of four stages namely Creating Projects, Student Preference, Faculty Preference and Project Allocation. This is a quick overview as to understand the process.
-                      </p>
-                      <ul>
-
-                        <li>
-                            <h4>Stage 1 : Creating Projects</h4>
-                            <p> 
-                                In this stage : 
-                            </p>
-                            <ol>
-                                <li>
-                                    The faculty can <b>ADD/EDIT/DELETE</b> projects. Note that these options will be disabled in the further stages.
-                                </li>
-                                <li>
-                                    Sometimes you wont be able to add any projects because you may be violating certain presets set by the Admin of that program. In such case you need to communicate with the Admin and take necessary steps.
-                                </li>
-                                <li>
-                                    The Save Preferences button in the Students Tab in each project will be disabled. Please refrain from clicking it.
-                                </li>
-                                <li>
-                                    Students preferences will be locked i.e students wont be able to edit their preferences.
-                                </li>
-                                <li>
-                                    Sometimes you will be logged out of the application. Dont worry this is because of session expiry or because of any server error. In the later case please contact us.
-                                </li>
-                            </ol>
-
-                        </li>
-                        <br>
-                        <li>
-                            <h4>Stage 2 : Student Preferences</h4>
-                            <p> 
-                                In this stage :
-                            </p>
-                            <ol>
-                                <li>
-                                    Faculty's <b>ADD/EDIT/DELETE</b> options are disabled from this stage and through out.
-                                </li>
-                                <li>
-                                    Students can now give their preferences. <b>Please do note that if you dont give any preference, you will be alloted a random project</b>.
-                                </li>
-                            </ol>
-                        </li>
-                        <br>
-                        <li>
-                            <h4>Stage 3 : Faculty Preferences</h4>
-                            <p> 
-                                In this stage :
-                            </p>
-                            <ol>
-                                <li>
-                                    Faculty have to give their preference in the Student tab in each project section. You can Save Preferences how many ever times you want. Note that the latest save will be considered for the allocation.
-                                </li>
-                                <li>
-                                    Students wont be able to edit their preferences further.
-                                </li>
-                            </ol>
-                        </li>
-                        <br>
-                        <li>
-                            <h4>Stage 4 : Project Allocation</h4>
-                            <p> 
-                                In this stage :
-                            </p>
-                            <ol>
-                                <li>
-                                   Project Allocation happens program wise, and after the allocation mails will be sent automatically to all the members involved in that particular program indicating the end of the allocation.
-                                </li>
-                                <li>
-                                    Students will be able to see their project alloted in their home page. It will appear as an expansion panel in place of the timeline.
-                                </li>
-                            </ol>
-                        </li>
-
-
-                      </ul>
-                    </mat-card-content>
- 
-                  </mat-card>
-
-
-            </mat-tab>
-
 
             <mat-tab  label="Faculty">
                 <div class="container">
@@ -329,67 +329,75 @@
             </div>
         </div>
         <hr>
-        <div class="instructions">
-            <h1 class="supertext"><b><u>The below text is the information on how to add streams or programs.</u></b></h1>
-        </div>
+        
 
+        <mat-card class="stages-card">
+            <div class="instructions">
+                <h1 class="supertext"><b>The below text is the information on how to add streams or programs.</b></h1>
+            </div>
+            <hr>
+            <br>
+            <mat-card-content>
             <pre>
+            <b><u>Streams Tab</u></b> : This tab is for adding any new streams in the institute.
 
-                Streams Tab : This tab is for adding any new streams in the institute.
+                    The “+” button on the top of the table can be used to add a new branch and the delete button can be used to remove the branch.
+                
+            <b><u>Programs Tab</u></b> : This tab is for adding any new programs within the provided streams. 
 
-                        The “+” button on the top of the table can be used to add a new branch and the delete button can be used to remove the branch.
-                    
-                Programs Tab : This tab is for adding any new programs within the provided streams. This tab requires 
+                    This tab requires mapping to the roll.no of the students of that particular program. The “+” button on the top of the table can be used to add a new 
+                    program and the delete button can be used to remove the program.
 
-                        Mapping to the roll.no of the students of that particular program. The “+” button on the top of the table can be used to add a new program and the delete 
-                        button can be used to remove the program.
+            <b><u>Explanation:</u></b>
 
-                Explanation:
-	
-                    Now let us consider that IIT Palakkad has four core streams
-                        1. Computer Science and Engineering(CSE)
-                        2. Electrical Engineering(EE)
-                        3. Mechanical Engineering(ME)
-                        4. Civil Engineering(CE)
+                Now let us consider that IIT Palakkad has four core streams
+                    1. Computer Science and Engineering(CSE)
+                    2. Electrical Engineering(EE)
+                    3. Mechanical Engineering(ME)
+                    4. Civil Engineering(CE)
 
-                    The above four streams must be added one by one in the streams tab:
+                The above four streams must be added one by one in the streams tab:
 
-                    For CSE:  
+                <b>For CSE:</b> 
 
-                        name : Computer Science and Engineering
-                        short :  CSE
-                        Similarly add all the other streams.
-                    
+                    name : Computer Science and Engineering
+                    short :  CSE
+                    Similarly the other streams can be added.
+                
 
-                    
-                    Now these streams further contain many programs such as UG, PG etc. For now let us consider that there are only two programs UG and PG.
-                    
-                    These programs will have to be registered under the programs tab.
-                        Click on the “+” button to add programs  and in the pop-up fill in the required details.
-                        Example:
-                            Let us consider the UG and PG programs must be added in the CSE stream.
-                            Now click on “+” button, In the pop-up the fill the required details,
-                            
-                    For UG:
+                
+                Now these streams further contain many programs such as UG, PG etc. For now let us consider that there are only two programs UG and PG.
+                
+                These programs will have to be registered under the programs tab.
+                    Click on the “+” button to add programs  and in the pop-up fill in the required details.
+                    Example:
+                        Let us consider the UG and PG programs must be added in the CSE stream.
+                        Now click on “+” button, In the pop-up the fill the required details,
+                        
+                <b>For UG:</b>
 
-                        Name: UG-Computer Science and Engineering or any other suitable name.
-                        Short: UG-CSE or any other suitable name. (allowed characters are letters, underscore and hyphen).
-                        Map: This field needs a simple regex to identify the students of that particular program from their roll number.
-                        Example:
-                            For UG-CSE the current roll numbers are 111801***
-                            So here the map would be 0|11
-                            For UG-EE the current roll numbers are 121801***
-                            So here the map would be 0|12
-                        Split up of the map:
-                        The numbers to the left of the pipe must tell the number of characters in the roll number before the occurrence of the unique pattern for that 
-                        program.
-                        For UG-CSE, UG-EE, UG-ME, UG-CE the roll numbers are 11…, 12…., 13…., 10… respectively the unique patterns are 11,12,13,10 respectively and the 
-                        number of characters before that is 0 so the map for each program would be 0|11, 0|12, 0|13, 0|10 respectively.
+                    Name: UG-Computer Science and Engineering or any other suitable name.
+                    Short: UG-CSE or any other suitable name. (allowed characters are letters, underscore and hyphen).
+                    Map: This field needs a simple regex to identify the students of that particular program from their roll number.
+                    Example:
+                        For UG-CSE the current roll numbers are 111801***
+                        So here the map would be 0|11
+                        For UG-EE the current roll numbers are 121801***
+                        So here the map would be 0|12
 
-                        Similarly the CSE program for PG can also be added.
 
+                    <b><u>Split up of the map:</u></b>
+
+                    The numbers to the left of the pipe('|') must tell the number of characters in the roll number before the occurrence of the unique pattern for that 
+                    program.
+                    For UG-CSE, UG-EE, UG-ME, UG-CE the roll numbers are 11…, 12…., 13…., 10… respectively the unique patterns are 11,12,13,10 respectively and the 
+                    number of characters before that is 0 so the map for each program would be 0|11, 0|12, 0|13, 0|10 respectively.
+
+                    Similarly the CSE program for PG can also be added.
 
             </pre>
+            </mat-card-content>
+        </mat-card>
     </mat-tab>
     
 </mat-tab-group>
