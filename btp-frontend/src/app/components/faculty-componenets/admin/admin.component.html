@@ -171,9 +171,30 @@
         <div class="searchBox">
             <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="project" />
             <button class="searchButton" href="#">
-        <i class="material-icons">search</i>
-      </button>
-    </div>
+                <i class="material-icons">search</i>
+            </button>
+        </div>
+      
+
+        <div class="finalStageButtons">
+
+            <div class="startAllocationButton">
+                <button mat-raised-button (click)="getSelectedProjects()">
+                    Start Allocation
+                </button>
+                
+            </div>
+            <div class="sendEmailsButton">
+                
+                <button mat-raised-button (click)="getSelectedProjects()">
+                    Send Emails
+                </button>
+            </div>
+        </div>
+
+
+
+      
         <div class="display">
             <div class="table mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource | filter: project" class="mat-elevation-z8">
