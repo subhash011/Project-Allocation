@@ -24,7 +24,6 @@ export class AdminComponent implements OnInit {
 
   columns: string[] = [
     "Title",
-    "Description",
     "Faculty",
     "Duration",
     "NoOfStudents",
