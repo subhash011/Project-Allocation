@@ -47,6 +47,19 @@
                 </form>
             </div>
 
+            <div>
+                <form [formGroup]="eighthFormGroup">
+                    <mat-form-field class="example-full-width" style="width: 250px;">
+                        <mat-label>Number of students per faculty</mat-label>
+                        <input matInput placeholder="Number of students" type="number" step="1" formControlName="eighthCtrl" />
+                    </mat-form-field>
+
+                    <button color="accent" mat-raised-button (click)="setStudentCount()" class="setButton">
+                        Submit
+                    </button>
+                </form>
+            </div>
+
             <span class="days_left"><strong>Time Left : </strong>
         <countdown-timer [end]="curr_deadline"></countdown-timer
       ></span>
@@ -155,7 +168,7 @@
                 <form [formGroup]="fourthFormGroup">
                     <ng-template matStepLabel>Project Allocation</ng-template>
                     <div>
-                    
+                    <h4><b>Please go to the Project tab to start the Allocation</b></h4>
                     </div>
                 </form>
             </mat-step>
