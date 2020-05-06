@@ -26,6 +26,8 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule } from "@angular/material";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -53,12 +55,13 @@ const MaterialComponents = [
   MatDatepickerModule,
   MatNativeDateModule,
   MatPaginatorModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatCheckboxModule
 ];
 
 @NgModule({
   declarations: [],
   imports: MaterialComponents,
-  exports: MaterialComponents
+  exports: MaterialComponents,
 })
 export class MaterialModule {}

@@ -77,7 +77,11 @@ router.post("/start", (req, res) => {
             firstProject = projects.find((val) => {
                 return val.equals(firstPreference.toString());
             });
+<<<<<<< HEAD
             if(!firstProject){
+=======
+            if (!firstPreference) {
+>>>>>>> 8b7249e1519c2b34b692a178a4072d9da1e09106
                 curStudent.projects_preference.shift();
                 continue;
             }

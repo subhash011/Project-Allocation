@@ -16,7 +16,7 @@ What things you need to install the software and how to install them
 - [MongoDB](https://github.com/mongodb/mongo)
 - MongoDB Compass (optional)
 
-### Installing
+### Installation
 
 Install the following step by step in order to get a development environment up and running.
 

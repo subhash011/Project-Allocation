@@ -9,8 +9,9 @@ import { FormBuilder, Validators, FormControl } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { UserService } from "src/app/services/user/user.service";
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatStepper } from "@angular/material";
+import { MatStepper, MatTableDataSource } from "@angular/material";
 import { LoadingBarService } from "@ngx-loading-bar/core";
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: "app-admin",
@@ -23,8 +24,8 @@ export class AdminComponent implements OnInit {
   public faculty_projects;
 
   columns: string[] = [
+    "select",
     "Title",
-    "Description",
     "Faculty",
     "Duration",
     "NoOfStudents",
@@ -70,6 +71,9 @@ export class AdminComponent implements OnInit {
   studentCap;
   days_left;
   project: any;
+
+  dataSource;
+  selection = new SelectionModel(true, []);
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
 
@@ -221,6 +225,7 @@ export class AdminComponent implements OnInit {
     this.projectService.getAllStreamProjects().subscribe((projects) => {
       if (projects["message"] == "success") {
         this.projects = projects["result"];
+        this.dataSource= new MatTableDataSource(this.projects);
       } else {
         this.loginService.signOut();
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
@@ -447,29 +452,29 @@ export class AdminComponent implements OnInit {
               .allocateMail(result["result"], this.programName)
               .subscribe((result) => {
                 if (result["message"] == "success") {
-                  this.userService
-                    .updateStage(this.stage_no + 1)
-                    .subscribe((data) => {
-                      if (data["status"] == "success") {
-                        this.loadingBar.stop();
-                        this.snackBar.open(
-                          "Allocation completed successfully and mails have been sent",
-                          "Ok",
-                          {
-                            duration: 3000,
-                          }
-                        );
-                      } else {
-                        this.loginService.signOut();
-                        this.snackBar.open(
-                          "Session Timed Out! Please Sign-In again",
-                          "Ok",
-                          {
-                            duration: 3000,
-                          }
-                        );
-                      }
-                    });
+                  // this.userService
+                  //   .updateStage(this.stage_no + 1)
+                  //   .subscribe((data) => {
+                  //     if (data["status"] == "success") {
+                  //       this.loadingBar.stop();
+                  //       this.snackBar.open(
+                  //         "Allocation completed successfully and mails have been sent",
+                  //         "Ok",
+                  //         {
+                  //           duration: 3000,
+                  //         }
+                  //       );
+                  //     } else {
+                  //       this.loginService.signOut();
+                  //       this.snackBar.open(
+                  //         "Session Timed Out! Please Sign-In again",
+                  //         "Ok",
+                  //         {
+                  //           duration: 3000,
+                  //         }
+                  //       );
+                  //     }
+                  //   });
                 } else {
                   this.loadingBar.stop();
                   this.snackBar.open(
@@ -492,7 +497,8 @@ export class AdminComponent implements OnInit {
             );
           }
         });
-      } else if (data["message"] == "invalid-token") {
+      } 
+      else if (data["message"] == "invalid-token") {
         this.loadingBar.stop();
         this.loginService.signOut();
         this.snackBar.open("Session Expired! Sign-In and try again", "Ok", {
@@ -506,6 +512,8 @@ export class AdminComponent implements OnInit {
       }
     });
   }
+
+
 
   sendEmails() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
@@ -557,7 +565,7 @@ export class AdminComponent implements OnInit {
                 });
             }
           });
-        } else {
+        } else if(this.stage_no == 2){
           this.userService.getFacultyStreamEmails().subscribe((data1) => {
             if (data1["status"] == "success") {
               this.mailer
@@ -593,6 +601,59 @@ export class AdminComponent implements OnInit {
                     );
                   }
                 });
+            }
+          });
+        }
+        else if(this.stage_no == 3){
+          this.userService.fetchAllMails().subscribe((result) => {
+            if (result["message"] == "success") {
+              this.mailer
+                .allocateMail(result["result"], this.programName)
+                .subscribe((result) => {
+                  if (result["message"] == "success") {
+                    this.userService
+                      .updateStage(this.stage_no + 1)
+                      .subscribe((data) => {
+                        if (data["status"] == "success") {
+                          this.loadingBar.stop();
+                          this.snackBar.open(
+                            "Allocation completed successfully and mails have been sent",
+                            "Ok",
+                            {
+                              duration: 3000,
+                            }
+                          );
+                        } else {
+                          this.loginService.signOut();
+                          this.snackBar.open(
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok",
+                            {
+                              duration: 3000,
+                            }
+                          );
+                        }
+                      });
+                  } else {
+                    this.loadingBar.stop();
+                    this.snackBar.open(
+                      "Allocation completed but mails not sent",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                  }
+                });
+            } else {
+              this.loadingBar.stop();
+              this.snackBar.open(
+                "Unable to fetch mails! If the error persists re-authenticate.",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
             }
           });
         }
@@ -790,4 +851,34 @@ export class AdminComponent implements OnInit {
       );
     }
   }
+
+
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+
+
+
+
+
 }
