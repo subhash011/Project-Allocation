@@ -42,6 +42,8 @@ function combineStudents(projects, students) {
     return students;
 }
 
+
+
 router.post("/start/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
