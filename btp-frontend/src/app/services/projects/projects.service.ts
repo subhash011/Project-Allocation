@@ -155,7 +155,6 @@ export class ProjectsService {
         Authorization: idToken,
       }),
     };
-    console.log(projects)
     return this.http.post(this.url, { projects : projects }, httpOptions);
   }
 }
