@@ -23,7 +23,7 @@ app.use(
 app.use(cors());
 
 //use body-parser
-app.use(bodyparser.json());
+app.use(bodyparser.json({limit: '50mb', extended: true}));
 mongoose.set("useFindAndModify", false);
 
 //uncomment during production

@@ -27,6 +27,8 @@ router.get("/project/:id", (req, res) => {
                                         var arr = [];
                                         for (const project of projects) {
                                             const newProj = {
+                                                _id:project._id,
+                                                faculty_id:project.faculty_id,
                                                 title: project.title,
                                                 description: project.description,
                                                 stream: project.stream,
@@ -34,6 +36,7 @@ router.get("/project/:id", (req, res) => {
                                                 faculty: project.faculty_id.name,
                                                 numberOfPreferences: project.students_id.length,
                                                 student_alloted: project.student_alloted,
+                                                students_id:project.students_id
                                             };
                                             arr.push(newProj);
                                         }

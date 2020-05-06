@@ -146,7 +146,7 @@ export class ProjectsService {
     return this.http.get(this.url, httpOptions);
   }
 
-  startAllocation() {
+  startAllocation(projects) {
     this.url = this.root + "allocation/start/" + localStorage.getItem("id");
     const idToken = JSON.parse(localStorage.getItem("user")).idToken;
     const httpOptions = {
@@ -155,6 +155,7 @@ export class ProjectsService {
         Authorization: idToken,
       }),
     };
-    return this.http.post(this.url, { message: "hi" }, httpOptions);
+    console.log(projects)
+    return this.http.post(this.url, { projects : projects }, httpOptions);
   }
 }

@@ -77,7 +77,7 @@ export class AdminComponent implements OnInit {
   days_left;
   project: any;
 
-  dataSource;
+  dataSource:any = [];
   selection = new SelectionModel(true, []);
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
@@ -264,6 +264,7 @@ export class AdminComponent implements OnInit {
       if (projects["message"] == "success") {
         this.projects = projects["result"];
         this.dataSource= new MatTableDataSource(this.projects);
+        this.selectAll();
       } else {
         this.loginService.signOut();
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
@@ -491,9 +492,18 @@ export class AdminComponent implements OnInit {
   }
 
   startAllocation() {
+    var selectedProjects = this.selection.selected;
     this.loadingBar.start();
-    this.projectService.startAllocation().subscribe((data) => {
+    this.projectService.startAllocation(selectedProjects).subscribe((data) => {
       if (data["message"] == "success") {
+          selectedProjects = selectedProjects.map(val => String(val._id));
+          this.dataSource = new MatTableDataSource(data["result"]);
+          this.selection.clear();
+          this.dataSource.data.forEach(row => {
+            if(selectedProjects.indexOf(row._id.toString()) != -1){
+              this.selection.select(row);
+            }
+          });
           if(this.stage_no == 3){
               this.userService
             .updateStage(this.stage_no + 1)
@@ -873,13 +883,10 @@ export class AdminComponent implements OnInit {
 
   setStudentCount(){
 
-    console.log(this.eighthFormGroup.get("eighthCtrl").value);
-
     if (this.eighthFormGroup.controls["eighthCtrl"].value > 0) {
       this.userService
         .setStudentCount(this.eighthFormGroup.get("eighthCtrl").value)
         .subscribe((data) => {
-          console.log(data);
           if (data["status"] == "success") {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -909,12 +916,9 @@ export class AdminComponent implements OnInit {
 
 
 
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    var numRows;
-    if(this.dataSource)
-       numRows = this.dataSource.data.length;
+    const numSelected = this.selection.selected ? this.selection.selected.length : 0;
+    const numRows = this.dataSource.data ? this.dataSource.data.length : 0;
     return numSelected === numRows;
   }
 
@@ -922,8 +926,11 @@ export class AdminComponent implements OnInit {
   masterToggle() {
     this.isAllSelected() ?
         this.selection.clear() :
-        this.dataSource ?
-        this.dataSource.data.forEach(row => this.selection.select(row)) : 0;
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  selectAll(){
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -932,18 +939,6 @@ export class AdminComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-  }
-
-
-  getSelectedProjects(){
-
-    const selectedProjects = this.selection.selected;
-
-    
-
-    console.log(selectedProjects);
-    this.ngOnInit();
-
   }
 
 
