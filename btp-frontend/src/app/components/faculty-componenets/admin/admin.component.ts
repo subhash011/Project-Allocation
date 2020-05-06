@@ -130,6 +130,10 @@ export class AdminComponent implements OnInit {
           this.stepper.next();
           this.stepper.next();
           this.stepper.next();
+            this.snackBar.open("Please go to the Project tab to start the Allocation", "Ok", {
+              duration: 3000,
+            });
+          
         }
       }
     });
@@ -263,6 +267,16 @@ export class AdminComponent implements OnInit {
                 duration: 3000,
               }
             );
+
+            snackBarRef.afterDismissed().subscribe(() => {
+              if(this.stage_no == 3){
+                this.snackBar.open("Please go to the Project tab to start the Allocation", "Ok", {
+                  duration: 3000,
+                });
+              }
+            });
+            
+           
           } else {
             this.loginService.signOut();
             this.snackBar.open(

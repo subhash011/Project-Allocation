@@ -155,12 +155,7 @@
                 <form [formGroup]="fourthFormGroup">
                     <ng-template matStepLabel>Project Allocation</ng-template>
                     <div>
-                        <button mat-button (click)="startAllocation()">
-              Start Allocation
-            </button>
-                <button mat-button [disabled] (click)="sendEmails()">
-                Send Emails
-              </button>
+                    
                     </div>
                 </form>
             </mat-step>
@@ -186,7 +181,7 @@
             </div>
             <div class="sendEmailsButton">
                 
-                <button mat-raised-button (click)="getSelectedProjects()">
+                <button mat-raised-button (click)="sendEmails()">
                     Send Emails
                 </button>
             </div>
