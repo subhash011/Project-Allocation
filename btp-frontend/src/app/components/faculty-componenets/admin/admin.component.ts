@@ -195,6 +195,7 @@ export class AdminComponent implements OnInit {
                   if(data["status"] == "success"){
 
                       this.allocationButton = false;
+                      this.allocationMail = false;
 
                       if (this.dateSet.length == 1) {
                         if (this.firstFormGroup.controls["firstCtrl"]) {
@@ -202,51 +203,43 @@ export class AdminComponent implements OnInit {
                           if (!flag) this.proceedButton1_ = false;
                         }
                       }
-                      if (this.dateSet.length == 2) {
-                        if (this.secondFormGroup.controls["secondCtrl"]) {
-                          this.proceedButton2 = false;
-                          if (!flag) this.proceedButton2_ = false;
-                        }
-                      }
-                      if (this.dateSet.length == 3) {
-                        if (this.thirdFormGroup.controls["thirdCtrl"])
-                          this.proceedButton3 = false;
-                        if (!flag) this.proceedButton3_ = false;
-                      }
-                      if (this.stage_no == 0) {
-                        this.minDate = new Date();
-                      } else {
-                        this.minDate = this.dateSet[this.dateSet.length - 1];
-                      }
+                     
 
                   }  
                   else{
 
                     this.allocationButton = true;
+                    this.allocationMail = true;
+
 
                     if (this.dateSet.length == 1) {
                       if (this.firstFormGroup.controls["firstCtrl"]) {
                         this.proceedButton1 = false;
-                        if (!flag) this.proceedButton1_ = false;
+                        this.proceedButton1_ = true;
                       }
-                    }
-                    if (this.dateSet.length == 2) {
-                      if (this.secondFormGroup.controls["secondCtrl"]) {
-                        this.proceedButton2 = false;
-                        if (!flag) this.proceedButton2_ = false;
-                      }
-                    }
-                    if (this.dateSet.length == 3) {
-                      if (this.thirdFormGroup.controls["thirdCtrl"])
-                        this.proceedButton3 = false;
-                      if (!flag) this.proceedButton3_ = false;
-                    }
-                    if (this.stage_no == 0) {
-                      this.minDate = new Date();
-                    } else {
-                      this.minDate = this.dateSet[this.dateSet.length - 1];
                     }
                   }
+
+                  if (this.dateSet.length == 2) {
+                    if (this.secondFormGroup.controls["secondCtrl"]) {
+                      this.proceedButton2 = false;
+                      if (!flag) this.proceedButton2_ = false;
+                    }
+                  }
+                  if (this.dateSet.length == 3) {
+                    if (this.thirdFormGroup.controls["thirdCtrl"])
+                      this.proceedButton3 = false;
+                    if (!flag) this.proceedButton3_ = false;
+                  }
+                  if (this.stage_no == 0) {
+                    this.minDate = new Date();
+                  } else {
+                    this.minDate = this.dateSet[this.dateSet.length - 1];
+                  }
+
+
+
+
                 })  
             } else {
               this.loginService.signOut();

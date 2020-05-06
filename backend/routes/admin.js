@@ -726,12 +726,12 @@ router.post("/set_StudentCount/:id",(req,res)=>{
 router.get("/validateAllocation/:id",(req,res)=>{
 
     const id = req.params.id;
-    const idToken = req.authorization.headers;
+    const idToken = req.headers.authorization;
 
     Faculty.findOne({google_id:{id:id,idToken:idToken}})
         .then(faculty=>{
 
-            if(facutly){
+            if(faculty){
 
                 Admin.findOne({admin_id:faculty._id})
                     .then(admin=>{
@@ -746,8 +746,9 @@ router.get("/validateAllocation/:id",(req,res)=>{
                                     for(const project of projects){
                                         count += project.studentIntake;
                                     }
+                                    console.log(count);
 
-                                    if(count >= admin.studentCap){
+                                    if(count >= admin.studentCount){
 
                                         res.json({
                                             status:"success",
