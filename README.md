@@ -196,6 +196,9 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    go to the server.js file and in line 29 there is a comment saying "uncomment during production", uncomment the line just below that and the app is ready for deployment. Now the backend folder will deploy angular application as static files so it is enough if we deploy the backend folder
    on the server.
 
+6. Based on our deployment on a cloud server, the node_modules folder in the backend directory has to be removed before deploying. You can try deployment with the
+   node_modules but if you face any errors then consider removing the node_module folder.
+
 ## Built With
 
 **MEAN STACK**
