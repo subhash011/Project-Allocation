@@ -121,6 +121,7 @@ router.get("/student/details/:id", (req, res) => {
 router.get("/faculty/details/:id", (req, res) => {
     var streamwise = [];
     const id = req.params.id;
+    var faculty = {};
     const idToken = req.headers.authorization;
     oauth(idToken)
         .then((user) => {
@@ -146,11 +147,11 @@ router.get("/faculty/details/:id", (req, res) => {
                                             };
                                             return newFac;
                                         });
-                                        streamwise.push(temp);
+                                        faculty[branch] = temp;
                                     }
                                     res.json({
                                         message: "success",
-                                        result: streamwise,
+                                        result: faculty,
                                     });
                                 } else {
                                     res.json({
