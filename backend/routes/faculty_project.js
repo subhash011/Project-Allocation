@@ -127,12 +127,12 @@ router.post("/add/:id", (req, res) => {
                                                     });
                                                 });
                                             })
-                                            .catch((err) => {
-                                                res.json({
-                                                    save: "fail",
-                                                    msg: " There was an error, Please try again!", //Display the messages in flash messages
-                                                });
-                                            });
+                                            // .catch((err) => {
+                                            //     res.json({
+                                            //         save: "fail",
+                                            //         msg: " There was an error, Please try again!", //Display the messages in flash messages
+                                            //     });
+                                            // });
                                     }
                                 }
                             })

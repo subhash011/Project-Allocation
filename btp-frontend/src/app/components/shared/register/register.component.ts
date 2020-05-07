@@ -67,6 +67,7 @@ export class RegisterComponent implements OnInit {
             this.userForm.controls["branch"].setErrors({
               required:true
             });
+            this.userForm.get("branch").updateValueAndValidity();
           }
         } else if (localStorage.getItem("role") == "faculty") {
           this.userForm.get("CGPA").clearValidators();
@@ -141,7 +142,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (this.userForm.valid) {
-      const user = {
+      var user = {
         name:
           this.userForm.get("firstName").value +
           " " +
@@ -151,6 +152,7 @@ export class RegisterComponent implements OnInit {
         gpa: this.userForm.get("CGPA").value,
         stream: this.userForm.get("branch").value,
       };
+      user.name = localStorage.getItem("role") == "student" ? user.name.toUpperCase() : user.name;
       const _user = JSON.parse(localStorage.getItem("user"));
 
       const httpOptions = {

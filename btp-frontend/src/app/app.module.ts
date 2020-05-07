@@ -38,6 +38,7 @@ import { AddMapComponent } from "./components/shared/add-map/add-map.component";
 import { LoadingBarModule } from "@ngx-loading-bar/core";
 import { TypingAnimationModule } from "angular-typing-animation";
 import { HelpComponent } from './components/shared/help/help.component';
+import { ResetComponent } from './components/faculty-componenets/reset/reset.component';
 
 const googleLoginOption: LoginOpt = {
   scope: "https://mail.google.com/",
@@ -80,12 +81,14 @@ export function provideConfig() {
     TimelineComponent,
     AddMapComponent,
     HelpComponent,
+    ResetComponent,
   ],
   entryComponents: [
     ShowPreferencesComponent,
     SubmitPopUpComponent,
     DeletePopUpComponent,
     AddMapComponent,
+    ResetComponent
   ],
   imports: [
     BrowserModule,

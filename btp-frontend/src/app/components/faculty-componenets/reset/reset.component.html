@@ -1,0 +1,24 @@
+<div class="reset">
+    <div class="card">
+        <mat-card>
+            <mat-card-header>
+                <b>Warning!</b>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="text">
+                    <span>
+                        This task removes all the students of this program
+                        and clears the allocation results if any. This also
+                        removes all the preferences of the faculties but the
+                        projects and the Co-Ordinator is not changed.
+                        Go ahead if you are sure to do this.
+                    </span>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <button color="accent" mat-raised-button (click)="onNoClick()">No</button>
+                <button color="warn" mat-raised-button (click)="onSubmit()">Yes</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

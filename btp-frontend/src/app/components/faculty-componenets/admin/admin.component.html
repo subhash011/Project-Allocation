@@ -1,5 +1,5 @@
 <mat-tab-group [(selectedIndex)]="index" [backgroundColor]="'primary'" animationDuration="0" dynamicHeight="true" mat-align-tabs="center">
-    <mat-tab label="Admin">
+    <mat-tab label="Co-ordinator">
         <div class="header">
             <h1>{{ programName }}</h1>
             <h2 *ngIf="stage_no == 0">Creating Projects</h2>
@@ -59,14 +59,13 @@
                     </button>
                 </form>
             </div>
-
             <span class="days_left"><strong>Time Left : </strong>
         <countdown-timer [end]="curr_deadline"></countdown-timer
       ></span>
         </div>
 
         <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no }}">
-            <mat-step [stepControl]="firstFormGroup" [editable]="'false'">
+            <mat-step [stepControl]="firstFormGroup" [editable]="'true'">
                 <form [formGroup]="firstFormGroup">
                     <ng-template matStepLabel>
                         Creating Projects
@@ -96,10 +95,13 @@
                         <button mat-button [disabled]="proceedButton1_" (click)="proceed()">
               Proceed
             </button>
+            <div class="reset">
+                <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
+            </div>
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="secondFormGroup" [editable]="'false'">
+            <mat-step [stepControl]="secondFormGroup" [editable]="'true'">
                 <form [formGroup]="secondFormGroup">
                     <ng-template matStepLabel>
                         Student Preferences
@@ -125,13 +127,19 @@
                         <button mat-button [disabled]="proceedButton2" (click)="sendRemainder()">
               Send Reminder
             </button>
+                        <button mat-button (click)="stepDownStage()">
+                Go Back
+              </button>
                         <button mat-button [disabled]="proceedButton2_" (click)="proceed()">
               Proceed
             </button>
+            <div class="reset">
+                <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
+            </div>
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="thirdFormGroup" [editable]="'false'">
+            <mat-step [stepControl]="thirdFormGroup" [editable]="'true'">
                 <form [formGroup]="thirdFormGroup">
                     <ng-template matStepLabel>Faculty Preferences
 
@@ -157,18 +165,30 @@
                         <button mat-button [disabled]="proceedButton3" (click)="sendRemainder()">
               Send Reminder
             </button>
+                        <button mat-button (click)="stepDownStage()">
+                Go Back
+              </button>
                         <button mat-button [disabled]="proceedButton3_" (click)="proceed()">
               Proceed
             </button>
+            <div class="reset">
+                <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
+            </div>
                     </div>
                 </form>
             </mat-step>
 
-            <mat-step [stepControl]="fourthFormGroup" [editable]="'false'">
+            <mat-step [stepControl]="fourthFormGroup" [editable]="'true'">
                 <form [formGroup]="fourthFormGroup">
                     <ng-template matStepLabel>Project Allocation</ng-template>
                     <div>
                     <h4><b>Please go to the Project tab to start the Allocation</b></h4>
+                    <button mat-button (click)="stepDownStage()">
+                        Go Back
+                      </button>
+                      <div class="reset">
+                        <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
+                    </div>
                     </div>
                 </form>
             </mat-step>
@@ -234,6 +254,10 @@
                     <ng-container matColumnDef="Duration">
                         <th mat-header-cell *matHeaderCellDef>Duration</th>
                         <td mat-cell *matCellDef="let project">{{ project.duration }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="studentIntake">
+                        <th mat-header-cell *matHeaderCellDef>Max Student Intake</th>
+                        <td mat-cell *matCellDef="let project">{{ project.studentIntake }}</td>
                     </ng-container>
                     <ng-container matColumnDef="NoOfStudents">
                         <th mat-header-cell *matHeaderCellDef>No.of preferences</th>

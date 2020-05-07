@@ -114,7 +114,7 @@
           class="submit_button"
           color="primary"
           type="submit"
-          [disabled]="!userForm.valid"
+          [disabled]="!userForm.valid || userForm.controls['branch'].hasError('required')"
         >
           Submit
         </button>

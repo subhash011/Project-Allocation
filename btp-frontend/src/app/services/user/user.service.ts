@@ -583,6 +583,33 @@ export class UserService {
     return this.http.get(this.url, httpOptions);
   }
 
+  revertStage(stage_no){
+    const user = JSON.parse(localStorage.getItem("user"));
+    const id = user.id;
+    const idToken = user.idToken;
+    this.url = this.base_url + "admin/revertStage/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.post(this.url, {stage : stage_no}, httpOptions);
+  }
 
+  resetUsers(){
+    const user = JSON.parse(localStorage.getItem("user"));
+    const id = user.id;
+    const idToken = user.idToken;
+    this.url = this.base_url + "admin/reset/" + id;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+   return this.http.post(this.url, {message:"hi"} ,httpOptions);
+  }
 
 }

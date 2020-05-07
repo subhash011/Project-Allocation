@@ -32,6 +32,7 @@ router.get("/project/:id", (req, res) => {
                                                 title: project.title,
                                                 description: project.description,
                                                 stream: project.stream,
+                                                studentIntake:project.studentIntake,
                                                 duration: project.duration,
                                                 faculty: project.faculty_id.name,
                                                 numberOfPreferences: project.students_id.length,
@@ -165,10 +166,7 @@ router.post("/setDeadline/:id", (req, res) => {
     const date = req.body.deadline;
 
     const format_date = new Date(date);
-
-    format_date.setHours(18);
-    format_date.setMinutes(30);
-
+    format_date.setHours(18, 30);
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then((faculty) => {
             Admin.findOne({ admin_id: faculty._id })
@@ -768,8 +766,7 @@ router.get("/validateAllocation/:id",(req,res)=>{
 
 
                                 })
-                           
-
+                        
                         }
 
                         else{
@@ -812,13 +809,190 @@ router.get("/validateAllocation/:id",(req,res)=>{
             })
 
         })
+});
+
+router.post("/revertStage/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    var stage = req.body.stage;
+  
+    Faculty.findOne({ google_id: { id: id, idToken, idToken } })
+      .then((faculty) => {
+        if (faculty) {
+          Admin.findOne({ admin_id: faculty._id })
+            .then((admin) => {
+              admin.deadlines.pop();
+              if(stage >= 3){
+                stage = 2;
+              }
+              else{
+                stage--;
+              }
+              admin.stage = stage;
+  
+  
+  
+              var promises = [];
+  
+              if (stage >= 3) {
+                Project.find({ stream: admin.stream })
+                  .then((projects) => {
+                    for (const project of projects) {
+                      project.student_alloted = [];
+  
+                      promises.push(
+                        project.save().then((result) => {
+                          return result;
+                        })
+                      );
+                    }
+  
+                    Promise.all(promises)
+                      .then((result) => {
+                        promises = [];
+  
+                        Student.findOne({ stream: admin.stream })
+                          .then((students) => {
+                            for (const student of students) {
+                              student.project_alloted = [];
+  
+                              promises.push(
+                                student.save().then((result) => {
+                                  return result;
+                                })
+                              );
+                            }
+                            Promise.all(promises)
+                              .then((result) => {
+                                admin
+                                  .save()
+                                  .then((result) => {
+                                    res.json({
+                                      status: "success",
+                                      msg:
+                                        "Successfully reverted back to the previous stage",
+                                    });
+                                  })
+                                  .catch((err) => {
+                                    res.json({
+                                      status: "fail",
+                                      result: null,
+                                    });
+                                  });
+                              })
+                              .catch((err) => {
+                                res.json({
+                                  status: "fail",
+                                  result: null,
+                                });
+                              });
+                          })
+                          .catch((err) => {
+                            res.json({
+                              status: "fail",
+                              result: null,
+                            });
+                          });
+                      })
+                      .catch((err) => {
+                        res.json({
+                          status: "fail",
+                          result: null,
+                        });
+                      });
+                  })
+                  .catch((err) => {
+                    res.json({
+                      status: "fail",
+                      result: null,
+                    });
+                  });
+              } 
+              
+              else {
+                admin.save().then((result) => {
+                  res.json({
+                    status: "success",
+                    msg: "Successfully reverted back to the previous stage",
+                  });
+                });
+              }
+            })
+            .catch((err) => {
+              res.json({
+                status: "fail",
+                result: null,
+              });
+            });
+        } else {
+          res.json({
+            status: "fail",
+            result: null,
+          });
+        }
+      })
+      .catch((err) => {
+        res.json({
+          status: "fail",
+          result: null,
+        });
+      });
+});
 
 
-
-
-
+router.post("/reset/:id",(req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    var promises = [];
+    var admin_info;
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(user => {
+        if(user && user.isAdmin){
+            Admin.findOne({admin_id:user._id}).then(admin => {
+                admin.startDate = undefined;
+                admin.deadlines = [];
+                admin.stage = 0;
+                admin.save().then(admin => {
+                    return admin;
+                });
+                return admin;
+            }).then(admin => {
+                const stream = admin.stream;
+                Student.find({stream:stream}).then(students => {
+                    for (const student of students) {
+                        promises.push(
+                            Student.findByIdAndDelete(student._id).then(student => {
+                                return student;
+                            })
+                        );
+                    }
+                    Promise.all(promises).then(result => {
+                        promises = [];
+                        Project.find({stream:stream}).then(projects => {
+                            for (const project of projects) {
+                                promises.push(
+                                    project.updateOne({student_alloted:[], students_id:[]}).then(project => {
+                                        return project;
+                                    })
+                                );
+                            }
+                            Promise.all(promises).then(result => {
+                                res.json({
+                                    message:"success",
+                                    result:null
+                                });
+                            })
+                        })
+                    })
+                })
+            })
+        } else {
+            res.json({
+                message:"invalid-token",
+                result:null
+            })
+        }
+    });
 })
-
 
 
 module.exports = router;

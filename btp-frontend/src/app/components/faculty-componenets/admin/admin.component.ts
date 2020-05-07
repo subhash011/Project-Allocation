@@ -12,6 +12,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatStepper, MatTableDataSource } from "@angular/material";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { SelectionModel } from '@angular/cdk/collections';
+import { ResetComponent } from '../reset/reset.component';
 
 @Component({
   selector: "app-admin",
@@ -26,6 +27,7 @@ export class AdminComponent implements OnInit {
   columns: string[] = [
     "select",
     "Title",
+    "studentIntake",
     "Faculty",
     "Duration",
     "NoOfStudents",
@@ -949,6 +951,119 @@ export class AdminComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
+  stepDownStage(){
 
+    const dialogRef = this.dialog.open(DeletePopUpComponent, {
+      width: "400px",
+      height: "250px",
+      data: {
+        heading: "Confirm Proceed",
+        message:
+          "Are you sure you want to go back to the previous stage? This cannot be undone",
+      },
+    });
+
+    const currStage = this.stage_no;
+
+   
+   
+
+    dialogRef.afterClosed().subscribe((result) => {
+      
+
+      if(result["message"] == "submit"){
+
+                this.userService.revertStage(currStage)
+                  .subscribe(data=>{
+                    if(data["status"]="success"){
+      
+                      this.snackBar.open(
+                        data["msg"],
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+                      this.proceedButton1_ = true;
+                      this.proceedButton2_ = true;
+                      this.proceedButton3_ = true;
+                      this.stepper.previous();
+                      this.ngOnInit();
+                    }
+      
+                    else{
+      
+                      this.snackBar.open(
+                        "Could Not Revert, Please try again.",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+      
+      
+                    }
+      
+                  })
+      
+      
+      
+              }
+      
+              else{
+                this.loginService.signOut();
+                this.snackBar.open(
+                  "Session Timed Out! Please Sign-In again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
+      
+              }
+      
+      
+          
+      
+
+
+
+      
+
+
+
+    })  
+    
+
+
+
+  }
+
+
+  resetProcess(){
+    const dialogRef = this.dialog.open(ResetComponent, {
+      width: "400px",
+      height: "300px"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result["message"] == "submit"){
+        this.loadingBar.start();
+        this.userService.resetUsers().subscribe(result => {
+          this.loadingBar.stop();
+          if(result["message"] == "success"){
+            this.snackBar.open("The alllocation process has been reinitialised","Ok",{
+              duration:3000
+            });
+            this.ngOnInit();
+          } else if(result["message"] == "invalid-token"){
+            this.snackBar.open("Session Expired! Please Sign-In Again","Ok",{
+              duration:3000
+            });
+            this.loginService.signOut();
+          }
+        })
+      }
+    })
+  }
 
 }
