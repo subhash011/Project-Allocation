@@ -373,12 +373,12 @@ export class SuperAdminComponent implements OnInit {
   getToolTipToRemoveFaculty(faculty, branch) {
     if (faculty.isAdmin) {
       if (faculty.adminProgram == branch) {
-        return "Remove admin Status to delete the faculty";
+        return "Remove co-ordinator Status to delete the faculty";
       } else {
         return (
-          "This faculty is an admin for " +
+          "This faculty is a co-ordinator for " +
           faculty.adminProgram +
-          " please remove the admin status to remove the faculty"
+          " please remove the co-ordinator status to remove the faculty"
         );
       }
     } else {
