@@ -768,8 +768,7 @@ router.get("/validateAllocation/:id",(req,res)=>{
 
 
                                 })
-                           
-
+                        
                         }
 
                         else{
@@ -812,13 +811,61 @@ router.get("/validateAllocation/:id",(req,res)=>{
             })
 
         })
-
-
-
-
-
 })
 
+router.post("/reset/:id",(req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    var promises = [];
+    var admin_info;
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(user => {
+        if(user && user.isAdmin){
+            Admin.findOne({admin_id:user._id}).then(admin => {
+                admin.startDate = undefined;
+                admin.deadlines = [];
+                admin.stage = 0;
+                admin.save().then(admin => {
+                    return admin;
+                });
+                return admin;
+            }).then(admin => {
+                const stream = admin.stream;
+                Student.find({stream:stream}).then(students => {
+                    for (const student of students) {
+                        promises.push(
+                            Student.findByIdAndDelete(student._id).then(student => {
+                                return student;
+                            })
+                        );
+                    }
+                    Promise.all(promises).then(result => {
+                        promises = [];
+                        Project.find({stream:stream}).then(projects => {
+                            for (const project of projects) {
+                                promises.push(
+                                    project.updateMany({student_alloted:[], students_id:[]}).then(project => {
+                                        return project;
+                                    })
+                                );
+                            }
+                            Promise.all(promises).then(result => {
+                                res.json({
+                                    message:"success",
+                                    result:null
+                                });
+                            })
+                        })
+                    })
+                })
+            })
+        } else {
+            res.json({
+                message:"invalid-token",
+                result:null
+            })
+        }
+    });
+})
 
 
 module.exports = router;

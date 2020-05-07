@@ -59,14 +59,13 @@
                     </button>
                 </form>
             </div>
-
             <span class="days_left"><strong>Time Left : </strong>
         <countdown-timer [end]="curr_deadline"></countdown-timer
       ></span>
         </div>
 
-        <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no }}">
-            <mat-step [stepControl]="firstFormGroup" [editable]="'false'">
+        <mat-horizontal-stepper #stepper  [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no }}">
+            <mat-step [stepControl]="firstFormGroup" [editable]="'true'">
                 <form [formGroup]="firstFormGroup">
                     <ng-template matStepLabel>
                         Creating Projects
@@ -99,7 +98,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="secondFormGroup" [editable]="'false'">
+            <mat-step [stepControl]="secondFormGroup" [editable]="'true'">
                 <form [formGroup]="secondFormGroup">
                     <ng-template matStepLabel>
                         Student Preferences
@@ -131,7 +130,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="thirdFormGroup" [editable]="'false'">
+            <mat-step [stepControl]="thirdFormGroup" [editable]="'true'">
                 <form [formGroup]="thirdFormGroup">
                     <ng-template matStepLabel>Faculty Preferences
 
@@ -164,7 +163,7 @@
                 </form>
             </mat-step>
 
-            <mat-step [stepControl]="fourthFormGroup" [editable]="'false'">
+            <mat-step [stepControl]="fourthFormGroup" [editable]="'true'">
                 <form [formGroup]="fourthFormGroup">
                     <ng-template matStepLabel>Project Allocation</ng-template>
                     <div>
@@ -173,6 +172,9 @@
                 </form>
             </mat-step>
         </mat-horizontal-stepper>
+        <div class="reset">
+            <button mat-raised-button color="primary" (click)="resetProcess()">Reset</button>
+        </div>
     </mat-tab>
 
     <mat-tab label="Projects">
