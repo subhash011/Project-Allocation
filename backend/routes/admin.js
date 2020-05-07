@@ -79,7 +79,10 @@ router.get("/info/:id", (req, res) => {
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
         (faculty) => {
-            Admin.findOne({ admin_id: faculty._id })
+
+            if(faculty){
+
+                Admin.findOne({ admin_id: faculty._id })
                 .then((admin) => {
                     if (admin) {
                         var startDate;
@@ -115,6 +118,20 @@ router.get("/info/:id", (req, res) => {
                         startDate: startDate,
                     });
                 });
+
+            }
+
+            else{
+
+                res.json({
+                    status:"fail",
+                    stage:0,
+                    deadlines:"",
+                    startDate:startDate
+                })
+
+            }
+           
         }
     );
 });
