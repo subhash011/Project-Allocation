@@ -60,13 +60,21 @@ export class HelpComponent implements OnInit {
       video.currentTime = 91;
     } else if(i == 3) {
       video.currentTime = 104;
-    } 
-    else {
+    } else {
       video.currentTime = 137;
     }
   }
 
+  isStudent(){
+    return localStorage.getItem("role") == "student" ? true : false;
+  }
 
+  isFaculty(){
+    return localStorage.getItem("role") == "faculty" || localStorage.getItem("role") == "admin" ? true : false;
+  }
 
+  isSuperAdmin(){
+    return localStorage.getItem("role") == "super_admin" ? true : false;
+  }
 
 }

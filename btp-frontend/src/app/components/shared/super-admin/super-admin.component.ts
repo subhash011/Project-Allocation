@@ -139,7 +139,7 @@ export class SuperAdminComponent implements OnInit {
               } else {
                 var i = 0;
                 for (const branch of this.programs) {
-                  this.students[branch.short] = result["result"][i];
+                  this.students[branch.short] = result["result"][branch.short];
                   i++;
                 }
               }
@@ -162,7 +162,7 @@ export class SuperAdminComponent implements OnInit {
               } else {
                 var i = 0;
                 for (const branch of this.programs) {
-                  this.faculties[branch.short] = result["result"][i];
+                  this.faculties[branch.short] = result["result"][branch.short];
                   i++;
                 }
               }

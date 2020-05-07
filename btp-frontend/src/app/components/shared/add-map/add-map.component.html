@@ -26,6 +26,9 @@
             <mat-error *ngIf="addForm.controls['map'].hasError('required')">
                 Map is <strong>required</strong>
             </mat-error>
+            <mat-error *ngIf="addForm.controls['map'].hasError('pattern')">
+                Accepted patterns is number followed by '|' followed by (number/word)
+            </mat-error>
         </mat-form-field>
     </div>
 </mat-dialog-content>

@@ -254,7 +254,7 @@
             </div>
         </div>
     </mat-tab>
-    <mat-tab label="Faculty/Co-ordinator">
+    <mat-tab label="Faculty/Admin" *ngIf="isFaculty() || isSuperAdmin()">
 
         <mat-tab-group *ngIf="index == 2" [selectedIndex]="0" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
 
@@ -312,7 +312,7 @@
 
 
     </mat-tab>
-    <mat-tab label="Super Admin">
+    <mat-tab label="Super Admin" *ngIf="isSuperAdmin()">
         <div class="container">
             <h1 class="head"><b><u>Super admin's guide for the application.</u></b></h1>
             <video class="video" #helpvidsa controls name="media">

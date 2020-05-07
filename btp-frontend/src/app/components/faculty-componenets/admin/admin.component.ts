@@ -12,6 +12,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatStepper, MatTableDataSource } from "@angular/material";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { SelectionModel } from '@angular/cdk/collections';
+import { ResetComponent } from '../reset/reset.component';
 
 @Component({
   selector: "app-admin",
@@ -1038,5 +1039,30 @@ export class AdminComponent implements OnInit {
   }
 
 
+  resetProcess(){
+    const dialogRef = this.dialog.open(ResetComponent, {
+      width: "400px",
+      height: "300px"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result["message"] == "submit"){
+        this.loadingBar.start();
+        this.userService.resetUsers().subscribe(result => {
+          this.loadingBar.stop();
+          if(result["message"] == "success"){
+            this.snackBar.open("The alllocation process has been reinitialised","Ok",{
+              duration:3000
+            });
+            this.ngOnInit();
+          } else if(result["message"] == "invalid-token"){
+            this.snackBar.open("Session Expired! Please Sign-In Again","Ok",{
+              duration:3000
+            });
+            this.loginService.signOut();
+          }
+        })
+      }
+    })
+  }
 
 }

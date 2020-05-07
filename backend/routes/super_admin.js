@@ -57,9 +57,10 @@ router.post("/register/:id", (req, res) => {
 
 router.get("/student/details/:id", (req, res) => {
     var streamwise = [];
-    var student = [];
+    var student = {};
     const id = req.params.id;
     const idToken = req.headers.authorization;
+    var students;
     oauth(idToken)
         .then((user) => {
             SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
@@ -84,10 +85,11 @@ router.get("/student/details/:id", (req, res) => {
                                             return newStud;
                                         });
                                         streamwise.push(temp);
+                                        student[branch] = temp;
                                     }
                                     res.json({
                                         message: "success",
-                                        result: streamwise,
+                                        result: student,
                                     });
                                 } else {
                                     res.json({
@@ -119,6 +121,7 @@ router.get("/student/details/:id", (req, res) => {
 router.get("/faculty/details/:id", (req, res) => {
     var streamwise = [];
     const id = req.params.id;
+    var faculty = {};
     const idToken = req.headers.authorization;
     oauth(idToken)
         .then((user) => {
@@ -144,11 +147,11 @@ router.get("/faculty/details/:id", (req, res) => {
                                             };
                                             return newFac;
                                         });
-                                        streamwise.push(temp);
+                                        faculty[branch] = temp;
                                     }
                                     res.json({
                                         message: "success",
-                                        result: streamwise,
+                                        result: faculty,
                                     });
                                 } else {
                                     res.json({
@@ -201,6 +204,9 @@ router.delete("/student/:id", (req, res) => {
                                     promises.push(
                                         Project.findById(projectid).then((project) => {
                                             project.students_id = project.students_id.filter(
+                                                (val) => !val.equals(id)
+                                            );
+                                            project.student_alloted = project.student_alloted.filter(
                                                 (val) => !val.equals(id)
                                             );
                                             project.save().then((project) => {

@@ -62,6 +62,7 @@ router.post("/start/:id", (req, res) => {
             if (faculty) {
                 if (faculty.isAdmin) {
                     stream = faculty.adminProgram;
+                    //reset dbs first
                     Project.find({stream:stream}).then(projects => {
                         for (const project of projects) {
                             project.student_alloted = [];
@@ -75,7 +76,7 @@ router.post("/start/:id", (req, res) => {
                             promises = [];
                             Student.find({stream:stream}).then(students => {
                                 for (const student of students) {
-                                    student.project_alloted = null;
+                                    student.project_alloted = undefined;
                                     promises.push(
                                         student.save().then(student => {
                                             return student;
@@ -83,13 +84,14 @@ router.post("/start/:id", (req, res) => {
                                     )
                                 }
                                 Promise.all(promises).then(result=>{
+                                    //start algorithm here
                                     promises.push(
                                         Project.find({ stream: stream }).then((projectList) => {
                                             projectList = projectList.filter(val => {
                                                 return pids.indexOf(val._id.toString()) != -1;
                                             })
                                             projects = projectList;
-                                            projects.sort((b, a) => {
+                                            projects.sort((a, b) => {
                                                 return a.students_id.length - b.students_id.length;
                                             });
                                             return projects;

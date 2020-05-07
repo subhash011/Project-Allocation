@@ -5,6 +5,25 @@ const Student = require("../models/Student");
 const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
+  }
+
 function getRandom(arr, n) {
     var result = new Array(n),
         len = arr.length,
@@ -60,8 +79,9 @@ router.post("/projects/add", (req, res) => {
         const students = result[0];
         const projects = result[1];
         for (const student of students) {
-            const number = Math.floor(Math.random() * 5 + 1);
+            const number = Math.floor(Math.random() * 3 + 2);
             const arr = getRandom(projects, number);
+            shuffle(arr);
             student.projects_preference = arr;
             promises.push(
                 student.save().then((student) => {
@@ -76,6 +96,7 @@ router.post("/projects/add", (req, res) => {
                     const arr = result.filter((val) => {
                         return val.projects_preference.indexOf(project._id) != -1;
                     });
+                    shuffle(arr);
                     project.students_id = arr;
                     promises.push(
                         project.save().then((result) => {

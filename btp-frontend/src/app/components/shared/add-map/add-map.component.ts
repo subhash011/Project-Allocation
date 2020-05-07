@@ -34,7 +34,7 @@ export class AddMapComponent implements OnInit {
         Validators.pattern("[a-zA-Z-_]*"),
       ]),
     ],
-    map: [null, Validators.required],
+    map: [null, Validators.compose([Validators.required, Validators.pattern("\\d+\\|\\w+")])],
   });
 
   onNoClick() {

@@ -11,7 +11,16 @@ mat-form-field {
 }
 
 mat-card-actions {
-    margin-left: 40%;
+    margin-left: -10%;
+}
+
+.message {
+    text-align: center;
+    margin-top: 5%;
+}
+
+.text {
+    display: inline-block;
 }
 
 .cgpa-field {
@@ -36,14 +45,18 @@ mat-card-content {
     margin-right: 0;
 }
 
+.register-wrapper {
+    text-align: center;
+}
+
 .register {
     z-index: 8;
 }
 
 .register-page {
-    margin-left: 24%;
+    display: inline-block;
     width: 50%;
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 button {
