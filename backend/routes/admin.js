@@ -823,12 +823,11 @@ router.post("/revertStage/:id", (req, res) => {
             .then((admin) => {
               admin.deadlines.pop();
               if(stage >= 3){
-                stage = 2;
+                admin.stage = 2;
               }
               else{
-                stage--;
+                admin.stage = stage - 1;
               }
-              admin.stage = stage;
   
   
   
@@ -851,10 +850,10 @@ router.post("/revertStage/:id", (req, res) => {
                       .then((result) => {
                         promises = [];
   
-                        Student.findOne({ stream: admin.stream })
+                        Student.find({ stream: admin.stream })
                           .then((students) => {
                             for (const student of students) {
-                              student.project_alloted = [];
+                              student.project_alloted = undefined;
   
                               promises.push(
                                 student.save().then((result) => {
