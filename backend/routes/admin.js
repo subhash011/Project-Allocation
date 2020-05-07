@@ -812,13 +812,134 @@ router.get("/validateAllocation/:id",(req,res)=>{
             })
 
         })
+});
 
-
-
-
-
-})
-
-
+router.post("/revertStage/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    var stage = req.body.stage;
+  
+    Faculty.findOne({ google_id: { id: id, idToken, idToken } })
+      .then((faculty) => {
+        if (faculty) {
+          Admin.findOne({ admin_id: faculty._id })
+            .then((admin) => {
+              admin.deadlines.pop();
+              if(stage >= 3){
+                stage = 2;
+              }
+              else{
+                stage--;
+              }
+              admin.stage = stage;
+  
+  
+  
+              var promises = [];
+  
+              if (stage >= 3) {
+                Project.find({ stream: admin.stream })
+                  .then((projects) => {
+                    for (const project of projects) {
+                      project.student_alloted = [];
+  
+                      promises.push(
+                        project.save().then((result) => {
+                          return result;
+                        })
+                      );
+                    }
+  
+                    Promise.all(promises)
+                      .then((result) => {
+                        promises = [];
+  
+                        Student.findOne({ stream: admin.stream })
+                          .then((students) => {
+                            for (const student of students) {
+                              student.project_alloted = [];
+  
+                              promises.push(
+                                student.save().then((result) => {
+                                  return result;
+                                })
+                              );
+                            }
+                            Promise.all(promises)
+                              .then((result) => {
+                                admin
+                                  .save()
+                                  .then((result) => {
+                                    res.json({
+                                      status: "success",
+                                      msg:
+                                        "Successfully reverted back to the previous stage",
+                                    });
+                                  })
+                                  .catch((err) => {
+                                    res.json({
+                                      status: "fail",
+                                      result: null,
+                                    });
+                                  });
+                              })
+                              .catch((err) => {
+                                res.json({
+                                  status: "fail",
+                                  result: null,
+                                });
+                              });
+                          })
+                          .catch((err) => {
+                            res.json({
+                              status: "fail",
+                              result: null,
+                            });
+                          });
+                      })
+                      .catch((err) => {
+                        res.json({
+                          status: "fail",
+                          result: null,
+                        });
+                      });
+                  })
+                  .catch((err) => {
+                    res.json({
+                      status: "fail",
+                      result: null,
+                    });
+                  });
+              } 
+              
+              else {
+                admin.save().then((result) => {
+                  res.json({
+                    status: "success",
+                    msg: "Successfully reverted back to the previous stage",
+                  });
+                });
+              }
+            })
+            .catch((err) => {
+              res.json({
+                status: "fail",
+                result: null,
+              });
+            });
+        } else {
+          res.json({
+            status: "fail",
+            result: null,
+          });
+        }
+      })
+      .catch((err) => {
+        res.json({
+          status: "fail",
+          result: null,
+        });
+      });
+});
 
 module.exports = router;

@@ -26,7 +26,7 @@
                                 <td mat-cell *matCellDef="let faculty">{{ faculty.email }}</td>
                             </ng-container>
                             <ng-container matColumnDef="isAdmin">
-                                <th mat-header-cell *matHeaderCellDef>Admin</th>
+                                <th mat-header-cell *matHeaderCellDef>Co-ordinator</th>
                                 <td mat-cell *matCellDef="let faculty">
                                     {{ faculty.isAdmin ? faculty.adminProgram : "NO" }}
                                 </td>
@@ -52,7 +52,7 @@
                     mat-raised-button
                     (click)="addAdmin(faculty._id, branch.short)"
                   >
-                    Make Admin
+                    Make Co-ordinator
                   </button>
                   <button
                     class="remove-admin-button"
@@ -63,7 +63,7 @@
                     mat-raised-button
                     (click)="removeAdmin(faculty._id)"
                   >
-                    Remove Admin Status
+                    Remove Co-ordinator Status
                   </button>
                 </td>
               </ng-container>

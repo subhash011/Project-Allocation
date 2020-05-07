@@ -10,7 +10,7 @@
             <br>
             <mat-card-content>
               <p>
-                There are three types of users namely <b>Student, Faculty, Super Admin</b>. And there are four roles namely <b>Student, Faculty, Admin, Super Admin</b>. We will have a quick glance on how the process works.                        
+                There are three types of users namely <b>Student, Faculty, Super Admin</b>. And there are four roles namely <b>Student, Faculty, Co-ordinator, Super Admin</b>. We will have a quick glance on how the process works.                        
                 We will go through these roles in detail first.
               </p>
               <ul>
@@ -30,10 +30,10 @@
                   </li>
 
                   <li>
-                    <h4>Admin</h4>
+                    <h4>Co-ordinator</h4>
                     <p>
-                        Presets help to control the number of students assigned to each faculty. These are assigned by the Admin of each program and is unique to a program.
-                        Admin is responsible for setting the deadlines of the programs. Mails will be sent to the particilar groups of users about the deadline. Please note
+                        Presets help to control the number of students assigned to each faculty. These are assigned by the Co-ordinator of each program and is unique to a program.
+                        Co-ordinator is responsible for setting the deadlines of the programs. Mails will be sent to the particilar groups of users about the deadline. Please note
                         that this is not automated for the first three stages i.e you have to hit the Send Mails button to send the mails. Only for the last stage this is automated.
                     </p>
                     <ol>
@@ -61,13 +61,13 @@
                             <h4>Priviliges</h4>
                             <ul>
                                 <li>
-                                    Admin can access the details of students & faculty who opted for the program.
+                                    Co-ordinator can access the details of students & faculty who opted for the program.
                                 </li>
                                 <li>
-                                    Admin can remove any student or faculty who opted for that program.
+                                    Co-ordinator can remove any student or faculty who opted for that program.
                                 </li>
                                 <li>
-                                    Admin has the access to deadlines and can change deadlines.
+                                    Co-ordinator has the access to deadlines and can change deadlines.
                                 </li>
                             </ul>
                         </li>
@@ -84,7 +84,7 @@
                             Super Admin has the access to the database.
                         </li>
                         <li>
-                            Super Admin is responsible for selecting the program Admins before the start of the Allocation.
+                            Super Admin is responsible for selecting the program Co-ordinators before the start of the Allocation.
                         </li>
                         <li>
                             They have the privilige to add programs.
@@ -103,10 +103,10 @@
                     Before the start of the allocation all the students and faculty have to register into the application.
                 </li>
                 <li>
-                    The Super Admin has to choose the Admins of each program. Note that every program should have a unique Admin.
+                    The Super Admin has to choose the Co-ordinators of each program. Note that every program should have a unique Co-ordinator.
                 </li>
                 <li>
-                    The Admins of each program have to start the allocation by setting the first deadline and fillng in the presets. On setting the first deadine the stages start i.e it will go to stage 1. 
+                    The Co-ordinators of each program have to start the allocation by setting the first deadline and fillng in the presets. On setting the first deadine the stages start i.e it will go to stage 1. 
                 </li>
                 <li>
                     <b>Start of Stage 1</b>
@@ -118,7 +118,7 @@
                     <b>End of Stage 1</b>
                 </li>
                 <li>
-                    Admins have to proceed to the next stage by hitting the proceed button. Admins have to make sure that no faculty have violated the presets, otherwise you wont be able to move to the next stage.
+                    Co-ordinators have to proceed to the next stage by hitting the proceed button. Co-ordinators have to make sure that no faculty have violated the presets, otherwise you wont be able to move to the next stage.
                 </li>
                 <li>
                     <b>Start of Stage 2</b>
@@ -130,7 +130,7 @@
                     <b>End of Stage 2</b>
                 </li>
                 <li>
-                    Admin has to proceed to the next stage and set the deadline for this stage.
+                    Co-ordinator has to proceed to the next stage and set the deadline for this stage.
                 </li>
                 <li>
                     <b>Start of Stage 3</b>
@@ -166,7 +166,7 @@
                             The faculty can <b>ADD/EDIT/DELETE</b> projects. Note that these options will be disabled in the further stages.
                         </li>
                         <li>
-                            Sometimes you wont be able to add any projects because you may be violating certain presets set by the Admin of that program. In such case you need to communicate with the Admin and take necessary steps.
+                            Sometimes you wont be able to add any projects because you may be violating certain presets set by the Co-ordinator of that program. In such case you need to communicate with the Co-ordinator and take necessary steps.
                         </li>
                         <li>
                             The Save Preferences button in the Students Tab in each project will be disabled. Please refrain from clicking it.
@@ -254,7 +254,7 @@
             </div>
         </div>
     </mat-tab>
-    <mat-tab label="Faculty/Admin">
+    <mat-tab label="Faculty/Co-ordinator">
 
         <mat-tab-group *ngIf="index == 2" [selectedIndex]="0" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
 
@@ -280,7 +280,7 @@
             </mat-tab>
 
 
-            <mat-tab label="Admin">
+            <mat-tab label="Co-ordinator">
 
         
 

@@ -949,6 +949,94 @@ export class AdminComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
+  stepDownStage(){
+
+    const dialogRef = this.dialog.open(DeletePopUpComponent, {
+      width: "400px",
+      height: "250px",
+      data: {
+        heading: "Confirm Proceed",
+        message:
+          "Are you sure you want to go back to the previous stage? This cannot be undone",
+      },
+    });
+
+    const currStage = this.stage_no;
+
+   
+   
+
+    dialogRef.afterClosed().subscribe((result) => {
+      
+
+      if(result["message"] == "submit"){
+
+                this.userService.revertStage(currStage)
+                  .subscribe(data=>{
+                    if(data["status"]="success"){
+      
+                      this.snackBar.open(
+                        data["msg"],
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+                      this.proceedButton1_ = true;
+                      this.proceedButton2_ = true;
+                      this.proceedButton3_ = true;
+                      this.stepper.previous();
+                      this.ngOnInit();
+                    }
+      
+                    else{
+      
+                      this.snackBar.open(
+                        "Could Not Revert, Please try again.",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+      
+      
+                    }
+      
+                  })
+      
+      
+      
+              }
+      
+              else{
+                this.loginService.signOut();
+                this.snackBar.open(
+                  "Session Timed Out! Please Sign-In again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
+      
+              }
+      
+      
+          
+      
+
+
+
+      
+
+
+
+    })  
+    
+
+
+
+  }
+
 
 
 }
