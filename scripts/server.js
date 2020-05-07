@@ -21,7 +21,7 @@ var mongoConnect = process.env.MONGO_URL;
 // mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/Testing
 
 mongoose
-    .connect('mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false/ProjectAllocationTest', {
+    .connect('mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/test', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })

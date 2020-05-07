@@ -89,7 +89,7 @@ router.post("/start/:id", (req, res) => {
                                                 return pids.indexOf(val._id.toString()) != -1;
                                             })
                                             projects = projectList;
-                                            projects.sort((b, a) => {
+                                            projects.sort((a, b) => {
                                                 return a.students_id.length - b.students_id.length;
                                             });
                                             return projects;
