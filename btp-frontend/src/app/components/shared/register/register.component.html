@@ -1,8 +1,9 @@
-<div *ngIf="message == 'fail'" class="alert alert-danger fade in alert-dismissible" style="margin-top: 18px;">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a
-  >
-  <strong>Registration Failed</strong>
+<div class="message" *ngIf="userForm.controls['branch'].hasError('required')">
+  <div class="text">
+    <h3>If you do not see your program listed here contact the super admin or the admin of your program.</h3>
+  </div>
 </div>
+<div class="register-wrapper">
 <div class="register-page">
   <form
     class="register"
@@ -61,7 +62,7 @@
         </div>
         <div class="row" *ngIf="!isSuperAdmin() && getRole()">
           <mat-form-field class="full-width">
-            <mat-select placeholder="Branch" formControlName="branch">
+            <mat-select placeholder="Program" formControlName="branch">
               <mat-option
                 *ngFor="let program of programs"
                 [value]="program.short"
@@ -70,7 +71,7 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="userForm.controls['branch'].hasError('required')">
-              Branch is <strong>required</strong>
+              Program is <strong>required</strong>
             </mat-error>
           </mat-form-field>
         </div>
@@ -121,3 +122,5 @@
     </mat-card>
   </form>
 </div>
+</div>
+
