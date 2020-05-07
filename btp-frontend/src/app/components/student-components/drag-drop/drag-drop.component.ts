@@ -97,25 +97,48 @@ export class DragDropComponent implements OnInit {
       });
     }
     dialogRef.afterClosed().subscribe((result) => {
-      if (result == "success") {
-        this.disable = true;
-        this.snackBar.open("Preferences Saved Successfully", "OK", {
-          duration: 3000,
-        });
-      } else if (result == "error") {
-        this.disable = false;
-        this.snackBar.open(
-          "Some Error Occured! If the Error Persists Please re-authenticate",
-          "OK",
-          {
+      this.loadingBar.start();
+      if(result["message"] == "submit"){
+        this.projectService
+        .storeStudentPreferences(result["result"])
+        .toPromise()
+        .then((res) => {
+          return res["message"];
+        })
+        .catch((err) => {
+          this.loadingBar.stop();
+          this.disable = false;
+          this.snackBar.open(
+            "Some Error Occured! If the Error Persists Please re-authenticate",
+            "OK",
+            {
+              duration: 3000,
+            }
+          );
+        })
+        .then((message) => {
+          this.loadingBar.stop();
+          if (message == "success") {
+            this.disable = true;
+          this.snackBar.open("Preferences Saved Successfully", "OK", {
             duration: 3000,
+          });
+          } else if (message == "invalid-token") {
+            this.disable = false;
+            this.loginObject.signOut();
+            this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+              duration: 3000,
+            });
+          } else {
+            this.disable = false;
+            this.snackBar.open(
+              "Some Error Occured! If the Error Persists Please re-authenticate",
+              "OK",
+              {
+                duration: 3000,
+              }
+            );
           }
-        );
-      } else if (result == "invalid-token") {
-        this.disable = false;
-        this.loginObject.signOut();
-        this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-          duration: 3000,
         });
       }
     });
