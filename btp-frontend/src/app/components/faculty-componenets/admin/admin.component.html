@@ -95,6 +95,9 @@
                         <button mat-button [disabled]="proceedButton1_" (click)="proceed()">
               Proceed
             </button>
+            <div class="reset">
+                <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
+            </div>
                     </div>
                 </form>
             </mat-step>
@@ -130,6 +133,9 @@
                         <button mat-button [disabled]="proceedButton2_" (click)="proceed()">
               Proceed
             </button>
+            <div class="reset">
+                <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
+            </div>
                     </div>
                 </form>
             </mat-step>
@@ -165,6 +171,9 @@
                         <button mat-button [disabled]="proceedButton3_" (click)="proceed()">
               Proceed
             </button>
+            <div class="reset">
+                <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
+            </div>
                     </div>
                 </form>
             </mat-step>
@@ -177,13 +186,13 @@
                     <button mat-button (click)="stepDownStage()">
                         Go Back
                       </button>
+                      <div class="reset">
+                        <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
+                    </div>
                     </div>
                 </form>
             </mat-step>
         </mat-horizontal-stepper>
-        <div class="reset">
-            <button mat-raised-button color="primary" (click)="resetProcess()">Reset</button>
-        </div>
     </mat-tab>
 
     <mat-tab label="Projects">
@@ -245,6 +254,10 @@
                     <ng-container matColumnDef="Duration">
                         <th mat-header-cell *matHeaderCellDef>Duration</th>
                         <td mat-cell *matCellDef="let project">{{ project.duration }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="studentIntake">
+                        <th mat-header-cell *matHeaderCellDef>Max Student Intake</th>
+                        <td mat-cell *matCellDef="let project">{{ project.studentIntake }}</td>
                     </ng-container>
                     <ng-container matColumnDef="NoOfStudents">
                         <th mat-header-cell *matHeaderCellDef>No.of preferences</th>

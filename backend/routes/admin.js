@@ -32,6 +32,7 @@ router.get("/project/:id", (req, res) => {
                                                 title: project.title,
                                                 description: project.description,
                                                 stream: project.stream,
+                                                studentIntake:project.studentIntake,
                                                 duration: project.duration,
                                                 faculty: project.faculty_id.name,
                                                 numberOfPreferences: project.students_id.length,
@@ -165,10 +166,7 @@ router.post("/setDeadline/:id", (req, res) => {
     const date = req.body.deadline;
 
     const format_date = new Date(date);
-
-    format_date.setHours(18);
-    format_date.setMinutes(30);
-
+    format_date.setHours(18, 30);
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then((faculty) => {
             Admin.findOne({ admin_id: faculty._id })
@@ -972,7 +970,7 @@ router.post("/reset/:id",(req, res) => {
                         Project.find({stream:stream}).then(projects => {
                             for (const project of projects) {
                                 promises.push(
-                                    project.updateMany({student_alloted:[], students_id:[]}).then(project => {
+                                    project.updateOne({student_alloted:[], students_id:[]}).then(project => {
                                         return project;
                                     })
                                 );
