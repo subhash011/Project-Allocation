@@ -182,8 +182,8 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 
    #### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
 
-3. Define `apiUrl` and `GOOGLE_CLIENT_ID` in the environment.prod.ts file. During the build the environment.ts file is replaced by  
-   environment.prod.ts file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
+3. Define `apiUrl` and `GOOGLE_CLIENT_ID` in the environment.prod.ts file. During the build the environment.ts file is replaced by environment.prod.ts 
+   file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
    file and under configurations, create a new configuration and define the file replacements in the file replacements array.
    This artice explains very well on how to use the file replacements array:
    `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`
