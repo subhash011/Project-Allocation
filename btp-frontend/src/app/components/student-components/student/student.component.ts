@@ -25,7 +25,6 @@ export class StudentComponent implements OnInit {
   details: any;
   loaded: boolean = false;
   ngOnInit() {
-    this.loadingService.start();
     this.user = JSON.parse(localStorage.getItem("user"));
     this.user = this.userService
       .getStudentDetails(this.user.id)
@@ -36,17 +35,14 @@ export class StudentComponent implements OnInit {
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
-          this.loadingService.stop();
         } else if (data["status"] == "success") {
           this.details = data["user_details"];
           this.loaded = true;
-          this.loadingService.stop();
         } else {
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
-          this.loadingService.stop();
         }
       });
   }
