@@ -28,7 +28,7 @@ export class ShowPreferencesComponent implements OnInit {
 
   ngOnInit() {}
   onNoClick(): void {
-    this.dialogRef.close("closed");
+    this.dialogRef.close({message:"closed"});
   }
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -51,27 +51,6 @@ export class ShowPreferencesComponent implements OnInit {
     return "/student" + "/preferences/" + localStorage.getItem("id");
   }
   savePreferences() {
-    this.projectService
-      .storeStudentPreferences(this.preferences)
-      .toPromise()
-      .then((res) => {
-        return res["message"];
-      })
-      .catch((err) => {
-        this.dialogRef.close("failed");
-      })
-      .then((message) => {
-        if (message == "success") {
-          this.dialogRef.close("success");
-        } else if (message == "invalid-token") {
-          this.dialogRef.close("invalid-token");
-          this.loginObject.signOut();
-          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-            duration: 3000,
-          });
-        } else {
-          this.dialogRef.close("error");
-        }
-      });
+    this.dialogRef.close({message:"submit", result:this.preferences});
   }
 }
