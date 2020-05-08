@@ -741,10 +741,12 @@ router.post("/set_StudentCount/:id",(req,res)=>{
 })
 
 
-router.get("/validateAllocation/:id",(req,res)=>{
+router.post("/validateAllocation/:id",(req,res)=>{
 
     const id = req.params.id;
     const idToken = req.headers.authorization;
+    const selectedProjects = req.body.projects;
+
 
     Faculty.findOne({google_id:{id:id,idToken:idToken}})
         .then(faculty=>{
@@ -756,7 +758,35 @@ router.get("/validateAllocation/:id",(req,res)=>{
 
                         if(admin){
 
-                            Project.find({stream:admin.stream})
+
+                            if(admin.stage >= 3){
+
+                                var count_sum = 0;
+
+                                for(const project of selectedProjects){
+
+                                    count_sum += Number(project.studentIntake);
+
+                                }
+
+                                if(count_sum >= admin.studentCount){
+                                    res.json({
+                                        status:"success"
+                                    })
+                                }
+                                else{
+                                    res.json({
+                                        status:"fail"
+                                    })
+                                }
+
+                            }
+
+                            else{
+
+
+                            
+                                Project.find({stream:admin.stream})
                                 .then(projects=>{
 
                                     var count = 0;
@@ -774,18 +804,18 @@ router.get("/validateAllocation/:id",(req,res)=>{
 
                                     }
 
-                                    else{
-                                        res.json({
-                                            status:"fail",
-                                            result:null
-                                        })
-                                    }
+                                        else{
+                                            res.json({
+                                                status:"fail",
+                                                result:null
+                                            })
+                                        }
 
 
-                                })
+                                    })
                         
+                            }
                         }
-
                         else{
 
 
@@ -795,8 +825,6 @@ router.get("/validateAllocation/:id",(req,res)=>{
                             })
 
                         }
-
-
 
                     })
                     .catch(err=>{

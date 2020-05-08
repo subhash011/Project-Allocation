@@ -191,7 +191,7 @@ export class AdminComponent implements OnInit {
                 }
               }
 
-              this.userService.validateAllocation()
+              this.userService.validateAllocation(this.projects)
                 .subscribe(data=>{
 
                   if(data["status"] == "success"){
@@ -506,7 +506,7 @@ export class AdminComponent implements OnInit {
     this.loadingBar.start();
 
 
-    this.userService.validateAllocation()
+    this.userService.validateAllocation(selectedProjects)
       .subscribe(data=>{
         if(data["status"] == "success"){
 
