@@ -8,6 +8,7 @@ import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 export class HelpComponent implements OnInit {
   @ViewChild('helpvid',{static:false}) help : ElementRef
   @ViewChild('helpvidsa',{static:false}) helpsa : ElementRef
+  @ViewChild('helpvidad',{static:false}) helpad : ElementRef
   constructor() {}
   background = "primary";
   index;
@@ -53,15 +54,15 @@ export class HelpComponent implements OnInit {
   }
 
   gotoad(i){
-    const video = this.helpsa.nativeElement;
+    const video = this.helpad.nativeElement;
     if(i == 1){
       video.currentTime = 0;
     } else if(i == 2){
-      video.currentTime = 91;
+      video.currentTime = 112;
     } else if(i == 3) {
-      video.currentTime = 104;
+      video.currentTime = 162;
     } else {
-      video.currentTime = 137;
+      video.currentTime = 194;
     }
   }
 

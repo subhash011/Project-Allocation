@@ -33,8 +33,8 @@
                     <h4>Co-ordinator</h4>
                     <p>
                         Presets help to control the number of students assigned to each faculty. These are assigned by the Co-ordinator of each program and is unique to a program.
-                        Co-ordinator is responsible for setting the deadlines of the programs. Mails will be sent to the particilar groups of users about the deadline. Please note
-                        that this is not automated for the first three stages i.e you have to hit the Send Mails button to send the mails. Only for the last stage this is automated.
+                        Co-ordinator is responsible for setting the deadlines of the programs. Mails will be sent to the particular groups of users about the deadline. Please note
+                        that this is not automated for any of the stages i.e you have to click the Send Mails button.
                     </p>
                     <ol>
                         <li>
@@ -53,6 +53,10 @@
                                 <li>
                                     <b>Students Per Faculty</b>: 
                                     This is the maximum number of students each faculty can intake considering all the projects they floated. This is not set to anything in the start. 
+                                </li>
+                                <li>
+                                    <b>Number of Students</b>: 
+                                    This is the number of students involved in the program. This is not set to anything in the start. 
                                 </li>
 
                             </ul>
@@ -218,8 +222,11 @@
                     </p>
                     <ol>
                         <li>
-                           Project Allocation happens program wise, and after the allocation mails will be sent automatically to all the members involved in that particular program indicating the end of the allocation.
+                           Project Allocation allocates program wise, and after the allocation make sure to click on the Send Mails button to send mails to all the members involved in that particular program indicating the end of the allocation.
                         </li>
+                        <li>
+                            Now you can exclude projects from the allocation by deselecting them in the Project tab. Go through the video to understand this better.
+                         </li>
                         <li>
                             Students will be able to see their project alloted in their home page. It will appear as an expansion panel in place of the timeline.
                         </li>
@@ -254,7 +261,7 @@
             </div>
         </div>
     </mat-tab>
-    <mat-tab label="Faculty/Admin" *ngIf="isFaculty() || isSuperAdmin()">
+    <mat-tab label="Faculty/Co-ordinator" *ngIf="isFaculty() || isSuperAdmin()">
 
         <mat-tab-group *ngIf="index == 2" [selectedIndex]="0" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
 
@@ -286,9 +293,9 @@
 
 
                 <div class="container">
-                    <h1 class="head"><b><u>Faculty Guide</u></b></h1>
-                    <video class="video" #helpvidsa controls name="media">
-                        <source src="../../../assets/Admin.mp4" type="video/mp4">
+                    <h1 class="head"><b><u>Co-ordinator Guide</u></b></h1>
+                    <video class="video" #helpvidad controls name="media">
+                        <source src="../../../assets/Admin_Remade.mp4" type="video/mp4">
                     </video>
                     <!-- <iframe #helpvid class="video" width="967" height="544" src="../../../assets/Student.mp4" frameborder="0" allowfullscreen></iframe> -->
                     <br>
