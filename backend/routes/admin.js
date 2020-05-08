@@ -661,88 +661,7 @@ router.get("/fetchAllMails/:id", (req, res) => {
     );
 });
 
-
-router.post("/set_StudentCount/:id",(req,res)=>{
-
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const cap = req.body.cap;
-
-
-    Faculty.findOne({google_id:{id:id,idToken:idToken}})
-        .then(faculty=>{
-
-            if(faculty){
-
-                Admin.findOne({admin_id:faculty._id})
-                    .then(admin=>{
-
-
-                        if(admin){
-
-                            admin.studentCount = cap;
-
-                            admin.save()
-                                .then(result=>{
-
-                                    res.json({
-                                        status:"success",
-                                        msg:"Number of Students set successfully!!"
-                                    })
-
-
-                                })
-                           
-
-                        }
-
-                        else{
-
-
-                            res.json({
-                                status:"fail",
-                                result:null
-                            })
-
-                        }
-
-
-
-                    })
-                    .catch(err=>{
-                        res.json({
-                            status:"fail",
-                            result:null
-                        })
-
-                    })
-
-            }
-            else{
-
-                res.json({
-                    status:"fail",
-                    result:null
-                })
-
-            }
-
-
-        })
-        .catch(err=>{
-            res.json({
-                status:"fail",
-                result:null
-            })
-
-        })
-
-
-})
-
-
 router.post("/validateAllocation/:id",(req,res)=>{
-
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const selectedProjects = req.body.projects;
@@ -855,6 +774,87 @@ router.post("/validateAllocation/:id",(req,res)=>{
 
         })
 });
+
+
+
+router.post("/set_StudentCount/:id",(req,res)=>{
+
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const cap = req.body.cap;
+
+
+    Faculty.findOne({google_id:{id:id,idToken:idToken}})
+        .then(faculty=>{
+
+            if(faculty){
+
+                Admin.findOne({admin_id:faculty._id})
+                    .then(admin=>{
+
+
+                        if(admin){
+
+                            admin.studentCount = cap;
+
+                            admin.save()
+                                .then(result=>{
+
+                                    res.json({
+                                        status:"success",
+                                        msg:"Number of Students set successfully!!"
+                                    })
+
+
+                                })
+                           
+
+                        }
+
+                        else{
+
+
+                            res.json({
+                                status:"fail",
+                                result:null
+                            })
+
+                        }
+
+
+
+                    })
+                    .catch(err=>{
+                        res.json({
+                            status:"fail",
+                            result:null
+                        })
+
+                    })
+
+            }
+            else{
+
+                res.json({
+                    status:"fail",
+                    result:null
+                })
+
+            }
+
+
+        })
+        .catch(err=>{
+            res.json({
+                status:"fail",
+                result:null
+            })
+
+        })
+
+
+})
+
 
 router.post("/revertStage/:id", (req, res) => {
     const id = req.params.id;
