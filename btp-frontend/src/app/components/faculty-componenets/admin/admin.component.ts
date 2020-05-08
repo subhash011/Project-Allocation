@@ -192,7 +192,7 @@ export class AdminComponent implements OnInit {
                 }
               }
 
-              this.userService.validateAllocation()
+              this.userService.validateAllocation(this.projects)
                 .subscribe(data=>{
 
                   if(data["status"] == "success"){
@@ -508,7 +508,7 @@ export class AdminComponent implements OnInit {
       disableClose:true,
       hasBackdrop:true,
     });
-    this.userService.validateAllocation()
+    this.userService.validateAllocation(selectedProjects)
       .subscribe(data=>{
         if(data["status"] == "success") {
           this.projectService.startAllocation(selectedProjects).subscribe((data) => {
@@ -527,7 +527,6 @@ export class AdminComponent implements OnInit {
                 .updateStage(this.stage_no + 1)
                 .subscribe((data) => {
                   if (data["status"] == "success") {
-                    this.loadingBar.stop();
                     this.snackBar.open(
                       "Allocation completed successfully",
                       "Ok",
@@ -547,7 +546,6 @@ export class AdminComponent implements OnInit {
                   }
                 });
               } else {
-                this.loadingBar.stop();
                 this.snackBar.open(
                   "Allocation completed successfully",
                   "Ok",
@@ -558,13 +556,11 @@ export class AdminComponent implements OnInit {
 
               }
             } else if (data["message"] == "invalid-token") {
-              this.loadingBar.stop();
               this.loginService.signOut();
               this.snackBar.open("Session Expired! Sign-In and try again", "Ok", {
                 duration: 3000,
               });
             } else {
-              this.loadingBar.stop();
               this.snackBar.open("Some error occured! Try again", "Ok", {
                 duration: 3000,
               });

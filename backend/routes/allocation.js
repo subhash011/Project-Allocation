@@ -236,7 +236,7 @@ router.post("/start/:id", (req, res) => {
                                                                 stream: project.stream,
                                                                 duration: project.duration,
                                                                 faculty: project.faculty_id.name,
-                                                                studentIntake: project.studentIntake,
+                                                                studentIntake:project.studentIntake,
                                                                 numberOfPreferences: project.students_id.length,
                                                                 student_alloted: project.student_alloted,
                                                                 students_id:project.students_id
