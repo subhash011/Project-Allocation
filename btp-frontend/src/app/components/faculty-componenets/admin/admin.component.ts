@@ -291,7 +291,7 @@ export class AdminComponent implements OnInit {
       data: {
         heading: "Confirm Proceed",
         message:
-          "Are you sure you want to proceed to the next stage? This cannot be undone",
+          "Please ensure that mails have been sent. Are you sure you want to proceed to the next stage?",
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -504,6 +504,14 @@ export class AdminComponent implements OnInit {
   startAllocation() {
     var selectedProjects = this.selection.selected;
     this.loadingBar.start();
+
+
+    this.userService.validateAllocation()
+      .subscribe(data=>{
+        if(data["status"] == "success"){
+
+
+
     this.projectService.startAllocation(selectedProjects).subscribe((data) => {
       if (data["message"] == "success") {
           selectedProjects = selectedProjects.map(val => String(val._id));
@@ -565,6 +573,19 @@ export class AdminComponent implements OnInit {
         });
       }
     });
+
+        }
+        else{
+          this.snackBar.open("Please include more projects in the allocation as a stable allocation is not possible!!", "Ok", {
+            duration: 3000,
+          });
+        }
+
+
+
+      })
+
+
   }
 
 
@@ -959,7 +980,7 @@ export class AdminComponent implements OnInit {
       data: {
         heading: "Confirm Proceed",
         message:
-          "Are you sure you want to go back to the previous stage? This cannot be undone",
+          "Are you sure you want to revert back to the previous stage?",
       },
     });
 
@@ -987,6 +1008,11 @@ export class AdminComponent implements OnInit {
                       this.proceedButton1_ = true;
                       this.proceedButton2_ = true;
                       this.proceedButton3_ = true;
+
+                      this.proceedButton1 = true;
+                      this.proceedButton2 = true;
+                      this.proceedButton3 = true;
+
                       this.stepper.previous();
                       this.ngOnInit();
                     }

@@ -79,7 +79,10 @@ router.get("/info/:id", (req, res) => {
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
         (faculty) => {
-            Admin.findOne({ admin_id: faculty._id })
+
+            if(faculty){
+
+                Admin.findOne({ admin_id: faculty._id })
                 .then((admin) => {
                     if (admin) {
                         var startDate;
@@ -115,6 +118,20 @@ router.get("/info/:id", (req, res) => {
                         startDate: startDate,
                     });
                 });
+
+            }
+
+            else{
+
+                res.json({
+                    status:"fail",
+                    stage:0,
+                    deadlines:"",
+                    startDate:startDate
+                })
+
+            }
+           
         }
     );
 });
@@ -823,12 +840,11 @@ router.post("/revertStage/:id", (req, res) => {
             .then((admin) => {
               admin.deadlines.pop();
               if(stage >= 3){
-                stage = 2;
+                admin.stage = 2;
               }
               else{
-                stage--;
+                admin.stage = stage - 1;
               }
-              admin.stage = stage;
   
   
   
@@ -851,10 +867,10 @@ router.post("/revertStage/:id", (req, res) => {
                       .then((result) => {
                         promises = [];
   
-                        Student.findOne({ stream: admin.stream })
+                        Student.find({ stream: admin.stream })
                           .then((students) => {
                             for (const student of students) {
-                              student.project_alloted = [];
+                              student.project_alloted = undefined;
   
                               promises.push(
                                 student.save().then((result) => {
