@@ -2,7 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
-const compression = require('compression');
+const compression = require("compression");
 require("dotenv/config");
 
 // start the server
@@ -13,18 +13,18 @@ const app = express();
 
 //express session
 app.use(
-    session({
-        cookie: { maxAge: 60000 },
-        secret: "woot",
-        resave: false,
-        saveUninitialized: false,
-    })
+  session({
+    cookie: { maxAge: 60000 },
+    secret: "woot",
+    resave: false,
+    saveUninitialized: false,
+  })
 );
 app.use(compression());
 app.use(cors());
 
 //use body-parser
-app.use(bodyparser.json({limit: '50mb', extended: true}));
+app.use(bodyparser.json({ limit: "50mb", extended: true }));
 mongoose.set("useFindAndModify", false);
 
 //uncomment during production
@@ -33,16 +33,16 @@ mongoose.set("useFindAndModify", false);
 var mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
 mongoose
-    .connect(mongoConnect, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => {
-        console.log("connected to mongodb");
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+  .connect(mongoConnect, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("connected to mongodb");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 //define all routes below this
 const home = require("./routes/home");
@@ -78,11 +78,10 @@ app.use("/email", mail);
 const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
-    console.log(req.url)
-    res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
+  res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
 });
 
 //start server
 app.listen(PORT, () => {
-    console.log("Server connected to port " + PORT);
+  console.log("Server connected to port " + PORT);
 });
