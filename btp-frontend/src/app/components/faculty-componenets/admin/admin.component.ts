@@ -515,7 +515,7 @@ export class AdminComponent implements OnInit {
             }
           });
           if(this.stage_no == 3){
-              this.userService
+            this.userService
             .updateStage(this.stage_no + 1)
             .subscribe((data) => {
               if (data["status"] == "success") {
