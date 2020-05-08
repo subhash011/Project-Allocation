@@ -90,6 +90,8 @@ export class DragDropComponent implements OnInit {
     if (this.dialog.openDialogs.length == 0) {
       this.disable = true;
       dialogRef = this.dialog.open(ShowPreferencesComponent, {
+        disableClose:false,
+        hasBackdrop:true,
         panelClass: "no-toolbar-padding",
         width: "800px",
         height: "800px",
@@ -98,7 +100,7 @@ export class DragDropComponent implements OnInit {
     }
     dialogRef.afterClosed().subscribe((result) => {
       this.loadingBar.start();
-      if(result["message"] == "submit"){
+      if(result && result["message"] == "submit"){
         this.projectService
         .storeStudentPreferences(result["result"])
         .toPromise()

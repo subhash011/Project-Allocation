@@ -13,6 +13,7 @@ import { MatStepper, MatTableDataSource } from "@angular/material";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { SelectionModel } from '@angular/cdk/collections';
 import { ResetComponent } from '../reset/reset.component';
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: "app-admin",
@@ -490,7 +491,6 @@ export class AdminComponent implements OnInit {
         }
       });
     } else {
-      //Snack bar
       let snackBarRef = this.snackBar.open("Plese choose the deadline", "Ok", {
         duration: 3000,
       });
@@ -503,30 +503,50 @@ export class AdminComponent implements OnInit {
 
   startAllocation() {
     var selectedProjects = this.selection.selected;
-    this.loadingBar.start();
-
-
+    var dialogRef = this.dialog.open(LoaderComponent, {
+      data:"Allocating projects, Please wait as this may take a while",
+      disableClose:true,
+      hasBackdrop:true,
+    });
     this.userService.validateAllocation()
       .subscribe(data=>{
-        if(data["status"] == "success"){
-
-
-
-    this.projectService.startAllocation(selectedProjects).subscribe((data) => {
-      if (data["message"] == "success") {
-          selectedProjects = selectedProjects.map(val => String(val._id));
-          this.dataSource = new MatTableDataSource(data["result"]);
-          this.selection.clear();
-          this.dataSource.data.forEach(row => {
-            if(selectedProjects.indexOf(row._id.toString()) != -1){
-              this.selection.select(row);
-            }
-          });
-          if(this.stage_no == 3){
-            this.userService
-            .updateStage(this.stage_no + 1)
-            .subscribe((data) => {
-              if (data["status"] == "success") {
+        if(data["status"] == "success") {
+          this.projectService.startAllocation(selectedProjects).subscribe((data) => {
+          dialogRef.close();
+          if (data["message"] == "success") {
+              selectedProjects = selectedProjects.map(val => String(val._id));
+              this.dataSource = new MatTableDataSource(data["result"]);
+              this.selection.clear();
+              this.dataSource.data.forEach(row => {
+                if(selectedProjects.indexOf(row._id.toString()) != -1){
+                  this.selection.select(row);
+                }
+              });
+              if(this.stage_no == 3){
+                this.userService
+                .updateStage(this.stage_no + 1)
+                .subscribe((data) => {
+                  if (data["status"] == "success") {
+                    this.loadingBar.stop();
+                    this.snackBar.open(
+                      "Allocation completed successfully",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                  } else {
+                    this.loginService.signOut();
+                    this.snackBar.open(
+                      "Session Timed Out! Please Sign-In again",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                  }
+                });
+              } else {
                 this.loadingBar.stop();
                 this.snackBar.open(
                   "Allocation completed successfully",
@@ -535,57 +555,28 @@ export class AdminComponent implements OnInit {
                     duration: 3000,
                   }
                 );
-              } else {
-                this.loginService.signOut();
-                this.snackBar.open(
-                  "Session Timed Out! Please Sign-In again",
-                  "Ok",
-                  {
-                    duration: 3000,
-                  }
-                );
-              }
-            });
-          }
-          else{
 
-            this.loadingBar.stop();
-            this.snackBar.open(
-              "Allocation completed successfully",
-              "Ok",
-              {
+              }
+            } else if (data["message"] == "invalid-token") {
+              this.loadingBar.stop();
+              this.loginService.signOut();
+              this.snackBar.open("Session Expired! Sign-In and try again", "Ok", {
                 duration: 3000,
-              }
-            );
-
-          }
-      } 
-      else if (data["message"] == "invalid-token") {
-        this.loadingBar.stop();
-        this.loginService.signOut();
-        this.snackBar.open("Session Expired! Sign-In and try again", "Ok", {
-          duration: 3000,
-        });
-      } else {
-        this.loadingBar.stop();
-        this.snackBar.open("Some error occured! Try again", "Ok", {
-          duration: 3000,
-        });
-      }
-    });
-
-        }
-        else{
+              });
+            } else {
+              this.loadingBar.stop();
+              this.snackBar.open("Some error occured! Try again", "Ok", {
+                duration: 3000,
+              });
+            }
+          });
+        } else {
+          dialogRef.close();
           this.snackBar.open("Please include more projects in the allocation as a stable allocation is not possible!!", "Ok", {
             duration: 3000,
           });
         }
-
-
-
       })
-
-
   }
 
 
@@ -594,6 +585,8 @@ export class AdminComponent implements OnInit {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
       height: "200px",
+      disableClose:false,
+      hasBackdrop:true,
       data: {
         heading: "Confirm Sending Mails",
         message:
@@ -602,6 +595,11 @@ export class AdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data:"Sending mails, Please wait as this may take a while",
+          disableClose:true,
+          hasBackdrop:true,
+        });
         if (this.stage_no == 1) {
           this.userService.getStudentStreamEmails().subscribe((data1) => {
             if (data1["status"] == "success") {
@@ -612,6 +610,7 @@ export class AdminComponent implements OnInit {
                   data1["stream"]
                 )
                 .subscribe((data) => {
+                  dialogRefLoad.close();
                   if (data["message"] == "success") {
                     let snackBarRef = this.snackBar.open(
                       "Mails have been sent",
@@ -651,6 +650,7 @@ export class AdminComponent implements OnInit {
                   data1["stream"]
                 )
                 .subscribe((data2) => {
+                  dialogRefLoad.close();
                   if (data2["message"] == "success") {
                     let snackBarRef = this.snackBar.open(
                       "Mails have been sent",
@@ -678,13 +678,13 @@ export class AdminComponent implements OnInit {
                 });
             }
           });
-        }
-        else {
+        } else {
           this.userService.fetchAllMails().subscribe((result) => {
             if (result["message"] == "success") {
               this.mailer
                 .allocateMail(result["result"], this.programName)
                 .subscribe((result) => {
+                  dialogRefLoad.close();
                   if (result["message"] == "success") {
                     this.loadingBar.stop();
                     this.snackBar.open(
