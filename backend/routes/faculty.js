@@ -11,7 +11,6 @@ const Student = require("../models/Student");
 router.post("/register/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
-
     const user = req.body;
     oauth(idToken).then((user_partial) => {
         const newUser = new Faculty({

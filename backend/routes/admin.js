@@ -27,17 +27,17 @@ router.get("/project/:id", (req, res) => {
                                         var arr = [];
                                         for (const project of projects) {
                                             const newProj = {
-                                                _id:project._id,
-                                                faculty_id:project.faculty_id,
+                                                _id: project._id,
+                                                faculty_id: project.faculty_id,
                                                 title: project.title,
                                                 description: project.description,
                                                 stream: project.stream,
-                                                studentIntake:project.studentIntake,
+                                                studentIntake: project.studentIntake,
                                                 duration: project.duration,
                                                 faculty: project.faculty_id.name,
                                                 numberOfPreferences: project.students_id.length,
                                                 student_alloted: project.student_alloted,
-                                                students_id:project.students_id
+                                                students_id: project.students_id,
                                             };
                                             arr.push(newProj);
                                         }
@@ -79,59 +79,51 @@ router.get("/info/:id", (req, res) => {
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
         (faculty) => {
-
-            if(faculty){
-
+            if (faculty) {
                 Admin.findOne({ admin_id: faculty._id })
-                .then((admin) => {
-                    if (admin) {
-                        var startDate;
-                        if (admin.deadlines.length) {
-                            startDate = admin.startDate;
-                        }
+                    .then((admin) => {
+                        if (admin) {
+                            var startDate;
+                            if (admin.deadlines.length) {
+                                startDate = admin.startDate;
+                            }
 
-                        res.json({
-                            status: "success",
-                            stage: admin.stage,
-                            deadlines: admin.deadlines,
-                            startDate: startDate,
-                            projectCap: admin.project_cap,
-                            studentCap: admin.student_cap,
-                            stream: admin.stream,
-                            studentsPerFaculty: admin.studentsPerFaculty,
-                            studentCount: admin.studentCount
-                        });
-                    } else {
+                            res.json({
+                                status: "success",
+                                stage: admin.stage,
+                                deadlines: admin.deadlines,
+                                startDate: startDate,
+                                projectCap: admin.project_cap,
+                                studentCap: admin.student_cap,
+                                stream: admin.stream,
+                                studentsPerFaculty: admin.studentsPerFaculty,
+                                studentCount: admin.studentCount,
+                            });
+                        } else {
+                            res.json({
+                                status: "fail",
+                                stage: 0,
+                                deadlines: "",
+                                startDate: startDate,
+                            });
+                        }
+                    })
+                    .catch((err) => {
                         res.json({
                             status: "fail",
                             stage: 0,
                             deadlines: "",
                             startDate: startDate,
                         });
-                    }
-                })
-                .catch((err) => {
-                    res.json({
-                        status: "fail",
-                        stage: 0,
-                        deadlines: "",
-                        startDate: startDate,
                     });
-                });
-
-            }
-
-            else{
-
+            } else {
                 res.json({
-                    status:"fail",
-                    stage:0,
-                    deadlines:"",
-                    startDate:startDate
-                })
-
+                    status: "fail",
+                    stage: 0,
+                    deadlines: "",
+                    startDate: startDate,
+                });
             }
-           
         }
     );
 });
@@ -661,382 +653,306 @@ router.get("/fetchAllMails/:id", (req, res) => {
     );
 });
 
-router.post("/validateAllocation/:id",(req,res)=>{
+router.post("/validateAllocation/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const selectedProjects = req.body.projects;
 
-
-    Faculty.findOne({google_id:{id:id,idToken:idToken}})
-        .then(faculty=>{
-
-            if(faculty){
-
-                Admin.findOne({admin_id:faculty._id})
-                    .then(admin=>{
-
-                        if(admin){
-
-
-                            if(admin.stage >= 3){
-
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .then((faculty) => {
+            if (faculty) {
+                Admin.findOne({ admin_id: faculty._id })
+                    .then((admin) => {
+                        if (admin) {
+                            if (admin.stage >= 3) {
                                 var count_sum = 0;
 
-                                for(const project of selectedProjects){
-
+                                for (const project of selectedProjects) {
                                     count_sum += Number(project.studentIntake);
-
                                 }
 
-                                if(count_sum >= admin.studentCount){
+                                if (count_sum >= admin.studentCount) {
                                     res.json({
-                                        status:"success"
-                                    })
-                                }
-                                else{
+                                        status: "success",
+                                    });
+                                } else {
                                     res.json({
-                                        status:"fail"
-                                    })
+                                        status: "fail",
+                                    });
                                 }
-
-                            }
-
-                            else{
-
-
-                            
-                                Project.find({stream:admin.stream})
-                                .then(projects=>{
-
+                            } else {
+                                Project.find({ stream: admin.stream }).then((projects) => {
                                     var count = 0;
 
-                                    for(const project of projects){
+                                    for (const project of projects) {
                                         count += project.studentIntake;
                                     }
 
-                                    if(count >= admin.studentCount){
-
+                                    if (count >= admin.studentCount) {
                                         res.json({
-                                            status:"success",
-                                            msg:"Allocation can start"
-                                        })
-
+                                            status: "success",
+                                            msg: "Allocation can start",
+                                        });
+                                    } else {
+                                        res.json({
+                                            status: "fail",
+                                            result: null,
+                                        });
                                     }
-
-                                        else{
-                                            res.json({
-                                                status:"fail",
-                                                result:null
-                                            })
-                                        }
-
-
-                                    })
-                        
+                                });
                             }
-                        }
-                        else{
-
-
+                        } else {
                             res.json({
-                                status:"fail",
-                                result:null
-                            })
-
+                                status: "fail",
+                                result: null,
+                            });
                         }
-
                     })
-                    .catch(err=>{
+                    .catch((err) => {
                         res.json({
-                            status:"fail",
-                            result:null
-                        })
-
-                    })
-
-            }
-            else{
-
+                            status: "fail",
+                            result: null,
+                        });
+                    });
+            } else {
                 res.json({
-                    status:"fail",
-                    result:null
-                })
-
+                    status: "fail",
+                    result: null,
+                });
             }
-
-
         })
-        .catch(err=>{
+        .catch((err) => {
             res.json({
-                status:"fail",
-                result:null
-            })
-
-        })
+                status: "fail",
+                result: null,
+            });
+        });
 });
 
-
-
-router.post("/set_StudentCount/:id",(req,res)=>{
-
+router.post("/set_StudentCount/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const cap = req.body.cap;
 
-
-    Faculty.findOne({google_id:{id:id,idToken:idToken}})
-        .then(faculty=>{
-
-            if(faculty){
-
-                Admin.findOne({admin_id:faculty._id})
-                    .then(admin=>{
-
-
-                        if(admin){
-
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .then((faculty) => {
+            if (faculty) {
+                Admin.findOne({ admin_id: faculty._id })
+                    .then((admin) => {
+                        if (admin) {
                             admin.studentCount = cap;
 
-                            admin.save()
-                                .then(result=>{
-
-                                    res.json({
-                                        status:"success",
-                                        msg:"Number of Students set successfully!!"
-                                    })
-
-
-                                })
-                           
-
-                        }
-
-                        else{
-
-
+                            admin.save().then((result) => {
+                                res.json({
+                                    status: "success",
+                                    msg: "Number of Students set successfully!!",
+                                });
+                            });
+                        } else {
                             res.json({
-                                status:"fail",
-                                result:null
-                            })
-
+                                status: "fail",
+                                result: null,
+                            });
                         }
-
-
-
                     })
-                    .catch(err=>{
+                    .catch((err) => {
                         res.json({
-                            status:"fail",
-                            result:null
-                        })
-
-                    })
-
-            }
-            else{
-
+                            status: "fail",
+                            result: null,
+                        });
+                    });
+            } else {
                 res.json({
-                    status:"fail",
-                    result:null
-                })
-
+                    status: "fail",
+                    result: null,
+                });
             }
-
-
         })
-        .catch(err=>{
+        .catch((err) => {
             res.json({
-                status:"fail",
-                result:null
-            })
-
-        })
-
-
-})
-
+                status: "fail",
+                result: null,
+            });
+        });
+});
 
 router.post("/revertStage/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     var stage = req.body.stage;
-  
+
     Faculty.findOne({ google_id: { id: id, idToken, idToken } })
-      .then((faculty) => {
-        if (faculty) {
-          Admin.findOne({ admin_id: faculty._id })
-            .then((admin) => {
-              admin.deadlines.pop();
-              if(stage >= 3){
-                admin.stage = 2;
-              }
-              else{
-                admin.stage = stage - 1;
-              }
-  
-  
-  
-              var promises = [];
-  
-              if (stage >= 3) {
-                Project.find({ stream: admin.stream })
-                  .then((projects) => {
-                    for (const project of projects) {
-                      project.student_alloted = [];
-  
-                      promises.push(
-                        project.save().then((result) => {
-                          return result;
-                        })
-                      );
-                    }
-  
-                    Promise.all(promises)
-                      .then((result) => {
-                        promises = [];
-  
-                        Student.find({ stream: admin.stream })
-                          .then((students) => {
-                            for (const student of students) {
-                              student.project_alloted = undefined;
-  
-                              promises.push(
-                                student.save().then((result) => {
-                                  return result;
+        .then((faculty) => {
+            if (faculty) {
+                Admin.findOne({ admin_id: faculty._id })
+                    .then((admin) => {
+                        admin.deadlines.pop();
+                        if (stage >= 3) {
+                            admin.stage = 2;
+                        } else {
+                            admin.stage = stage - 1;
+                        }
+
+                        var promises = [];
+
+                        if (stage >= 3) {
+                            Project.find({ stream: admin.stream })
+                                .then((projects) => {
+                                    for (const project of projects) {
+                                        project.student_alloted = [];
+
+                                        promises.push(
+                                            project.save().then((result) => {
+                                                return result;
+                                            })
+                                        );
+                                    }
+
+                                    Promise.all(promises)
+                                        .then((result) => {
+                                            promises = [];
+
+                                            Student.find({ stream: admin.stream })
+                                                .then((students) => {
+                                                    for (const student of students) {
+                                                        student.project_alloted = undefined;
+
+                                                        promises.push(
+                                                            student.save().then((result) => {
+                                                                return result;
+                                                            })
+                                                        );
+                                                    }
+                                                    Promise.all(promises)
+                                                        .then((result) => {
+                                                            admin
+                                                                .save()
+                                                                .then((result) => {
+                                                                    res.json({
+                                                                        status: "success",
+                                                                        msg: "Successfully reverted back to the previous stage",
+                                                                    });
+                                                                })
+                                                                .catch((err) => {
+                                                                    res.json({
+                                                                        status: "fail",
+                                                                        result: null,
+                                                                    });
+                                                                });
+                                                        })
+                                                        .catch((err) => {
+                                                            res.json({
+                                                                status: "fail",
+                                                                result: null,
+                                                            });
+                                                        });
+                                                })
+                                                .catch((err) => {
+                                                    res.json({
+                                                        status: "fail",
+                                                        result: null,
+                                                    });
+                                                });
+                                        })
+                                        .catch((err) => {
+                                            res.json({
+                                                status: "fail",
+                                                result: null,
+                                            });
+                                        });
                                 })
-                              );
-                            }
-                            Promise.all(promises)
-                              .then((result) => {
-                                admin
-                                  .save()
-                                  .then((result) => {
+                                .catch((err) => {
                                     res.json({
-                                      status: "success",
-                                      msg:
-                                        "Successfully reverted back to the previous stage",
+                                        status: "fail",
+                                        result: null,
                                     });
-                                  })
-                                  .catch((err) => {
-                                    res.json({
-                                      status: "fail",
-                                      result: null,
-                                    });
-                                  });
-                              })
-                              .catch((err) => {
-                                res.json({
-                                  status: "fail",
-                                  result: null,
                                 });
-                              });
-                          })
-                          .catch((err) => {
-                            res.json({
-                              status: "fail",
-                              result: null,
+                        } else {
+                            admin.save().then((result) => {
+                                res.json({
+                                    status: "success",
+                                    msg: "Successfully reverted back to the previous stage",
+                                });
                             });
-                          });
-                      })
-                      .catch((err) => {
+                        }
+                    })
+                    .catch((err) => {
                         res.json({
-                          status: "fail",
-                          result: null,
+                            status: "fail",
+                            result: null,
                         });
-                      });
-                  })
-                  .catch((err) => {
-                    res.json({
-                      status: "fail",
-                      result: null,
                     });
-                  });
-              } 
-              
-              else {
-                admin.save().then((result) => {
-                  res.json({
-                    status: "success",
-                    msg: "Successfully reverted back to the previous stage",
-                  });
+            } else {
+                res.json({
+                    status: "fail",
+                    result: null,
                 });
-              }
-            })
-            .catch((err) => {
-              res.json({
+            }
+        })
+        .catch((err) => {
+            res.json({
                 status: "fail",
                 result: null,
-              });
             });
-        } else {
-          res.json({
-            status: "fail",
-            result: null,
-          });
-        }
-      })
-      .catch((err) => {
-        res.json({
-          status: "fail",
-          result: null,
         });
-      });
 });
 
-
-router.post("/reset/:id",(req, res) => {
+router.post("/reset/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     var promises = [];
     var admin_info;
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(user => {
-        if(user && user.isAdmin){
-            Admin.findOne({admin_id:user._id}).then(admin => {
-                admin.startDate = undefined;
-                admin.deadlines = [];
-                admin.stage = 0;
-                admin.save().then(admin => {
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then((user) => {
+        if (user && user.isAdmin) {
+            Admin.findOne({ admin_id: user._id })
+                .then((admin) => {
+                    admin.startDate = undefined;
+                    admin.deadlines = [];
+                    admin.stage = 0;
+                    admin.save().then((admin) => {
+                        return admin;
+                    });
                     return admin;
-                });
-                return admin;
-            }).then(admin => {
-                const stream = admin.stream;
-                Student.find({stream:stream}).then(students => {
-                    for (const student of students) {
-                        promises.push(
-                            Student.findByIdAndDelete(student._id).then(student => {
-                                return student;
-                            })
-                        );
-                    }
-                    Promise.all(promises).then(result => {
-                        promises = [];
-                        Project.find({stream:stream}).then(projects => {
-                            for (const project of projects) {
-                                promises.push(
-                                    project.updateOne({student_alloted:[], students_id:[]}).then(project => {
-                                        return project;
-                                    })
-                                );
-                            }
-                            Promise.all(promises).then(result => {
-                                res.json({
-                                    message:"success",
-                                    result:null
-                                });
-                            })
-                        })
-                    })
                 })
-            })
+                .then((admin) => {
+                    const stream = admin.stream;
+                    Student.find({ stream: stream }).then((students) => {
+                        for (const student of students) {
+                            promises.push(
+                                Student.findByIdAndDelete(student._id).then((student) => {
+                                    return student;
+                                })
+                            );
+                        }
+                        Promise.all(promises).then((result) => {
+                            promises = [];
+                            Project.find({ stream: stream }).then((projects) => {
+                                for (const project of projects) {
+                                    promises.push(
+                                        project
+                                        .updateOne({ student_alloted: [], students_id: [] })
+                                        .then((project) => {
+                                            return project;
+                                        })
+                                    );
+                                }
+                                Promise.all(promises).then((result) => {
+                                    res.json({
+                                        message: "success",
+                                        result: null,
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
         } else {
             res.json({
-                message:"invalid-token",
-                result:null
-            })
+                message: "invalid-token",
+                result: null,
+            });
         }
     });
-})
-
+});
 
 module.exports = router;

@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 @Component({
   selector: "app-delete-pop-up",
   templateUrl: "./delete-pop-up.component.html",
-  styleUrls: ["./delete-pop-up.component.scss"]
+  styleUrls: ["./delete-pop-up.component.scss"],
 })
 export class DeletePopUpComponent implements OnInit {
   constructor(
