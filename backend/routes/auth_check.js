@@ -82,10 +82,7 @@ router.post("/user_check", (req, res) => {
                         });
                     }
                 });
-            } else if (
-                email_check === "iitpkd.ac.in" ||
-                email_check === "gmail.com" //remove it later only for testing
-            ) {
+            } else if (email_check === "iitpkd.ac.in") {
                 Faculty.findOne({ email: userDetails.email })
                     .then((user) => {
                         if (user) {

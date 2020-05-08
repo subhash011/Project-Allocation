@@ -55,8 +55,8 @@
                     </mat-form-field>
 
                     <button color="accent" mat-raised-button (click)="setStudentCount()" class="setButton">
-                        Submit
-                    </button>
+            Submit
+          </button>
                 </form>
             </div>
             <span class="days_left"><strong>Time Left : </strong>
@@ -95,9 +95,11 @@
                         <button mat-button [disabled]="proceedButton1_" (click)="proceed()">
               Proceed
             </button>
-            <div class="reset">
-                <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
-            </div>
+                        <div class="reset">
+                            <button mat-raised-button color="primary" (click)="resetProcess()">
+                Reset Allocation
+              </button>
+                        </div>
                     </div>
                 </form>
             </mat-step>
@@ -128,14 +130,16 @@
               Send Reminder
             </button>
                         <button mat-button (click)="stepDownStage()">
-                Go Back
-              </button>
+              Go Back
+            </button>
                         <button mat-button [disabled]="proceedButton2_" (click)="proceed()">
               Proceed
             </button>
-            <div class="reset">
-                <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
-            </div>
+                        <div class="reset">
+                            <button mat-raised-button color="primary" (click)="resetProcess()">
+                Reset Allocation
+              </button>
+                        </div>
                     </div>
                 </form>
             </mat-step>
@@ -166,14 +170,16 @@
               Send Reminder
             </button>
                         <button mat-button (click)="stepDownStage()">
-                Go Back
-              </button>
+              Go Back
+            </button>
                         <button mat-button [disabled]="proceedButton3_" (click)="proceed()">
               Proceed
             </button>
-            <div class="reset">
-                <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
-            </div>
+                        <div class="reset">
+                            <button mat-raised-button color="primary" (click)="resetProcess()">
+                Reset Allocation
+              </button>
+                        </div>
                     </div>
                 </form>
             </mat-step>
@@ -182,13 +188,15 @@
                 <form [formGroup]="fourthFormGroup">
                     <ng-template matStepLabel>Project Allocation</ng-template>
                     <div>
-                    <h4><b>Please go to the Project tab to start the Allocation</b></h4>
-                    <button mat-button (click)="stepDownStage()">
-                        Go Back
-                      </button>
-                      <div class="reset">
-                        <button mat-raised-button color="primary" (click)="resetProcess()">Reset Allocation</button>
-                    </div>
+                        <h4><b>Please go to the Project tab to start the Allocation</b></h4>
+                        <button mat-button (click)="stepDownStage()">
+              Go Back
+            </button>
+                        <div class="reset">
+                            <button mat-raised-button color="primary" (click)="resetProcess()">
+                Reset Allocation
+              </button>
+                        </div>
                     </div>
                 </form>
             </mat-step>
@@ -199,47 +207,36 @@
         <div class="searchBox">
             <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="project" />
             <button class="searchButton" href="#">
-                <i class="material-icons">search</i>
-            </button>
+        <i class="material-icons">search</i>
+      </button>
         </div>
-      
 
         <div class="finalStageButtons" *ngIf="stage_no >= 3">
-
             <div class="startAllocationButton">
                 <button mat-raised-button color="primary" [disabled]="allocationButton" (click)="startAllocation()">
-                    Start Allocation
-                </button>
-                
+          Start Allocation
+        </button>
             </div>
             <div class="sendEmailsButton">
-                
                 <button mat-raised-button color="accent" [disabled]="allocationMail" (click)="sendEmails()">
-                    Send Emails
-                </button>
+          Send Emails
+        </button>
             </div>
         </div>
-      
+
         <div class="display">
             <div class="table mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource | filter: project" class="mat-elevation-z8">
-
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
-                          <mat-checkbox (change)="$event ? masterToggle() : null"
-                                        [checked]="selection.hasValue() && isAllSelected()"
-                                        [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                        [aria-label]="checkboxLabel(null)">
-                          </mat-checkbox>
+                            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel(null)">
+                            </mat-checkbox>
                         </th>
                         <td mat-cell *matCellDef="let row">
-                          <mat-checkbox (click)="$event.stopPropagation()"
-                                        (change)="$event ? selection.toggle(row) : null"
-                                        [checked]="selection.isSelected(row)"
-                                        [aria-label]="checkboxLabel(row)">
-                          </mat-checkbox>
+                            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                            </mat-checkbox>
                         </td>
-                      </ng-container>
+                    </ng-container>
 
                     <ng-container matColumnDef="Title">
                         <th mat-header-cell *matHeaderCellDef [style.color]="background">
@@ -257,7 +254,9 @@
                     </ng-container>
                     <ng-container matColumnDef="studentIntake">
                         <th mat-header-cell *matHeaderCellDef>Max Student Intake</th>
-                        <td mat-cell *matCellDef="let project">{{ project.studentIntake }}</td>
+                        <td mat-cell *matCellDef="let project">
+                            {{ project.studentIntake }}
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="NoOfStudents">
                         <th mat-header-cell *matHeaderCellDef>No.of preferences</th>
@@ -268,11 +267,16 @@
                     <ng-container matColumnDef="Student">
                         <th mat-header-cell *matHeaderCellDef>Alloted To</th>
                         <td mat-cell *matCellDef="let project">
-                            <div *ngIf="!project.student_alloted || project.student_alloted.length <= 0">
+                            <div *ngIf="
+                  !project.student_alloted ||
+                  project.student_alloted.length <= 0
+                ">
                                 N/A
                             </div>
-                            <div *ngIf="project.student_alloted && project.student_alloted.length > 0">
-                                {{getAllotedStudents(project.student_alloted)}}
+                            <div *ngIf="
+                  project.student_alloted && project.student_alloted.length > 0
+                ">
+                                {{ getAllotedStudents(project.student_alloted) }}
                             </div>
                         </td>
                     </ng-container>
@@ -335,7 +339,9 @@
                 <div class="display">
                     <div class="messages">
                         <p class="manage-font">
-                            <strong>SPP</strong> : Students per project limit exceeded, <strong>PFE</strong> : Projects per faculty limit exceeded, <strong>SPF</strong> : Students per faculty limit exceeded
+                            <strong>SPP</strong> : Students per project limit exceeded,
+                            <strong>PFE</strong> : Projects per faculty limit exceeded,
+                            <strong>SPF</strong> : Students per faculty limit exceeded
                         </p>
                     </div>
                     <div class="table mat-elevation-z8">

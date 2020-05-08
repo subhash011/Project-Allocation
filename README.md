@@ -11,9 +11,9 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them
 
 - [Angular CLI](https://github.com/angular/angular-cli) version 8.3.25.
-- [Node.js](https://github.com/nodejs)
+- [Node.js](https://github.com/nodejs) version 12.x
 - [Angular Material](https://github.com/angular/components)
-- [MongoDB](https://github.com/mongodb/mongo)
+- [MongoDB](https://github.com/mongodb/mongo) version 4.2
 - MongoDB Compass (optional)
 
 ### Installation
@@ -143,7 +143,7 @@ npm i
 
 The above commands will install all the required packages but some changes are to made for the application to run as expected:
 
-Check the instructions given in btp-frontend folder's readme for more information.
+**Check the instructions given in btp-frontend folder's readme for more information.**
 
 ## Running the web app locally
 
@@ -180,15 +180,18 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 2. `apiUrl` is the base URL to which angular application will be listening, `GOOGLE_CLIENT_ID` is the ID obtained from google developer console on
    registering the application
 
-   #### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
+   To register the app on google's developer console follow the link given:
+   `https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98`
 
-3. Define `apiUrl` and `GOOGLE_CLIENT_ID` in the environment.prod.ts file. During the build the environment.ts file is replaced by environment.prod.ts 
+#### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
+
+3. Define `apiUrl` and `GOOGLE_CLIENT_ID` in the environment.prod.ts file. During the build the environment.ts file is replaced by environment.prod.ts
    file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
    file and under configurations, create a new configuration and define the file replacements in the file replacements array.
    This artice explains very well on how to use the file replacements array:
-   `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`
+   `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`, when following this link choose the application type as **Web Application** not **Others** as mentionen in the link.
 
-4. To build the application after completing all the configuration steps, run `ng build --prod` if you have not made any file replacements else
+4. To build the application after completing all the configuration steps, run `ng build --prod --build-optimizer` if you have not made any file replacements else
    run the build command accordingly. Remember to run the ng build command in the root directory of the project i.e btp-frontend.
 
 5. After running the build command angular writes the output to the dist folder under the root directory. Inside the dist folder ther will be a

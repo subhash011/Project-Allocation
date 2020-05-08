@@ -30,16 +30,18 @@
     <div class="mobile-drag">
         <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="preferences" class="example-list" (cdkDropListDropped)="drop($event)">
             <div class="example-box" *ngFor="let preference of preferences" cdkDrag>
-                <div class="example-custom-placeholder" *cdkDragPlaceholder></div>{{preference["title"]}}</div>
+                <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                {{ preference["title"] }}
+            </div>
         </div>
         <div mat-dialog-actions>
             <button mat-raised-button class="left-button" color="warn" (click)="onNoClick()">
-            Go Back
-          </button>
+        Go Back
+      </button>
             <div class="flex-space"></div>
             <button mat-raised-button class="right-button" (click)="savePreferences()" cdkFocusInitial color="primary">
-            Confirm Preferences
-          </button>
+        Confirm Preferences
+      </button>
         </div>
     </div>
     <div mat-dialog-actions>

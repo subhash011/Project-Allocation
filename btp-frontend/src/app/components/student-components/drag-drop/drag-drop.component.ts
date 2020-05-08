@@ -90,8 +90,8 @@ export class DragDropComponent implements OnInit {
     if (this.dialog.openDialogs.length == 0) {
       this.disable = true;
       dialogRef = this.dialog.open(ShowPreferencesComponent, {
-        disableClose:false,
-        hasBackdrop:true,
+        disableClose: false,
+        hasBackdrop: true,
         panelClass: "no-toolbar-padding",
         width: "800px",
         height: "800px",
@@ -100,38 +100,15 @@ export class DragDropComponent implements OnInit {
     }
     dialogRef.afterClosed().subscribe((result) => {
       this.loadingBar.start();
-      if(result && result["message"] == "submit"){
+      if (result && result["message"] == "submit") {
         this.projectService
-        .storeStudentPreferences(result["result"])
-        .toPromise()
-        .then((res) => {
-          return res["message"];
-        })
-        .catch((err) => {
-          this.loadingBar.stop();
-          this.disable = false;
-          this.snackBar.open(
-            "Some Error Occured! If the Error Persists Please re-authenticate",
-            "OK",
-            {
-              duration: 3000,
-            }
-          );
-        })
-        .then((message) => {
-          this.loadingBar.stop();
-          if (message == "success") {
-            this.disable = true;
-          this.snackBar.open("Preferences Saved Successfully", "OK", {
-            duration: 3000,
-          });
-          } else if (message == "invalid-token") {
-            this.disable = false;
-            this.loginObject.signOut();
-            this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-              duration: 3000,
-            });
-          } else {
+          .storeStudentPreferences(result["result"])
+          .toPromise()
+          .then((res) => {
+            return res["message"];
+          })
+          .catch((err) => {
+            this.loadingBar.stop();
             this.disable = false;
             this.snackBar.open(
               "Some Error Occured! If the Error Persists Please re-authenticate",
@@ -140,8 +117,35 @@ export class DragDropComponent implements OnInit {
                 duration: 3000,
               }
             );
-          }
-        });
+          })
+          .then((message) => {
+            this.loadingBar.stop();
+            if (message == "success") {
+              this.disable = true;
+              this.snackBar.open("Preferences Saved Successfully", "OK", {
+                duration: 3000,
+              });
+            } else if (message == "invalid-token") {
+              this.disable = false;
+              this.loginObject.signOut();
+              this.snackBar.open(
+                "Session Expired! Please Sign In Again",
+                "OK",
+                {
+                  duration: 3000,
+                }
+              );
+            } else {
+              this.disable = false;
+              this.snackBar.open(
+                "Some Error Occured! If the Error Persists Please re-authenticate",
+                "OK",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          });
       }
     });
   }

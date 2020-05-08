@@ -28,7 +28,7 @@ export class ShowPreferencesComponent implements OnInit {
 
   ngOnInit() {}
   onNoClick(): void {
-    this.dialogRef.close({message:"closed"});
+    this.dialogRef.close({ message: "closed" });
   }
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -51,6 +51,6 @@ export class ShowPreferencesComponent implements OnInit {
     return "/student" + "/preferences/" + localStorage.getItem("id");
   }
   savePreferences() {
-    this.dialogRef.close({message:"submit", result:this.preferences});
+    this.dialogRef.close({ message: "submit", result: this.preferences });
   }
 }

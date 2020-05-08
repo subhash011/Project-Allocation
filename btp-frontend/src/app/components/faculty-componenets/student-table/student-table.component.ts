@@ -9,7 +9,7 @@ import { MatDialog } from "@angular/material/dialog";
 @Component({
   selector: "app-student-table",
   templateUrl: "./student-table.component.html",
-  styleUrls: ["./student-table.component.scss"]
+  styleUrls: ["./student-table.component.scss"],
 })
 export class StudentTableComponent implements OnInit {
   @Input() public student_list;
@@ -33,50 +33,37 @@ export class StudentTableComponent implements OnInit {
 
   onSubmit() {
     // this.checked = false;
-    if(this.adminStage == 2){
+    if (this.adminStage == 2) {
       this.projectService
-      .savePreference(this.student_list, this.project._id)
-      .subscribe(data => {
-        if (data["status"] == "success") {
-          let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
-            duration: 3000
-          });
-          snackBarRef.afterDismissed().subscribe(() => {
-            this.router
-              .navigateByUrl("/refresh", { skipLocationChange: true })
-              .then(() => {
-                this.router.navigate([decodeURI(this.location.path())]);
-              });
-          });
-        }
-        else{
-
-          this.snackBar.open(data["msg"], "Ok", {
-            duration: 3000
-          });
-        
-        }
-
-      });
-    }
-    
-    else{
-
-      if(this.adminStage < 2){
+        .savePreference(this.student_list, this.project._id)
+        .subscribe((data) => {
+          if (data["status"] == "success") {
+            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+            snackBarRef.afterDismissed().subscribe(() => {
+              this.router
+                .navigateByUrl("/refresh", { skipLocationChange: true })
+                .then(() => {
+                  this.router.navigate([decodeURI(this.location.path())]);
+                });
+            });
+          } else {
+            this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+          }
+        });
+    } else {
+      if (this.adminStage < 2) {
         this.snackBar.open("This will be active on stage 2", "Ok", {
-          duration: 3000
+          duration: 3000,
         });
-      }
-      else{
+      } else {
         this.snackBar.open("Stage deadline has ended", "Ok", {
-          duration: 3000
+          duration: 3000,
         });
-
       }
-
-
-    
-    
     }
   }
 }

@@ -1,19 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, OnInit } from "@angular/core";
+import { MatDialogRef } from "@angular/material";
 
 @Component({
-  selector: 'app-reset',
-  templateUrl: './reset.component.html',
-  styleUrls: ['./reset.component.scss']
+  selector: "app-reset",
+  templateUrl: "./reset.component.html",
+  styleUrls: ["./reset.component.scss"],
 })
 export class ResetComponent implements OnInit {
+  constructor(public dialogRef: MatDialogRef<ResetComponent>) {}
 
-  constructor(
-    public dialogRef: MatDialogRef<ResetComponent>,
-  ) { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
   onNoClick(): void {
     this.dialogRef.close({ message: "closed" });
   }

@@ -1,60 +1,51 @@
-<h4 class="heading"> </h4>
+<h4 class="heading"></h4>
 <mat-accordion>
-  <mat-expansion-panel>
-      <mat-expansion-panel-header>
-          <mat-panel-title>
-              {{ project["title"] }}
-          </mat-panel-title>
-          <mat-panel-description>
-              <div class="flex-space"></div>
-              Duration : {{ project["duration"] }}
-          </mat-panel-description>
-      </mat-expansion-panel-header>
-      <p>Description : {{ project["description"] }}</p>
-  </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{ project["title"] }}
+            </mat-panel-title>
+            <mat-panel-description>
+                <div class="flex-space"></div>
+                Duration : {{ project["duration"] }}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>Description : {{ project["description"] }}</p>
+    </mat-expansion-panel>
 </mat-accordion>
 <div class="flex-space"></div>
 
-<h4 class="heading_pref">Preferences: </h4>
-<div
-  cdkDropList
-  class="example-list"
-  (cdkDropListDropped)="drop($event)"
->
-<mat-divider></mat-divider>
-  <mat-card>
-    <div class="row header">
-      <div><strong>Name</strong></div>
-      <div><strong>CGPA</strong></div>
-      <div><strong>Roll No</strong></div>
+<h4 class="heading_pref">Preferences:</h4>
+<div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+    <mat-divider></mat-divider>
+    <mat-card>
+        <div class="row header">
+            <div><strong>Name</strong></div>
+            <div><strong>CGPA</strong></div>
+            <div><strong>Roll No</strong></div>
+        </div>
+    </mat-card>
+    <!-- <mat-divider></mat-divider> -->
+
+    <div class="example-box" *ngFor="let student of student_list" cdkDrag>
+        <mat-list-item>
+            <div class="row">
+                <div>
+                    {{ student.name }}
+                </div>
+
+                <div>
+                    {{ student.gpa }}
+                </div>
+
+                <div>
+                    {{ student.roll_no }}
+                </div>
+            </div>
+        </mat-list-item>
     </div>
-  </mat-card>
-  <!-- <mat-divider></mat-divider> -->
-
-  <div class="example-box" *ngFor="let student of student_list" cdkDrag>
-    <mat-list-item>
-      <div class="row">
-        <div>
-          {{ student.name }}
-        </div>
-
-        <div>
-          {{ student.gpa }}
-        </div>
-
-        <div>
-          {{ student.roll_no }}
-        </div>
-      </div>
-    </mat-list-item>
-  </div>
 </div>
 
-<button
-class="saveButton"
-mat-raised-button
-color="warn"
-(click)="onSubmit()"
->
-Save Preferences
+<button class="saveButton" mat-raised-button color="warn" (click)="onSubmit()">
+  Save Preferences
 </button>

@@ -61,11 +61,11 @@ export class RegisterComponent implements OnInit {
           this.userForm.get("branch").disable();
           const stream = this.getStream();
           this.branchStudent = stream;
-          if(this.branchStudent != "invalid"){
+          if (this.branchStudent != "invalid") {
             this.userForm.controls["branch"].setValue(this.branchStudent);
           } else {
             this.userForm.controls["branch"].setErrors({
-              required:true
+              required: true,
             });
             this.userForm.get("branch").updateValueAndValidity();
           }
@@ -152,7 +152,10 @@ export class RegisterComponent implements OnInit {
         gpa: this.userForm.get("CGPA").value,
         stream: this.userForm.get("branch").value,
       };
-      user.name = localStorage.getItem("role") == "student" ? user.name.toUpperCase() : user.name;
+      user.name =
+        localStorage.getItem("role") == "student"
+          ? user.name.toUpperCase()
+          : user.name;
       const _user = JSON.parse(localStorage.getItem("user"));
 
       const httpOptions = {

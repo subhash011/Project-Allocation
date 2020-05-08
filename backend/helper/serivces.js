@@ -10,13 +10,13 @@ Mapping.find().then((maps) => {
     for (const map of maps) {
         const newpr = {
             short: map.short,
-            full: map.full
-        }
-        programs.push(newpr)
+            full: map.full,
+        };
+        programs.push(newpr);
     }
 });
 
 module.exports = {
     branches: branches,
-    programs: programs
+    programs: programs,
 };

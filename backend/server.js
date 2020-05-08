@@ -2,7 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
-const compression = require('compression');
+const compression = require("compression");
 require("dotenv/config");
 
 // start the server
@@ -24,7 +24,7 @@ app.use(compression());
 app.use(cors());
 
 //use body-parser
-app.use(bodyparser.json({limit: '50mb', extended: true}));
+app.use(bodyparser.json({ limit: "50mb", extended: true }));
 mongoose.set("useFindAndModify", false);
 
 //uncomment during production

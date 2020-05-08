@@ -37,9 +37,9 @@ import { environment } from "../environments/environment";
 import { AddMapComponent } from "./components/shared/add-map/add-map.component";
 import { LoadingBarModule } from "@ngx-loading-bar/core";
 import { TypingAnimationModule } from "angular-typing-animation";
-import { HelpComponent } from './components/shared/help/help.component';
-import { ResetComponent } from './components/faculty-componenets/reset/reset.component';
-import { LoaderComponent } from './components/shared/loader/loader.component';
+import { HelpComponent } from "./components/shared/help/help.component";
+import { ResetComponent } from "./components/faculty-componenets/reset/reset.component";
+import { LoaderComponent } from "./components/shared/loader/loader.component";
 
 const googleLoginOption: LoginOpt = {
   scope: "https://mail.google.com/",
@@ -91,7 +91,7 @@ export function provideConfig() {
     DeletePopUpComponent,
     AddMapComponent,
     ResetComponent,
-    LoaderComponent
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
