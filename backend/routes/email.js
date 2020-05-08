@@ -32,7 +32,7 @@ router.post("/send", (req, res) => {
     const subject = req.body.subject;
     const mailBody = req.body.mailBody;
     const options = {
-        to: to,
+        cc: to,
         subject: subject,
         text: mailBody,
     };
