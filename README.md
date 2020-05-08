@@ -11,9 +11,9 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them
 
 - [Angular CLI](https://github.com/angular/angular-cli) version 8.3.25.
-- [Node.js](https://github.com/nodejs)
+- [Node.js](https://github.com/nodejs) version 12.x
 - [Angular Material](https://github.com/angular/components)
-- [MongoDB](https://github.com/mongodb/mongo)
+- [MongoDB](https://github.com/mongodb/mongo) version 4.2
 - MongoDB Compass (optional)
 
 ### Installation
