@@ -195,7 +195,7 @@ export class AdminComponent implements OnInit {
               }
 
               this.userService
-                .validateAllocation(this.selection.selected)
+                .validateAllocation(this.selection.selected,this.students.length)
                 .subscribe((data) => {
                   if (data["status"] == "success") {
                     this.allocationButton = false;
@@ -334,7 +334,7 @@ export class AdminComponent implements OnInit {
       width: "300px",
       data: {
         heading: "Confirm Deletion",
-        message: "Are you sure you want to remove Faculty",
+        message: "Are you sure you want to remove the Faculty?",
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -368,7 +368,7 @@ export class AdminComponent implements OnInit {
       width: "300px",
       data: {
         heading: "Confirm Deletion",
-        message: "Are you sure you want to remove Student",
+        message: "Are you sure you want to remove the Student?",
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -498,7 +498,7 @@ export class AdminComponent implements OnInit {
       disableClose: true,
       hasBackdrop: true,
     });
-    this.userService.validateAllocation(selectedProjects).subscribe((data) => {
+    this.userService.validateAllocation(selectedProjects,this.students.length).subscribe((data) => {
       if (data["status"] == "success") {
         this.projectService
           .startAllocation(selectedProjects)
@@ -676,7 +676,7 @@ export class AdminComponent implements OnInit {
                   if (result["message"] == "success") {
                     this.loadingBar.stop();
                     this.snackBar.open(
-                      "Mails have been sent succesfully.",
+                      "Mails have been sent successfully.",
                       "Ok",
                       {
                         duration: 3000,

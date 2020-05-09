@@ -657,6 +657,7 @@ router.post("/validateAllocation/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const selectedProjects = req.body.projects;
+    const students = req.body.students;
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .then((faculty) => {
@@ -670,8 +671,8 @@ router.post("/validateAllocation/:id", (req, res) => {
                                 for (const project of selectedProjects) {
                                     count_sum += Number(project.studentIntake);
                                 }
-
-                                if (count_sum >= admin.studentCount) {
+                                
+                                if (count_sum >= Math.min(students,admin.studentCount)) {
                                     res.json({
                                         status: "success",
                                     });
