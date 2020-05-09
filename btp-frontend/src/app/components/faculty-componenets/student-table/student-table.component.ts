@@ -16,10 +16,9 @@ export class StudentTableComponent implements OnInit {
   @Input() public project;
   @Input() public adminStage;
 
+  @ViewChild("table", { static: false }) table;
 
-  @ViewChild('table',{static:false}) table;
-
-  public fields = ["Name","CGPA","Roll"];
+  public fields = ["Name", "CGPA", "Roll"];
 
   constructor(
     private projectService: ProjectsService,
@@ -36,6 +35,7 @@ export class StudentTableComponent implements OnInit {
       this.projectService
         .savePreference(this.student_list, this.project._id)
         .subscribe((data) => {
+          console.log(this.student_list);
           if (data["status"] == "success") {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -67,13 +67,14 @@ export class StudentTableComponent implements OnInit {
   }
 
   onListDrop(event: CdkDragDrop<string[]>) {
-    let previousIndex = this.student_list.findIndex(row => row === event.item.data);
+    let previousIndex = this.student_list.findIndex(
+      (row) => row === event.item.data
+    );
     moveItemInArray(this.student_list, previousIndex, event.currentIndex);
     this.table.renderRows();
   }
 
-
-
-
-
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.student_list, event.previousIndex, event.currentIndex);
+  }
 }

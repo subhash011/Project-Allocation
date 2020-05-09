@@ -94,27 +94,22 @@ export class FacultyComponent implements OnInit {
   }
 
   displayProject(project) {
-    this.projectService
-      .getStudentsApplied(project._id)
-      .subscribe((data) => {
-        if (data["status"] == "success") {
-          this.student_list = data["students"];
+    this.projectService.getStudentsApplied(project._id).subscribe((data) => {
+      if (data["status"] == "success") {
+        this.student_list = data["students"];
 
-          
-
-          if(this.adminStage <=1 ){
-            this.student_list.sort((a, b) => {
-              return b.gpa - a.gpa;
-            });
-          }
-
-        } else {
-          this.loginService.signOut();
-          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-            duration: 3000,
+        if (this.adminStage <= 1) {
+          this.student_list.sort((a, b) => {
+            return b.gpa - a.gpa;
           });
         }
-      });
+      } else {
+        this.loginService.signOut();
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+          duration: 3000,
+        });
+      }
+    });
 
     this.project = project;
     this.add = false;

@@ -146,6 +146,8 @@ export class DragDropComponent implements OnInit {
               );
             }
           });
+      } else {
+        this.loadingBar.stop();
       }
     });
   }
