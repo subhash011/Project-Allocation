@@ -17,45 +17,59 @@
     cursor: move;
     font-size: 14px;
 }
-
 .cdk-drag-preview {
     box-sizing: border-box;
-    border-radius: 10px;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
-}
-
-.cdk-drag-placeholder {
-    opacity: 0;
-}
-
-.cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.example-box {
-    width: 100%;
-    padding-left: 0px;
     border-radius: 4px;
-    padding-right: 0px;
-}
-
-.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+  
+  .cdk-drag-animating {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
+  }
+  
+  .cdk-drop-list-dragging .mat-row:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+// .cdk-drag-preview {
+//     box-sizing: border-box;
+//     border-radius: 10px;
+//     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+// }
+
+// .cdk-drag-placeholder {
+//     opacity: 0;
+// }
+
+// .cdk-drag-animating {
+//     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+// }
+
+// .example-box {
+//     width: 100%;
+//     padding-left: 0px;
+//     border-radius: 4px;
+//     padding-right: 0px;
+// }
+
+// .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+//     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+// }
 
 .row {
     display: flex;
-    justify-content: space-around;
+    // justify-content: space-around;
     // margin-right: 2%;
 }
 
 .header {
     margin-bottom: 2%;
     margin-top: 2%;
-}
-
-mat-list-item {
-    width: 100%;
 }
 
 .flex-space {
@@ -85,3 +99,9 @@ mat-list-item {
     margin-left: 2%;
     margin-top: 2%;
 }
+
+mat-list-item{
+    width:100%;
+}
+
+

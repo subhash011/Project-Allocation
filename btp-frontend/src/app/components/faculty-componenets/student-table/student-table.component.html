@@ -16,35 +16,32 @@
 <div class="flex-space"></div>
 
 <h4 class="heading_pref">Preferences:</h4>
-<div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-    <mat-divider></mat-divider>
-    <mat-card>
-        <div class="row header">
-            <div><strong>Name</strong></div>
-            <div><strong>CGPA</strong></div>
-            <div><strong>Roll No</strong></div>
-        </div>
-    </mat-card>
-    <!-- <mat-divider></mat-divider> -->
+<mat-table #table cdkDropList (cdkDropListDropped)="onListDrop($event)" [dataSource]="student_list" class="mat-elevation-z8">
+ 
+    <!-- Name Column -->
+    <ng-container matColumnDef="Name">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+    </ng-container>
 
-    <div class="example-box" *ngFor="let student of student_list" cdkDrag>
-        <mat-list-item>
-            <div class="row">
-                <div>
-                    {{ student.name }}
-                </div>
+     <!-- CGPA Column -->
+     <ng-container matColumnDef="CGPA">
+        <mat-header-cell *matHeaderCellDef> CGPA </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.gpa.toPrecision(3)}} </mat-cell>
+      </ng-container>
 
-                <div>
-                    {{ student.gpa }}
-                </div>
+       <!-- Roll No. Column -->
+    <ng-container matColumnDef="Roll">
+        <mat-header-cell *matHeaderCellDef> Roll No. </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.roll_no}} </mat-cell>
+      </ng-container>
+  
 
-                <div>
-                    {{ student.roll_no }}
-                </div>
-            </div>
-        </mat-list-item>
-    </div>
-</div>
+    <mat-header-row *matHeaderRowDef="fields"></mat-header-row>
+    <mat-row cdkDrag [cdkDragData]=row *matRowDef="let row; columns: fields;"></mat-row>
+</mat-table>
+
+
 
 <button class="saveButton" mat-raised-button color="warn" (click)="onSubmit()">
   Save Preferences
