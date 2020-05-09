@@ -28,5 +28,8 @@
     "passport-google-id-token": "^0.4.6",
     "passport-google-oauth": "^2.0.0",
     "xoauth2": "^1.2.0"
+  },
+  "nodemonConfig": {
+    "delay": "1000"
   }
 }
