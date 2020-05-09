@@ -14,7 +14,12 @@
 
 <div>
   <a (click)="userActivity()">
-    <div class="google-btn" *ngIf="!getCondition()">
+    <div
+      matRipple
+      matRippleCentered="true"
+      class="google-btn"
+      *ngIf="!getCondition()"
+    >
       <img src="../../../../assets/btn_google_signin_light_focus_web.png" />
     </div>
     <mat-icon
