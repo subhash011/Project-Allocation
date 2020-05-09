@@ -95,11 +95,12 @@ export class FacultyComponent implements OnInit {
 
   displayProject(project) {
     this.projectService
-      .getStudentsApplied(project.students_id)
+      .getStudentsApplied(project._id)
       .subscribe((data) => {
         if (data["status"] == "success") {
           this.student_list = data["students"];
 
+          
 
           if(this.adminStage <=1 ){
             this.student_list.sort((a, b) => {

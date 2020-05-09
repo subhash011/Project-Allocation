@@ -150,7 +150,7 @@
     <mat-tab-group color="accent" animationDuration="0" dynamicHeight="true">
       <mat-tab label="Students">
         <app-student-table
-          *ngIf="!programs_mode && student_list"
+          *ngIf="student_list && !programs_mode"
           [project]="project"
           [adminStage]="adminStage"
           [student_list]="student_list"
