@@ -35,7 +35,6 @@ export class StudentTableComponent implements OnInit {
       this.projectService
         .savePreference(this.student_list, this.project._id)
         .subscribe((data) => {
-          console.log(this.student_list);
           if (data["status"] == "success") {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
