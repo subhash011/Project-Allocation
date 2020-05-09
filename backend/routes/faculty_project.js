@@ -171,7 +171,7 @@ router.post("/applied/:id", (req, res) => {
   Faculty.findOne({ google_id: { id: id, idToken: idToken } })
     .then((faculty) => {
       if (faculty) {
-        Project.findById(mongoose.SchemaType.ObjectId(project_id))
+        Project.findById(mongoose.Types.ObjectId(project_id))
           .populate("students_id", null, Student)
           .then((project) => {
             res.json({
