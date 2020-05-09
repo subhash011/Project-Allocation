@@ -299,7 +299,7 @@ export class AdminComponent implements OnInit {
             this.days_left = "Please Set the deadline";
 
             let snackBarRef = this.snackBar.open(
-              "SuccessFully moved to the next stage!",
+              "Successfully moved to the next stage!",
               "Ok",
               {
                 duration: 3000,
