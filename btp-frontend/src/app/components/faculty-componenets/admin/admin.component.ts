@@ -230,11 +230,7 @@ export class AdminComponent implements OnInit {
                       this.proceedButton3 = false;
                     if (!flag) this.proceedButton3_ = false;
                   }
-                  if (this.stage_no == 0) {
-                    this.minDate = new Date();
-                  } else {
-                    this.minDate = this.dateSet[this.dateSet.length - 1];
-                  }
+                  this.minDate = new Date();
                 });
             } else {
               this.loginService.signOut();
@@ -296,7 +292,7 @@ export class AdminComponent implements OnInit {
         this.proceedButton3 = true;
         this.userService.updateStage(this.stage_no).subscribe((data) => {
           if (data["status"] == "success") {
-            this.days_left = "Please Set the deadline";
+            this.days_left = "Please set the deadline";
 
             let snackBarRef = this.snackBar.open(
               "Successfully moved to the next stage!",
@@ -309,7 +305,7 @@ export class AdminComponent implements OnInit {
             snackBarRef.afterDismissed().subscribe(() => {
               if (this.stage_no >= 3) {
                 this.snackBar.open(
-                  "Please go to the Project tab to start the Allocation",
+                  "Please go to the project tab to start the allocation",
                   "Ok",
                   {
                     duration: 3000,
@@ -563,7 +559,7 @@ export class AdminComponent implements OnInit {
       } else {
         dialogRef.close();
         this.snackBar.open(
-          "The number of students alloted are more than the projects created. Please make sure that more projects are included.",
+          "Unable to do an allocation. Please note the number of projects that can be alloted must be greater than or equal to the number of students.",
           "Ok",
           {
             duration: 3000,
@@ -717,6 +713,8 @@ export class AdminComponent implements OnInit {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
       height: "200px",
+      disableClose: false,
+      hasBackdrop: true,
       data: {
         heading: "Confirm Sending Remainders",
         message:
@@ -1005,6 +1003,8 @@ export class AdminComponent implements OnInit {
     const dialogRef = this.dialog.open(ResetComponent, {
       width: "400px",
       height: "300px",
+      disableClose: false,
+      hasBackdrop: true,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
