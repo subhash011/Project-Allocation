@@ -1,47 +1,55 @@
 <h4 class="heading"></h4>
 <mat-accordion>
-    <mat-expansion-panel>
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                {{ project["title"] }}
-            </mat-panel-title>
-            <mat-panel-description>
-                <div class="flex-space"></div>
-                Duration : {{ project["duration"] }}
-            </mat-panel-description>
-        </mat-expansion-panel-header>
-        <p>Description : {{ project["description"] }}</p>
-    </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ project["title"] }}
+      </mat-panel-title>
+      <mat-panel-description>
+        <div class="flex-space"></div>
+        Duration : {{ project["duration"] }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p>Description : {{ project["description"] }}</p>
+  </mat-expansion-panel>
 </mat-accordion>
 <div class="flex-space"></div>
 
 <h4 class="heading_pref">Preferences:</h4>
-<mat-table #table cdkDropList (cdkDropListDropped)="onListDrop($event)" [dataSource]="student_list" class="mat-elevation-z8">
- 
-    <!-- Name Column -->
-    <ng-container matColumnDef="Name">
-      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
-    </ng-container>
+<div class="example-list" cdkDropList (cdkDropListDropped)="drop($event)">
+  <mat-divider></mat-divider>
+  <mat-card>
+    <div class="row header data">
+      <div class="render"><strong>Name</strong></div>
+      <div class="flex-grow"></div>
+      <div class="render"><strong>CGPA</strong></div>
+      <div class="flex-grow"></div>
+      <div class="render"><strong>Roll No</strong></div>
+    </div>
+  </mat-card>
 
-     <!-- CGPA Column -->
-     <ng-container matColumnDef="CGPA">
-        <mat-header-cell *matHeaderCellDef> CGPA </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.gpa.toPrecision(3)}} </mat-cell>
-      </ng-container>
-
-       <!-- Roll No. Column -->
-    <ng-container matColumnDef="Roll">
-        <mat-header-cell *matHeaderCellDef> Roll No. </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.roll_no}} </mat-cell>
-      </ng-container>
-  
-
-    <mat-header-row *matHeaderRowDef="fields"></mat-header-row>
-    <mat-row cdkDrag [cdkDragData]=row *matRowDef="let row; columns: fields;"></mat-row>
-</mat-table>
-
-
+  <div class="example-box" *ngFor="let student of student_list" cdkDrag>
+    <mat-list-item>
+      <div class="row data">
+        <div class="render">
+          {{
+            student.name.length > 20
+              ? student.name.substring(0, 15) + "...."
+              : student.name
+          }}
+        </div>
+        <div class="flex-grow"></div>
+        <div class="render">
+          {{ student.gpa.toPrecision(3) }}
+        </div>
+        <div class="flex-grow"></div>
+        <div class="render">
+          {{ student.roll_no }}
+        </div>
+      </div>
+    </mat-list-item>
+  </div>
+</div>
 
 <button class="saveButton" mat-raised-button color="warn" (click)="onSubmit()">
   Save Preferences

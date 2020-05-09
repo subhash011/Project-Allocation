@@ -84,13 +84,12 @@ export class ProjectsService {
     return this.http.post(this.url, project, httpOptions);
   }
 
-  getStudentsApplied(students_id) {
+  getStudentsApplied(project_id) {
     const student_data = {
-      student: students_id,
+      project: project_id,
     };
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -155,6 +154,6 @@ export class ProjectsService {
         Authorization: idToken,
       }),
     };
-    return this.http.post(this.url, { projects : projects }, httpOptions);
+    return this.http.post(this.url, { projects: projects }, httpOptions);
   }
 }
