@@ -169,9 +169,9 @@ router.post("/applied/:id", (req, res) => {
     const student_ids = req.body.student;
     const idToken = req.headers.authorization;
 
-    oauth(idToken)
-        .then((user) => {
-            if (user["sub"] == String(id)) {
+    Faculty.findOne({google_id:{id:id,idToken:idToken}})
+        .then((faculty) => {
+            if (faculty) {
                 student_ids.map((id) => {
                     mongoose.Types.ObjectId(id);
                 });
@@ -211,7 +211,6 @@ router.post("/save_preference/:id", (req, res) => {
     const student = req.body.student;
     const project_id = req.body.project_id;
     const idToken = req.headers.authorization;
-
     let student_ids = [];
 
     student.forEach((per) => {

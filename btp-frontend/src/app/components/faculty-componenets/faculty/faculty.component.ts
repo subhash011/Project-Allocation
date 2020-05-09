@@ -100,9 +100,13 @@ export class FacultyComponent implements OnInit {
         if (data["status"] == "success") {
           this.student_list = data["students"];
 
-          this.student_list.sort((a, b) => {
-            return b.gpa - a.gpa;
-          });
+
+          if(this.adminStage <=1 ){
+            this.student_list.sort((a, b) => {
+              return b.gpa - a.gpa;
+            });
+          }
+
         } else {
           this.loginService.signOut();
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
