@@ -568,7 +568,7 @@ export class UserService {
     return this.http.get(this.url);
   }
 
-  validateAllocation(projects){
+  validateAllocation(projects,studentsEnrolled){
     const user = JSON.parse(localStorage.getItem("user"));
     const id = user.id;
     const idToken = user.idToken;
@@ -580,7 +580,7 @@ export class UserService {
       }),
     };
 
-    return this.http.post(this.url,{projects:projects},httpOptions);
+    return this.http.post(this.url,{projects:projects,students:studentsEnrolled},httpOptions);
   }
 
   revertStage(stage_no){
