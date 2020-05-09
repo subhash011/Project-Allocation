@@ -717,6 +717,8 @@ export class AdminComponent implements OnInit {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
       height: "200px",
+      disableClose: false,
+      hasBackdrop: true,
       data: {
         heading: "Confirm Sending Remainders",
         message:
@@ -1005,6 +1007,8 @@ export class AdminComponent implements OnInit {
     const dialogRef = this.dialog.open(ResetComponent, {
       width: "400px",
       height: "300px",
+      disableClose: false,
+      hasBackdrop: true,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
