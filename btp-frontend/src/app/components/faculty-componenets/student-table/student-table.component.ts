@@ -1,6 +1,6 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProjectsService } from "./../../../services/projects/projects.service";
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild } from "@angular/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
@@ -13,9 +13,13 @@ import { MatDialog } from "@angular/material/dialog";
 })
 export class StudentTableComponent implements OnInit {
   @Input() public student_list;
-  // public checked: boolean = false;
   @Input() public project;
   @Input() public adminStage;
+
+
+  @ViewChild('table',{static:false}) table;
+
+  public fields = ["Name","CGPA","Roll"];
 
   constructor(
     private projectService: ProjectsService,
@@ -27,12 +31,7 @@ export class StudentTableComponent implements OnInit {
 
   ngOnInit() {}
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.student_list, event.previousIndex, event.currentIndex);
-  }
-
   onSubmit() {
-    // this.checked = false;
     if (this.adminStage == 2) {
       this.projectService
         .savePreference(this.student_list, this.project._id)
@@ -56,7 +55,7 @@ export class StudentTableComponent implements OnInit {
         });
     } else {
       if (this.adminStage < 2) {
-        this.snackBar.open("This will be active on stage 2", "Ok", {
+        this.snackBar.open("This will be active on stage 3", "Ok", {
           duration: 3000,
         });
       } else {
@@ -66,4 +65,15 @@ export class StudentTableComponent implements OnInit {
       }
     }
   }
+
+  onListDrop(event: CdkDragDrop<string[]>) {
+    let previousIndex = this.student_list.findIndex(row => row === event.item.data);
+    moveItemInArray(this.student_list, previousIndex, event.currentIndex);
+    this.table.renderRows();
+  }
+
+
+
+
+
 }
