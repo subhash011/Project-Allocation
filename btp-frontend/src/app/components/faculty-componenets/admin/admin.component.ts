@@ -338,7 +338,7 @@ export class AdminComponent implements OnInit {
       width: "300px",
       data: {
         heading: "Confirm Deletion",
-        message: "Are you sure you want to remove Faculty",
+        message: "Are you sure you want to remove the Faculty?",
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -372,7 +372,7 @@ export class AdminComponent implements OnInit {
       width: "300px",
       data: {
         heading: "Confirm Deletion",
-        message: "Are you sure you want to remove Student",
+        message: "Are you sure you want to remove the Student?",
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -680,7 +680,7 @@ export class AdminComponent implements OnInit {
                   if (result["message"] == "success") {
                     this.loadingBar.stop();
                     this.snackBar.open(
-                      "Mails have been sent succesfully.",
+                      "Mails have been sent successfully.",
                       "Ok",
                       {
                         duration: 3000,
