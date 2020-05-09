@@ -23,8 +23,8 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if(!localStorage.getItem("isLoggedIn")){
-      localStorage.setItem("isLoggedIn","false");
+    if (!localStorage.getItem("isLoggedIn")) {
+      localStorage.setItem("isLoggedIn", "false");
     }
   }
   userActivity() {
@@ -63,6 +63,21 @@ export class LoginComponent implements OnInit {
               this.router.navigate([navObj.route]);
             } else {
               this.router.navigate([navObj.route, navObj.error]);
+            }
+            if (data["position"] == "error") {
+              this.authService.signOut().then(() => {});
+              this.snackBar.open(
+                "Use the institute mail-id to access the portal",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+              localStorage.setItem("isLoggedIn", "false");
+              localStorage.setItem("role", "none");
+              localStorage.removeItem("user");
+              localStorage.removeItem("id");
+              this.router.navigate([""]);
             }
             this.loadingBar.stop();
           });
