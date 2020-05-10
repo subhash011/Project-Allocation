@@ -72,6 +72,7 @@ export class SuperAdminComponent implements OnInit {
   maps: any = [];
   branches: any = [];
   programs: any = [];
+  hasAdmins = {};
 
   ngOnInit() {
     this.loadingBar.start();
@@ -164,6 +165,18 @@ export class SuperAdminComponent implements OnInit {
                 for (const branch of this.programs) {
                   this.faculties[branch.short] = result["result"][branch.short];
                   i++;
+                  this.hasAdmins[branch.short] =
+                    this.faculties[branch.short].filter((val) => {
+                      if (
+                        val.adminProgram &&
+                        val.adminProgram == branch.short
+                      ) {
+                        return true;
+                      }
+                      return false;
+                    }).length > 0
+                      ? true
+                      : false;
                 }
               }
             }
