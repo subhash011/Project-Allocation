@@ -39,13 +39,13 @@ export class StudentTableComponent implements OnInit {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
-            snackBarRef.afterDismissed().subscribe(() => {
-              this.router
-                .navigateByUrl("/refresh", { skipLocationChange: true })
-                .then(() => {
-                  this.router.navigate([decodeURI(this.location.path())]);
-                });
-            });
+            // snackBarRef.afterDismissed().subscribe(() => {
+            //   this.router
+            //     .navigateByUrl("/refresh", { skipLocationChange: true })
+            //     .then(() => {
+            //       this.router.navigate([decodeURI(this.location.path())]);
+            //     });
+            // });
           } else {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,

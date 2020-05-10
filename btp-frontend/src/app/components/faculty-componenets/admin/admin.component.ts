@@ -195,7 +195,10 @@ export class AdminComponent implements OnInit {
               }
 
               this.userService
-                .validateAllocation(this.selection.selected,this.students.length)
+                .validateAllocation(
+                  this.selection.selected,
+                  this.students.length
+                )
                 .subscribe((data) => {
                   if (data["status"] == "success") {
                     this.allocationButton = false;
@@ -460,13 +463,13 @@ export class AdminComponent implements OnInit {
                   duration: 3000,
                 }
               );
-
-              snackBarRef.afterDismissed().subscribe(() => {
-                this.ngOnInit();
-              });
-              snackBarRef.onAction().subscribe(() => {
-                this.ngOnInit();
-              });
+              this.ngOnInit();
+              // snackBarRef.afterDismissed().subscribe(() => {
+              //   this.ngOnInit();
+              // });
+              // snackBarRef.onAction().subscribe(() => {
+              //   this.ngOnInit();
+              // });
             } else {
               this.loginService.signOut();
               this.snackBar.open(
@@ -498,75 +501,83 @@ export class AdminComponent implements OnInit {
       disableClose: true,
       hasBackdrop: true,
     });
-    this.userService.validateAllocation(selectedProjects,this.students.length).subscribe((data) => {
-      if (data["status"] == "success") {
-        this.projectService
-          .startAllocation(selectedProjects)
-          .subscribe((data) => {
-            dialogRef.close();
-            if (data["message"] == "success") {
-              selectedProjects = selectedProjects.map((val) => String(val._id));
-              this.dataSource = new MatTableDataSource(data["result"]);
-              this.selection.clear();
-              this.dataSource.data.forEach((row) => {
-                if (selectedProjects.indexOf(row._id.toString()) != -1) {
-                  this.selection.select(row);
-                }
-              });
-              if (this.stage_no == 3) {
-                this.userService
-                  .updateStage(this.stage_no + 1)
-                  .subscribe((data) => {
-                    if (data["status"] == "success") {
-                      this.snackBar.open(
-                        "Allocation completed successfully",
-                        "Ok",
-                        {
-                          duration: 3000,
-                        }
-                      );
-                    } else {
-                      this.loginService.signOut();
-                      this.snackBar.open(
-                        "Session Timed Out! Please Sign-In again",
-                        "Ok",
-                        {
-                          duration: 3000,
-                        }
-                      );
+    this.userService
+      .validateAllocation(selectedProjects, this.students.length)
+      .subscribe((data) => {
+        if (data["status"] == "success") {
+          this.projectService
+            .startAllocation(selectedProjects)
+            .subscribe((data) => {
+              dialogRef.close();
+              if (data["message"] == "success") {
+                selectedProjects = selectedProjects.map((val) =>
+                  String(val._id)
+                );
+                this.dataSource = new MatTableDataSource(data["result"]);
+                this.selection.clear();
+                this.dataSource.data.forEach((row) => {
+                  if (selectedProjects.indexOf(row._id.toString()) != -1) {
+                    this.selection.select(row);
+                  }
+                });
+                if (this.stage_no == 3) {
+                  this.userService
+                    .updateStage(this.stage_no + 1)
+                    .subscribe((data) => {
+                      if (data["status"] == "success") {
+                        this.snackBar.open(
+                          "Allocation completed successfully",
+                          "Ok",
+                          {
+                            duration: 3000,
+                          }
+                        );
+                      } else {
+                        this.loginService.signOut();
+                        this.snackBar.open(
+                          "Session Timed Out! Please Sign-In again",
+                          "Ok",
+                          {
+                            duration: 3000,
+                          }
+                        );
+                      }
+                    });
+                } else {
+                  this.snackBar.open(
+                    "Allocation completed successfully",
+                    "Ok",
+                    {
+                      duration: 3000,
                     }
-                  });
+                  );
+                }
+              } else if (data["message"] == "invalid-token") {
+                this.loginService.signOut();
+                this.snackBar.open(
+                  "Session Expired! Sign-In and try again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
               } else {
-                this.snackBar.open("Allocation completed successfully", "Ok", {
+                this.snackBar.open("Some error occured! Try again", "Ok", {
                   duration: 3000,
                 });
               }
-            } else if (data["message"] == "invalid-token") {
-              this.loginService.signOut();
-              this.snackBar.open(
-                "Session Expired! Sign-In and try again",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-            } else {
-              this.snackBar.open("Some error occured! Try again", "Ok", {
-                duration: 3000,
-              });
+            });
+        } else {
+          dialogRef.close();
+          this.snackBar.open(
+            "Unable to do an allocation. Please note the number of projects that can be alloted must be greater than or equal to the number of students.",
+            "Ok",
+            {
+              duration: 3000,
             }
-          });
-      } else {
-        dialogRef.close();
-        this.snackBar.open(
-          "Unable to do an allocation. Please note the number of projects that can be alloted must be greater than or equal to the number of students.",
-          "Ok",
-          {
-            duration: 3000,
-          }
-        );
-      }
-    });
+          );
+        }
+      });
   }
 
   sendEmails() {
@@ -723,8 +734,14 @@ export class AdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Sending mails, Please wait as this may take a while",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         if (this.stage_no == 1) {
           this.userService.getStudentStreamEmails().subscribe((data1) => {
+            dialogRefLoad.close();
             if (data1["status"] == "success") {
               this.mailer
                 .adminToStudents(
@@ -764,6 +781,7 @@ export class AdminComponent implements OnInit {
           });
         } else {
           this.userService.getFacultyStreamEmails().subscribe((data1) => {
+            dialogRefLoad.close();
             if (data1["status"] == "success") {
               this.mailer
                 .adminToFaculty(
@@ -815,6 +833,7 @@ export class AdminComponent implements OnInit {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
+            console.log(this.projectCap);
             this.ngOnInit();
           } else {
             this.loginService.signOut();
@@ -1019,6 +1038,7 @@ export class AdminComponent implements OnInit {
                 duration: 3000,
               }
             );
+            this.stepper.reset();
             this.ngOnInit();
           } else if (result["message"] == "invalid-token") {
             this.snackBar.open("Session Expired! Please Sign-In Again", "Ok", {
