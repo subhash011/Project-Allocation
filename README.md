@@ -175,7 +175,7 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 
 ## Deployment
 
-1. Navigate to the `environments` folder under the `src` folder.
+1. Navigate to the `environments` folder under the `src` folder and open the environment.prod.ts file.
 
 2. `apiUrl` is the base URL to which angular application will be listening, `GOOGLE_CLIENT_ID` is the ID obtained from google developer console on
    registering the application
@@ -187,21 +187,24 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 
 3. Define `apiUrl` and `GOOGLE_CLIENT_ID` in the environment.prod.ts file.
 
-   ### Optional Steps to follow to maintain the code for various deployment stages like developement, testing, production etc.
-
-   During the build the environment.ts file is replaced by environment.prod.ts
-   file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
-   file and under configurations, create a new configuration and define the file replacements in the file replacements array.
-   This artice explains very well on how to use the file replacements array:
-   `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`
+   > ### Optional Steps to follow to maintain the code for various deployment stages like developement, testing, production etc.
+   >
+   > During the build the environment.ts file is replaced by environment.prod.ts
+   > file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
+   > file and under configurations, create a new configuration and define the file replacements in the file replacements array.
+   > This artice explains very well on how to use the file replacements array:
+   > `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`
 
 4. To build the application after completing all the configuration steps, run `ng build --prod --build-optimizer`.
 
-   ### This is required only if the above optional steps are followed
+   > ### This is required only if the above optional steps are followed
+   >
+   > if you have made any file replacements run the build command accordingly. Remember to run the ng build command in the root directory of the project i.e btp-frontend.
 
-   if you have made any file replacements run the build command accordingly. Remember to run the ng build command in the root directory of the project i.e btp-frontend.
+5. After running the build command the in step 4, the backend folder is ready to be deployed along with the necessary static files.
 
-5. After running the build command the in step 4, the backend folder is ready to be deployed along with the necessart static files.
+6. For deployment instructions on centos 7 follow this link:
+   `https://www.terlici.com/2015/04/20/hosting-deploying-nodejs-centos.html`
 
 ## Built With
 
