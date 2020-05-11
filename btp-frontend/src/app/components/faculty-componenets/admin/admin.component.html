@@ -437,7 +437,7 @@
               </div>
             </td>
           </ng-container>
-          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
           <tr mat-row *matRowDef="let row; columns: columns"></tr>
         </table>
       </div>
@@ -506,7 +506,10 @@
                   >
                 </td>
               </ng-container>
-              <tr mat-header-row *matHeaderRowDef="studentCols"></tr>
+              <tr
+                mat-header-row
+                *matHeaderRowDef="studentCols; sticky: true"
+              ></tr>
               <tr mat-row *matRowDef="let row; columns: studentCols"></tr>
             </table>
           </div>
@@ -593,7 +596,10 @@
                   >
                 </td>
               </ng-container>
-              <tr mat-header-row *matHeaderRowDef="facultyCols"></tr>
+              <tr
+                mat-header-row
+                *matHeaderRowDef="facultyCols; sticky: true"
+              ></tr>
               <tr mat-row *matRowDef="let row; columns: facultyCols"></tr>
             </table>
           </div>
