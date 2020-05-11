@@ -179,7 +179,6 @@ export class AdminComponent implements OnInit {
             if (result["message"] == "success") {
               this.faculties = result["result"]["faculties"];
               this.students = result["result"]["students"];
-              console.log(this.faculties);
               let flag = false;
               for (const faculty of this.faculties) {
                 if (
