@@ -205,6 +205,7 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 
 6. For deployment instructions on centos 7 follow this link:
    `https://www.terlici.com/2015/04/20/hosting-deploying-nodejs-centos.html`
+   In the given link skip the 'Little customization' part.
 
 ## Built With
 
