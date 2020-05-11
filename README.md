@@ -181,7 +181,7 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    registering the application
 
    To register the app on google's developer console follow the link given:
-   `https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98`, when following this link choose the application type as **Web Application** not **Others** as mentionen in the link.
+   `https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98`, when following this link choose the application type as **Web Application** not **Others** as mentioned in the link.
 
 #### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
 
