@@ -62,8 +62,11 @@ For more reference - [installation instructions](https://tecadmin.net/install-la
 
 ##### CentOS 7 or Fedora
 
-Please follow the link to install npm and node on CentOS or Fedora : 
-`https://computingforgeeks.com/how-to-install-nodejs-on-centos-fedora/`
+Please follow the link to install npm and node on CentOS or Fedora :
+
+```
+https://computingforgeeks.com/how-to-install-nodejs-on-centos-fedora/
+```
 
 #### 2. Angular CLI
 
@@ -186,7 +189,10 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    registering the application
 
    To register the app on google's developer console follow the link given:
-   `https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98`, when following this link choose the application type as **Web Application** not **Others** as mentioned in the link.
+   ```
+   https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98
+   ```
+   when following this link choose the application type as **Web Application** not **Others** as mentioned in the link.
 
    #### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
 
@@ -198,7 +204,9 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    > file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
    > file and under configurations, create a new configuration and define the file replacements in the file replacements array.
    > This artice explains very well on how to use the file replacements array:
-   > `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`
+    ```
+    https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23
+   ```
 
 4. To build the application after completing all the configuration steps, run `ng build --prod --build-optimizer`.
 
@@ -209,7 +217,9 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 5. After running the build command the in step 4, the backend folder is ready to be deployed along with the necessary static files. The entire app is present in the backend folder now so it is enough to deploy this folder.
 
 6. For deployment instructions on centos 7 follow this link:
-   `https://www.terlici.com/2015/04/20/hosting-deploying-nodejs-centos.html`
+   ```
+   https://www.terlici.com/2015/04/20/hosting-deploying-nodejs-centos.html
+   ```
    In the given link skip the 'Little customization' part.
 
 ## Built With
