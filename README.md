@@ -201,7 +201,7 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    >
    > if you have made any file replacements run the build command accordingly. Remember to run the ng build command in the root directory of the project i.e btp-frontend.
 
-5. After running the build command the in step 4, the backend folder is ready to be deployed along with the necessary static files.
+5. After running the build command the in step 4, the backend folder is ready to be deployed along with the necessary static files. The entire app is present in the backend folder now so it is enough to deploy this folder.
 
 6. For deployment instructions on centos 7 follow this link:
    `https://www.terlici.com/2015/04/20/hosting-deploying-nodejs-centos.html`
