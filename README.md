@@ -217,9 +217,7 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    > file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
    > file and under configurations, create a new configuration and define the file replacements in the file replacements array.
    > This artice explains very well on how to use the file replacements array:
-    ```
-    https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23
-   ```
+   > https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23
 
 4. To build the application after completing all the configuration steps, run `ng build --prod --build-optimizer`.
 
