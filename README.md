@@ -183,11 +183,11 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    To register the app on google's developer console follow the link given:
    `https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98`, when following this link choose the application type as **Web Application** not **Others** as mentionen in the link.
 
-#### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
+   #### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
 
 3. Define `apiUrl` and `GOOGLE_CLIENT_ID` in the environment.prod.ts file.
 
-   ## Optional Steps to follow to maintain the code for various deployment stages like developement, testing, production etc.
+   ### Optional Steps to follow to maintain the code for various deployment stages like developement, testing, production etc.
 
    During the build the environment.ts file is replaced by environment.prod.ts
    file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
@@ -197,17 +197,11 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 
 4. To build the application after completing all the configuration steps, run `ng build --prod --build-optimizer`.
 
-   ## This is required only if the above optional steps are followed
+   ### This is required only if the above optional steps are followed
 
    if you have made any file replacements run the build command accordingly. Remember to run the ng build command in the root directory of the project i.e btp-frontend.
 
-5. After running the build command angular writes the output to the dist folder under the root directory. Inside the dist folder ther will be a
-   folder with the project name, copy that folder into the root directory of the backend (here "backend"). Once this is done in the backend folder
-   go to the server.js file and in line 30 there is a comment saying "uncomment during production", uncomment the line just below that and the app is ready for deployment. Now the backend folder will deploy angular application as static files so it is enough if we deploy the backend folder
-   on the server.
-
-6. Based on our deployment on a cloud server, the node_modules folder in the backend directory has to be removed before deploying. You can try deployment with the
-   node_modules but if you face any errors then consider removing the node_module folder.
+5. After running the build command the in step 4, the backend folder is ready to be deployed along with the necessart static files.
 
 ## Built With
 

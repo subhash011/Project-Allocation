@@ -13,12 +13,12 @@ const app = express();
 
 //express session
 app.use(
-  session({
-    cookie: { maxAge: 60000 },
-    secret: "woot",
-    resave: false,
-    saveUninitialized: false,
-  })
+	session({
+		cookie: { maxAge: 60000 },
+		secret: "woot",
+		resave: false,
+		saveUninitialized: false,
+	})
 );
 app.use(compression());
 app.use(cors());
@@ -28,21 +28,21 @@ app.use(bodyparser.json({ limit: "50mb", extended: true }));
 mongoose.set("useFindAndModify", false);
 
 //uncomment during production
-// app.use(express.static(__dirname + "/btp-frontend"));
+app.use(express.static(__dirname + "/btp-frontend"));
 
 var mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
 mongoose
-  .connect(mongoConnect, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("connected to mongodb");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+	.connect(mongoConnect, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	})
+	.then(() => {
+		console.log("connected to mongodb");
+	})
+	.catch((err) => {
+		console.log(err);
+	});
 
 //define all routes below this
 const home = require("./routes/home");
@@ -78,10 +78,10 @@ app.use("/email", mail);
 const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
+	res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
 });
 
 //start server
 app.listen(PORT, () => {
-  console.log("Server connected to port " + PORT);
+	console.log("Server connected to port " + PORT);
 });
