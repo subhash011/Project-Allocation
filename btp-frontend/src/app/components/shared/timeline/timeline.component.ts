@@ -4,9 +4,6 @@ import {
   Component,
   OnInit,
   Input,
-  AfterViewInit,
-  TemplateRef,
-  ChangeDetectorRef,
   OnChanges,
   SimpleChanges,
 } from "@angular/core";
@@ -20,7 +17,6 @@ export class TimelineComponent implements OnInit, OnChanges {
   @Input() program;
   constructor(
     private userService: UserService,
-    private cdRef: ChangeDetectorRef,
     private loadingBar: LoadingBarService
   ) {}
   admins: any;
