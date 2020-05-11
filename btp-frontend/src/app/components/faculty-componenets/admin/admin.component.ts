@@ -938,11 +938,50 @@ export class AdminComponent implements OnInit {
               break;
             }
           }
-          if (!flag) {
-            this.proceedButton1_ = false;
-            this.proceedButton2_ = false;
-            this.proceedButton3_ = false;
-          }
+
+          this.userService
+            .validateAllocation(this.selection.selected, this.students.length)
+            .subscribe((data) => {
+              if (data["status"] == "success") {
+                this.allocationButton = false;
+                this.allocationMail = false;
+
+                if (this.dateSet.length == 1) {
+                  if (this.firstFormGroup.controls["firstCtrl"]) {
+                    this.proceedButton1 = false;
+                    if (!flag) this.proceedButton1_ = false;
+                  }
+                }
+              } else {
+                this.allocationButton = true;
+                this.allocationMail = true;
+
+                if (this.dateSet.length == 1) {
+                  if (this.firstFormGroup.controls["firstCtrl"]) {
+                    this.proceedButton1 = false;
+                    this.proceedButton1_ = true;
+                  }
+                }
+              }
+
+              if (this.dateSet.length == 2) {
+                if (this.secondFormGroup.controls["secondCtrl"]) {
+                  this.proceedButton2 = false;
+                  if (!flag) this.proceedButton2_ = false;
+                }
+              }
+              if (this.dateSet.length == 3) {
+                if (this.thirdFormGroup.controls["thirdCtrl"])
+                  this.proceedButton3 = false;
+                if (!flag) this.proceedButton3_ = false;
+              }
+              this.minDate = new Date();
+            });
+        } else {
+          this.loginService.signOut();
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
         }
       });
   }
