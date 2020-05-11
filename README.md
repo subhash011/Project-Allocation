@@ -95,7 +95,7 @@ _MongoDB Compass_ :
 Please follow the instructions given in the documentation -
 [MongoDB compass Ubuntu](https://docs.mongodb.com/compass/master/install/)
 
-#### 4. Angular Material
+#### 4. This is not required for now. During the build process if you face any error related to angular material then use this option.
 
 Clone the repository to your local machine
 
