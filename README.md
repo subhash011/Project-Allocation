@@ -26,7 +26,7 @@ Install the following step by step in order to get a development environment up 
 
 Visit the nodejs website here ([Install Node](https://nodejs.org/en/download/)) and choose the windows installer option with the appropriate architecture of your computer.
 
-##### Linux
+##### Ubuntu
 
 Refresh your local package index by typing :
 
@@ -59,6 +59,11 @@ $ npm -v
 ```
 
 For more reference - [installation instructions](https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/)
+
+##### CentOS 7 or Fedora
+
+Please follow the link to install npm and node on CentOS or Fedora : 
+`https://computingforgeeks.com/how-to-install-nodejs-on-centos-fedora/`
 
 #### 2. Angular CLI
 
