@@ -94,7 +94,7 @@
               </ng-container>
               <tr
                 mat-header-row
-                *matHeaderRowDef="displayedColumnsFaculty"
+                *matHeaderRowDef="displayedColumnsFaculty; sticky: true"
               ></tr>
               <tr
                 mat-row
@@ -165,7 +165,7 @@
               </ng-container>
               <tr
                 mat-header-row
-                *matHeaderRowDef="displayedColumnsStudent"
+                *matHeaderRowDef="displayedColumnsStudent; sticky: true"
               ></tr>
               <tr
                 mat-row
@@ -290,7 +290,10 @@
               >
             </td>
           </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsStreams"></tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumnsStreams; sticky: true"
+          ></tr>
           <tr
             mat-row
             *matRowDef="let row; columns: displayedColumnsStreams"
@@ -360,7 +363,10 @@
               >
             </td>
           </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsMaps"></tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumnsMaps; sticky: true"
+          ></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumnsMaps"></tr>
         </table>
       </div>

@@ -179,6 +179,7 @@ export class AdminComponent implements OnInit {
             if (result["message"] == "success") {
               this.faculties = result["result"]["faculties"];
               this.students = result["result"]["students"];
+              console.log(this.faculties);
               let flag = false;
               for (const faculty of this.faculties) {
                 if (
@@ -833,7 +834,6 @@ export class AdminComponent implements OnInit {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
-            console.log(this.projectCap);
             this.ngOnInit();
           } else {
             this.loginService.signOut();
