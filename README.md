@@ -83,7 +83,7 @@ npm install -g @angular/cli
 Execute the following command on the command line :
 
 ```
-$ sudo npm install -g @angular/cli
+$ npm install -g @angular/cli
 ```
 
 #### 3. MongoDB & MongoDB Compass
@@ -93,7 +93,7 @@ $ sudo npm install -g @angular/cli
 Please follow the instructions given in the documentation -
 [Mongo Docs Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 
-##### Linux
+##### Ubuntu
 
 _MongoDB Community Edition_ :
 Please follow the instructions given in the documentation -
@@ -102,6 +102,19 @@ Please follow the instructions given in the documentation -
 _MongoDB Compass_ :
 Please follow the instructions given in the documentation -
 [MongoDB compass Ubuntu](https://docs.mongodb.com/compass/master/install/)
+
+##### CentOS
+
+_MongoDB Community Edition_ :
+Please follow the instructions given in the documentation -
+[Mongo Docs CentOS](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/)
+
+_MongoDB Compass (Probably not required unless direct visualisation of database is needed) _ :
+```
+sudo yum install mongodb-compass-1.20.4.x86_64.rpm
+```
+
+
 
 #### 4. This is not required for now. During the build process if you face any error related to angular material then use this option.
 
