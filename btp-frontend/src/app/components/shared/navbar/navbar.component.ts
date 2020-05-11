@@ -35,7 +35,6 @@ export class NavbarComponent implements OnInit {
           this.programs = data["programs"];
           if (this.programs.length > 0) {
             this.programsVisible = true;
-            console.log(this.programsVisible);
           }
         } else {
           let snackBarRef = this.snackBar.open(

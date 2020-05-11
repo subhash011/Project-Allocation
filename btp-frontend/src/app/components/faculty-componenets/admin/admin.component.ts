@@ -833,7 +833,7 @@ export class AdminComponent implements OnInit {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
-            this.ngOnInit();
+            this.validateFields();
           } else {
             this.loginService.signOut();
             this.snackBar.open(
@@ -865,7 +865,7 @@ export class AdminComponent implements OnInit {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
-            this.ngOnInit();
+            this.validateFields();
           } else {
             this.loginService.signOut();
             this.snackBar.open(
@@ -897,7 +897,7 @@ export class AdminComponent implements OnInit {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
-            this.ngOnInit();
+            this.validateFields();
           } else {
             this.loginService.signOut();
             this.snackBar.open(
@@ -914,6 +914,37 @@ export class AdminComponent implements OnInit {
         duration: 3000,
       });
     }
+  }
+
+  validateFields() {
+    this.userService
+      .getMembersForAdmin()
+      .toPromise()
+      .then((result) => {
+        if (result["message"] == "success") {
+          this.faculties = result["result"]["faculties"];
+          this.students = result["result"]["students"];
+          let flag = false;
+          for (const faculty of this.faculties) {
+            if (
+              faculty.project_cap ||
+              faculty.student_cap ||
+              faculty.studentsPerFaculty
+            ) {
+              this.proceedButton1_ = true;
+              this.proceedButton2_ = true;
+              this.proceedButton3_ = true;
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) {
+            this.proceedButton1_ = false;
+            this.proceedButton2_ = false;
+            this.proceedButton3_ = false;
+          }
+        }
+      });
   }
 
   setStudentCount() {
