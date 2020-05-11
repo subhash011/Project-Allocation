@@ -181,7 +181,7 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    registering the application
 
    To register the app on google's developer console follow the link given:
-   `https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98`
+   `https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98`, when following this link choose the application type as **Web Application** not **Others** as mentionen in the link.
 
 #### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
 
@@ -189,7 +189,7 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
    file and under configurations, create a new configuration and define the file replacements in the file replacements array.
    This artice explains very well on how to use the file replacements array:
-   `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`, when following this link choose the application type as **Web Application** not **Others** as mentionen in the link.
+   `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`
 
 4. To build the application after completing all the configuration steps, run `ng build --prod --build-optimizer` if you have not made any file replacements else
    run the build command accordingly. Remember to run the ng build command in the root directory of the project i.e btp-frontend.
