@@ -26,7 +26,7 @@ Install the following step by step in order to get a development environment up 
 
 Visit the nodejs website here ([Install Node](https://nodejs.org/en/download/)) and choose the windows installer option with the appropriate architecture of your computer.
 
-##### Linux
+##### Ubuntu
 
 Refresh your local package index by typing :
 
@@ -60,6 +60,14 @@ $ npm -v
 
 For more reference - [installation instructions](https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/)
 
+##### CentOS 7 or Fedora
+
+Please follow the link to install npm and node on CentOS or Fedora :
+
+```
+https://computingforgeeks.com/how-to-install-nodejs-on-centos-fedora/
+```
+
 #### 2. Angular CLI
 
 ##### Windows
@@ -75,7 +83,7 @@ npm install -g @angular/cli
 Execute the following command on the command line :
 
 ```
-$ sudo npm install -g @angular/cli
+$ npm install -g @angular/cli
 ```
 
 #### 3. MongoDB & MongoDB Compass
@@ -85,7 +93,7 @@ $ sudo npm install -g @angular/cli
 Please follow the instructions given in the documentation -
 [Mongo Docs Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 
-##### Linux
+##### Ubuntu
 
 _MongoDB Community Edition_ :
 Please follow the instructions given in the documentation -
@@ -95,7 +103,20 @@ _MongoDB Compass_ :
 Please follow the instructions given in the documentation -
 [MongoDB compass Ubuntu](https://docs.mongodb.com/compass/master/install/)
 
-#### 4. Angular Material
+##### CentOS
+
+_MongoDB Community Edition_ :
+Please follow the instructions given in the documentation -
+[Mongo Docs CentOS](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/)
+
+_MongoDB Compass (Probably not required unless direct visualisation of database is needed) _ :
+```
+sudo yum install mongodb-compass-1.20.4.x86_64.rpm
+```
+
+
+
+#### 4. This is not required for now. During the build process if you face any error related to angular material then use this option.
 
 Clone the repository to your local machine
 
@@ -139,6 +160,9 @@ npm i
 
 > All the dependencies will be installed which otherwise have to be installed with `npm i --save packagename`.
 
+After the above steps are completed, in the backend folder, replace the 'environment.txt' file with a file named '.env'
+and add all the required parameters as mentioned in the environment.txt file.
+
 ## Configuring Angular app
 
 The above commands will install all the required packages but some changes are to made for the application to run as expected:
@@ -175,32 +199,42 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 
 ## Deployment
 
-1. Navigate to the `environments` folder under the `src` folder.
+1. Navigate to the `environments` folder under the `src` folder and open the environment.prod.ts file.
 
 2. `apiUrl` is the base URL to which angular application will be listening, `GOOGLE_CLIENT_ID` is the ID obtained from google developer console on
    registering the application
 
    To register the app on google's developer console follow the link given:
-   `https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98`
+   ```
+   https://medium.com/@pablo127/google-api-authentication-with-oauth-2-on-the-example-of-gmail-a103c897fd98
+   ```
+   when following this link choose the application type as **Web Application** not **Others** as mentioned in the link.
 
-#### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
+   #### Note : The GOOGLE_CLIENT_ID must be the same for the backend .env file and the btp-frontend environment.prod.ts file
 
-3. Define `apiUrl` and `GOOGLE_CLIENT_ID` in the environment.prod.ts file. During the build the environment.ts file is replaced by environment.prod.ts
-   file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
-   file and under configurations, create a new configuration and define the file replacements in the file replacements array.
-   This artice explains very well on how to use the file replacements array:
-   `https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23`, when following this link choose the application type as **Web Application** not **Others** as mentionen in the link.
+3. Define `apiUrl` and `GOOGLE_CLIENT_ID` in the environment.prod.ts file.
 
-4. To build the application after completing all the configuration steps, run `ng build --prod --build-optimizer` if you have not made any file replacements else
-   run the build command accordingly. Remember to run the ng build command in the root directory of the project i.e btp-frontend.
+   > ### Optional Steps to follow to maintain the code for various deployment stages like developement, testing, production etc.
+   >
+   > During the build the environment.ts file is replaced by environment.prod.ts
+   > file so we need not worry about the environment.ts file. To change the default behaviour head over to the angular.json
+   > file and under configurations, create a new configuration and define the file replacements in the file replacements array.
+   > This artice explains very well on how to use the file replacements array:
+   > https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23
 
-5. After running the build command angular writes the output to the dist folder under the root directory. Inside the dist folder ther will be a
-   folder with the project name, copy that folder into the root directory of the backend (here "backend"). Once this is done in the backend folder
-   go to the server.js file and in line 29 there is a comment saying "uncomment during production", uncomment the line just below that and the app is ready for deployment. Now the backend folder will deploy angular application as static files so it is enough if we deploy the backend folder
-   on the server.
+4. To build the application after completing all the configuration steps, run `ng build --prod --build-optimizer`.
 
-6. Based on our deployment on a cloud server, the node_modules folder in the backend directory has to be removed before deploying. You can try deployment with the
-   node_modules but if you face any errors then consider removing the node_module folder.
+   > ### This is required only if the above optional steps are followed
+   >
+   > if you have made any file replacements run the build command accordingly. Remember to run the ng build command in the root directory of the project i.e btp-frontend.
+
+5. After running the build command the in step 4, the backend folder is ready to be deployed along with the necessary static files. The entire app is present in the backend folder now so it is enough to deploy this folder.
+
+6. For deployment instructions on centos 7 follow this link:
+   ```
+   https://www.terlici.com/2015/04/20/hosting-deploying-nodejs-centos.html
+   ```
+   In the given link skip the 'Little customization' part.
 
 ## Built With
 

@@ -27,7 +27,8 @@ import { MatNativeDateModule } from "@angular/material";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatRippleModule } from "@angular/material/core";
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -57,7 +58,8 @@ const MaterialComponents = [
   MatPaginatorModule,
   MatTooltipModule,
   MatCheckboxModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatRippleModule,
 ];
 
 @NgModule({

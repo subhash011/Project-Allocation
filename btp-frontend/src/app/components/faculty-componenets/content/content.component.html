@@ -1,173 +1,269 @@
 <div class="container" *ngIf="empty; else notEmpty">
-    <div class="app-timeline" *ngIf="!programs_mode; else goProgramMode">
-        <app-timeline *ngIf="!programs_mode" [program]="stream"></app-timeline>
-    </div>
+  <div class="app-timeline" *ngIf="!programs_mode; else goProgramMode">
+    <app-timeline *ngIf="!programs_mode" [program]="stream"></app-timeline>
+  </div>
 
-    <ng-template #goProgramMode>
-        <div *ngIf="program_details">
-            <app-timeline *ngIf="program_details" [program]="program_details.program.short"></app-timeline>
-            <div class="flex-space" *ngIf="program_details"></div>
-            <div class="display">
-                <div class="table mat-elevation-z8">
-                    <table mat-table #table [dataSource]="program_details.projects" class="mat-elevation-z8">
-                        <ng-container tainer matColumnDef="Project Name">
-                            <th mat-header-cell *matHeaderCellDef>
-                                Project Name
-                            </th>
-                            <td mat-cell *matCellDef="let map">{{ map.title }}</td>
-                        </ng-container>
+  <ng-template #goProgramMode>
+    <div *ngIf="program_details">
+      <app-timeline
+        *ngIf="program_details"
+        [program]="program_details.program.short"
+      ></app-timeline>
+      <div class="flex-space" *ngIf="program_details"></div>
+      <div class="display">
+        <div class="table mat-elevation-z8">
+          <table
+            mat-table
+            #table
+            [dataSource]="program_details.projects"
+            class="mat-elevation-z8"
+          >
+            <ng-container tainer matColumnDef="Project Name">
+              <th mat-header-cell *matHeaderCellDef>
+                Project Name
+              </th>
+              <td mat-cell *matCellDef="let map">{{ map.title }}</td>
+            </ng-container>
 
-                        <ng-container tainer matColumnDef="#Students Applied">
-                            <th mat-header-cell *matHeaderCellDef>
-                                No of Students Applied
-                            </th>
-                            <td mat-cell *matCellDef="let map">
-                                {{ map.students_id.length }}
-                            </td>
-                        </ng-container>
+            <ng-container tainer matColumnDef="#Students Applied">
+              <th mat-header-cell *matHeaderCellDef>
+                No of Students Applied
+              </th>
+              <td mat-cell *matCellDef="let map">
+                {{ map.students_id.length }}
+              </td>
+            </ng-container>
 
-                        <ng-container tainer matColumnDef="#Students Alloted">
-                            <th mat-header-cell *matHeaderCellDef>
-                                Students Alloted
-                            </th>
-                            <td mat-cell *matCellDef="let project">
-                                <div *ngIf="
+            <ng-container tainer matColumnDef="#Students Alloted">
+              <th mat-header-cell *matHeaderCellDef>
+                Students Alloted
+              </th>
+              <td mat-cell *matCellDef="let project">
+                <div
+                  *ngIf="
                     !project.student_alloted ||
                     project.student_alloted.length <= 0
-                  ">
-                                    N/A
-                                </div>
-                                <div *ngIf="
+                  "
+                >
+                  N/A
+                </div>
+                <div
+                  *ngIf="
                     project.student_alloted &&
                     project.student_alloted.length > 0
-                  ">
-                                    <div *ngFor="let student of project.student_alloted">
-                                        {{ student.name }} &nbsp;
-                                    </div>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="Headers"></tr>
-                        <tr mat-row *matRowDef="let row; columns: Headers"></tr>
-                    </table>
+                  "
+                >
+                  <div *ngFor="let student of project.student_alloted">
+                    {{ student.name }} &nbsp;
+                  </div>
                 </div>
-            </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="Headers"></tr>
+            <tr mat-row *matRowDef="let row; columns: Headers"></tr>
+          </table>
         </div>
-    </ng-template>
+      </div>
+    </div>
+  </ng-template>
 </div>
 <ng-template #notEmpty>
-    <div class="container-add" *ngIf="add; else display">
-        <form [formGroup]="ProjectForm" novalidate (ngSubmit)="onSubmit()" class="form-card">
-            <mat-card class="add-card mat-elevation-z12">
-                <mat-card-title>
-                    Add Project
-                </mat-card-title>
-                <mat-card-content class="add-card-content">
-                    <div class="row">
-                        <mat-form-field class="full-width">
-                            <input matInput placeholder="Title" formControlName="title" />
-                            <mat-error *ngIf="ProjectForm.controls['title'].hasError('required')">
-                                Title is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field class="full-width">
-                            <input matInput type="number" placeholder="Duration (months)" formControlName="duration" />
-                            <mat-error *ngIf="ProjectForm.controls['duration'].hasError('required')">
-                                Duration is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
+  <div class="container-add" *ngIf="add; else display">
+    <form
+      [formGroup]="ProjectForm"
+      novalidate
+      (ngSubmit)="onSubmit()"
+      class="form-card"
+    >
+      <mat-card class="add-card mat-elevation-z12">
+        <mat-card-title>
+          Add Project
+        </mat-card-title>
+        <mat-card-content class="add-card-content">
+          <div class="row">
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Title" formControlName="title" />
+              <mat-error
+                *ngIf="ProjectForm.controls['title'].hasError('required')"
+              >
+                Title is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                type="number"
+                placeholder="Duration (months)"
+                formControlName="duration"
+              />
+              <mat-error
+                *ngIf="ProjectForm.controls['duration'].hasError('required')"
+              >
+                Duration is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-                    <div class="row">
-                        <mat-form-field class="full-width">
-                            <input matInput type="number" placeholder="No. of Students" formControlName="studentIntake" />
-                            <mat-error *ngIf="
+          <div class="row">
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                type="number"
+                placeholder="No. of Students"
+                formControlName="studentIntake"
+              />
+              <mat-error
+                *ngIf="
                   ProjectForm.controls['studentIntake'].hasError('required')
-                ">
-                                StudentIntake is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field class="full-width">
-                            <textarea matInput placeholder="Description" formControlName="description"></textarea>
-                        </mat-form-field>
-                    </div>
-                </mat-card-content>
-                <button mat-raised-button class="submit_button" [disabled]="!ProjectForm.valid" color="primary" type="submit">
+                "
+              >
+                StudentIntake is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-form-field class="full-width">
+              <textarea
+                matInput
+                placeholder="Description"
+                formControlName="description"
+              ></textarea>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+        <button
+          mat-raised-button
+          class="submit_button"
+          [disabled]="!ProjectForm.valid"
+          color="primary"
+          type="submit"
+        >
           Submit
         </button>
-            </mat-card>
-        </form>
-    </div>
-    <ng-template #display>
-        <mat-tab-group color="accent" dynamicHeight="true">
-            <mat-tab label="Students">
-                <app-student-table *ngIf="!programs_mode" [project]="project" [adminStage]="adminStage" [student_list]="student_list">
-                </app-student-table>
-            </mat-tab>
+      </mat-card>
+    </form>
+  </div>
+  <ng-template #display>
+    <mat-tab-group color="accent" animationDuration="0" dynamicHeight="true">
+      <mat-tab label="Students">
+        <app-student-table
+          *ngIf="!programs_mode && student_list"
+          [project]="project"
+          [adminStage]="adminStage"
+          [student_list]="student_list"
+        >
+        </app-student-table>
+      </mat-tab>
 
-            <mat-tab class="editPage" label="Edit">
-                <div class="container-edit">
-                    <form [formGroup]="EditForm" novalidate (ngSubmit)="onEditSubmit(project)" class="form-card">
-                        <mat-card class="add-card mat-elevation-z12">
-                            <mat-card-title>
-                                Edit Project
-                            </mat-card-title>
+      <mat-tab class="editPage" label="Edit">
+        <div class="container-edit">
+          <form
+            [formGroup]="EditForm"
+            novalidate
+            (ngSubmit)="onEditSubmit(project)"
+            class="form-card"
+          >
+            <mat-card class="add-card mat-elevation-z12">
+              <mat-card-title>
+                Edit Project
+              </mat-card-title>
 
-                            <mat-card-content class="add-card-content">
-                                <div class="row">
-                                    <mat-form-field class="full-width">
-                                        <input matInput placeholder="Title" formControlName="title" [(ngModel)]="project.title" />
-                                        <mat-error *ngIf="EditForm.controls['title'].hasError('required')">
-                                            Title is <strong>required</strong>
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
+              <mat-card-content class="add-card-content">
+                <div class="row">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Title"
+                      formControlName="title"
+                      [(ngModel)]="project.title"
+                    />
+                    <mat-error
+                      *ngIf="EditForm.controls['title'].hasError('required')"
+                    >
+                      Title is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
 
-                                <div class="row">
-                                    <mat-form-field class="full-width">
-                                        <input matInput placeholder="Duration (months)" formControlName="duration" [(ngModel)]="project.duration" />
-                                        <mat-error *ngIf="EditForm.controls['duration'].hasError('required')">
-                                            Duration is <strong>required</strong>
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
+                <div class="row">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Duration (months)"
+                      formControlName="duration"
+                      [(ngModel)]="project.duration"
+                    />
+                    <mat-error
+                      *ngIf="EditForm.controls['duration'].hasError('required')"
+                    >
+                      Duration is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
 
-                                <div class="row">
-                                    <mat-form-field class="full-width">
-                                        <input matInput type="number" placeholder="No. of Students" formControlName="studentIntake" [(ngModel)]="project.studentIntake" />
-                                        <mat-error *ngIf="
+                <div class="row">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      type="number"
+                      placeholder="No. of Students"
+                      formControlName="studentIntake"
+                      [(ngModel)]="project.studentIntake"
+                    />
+                    <mat-error
+                      *ngIf="
                         EditForm.controls['studentIntake'].hasError('required')
-                      ">
-                                            StudentIntake is <strong>required</strong>
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-                                <div class="row">
-                                    <mat-form-field class="full-width">
-                                        <textarea matInput placeholder="Description" formControlName="description" [(ngModel)]="project.description"></textarea>
-                                    </mat-form-field>
-                                    <mat-error *ngIf="
+                      "
+                    >
+                      StudentIntake is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="full-width">
+                    <textarea
+                      matInput
+                      placeholder="Description"
+                      formControlName="description"
+                      [(ngModel)]="project.description"
+                    ></textarea>
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
                       EditForm.controls['description'].hasError('required')
-                    ">
-                                        Description is <strong>required</strong>
-                                    </mat-error>
-                                </div>
-                            </mat-card-content>
-                            <button mat-raised-button *ngIf="adminStage == 0" class="edit-submit" [disabled]="!EditForm.valid" color="primary" type="submit">
+                    "
+                  >
+                    Description is <strong>required</strong>
+                  </mat-error>
+                </div>
+              </mat-card-content>
+              <button
+                mat-raised-button
+                *ngIf="adminStage == 0"
+                class="edit-submit"
+                [disabled]="!EditForm.valid"
+                color="primary"
+                type="submit"
+              >
                 Submit
               </button>
-                            <button mat-raised-button *ngIf="adminStage == 0" class="deleteButton" type="button" color="primary" (click)="deleteProject(project)">
+              <button
+                mat-raised-button
+                *ngIf="adminStage == 0"
+                class="deleteButton"
+                type="button"
+                color="primary"
+                (click)="deleteProject(project)"
+              >
                 Delete
               </button>
-                        </mat-card>
-                    </form>
-                </div>
-            </mat-tab>
-        </mat-tab-group>
-    </ng-template>
+            </mat-card>
+          </form>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
 </ng-template>

@@ -84,7 +84,8 @@ router.post("/user_check", (req, res) => {
                 });
             } else if (
                 email_check === "iitpkd.ac.in" ||
-                email === "subhash011011@gmail.com"
+                userDetails.email === "subhash011011@gmail.com" ||
+                userDetails.email === "saivamsi.ds123@gmail.com"
             ) {
                 Faculty.findOne({ email: userDetails.email })
                     .then((user) => {
