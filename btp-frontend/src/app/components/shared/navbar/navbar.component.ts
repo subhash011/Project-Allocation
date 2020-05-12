@@ -2,63 +2,26 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../login/login.component";
 import { UserService } from "../../../services/user/user.service";
 import { Router } from "@angular/router";
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  DoCheck,
-} from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
   styleUrls: ["./navbar.component.scss"],
   providers: [LoginComponent],
 })
-export class NavbarComponent implements OnInit, DoCheck {
+export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,
     private userService: UserService,
     private login: LoginComponent,
     private snackBar: MatSnackBar
   ) {}
+  programsVisible: boolean = false;
   role: string = "admin";
   checkPrograms: boolean = false;
   programs;
   adminProgram;
-  programsVisible: boolean = false;
   curRole;
-  ngDoCheck(): void {
-    // if (
-    //   (localStorage.getItem("role") == "admin" ||
-    //     localStorage.getItem("role") == "faculty") &&
-    //   localStorage.getItem("isLoggedIn") == "true"
-    // ) {
-    //   this.userService.getFacultyPrograms().subscribe((data) => {
-    //     if (data["status"] == "success") {
-    //       this.programs = data["programs"];
-    //       if (this.programs.length > 0) {
-    //         this.programsVisible = true;
-    //       }
-    //     } else {
-    //       let snackBarRef = this.snackBar.open(
-    //         "Session Timed Out! Please Sign in Again!",
-    //         "Ok",
-    //         {
-    //           duration: 3000,
-    //         }
-    //       );
-    //       snackBarRef.afterDismissed().subscribe(() => {
-    //         this.login.signOut();
-    //       });
-    //       snackBarRef.onAction().subscribe(() => {
-    //         this.login.signOut();
-    //       });
-    //     }
-    //   });
-    // }
-  }
-
   ngOnInit() {
     if (localStorage.getItem("isLoggedIn") == "true") {
       this.role = localStorage.getItem("role");
@@ -81,12 +44,13 @@ export class NavbarComponent implements OnInit, DoCheck {
               duration: 3000,
             }
           );
-          snackBarRef.afterDismissed().subscribe(() => {
-            this.login.signOut();
-          });
-          snackBarRef.onAction().subscribe(() => {
-            this.login.signOut();
-          });
+          this.login.signOut();
+          // snackBarRef.afterDismissed().subscribe(() => {
+          //   this.login.signOut();
+          // });
+          // snackBarRef.onAction().subscribe(() => {
+          //   this.login.signOut();
+          // });
         }
       });
     }

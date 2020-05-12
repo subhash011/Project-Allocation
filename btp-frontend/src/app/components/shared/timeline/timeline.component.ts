@@ -4,9 +4,6 @@ import {
   Component,
   OnInit,
   Input,
-  AfterViewInit,
-  TemplateRef,
-  ChangeDetectorRef,
   OnChanges,
   SimpleChanges,
 } from "@angular/core";
@@ -20,7 +17,6 @@ export class TimelineComponent implements OnInit, OnChanges {
   @Input() program;
   constructor(
     private userService: UserService,
-    private cdRef: ChangeDetectorRef,
     private loadingBar: LoadingBarService
   ) {}
   admins: any;
@@ -123,7 +119,12 @@ export class TimelineComponent implements OnInit, OnChanges {
                       );
                     this.stageTwo *= 100;
                     if (this.stageTwo >= 100) {
+                      this.stageTwo = 100;
                       this.stageTwoCompleted = true;
+                    }
+                    if (now.getTime() < this.dates[0].getTime()) {
+                      this.stageTwo = 0;
+                      this.stageTwoCompleted = false;
                     }
                   }
                   if (this.stage == 2 && i == 2) {
@@ -143,7 +144,12 @@ export class TimelineComponent implements OnInit, OnChanges {
                       );
                     this.stageThree *= 100;
                     if (this.stageThree >= 100) {
+                      this.stageThree = 100;
                       this.stageThreeCompleted = true;
+                    }
+                    if (now.getTime() < this.dates[1].getTime()) {
+                      this.stageThree = 0;
+                      this.stageThreeCompleted = false;
                     }
                   }
                   if (this.stage == 3 && i + 1 == 4) {
@@ -164,7 +170,12 @@ export class TimelineComponent implements OnInit, OnChanges {
                       );
                     this.stageFour *= 100;
                     if (this.stageFour >= 100) {
+                      this.stageFour = 100;
                       this.stageFourCompleted = true;
+                    }
+                    if (now.getTime() < this.dates[2].getTime()) {
+                      this.stageFour = 0;
+                      this.stageFourCompleted = false;
                     }
                   }
                   if (this.stage == 4 && i == 4) {
@@ -251,6 +262,10 @@ export class TimelineComponent implements OnInit, OnChanges {
                       this.stageTwo = 100;
                       this.stageTwoCompleted = true;
                     }
+                    if (now.getTime() < this.dates[0].getTime()) {
+                      this.stageTwo = 0;
+                      this.stageTwoCompleted = false;
+                    }
                   }
                   if (this.stage == 2 && i == 2) {
                     this.stageOneCompleted = true;
@@ -271,6 +286,10 @@ export class TimelineComponent implements OnInit, OnChanges {
                     if (this.stageThree >= 100) {
                       this.stageThree = 100;
                       this.stageThreeCompleted = true;
+                    }
+                    if (now.getTime() < this.dates[1].getTime()) {
+                      this.stageThree = 0;
+                      this.stageThreeCompleted = false;
                     }
                   }
 
@@ -295,6 +314,10 @@ export class TimelineComponent implements OnInit, OnChanges {
                       this.stageFour = 100;
                       this.stageFourCompleted = true;
                     }
+                    if (now.getTime() < this.dates[1].getTime()) {
+                      this.stageFour = 0;
+                      this.stageFourCompleted = false;
+                    }
                   }
                   if (this.stage == 4 && i == 4) {
                     this.stageThreeCompleted = true;
@@ -318,6 +341,14 @@ export class TimelineComponent implements OnInit, OnChanges {
         });
     }
   }
+
+  isBetween(a, b, c) {
+    if (a < b && b < c) {
+      return true;
+    }
+    return false;
+  }
+
   refresh(program) {
     this.program = program.short;
     this.ngOnInit();

@@ -1,42 +1,67 @@
-<mat-tab-group [(selectedIndex)]="index" animationDuration="0" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
-    <mat-tab label="Faculty">
-        <mat-tab-group *ngIf="index == 0" animationDuration="0" [selectedIndex]="0">
-            <mat-tab *ngFor="let branch of programs" [label]="branch.name">
-                <div class="searchBox">
-                    <input class="searchInput" autocomplete="off" type="search" mat-input placeholder="Search by any ... " name="search" [(ngModel)]="faculty" />
-                    <button class="searchButton" href="#">
+<mat-tab-group
+  [(selectedIndex)]="index"
+  animationDuration="0"
+  [backgroundColor]="background"
+  dynamicHeight="true"
+  mat-align-tabs="center"
+>
+  <mat-tab label="Faculty">
+    <mat-tab-group *ngIf="index == 0" animationDuration="0" [selectedIndex]="0">
+      <mat-tab *ngFor="let branch of programs" [label]="branch.name">
+        <div class="searchBox">
+          <input
+            class="searchInput"
+            autocomplete="off"
+            type="search"
+            mat-input
+            placeholder="Search by any ... "
+            name="search"
+            [(ngModel)]="faculty"
+          />
+          <button class="searchButton" href="#">
             <i class="material-icons">search</i>
           </button>
-                </div>
-                <div class="display">
-                    <div class="table mat-elevation-z8">
-                        <table mat-table [dataSource]="faculties[branch.short] | filter: faculty" class="mat-elevation-z8">
-                            <ng-container matColumnDef="Name">
-                                <th mat-header-cell *matHeaderCellDef [style.color]="background">
-                                    Name
-                                </th>
-                                <td mat-cell *matCellDef="let faculty">{{ faculty.name }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="Stream">
-                                <th mat-header-cell *matHeaderCellDef>Stream</th>
-                                <td mat-cell *matCellDef="let faculty">{{ faculty.stream }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="Email-ID">
-                                <th mat-header-cell *matHeaderCellDef>Email-ID</th>
-                                <td mat-cell *matCellDef="let faculty">{{ faculty.email }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="isAdmin">
-                                <th mat-header-cell *matHeaderCellDef>Co-ordinator</th>
-                                <td mat-cell *matCellDef="let faculty">
-                                    {{ faculty.isAdmin ? faculty.adminProgram : "NO" }}
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="Actions">
-                                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                                <td mat-cell *matCellDef="let faculty">
-                                    <span [matTooltip]="
+        </div>
+        <div class="display">
+          <div class="table mat-elevation-z8">
+            <table
+              mat-table
+              [dataSource]="faculties[branch.short] | filter: faculty"
+              class="mat-elevation-z8"
+            >
+              <ng-container matColumnDef="Name">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  [style.color]="background"
+                >
+                  Name
+                </th>
+                <td mat-cell *matCellDef="let faculty">{{ faculty.name }}</td>
+              </ng-container>
+              <ng-container matColumnDef="Stream">
+                <th mat-header-cell *matHeaderCellDef>Stream</th>
+                <td mat-cell *matCellDef="let faculty">{{ faculty.stream }}</td>
+              </ng-container>
+              <ng-container matColumnDef="Email-ID">
+                <th mat-header-cell *matHeaderCellDef>Email-ID</th>
+                <td mat-cell *matCellDef="let faculty">{{ faculty.email }}</td>
+              </ng-container>
+              <ng-container matColumnDef="isAdmin">
+                <th mat-header-cell *matHeaderCellDef>Co-ordinator</th>
+                <td mat-cell *matCellDef="let faculty">
+                  {{ faculty.isAdmin ? faculty.adminProgram : "NO" }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let faculty">
+                  <span
+                    [matTooltip]="
                       getToolTipToRemoveFaculty(faculty, branch.short)
-                    " matTooltipPosition="above"><button
+                    "
+                    matTooltipPosition="above"
+                    ><button
                       color="warn"
                       mat-raised-button
                       [disabled]="faculty.isAdmin"
@@ -48,7 +73,7 @@
                   <button
                     class="admin-button"
                     color="primary"
-                    *ngIf="!faculty.isAdmin"
+                    *ngIf="!faculty.isAdmin && !hasAdmins[branch.short]"
                     mat-raised-button
                     (click)="addAdmin(faculty._id, branch.short)"
                   >
@@ -69,7 +94,7 @@
               </ng-container>
               <tr
                 mat-header-row
-                *matHeaderRowDef="displayedColumnsFaculty"
+                *matHeaderRowDef="displayedColumnsFaculty; sticky: true"
               ></tr>
               <tr
                 mat-row
@@ -140,7 +165,7 @@
               </ng-container>
               <tr
                 mat-header-row
-                *matHeaderRowDef="displayedColumnsStudent"
+                *matHeaderRowDef="displayedColumnsStudent; sticky: true"
               ></tr>
               <tr
                 mat-row
@@ -265,7 +290,10 @@
               >
             </td>
           </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsStreams"></tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumnsStreams; sticky: true"
+          ></tr>
           <tr
             mat-row
             *matRowDef="let row; columns: displayedColumnsStreams"
@@ -335,7 +363,10 @@
               >
             </td>
           </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsMaps"></tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumnsMaps; sticky: true"
+          ></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumnsMaps"></tr>
         </table>
       </div>

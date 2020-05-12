@@ -35,18 +35,17 @@ export class StudentTableComponent implements OnInit {
       this.projectService
         .savePreference(this.student_list, this.project._id)
         .subscribe((data) => {
-          console.log(this.student_list);
           if (data["status"] == "success") {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
-            snackBarRef.afterDismissed().subscribe(() => {
-              this.router
-                .navigateByUrl("/refresh", { skipLocationChange: true })
-                .then(() => {
-                  this.router.navigate([decodeURI(this.location.path())]);
-                });
-            });
+            // snackBarRef.afterDismissed().subscribe(() => {
+            //   this.router
+            //     .navigateByUrl("/refresh", { skipLocationChange: true })
+            //     .then(() => {
+            //       this.router.navigate([decodeURI(this.location.path())]);
+            //     });
+            // });
           } else {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
