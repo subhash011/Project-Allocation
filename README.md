@@ -160,6 +160,9 @@ npm i
 
 > All the dependencies will be installed which otherwise have to be installed with `npm i --save packagename`.
 
+After the above steps are completed, in the backend folder, replace the 'environment.txt' file with a file named '.env'
+and add all the required parameters as mentioned in the environment.txt file.
+
 ## Configuring Angular app
 
 The above commands will install all the required packages but some changes are to made for the application to run as expected:
