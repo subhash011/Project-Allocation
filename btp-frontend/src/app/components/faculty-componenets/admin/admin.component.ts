@@ -16,6 +16,7 @@ import { ResetComponent } from "../reset/reset.component";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { ShowPreferencesComponent } from "../../student-components/show-preferences/show-preferences.component";
 import { ShowStudentPreferencesComponent } from "../show-student-preferences/show-student-preferences.component";
+import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/show-faculty-preferences.component";
 
 @Component({
   selector: "app-admin",
@@ -33,6 +34,7 @@ export class AdminComponent implements OnInit {
     "studentIntake",
     "Faculty",
     "Duration",
+    "Preferences",
     "NoOfStudents",
     "Student",
   ];
@@ -1046,6 +1048,14 @@ export class AdminComponent implements OnInit {
           duration: 3000,
         });
       }
+    });
+  }
+
+  showPreferencesProject(project) {
+    const dialogRef = this.dialog.open(ShowFacultyPreferencesComponent, {
+      disableClose: false,
+      hasBackdrop: true,
+      data: project,
     });
   }
 

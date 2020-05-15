@@ -22,6 +22,11 @@ router.get("/project/:id", (req, res) => {
 								const stream = admin.stream;
 								Project.find({ stream: stream })
 									.populate("faculty_id", null, Faculty)
+									.populate({
+										path: "students_id",
+										select: { name: 1, roll_no: 1 },
+										model: Student,
+									})
 									.populate("student_alloted", null, Student)
 									.then((projects) => {
 										var arr = [];

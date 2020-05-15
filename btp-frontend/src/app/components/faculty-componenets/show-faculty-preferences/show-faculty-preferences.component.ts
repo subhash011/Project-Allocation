@@ -1,13 +1,14 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from "@angular/material";
+
 @Component({
-  selector: "app-show-student-preferences",
-  templateUrl: "./show-student-preferences.component.html",
-  styleUrls: ["./show-student-preferences.component.scss"],
+  selector: "app-show-faculty-preferences",
+  templateUrl: "./show-faculty-preferences.component.html",
+  styleUrls: ["./show-faculty-preferences.component.scss"],
 })
-export class ShowStudentPreferencesComponent implements OnInit {
+export class ShowFacultyPreferencesComponent implements OnInit {
   constructor(
-    public dialogRef: MatDialogRef<ShowStudentPreferencesComponent>,
+    public dialogRef: MatDialogRef<ShowFacultyPreferencesComponent>,
     @Inject(MAT_DIALOG_DATA) public preferences: any,
     private snackBar: MatSnackBar
   ) {}
@@ -15,21 +16,20 @@ export class ShowStudentPreferencesComponent implements OnInit {
   value: string = "";
 
   ngOnInit() {
-    const projects = this.preferences.projects_preference;
+    const projects = this.preferences.students_id;
     for (let index = 0; index < projects.length; index++) {
       const number = index + 1;
       const project = projects[index];
       this.value +=
         number +
-        ". Project: " +
-        project.title +
+        ". Student: " +
+        project.name +
         " | " +
-        "Faculty name: " +
-        project.faculty_name +
+        "Roll Number: " +
+        project.roll_no +
         "\n";
     }
   }
-
   close() {
     this.dialogRef.close();
   }

@@ -417,6 +417,18 @@
               {{ project.numberOfPreferences }}
             </td>
           </ng-container>
+          <ng-container matColumnDef="Preferences">
+            <th mat-header-cell *matHeaderCellDef>Preferences</th>
+            <td mat-cell *matCellDef="let project">
+              <mat-icon
+                matTooltip="View faculty preferences"
+                matTooltipPosition="above"
+                (click)="showPreferencesProject(project)"
+              >
+                open_in_new</mat-icon
+              >
+            </td>
+          </ng-container>
           <ng-container matColumnDef="Student">
             <th mat-header-cell *matHeaderCellDef>Alloted To</th>
             <td mat-cell *matCellDef="let project">
@@ -511,7 +523,11 @@
                   Preferences
                 </th>
                 <td mat-cell *matCellDef="let student">
-                  <mat-icon (click)="showPreferences(student)">
+                  <mat-icon
+                    matTooltip="View student preferences"
+                    matTooltipPosition="above"
+                    (click)="showPreferences(student)"
+                  >
                     open_in_new</mat-icon
                   >
                 </td>

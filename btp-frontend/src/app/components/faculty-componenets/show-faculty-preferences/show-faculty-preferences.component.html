@@ -1,21 +1,16 @@
-<div *ngIf="preferences.projects_preference.length != 0; else elseBlock">
-  <div
-    class="list-item"
-    *ngFor="let preference of preferences.projects_preference"
-  >
+<div *ngIf="preferences.students_id.length != 0; else elseBlock">
+  <div class="list-item" *ngFor="let preference of preferences.students_id">
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Faculty : {{ preference["faculty_name"] }}
+            Student : {{ preference["name"] }}
           </mat-panel-title>
           <mat-panel-description>
             <div class="flex-space"></div>
-            Project Title : {{ preference["title"] }}
+            Roll number : {{ preference["roll_no"] }}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <p>Faculty Email : {{ preference["faculty_email"] }}</p>
-        <p>Description : {{ preference["description"] }}</p>
       </mat-expansion-panel>
     </mat-accordion>
     <div class="flex-space"></div>
@@ -34,6 +29,7 @@
     </button>
   </div>
 </div>
+
 <ng-template #elseBlock>
   No preferences to display
 </ng-template>
