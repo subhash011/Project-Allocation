@@ -237,6 +237,7 @@ export class AdminComponent implements OnInit {
     for (const allot of alloted) {
       ans += allot.name + ", ";
     }
+    ans = ans.substring(0, ans.length - 2);
     return ans;
   }
 
