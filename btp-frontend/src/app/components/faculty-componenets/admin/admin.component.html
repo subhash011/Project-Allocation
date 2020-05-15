@@ -506,6 +506,16 @@
                   >
                 </td>
               </ng-container>
+              <ng-container matColumnDef="ViewPref">
+                <th mat-header-cell *matHeaderCellDef>
+                  Preferences
+                </th>
+                <td mat-cell *matCellDef="let student">
+                  <mat-icon (click)="showPreferences(student)">
+                    open_in_new</mat-icon
+                  >
+                </td>
+              </ng-container>
               <tr
                 mat-header-row
                 *matHeaderRowDef="studentCols; sticky: true"

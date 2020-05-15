@@ -14,6 +14,8 @@ import { LoadingBarService } from "@ngx-loading-bar/core";
 import { SelectionModel } from "@angular/cdk/collections";
 import { ResetComponent } from "../reset/reset.component";
 import { LoaderComponent } from "../../shared/loader/loader.component";
+import { ShowPreferencesComponent } from "../../student-components/show-preferences/show-preferences.component";
+import { ShowStudentPreferencesComponent } from "../show-student-preferences/show-student-preferences.component";
 
 @Component({
   selector: "app-admin",
@@ -35,7 +37,7 @@ export class AdminComponent implements OnInit {
     "Student",
   ];
   facultyCols = ["Name", "NoOfProjects", "Email", "Actions", "Violations"];
-  studentCols = ["Name", "Email", "GPA", "Actions"];
+  studentCols = ["Name", "Email", "GPA", "ViewPref", "Actions"];
 
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -1044,6 +1046,14 @@ export class AdminComponent implements OnInit {
           duration: 3000,
         });
       }
+    });
+  }
+
+  showPreferences(student) {
+    const dialogRef = this.dialog.open(ShowStudentPreferencesComponent, {
+      disableClose: false,
+      hasBackdrop: true,
+      data: student,
     });
   }
 

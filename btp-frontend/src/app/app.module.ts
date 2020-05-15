@@ -40,6 +40,7 @@ import { TypingAnimationModule } from "angular-typing-animation";
 import { HelpComponent } from "./components/shared/help/help.component";
 import { ResetComponent } from "./components/faculty-componenets/reset/reset.component";
 import { LoaderComponent } from "./components/shared/loader/loader.component";
+import { ShowStudentPreferencesComponent } from "./components/faculty-componenets/show-student-preferences/show-student-preferences.component";
 
 const googleLoginOption: LoginOpt = {
   scope: "https://mail.google.com/",
@@ -84,6 +85,7 @@ export function provideConfig() {
     HelpComponent,
     ResetComponent,
     LoaderComponent,
+    ShowStudentPreferencesComponent,
   ],
   entryComponents: [
     ShowPreferencesComponent,
@@ -92,6 +94,7 @@ export function provideConfig() {
     AddMapComponent,
     ResetComponent,
     LoaderComponent,
+    ShowStudentPreferencesComponent,
   ],
   imports: [
     BrowserModule,

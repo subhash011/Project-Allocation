@@ -383,19 +383,39 @@ router.get("/members/:id", (req, res) => {
 								})
 						);
 						promises.push(
-							Student.find({ stream: admin.stream }).then((students) => {
-								var tempStudents = students.map((val) => {
-									var newStud = {
-										_id: val._id,
-										name: val.name,
-										email: val.email,
-										gpa: val.gpa,
-									};
-									return newStud;
-								});
-								users.students = tempStudents;
-								return users.students;
-							})
+							Student.find({ stream: admin.stream })
+								.populate({
+									path: "projects_preference",
+									model: Project,
+									populate: {
+										path: "faculty_id",
+										model: Faculty,
+									},
+								})
+								.then((students) => {
+									var tempStudents = students.map((val) => {
+										var project = val.projects_preference.map((val) => {
+											var newProj = {
+												faculty_name: val.faculty_id.name,
+												title: val.title,
+												description: val.description,
+												faculty_email: val.faculty_id.email,
+											};
+											return newProj;
+										});
+
+										var newStud = {
+											_id: val._id,
+											name: val.name,
+											projects_preference: project,
+											email: val.email,
+											gpa: val.gpa,
+										};
+										return newStud;
+									});
+									users.students = tempStudents;
+									return users.students;
+								})
 						);
 						Promise.all(promises)
 							.then((result) => {
