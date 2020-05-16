@@ -2,7 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
-const compression = require("compression");
+//const compression = require("compression");
 require("dotenv/config");
 
 // start the server
@@ -20,7 +20,7 @@ app.use(
 		saveUninitialized: false,
 	})
 );
-app.use(compression());
+//app.use(compression());
 app.use(cors());
 
 //use body-parser
@@ -75,7 +75,7 @@ app.use("/admin", admin);
 const mail = require("./routes/email");
 app.use("/email", mail);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.argv[2];
 
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
