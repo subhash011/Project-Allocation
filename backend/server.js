@@ -75,7 +75,7 @@ app.use("/api/admin", admin);
 const mail = require("./routes/email");
 app.use("/api/email", mail);
 
-const PORT = process.argv[2];
+const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
