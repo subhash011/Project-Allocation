@@ -589,9 +589,9 @@
                   Violations
                 </th>
                 <td mat-cell *matCellDef="let faculty">
-                  {{ faculty.student_cap ? "SPP, " : ""
-                  }}{{ faculty.project_cap ? "PFE, " : ""
-                  }}{{ faculty.studentsPerFaculty ? "SPF" : "" }}
+                  {{ faculty.student_cap ? "SPP" : ""
+                  }}{{ faculty.project_cap ? ", PFE" : ""
+                  }}{{ faculty.studentsPerFaculty ? ", SPF" : "" }}
                   {{
                     !faculty.student_cap &&
                     !faculty.project_cap &&

@@ -24,8 +24,18 @@ router.get("/project/:id", (req, res) => {
 									.populate("faculty_id", null, Faculty)
 									.populate({
 										path: "students_id",
-										select: { name: 1, roll_no: 1 },
+										select: { name: 1, roll_no: 1, project_alloted: 1 },
 										model: Student,
+										populate: {
+											path: "project_alloted",
+											select: { title: 1, faculty_id: 1 },
+											model: Project,
+											populate: {
+												path: "faculty_id",
+												select: { name: 1 },
+												model: Faculty,
+											},
+										},
 									})
 									.populate("student_alloted", null, Student)
 									.then((projects) => {
@@ -415,6 +425,7 @@ router.get("/members/:id", (req, res) => {
 											projects_preference: project,
 											email: val.email,
 											gpa: val.gpa,
+											project_alloted: val.project_alloted,
 										};
 										return newStud;
 									});

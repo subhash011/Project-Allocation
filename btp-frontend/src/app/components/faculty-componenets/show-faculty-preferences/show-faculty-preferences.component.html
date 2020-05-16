@@ -11,6 +11,22 @@
             Roll number : {{ preference["roll_no"] }}
           </mat-panel-description>
         </mat-expansion-panel-header>
+        <div class="faculty">
+          Faculty:
+          {{
+            preference["project_alloted"]
+              ? preference["project_alloted"]["faculty_id"]["name"]
+              : "N/A"
+          }}
+        </div>
+        <div class="project">
+          Project Alloted:
+          {{
+            preference["project_alloted"]
+              ? preference["project_alloted"]["title"]
+              : "N/A"
+          }}
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
     <div class="flex-space"></div>
