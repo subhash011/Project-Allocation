@@ -1,4 +1,4 @@
 .env
 .vscode/
-backend/node_modules/
-backend/btp-frontend/
+./backend/node_modules/
+./backend/btp-frontend/
