@@ -1,0 +1,8 @@
+@import "../../app-theme";
+@import "../../app/components/home/home"; // Define the dark theme.
+$primary: mat-palette($mat-purple, 800);
+$accent: mat-palette($mat-grey, 400, A100, A400);
+$theme: mat-dark-theme($primary, $accent);
+@include angular-material-theme($theme);
+@include material-custom-theme($theme);
+// @include home-theme($theme);
