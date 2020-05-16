@@ -64,7 +64,7 @@ const faculty_project = require("./routes/faculty_project");
 app.use("/api/faculty/project", faculty_project);
 
 const super_admin = require("./routes/super_admin");
-app.use("//apisuper", super_admin);
+app.use("/api/super", super_admin);
 
 const allocation = require("./routes/allocation");
 app.use("/api/allocation", allocation);
