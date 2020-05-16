@@ -139,6 +139,7 @@ router.post("/user_check", (req, res) => {
             }
         })
         .catch((err) => {
+	    console.log(err);
             res.json({
                 isRegistered: false,
                 position: "login-error",
