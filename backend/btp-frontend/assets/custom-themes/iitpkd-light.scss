@@ -1,7 +1,0 @@
-@import "../../app-theme";
-// Define the dark theme.
-$primary: mat-palette($mat-orange);
-$accent: mat-palette($mat-grey, 800, A400, A700);
-$theme: mat-light-theme($primary, $accent);
-@include angular-material-theme($theme);
-@include material-custom-theme($theme);
