@@ -353,7 +353,7 @@
   /***/
   function _(module, exports, __webpack_require__) {
     module.exports = __webpack_require__(
-    /*! /opt/Project-Allocation/btp-frontend/src/assets/pink-grey.css */
+    /*! /home/subhash011/Desktop/Subhash/Project-Allocation/btp-frontend/src/assets/pink-grey.css */
     "./src/assets/pink-grey.css");
     /***/
   }

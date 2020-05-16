@@ -338,7 +338,7 @@ if (content.locals) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /opt/Project-Allocation/btp-frontend/src/assets/indigo-pink.css */"./src/assets/indigo-pink.css");
+module.exports = __webpack_require__(/*! /home/subhash011/Desktop/Subhash/Project-Allocation/btp-frontend/src/assets/indigo-pink.css */"./src/assets/indigo-pink.css");
 
 
 /***/ })
