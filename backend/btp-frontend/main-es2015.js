@@ -7151,7 +7151,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const environment = {
     production: false,
-    apiUrl: "http://localhost/api/",
+    apiUrl: "http://localhost:8080/api/",
     GOOGLE_CLIENT_ID: "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com",
 };
 /*
