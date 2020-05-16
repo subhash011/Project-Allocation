@@ -30,8 +30,7 @@ export class StudentProjectsComponent implements OnInit {
   getStudentProjects() {
     const user = this.projectService
       .getAllStudentProjects()
-      .toPromise()
-      .then((details) => {
+      .subscribe((details) => {
         if (details["message"] == "token-expired") {
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
@@ -46,8 +45,7 @@ export class StudentProjectsComponent implements OnInit {
   getStudentPreferences() {
     const user = this.projectService
       .getStudentPreference()
-      .toPromise()
-      .then((details) => {
+      .subscribe((details) => {
         if (details["message"] == "token-expired") {
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {

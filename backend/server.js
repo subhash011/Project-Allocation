@@ -2,7 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
-//const compression = require("compression");
+const compression = require("compression");
 require("dotenv/config");
 
 // start the server
@@ -20,7 +20,7 @@ app.use(
 		saveUninitialized: false,
 	})
 );
-//app.use(compression());
+app.use(compression());
 app.use(cors());
 
 //use body-parser

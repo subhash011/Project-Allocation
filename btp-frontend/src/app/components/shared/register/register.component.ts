@@ -22,19 +22,16 @@ export class RegisterComponent implements OnInit {
   ) {}
   branchStudent: any;
   ngOnInit() {
-    this.userService
-      .getAllBranches()
-      .toPromise()
-      .then((maps) => {
-        this.maps = maps["result"];
-        for (const map of this.maps) {
-          const newObj = {
-            name: map.full,
-            short: map.short,
-          };
-          this.branches.push(newObj);
-        }
-      });
+    this.userService.getAllBranches().subscribe((maps) => {
+      this.maps = maps["result"];
+      for (const map of this.maps) {
+        const newObj = {
+          name: map.full,
+          short: map.short,
+        };
+        this.branches.push(newObj);
+      }
+    });
     this.userService
       .getAllMaps()
       .toPromise()
