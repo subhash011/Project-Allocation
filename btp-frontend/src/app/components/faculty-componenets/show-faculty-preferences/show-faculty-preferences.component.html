@@ -1,0 +1,51 @@
+<div *ngIf="preferences.students_id.length != 0; else elseBlock">
+  <div class="list-item" *ngFor="let preference of preferences.students_id">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Student : {{ preference["name"] }}
+          </mat-panel-title>
+          <mat-panel-description>
+            <div class="flex-space"></div>
+            Roll number : {{ preference["roll_no"] }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="faculty">
+          Faculty:
+          {{
+            preference["project_alloted"]
+              ? preference["project_alloted"]["faculty_id"]["name"]
+              : "N/A"
+          }}
+        </div>
+        <div class="project">
+          Project Alloted:
+          {{
+            preference["project_alloted"]
+              ? preference["project_alloted"]["title"]
+              : "N/A"
+          }}
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <div class="flex-space"></div>
+  </div>
+  <button mat-raised-button color="accent" (click)="close()">Close</button>
+  <div #container class="copy">
+    <button
+      mat-raised-button
+      color="primary"
+      ngxClipboard
+      [cbContent]="value"
+      [container]="container"
+      (cbOnSuccess)="copied($event)"
+    >
+      Copy to Clipboard
+    </button>
+  </div>
+</div>
+
+<ng-template #elseBlock>
+  No preferences to display
+</ng-template>
