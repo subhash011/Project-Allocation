@@ -34,7 +34,7 @@ export class ShowFacultyPreferencesComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  copied() {
+  copied(event) {
     this.snackBar.open("Copied content to clipboard", "Ok", {
       duration: 3000,
     });
