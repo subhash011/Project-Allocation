@@ -10,33 +10,19 @@ const fs = require("fs");
 var branches = Service.branches;
 var programs = Service.programs;
 
-
 function combineProjects(projects, students) {
-	
-	let rolls = [];
-
-
-	for(const project of projects){
-
-		for(const student of project.students_id){
-
-			rolls.push(student.roll_no);
-
-		}
-
-
+	students = students.map((val) => JSON.stringify(val));
+	for (const project of projects) {
+		const setA = new Set(project.students_id.map((val) => JSON.stringify(val)));
+		const setB = new Set(students);
+		const union = new Set([...setA, ...setB]);
+		project.students_id = [...union];
+		project.students_id = project.students_id.map((val) => JSON.parse(val));
 	}
-
-
-
-
-
-
+	return projects;
 }
 
 function combineStudents(projects, students) {
-	students = students;
-	projects = projects;
 	studentIDS = students.map((val) => val._id);
 	projectIDS = projects.map((val) => val._id);
 	for (const student of students) {
@@ -53,29 +39,36 @@ function combineStudents(projects, students) {
 	return students;
 }
 
-function generateCSV(data,program_name){
+function generateCSV(data, program_name) {
+	let headers = "Title,Faculty,StudentIntake,PreferencesCount,";
 
-	let headers = 'Title,Faculty,StudentIntake,PreferencesCount,';
-	
-	
 	const s_length = data[0].students_id.length;
 
-	for(let ind = 1;ind <= s_length;ind++){
-	  headers += (ind == s_length) ? `Preference.${ind}\n`:`Preference.${ind},`;
+	for (let ind = 1; ind <= s_length; ind++) {
+		headers += ind == s_length ? `Preference.${ind}\n` : `Preference.${ind},`;
 	}
 
 	let str = "";
-	for(const fields of data){
-	  str += fields.title + "," + fields.faculty + "," + fields.studentIntake + "," + fields.preferenceCount + "," + fields.studentPref + "\n";
+	for (const fields of data) {
+		str +=
+			fields.title +
+			"," +
+			fields.faculty +
+			"," +
+			fields.studentIntake +
+			"," +
+			fields.preferenceCount +
+			"," +
+			fields.studentPref +
+			"\n";
 	}
 
 	const write_obj = headers + str;
 
 	fs.writeFile(`../CSV/${program_name}.csv`, write_obj, (err) => {
-	  if (err) console.log("Failed to write");
-	  console.log("Successfully Written to File.");
+		if (err) console.log("Failed to write");
+		console.log("Successfully Written to File.");
 	});
-
 }
 
 router.get("/project/:id", (req, res) => {
@@ -1111,205 +1104,144 @@ router.post("/swap/:id", (req, res) => {
 	);
 });
 
-
-
-router.get("/export_projects/:id",(req,res)=>{
-
-
-		const id = req.params.id;
-		const idToken = req.headers.authorization;
-
-		Faculty.findOne({google_id:{id:id,idToken:idToken}})
-			.then(faculty=>{
-
-				if(faculty){
-
-					Admin.findOne({admin_id:faculty._id})
-						.then(admin=>{
-
-							if(admin){
-								var programName = admin.stream;
-								var promises = [];
-
-								promises.push(
-									Student.find()
-										.then(students=>{
-
-											students.sort((a,b)=>{
-												return b.gpa - a.gpa;
-											})
-
-											return students.map(val=>{
-												let new_s = {
-													_id: val._id,
-													name:val.name,
-													roll_no:val.roll_no
-												}
-												return new_s;
-											})
-										})
-								)
-
-								promises.push(
-										Project.find({stream:programName})
-										.populate("faculty_id", {name:1}, Faculty)
-										.populate({
-											path: "students_id",
-											select: { _id:1, name: 1, roll_no: 1 },
-											model: Student,
-										})
-										.populate("student_alloted", {name:1,roll_no:1}, Student)
-										.then(data=>{
-
-											var projects = data.map(val=>{
-
-												var new_proj = {
-													title:val.title,
-													faculty:val.faculty_id.name,
-													studentIntake:val.studentIntake,
-													preferencesCount:val.students_id.length,
-													students_id: val.students_id
-												}
-												return new_proj;
-											})
-											return projects;
-										})
-
-								)
-
-								Promise.all(promises)
-									.then(result=>{
-
-										const students = result[0];
-										const projects = result[1];
-
-										const data = combineProjects(projects,students);
-
-										generateCSV(data,programName);
-
-									})
-								
-
-
-
-
-							}
-
-							else{
-
-							}
-
-						})
-
-				}
-
-				else{
-
-				}
-
-			})
-
-
-})
-
-
-
-
-router.get("/export_students/:id",(req,res)=>{
-
-
+router.get("/export_projects/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 
-	Faculty.findOne({google_id:{id:id,idToken:idToken}})
-		.then(faculty=>{
+	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
+		(faculty) => {
+			if (faculty) {
+				Admin.findOne({ admin_id: faculty._id }).then((admin) => {
+					if (admin) {
+						var programName = admin.stream;
+						var promises = [];
 
-			if(faculty){
+						promises.push(
+							Student.find().then((students) => {
+								students.sort((a, b) => {
+									return b.gpa - a.gpa;
+								});
 
-				Admin.findOne({admin_id:faculty._id})
-					.then(admin=>{
+								return students.map((val) => {
+									let new_s = {
+										_id: val._id,
+										name: val.name,
+										roll_no: val.roll_no,
+									};
+									return new_s;
+								});
+							})
+						);
 
-						if(admin){
-							var programName = admin.stream;
-							var promises = [];
-
-							promises.push(
-								Student.find()
-									.then(students=>{
-
-										students.sort((a,b)=>{
-											return b.gpa - a.gpa;
-										})
-
-										return students.map(val=>{
-											let new_s = {
-												_id: val._id,
-												name:val.name,
-												roll_no:val.roll_no
-											}
-											return new_s;
-										})
-									})
-							)
-
-							promises.push(
-									Project.find({stream:programName})
-									.populate("faculty_id", {name:1}, Faculty)
-									.populate({
-										path: "students_id",
-										select: { _id:1, name: 1, roll_no: 1 },
-										model: Student,
-									})
-									.populate("student_alloted", {name:1,roll_no:1}, Student)
-									.then(data=>{
-
-										var projects = data.map(val=>{
-
-											var new_proj = {
-												title:val.title,
-												faculty:val.faculty_id.name,
-												studentIntake:val.studentIntake,
-												preferencesCount:val.students_id.length,
-												students_id: val.students_id
-											}
-											return new_proj;
-										})
-										return projects;
-									})
-
-							)
-
-							Promise.all(promises)
-								.then(result=>{
-
-									const students = result[0];
-									const projects = result[1];
-
-									const data = combineProjects(projects,students);
-
-									generateCSV(data,programName);
-
+						promises.push(
+							Project.find({ stream: programName })
+								.populate("faculty_id", { name: 1 }, Faculty)
+								.populate({
+									path: "students_id",
+									select: { _id: 1, name: 1, roll_no: 1 },
+									model: Student,
 								})
+								.populate("student_alloted", { name: 1, roll_no: 1 }, Student)
+								.then((data) => {
+									var projects = data.map((val) => {
+										var new_proj = {
+											title: val.title,
+											faculty: val.faculty_id.name,
+											studentIntake: val.studentIntake,
+											preferencesCount: val.students_id.length,
+											students_id: val.students_id,
+										};
+										return new_proj;
+									});
+									return projects;
+								})
+						);
 
-						}
+						Promise.all(promises).then((result) => {
+							const students = result[0];
+							const projects = result[1];
 
-						else{
+							const data = combineProjects(projects, students);
 
-						}
-
-					})
-
+							generateCSV(data, programName);
+						});
+					} else {
+					}
+				});
+			} else {
 			}
+		}
+	);
+});
 
-			else{
+router.get("/export_students/:id", (req, res) => {
+	const id = req.params.id;
+	const idToken = req.headers.authorization;
 
+	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
+		(faculty) => {
+			if (faculty) {
+				Admin.findOne({ admin_id: faculty._id }).then((admin) => {
+					if (admin) {
+						var programName = admin.stream;
+						var promises = [];
+
+						promises.push(
+							Student.find().then((students) => {
+								students.sort((a, b) => {
+									return b.gpa - a.gpa;
+								});
+
+								return students.map((val) => {
+									let new_s = {
+										_id: val._id,
+										name: val.name,
+										roll_no: val.roll_no,
+									};
+									return new_s;
+								});
+							})
+						);
+
+						promises.push(
+							Project.find({ stream: programName })
+								.populate("faculty_id", { name: 1 }, Faculty)
+								.populate({
+									path: "students_id",
+									select: { _id: 1, name: 1, roll_no: 1 },
+									model: Student,
+								})
+								.populate("student_alloted", { name: 1, roll_no: 1 }, Student)
+								.then((data) => {
+									var projects = data.map((val) => {
+										var new_proj = {
+											title: val.title,
+											faculty: val.faculty_id.name,
+											studentIntake: val.studentIntake,
+											preferencesCount: val.students_id.length,
+											students_id: val.students_id,
+										};
+										return new_proj;
+									});
+									return projects;
+								})
+						);
+
+						Promise.all(promises).then((result) => {
+							const students = result[0];
+							const projects = result[1];
+
+							const data = combineProjects(projects, students);
+
+							generateCSV(data, programName);
+						});
+					} else {
+					}
+				});
+			} else {
 			}
-
-		})
-
-
-})
-
-
+		}
+	);
+});
 
 module.exports = router;
