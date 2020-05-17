@@ -29,35 +29,37 @@ export class ExporttocsvService {
     };
    return this.http.get(this.url ,httpOptions);
 
-    // var fs = require("fs");
+  }
 
+  generateCSV_students(){
 
-    // let headers = 'Title,Faculty,StudentIntake,PreferencesCount,';
+    const user = JSON.parse(localStorage.getItem("user"));
+    const id = user.id;
+    const idToken = user.idToken;
+    this.url = this.base_url + "admin/export_students/" + id;
 
-
-    // const s_length = data[0].students_id.length;
-
-    // for(let ind = 1;ind <= s_length;ind++){
-    //   headers += (ind == s_length) ? `Preference.${ind}\n`:`Preference.${ind},`;
-    // }
-
-    // let str = "";
-    // for(const fields of data){
-    //   str += fields.title + "," + fields.faculty + "," + fields.studentIntake + "," + fields.preferenceCount + "," + fields.studentPref + "\n";
-    // }
-
-    // const write_obj = headers + str;
-
-    // fs.writeFile(`${program_name}.csv`, write_obj, (err) => {
-    //   if (err) console.log("Failed to write");
-    //   console.log("Successfully Written to File.");
-    // });
-
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+   return this.http.get(this.url ,httpOptions);
 
   }
 
+  download(role){
 
+    const user = JSON.parse(localStorage.getItem("user"));
+    const id = user.id;
+    const idToken = user.idToken;
 
+    this.url = this.base_url + "admin/download_csv/" + id + "/" + role;
+    const headers =  new HttpHeaders({
+        Authorization: idToken
+      })
+    return this.http.get(this.url,{headers,responseType : "blob"});
+  }
 
 
 }

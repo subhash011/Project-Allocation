@@ -13,7 +13,7 @@ import * as moment from "moment";
 export class UserService {
   private url: string;
   private root = environment.apiUrl;
-  private base_url = this.root;
+  private base_url = this.root; 
   constructor(
     private http: HttpClient,
     private router: Router,

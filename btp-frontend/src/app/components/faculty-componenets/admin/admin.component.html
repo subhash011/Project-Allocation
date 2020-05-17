@@ -363,7 +363,11 @@
       </div>
     </div>
 
-    <button mat-raised-button (click)="exportProject()">Export Preferences</button> 
+    <div>
+      <button mat-raised-button color="accent" class="project_download" (click)="downloadFile_project()">
+        Export Preferences
+       </button>
+    </div>
 
     <div class="display">
       <div class="table mat-elevation-z8">
@@ -479,6 +483,13 @@
             <i class="material-icons">search</i>
           </button>
         </div>
+        
+        <div class="flex-space">
+          <button mat-raised-button color="accent" class="student_download" (click)="downloadFile_student()">
+            Export Preferences
+           </button>
+        </div>
+
         <div class="display">
           <div class="table mat-elevation-z8">
             <table

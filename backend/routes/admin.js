@@ -7,6 +7,7 @@ const Admin = require("../models/Admin_Info");
 const Student = require("../models/Student");
 const Service = require("../helper/serivces");
 const fs = require("fs");
+const path = require("path");
 var branches = Service.branches;
 var programs = Service.programs;
 
@@ -1289,5 +1290,56 @@ router.get("/export_students/:id", (req, res) => {
 		}
 	);
 });
+
+router.get("/download_csv/:id/:role",(req,res)=>{
+
+	const id = req.params.id;
+	const role = req.params.role;
+	const idToken = req.headers.authorization;
+
+	Faculty.findOne({google_id:{id:id,idToken:idToken}})
+		.then(faculty=>{
+			if(faculty){
+				Admin.findOne({admin_id:faculty._id})
+					.then(admin=>{
+						if(admin){
+							const filename = admin.stream;
+							if(role == "project")
+								var file = path.resolve(__dirname, `../CSV/projects/${filename}.csv`);
+							else if(role == "student")	
+								var file = path.resolve(__dirname, `../CSV/students/${filename}.csv`);
+							else
+								var file = null;
+
+							res.download(file);
+						}
+						else{
+							res.json({
+								status:"fail",
+								result:null
+							})
+						}
+					})
+					.catch(err=>{
+						res.json({
+							status:"fail",
+							result:null
+						})
+					})
+			}
+			else{
+				res.json({
+					status:"fail",
+					result:null
+				})
+			}
+		})
+		.catch(err=>{
+			res.json({
+				status:"fail",
+				result:null
+			})
+		})
+})
 
 module.exports = router;

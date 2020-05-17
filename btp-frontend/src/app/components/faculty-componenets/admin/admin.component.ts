@@ -18,6 +18,7 @@ import { LoaderComponent } from "../../shared/loader/loader.component";
 import { ShowPreferencesComponent } from "../../student-components/show-preferences/show-preferences.component";
 import { ShowStudentPreferencesComponent } from "../show-student-preferences/show-student-preferences.component";
 import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/show-faculty-preferences.component";
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: "app-admin",
@@ -262,7 +263,6 @@ export class AdminComponent implements OnInit {
         this.proceedButton3 = true;
         this.userService.updateStage(this.stage_no).subscribe((data) => {
           if (data["status"] == "success") {
-            this.days_left = "Please set the deadline";
 
             let snackBarRef = this.snackBar.open(
               "Successfully moved to the next stage!",
@@ -283,6 +283,23 @@ export class AdminComponent implements OnInit {
                 );
               }
             });
+            if(this.stage_no >= 3){
+              console.log("here")
+              this.exportService.generateCSV_projects()
+                .subscribe(data=>{
+                  console.log(data);
+                  if(data["message"] == "success"){
+                    this.exportService.generateCSV_students()
+                      .subscribe(data=>{
+                          if(data["message"] == "success"){
+
+                          }
+                      })
+
+                  }
+                })
+            }
+
           } else {
             this.loginService.signOut();
             this.snackBar.open(
@@ -431,12 +448,6 @@ export class AdminComponent implements OnInit {
                 }
               );
               this.ngOnInit();
-              // snackBarRef.afterDismissed().subscribe(() => {
-              //   this.ngOnInit();
-              // });
-              // snackBarRef.onAction().subscribe(() => {
-              //   this.ngOnInit();
-              // });
             } else {
               this.loginService.signOut();
               this.snackBar.open(
@@ -451,7 +462,7 @@ export class AdminComponent implements OnInit {
         }
       });
     } else {
-      let snackBarRef = this.snackBar.open("Plese choose the deadline", "Ok", {
+     this.snackBar.open("Plese choose the deadline", "Ok", {
         duration: 3000,
       });
     }
@@ -1103,17 +1114,20 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  exportProject(){
-
-    this.exportService.generateCSV_projects()
+  downloadFile_project(){
+    
+    this.exportService.download("project")
       .subscribe(data=>{
-
-        
-
-
+        saveAs(data, `${this.programName}_faculty.csv`);
       })
-  
+  }
 
+  downloadFile_student(){
+    
+    this.exportService.download("student")
+      .subscribe(data=>{
+        saveAs(data, `${this.programName}_students.csv`);
+      })
   }
 
 
