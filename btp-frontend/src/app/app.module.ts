@@ -40,7 +40,9 @@ import { TypingAnimationModule } from "angular-typing-animation";
 import { HelpComponent } from "./components/shared/help/help.component";
 import { ResetComponent } from "./components/faculty-componenets/reset/reset.component";
 import { LoaderComponent } from "./components/shared/loader/loader.component";
-
+import { ShowStudentPreferencesComponent } from "./components/faculty-componenets/show-student-preferences/show-student-preferences.component";
+import { ClipboardModule } from "ngx-clipboard";
+import { ShowFacultyPreferencesComponent } from "./components/faculty-componenets/show-faculty-preferences/show-faculty-preferences.component";
 const googleLoginOption: LoginOpt = {
   scope: "https://mail.google.com/",
   prompt: "select_account",
@@ -84,6 +86,8 @@ export function provideConfig() {
     HelpComponent,
     ResetComponent,
     LoaderComponent,
+    ShowStudentPreferencesComponent,
+    ShowFacultyPreferencesComponent,
   ],
   entryComponents: [
     ShowPreferencesComponent,
@@ -92,6 +96,8 @@ export function provideConfig() {
     AddMapComponent,
     ResetComponent,
     LoaderComponent,
+    ShowStudentPreferencesComponent,
+    ShowFacultyPreferencesComponent,
   ],
   imports: [
     BrowserModule,
@@ -107,8 +113,9 @@ export function provideConfig() {
     CountdownTimerModule.forRoot(),
     LoadingBarModule,
     TypingAnimationModule,
+    ClipboardModule,
   ],
-  exports: [],
+  exports: [ClipboardModule],
   providers: [
     {
       provide: AuthServiceConfig,

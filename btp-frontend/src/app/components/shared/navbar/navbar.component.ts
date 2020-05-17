@@ -45,12 +45,6 @@ export class NavbarComponent implements OnInit {
             }
           );
           this.login.signOut();
-          // snackBarRef.afterDismissed().subscribe(() => {
-          //   this.login.signOut();
-          // });
-          // snackBarRef.onAction().subscribe(() => {
-          //   this.login.signOut();
-          // });
         }
       });
     }

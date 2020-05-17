@@ -46,34 +46,34 @@ mongoose
 
 //define all routes below this
 const home = require("./routes/home");
-app.use("", home);
+app.use("/api", home);
 
 const auth_check = require("./routes/auth_check");
-app.use("/auth", auth_check);
+app.use("/api/auth", auth_check);
 
 const student = require("./routes/student");
-app.use("/student", student);
+app.use("/api/student", student);
 
 const faculty = require("./routes/faculty");
-app.use("/faculty", faculty);
+app.use("/api/faculty", faculty);
 
 const student_project = require("./routes/student_project");
-app.use("/student/project", student_project);
+app.use("/api/student/project", student_project);
 
 const faculty_project = require("./routes/faculty_project");
-app.use("/faculty/project", faculty_project);
+app.use("/api/faculty/project", faculty_project);
 
 const super_admin = require("./routes/super_admin");
-app.use("/super", super_admin);
+app.use("/api/super", super_admin);
 
 const allocation = require("./routes/allocation");
-app.use("/allocation", allocation);
+app.use("/api/allocation", allocation);
 
 const admin = require("./routes/admin");
-app.use("/admin", admin);
+app.use("/api/admin", admin);
 
 const mail = require("./routes/email");
-app.use("/email", mail);
+app.use("/api/email", mail);
 
 const PORT = process.env.PORT || 8080;
 

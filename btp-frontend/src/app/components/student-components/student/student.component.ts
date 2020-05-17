@@ -28,8 +28,7 @@ export class StudentComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.user = this.userService
       .getStudentDetails(this.user.id)
-      .toPromise()
-      .then((data) => {
+      .subscribe((data) => {
         if (data["status"] == "invalid-token") {
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {

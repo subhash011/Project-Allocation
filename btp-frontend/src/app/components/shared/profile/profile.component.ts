@@ -66,12 +66,7 @@ export class ProfileComponent implements OnInit {
                     duration: 3000,
                   }
                 );
-                snackBarRef.afterDismissed().subscribe(() => {
-                  this.login.signOut();
-                });
-                snackBarRef.onAction().subscribe(() => {
-                  this.login.signOut();
-                });
+                this.login.signOut();
               }
             });
           } else {
@@ -183,12 +178,6 @@ export class ProfileComponent implements OnInit {
             }
           );
           this.login.signOut();
-          // snackBarRef.afterDismissed().subscribe(() => {
-          //   this.login.signOut();
-          // });
-          // snackBarRef.onAction().subscribe(() => {
-          //   this.login.signOut();
-          // });
         }
       });
     }
@@ -205,12 +194,6 @@ export class ProfileComponent implements OnInit {
             duration: 3000,
           });
           this.ngOnInit();
-          // snackBarRef.afterDismissed().subscribe(() => {
-          //   this.ngOnInit();
-          // });
-          // snackBarRef.onAction().subscribe(() => {
-          //   this.ngOnInit();
-          // });
         } else {
           let snackBarRef = this.snackBar.open(
             "Session Timed Out! Please Sign in Again!",
@@ -220,12 +203,6 @@ export class ProfileComponent implements OnInit {
             }
           );
           this.login.signOut();
-          // snackBarRef.afterDismissed().subscribe(() => {
-          //   this.login.signOut();
-          // });
-          // snackBarRef.onAction().subscribe(() => {
-          //   this.login.signOut();
-          // });
         }
       });
     }
@@ -251,12 +228,6 @@ export class ProfileComponent implements OnInit {
               duration: 3000,
             });
             this.ngOnInit();
-            // snackBarRef.afterDismissed().subscribe(() => {
-            //   this.ngOnInit();
-            // });
-            // snackBarRef.onAction().subscribe(() => {
-            //   this.ngOnInit();
-            // });
           } else {
             let snackBarRef = this.snackBar.open(
               "Session Timed Out! Please Sign in Again!",
@@ -266,12 +237,6 @@ export class ProfileComponent implements OnInit {
               }
             );
             this.login.signOut();
-            // snackBarRef.afterDismissed().subscribe(() => {
-            //   this.login.signOut();
-            // });
-            // snackBarRef.onAction().subscribe(() => {
-            //   this.login.signOut();
-            // });
           }
         });
       }

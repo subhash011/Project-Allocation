@@ -202,21 +202,18 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
         this.loadingBar.start();
-        this.userService
-          .setProgram(data["map"])
-          .toPromise()
-          .then((data) => {
-            if (data["message"] == "success") {
-              this.ngOnInit();
-              const snackBarRef = this.snackBar.open(
-                "Added Program Successfully",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-            }
-          });
+        this.userService.setProgram(data["map"]).subscribe((data) => {
+          if (data["message"] == "success") {
+            this.ngOnInit();
+            const snackBarRef = this.snackBar.open(
+              "Added Program Successfully",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+          }
+        });
       }
     });
   }
@@ -231,26 +228,23 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.loadingBar.start();
-        this.userService
-          .removeProgram(short)
-          .toPromise()
-          .then((result) => {
-            if (result["message"] == "invalid-token") {
-              this.login.signOut();
-              this.snackBar.open(
-                "Session Timed Out! Please Sign-In Again",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-            } else {
-              this.ngOnInit();
-              this.snackBar.open("Removed Program", "Ok", {
+        this.userService.removeProgram(short).subscribe((result) => {
+          if (result["message"] == "invalid-token") {
+            this.login.signOut();
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In Again",
+              "Ok",
+              {
                 duration: 3000,
-              });
-            }
-          });
+              }
+            );
+          } else {
+            this.ngOnInit();
+            this.snackBar.open("Removed Program", "Ok", {
+              duration: 3000,
+            });
+          }
+        });
       }
     });
   }
@@ -267,21 +261,18 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
         this.loadingBar.start();
-        this.userService
-          .setBranch(data["map"])
-          .toPromise()
-          .then((data) => {
-            if (data["message"] == "success") {
-              this.ngOnInit();
-              const snackBarRef = this.snackBar.open(
-                "Added Branch Successfully",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-            }
-          });
+        this.userService.setBranch(data["map"]).subscribe((data) => {
+          if (data["message"] == "success") {
+            this.ngOnInit();
+            const snackBarRef = this.snackBar.open(
+              "Added Branch Successfully",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+          }
+        });
       }
     });
   }
@@ -297,26 +288,23 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.loadingBar.start();
-        this.userService
-          .removeBranch(short)
-          .toPromise()
-          .then((result) => {
-            if (result["message"] == "invalid-token") {
-              this.login.signOut();
-              this.snackBar.open(
-                "Session Timed Out! Please Sign-In Again",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-            } else {
-              this.ngOnInit();
-              this.snackBar.open("Removed Stream", "Ok", {
+        this.userService.removeBranch(short).subscribe((result) => {
+          if (result["message"] == "invalid-token") {
+            this.login.signOut();
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In Again",
+              "Ok",
+              {
                 duration: 3000,
-              });
-            }
-          });
+              }
+            );
+          } else {
+            this.ngOnInit();
+            this.snackBar.open("Removed Stream", "Ok", {
+              duration: 3000,
+            });
+          }
+        });
       }
     });
   }

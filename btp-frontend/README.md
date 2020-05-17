@@ -1,3 +1,7 @@
+1. If you want to make it quick and easy just run the filereplace.sh script in the btp-frontend folder and make sure that the file is executable before running it.
+
+If you are on windows and cant execute the script, the follow the upcoming instructions.
+
 1. Replacing the ngx-countdown-timer.
    Go to `btp-frontend\node_modules\ngx-countdown-timer`,
    Here two files are to be changed.

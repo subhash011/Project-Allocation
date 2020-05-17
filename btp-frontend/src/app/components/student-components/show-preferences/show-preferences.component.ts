@@ -47,9 +47,6 @@ export class ShowPreferencesComponent implements OnInit {
       );
     }
   }
-  getUrl() {
-    return "/student" + "/preferences/" + localStorage.getItem("id");
-  }
   savePreferences() {
     this.dialogRef.close({ message: "submit", result: this.preferences });
   }

@@ -1,0 +1,30 @@
+.list {
+  min-height: 60px;
+  border-radius: 4px;
+  display: block;
+  overflow: hidden;
+}
+
+.copy {
+  float: right;
+}
+
+.project {
+  float: left;
+}
+
+.faculty {
+  float: right;
+}
+
+.list-item {
+  padding: 20px 10px;
+  box-sizing: border-box;
+  cursor: move;
+  color: black;
+  font-size: 14px;
+}
+
+.list-item:last-child {
+  border: none;
+}

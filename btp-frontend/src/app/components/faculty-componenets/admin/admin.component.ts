@@ -14,6 +14,9 @@ import { LoadingBarService } from "@ngx-loading-bar/core";
 import { SelectionModel } from "@angular/cdk/collections";
 import { ResetComponent } from "../reset/reset.component";
 import { LoaderComponent } from "../../shared/loader/loader.component";
+import { ShowPreferencesComponent } from "../../student-components/show-preferences/show-preferences.component";
+import { ShowStudentPreferencesComponent } from "../show-student-preferences/show-student-preferences.component";
+import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/show-faculty-preferences.component";
 
 @Component({
   selector: "app-admin",
@@ -31,11 +34,12 @@ export class AdminComponent implements OnInit {
     "studentIntake",
     "Faculty",
     "Duration",
+    "Preferences",
     "NoOfStudents",
     "Student",
   ];
   facultyCols = ["Name", "NoOfProjects", "Email", "Actions", "Violations"];
-  studentCols = ["Name", "Email", "GPA", "Actions"];
+  studentCols = ["Name", "Email", "GPA", "ViewPref", "Actions"];
 
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -233,6 +237,7 @@ export class AdminComponent implements OnInit {
     for (const allot of alloted) {
       ans += allot.name + ", ";
     }
+    ans = ans.substring(0, ans.length - 2);
     return ans;
   }
 
@@ -1044,6 +1049,22 @@ export class AdminComponent implements OnInit {
           duration: 3000,
         });
       }
+    });
+  }
+
+  showPreferencesProject(project) {
+    const dialogRef = this.dialog.open(ShowFacultyPreferencesComponent, {
+      disableClose: false,
+      hasBackdrop: true,
+      data: project,
+    });
+  }
+
+  showPreferences(student) {
+    const dialogRef = this.dialog.open(ShowStudentPreferencesComponent, {
+      disableClose: false,
+      hasBackdrop: true,
+      data: student,
     });
   }
 
