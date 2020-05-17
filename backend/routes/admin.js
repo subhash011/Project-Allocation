@@ -10,6 +10,14 @@ const fs = require("fs");
 var branches = Service.branches;
 var programs = Service.programs;
 
+function studentPref(total, student) {
+	return total + "," + student.name;
+}
+
+function projectPref(total, project) {
+	return total + "," + project.title;
+}
+
 function combineProjects(projects, students) {
 	students = students.map((val) => JSON.stringify(val));
 	for (const project of projects) {
@@ -18,31 +26,36 @@ function combineProjects(projects, students) {
 		const union = new Set([...setA, ...setB]);
 		project.students_id = [...union];
 		project.students_id = project.students_id.map((val) => JSON.parse(val));
+		project.students_id = project.students_id
+			.reduce(studentPref, "")
+			.substring(1);
 	}
 	return projects;
 }
 
 function combineStudents(projects, students) {
-	studentIDS = students.map((val) => val._id);
-	projectIDS = projects.map((val) => val._id);
+	projects = projects.map((val) => JSON.stringify(val));
 	for (const student of students) {
 		const setA = new Set(
-			student.projects_preference.map((val) => val.toString())
+			student.projects_preference.map((val) => JSON.stringify(val))
 		);
-		const setB = new Set(projectIDS.map((val) => val.toString()));
+		const setB = new Set(projects);
 		const union = new Set([...setA, ...setB]);
 		student.projects_preference = [...union];
 		student.projects_preference = student.projects_preference.map((val) =>
-			mongoose.Types.ObjectId(val)
+			JSON.parse(val)
 		);
+		student.projects_preference = student.projects_preference
+			.reduce(projectPref, "")
+			.substring(1);
 	}
 	return students;
 }
 
-function generateCSV(data, program_name) {
-	let headers = "Title,Faculty,StudentIntake,PreferencesCount,";
+function generateCSVProjects(data, program_name) {
+	let headers = "Title,Faculty,Student intake,Preference count,";
 
-	const s_length = data[0].students_id.length;
+	const s_length = data[0].students_id.split(",").length;
 
 	for (let ind = 1; ind <= s_length; ind++) {
 		headers += ind == s_length ? `Preference.${ind}\n` : `Preference.${ind},`;
@@ -59,15 +72,46 @@ function generateCSV(data, program_name) {
 			"," +
 			fields.preferenceCount +
 			"," +
-			fields.studentPref +
+			fields.students_id +
 			"\n";
 	}
 
 	const write_obj = headers + str;
+	fs.writeFile(`./CSV/projects/${program_name}.csv`, write_obj, (err) => {
+		if (err) {
+			return "error";
+		}
+		return "success";
+	});
+}
 
-	fs.writeFile(`../CSV/${program_name}.csv`, write_obj, (err) => {
-		if (err) console.log("Failed to write");
-		console.log("Successfully Written to File.");
+function generateCSVStudents(data, program_name) {
+	let headers = "Name,Roll no.,GPA,Preference count,";
+	const p_length = data[0].projects_preference.split(",").length;
+	for (let ind = 1; ind <= p_length; ind++) {
+		headers += ind == p_length ? `Preference.${ind}\n` : `Preference.${ind},`;
+	}
+	let str = "";
+	for (const fields of data) {
+		str +=
+			fields.name +
+			"," +
+			fields.roll_no +
+			"," +
+			fields.gpa +
+			"," +
+			fields.preferenceCount +
+			"," +
+			fields.projects_preference +
+			"\n";
+	}
+
+	const write_obj = headers + str;
+	fs.writeFile(`./CSV/students/${program_name}.csv`, write_obj, (err) => {
+		if (err) {
+			return "error";
+		}
+		return "success";
 	});
 }
 
@@ -1107,10 +1151,9 @@ router.post("/swap/:id", (req, res) => {
 router.get("/export_projects/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
-
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
 		(faculty) => {
-			if (faculty) {
+			if (faculty && faculty.isAdmin) {
 				Admin.findOne({ admin_id: faculty._id }).then((admin) => {
 					if (admin) {
 						var programName = admin.stream;
@@ -1148,7 +1191,7 @@ router.get("/export_projects/:id", (req, res) => {
 											title: val.title,
 											faculty: val.faculty_id.name,
 											studentIntake: val.studentIntake,
-											preferencesCount: val.students_id.length,
+											preferenceCount: val.students_id.length,
 											students_id: val.students_id,
 										};
 										return new_proj;
@@ -1162,13 +1205,18 @@ router.get("/export_projects/:id", (req, res) => {
 							const projects = result[1];
 
 							const data = combineProjects(projects, students);
+							const answer = generateCSVProjects(data, programName);
 
-							generateCSV(data, programName);
+							res.json({
+								message: "success",
+							});
 						});
-					} else {
 					}
 				});
 			} else {
+				res.json({
+					message: "invalid-token",
+				});
 			}
 		}
 	);
@@ -1180,65 +1228,63 @@ router.get("/export_students/:id", (req, res) => {
 
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
 		(faculty) => {
-			if (faculty) {
+			if (faculty && faculty.isAdmin) {
 				Admin.findOne({ admin_id: faculty._id }).then((admin) => {
 					if (admin) {
 						var programName = admin.stream;
 						var promises = [];
 
 						promises.push(
-							Student.find().then((students) => {
-								students.sort((a, b) => {
-									return b.gpa - a.gpa;
-								});
-
-								return students.map((val) => {
-									let new_s = {
-										_id: val._id,
-										name: val.name,
-										roll_no: val.roll_no,
-									};
-									return new_s;
-								});
-							})
+							Student.find()
+								.populate("projects_preference", { _id: 1, title: 1 }, Project)
+								.then((students) => {
+									return students.map((val) => {
+										let new_s = {
+											_id: val._id,
+											name: val.name,
+											roll_no: val.roll_no,
+											gpa: val.gpa,
+											preferenceCount: val.projects_preference.length,
+											projects_preference: val.projects_preference,
+										};
+										return new_s;
+									});
+								})
 						);
 
 						promises.push(
-							Project.find({ stream: programName })
-								.populate("faculty_id", { name: 1 }, Faculty)
-								.populate({
-									path: "students_id",
-									select: { _id: 1, name: 1, roll_no: 1 },
-									model: Student,
-								})
-								.populate("student_alloted", { name: 1, roll_no: 1 }, Student)
-								.then((data) => {
-									var projects = data.map((val) => {
-										var new_proj = {
-											title: val.title,
-											faculty: val.faculty_id.name,
-											studentIntake: val.studentIntake,
-											preferencesCount: val.students_id.length,
-											students_id: val.students_id,
-										};
-										return new_proj;
-									});
-									return projects;
-								})
+							Project.find({ stream: programName }).then((data) => {
+								data.sort((a, b) => {
+									return a.students_id.length - b.students_id.length;
+								});
+								var projects = data.map((val) => {
+									var new_proj = {
+										_id: val._id,
+										title: val.title,
+									};
+									return new_proj;
+								});
+								return projects;
+							})
 						);
 
 						Promise.all(promises).then((result) => {
 							const students = result[0];
 							const projects = result[1];
 
-							const data = combineProjects(projects, students);
+							const data = combineStudents(projects, students);
 
-							generateCSV(data, programName);
+							generateCSVStudents(data, programName);
+							res.json({
+								message: "success",
+							});
 						});
-					} else {
 					}
 				});
 			} else {
+				res.json({
+					message: "invalid-token",
+				});
 			}
 		}
 	);
