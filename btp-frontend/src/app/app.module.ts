@@ -1,3 +1,4 @@
+import { ExporttocsvService } from './services/exporttocsv/exporttocsv.service';
 import { UserService } from "./services/user/user.service";
 import { ThemePickerComponent } from "./components/shared/theme-picker/theme-picker.component";
 import { MaterialModule } from "./material/material.module";
@@ -122,7 +123,7 @@ export function provideConfig() {
       useFactory: provideConfig,
     },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
-    UserService,
+    UserService,ExporttocsvService,
   ],
   bootstrap: [AppComponent],
 })

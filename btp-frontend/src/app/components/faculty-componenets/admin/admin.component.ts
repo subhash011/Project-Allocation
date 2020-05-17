@@ -1,3 +1,4 @@
+import { ExporttocsvService } from './../../../services/exporttocsv/exporttocsv.service';
 import { ActivatedRoute } from "@angular/router";
 import { ProjectsService } from "./../../../services/projects/projects.service";
 import { LoginComponent } from "./../../shared/login/login.component";
@@ -98,7 +99,8 @@ export class AdminComponent implements OnInit {
     private projectService: ProjectsService,
     private loginService: LoginComponent,
     private activatedRoute: ActivatedRoute,
-    private loadingBar: LoadingBarService
+    private loadingBar: LoadingBarService,
+    private exportService : ExporttocsvService
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -1100,4 +1102,19 @@ export class AdminComponent implements OnInit {
       }
     });
   }
+
+  exportProject(){
+
+    this.exportService.generateCSV_projects()
+      .subscribe(data=>{
+
+        
+
+
+      })
+  
+
+  }
+
+
 }
