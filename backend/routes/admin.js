@@ -931,13 +931,11 @@ router.post("/revertStage/:id", (req, res) => {
 						if (stage >= 3) {
 							admin.stage = 2;
 						} else {
-							admin.stage = stage - 1;
-
-							if(admin.stage == 1){
+							if (admin.stage == 1) {
 								admin.startDate = undefined;
 								admin.deadlines = [];
 							}
-
+							admin.stage = stage - 1;
 						}
 
 						var promises = [];
@@ -1297,55 +1295,57 @@ router.get("/export_students/:id", (req, res) => {
 	);
 });
 
-router.get("/download_csv/:id/:role",(req,res)=>{
-
+router.get("/download_csv/:id/:role", (req, res) => {
 	const id = req.params.id;
 	const role = req.params.role;
 	const idToken = req.headers.authorization;
 
-	Faculty.findOne({google_id:{id:id,idToken:idToken}})
-		.then(faculty=>{
-			if(faculty){
-				Admin.findOne({admin_id:faculty._id})
-					.then(admin=>{
-						if(admin){
+	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+		.then((faculty) => {
+			if (faculty) {
+				Admin.findOne({ admin_id: faculty._id })
+					.then((admin) => {
+						if (admin) {
 							const filename = admin.stream;
-							if(role == "project")
-								var file = path.resolve(__dirname, `../CSV/projects/${filename}.csv`);
-							else if(role == "student")	
-								var file = path.resolve(__dirname, `../CSV/students/${filename}.csv`);
-							else
-								var file = null;
+							if (role == "project")
+								var file = path.resolve(
+									__dirname,
+									`../CSV/projects/${filename}.csv`
+								);
+							else if (role == "student")
+								var file = path.resolve(
+									__dirname,
+									`../CSV/students/${filename}.csv`
+								);
+							else var file = null;
 
 							res.download(file);
-						}
-						else{
+						} else {
 							res.json({
-								status:"fail",
-								result:null
-							})
+								status: "fail",
+								result: null,
+							});
 						}
 					})
-					.catch(err=>{
+					.catch((err) => {
 						res.json({
-							status:"fail",
-							result:null
-						})
-					})
-			}
-			else{
+							status: "fail",
+							result: null,
+						});
+					});
+			} else {
 				res.json({
-					status:"fail",
-					result:null
-				})
+					status: "fail",
+					result: null,
+				});
 			}
 		})
-		.catch(err=>{
+		.catch((err) => {
 			res.json({
-				status:"fail",
-				result:null
-			})
-		})
-})
+				status: "fail",
+				result: null,
+			});
+		});
+});
 
 module.exports = router;
