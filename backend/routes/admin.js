@@ -932,6 +932,12 @@ router.post("/revertStage/:id", (req, res) => {
 							admin.stage = 2;
 						} else {
 							admin.stage = stage - 1;
+
+							if(admin.stage == 1){
+								admin.startDate = undefined;
+								admin.deadlines = [];
+							}
+
 						}
 
 						var promises = [];
