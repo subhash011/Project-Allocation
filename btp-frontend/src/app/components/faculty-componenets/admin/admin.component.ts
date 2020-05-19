@@ -282,7 +282,6 @@ export class AdminComponent implements OnInit {
                 );
               }
             });
-<<<<<<< HEAD
             if (this.stage_no >= 3) {
               console.log("here");
               this.exportService.generateCSV_projects().subscribe((data) => {
@@ -296,22 +295,6 @@ export class AdminComponent implements OnInit {
                     });
                 }
               });
-=======
-            if(this.stage_no >= 3){
-              this.exportService.generateCSV_projects()
-                .subscribe(data=>{
-                  console.log(data);
-                  if(data["message"] == "success"){
-                    this.exportService.generateCSV_students()
-                      .subscribe(data=>{
-                          if(data["message"] == "success"){
-
-                          }
-                      })
-
-                  }
-                })
->>>>>>> c942b479fa70d9c876cb766a8dde3ea44d1220c7
             }
           } else {
             this.loginService.signOut();
@@ -590,8 +573,7 @@ export class AdminComponent implements OnInit {
           disableClose: true,
           hasBackdrop: true,
         });
-        if(this.stage_no == 0 || this.stage_no == 2){
-
+        if (this.stage_no == 0 || this.stage_no == 2) {
           this.userService.getFacultyStreamEmails().subscribe((data1) => {
             if (data1["status"] == "success") {
               this.mailer
@@ -630,8 +612,7 @@ export class AdminComponent implements OnInit {
                 });
             }
           });
-        }
-        else if (this.stage_no == 1) {
+        } else if (this.stage_no == 1) {
           this.userService.getStudentStreamEmails().subscribe((data1) => {
             if (data1["status"] == "success") {
               this.mailer
@@ -670,8 +651,7 @@ export class AdminComponent implements OnInit {
                 });
             }
           });
-        } 
-        else {
+        } else {
           this.userService.fetchAllMails().subscribe((result) => {
             if (result["message"] == "success") {
               this.mailer
