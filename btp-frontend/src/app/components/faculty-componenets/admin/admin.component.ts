@@ -1,4 +1,4 @@
-import { ExporttocsvService } from './../../../services/exporttocsv/exporttocsv.service';
+import { ExporttocsvService } from "./../../../services/exporttocsv/exporttocsv.service";
 import { ActivatedRoute } from "@angular/router";
 import { ProjectsService } from "./../../../services/projects/projects.service";
 import { LoginComponent } from "./../../shared/login/login.component";
@@ -18,7 +18,7 @@ import { LoaderComponent } from "../../shared/loader/loader.component";
 import { ShowPreferencesComponent } from "../../student-components/show-preferences/show-preferences.component";
 import { ShowStudentPreferencesComponent } from "../show-student-preferences/show-student-preferences.component";
 import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/show-faculty-preferences.component";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: "app-admin",
@@ -101,7 +101,7 @@ export class AdminComponent implements OnInit {
     private loginService: LoginComponent,
     private activatedRoute: ActivatedRoute,
     private loadingBar: LoadingBarService,
-    private exportService : ExporttocsvService
+    private exportService: ExporttocsvService
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -263,12 +263,11 @@ export class AdminComponent implements OnInit {
         this.proceedButton3 = true;
         this.userService.updateStage(this.stage_no).subscribe((data) => {
           if (data["status"] == "success") {
-
             let snackBarRef = this.snackBar.open(
               "Successfully moved to the next stage!",
               "Ok",
               {
-                duration: 3000,
+                duration: 10000,
               }
             );
 
@@ -278,28 +277,25 @@ export class AdminComponent implements OnInit {
                   "Please go to the project tab to start the allocation",
                   "Ok",
                   {
-                    duration: 3000,
+                    duration: 10000,
                   }
                 );
               }
             });
-            if(this.stage_no >= 3){
-              console.log("here")
-              this.exportService.generateCSV_projects()
-                .subscribe(data=>{
-                  console.log(data);
-                  if(data["message"] == "success"){
-                    this.exportService.generateCSV_students()
-                      .subscribe(data=>{
-                          if(data["message"] == "success"){
-
-                          }
-                      })
-
-                  }
-                })
+            if (this.stage_no >= 3) {
+              console.log("here");
+              this.exportService.generateCSV_projects().subscribe((data) => {
+                console.log(data);
+                if (data["message"] == "success") {
+                  this.exportService
+                    .generateCSV_students()
+                    .subscribe((data) => {
+                      if (data["message"] == "success") {
+                      }
+                    });
+                }
+              });
             }
-
           } else {
             this.loginService.signOut();
             this.snackBar.open(
@@ -462,7 +458,7 @@ export class AdminComponent implements OnInit {
         }
       });
     } else {
-     this.snackBar.open("Plese choose the deadline", "Ok", {
+      this.snackBar.open("Plese choose the deadline", "Ok", {
         duration: 3000,
       });
     }
@@ -551,7 +547,7 @@ export class AdminComponent implements OnInit {
             "Unable to do an allocation. Please note the number of projects that can be alloted must be greater than or equal to the number of students.",
             "Ok",
             {
-              duration: 3000,
+              duration: 10000,
             }
           );
         }
@@ -688,7 +684,7 @@ export class AdminComponent implements OnInit {
                 "Unable to fetch mails! If the error persists re-authenticate.",
                 "Ok",
                 {
-                  duration: 3000,
+                  duration: 10000,
                 }
               );
             }
@@ -1114,21 +1110,15 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  downloadFile_project(){
-    
-    this.exportService.download("project")
-      .subscribe(data=>{
-        saveAs(data, `${this.programName}_faculty.csv`);
-      })
+  downloadFile_project() {
+    this.exportService.download("project").subscribe((data) => {
+      saveAs(data, `${this.programName}_faculty.csv`);
+    });
   }
 
-  downloadFile_student(){
-    
-    this.exportService.download("student")
-      .subscribe(data=>{
-        saveAs(data, `${this.programName}_students.csv`);
-      })
+  downloadFile_student() {
+    this.exportService.download("student").subscribe((data) => {
+      saveAs(data, `${this.programName}_students.csv`);
+    });
   }
-
-
 }

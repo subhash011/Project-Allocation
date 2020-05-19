@@ -53,9 +53,21 @@ function combineStudents(projects, students) {
 
 function generateCSVProjects(data, program_name) {
 	let headers = "Title,Faculty,Student intake,Preference count,";
-
-	const s_length = data[0].students_id.split(",").length;
-
+	if (!data[0]) {
+		headers = headers.substring(0, headers.length - 1) + "\n";
+		fs.writeFile(`./CSV/students/${program_name}.csv`, headers, (err) => {
+			if (err) {
+				return "error";
+			}
+			return "success";
+		});
+		return;
+	}
+	var s_length = data[0].students_id.split(",").length;
+	if (data[0].students_id == "") {
+		s_length = 0;
+		headers = headers.substring(0, headers.length - 1) + "\n";
+	}
 	for (let ind = 1; ind <= s_length; ind++) {
 		headers += ind == s_length ? `Preference.${ind}\n` : `Preference.${ind},`;
 	}
@@ -86,7 +98,21 @@ function generateCSVProjects(data, program_name) {
 
 function generateCSVStudents(data, program_name) {
 	let headers = "Name,Roll no.,GPA,Preference count,";
-	const p_length = data[0].projects_preference.split(",").length;
+	if (!data[0]) {
+		headers = headers.substring(0, headers.length - 1) + "\n";
+		fs.writeFile(`./CSV/students/${program_name}.csv`, headers, (err) => {
+			if (err) {
+				return "error";
+			}
+			return "success";
+		});
+		return;
+	}
+	var p_length = data[0].projects_preference.split(",").length;
+	if (data[0].projects_preference == "") {
+		p_length = 0;
+		headers = headers.substring(0, headers.length - 1) + "\n";
+	}
 	for (let ind = 1; ind <= p_length; ind++) {
 		headers += ind == p_length ? `Preference.${ind}\n` : `Preference.${ind},`;
 	}

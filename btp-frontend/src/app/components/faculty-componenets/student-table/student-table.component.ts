@@ -39,13 +39,6 @@ export class StudentTableComponent implements OnInit {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
-            // snackBarRef.afterDismissed().subscribe(() => {
-            //   this.router
-            //     .navigateByUrl("/refresh", { skipLocationChange: true })
-            //     .then(() => {
-            //       this.router.navigate([decodeURI(this.location.path())]);
-            //     });
-            // });
           } else {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -54,11 +47,18 @@ export class StudentTableComponent implements OnInit {
         });
     } else {
       if (this.adminStage < 2) {
-        this.snackBar.open("This will be active on stage 3", "Ok", {
-          duration: 3000,
+        this.student_list.sort((a, b) => {
+          return b.gpa - a.gpa;
         });
+        this.snackBar.open(
+          "Preferences can be edited only in the next stage.",
+          "Ok",
+          {
+            duration: 3000,
+          }
+        );
       } else {
-        this.snackBar.open("Stage deadline has ended", "Ok", {
+        this.snackBar.open("You cannot edit preferences anymore", "Ok", {
           duration: 3000,
         });
       }

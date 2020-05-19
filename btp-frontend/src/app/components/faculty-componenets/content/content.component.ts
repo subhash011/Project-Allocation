@@ -162,8 +162,8 @@ export class ContentComponent implements OnInit, DoCheck {
       if (project.studentIntake > 0 && project.duration > 0) {
         if (this.dialog.openDialogs.length == 0) {
           let dialogRef = this.dialog.open(SubmitPopUpComponent, {
-            height: "50%",
-            width: "700px",
+            height: "20%",
+            width: "400px",
             data: project,
           });
           dialogRef.afterClosed().subscribe((result) => {
