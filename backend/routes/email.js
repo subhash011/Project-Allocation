@@ -37,11 +37,13 @@ router.post("/send", (req, res) => {
 		port: 465,
 		secure: true,
 		auth: {
-			type: "OAuth2",
-			user: user.email,
-			clientId: process.env.GOOGLE_CLIENT_ID,
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-			accessToken: user.authToken,
+			user: process.env.PAP_MAIL,
+			pass: process.env.PAP_PASS,
+			// type: "OAuth2",
+			// user: user.email,
+			// clientId: process.env.GOOGLE_CLIENT_ID,
+			// clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+			// accessToken: user.authToken,
 		},
 	});
 	sendEmail(options, transport)
