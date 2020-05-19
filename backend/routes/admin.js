@@ -373,23 +373,22 @@ router.get("/stream_email/faculty/:id", (req, res) => {
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.then((faculty) => {
 			const stream = faculty.adminProgram;
-			for(const program of faculty.prgrams){
-				if(program.short == stream){
+			for (const program of faculty.programs) {
+				if (program.short == stream) {
 					programAdmin = program;
 					break;
 				}
 			}
-			Faculty.find({ programs : { $elemMatch: programAdmin }})
+			Faculty.find({ programs: { $elemMatch: programAdmin } })
 				.then((faculty) => {
 					for (const fac of faculty) {
 						emails.push(fac.email);
 					}
-
 					res.json({
 						status: "success",
 						result: emails,
 						stream: stream,
-						streamFull : programAdmin.full
+						streamFull: programAdmin.full,
 					});
 				})
 				.catch((err) => {
@@ -416,8 +415,8 @@ router.get("/stream_email/student/:id", (req, res) => {
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.then((faculty) => {
 			const stream = faculty.adminProgram;
-			for(const program of faculty.prgrams){
-				if(program.short == stream){
+			for (const program of faculty.programs) {
+				if (program.short == stream) {
 					programAdmin = program;
 					break;
 				}
@@ -433,7 +432,7 @@ router.get("/stream_email/student/:id", (req, res) => {
 						status: "success",
 						result: emails,
 						stream: stream,
-						streamFull : programAdmin.full 
+						streamFull: programAdmin.full,
 					});
 				})
 				.catch((err) => {
@@ -821,6 +820,7 @@ router.get("/fetchAllMails/:id", (req, res) => {
 							res.json({
 								message: "success",
 								result: answer,
+								streamFull: programAdmin.full,
 							});
 						});
 					} else {

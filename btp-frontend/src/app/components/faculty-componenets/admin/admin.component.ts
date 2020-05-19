@@ -655,7 +655,7 @@ export class AdminComponent implements OnInit {
           this.userService.fetchAllMails().subscribe((result) => {
             if (result["message"] == "success") {
               this.mailer
-                .allocateMail(result["result"], this.programName)
+                .allocateMail(result["result"], result["streamFull"])
                 .subscribe((result) => {
                   dialogRefLoad.close();
                   if (result["message"] == "success") {

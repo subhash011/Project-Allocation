@@ -137,9 +137,9 @@ ${stream} Admin
         user: user,
         mailBody: `Dear Students,
 
-    Please login to the project allocation portal and record your preference among projects offered to program X. Note that it is better to have as many projects as possible in your preference list. The deadline for this phase is ${
-      fmt1.format(curr_deadline) + " 11:59 pm"
-    }.
+    Please login to the project allocation portal and record your preference among projects offered to program ${stream}. Note that it is better to have as many projects as possible in your preference list. The deadline for this phase is ${
+          fmt1.format(curr_deadline) + " 11:59 pm"
+        }.
 
 Regards,
 ${user.name},
