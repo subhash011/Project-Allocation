@@ -1,4 +1,4 @@
-import { ExporttocsvService } from './services/exporttocsv/exporttocsv.service';
+import { ExporttocsvService } from "./services/exporttocsv/exporttocsv.service";
 import { UserService } from "./services/user/user.service";
 import { ThemePickerComponent } from "./components/shared/theme-picker/theme-picker.component";
 import { MaterialModule } from "./material/material.module";
@@ -45,7 +45,7 @@ import { ShowStudentPreferencesComponent } from "./components/faculty-componenet
 import { ClipboardModule } from "ngx-clipboard";
 import { ShowFacultyPreferencesComponent } from "./components/faculty-componenets/show-faculty-preferences/show-faculty-preferences.component";
 const googleLoginOption: LoginOpt = {
-  scope: "https://mail.google.com/",
+  // scope: "https://mail.google.com/",
   prompt: "select_account",
 };
 const config = new AuthServiceConfig([
@@ -123,7 +123,8 @@ export function provideConfig() {
       useFactory: provideConfig,
     },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
-    UserService,ExporttocsvService,
+    UserService,
+    ExporttocsvService,
   ],
   bootstrap: [AppComponent],
 })
