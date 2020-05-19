@@ -8,8 +8,6 @@ const SuperAdmin = require("../models/SuperAdmin");
 const Admin = require("../models/Admin_Info");
 const Mapping = require("../models/Mapping");
 const oauth = require("../config/oauth");
-const Service = require("../helper/serivces");
-var branches = Service.branches;
 Array.prototype.contains = function (v) {
 	for (var i = 0; i < this.length; i++) {
 		if (this[i] === v) return true;
@@ -58,13 +56,17 @@ router.post("/register/:id", (req, res) => {
 router.get("/student/details/:id", (req, res) => {
 	var streamwise = [];
 	var student = {};
-	for (const branch of branches) {
-		student[branch] = [];
-	}
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	var students;
-	oauth(idToken)
+	var branches = [];
+	Mapping.find()
+		.then((maps) => {
+			branches = maps.map((val) => val.short);
+			for (const branch of branches) {
+				student[branch] = [];
+			}
+		})
 		.then((user) => {
 			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
 				(user) => {
@@ -125,11 +127,15 @@ router.get("/faculty/details/:id", (req, res) => {
 	var streamwise = [];
 	const id = req.params.id;
 	var faculty = {};
-	for (const branch of branches) {
-		faculty[branch] = [];
-	}
+	var branches = [];
 	const idToken = req.headers.authorization;
-	oauth(idToken)
+	Mapping.find()
+		.then((maps) => {
+			branches = maps.map((val) => val.short);
+			for (const branch of branches) {
+				faculty[branch] = [];
+			}
+		})
 		.then((user) => {
 			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
 				(user) => {

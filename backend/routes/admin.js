@@ -5,11 +5,9 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Admin = require("../models/Admin_Info");
 const Student = require("../models/Student");
-const Service = require("../helper/serivces");
 const fs = require("fs");
 const path = require("path");
-var branches = Service.branches;
-var programs = Service.programs;
+const Mapping = require("../models/Mapping");
 
 function studentPref(total, student) {
 	return total + "," + student.name;
@@ -416,25 +414,29 @@ router.get("/stream_email/student/:id", (req, res) => {
 router.get("/all/info", (req, res) => {
 	var result = {};
 	var promises = [];
-	Admin.find().then((admins) => {
-		if (admins) {
-			for (const branch of branches) {
-				promises.push(
-					Admin.findOne({ stream: branch })
-						.populate("admin_id")
-						.then((admin) => {
-							result[branch] = admin;
-							return admin;
-						})
-				);
-			}
-			Promise.all(promises).then((prom) => {
-				return res.json({
-					message: "success",
-					result: result,
+	var branches = [];
+	Mapping.find().then((maps) => {
+		branches = maps.map((val) => val.short);
+		Admin.find().then((admins) => {
+			if (admins) {
+				for (const branch of branches) {
+					promises.push(
+						Admin.findOne({ stream: branch })
+							.populate("admin_id")
+							.then((admin) => {
+								result[branch] = admin;
+								return admin;
+							})
+					);
+				}
+				Promise.all(promises).then((prom) => {
+					return res.json({
+						message: "success",
+						result: result,
+					});
 				});
-			});
-		}
+			}
+		});
 	});
 });
 
