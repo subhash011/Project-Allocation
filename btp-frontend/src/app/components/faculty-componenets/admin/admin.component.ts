@@ -577,14 +577,55 @@ export class AdminComponent implements OnInit {
           disableClose: true,
           hasBackdrop: true,
         });
-        if (this.stage_no == 1) {
+        if(this.stage_no == 0 || this.stage_no == 2){
+
+          this.userService.getFacultyStreamEmails().subscribe((data1) => {
+            if (data1["status"] == "success") {
+              this.mailer
+                .adminToFaculty(
+                  this.stage_no,
+                  data1["result"],
+                  this.curr_deadline,
+                  data1["streamFull"]
+                )
+                .subscribe((data2) => {
+                  dialogRefLoad.close();
+                  if (data2["message"] == "success") {
+                    let snackBarRef = this.snackBar.open(
+                      "Mails have been sent",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                    snackBarRef.afterDismissed().subscribe(() => {
+                      this.ngOnInit();
+                    });
+                    snackBarRef.onAction().subscribe(() => {
+                      this.ngOnInit();
+                    });
+                  } else {
+                    this.loginService.signOut();
+                    this.snackBar.open(
+                      "Session Timed Out! Please Sign-In again",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                  }
+                });
+            }
+          });
+        }
+        else if (this.stage_no == 1) {
           this.userService.getStudentStreamEmails().subscribe((data1) => {
             if (data1["status"] == "success") {
               this.mailer
                 .adminToStudents(
                   data1["result"],
                   this.curr_deadline,
-                  data1["stream"]
+                  data1["streamFull"]
                 )
                 .subscribe((data) => {
                   dialogRefLoad.close();
@@ -616,46 +657,8 @@ export class AdminComponent implements OnInit {
                 });
             }
           });
-        } else if (this.stage_no == 2) {
-          this.userService.getFacultyStreamEmails().subscribe((data1) => {
-            if (data1["status"] == "success") {
-              this.mailer
-                .adminToFaculty(
-                  this.stage_no,
-                  data1["result"],
-                  this.curr_deadline,
-                  data1["stream"]
-                )
-                .subscribe((data2) => {
-                  dialogRefLoad.close();
-                  if (data2["message"] == "success") {
-                    let snackBarRef = this.snackBar.open(
-                      "Mails have been sent",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                  } else {
-                    this.loginService.signOut();
-                    this.snackBar.open(
-                      "Session Timed Out! Please Sign-In again",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                  }
-                });
-            }
-          });
-        } else {
+        } 
+        else {
           this.userService.fetchAllMails().subscribe((result) => {
             if (result["message"] == "success") {
               this.mailer
