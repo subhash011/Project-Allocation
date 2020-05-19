@@ -282,6 +282,7 @@ export class AdminComponent implements OnInit {
                 );
               }
             });
+<<<<<<< HEAD
             if (this.stage_no >= 3) {
               console.log("here");
               this.exportService.generateCSV_projects().subscribe((data) => {
@@ -295,6 +296,22 @@ export class AdminComponent implements OnInit {
                     });
                 }
               });
+=======
+            if(this.stage_no >= 3){
+              this.exportService.generateCSV_projects()
+                .subscribe(data=>{
+                  console.log(data);
+                  if(data["message"] == "success"){
+                    this.exportService.generateCSV_students()
+                      .subscribe(data=>{
+                          if(data["message"] == "success"){
+
+                          }
+                      })
+
+                  }
+                })
+>>>>>>> c942b479fa70d9c876cb766a8dde3ea44d1220c7
             }
           } else {
             this.loginService.signOut();
@@ -573,14 +590,55 @@ export class AdminComponent implements OnInit {
           disableClose: true,
           hasBackdrop: true,
         });
-        if (this.stage_no == 1) {
+        if(this.stage_no == 0 || this.stage_no == 2){
+
+          this.userService.getFacultyStreamEmails().subscribe((data1) => {
+            if (data1["status"] == "success") {
+              this.mailer
+                .adminToFaculty(
+                  this.stage_no,
+                  data1["result"],
+                  this.curr_deadline,
+                  data1["streamFull"]
+                )
+                .subscribe((data2) => {
+                  dialogRefLoad.close();
+                  if (data2["message"] == "success") {
+                    let snackBarRef = this.snackBar.open(
+                      "Mails have been sent",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                    snackBarRef.afterDismissed().subscribe(() => {
+                      this.ngOnInit();
+                    });
+                    snackBarRef.onAction().subscribe(() => {
+                      this.ngOnInit();
+                    });
+                  } else {
+                    this.loginService.signOut();
+                    this.snackBar.open(
+                      "Session Timed Out! Please Sign-In again",
+                      "Ok",
+                      {
+                        duration: 3000,
+                      }
+                    );
+                  }
+                });
+            }
+          });
+        }
+        else if (this.stage_no == 1) {
           this.userService.getStudentStreamEmails().subscribe((data1) => {
             if (data1["status"] == "success") {
               this.mailer
                 .adminToStudents(
                   data1["result"],
                   this.curr_deadline,
-                  data1["stream"]
+                  data1["streamFull"]
                 )
                 .subscribe((data) => {
                   dialogRefLoad.close();
@@ -612,46 +670,8 @@ export class AdminComponent implements OnInit {
                 });
             }
           });
-        } else if (this.stage_no == 2) {
-          this.userService.getFacultyStreamEmails().subscribe((data1) => {
-            if (data1["status"] == "success") {
-              this.mailer
-                .adminToFaculty(
-                  this.stage_no,
-                  data1["result"],
-                  this.curr_deadline,
-                  data1["stream"]
-                )
-                .subscribe((data2) => {
-                  dialogRefLoad.close();
-                  if (data2["message"] == "success") {
-                    let snackBarRef = this.snackBar.open(
-                      "Mails have been sent",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                  } else {
-                    this.loginService.signOut();
-                    this.snackBar.open(
-                      "Session Timed Out! Please Sign-In again",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                  }
-                });
-            }
-          });
-        } else {
+        } 
+        else {
           this.userService.fetchAllMails().subscribe((result) => {
             if (result["message"] == "success") {
               this.mailer
@@ -694,109 +714,109 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  sendRemainder() {
-    const dialogRef = this.dialog.open(DeletePopUpComponent, {
-      width: "400px",
-      height: "200px",
-      disableClose: false,
-      hasBackdrop: true,
-      data: {
-        heading: "Confirm Sending Remainders",
-        message:
-          "Are you sure you want to send remainders? This cannot be undone.",
-      },
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result && result["message"] == "submit") {
-        var dialogRefLoad = this.dialog.open(LoaderComponent, {
-          data: "Sending mails, Please wait as this may take a while",
-          disableClose: true,
-          hasBackdrop: true,
-        });
-        if (this.stage_no == 1) {
-          this.userService.getStudentStreamEmails().subscribe((data1) => {
-            dialogRefLoad.close();
-            if (data1["status"] == "success") {
-              this.mailer
-                .adminToStudents(
-                  data1["result"],
-                  this.curr_deadline,
-                  data1["stream"],
-                  true
-                )
-                .subscribe((data) => {
-                  if (data["status"] == "success") {
-                    let snackBarRef = this.snackBar.open(
-                      "Remainders have been sent",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
+  // sendRemainder() {
+  //   const dialogRef = this.dialog.open(DeletePopUpComponent, {
+  //     width: "400px",
+  //     height: "200px",
+  //     disableClose: false,
+  //     hasBackdrop: true,
+  //     data: {
+  //       heading: "Confirm Sending Remainders",
+  //       message:
+  //         "Are you sure you want to send remainders? This cannot be undone.",
+  //     },
+  //   });
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     if (result && result["message"] == "submit") {
+  //       var dialogRefLoad = this.dialog.open(LoaderComponent, {
+  //         data: "Sending mails, Please wait as this may take a while",
+  //         disableClose: true,
+  //         hasBackdrop: true,
+  //       });
+  //       if (this.stage_no == 1) {
+  //         this.userService.getStudentStreamEmails().subscribe((data1) => {
+  //           dialogRefLoad.close();
+  //           if (data1["status"] == "success") {
+  //             this.mailer
+  //               .adminToStudents(
+  //                 data1["result"],
+  //                 this.curr_deadline,
+  //                 data1["stream"],
+  //                 true
+  //               )
+  //               .subscribe((data) => {
+  //                 if (data["status"] == "success") {
+  //                   let snackBarRef = this.snackBar.open(
+  //                     "Remainders have been sent",
+  //                     "Ok",
+  //                     {
+  //                       duration: 3000,
+  //                     }
+  //                   );
 
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                  } else {
-                    this.loginService.signOut();
-                    this.snackBar.open(
-                      "Session Timed Out! Please Sign-In again",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                  }
-                });
-            }
-          });
-        } else {
-          this.userService.getFacultyStreamEmails().subscribe((data1) => {
-            dialogRefLoad.close();
-            if (data1["status"] == "success") {
-              this.mailer
-                .adminToFaculty(
-                  this.stage_no,
-                  data1["result"],
-                  this.curr_deadline,
-                  data1["stream"],
-                  true
-                )
-                .subscribe((data2) => {
-                  if (data2["message"] == "success") {
-                    let snackBarRef = this.snackBar.open(
-                      "Remainders have been sent",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                  } else {
-                    this.loginService.signOut();
-                    this.snackBar.open(
-                      "Session Timed Out! Please Sign-In again",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                  }
-                });
-            }
-          });
-        }
-      }
-    });
-  }
+  //                   snackBarRef.afterDismissed().subscribe(() => {
+  //                     this.ngOnInit();
+  //                   });
+  //                   snackBarRef.onAction().subscribe(() => {
+  //                     this.ngOnInit();
+  //                   });
+  //                 } else {
+  //                   this.loginService.signOut();
+  //                   this.snackBar.open(
+  //                     "Session Timed Out! Please Sign-In again",
+  //                     "Ok",
+  //                     {
+  //                       duration: 3000,
+  //                     }
+  //                   );
+  //                 }
+  //               });
+  //           }
+  //         });
+  //       } else {
+  //         this.userService.getFacultyStreamEmails().subscribe((data1) => {
+  //           dialogRefLoad.close();
+  //           if (data1["status"] == "success") {
+  //             this.mailer
+  //               .adminToFaculty(
+  //                 this.stage_no,
+  //                 data1["result"],
+  //                 this.curr_deadline,
+  //                 data1["stream"],
+  //                 true
+  //               )
+  //               .subscribe((data2) => {
+  //                 if (data2["message"] == "success") {
+  //                   let snackBarRef = this.snackBar.open(
+  //                     "Remainders have been sent",
+  //                     "Ok",
+  //                     {
+  //                       duration: 3000,
+  //                     }
+  //                   );
+  //                   snackBarRef.afterDismissed().subscribe(() => {
+  //                     this.ngOnInit();
+  //                   });
+  //                   snackBarRef.onAction().subscribe(() => {
+  //                     this.ngOnInit();
+  //                   });
+  //                 } else {
+  //                   this.loginService.signOut();
+  //                   this.snackBar.open(
+  //                     "Session Timed Out! Please Sign-In again",
+  //                     "Ok",
+  //                     {
+  //                       duration: 3000,
+  //                     }
+  //                   );
+  //                 }
+  //               });
+  //           }
+  //         });
+  //       }
+  //     }
+  //   });
+  // }
 
   setProjectCap() {
     if (this.fifthFormGroup.controls["fifthCtrl"].value > 0) {

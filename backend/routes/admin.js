@@ -369,12 +369,17 @@ router.get("/stream_email/faculty/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	const emails = [];
-
+	var programAdmin;
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.then((faculty) => {
-			const stream = faculty.stream;
-
-			Faculty.find({ stream: stream })
+			const stream = faculty.adminProgram;
+			for(const program of faculty.prgrams){
+				if(program.short == stream){
+					programAdmin = program;
+					break;
+				}
+			}
+			Faculty.find({ programs : { $elemMatch: programAdmin }})
 				.then((faculty) => {
 					for (const fac of faculty) {
 						emails.push(fac.email);
@@ -384,6 +389,7 @@ router.get("/stream_email/faculty/:id", (req, res) => {
 						status: "success",
 						result: emails,
 						stream: stream,
+						streamFull : programAdmin.full
 					});
 				})
 				.catch((err) => {
@@ -405,10 +411,17 @@ router.get("/stream_email/student/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	const emails = [];
+	var programAdmin;
 
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.then((faculty) => {
-			const stream = faculty.stream;
+			const stream = faculty.adminProgram;
+			for(const program of faculty.prgrams){
+				if(program.short == stream){
+					programAdmin = program;
+					break;
+				}
+			}
 
 			Student.find({ stream: stream })
 				.then((students) => {
@@ -420,6 +433,7 @@ router.get("/stream_email/student/:id", (req, res) => {
 						status: "success",
 						result: emails,
 						stream: stream,
+						streamFull : programAdmin.full 
 					});
 				})
 				.catch((err) => {
