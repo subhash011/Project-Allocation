@@ -1052,11 +1052,6 @@ export class AdminComponent implements OnInit {
             });
           }
         });
-      } else {
-        this.loginService.signOut();
-        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-          duration: 3000,
-        });
       }
     });
   }
