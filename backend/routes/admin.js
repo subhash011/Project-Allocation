@@ -51,6 +51,7 @@ function combineStudents(projects, students) {
 	return students;
 }
 
+//here we have to note that the folder should have write permissions else you might face problems
 function generateCSVProjects(data, program_name) {
 	let headers = "Title,Faculty,Student intake,Preference count,";
 	var file = path.resolve(__dirname, `../CSV/projects/${program_name}.csv`);
@@ -97,6 +98,7 @@ function generateCSVProjects(data, program_name) {
 	});
 }
 
+//here we have to note that the folder should have write permissions else you might face problems
 function generateCSVStudents(data, program_name) {
 	let headers = "Name,Roll no.,GPA,Preference count,";
 	var file = path.resolve(__dirname, `../CSV/students/${program_name}.csv`);
