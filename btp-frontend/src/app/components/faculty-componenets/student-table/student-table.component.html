@@ -7,7 +7,7 @@
       </mat-panel-title>
       <mat-panel-description>
         <div class="flex-space"></div>
-        Student Intake : {{project["studentIntake"]}}
+        Student Intake : {{ project["studentIntake"] }}
         <div class="flex-space"></div>
         Duration : {{ project["duration"] }}
       </mat-panel-description>
@@ -30,7 +30,12 @@
     </div>
   </mat-card>
 
-  <div class="example-box" *ngFor="let student of student_list" cdkDrag>
+  <div
+    class="example-box"
+    *ngFor="let student of student_list"
+    [cdkDragDisabled]="adminStage != 2 ? true : false"
+    cdkDrag
+  >
     <mat-list-item>
       <div class="row data">
         <div class="render">
