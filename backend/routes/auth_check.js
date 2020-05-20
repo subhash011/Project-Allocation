@@ -82,7 +82,7 @@ router.post("/user_check", (req, res) => {
 							user_details: "Student Not Found",
 						});
 					});
-			} else if (email_check === "iitpkd.ac.in") {
+			} else if (email_check === "iitpkd.ac.in" || email_check == "gmail.com") {
 				Faculty.findOne({ email: userDetails.email })
 					.then((user) => {
 						if (user) {
