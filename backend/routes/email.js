@@ -6,6 +6,7 @@ const Project = require("../models/Project");
 const Student = require("../models/Student");
 const Faculty = require("../models/Faculty");
 const Admin = require("../models/Admin_Info");
+require("dotenv/config");
 //this function sends the mail
 //inputs are the mailing object and the transporter object
 //we can pass these two from the post request
