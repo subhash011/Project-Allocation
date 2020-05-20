@@ -55,7 +55,7 @@ function generateCSVProjects(data, program_name) {
     let headers = "Title,Faculty,Student intake,Preference count,";
     if (!data[0]) {
         headers = headers.substring(0, headers.length - 1) + "\n";
-        fs.writeFile(`./CSV/projects/${program_name}.csv`, headers, (err) => {
+        fs.writeFile(`../CSV/projects/${program_name}.csv`, headers, (err) => {
             if (err) {
                 return "error";
             }
@@ -88,7 +88,7 @@ function generateCSVProjects(data, program_name) {
     }
 
     const write_obj = headers + str;
-    fs.writeFile(`./CSV/projects/${program_name}.csv`, write_obj, (err) => {
+    fs.writeFile(`../CSV/projects/${program_name}.csv`, write_obj, (err) => {
         if (err) {
             return "error";
         }
