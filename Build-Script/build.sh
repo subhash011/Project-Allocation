@@ -1,6 +1,8 @@
 #! /bin/bash
 
-#type yes if there are changes in btp-frontend folder
+# if changes in btp-frontend folder use -----> ./build.sh yes
+# else use -----> ./build.sh no
+
 str=$1
 
 pushd /opt/Project-Allocation
