@@ -59,6 +59,9 @@ export class LoginComponent implements OnInit {
             if (route[1] == "register") {
               localStorage.setItem("isRegistered", "false");
             }
+            else{
+              localStorage.setItem("isRegistered","true");
+            }
             if (navObj.error === "none") {
               this.router.navigate([navObj.route]);
             } else {

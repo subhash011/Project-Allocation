@@ -5,7 +5,7 @@
         <span class="navhead">IIT Palakkad</span>
       </button>
     </div>
-    <div *ngIf="isFaculty()">
+    <div *ngIf="isFaculty() && checkRegister()">
       <div class="flex-grow-left"></div>
       <button mat-button (click)="goToHome()" class="nav-text">
         Home
@@ -38,7 +38,7 @@
         Add Projects
       </button>
     </div>
-    <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin()">
+    <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin() && checkRegister()">
       <div class="flex-grow-left"></div>
       <button mat-button [routerLink]="getUrlPreferences()" class="nav-text">
         Edit Preferences
@@ -47,7 +47,7 @@
     <div class="flex-space"></div>
     <div class="flex-grow-right"></div>
     <div>
-      <div *ngIf="isUser() && !isSuperAdmin()">
+      <div *ngIf="isUser() && !isSuperAdmin() && checkRegister()">
         <div class="flex-grow-right"></div>
         <button mat-button routerLink="/help">
           <span class="nav-text">Help</span>
