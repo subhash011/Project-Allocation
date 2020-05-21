@@ -49,9 +49,9 @@
     <div>
       <div *ngIf="isUser() && !isSuperAdmin()">
         <div class="flex-grow-right"></div>
-          <button  mat-button routerLink="/help">
-            <span class="nav-text">Help</span>
-          </button>
+        <button mat-button routerLink="/help">
+          <span class="nav-text">Help</span>
+        </button>
         <button mat-button [matMenuTriggerFor]="beforeMenu">
           <span class="nav-text">Options</span>
           <mat-icon>keyboard_arrow_down</mat-icon>
@@ -63,9 +63,6 @@
           <button mat-menu-item (click)="getAdmin()" *ngIf="isAdmin()">
             Co-ordinator
           </button>
-          <!-- <button mat-menu-item routerLink="/help">
-            Help
-          </button> -->
         </mat-menu>
       </div>
       <div *ngIf="isSuperAdmin()">
@@ -77,10 +74,11 @@
     <div class="flex-grow-right"></div>
     <app-theme-picker class="primary-toolbar"></app-theme-picker>
     <div class="flex-grow-right primary-toolbar"></div>
-    <app-login></app-login>
+    <app-login class="primary-toolbar"></app-login>
   </mat-toolbar-row>
   <mat-toolbar-row class="mobile">
-    <app-theme-picker></app-theme-picker>
+    <app-login class="login-mobile"></app-login>
+    <app-theme-picker class="theme-mobile"></app-theme-picker>
   </mat-toolbar-row>
 </mat-toolbar>
 

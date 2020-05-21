@@ -14,7 +14,7 @@ const app = express();
 //express session
 app.use(
 	session({
-		cookie: { maxAge: 60000, secure : true, sameSite: "none" },
+		cookie: { maxAge: 60000, secure: true, sameSite: "none" },
 		secret: "woot",
 		resave: false,
 		saveUninitialized: false,
@@ -28,7 +28,7 @@ app.use(bodyparser.json({ limit: "50mb", extended: true }));
 mongoose.set("useFindAndModify", false);
 
 //uncomment during production
-//app.use(express.static(__dirname + "/btp-frontend"));
+app.use(express.static(__dirname + "/btp-frontend"));
 
 var mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
