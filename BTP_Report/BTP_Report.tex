@@ -8,7 +8,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage[titletoc,title]{appendix}
-
+\usepackage{authblk}
 \usepackage{hyperref}
 
 % Math
@@ -28,104 +28,104 @@
 
 % Code syntax highlighting
 % https://www.overleaf.com/learn/latex/Code_Highlighting_with_minted
-\usepackage{minted}
-\usemintedstyle{borland}
+%\usepackage{minted}
+%\usemintedstyle{borland}
 % References
 % https://www.overleaf.com/learn/latex/Bibliography_management_in_LaTeX
 % https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
-\usepackage{biblatex}
-\addbibresource{references.bib}
+%\usepackage{biblatex}
+%\addbibresource{references.bib}
 % Title content
+
+
 \title{Project Allocation Portal}
-\author{Albert Sunny, Sai Vamsi Alisetti, Subhash S}
+\author{Subhash S, Sai Vamsi Alisetti, Albert Sunny}
+\affil{Indian Institute of Technology Palakkad}
 \date{}
 
 \begin{document}
-
 \maketitle
 
 % Introduction and Overview
 \section{Introduction}
 
-Web Apps have been there since time being and with today's technology and opens source libraries there is a boost in the making of web apps. Our initial motivations of making this web portal was to reduce the drudgery people have to go through doing the project allocation manually in this modern era where everything is code driven. We have seen that most of the project allocations have been going on using Google Docs or Excel which is a very tiresome and time taking process. So we came up with an automated solution to this by making a web portal to collect everyones preferences and use an algorithm to allocate the projects. We will dive into the workings of the algorithm in the later sections. We made a web app as it is the most accessible thing these days. 
+Web Apps have been with us since early 2000's. However, with today's technology and opens source libraries, they have become an irreplaceable part of our day-to-day lives. Our initial motivations of making this portal was to reduce the drudgery people have to go through due to manual project allocation in this modern era where everything is code driven. We have seen that most of the project allocations are done using Google Docs or Excel --- a tiresome and time-consuming process. So, we came up with a web-based solution that uses an algorithm to allocate projects after collecting preferences from students and mentors. 
 
 \section{Overview}
-We have four positions namely Students, Faculty, Admin, Super Admin. Every individual falls into any of these four positions. Each stream is called a program. As of now the programs are extended to pg programs as well.
-\\ \\ 
-\textbf{Registraion $\&$ Login}: Once they sign in with their institute email id we parse it and        decide whether he/she is a student or faculty and redirect him/her accordingly.
-\\ \\
-\textbf{Super Admin}: Super Admin is given certain priviliges. She/he can view or delete all the projects, all the faculty, all the students, all the programs. Super Admin is the one who can add more programs by assigning it to a particular roll number map. Super Admin is the one who can set the status of admin to the faculty of the respective program.
-\\ \\
-\textbf{Admin}: Only faculty can be a admin to any program. Each program will have an admin. Admin is responsible for setting the deadlines of the allocation and sending mails to the respective members. Admin can also set certain other parameters like max number of projects per faculty, max number of student intake per faculty,total number of students per faculty, and admin can also view or delete students and faculty of the program.
-\\ \\
-\textbf{Faculty}: Faculty can choose to support more than one program by adding more programs in their profile. Each faculty has the eligibility to add, edit, delete projects and give a student preference order to each of their projects.
-\\ \\
-\textbf{Students}: Students page has a very minimalistic UI i.e it is very intuitive to use. All the students have to do is when the appropriate stage comes to pass they have to start choosing the projects they prefer.
-\\ \\
-Here we deal with taking preferences from two sides that is from the students (the projects preffered by them) and the faculty (the preference of students who applied to that particular project). Each project provided by the faculty have a student intake number i.e the number of students they wish to take for the project. Now we use the modified general version of Gale Shapley's Algorithm for stable matching of projects to students. 
-% Algorithm Implementation and Development
-\section{Algorithm Implementation and Development}
-Set $S$ represents set of all students and set $P$ represents set of all projects.
-\\ \\
-Let $S = \{ S_1, S_2, ... , S_m \}$ 
-where 
-$m \in N$ 
-and
-$S_i = (id_i,preference_i)$ is the $i^{th}$ student
-and
-$preference_i = \{P_i, ... ,P_j\}$ where 
-$|preference_i| = |P|$
-since the remaining projects which the $i^{th}$ student didnt choose are sorted in the increasing order of number of students applied to the project, and have been appended to the $i^{th}$ student preference.
-\\ \\
-Let $P = \{P_1, P_2, ... , P_n\}$ 
-where 
-$n \in N$
-and
-$P_i = (id_i,preference_i,studentIntake_i)$ is the $i^{th}$ project 
-and
-$preference_i = \{S_i, ... ,S_j\}$ where 
-$|preference_i| = |S|$
-since the remaining students who didnt apply to the $i^{th}$ project are sorted in the decreasing order of CGPA and have been appended to the ${i^{th}}$ project preference.
-\\ \\
-A necessary condition for this algorithm to work is $n \geq m$.
+We have four positions namely Students, Faculty, Co-ordinator, Super Admin. Every individual falls into one of these four positions. Each \emph{program} has a co-ordinator and is supported by a set of faculty members. For e.g., a program could be a UG program of CSE, or the PG program of EE.
 
-\subsection{Pseudo Code}
-\begin{algorithm}[H]
-\caption{Project Allocation}
-\begin{algorithmic}
-\REQUIRE $n \geq m $
-\STATE $free \leftarrow S$
-\STATE $alloted \leftarrow [\:]$ 
-\STATE $allocationMap \leftarrow \{\}$
-\WHILE{$|free| > 0$}
-\STATE $S_i \leftarrow free[0]$
-\STATE $P_j \leftarrow first \: preference \: of \: S_i$
-\IF{$\neg allocationMap.hasKey(P_j)$}
-\STATE $allocationMap[P_j] = [\:]$
-\STATE $allocationMap \leftarrow \{P_j,S_i\}$
-\STATE $alloted.push(S_i)$
-\STATE $free - \{S_i\}$
-\ELSE 
-\IF{$|allocationMap[P_j]| < P_j.studentIntake $}
-\STATE $allocationMap[P_j].push(S_i)$
-\STATE $Sort \: allocationMap[P_j] \: according \: to \: the \: index \: of \: S_i \: in \: the \: project \: preference$
-\STATE $alloted.push(S_i)$
-\STATE $free - \{S_i\}$
+\begin{itemize}
+	\item \textbf{Registration \& Login}: On the first sign-in with institute email, we parse it and decide whether the user is a student or faculty, and redirect the user accordingly.
+
+	\item \textbf{Super Admin}: They are typically faculty/staff from the academic section. They can view and delete projects, faculties and students. They are in-charge of adding information about \textit{programs} into the portal. When creating programs they also have to map student roll numbers to programs using a regular expression. They can also assign the program co-ordinators.
+
+	\item \textbf{Co-ordinator}: Each program will have a faculty as its project co-ordinator. They are responsible for setting the deadlines for various stages of the project allocation, and dissemination of information using the portal. They can also configure parameters such as number of projects per faculty, maximum intake per project, student cap per faculty, total number of students in the program. They can also view/delete students and faculties of the program they are coordinating.
+
+	\item \textbf{Faculty}: A faculty can choose to support a program by adding it in their profile. Each faculty can add, edit, delete projects. They are also given the option to record their preference among students who have opted for their projects.
+
+	\item \textbf{Students}: Student's page has a very minimalistic UI i.e., it is very intuitive to use. All the students have to do is when the appropriate stage comes to pass, they have to record their preference among the projects offered by the faculties supporting their program.
+\end{itemize}
+
+
+\newpage
+\section{Allocation Algorithm}
+
+Let $\mathcal{S}=\{1,2,\ldots,m\}$ and $\mathcal{P}= \{1,2,\ldots,n\}$ represent the set of students and projects in a program. We note that it may be possible to accommodate multiple student in a project. Let $m_j \leq m$ denote that maximum number of students that can simultaneously work on project $j$. Each student $i \in \mathcal{S}$ has a preference for the projects in set $\mathcal{P}$. We denote this preference as a function $\sigma^S_i: \mathcal{P} \to \mathcal{P}$. Note that $\sigma^S_i$ is a permutation of set $\mathcal{P}$, and $\arg \max_{j \in \mathcal{P}} \sigma^S_i(j)$ and $\arg \min_{j \in \mathcal{P}} \sigma^S_i(j)$ denote the most and least preferred projects by student $i$. Similarly, each project (its mentor) also has a preference of over the set of students $\mathcal{S}$. Preference of project $j \in \mathcal{P}$ is denoted by the function $\sigma^P_j: \mathcal{S} \to \mathcal{S}$. Note that $\sigma^P_i$ is a permutation of set $\mathcal{S}$, and $\arg \max_{i \in \mathcal{S}} \sigma^P_j(i)$ and $\arg \min_{i \in \mathcal{P}} \sigma^P_j(i)$ denote the most and least preferred student by the mentor of project $j$. The permutations are obtained using the following approach: 
+
+\begin{itemize}
+	\item $\sigma^S_i$ (\textit{Students' preference}): In the second phase of project allocation, students are allowed to choose and order them in the decreasing order of preference. At the end of this phase, projects not chosen by a student are appended to his/her preference list. These newly added projects will be ordered in the increasing order of number students who have opted for these projects during phase two.
+	\item $\sigma^P_i$ (\textit{Mentors' preference}): In the third phase of project allocation, project mentors are allowed to order (in decreasing order of preference) students who have opted for their projects. At the end of this phase, for each project, student who have not opted it are appended to the project's preference list. These newly added students will be ordered in the decreasing order of their GPA.
+\end{itemize}
+
+
+Now, given the sets $\mathcal{S}$ and $\mathcal{P}$, preferences $\{\sigma^{S}_i, i \in \mathcal{S} \}$ and $\{\sigma^{S}_j, j \in \mathcal{P} \}$. We are interested in obtaining an \emph{allocation} $f: \mathcal{S} \to \mathcal{P}$. We note that a sufficient condition for the existence of an allocation is $\sum^n_{j=1} m_j \geq n$.
+We refer to an allocation as \textit{unstable} if there exists two tuples $(s_1, p_1)$ and $(s_2, p_2)$, where $s_1,s_2 \in \mathcal{S}$ and $p_1,p_2 \in \mathcal{P}$, $s_1$ prefers $p_2$ over $p_1$, and $p_2$ prefers $s_1$ over $s_2$. We refer to allocations that are not unstable as \textit{stable allocations}. To understand this concept better, let us consider the following example.
+
+\medskip
+\noindent
+\emph{Example}: Consider $\mathcal{S} = \{s_1,s_2,s_3\}$ and $\mathcal{P} = \{p_1,p_2,p_3\}$.
+Let $\sigma^S_1 = \{p_2, p_1, p_3\}$, $\sigma^S_2 = \{p_1, p_2, p_3\}$, $\sigma^S_3 = \{p_3,p_2,p_1\}$, $\sigma^P_1 = \{s_1, s_2, s_3\}$, $\sigma^P_2 = \{s_3, s_2, s_1\}$, and $\sigma^P_3 = \{s_2, s_1, s_3\}$. Let us consider the allocations $f_1 = \{(s_1, p_2), (s_2, p_1), (s_3, p_3)\}$ and $f_2 = \{(s_1, p_3), (s_2, p_2), (s_3, p_1)\}$. $f_1$ is a stable allocation because all students are allocated their first preference. In $f_2$, $s_2$ prefers $p_1$ over $p_2$ (project allocated to $s_2$) and $p_1$ prefers $s_1$ over its current allocation $s_3$. Thus, $f_2$ is an unstable allocation.
+
+
+%Theorem: There always exists a stable set of allocations.
+
+%\textit{Proof}:
+
+%\
+
+%Theorem: The algorithm will terminate.
+
+%\textit{Proof}:
+
+%\
+
+
+%We would also prefer such an allocation to be \emph{stable}. Consider two allocations $(s_1, p_1)$ and $(s_2, p_2)$, where $s_1,s_2 \in \mathcal{S}$ and $p_1,p_2 \in \mathcal{P}$. This allocation is \textit{not stable} if $s_1$ prefers $p_2$ over $p_1$, and $p_2$ prefers $s_1$ over $s_2$. 
+
+\medskip
+The well-known \emph{Gale–Shapley algorithm} can be used to compute a stable allocation. In its most basic form, this algorithm takes as input equal numbers of two types of participants, and an ordering for each participant giving their preference for whom to be matched to among the participants of the other type. We use Algorithm~\ref{algo:algo1}, a Gale–Shapley type algorithm, to allocate students to projects. Let $\mathcal{S}_j$ denote the set of students allocated to project $j$. We note that $\cup^n_{j=1} \mathcal{S}_j = \mathcal{S}$. Here the set $\mathcal{S}$ is ordered by decreasing order of CGPA of each student. This ordering improves the performance of the algorithm which we shall see in the example that follows.
+
+\begin{algorithm}[ht]
+\caption{Allocation algorithm \label{algo:algo1}}
+\begin{algorithmic}[1]
+\STATE set $\mathcal{P}_i = \{1,2,\ldots, n\}$ for all $i \in \mathcal{S}$
+\STATE set $\mathcal{S}_j = \emptyset$ for all $j \in \mathcal{P}$
+\WHILE{$\mathcal{S} \neq \emptyset$}
+\STATE let $i$ be the student with the highest GPA in $\mathcal{S}$
+\STATE let $j = \arg \max_{j^{'} \in \mathcal{P}_i } \sigma^S_i(j^{'})$ --- most preferred project by student $i$ from set $\mathcal{P}_i$
+\IF{$|\mathcal{S}_j| < m_j $}
+\STATE $\mathcal{S}_j = \mathcal{S}_j \cup \{i\}$
+\STATE $\mathcal{S} = \mathcal{S} \setminus \{i\}$
 \ELSE
-\STATE $S_k \leftarrow last \: element \: of \: the \: allocationMap[P_j]$
-\STATE $S_{k,index} \leftarrow  findIndex \: of \: S_k \: in \: preferences \: of \:P_j$ 
-\STATE $S_{i,index} \leftarrow findIndex \: of \: S_i \: in\: preferences \: of \:P_j$
-\IF{$S_{k,index} > S_{i,index}$}
-\STATE $allocationMap[P_j].push(S_i)$
-\STATE $Pop \: the \: first \: preference \: of \: S_k$
-\STATE $Sort \: allocationMap[P_j] \: according \: to \: the \: index \: of \: S_i \: in \: the \: project \: preference$
-\STATE $alloted - \{S_k\}$
-\STATE $free - \{S_i\}$
-\STATE $alloted.push(S_i)$
-\STATE $free.push(S_k)$
+\STATE $k_{min} = \arg \min_{k \in \mathcal{S}_j} \sigma^P_j(k)$ 
+\IF{$\sigma^P_j(i) > \sigma^P_j(k_{min})$}
+\STATE $\mathcal{S}_j = \mathcal{S}_j \cup \{ i\}$
+\STATE $\mathcal{S} = \mathcal{S} \setminus \{i\}$
+\STATE $\mathcal{P}_{k_{min}} = \mathcal{P}_{k_{min}} \setminus \{j\}$ 
+\STATE $\mathcal{S}_j = \mathcal{S}_j \cup \{ k_{min}\}$
+\STATE $\mathcal{S} = \mathcal{S} \cup \{k_{min}\}$
 \ELSE
-\STATE $ Pop \: the \: first \: preference \: of \: S_i$
-\ENDIF
+\STATE $\mathcal{P}_{i} = \mathcal{P}_{i} \setminus \{j\}$ 
 \ENDIF
 \ENDIF
 \ENDWHILE
@@ -133,31 +133,47 @@ A necessary condition for this algorithm to work is $n \geq m$.
 \end{algorithm}
 
 
+\medskip
+\noindent
+\textit{An example to illustrate the working of Algo.~\ref{algo:algo1}}: Let $\mathcal{S} = \{s_1, s_2, s_3, s_4\}$ and $\mathcal{P} = \{p_1, p_2, p_3\}$. Let the GPA of students in $\mathcal{S}$ be $\{9,8,7,6\}$. Let the student intake for projects in $\mathcal{P}$ be $\{1,2,1,2\}$. Let the preferences be $\sigma^S_1 = \{p_1, p_2, p_3, p_4\}$, $\sigma^S_2 = \{p_1, p_2, p_4, p_3\}$, $\sigma^S_3 = \{p_2, p_3, p_4, p_1\}$, $\sigma^S_4 = \{p_2, p_4, p_3, p_1\}$ and $\sigma^P_1 = \{s_3, s_4, s_2, s_1\}$, $\sigma^P_2 = \{s_4, s_3, s_1, s_2\}$, $\sigma^P_3 = \{s_4, s_1, s_2, s_3\}$, $\sigma^P_4 = \{s_2, s_1, s_4, s_3\}$. We note that $\sum^n_{j=1} m_j = 1+2+1+2 = 6 > 4 = n$. Thus, a stable allocation exists. The steps executed in different iterations of the outermost loop of Algo.~\ref{algo:algo1} are as follows
 
-%  Theoretical Background
-\section{Theoretical Background}
-Gale–Shapley algorithm provides a solution for finding stable relationships given a set of men and women. This algorithm can be used to solve a large number of problems, one such use case is matching interns to companies such that each company finds a suitable intern and each intern gets a desirable company.Suppose there are two couples (w1, m1) and (w2, m2). The relationship is unstable when w1 wants to be with m2 and vice versa. However, if w1 wants to be with m2 but m2 wants to be with w2 then it’s sad for w1 but the relationship is stable. Please refer [2] for more insights on the algorithm.
+\begin{enumerate}
 
+\item $s_1$ is chosen from $\mathcal{S}$ (highest GPA). Since $\sigma^S_1 = \{p_1, p_2, p_3, p_4\}$, update $f=\{(s_1, p_1)\}$ and $\mathcal{S} = \mathcal{S}\setminus \{s_1\}$.
 
+\item $s_2$ is chosen from $\mathcal{S}$. We note that $\sigma^S_2 = \{p_1, p_2, p_4, p_3\}$ and $\sigma^P_1 = \{s_3, s_4, s_2, s_1\}$. Since $m_1 = 1$, i.e., $p_1$ can only accommodate one student and $s_2$ is preferred over $s_1$ in $\sigma^P_1$, we update $f=\{(s_2, p_1)\}$, $\mathcal{S} = (\mathcal{S} \setminus \{s_2\}) \cup \{s_1\}$ and $p_1$ is removed from the preference list of $s_1$, i.e., update $\sigma^S_1 = \{p_2, p_3, p_4\}$.
+
+\item $s_3$ is chosen from $\mathcal{S}$. Since $\sigma^S_3 = \{p_2, p_3, p_4, p_1\}$, update $f=\{(s_2, p_1), (s_3, p_2)\}$ and $\mathcal{S} = \mathcal{S}\setminus \{s_3\}$.
+
+\item $s_4$ is chosen from $\mathcal{S}$. Since $\sigma^S_4 = \{p_2, p_4, p_3, p_1\}$, update $f=\{(s_2, p_1), (s_3, p_2), (s_4, p_2).\}$ and $\mathcal{S} = \mathcal{S}\setminus \{s_3\}$.
+
+\item $s_1$ is chosen from $\mathcal{S}$. We note that $\sigma^S_1 = \{p_2, p_3, p_4\}$. Thus, $p_2$ is now the most preferred project of $s_1$. Since $m_2 = 2$ and $p_2$ already has two students we have to check the preferences of $p_2$. We can see that $s_2$ is least preferred by $p_2$. So, no changes are made to the allocation, and we have $f=\{(s_2, p_1), (s_3, p_2), (s_4, p_2)\}$, $\mathcal{S} = \{s_1\}$, and $p_2$ is removed from the preference list of $s_1$, i.e., update $\sigma^S_1 = \{p_3, p_4\}$.
+
+\item $s_1$ is chosen from $\mathcal{S}$. We note that $\sigma^S_1 = \{p_3, p_4\}$. Thus, $p_3$ is now the most preferred project of $s_1$. Since $p_3$ is not allocated to any student yet, we allocate $s_1$ to $p_3$. We update $f=\{(s_2, p_1), (s_3, p_2), (s_4, p_2),$ $(s_1, p_3)\}$ and $\mathcal{S}= \emptyset$.  Since $\mathcal{S}$ is empty, the algorithm terminates and returns the stable allocation $f$.
+
+\end{enumerate}
 
 
 
 % Computational Results
-\section{Built With}
-\textbf{MEAN STACK}
-\\ \\
-\textbf{MongoDB}: MongoDB is a cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema. MongoDB is developed by MongoDB Inc. and licensed under the Server Side Public License (SSPL).
-\\ \\
-\textbf{Express JS}: Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
-\\ \\
-\textbf{Angular}: Angular is a TypeScript-based open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations.
-\\ \\ 
-\textbf{Node JS}: Node.js is an open-source, cross-platform, JavaScript runtime environment that executes JavaScript code outside of a web browser. Node.js lets developers use JavaScript to write command line tools and for server-side scripting—running scripts server-side to produce dynamic web page content before the page is sent to the user's web browser. Consequently, Node.js represents a "JavaScript everywhere" paradigm, unifying web-application development around a single programming language, rather than different languages for server- and client-side scripts
+\section{Technologies Used to Build a Complete End-to-End Solution}
+
+\begin{enumerate}
+	\item \textbf{MongoDB}: A cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema. MongoDB is developed by MongoDB Inc. and licensed under the Server Side Public License (SSPL).
+	
+	\item \textbf{Javascript}: A lightweight, interpreted, or just-in-time compiled programming language with first-class functions. While it is most well-known as the scripting language for Web pages, many non-browser environments also use it, such as Node.js, Apache CouchDB and Adobe Acrobat.
+	
+	\item \textbf{Node.js}: An open-source, cross-platform, JavaScript run-time environment that executes JavaScript code outside of a web browser. Node.js lets developers use JavaScript to write server-side script. Consequently, Node.js represents a "JavaScript everywhere" paradigm, unifying web-application development around a single programming language, rather than different languages for server and client-side scripts
+	
+	\item \textbf{Express JS}: A minimal and flexible Node.js framework that provides a robust set of features for web and mobile applications.
+	
+	\item \textbf{Angular}: A TypeScript-based open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations.
+\end{enumerate}
 
 
-% Summary and Conclusions
+
 \section{Summary and Conclusions}
-In this way we made the project allocation easier with the help of this algorithm and the web portal setup. To culminate this we have made many tests to check the efficiency of the algorithm and it works well with all the test cases. 
+We have tested the allocation algorithm with several tests cases, and it seems to work as expected. We stongly believe that the full-stack solution that we have developed will make academic project allocation an effortless and streamlined process. We also plan to enhance our solution by addressing bugs/suggestions that we receive after deploying the solution within our institute. 
 
 
 
