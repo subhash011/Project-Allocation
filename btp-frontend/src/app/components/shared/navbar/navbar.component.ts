@@ -22,6 +22,7 @@ export class NavbarComponent implements OnInit {
   programs;
   adminProgram;
   curRole;
+  badge: number = 0;
   ngOnInit() {
     if (localStorage.getItem("isLoggedIn") == "true") {
       this.role = localStorage.getItem("role");
@@ -156,11 +157,10 @@ export class NavbarComponent implements OnInit {
     } else return false;
   }
 
-  checkRegister(){
-    if(localStorage.getItem("isRegistered") == "true"){
+  checkRegister() {
+    if (localStorage.getItem("isRegistered") == "true") {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }

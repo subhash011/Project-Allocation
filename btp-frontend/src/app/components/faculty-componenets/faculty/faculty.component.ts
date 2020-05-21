@@ -4,6 +4,7 @@ import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import { UserService } from "src/app/services/user/user.service";
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
 @Component({
   selector: "app-faculty",
@@ -34,7 +35,8 @@ export class FacultyComponent implements OnInit {
     private snackBar: MatSnackBar,
     private loginService: LoginComponent,
     private projectService: ProjectsService,
-    private userService: UserService
+    private userService: UserService,
+    private navbar: NavbarComponent
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +48,8 @@ export class FacultyComponent implements OnInit {
       if (data["status"] == "success") {
         const user_info = data["user_details"];
         this.name = user_info.name;
-
+        this.navbar.programsVisible = true;
+        this.navbar.programs = user_info.programs;
         this.activatedRoute.queryParams.subscribe((params) => {
           this.routeParams = params;
           if (params.mode == "programMode") {
