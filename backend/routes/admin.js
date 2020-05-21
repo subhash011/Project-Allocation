@@ -614,23 +614,70 @@ router.delete("/faculty/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	const mid = req.headers.body;
-	Admin.findOne({ google_id: { id: id, idToken: idToken } }).then((admin) => {
-		if (admin) {
-			Faculty.findByIdAndDelete(mongoose.Types.ObjectId(mid)).then(
-				(faculty) => {
+	var programAdmin = {};
+	var streamProjects = [];
+	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
+		(faculty) => {
+			Admin.findOne({ admin_id: faculty._id }).then((admin) => {
+				if (admin) {
+					for (const program of faculty.programs) {
+						if (program.short == admin.stream) {
+							programAdmin = program;
+						}
+					}
+					Faculty.findById(mongoose.Types.ObjectId(mid)).then((faculty) => {
+						faculty.programs = faculty.programs.filter((val) => {
+							return val.equals(programAdmin);
+						});
+						faculty.save().then((faculty) => {
+							var projects = faculty.project_list;
+							var promises = [];
+							for (const project of projects) {
+								promises.push(
+									Project.findOneAndDelete({
+										_id: project,
+										stream: programAdmin.short,
+									}).then((projects) => {
+										if (projects) {
+											streamProjects.push(projects._id.toString());
+										}
+										return projects;
+									})
+								);
+							}
+							Promise.all(promises).then((projects) => {
+								Student.find({
+									stream: programAdmin.short,
+								}).then((students) => {
+									var promises = [];
+									for (const student of students) {
+										student.projects_preference = student.projects_preference.filter(
+											(val) => {
+												return streamProjects.indexOf(val.toString()) != -1;
+											}
+										);
+										promises.push(
+											student.save().then((student) => {
+												return student;
+											})
+										);
+									}
+									Promise.all(promises).then((students) => {
+										res.json({ result: students, message: "success" });
+									});
+								});
+							});
+						});
+					});
+				} else {
 					res.json({
-						message: "success",
+						message: "invalid-token",
 						result: null,
 					});
 				}
-			);
-		} else {
-			res.json({
-				message: "invalid-token",
-				result: null,
 			});
 		}
-	});
+	);
 });
 
 router.delete("/student/:id", (req, res) => {
@@ -639,14 +686,39 @@ router.delete("/student/:id", (req, res) => {
 	const mid = req.headers.body;
 	Admin.findOne({ google_id: { id: id, idToken: idToken } }).then((admin) => {
 		if (admin) {
-			Student.findByIdAndDelete(mongoose.Types.ObjectId(mid)).then(
-				(student) => {
-					res.json({
-						message: "success",
-						result: null,
-					});
-				}
-			);
+			Student.findByIdAndDelete(mongoose.Types.ObjectId(mid))
+				.then((student) => {
+					if (student) return student.projects_preference;
+					else return null;
+				})
+				.then((projects) => {
+					if (projects) {
+						for (const project of projects) {
+							var projectid = mongoose.Types.ObjectId(project);
+							promises.push(
+								Project.findById(projectid).then((project) => {
+									project.students_id = project.students_id.filter(
+										(val) => !val.equals(id)
+									);
+									project.student_alloted = project.student_alloted.filter(
+										(val) => !val.equals(id)
+									);
+									project.save().then((project) => {
+										return project;
+									});
+								})
+							);
+						}
+						Promise.all(promises).then((result) => {
+							res.json({ result: result, message: "success" });
+						});
+					} else {
+						res.json({ message: "error" });
+					}
+				})
+				.catch((err) => {
+					res.status(500);
+				});
 		} else {
 			res.json({
 				message: "invalid-token",
