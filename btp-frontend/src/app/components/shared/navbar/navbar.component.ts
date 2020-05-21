@@ -155,4 +155,13 @@ export class NavbarComponent implements OnInit {
       }
     } else return false;
   }
+
+  checkRegister(){
+    if(localStorage.getItem("isRegistered") == "true"){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 }

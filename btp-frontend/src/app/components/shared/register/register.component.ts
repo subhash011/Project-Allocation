@@ -1,3 +1,4 @@
+import { NavbarComponent } from './../navbar/navbar.component';
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UserService } from "./../../../services/user/user.service";
@@ -171,7 +172,7 @@ export class RegisterComponent implements OnInit {
         .then((data: any) => {
           if (data["registration"] == "success") {
             localStorage.setItem("role", position);
-            localStorage.removeItem("isRegistered");
+            localStorage.setItem("isRegistered","true");
             var snackBarRef = this.snackBar.open(
               "Registration Successful",
               "Ok",
