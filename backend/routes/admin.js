@@ -625,48 +625,44 @@ router.delete("/faculty/:id", (req, res) => {
 							programAdmin = program;
 						}
 					}
-					Faculty.findById(mongoose.Types.ObjectId(mid)).then((faculty) => {
-						faculty.programs = faculty.programs.filter((val) => {
-							return val.equals(programAdmin);
-						});
-						faculty.save().then((faculty) => {
-							var projects = faculty.project_list;
-							var promises = [];
-							for (const project of projects) {
-								promises.push(
-									Project.findOneAndDelete({
-										_id: project,
-										stream: programAdmin.short,
-									}).then((projects) => {
-										if (projects) {
-											streamProjects.push(projects._id.toString());
-										}
-										return projects;
-									})
-								);
-							}
-							Promise.all(promises).then((projects) => {
-								Student.find({
-									stream: programAdmin.short,
-								}).then((students) => {
-									var promises = [];
-									for (const student of students) {
-										student.projects_preference = student.projects_preference.filter(
-											(val) => {
-												return streamProjects.indexOf(val.toString()) != -1;
-											}
-										);
-										promises.push(
-											student.save().then((student) => {
-												return student;
-											})
-										);
-									}
-									Promise.all(promises).then((students) => {
-										res.json({ result: students, message: "success" });
-									});
+					Project.find({
+						faculty_id: mongoose.Types.ObjectId(mid),
+						stream: programAdmin.short,
+					}).then((projects) => {
+						streamProjects = projects.map((val) => val._id.toString());
+						var promises = [];
+						promises.push(
+							Faculty.findById(mongoose.Types.ObjectId(mid)).then((faculty) => {
+								faculty.project_list = faculty.project_list.filter((val) => {
+									return streamProjects.indexOf(val.toString()) != -1;
 								});
-							});
+								faculty.save().then((faculty) => {
+									return faculty;
+								});
+							})
+						);
+						promises.push(
+							Student.find({ stream: programAdmin.short }).then((students) => {
+								var studentPromises = [];
+								for (const student of students) {
+									student.projects_preference = student.projects_preference.filter(
+										(val) => {
+											return streamProjects.indexOf(val.toString()) != -1;
+										}
+									);
+									studentPromises.push(
+										student.save().then((stud) => {
+											return stud;
+										})
+									);
+								}
+								Promise.all(studentPromises).then((students) => {
+									return students;
+								});
+							})
+						);
+						Promise.all(promises).then((result) => {
+							res.json({ result: result, message: "success" });
 						});
 					});
 				} else {
