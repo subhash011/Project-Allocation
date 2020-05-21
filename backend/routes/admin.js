@@ -634,7 +634,10 @@ router.delete("/faculty/:id", (req, res) => {
 						promises.push(
 							Faculty.findById(mongoose.Types.ObjectId(mid)).then((faculty) => {
 								faculty.project_list = faculty.project_list.filter((val) => {
-									return streamProjects.indexOf(val.toString()) != -1;
+									return streamProjects.indexOf(val.toString()) == -1;
+								});
+								faculty.programs = faculty.programs.filter((val) => {
+									return JSON.stringify(val) != JSON.stringify(programAdmin);
 								});
 								faculty.save().then((faculty) => {
 									return faculty;
@@ -647,7 +650,7 @@ router.delete("/faculty/:id", (req, res) => {
 								for (const student of students) {
 									student.projects_preference = student.projects_preference.filter(
 										(val) => {
-											return streamProjects.indexOf(val.toString()) != -1;
+											return streamProjects.indexOf(val.toString()) == -1;
 										}
 									);
 									studentPromises.push(
@@ -662,7 +665,22 @@ router.delete("/faculty/:id", (req, res) => {
 							})
 						);
 						Promise.all(promises).then((result) => {
-							res.json({ result: result, message: "success" });
+							promises = [];
+							for (const project of streamProjects) {
+								promises.push(
+									Project.findByIdAndDelete(
+										mongoose.Types.ObjectId(project)
+									).then((pr) => {
+										return pr;
+									})
+								);
+							}
+							Promise.all(promises).then((result) => {
+								res.json({
+									message: "success",
+									result: null,
+								});
+							});
 						});
 					});
 				} else {
@@ -694,10 +712,10 @@ router.delete("/student/:id", (req, res) => {
 							promises.push(
 								Project.findById(projectid).then((project) => {
 									project.students_id = project.students_id.filter(
-										(val) => !val.equals(id)
+										(val) => !val.toString() == mid
 									);
 									project.student_alloted = project.student_alloted.filter(
-										(val) => !val.equals(id)
+										(val) => !val.toString() == mid
 									);
 									project.save().then((project) => {
 										return project;
@@ -709,7 +727,7 @@ router.delete("/student/:id", (req, res) => {
 							res.json({ result: result, message: "success" });
 						});
 					} else {
-						res.json({ message: "error" });
+						res.json({ message: "success" });
 					}
 				})
 				.catch((err) => {

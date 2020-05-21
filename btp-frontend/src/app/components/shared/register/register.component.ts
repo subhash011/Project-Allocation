@@ -1,4 +1,4 @@
-import { NavbarComponent } from './../navbar/navbar.component';
+import { NavbarComponent } from "./../navbar/navbar.component";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UserService } from "./../../../services/user/user.service";
@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {}
   branchStudent: any;
+  head: string;
   ngOnInit() {
     this.userService.getAllBranches().subscribe((maps) => {
       this.maps = maps["result"];
@@ -56,6 +57,7 @@ export class RegisterComponent implements OnInit {
           this.userForm.get("branch").clearValidators();
         }
         if (localStorage.getItem("role") == "student") {
+          this.head = "Program";
           this.userForm.get("branch").disable();
           const stream = this.getStream();
           this.branchStudent = stream;
@@ -70,6 +72,7 @@ export class RegisterComponent implements OnInit {
         } else if (localStorage.getItem("role") == "faculty") {
           this.userForm.get("CGPA").clearValidators();
           this.userForm.get("CGPA").updateValueAndValidity();
+          this.head = "Stream";
         } else {
           this.userForm.get("CGPA").clearValidators();
           this.userForm.get("branch").clearValidators();
@@ -172,7 +175,7 @@ export class RegisterComponent implements OnInit {
         .then((data: any) => {
           if (data["registration"] == "success") {
             localStorage.setItem("role", position);
-            localStorage.setItem("isRegistered","true");
+            localStorage.setItem("isRegistered", "true");
             var snackBarRef = this.snackBar.open(
               "Registration Successful",
               "Ok",
