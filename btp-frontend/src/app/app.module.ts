@@ -13,12 +13,10 @@ import { LoginComponent } from "./components/shared/login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NavbarComponent } from "./components/shared/navbar/navbar.component";
 import { RegisterComponent } from "./components/shared/register/register.component";
-import { DragDropComponent } from "./components/student-components/drag-drop/drag-drop.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { StudentComponent } from "./components/student-components/student/student.component";
 import { FacultyComponent } from "./components/faculty-componenets/faculty/faculty.component";
 import { HomeComponent } from "./components/home/home.component";
-import { ShowPreferencesComponent } from "./components/student-components/show-preferences/show-preferences.component";
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ProfileComponent } from "./components/shared/profile/profile.component";
@@ -44,8 +42,8 @@ import { LoaderComponent } from "./components/shared/loader/loader.component";
 import { ShowStudentPreferencesComponent } from "./components/faculty-componenets/show-student-preferences/show-student-preferences.component";
 import { ClipboardModule } from "ngx-clipboard";
 import { ShowFacultyPreferencesComponent } from "./components/faculty-componenets/show-faculty-preferences/show-faculty-preferences.component";
-import { ShowAvailableProjectsComponent } from './components/student-components/show-available-projects/show-available-projects.component';
-import { EditPreferencesComponent } from './components/student-components/edit-preferences/edit-preferences.component';
+import { ShowAvailableProjectsComponent } from "./components/student-components/show-available-projects/show-available-projects.component";
+import { EditPreferencesComponent } from "./components/student-components/edit-preferences/edit-preferences.component";
 const googleLoginOption: LoginOpt = {
   // scope: "https://mail.google.com/",
   prompt: "select_account",
@@ -68,11 +66,9 @@ export function provideConfig() {
     LoginComponent,
     NavbarComponent,
     RegisterComponent,
-    DragDropComponent,
     StudentComponent,
     FacultyComponent,
     HomeComponent,
-    ShowPreferencesComponent,
     ProfileComponent,
     StudentProjectsComponent,
     ThemePickerComponent,
@@ -95,7 +91,6 @@ export function provideConfig() {
     EditPreferencesComponent,
   ],
   entryComponents: [
-    ShowPreferencesComponent,
     SubmitPopUpComponent,
     DeletePopUpComponent,
     AddMapComponent,
