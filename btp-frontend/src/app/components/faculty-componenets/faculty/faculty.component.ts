@@ -100,11 +100,18 @@ export class FacultyComponent implements OnInit {
     this.projectService.getStudentsApplied(project._id).subscribe((data) => {
       if (data["status"] == "success") {
         this.student_list = data["students"];
-
-        if (this.adminStage <= 1) {
+        if (this.adminStage < 2) {
+          localStorage.setItem("sorted", "false");
           this.student_list.sort((a, b) => {
             return b.gpa - a.gpa;
           });
+        } else if (this.adminStage == 2) {
+          if (localStorage.getItem("sorted") == "false") {
+            this.student_list.sort((a, b) => {
+              return b.gpa - a.gpa;
+            });
+            localStorage.removeItem("sorted");
+          }
         }
       } else {
         this.loginService.signOut();
