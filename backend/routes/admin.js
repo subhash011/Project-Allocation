@@ -5,9 +5,37 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Admin = require("../models/Admin_Info");
 const Student = require("../models/Student");
+const Mapping = require("../models/Mapping");
 const fs = require("fs");
 const path = require("path");
-const Mapping = require("../models/Mapping");
+const multer = require("multer");
+const csv = require('fast-csv');
+
+	
+function validateCsvData(rows) {
+	const dataRows = rows.slice(1, rows.length);
+	for (let i = 0; i < dataRows.length; i++) {
+	  const rowError = validateCsvRow(dataRows[i]);
+	  if (rowError) {
+		return `${rowError} on row ${i + 1}`
+	  }
+	}
+	return;
+}
+
+function validateCsvRow(row) {
+	if (!row[0]) {
+	  return "invalid name"
+	}
+	else if (!Number.isInteger(Number(row[1]))) {
+	  return "invalid roll number"
+	}
+	else if (!Number(row[2])) {
+	  return "invalid gpa"
+	}
+	return;
+}
+
 
 function studentPref(total, student) {
 	return total + "," + student.name;
@@ -1479,5 +1507,117 @@ router.get("/download_csv/:id/:role", (req, res) => {
 			});
 		});
 });
+
+
+router.post("/uploadStudentList/:id",(req,res)=>{
+
+
+	const id = req.params.id;
+	const idToken = req.headers.authorization;
+
+	Faculty.findOne({google_id:{id:id,idToken:idToken}})
+		.then(faculty=>{
+
+			if(faculty){
+				Admin.findOne({admin_id:faculty._id})
+					.then(admin=>{
+						if(admin){
+
+							const storage = multer.diskStorage({
+								destination: function(req, file, cb) {
+									cb(null, 'CSV/StudentList');
+								},
+							
+								filename: function(req, file, cb) {
+									cb(null, admin.stream + ".csv");
+								}
+							})
+
+
+							let upload = multer({ storage: storage }).single('student_list');
+
+							upload(req, res, function(err) {
+								
+								
+								if (!req.file) {
+									return res.send('Please select a file to upload');
+								}
+								else if (err instanceof multer.MulterError) {
+									return res.send(err);
+								}
+								else if (err) {
+									return res.send(err);
+								}
+
+								let fileRows = []
+								csv.parseFile(req.file.path)
+								.on("data",  (data) => {
+									fileRows.push(data); 
+								})
+								.on("end", () => {
+
+									
+									const validationError = validateCsvData(fileRows);
+									if (validationError) {
+										fs.unlinkSync(req.file.path);
+									 return res.json({ 
+										status:"fail",
+										error: validationError
+									 });
+									}
+									
+								admin.studentCount = fileRows.length - 1;
+								admin.save()
+									.then(result=>{
+
+										return res.json({
+											status:"success",
+											msg:"Successfully uploaded the student list."
+										})
+
+									})
+								
+								})
+
+								
+							});
+						
+						}
+						else{
+							res.json({
+								status:"fail",
+								result:null
+							})
+
+						}
+					})
+					.catch(err=>{
+						res.json({
+							status:"fail",
+							result:null
+						})
+					})
+			
+			}
+			else{
+				res.json({
+					status:"fail",
+					result:null
+				})
+
+			}
+		})
+		.catch(err=>{
+			res.json({
+				status:"fail",
+				result:null
+			})
+		})
+
+
+
+})
+
+
 
 module.exports = router;

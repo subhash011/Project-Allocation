@@ -29,6 +29,7 @@ import { saveAs } from "file-saver";
 export class AdminComponent implements OnInit {
   public details; // For displaying the projects tab
   public faculty_projects;
+  public fileToUpload: File = null;
 
   columns: string[] = [
     "select",
@@ -50,7 +51,7 @@ export class AdminComponent implements OnInit {
   fifthFormGroup: FormGroup;
   sixthFormGroup: FormGroup;
   seventhFormGroup: FormGroup;
-  eighthFormGroup: FormGroup;
+  // eighthFormGroup: FormGroup;
 
   public programName;
 
@@ -124,9 +125,9 @@ export class AdminComponent implements OnInit {
     this.seventhFormGroup = this.formBuilder.group({
       seventhCtrl: [this.studentsPerFaculty],
     });
-    this.eighthFormGroup = this.formBuilder.group({
-      eighthCtrl: [this.studentCount],
-    });
+    // this.eighthFormGroup = this.formBuilder.group({
+    //   eighthCtrl: [this.studentCount],
+    // });
   }
 
   ngAfterViewInit() {
@@ -161,7 +162,7 @@ export class AdminComponent implements OnInit {
         this.dateSet = data["deadlines"];
         this.projectCap = data["projectCap"];
         this.studentCap = data["studentCap"];
-        this.studentCount = data["studentCount"];
+        // this.studentCount = data["studentCount"];
         this.studentsPerFaculty = data["studentsPerFaculty"];
         this.dateSet = this.dateSet.map((date) => {
           return new Date(date);
@@ -177,7 +178,7 @@ export class AdminComponent implements OnInit {
         this.seventhFormGroup.controls["seventhCtrl"].setValue(
           this.studentsPerFaculty
         );
-        this.eighthFormGroup.controls["eighthCtrl"].setValue(this.studentCount);
+        // this.eighthFormGroup.controls["eighthCtrl"].setValue(this.studentCount);
 
         this.userService
           .getMembersForAdmin()
@@ -960,33 +961,33 @@ export class AdminComponent implements OnInit {
       });
   }
 
-  setStudentCount() {
-    if (this.eighthFormGroup.controls["eighthCtrl"].value > 0) {
-      this.userService
-        .setStudentCount(this.eighthFormGroup.get("eighthCtrl").value)
-        .subscribe((data) => {
-          if (data["status"] == "success") {
-            this.snackBar.open(data["msg"], "Ok", {
-              duration: 3000,
-            });
-            this.ngOnInit();
-          } else {
-            this.loginService.signOut();
-            this.snackBar.open(
-              "Session Timed Out! Please Sign-In again",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
-          }
-        });
-    } else {
-      this.snackBar.open("Please enter a valid number", "Ok", {
-        duration: 3000,
-      });
-    }
-  }
+  // setStudentCount() {
+  //   if (this.eighthFormGroup.controls["eighthCtrl"].value > 0) {
+  //     this.userService
+  //       .setStudentCount(this.eighthFormGroup.get("eighthCtrl").value)
+  //       .subscribe((data) => {
+  //         if (data["status"] == "success") {
+  //           this.snackBar.open(data["msg"], "Ok", {
+  //             duration: 3000,
+  //           });
+  //           this.ngOnInit();
+  //         } else {
+  //           this.loginService.signOut();
+  //           this.snackBar.open(
+  //             "Session Timed Out! Please Sign-In again",
+  //             "Ok",
+  //             {
+  //               duration: 3000,
+  //             }
+  //           );
+  //         }
+  //       });
+  //   } else {
+  //     this.snackBar.open("Please enter a valid number", "Ok", {
+  //       duration: 3000,
+  //     });
+  //   }
+  // }
 
   isAllSelected() {
     const numSelected = this.selection.selected
@@ -1115,5 +1116,34 @@ export class AdminComponent implements OnInit {
     this.exportService.download("student").subscribe((data) => {
       saveAs(data, `${this.programName}_students.csv`);
     });
+  }
+
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+    if(this.fileToUpload.name.split(".")[1] == "csv"){
+
+    }
+    else{
+      this.snackBar.open("Only .csv files are to imported. Other files types are not supported.", "Ok", {
+        duration: 10000,
+      });
+    }
+}
+
+  importStudents(){
+     this.exportService.uploadStudentList(this.fileToUpload,this.programName)
+     .subscribe(data => {
+       if(data["status"] == "success"){
+        this.snackBar.open("Successfully uploaded the files.", "Ok", {
+          duration: 10000,
+        });
+       }
+       else{
+        this.snackBar.open("There was an unexpected error. Please reload and try again!", "Ok", {
+          duration: 10000,
+        });
+       }
+      // do something, if upload success
+      });
   }
 }

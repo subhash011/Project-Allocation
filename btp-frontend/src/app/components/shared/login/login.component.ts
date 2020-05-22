@@ -62,10 +62,24 @@ export class LoginComponent implements OnInit {
             else{
               localStorage.setItem("isRegistered","true");
             }
+
             if (navObj.error === "none") {
               this.router.navigate([navObj.route]);
             } else {
-              this.router.navigate([navObj.route, navObj.error]);
+              this.authService.signOut().then(() => {});
+              this.snackBar.open(
+                  navObj.error,
+                "Ok",
+                {
+                  duration: 10000,
+                }
+              );
+              localStorage.setItem("isLoggedIn", "false");
+              localStorage.setItem("role", "none");
+              localStorage.removeItem("user");
+              localStorage.removeItem("id");
+              this.router.navigate([""]);
+              // this.router.navigate([navObj.route, navObj.error]);
             }
             if (data["position"] == "error") {
               this.authService.signOut().then(() => {});
