@@ -19,6 +19,7 @@ import {
 import { SelectionModel } from "@angular/cdk/collections";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
 import { Router, ActivatedRoute } from "@angular/router";
+import { LoaderComponent } from "../../shared/loader/loader.component";
 
 @Component({
   selector: "app-show-available-projects",
@@ -40,6 +41,7 @@ export class ShowAvailableProjectsComponent implements OnInit {
   preferences: any = new MatTableDataSource([]);
   projects = new MatTableDataSource([]);
   expandedElement;
+  isAddDisabled: boolean = false;
   selection = new SelectionModel<any>(true, []);
   displayedColumns = [
     "select",
@@ -187,7 +189,11 @@ export class ShowAvailableProjectsComponent implements OnInit {
   }
 
   onSubmit() {
-    this.loadingBar.start();
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Adding to preferences, please wait",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     const preference = this.selection.selected;
     this.projectService
       .appendStudentPreferences(preference)
@@ -196,7 +202,7 @@ export class ShowAvailableProjectsComponent implements OnInit {
         return res["message"];
       })
       .catch((err) => {
-        this.loadingBar.stop();
+        dialogRefLoad.close();
         this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
@@ -204,20 +210,18 @@ export class ShowAvailableProjectsComponent implements OnInit {
       })
       .then((message) => {
         this.ngOnInit();
-        this.loadingBar.stop();
+        dialogRefLoad.close();
         this.deselectAll();
         if (message == "success") {
           this.snackBar.open("Added to preferences", "OK", {
             duration: 3000,
           });
         } else if (message == "invalid-token") {
-          this.loadingBar.stop();
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
         } else {
-          this.loadingBar.stop();
           this.snackBar.open("Some Error Occured! Try again later.", "OK", {
             duration: 3000,
           });

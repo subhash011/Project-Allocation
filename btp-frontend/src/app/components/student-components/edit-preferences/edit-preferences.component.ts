@@ -13,6 +13,7 @@ import {
   animate,
 } from "@angular/animations";
 import { ShowAvailableProjectsComponent } from "../show-available-projects/show-available-projects.component";
+import { LoaderComponent } from "../../shared/loader/loader.component";
 
 @Component({
   selector: "app-edit-preferences",
@@ -45,7 +46,8 @@ export class EditPreferencesComponent implements OnInit {
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private loadingBar: LoadingBarService
+    private loadingBar: LoadingBarService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {}
@@ -53,7 +55,11 @@ export class EditPreferencesComponent implements OnInit {
   displayedColumns = ["Title", "Faculty", "Email", "Intake", "Actions"];
 
   onSubmit() {
-    this.loadingBar.start();
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Saving preferences, please wait",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.projectService
       .storeStudentPreferences(this.preferences.data)
       .toPromise()
@@ -64,7 +70,7 @@ export class EditPreferencesComponent implements OnInit {
         return res["message"];
       })
       .catch((err) => {
-        this.loadingBar.stop();
+        dialogRefLoad.close();
         this.disable = false;
         this.snackBar.open(
           "Some Error Occured! If the Error Persists Please re-authenticate",
@@ -75,7 +81,7 @@ export class EditPreferencesComponent implements OnInit {
         );
       })
       .then((message) => {
-        this.loadingBar.stop();
+        dialogRefLoad.close();
         if (message == "success") {
           this.disable = true;
           this.snackBar.open("Preferences Saved Successfully", "OK", {
