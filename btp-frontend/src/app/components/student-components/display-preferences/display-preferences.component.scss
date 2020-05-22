@@ -1,0 +1,47 @@
+.emptyBlock {
+  text-align: center;
+}
+
+.flex-space {
+  flex-grow: 1;
+}
+
+mat-toolbar {
+  text-align: center;
+}
+
+.fill-space {
+  flex: 1 1 auto;
+}
+
+.expansion-panel {
+  float: left;
+  min-width: 80%;
+}
+
+.list {
+  min-height: 60px;
+  width: 100%;
+  border-radius: 4px;
+  display: block;
+}
+.accordion {
+  float: left;
+  min-width: 100%;
+}
+
+mat-icon:hover {
+  cursor: pointer;
+}
+
+.list-item {
+  padding: 20px 10px;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: move;
+  font-size: 14px;
+}
+
+.list-item:last-child {
+  border: none;
+}

@@ -1,18 +1,36 @@
 table {
-  width: 80%;
-  margin-left: 10%;
+  width: 90%;
+  margin-left: 5%;
+}
+
+mat-drawer {
+  width: 50%;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 mat-form-field {
-  margin-left: 10%;
+  margin-left: 5%;
   width: 30%;
   margin-top: 50px;
+}
+
+mat-icon:hover {
+  cursor: pointer;
 }
 
 .add-preferences {
   float: right;
   margin-top: 60px;
-  margin-right: 13%;
+  margin-right: 5%;
 }
 
 tr {
@@ -43,6 +61,10 @@ tr.example-element-row:not(.example-expanded-row):active {
 .example-element-detail {
   overflow: hidden;
   display: flex;
+}
+
+.fill-space {
+  flex: 1 1 auto;
 }
 
 .example-element-symbol {

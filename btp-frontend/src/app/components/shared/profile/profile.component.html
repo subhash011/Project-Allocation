@@ -4,33 +4,18 @@
       <img mat-card-avatar [src]="getUrl()" class="image" />
       <div *ngIf="user_info">
         <form [formGroup]="studentFormGroup" class="facultyForm">
-          <mat-form-field class="example-full-width">
-            <mat-label>Name</mat-label>
-            <mat-card-title>
-              <input matInput placeholder="name" formControlName="name"
-            /></mat-card-title>
-          </mat-form-field>
+          <p class="example-full-width">
+            <strong>Name</strong> : {{ user_info.name }}
+          </p>
           <p class="example-full-width">
             <strong>Stream</strong> : {{ user_info.stream }}
           </p>
           <p class="example-full-width">
             <strong>Email-ID</strong> : {{ user_info.email }}
           </p>
-          <mat-form-field class="example-full-width">
-            <mat-label>CGPA</mat-label>
-            <mat-card-title>
-              <input matInput placeholder="CGPA" formControlName="gpa"
-            /></mat-card-title>
-          </mat-form-field>
-          <mat-card-actions>
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="updateStudentProfile()"
-            >
-              Update Profile
-            </button>
-          </mat-card-actions>
+          <p class="example-full-width">
+            <strong>CGPA</strong> : {{ user_info.gpa }}
+          </p>
         </form>
       </div>
     </mat-card>
