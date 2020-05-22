@@ -61,5 +61,22 @@ export class ExporttocsvService {
     return this.http.get(this.url,{headers,responseType : "blob"});
   }
 
+  uploadStudentList(fileToUpload: File,programName){
+    const user = JSON.parse(localStorage.getItem("user"));
+    const id = user.id;
+    const idToken = user.idToken;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: idToken,
+      }),
+    };
+
+    this.url = this.base_url + "admin/uploadStudentList/" + id;
+    const formData: FormData = new FormData();
+    formData.append('student_list', fileToUpload, programName);
+    return this.http.post(this.url, formData, httpOptions);
+  }
+
 
 }

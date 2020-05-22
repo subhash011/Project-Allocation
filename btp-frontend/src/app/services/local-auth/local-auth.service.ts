@@ -37,7 +37,7 @@ export class LocalAuthService {
       if (data.position === "student") {
         return {
           route: "/register/" + data.user_details.id,
-          error: "none",
+          error: data.msg,
         };
       } else if (data.position === "faculty") {
         return {

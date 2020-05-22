@@ -87,7 +87,7 @@
         </form>
       </div>
 
-      <div>
+      <!-- <div>
         <form [formGroup]="eighthFormGroup">
           <mat-form-field class="example-full-width" style="width: 250px;">
             <mat-label>Number of Students</mat-label>
@@ -109,7 +109,7 @@
             Submit
           </button>
         </form>
-      </div>
+      </div> -->
       <span class="days_left"
         ><strong>Time Left : </strong>
         <countdown-timer [end]="curr_deadline"></countdown-timer
@@ -496,7 +496,20 @@
             Export Preferences
           </button>
         </div>
+        <!-- <input type="file"
+        (change)="handleFileInput($event.target.files)" /> -->
 
+        <input class="ng-hide" id="input-file-id" type="file" />
+        <label for="input-file-id" class="md-button md-raised md-primary">Choose Files</label>
+
+        <button
+        mat-raised-button
+        color="accent"
+        class="student_download"
+        (click)="importStudents()"
+      >
+        Import Students
+      </button>
         <div class="display">
           <div class="table mat-elevation-z8">
             <table
