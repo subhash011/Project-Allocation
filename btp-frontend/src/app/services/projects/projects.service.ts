@@ -51,6 +51,49 @@ export class ProjectsService {
     };
     return this.http.post(this.url_post, preferences, httpOptions);
   }
+
+  appendStudentPreferences(preferences) {
+    preferences = preferences.map((val) => val._id);
+    const id = localStorage.getItem("id");
+    this.url_post = this.studentBaseURL + "append/preference/" + id;
+    const user = JSON.parse(localStorage.getItem("user"));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken,
+      }),
+    };
+    return this.http.post(this.url_post, preferences, httpOptions);
+  }
+
+  addOneStudentPreference(preference) {
+    preference = preference._id;
+    const id = localStorage.getItem("id");
+    this.url_post = this.studentBaseURL + "add/preference/" + id;
+    const user = JSON.parse(localStorage.getItem("user"));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken,
+      }),
+    };
+    return this.http.post(this.url_post, { preference }, httpOptions);
+  }
+
+  removeOneStudentPreference(preference) {
+    preference = preference._id;
+    const id = localStorage.getItem("id");
+    this.url_post = this.studentBaseURL + "remove/preference/" + id;
+    const user = JSON.parse(localStorage.getItem("user"));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken,
+      }),
+    };
+    return this.http.post(this.url_post, { preference }, httpOptions);
+  }
+
   getFacultyProjects(stream) {
     const obj = {
       stream: stream,

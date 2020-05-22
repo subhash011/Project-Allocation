@@ -40,20 +40,14 @@
     </div>
     <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin() && checkRegister()">
       <div class="flex-grow-left"></div>
-      <button mat-button [routerLink]="getUrlPreferences()" class="nav-text">
+      <button mat-button [routerLink]="getUrlProjects()" class="nav-text">
         Add Preferences
       </button>
     </div>
     <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin() && checkRegister()">
       <div class="flex-grow-left"></div>
-      <button
-        mat-button
-        [matBadge]="badge"
-        matBadgePosition="after"
-        matBadgeColor="accent"
-        class="nav-text"
-      >
-        Reorder Prefernces
+      <button mat-button class="nav-text" [routerLink]="getUrlPreferences()">
+        Reorder Preferences
       </button>
     </div>
     <div class="flex-space"></div>

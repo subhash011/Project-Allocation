@@ -11,6 +11,8 @@ import { FacultyComponent } from "./components/faculty-componenets/faculty/facul
 import { StudentComponent } from "./components/student-components/student/student.component";
 import { RegisterComponent } from "./components/shared/register/register.component";
 import { HomeComponent } from "./components/home/home.component";
+import { ShowAvailableProjectsComponent } from "./components/student-components/show-available-projects/show-available-projects.component";
+import { EditPreferencesComponent } from "./components/student-components/edit-preferences/edit-preferences.component";
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
@@ -25,9 +27,15 @@ const routes: Routes = [
     path: "refresh",
     component: RefreshComponent,
   },
-  { path: "student/preferences/:id", component: DragDropComponent },
+  {
+    path: "student/projects/:id",
+    component: ShowAvailableProjectsComponent,
+  },
+  {
+    path: "student/preferences/:id",
+    component: ShowAvailableProjectsComponent,
+  },
   { path: "profile/:id", component: ProfileComponent },
-  { path: "student/projects/:id", component: StudentProjectsComponent },
   { path: "super", component: SuperAdminComponent },
   { path: "admin/:id", component: AdminComponent },
   { path: "super_admin/:id", component: SuperAdminComponent },

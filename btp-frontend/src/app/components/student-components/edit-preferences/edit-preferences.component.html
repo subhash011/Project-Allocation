@@ -1,0 +1,72 @@
+<button class="submit" mat-raised-button color="primary" (click)="onSubmit()">
+  Submit Preferences
+</button>
+
+<mat-table
+  [dataSource]="preferences"
+  multiTemplateDataRows
+  class="mat-elevation-z8"
+  cdkDropList
+  [cdkDropListData]="preferences.data"
+  (cdkDropListDropped)="drop($event)"
+>
+  <ng-container matColumnDef="Title">
+    <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+    <mat-cell *matCellDef="let preference">
+      {{ preference.title }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Faculty">
+    <mat-header-cell *matHeaderCellDef> Faculty </mat-header-cell>
+    <mat-cell *matCellDef="let preference">
+      {{ preference.faculty_name }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Email">
+    <mat-header-cell *matHeaderCellDef> Email-ID </mat-header-cell>
+    <mat-cell *matCellDef="let preference">
+      {{ preference.faculty_email }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Intake">
+    <mat-header-cell *matHeaderCellDef> Student Intake </mat-header-cell>
+    <mat-cell *matCellDef="let preference">
+      {{ preference.studentIntake }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Actions">
+    <mat-header-cell *matHeaderCellDef> Remove projects </mat-header-cell>
+    <mat-cell *matCellDef="let preference">
+      <mat-icon (click)="removePreference(preference)">delete</mat-icon>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="expandedDetail">
+    <mat-cell
+      *matCellDef="let preference"
+      [attr.colspan]="displayedColumns.length"
+      [@detailExpand]="preference == expandedElement ? 'expanded' : 'collapsed'"
+    >
+      <div class="example-element-detail">
+        <div class="example-element-description">
+          Description : {{ preference.description }}
+        </div>
+      </div>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    class="example-element-row"
+    [class.example-expanded-row]="expandedElement === row"
+    (click)="expandedElement = expandedElement === row ? null : row"
+    [cdkDragData]="row"
+    [style.border-bottom-width]="expandedElement == row ? '0px' : '1px'"
+    cdkDrag
+  ></mat-row>
+  <mat-row
+    [style.display]="expandedElement === row ? 'flex' : 'none'"
+    [style.transition-delay]="'12s'"
+    *matRowDef="let row; columns: ['expandedDetail']"
+    class="example-detail-row"
+  ></mat-row>
+</mat-table>

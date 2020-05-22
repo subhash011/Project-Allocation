@@ -61,58 +61,53 @@ router.get("/preference/:id", (req, res) => {
 	var promises = [];
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
-	oauth(idToken)
-		.then((user) => {
-			var promise = Student.findOne({ google_id: { id: id, idToken: idToken } })
-				.then((student) => {
-					if (student) {
-						return student["projects_preference"];
-					} else {
-						res.json({ message: "invalid-token" });
-						return null;
-					}
-				})
-				.catch((err) => {
-					res.json(err);
-				})
-				.then((project_id) => {
-					if (project_id) {
-						for (const project of project_id) {
-							promises.push(
-								Project.findById(project)
-									.populate("faculty_id")
-									.then((project) => {
-										var new_details = {
-											_id: project["_id"],
-											title: project["title"],
-											description: project["description"],
-											duration: project["duration"],
-											studentIntake: project["studentIntake"],
-											faculty_name: project["faculty_id"]["name"],
-											faculty_email: project["faculty_id"]["email"],
-										};
-										return new_details;
-									})
-									.catch((err) => {
-										res.json({
-											message: "error",
-											result: err,
-										});
-									})
-							);
-						}
-						Promise.all(promises).then((result) => {
-							res.json({
-								message: "success",
-								result: result,
-							});
-						});
-					}
-				});
+	Student.findOne({ google_id: { id: id, idToken: idToken } })
+		.populate({
+			path: "projects_preference",
+			select: {
+				_id: 1,
+				title: 1,
+				description: 1,
+				duration: 1,
+				studentIntake: 1,
+			},
+			model: Project,
+			populate: {
+				path: "faculty_id",
+				select: {
+					name: 1,
+					email: 1,
+				},
+			},
 		})
-		.catch((err) => {
+		.then((student) => {
+			if (student) {
+				var answer = student.projects_preference.map((val) => {
+					var newDetails = {
+						_id: val._id,
+						title: val.title,
+						description: val.description,
+						duration: val.duration,
+						studentIntake: val.studentIntake,
+						faculty_name: val.faculty_id.name,
+						faculty_email: val.faculty_id.email,
+					};
+					return newDetails;
+				});
+				res.json({
+					message: "success",
+					result: answer,
+				});
+			} else {
+				res.json({
+					message: "invalid-token",
+					result: null,
+				});
+			}
+		})
+		.catch(() => {
 			res.json({
-				message: "invalid-client",
+				message: "invalid-token",
 				result: null,
 			});
 		});
@@ -125,6 +120,7 @@ router.post("/preference/:id", (req, res) => {
 		mongoose.Types.ObjectId(val["_id"])
 	);
 	var studentStream;
+	var studentID;
 	const idToken = req.headers.authorization;
 	oauth(idToken)
 		.then((user) => {
@@ -135,6 +131,7 @@ router.post("/preference/:id", (req, res) => {
 				.then((student) => {
 					if (student) {
 						studentStream = student.stream;
+						studentID = student._id;
 						return student._id;
 					} else {
 						return null;
@@ -143,6 +140,7 @@ router.post("/preference/:id", (req, res) => {
 				.then((student) => {
 					if (student) {
 						Project.find({ stream: studentStream }).then((projects) => {
+							var promises = [];
 							for (const project of projects) {
 								var projIsInArr = project_idArr.some(function (val) {
 									return val.equals(project._id);
@@ -157,15 +155,51 @@ router.post("/preference/:id", (req, res) => {
 										(val) => !val.equals(student)
 									);
 								}
-								project
-									.save()
-									.then((proj) => {
-										res.json({ message: "success" });
+								promises.push(
+									project.save().then((proj) => {
+										return proj;
 									})
-									.catch((err) => {
-										res.status(500);
-									});
+								);
 							}
+							Promise.all(promises).then((result) => {
+								Student.findById(studentID)
+									.populate({
+										path: "projects_preference",
+										select: {
+											_id: 1,
+											title: 1,
+											description: 1,
+											duration: 1,
+											studentIntake: 1,
+										},
+										model: Project,
+										populate: {
+											path: "faculty_id",
+											select: {
+												name: 1,
+												email: 1,
+											},
+										},
+									})
+									.then((student) => {
+										var answer = student.projects_preference.map((val) => {
+											var newDetails = {
+												_id: val._id,
+												title: val.title,
+												description: val.description,
+												duration: val.duration,
+												studentIntake: val.studentIntake,
+												faculty_name: val.faculty_id.name,
+												faculty_email: val.faculty_id.email,
+											};
+											return newDetails;
+										});
+										res.json({
+											message: "success",
+											result: answer,
+										});
+									});
+							});
 						});
 					} else {
 						res.json({ message: "invalid-token" });
@@ -180,20 +214,46 @@ router.post("/preference/:id", (req, res) => {
 		});
 });
 
-router.post("/add/preference/:id", (req, res) => {
+router.post("/append/preference/:id", (req, res) => {
 	const id = req.params.id;
-	const project = req.body;
-	const projectID = mongoose.Types.ObjectId(project);
+	const projects = req.body;
+	const project_idArr = projects;
+	var studentStream;
 	const idToken = req.headers.authorization;
-	Student.findOne({ google_id: { id: id, idToken: idToken } })
-		.then((student) => {
+	Student.findOne({ google_id: { id: id, idToken: idToken } }).then(
+		(student) => {
 			if (student) {
-				student.projects_preference.push(projectID);
+				student.projects_preference = [
+					...student.projects_preference,
+					...project_idArr,
+				];
 				student.save().then((student) => {
-					res.json({
-						message: "success",
-						result: student.projects_preference,
-					});
+					studentStream = student.stream;
+					var studentID = student._id;
+					var promises = [];
+					for (const project of project_idArr) {
+						promises.push(
+							Project.updateOne(
+								{ _id: project },
+								{ $push: { students_id: studentID } }
+							).then((proj) => {
+								return proj;
+							})
+						);
+					}
+					Promise.all(promises)
+						.then((projects) => {
+							res.json({
+								message: "success",
+								result: projects,
+							});
+						})
+						.catch(() => {
+							res.json({
+								message: "error",
+								result: null,
+							});
+						});
 				});
 			} else {
 				res.json({
@@ -201,47 +261,64 @@ router.post("/add/preference/:id", (req, res) => {
 					result: null,
 				});
 			}
-		})
-		.catch(() => {
-			res.json({
-				message: "error",
-				result: null,
-			});
-		});
+		}
+	);
 });
 
+//remove one preference
 router.post("/remove/preference/:id", (req, res) => {
 	const id = req.params.id;
-	const project = req.body;
-	const projectID = mongoose.Types.ObjectId(project);
+	const projects = req.body.preference;
+	var studentStream;
 	const idToken = req.headers.authorization;
-	Student.findOne({ google_id: { id: id, idToken: idToken } })
-		.then((student) => {
-			if (student) {
-				student.projects_preference = student.projects_preference.filter(
-					(val) => {
-						return val.toString() != project;
-					}
-				);
-				student.save().then((student) => {
-					res.json({
-						message: "success",
-						result: student.projects_preference,
+	Student.findOne({ google_id: { id: id, idToken: idToken } }).then(
+		(student) => {
+			student.projects_preference = student.projects_preference.filter(
+				(val) => {
+					return val.toString() != projects;
+				}
+			);
+			student.save().then((student) => {
+				var studentID = student._id;
+				Project.findById(mongoose.Types.ObjectId(projects)).then((project) => {
+					project.students_id = project.students_id.filter((val) => {
+						return val.toString() != studentID.toString();
+					});
+					project.save().then((result) => {
+						res.json({
+							message: "success",
+							result: null,
+						});
 					});
 				});
-			} else {
-				res.json({
-					message: "invalid-token",
-					result: null,
-				});
-			}
-		})
-		.catch(() => {
-			res.json({
-				message: "error",
-				result: null,
 			});
-		});
+		}
+	);
+});
+
+//add one preference
+router.post("/add/preference/:id", (req, res) => {
+	const id = req.params.id;
+	const projects = req.body.preference;
+	var studentStream;
+	const idToken = req.headers.authorization;
+	Student.findOne({ google_id: { id: id, idToken: idToken } }).then(
+		(student) => {
+			student.projects_preference.push(mongoose.Types.ObjectId(projects));
+			student.save().then((student) => {
+				var studentID = student._id;
+				Project.findById(mongoose.Types.ObjectId(projects)).then((project) => {
+					project.students_id.push(mongoose.Types.ObjectId(studentID));
+					project.save().then((result) => {
+						res.json({
+							message: "success",
+							result: null,
+						});
+					});
+				});
+			});
+		}
+	);
 });
 
 module.exports = router;

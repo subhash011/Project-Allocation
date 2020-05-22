@@ -1,0 +1,60 @@
+table {
+  width: 80%;
+  margin-left: 10%;
+}
+
+mat-form-field {
+  margin-left: 10%;
+  width: 30%;
+  margin-top: 50px;
+}
+
+.add-preferences {
+  float: right;
+  margin-top: 60px;
+  margin-right: 13%;
+}
+
+tr {
+  :hover {
+    cursor: pointer;
+  }
+}
+
+tr.example-detail-row {
+  height: 0;
+  :hover {
+    cursor: default;
+  }
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  cursor: pointer;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  cursor: pointer;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}

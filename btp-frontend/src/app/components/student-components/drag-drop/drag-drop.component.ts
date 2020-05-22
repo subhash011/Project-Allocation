@@ -11,6 +11,9 @@ import {
   transferArrayItem,
 } from "@angular/cdk/drag-drop";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatTableDataSource } from "@angular/material";
+import { EditPreferencesComponent } from "../edit-preferences/edit-preferences.component";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-drag-drop",
@@ -19,13 +22,23 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   providers: [LoginComponent],
 })
 export class DragDropComponent implements OnInit {
+  projects: any = new MatTableDataSource([]);
+  preferenceArray: any = [];
+  count = 0;
+  preferences: any = new MatTableDataSource([]);
+  stage = -1;
+  disable = true;
+  helperArray: any = [];
+  lastDropped;
+  contID: any;
   constructor(
     private dialog: MatDialog,
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
     private userService: UserService,
-    private loadingBar: LoadingBarService
+    private loadingBar: LoadingBarService,
+    private router: Router
   ) {}
   loaded: boolean = false;
   ngOnInit() {
@@ -40,15 +53,6 @@ export class DragDropComponent implements OnInit {
         }
       });
   }
-  projects: any = [];
-  preferenceArray: any = [];
-  count = 0;
-  preferences: any = [];
-  stage = -1;
-  disable = true;
-  helperArray: any = [];
-  lastDropped;
-  contID: any;
   drop(event: CdkDragDrop<string[]>) {
     this.contID = Number(event.container.id.split("-")[3]);
     if (event.previousContainer === event.container) {
@@ -166,8 +170,8 @@ export class DragDropComponent implements OnInit {
           return null;
         }
         if (details) {
-          this.preferences = details["result"];
-          tempPref = this.preferences.map((val) => val._id);
+          this.preferences.data = details["result"];
+          tempPref = this.preferences.data.map((val) => val._id);
           return details;
         }
       })
@@ -180,7 +184,7 @@ export class DragDropComponent implements OnInit {
               tempArray = projects["result"];
               for (const project of tempArray) {
                 if (!tempPref.includes(project._id)) {
-                  this.projects.push(project);
+                  this.projects.data.push(project);
                 }
               }
               this.loaded = true;

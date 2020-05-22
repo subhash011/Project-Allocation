@@ -56,11 +56,7 @@ export class NavbarComponent implements OnInit {
   }
 
   getUrlPreferences() {
-    return (
-      localStorage.getItem("role") +
-      "/preferences/" +
-      localStorage.getItem("id")
-    );
+    return "student" + "/preferences/" + localStorage.getItem("id");
   }
 
   getAddProjects() {
