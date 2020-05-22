@@ -496,17 +496,15 @@
             Export Preferences
           </button>
         </div>
-        <!-- <input type="file"
-        (change)="handleFileInput($event.target.files)" /> -->
 
-        <input class="ng-hide" id="input-file-id" type="file" />
-        <label for="input-file-id" class="md-button md-raised md-primary">Choose Files</label>
+        <input type="file" style="display: none;"
+        (change)="handleFileInput($event.target.files)" #fileInput />
 
         <button
         mat-raised-button
         color="accent"
         class="student_download"
-        (click)="importStudents()"
+        (click)="fileInput.click()"
       >
         Import Students
       </button>

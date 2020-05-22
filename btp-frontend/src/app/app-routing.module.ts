@@ -4,7 +4,7 @@ import { SuperAdminComponent } from "./components/shared/super-admin/super-admin
 import { RefreshComponent } from "./components/faculty-componenets/refresh/refresh.component";
 import { StudentProjectsComponent } from "./components/student-components/student-projects/student-projects.component";
 import { ProfileComponent } from "./components/shared/profile/profile.component";
-import { DragDropComponent } from "./components/student-components/drag-drop/drag-drop.component";
+// import { DragDropComponent } from "./components/student-components/drag-drop/drag-drop.component";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { FacultyComponent } from "./components/faculty-componenets/faculty/faculty.component";

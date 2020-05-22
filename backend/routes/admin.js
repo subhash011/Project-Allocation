@@ -1561,8 +1561,8 @@ router.post("/uploadStudentList/:id",(req,res)=>{
 									if (validationError) {
 										fs.unlinkSync(req.file.path);
 									 return res.json({ 
-										status:"fail",
-										error: validationError
+										status:"fail_parse",
+										msg: validationError
 									 });
 									}
 									

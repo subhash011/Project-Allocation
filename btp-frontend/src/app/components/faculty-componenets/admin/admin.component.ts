@@ -1122,6 +1122,37 @@ export class AdminComponent implements OnInit {
     this.fileToUpload = files.item(0);
     if(this.fileToUpload.name.split(".")[1] == "csv"){
 
+      const dialogRef = this.dialog.open(DeletePopUpComponent, {
+        width: "400px",
+        height: "200px",
+        data: {
+          heading: "Confirm Proceed",
+          message:
+            `Are you sure that you want to upload ${this.fileToUpload.name} ?`,
+        },
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result && result["message"] == "submit") {
+          this.exportService.uploadStudentList(this.fileToUpload,this.programName)
+          .subscribe(data => {
+            if(data["status"] == "success"){
+             this.snackBar.open("Successfully uploaded the files.", "Ok", {
+               duration: 10000,
+             });
+            }
+            else if(data['status'] == "fail_parse"){
+             this.snackBar.open(data['msg'], "Ok", {
+               duration: 10000,
+             });
+            }
+            else{
+             this.snackBar.open("There was an unexpected error. Please reload and try again!", "Ok", {
+               duration: 10000,
+             });
+            }
+           });
+        }
+      })
     }
     else{
       this.snackBar.open("Only .csv files are to imported. Other files types are not supported.", "Ok", {
@@ -1130,20 +1161,5 @@ export class AdminComponent implements OnInit {
     }
 }
 
-  importStudents(){
-     this.exportService.uploadStudentList(this.fileToUpload,this.programName)
-     .subscribe(data => {
-       if(data["status"] == "success"){
-        this.snackBar.open("Successfully uploaded the files.", "Ok", {
-          duration: 10000,
-        });
-       }
-       else{
-        this.snackBar.open("There was an unexpected error. Please reload and try again!", "Ok", {
-          duration: 10000,
-        });
-       }
-      // do something, if upload success
-      });
-  }
+
 }
