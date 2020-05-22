@@ -44,6 +44,7 @@ import { ClipboardModule } from "ngx-clipboard";
 import { ShowFacultyPreferencesComponent } from "./components/faculty-componenets/show-faculty-preferences/show-faculty-preferences.component";
 import { ShowAvailableProjectsComponent } from "./components/student-components/show-available-projects/show-available-projects.component";
 import { EditPreferencesComponent } from "./components/student-components/edit-preferences/edit-preferences.component";
+import { DisplayPreferencesComponent } from './components/student-components/display-preferences/display-preferences.component';
 const googleLoginOption: LoginOpt = {
   // scope: "https://mail.google.com/",
   prompt: "select_account",
@@ -89,6 +90,7 @@ export function provideConfig() {
     ShowFacultyPreferencesComponent,
     ShowAvailableProjectsComponent,
     EditPreferencesComponent,
+    DisplayPreferencesComponent,
   ],
   entryComponents: [
     SubmitPopUpComponent,

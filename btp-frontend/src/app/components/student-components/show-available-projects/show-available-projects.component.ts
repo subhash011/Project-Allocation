@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import {
   MatDialog,
   MatSnackBar,
@@ -36,6 +36,7 @@ import { Router, ActivatedRoute } from "@angular/router";
   ],
 })
 export class ShowAvailableProjectsComponent implements OnInit {
+  @ViewChild("table", { static: false }) table: MatTable<any>;
   preferences: any = new MatTableDataSource([]);
   projects = new MatTableDataSource([]);
   expandedElement;
@@ -53,7 +54,7 @@ export class ShowAvailableProjectsComponent implements OnInit {
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private userService: UserService,
+    private cdRef: UserService,
     private loadingBar: LoadingBarService,
     private router: Router
   ) {}
@@ -92,6 +93,19 @@ export class ShowAvailableProjectsComponent implements OnInit {
             .getAllStudentProjects()
             .toPromise()
             .then((projects) => {
+              if (
+                projects["message"] == "invalid-client" ||
+                projects["message"] == "invalid-token"
+              ) {
+                this.loginObject.signOut();
+                this.snackBar.open(
+                  "Session Expired! Please Sign In Again",
+                  "OK",
+                  {
+                    duration: 3000,
+                  }
+                );
+              }
               tempArray = projects["result"];
               for (const project of tempArray) {
                 if (!tempPref.includes(project._id)) {
@@ -166,6 +180,7 @@ export class ShowAvailableProjectsComponent implements OnInit {
         this.projects.data = this.projects.data.filter((val) => {
           return val._id != project._id;
         });
+        this.preferences.data.push(project);
         this.deselectProject(project);
       }
     });
@@ -192,7 +207,7 @@ export class ShowAvailableProjectsComponent implements OnInit {
         this.loadingBar.stop();
         this.deselectAll();
         if (message == "success") {
-          this.snackBar.open("Preferences Saved Successfully", "OK", {
+          this.snackBar.open("Added to preferences", "OK", {
             duration: 3000,
           });
         } else if (message == "invalid-token") {
@@ -209,5 +224,12 @@ export class ShowAvailableProjectsComponent implements OnInit {
         }
       });
   }
-  drop() {}
+  updateProjects(event) {
+    this.projects.data.push(event);
+    this.preferences.data = this.preferences.data.filter((val) => {
+      return val._id != event._id;
+    });
+    this.expandedElement = null;
+    this.table.renderRows();
+  }
 }
