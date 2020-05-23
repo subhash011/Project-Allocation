@@ -27,6 +27,8 @@
       <div class="render"><strong>CGPA</strong></div>
       <div class="flex-grow"></div>
       <div class="render"><strong>Roll No</strong></div>
+      <div class="flex-grow"></div>
+      <div class="render"><strong>Preference</strong></div>
     </div>
   </mat-card>
 
@@ -47,11 +49,15 @@
         </div>
         <div class="flex-grow"></div>
         <div class="render">
-          {{ student.gpa.toPrecision(3) }}
+          {{ student.gpa | number:'1.2-3'}}
         </div>
         <div class="flex-grow"></div>
         <div class="render">
           {{ student.roll_no }}
+        </div>
+        <div class="flex-grow"></div>
+        <div class="render"  *ngIf="student._id">
+          {{ "" | preference:project._id:student._id:student_list}}
         </div>
       </div>
     </mat-list-item>

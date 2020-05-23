@@ -1179,6 +1179,7 @@ export class AdminComponent implements OnInit {
                 this.snackBar.open("Successfully uploaded the files.", "Ok", {
                   duration: 10000,
                 });
+                this.ngOnInit();
               } else if (data["status"] == "fail_parse") {
                 this.snackBar.open(data["msg"], "Ok", {
                   duration: 10000,
@@ -1212,7 +1213,7 @@ export class AdminComponent implements OnInit {
       height: "200px",
       data: {
         heading: "Confirm Publish",
-        message: `Are you sure that you want to publish this allocation to faculty ? `,
+        message: `Are you sure that you want to publish this allocation to faculty ? Do note that mails will be sent automatically.`,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -1221,8 +1222,20 @@ export class AdminComponent implements OnInit {
           if (data["status"] == "success") {
             this.publishFaculty = true;
             localStorage.setItem("pf", "true");
-            this.snackBar.open("Successfully published to faculty", "Ok", {
-              duration: 10000,
+            this.userService.getFacultyStreamEmails().subscribe((data1) => {
+              if (data1["status"] == "success") {
+                this.mailer
+                  .publishMail("faculty", data1["result"], data1["streamFull"])
+                  .subscribe((data) => {
+                    this.snackBar.open(
+                      "Successfully published to students and mails have been sent.",
+                      "Ok",
+                      {
+                        duration: 10000,
+                      }
+                    );
+                  });
+              }
             });
           }
         });
@@ -1236,7 +1249,7 @@ export class AdminComponent implements OnInit {
       height: "200px",
       data: {
         heading: "Confirm Publish",
-        message: `Are you sure that you want to publish this allocation to students ? `,
+        message: `Are you sure that you want to publish this allocation to students ? Do note that mails will be sent automatically.`,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -1245,8 +1258,20 @@ export class AdminComponent implements OnInit {
           if (data["status"] == "success") {
             this.publishStudents = true;
             localStorage.setItem("ps", "true");
-            this.snackBar.open("Successfully published to students", "Ok", {
-              duration: 10000,
+            this.userService.getStudentStreamEmails().subscribe((data1) => {
+              if (data1["status"] == "success") {
+                this.mailer
+                  .publishMail("student", data1["result"], data1["streamFull"])
+                  .subscribe((data) => {
+                    this.snackBar.open(
+                      "Successfully published to students and mails have been sent.",
+                      "Ok",
+                      {
+                        duration: 10000,
+                      }
+                    );
+                  });
+              }
             });
           }
         });

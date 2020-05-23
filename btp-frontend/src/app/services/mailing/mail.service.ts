@@ -153,6 +153,55 @@ Project Coordinator (${stream})
     return this.http.post(url, body, httpOptions);
   }
 
+  publishMail(role,emails,program){
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    var url = this.base_url + "send";
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken,
+      }),
+    };
+
+    if(role == "student"){
+      var body = {
+        user: user,
+        mailBody: `Dear Students,
+
+The project allocation for program ${program} has been completed. Please login to the project allocation portal to view the projects/students allocated to you.
+        
+Regards,
+${user.name},
+Project Coordinator (${program})
+         `,
+        to: emails,
+        subject: `${program}: Project Allocation Completed`,
+      };
+
+
+    }
+
+    else if(role == "faculty"){
+      var body = {
+        user: user,
+        mailBody: `Dear Faculty Members,
+
+The project allocation for program ${program} has been completed. Please login to the project allocation portal to view the projects/students allocated to you.
+        
+Regards,
+${user.name},
+Project Coordinator (${program})
+         `,
+        to: emails,
+        subject: `${program}: Project Allocation Completed`,
+      };
+    }
+
+    return this.http.post(url, body, httpOptions);
+
+  }
+
   formatAMPM(curr_date) {
     const date = new Date(curr_date);
     var hours = date.getHours();

@@ -1,10 +1,36 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProjectsService } from "./../../../services/projects/projects.service";
-import { Component, OnInit, Input, ViewChild } from "@angular/core";
+import { Component, OnInit, Input, ViewChild, Pipe, PipeTransform } from "@angular/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDialog } from "@angular/material/dialog";
+
+@Pipe({
+  name: 'preference'
+})
+export class PreferencePipe implements PipeTransform {
+
+  transform(value: any, ...args: any[]): any {
+    let student_list = args[2];
+    let student_id = args[1];
+    let project_id = args[0];
+
+    for(const student of student_list){
+
+      if(student._id == student_id){
+        const index = student.projects_preference.indexOf(project_id);
+        if(index == -1){
+          return "N/A"
+        }
+        return index+1;
+      }
+    }
+
+  }
+
+}
+
 
 @Component({
   selector: "app-student-table",

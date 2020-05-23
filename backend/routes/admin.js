@@ -1634,51 +1634,75 @@ router.post("/uploadStudentList/:id", (req, res) => {
 									return res.send(err);
 								}
 
-								let fileRows = [];
-								csv
-									.parseFile(req.file.path)
-									.on("data", (data) => {
-										fileRows.push(data);
-									})
-									.on("end", () => {
-										const validationError = validateCsvData(fileRows);
-										if (validationError) {
-											fs.unlinkSync(req.file.path);
-											return res.json({
-												status: "fail_parse",
-												msg: validationError,
-											});
-										}
 
-										admin.studentCount = fileRows.length - 1;
-										admin
-											.save()
-											.then((result) => {
-												return res.json({
-													status: "success",
-													msg: "Successfully uploaded the student list.",
-												});
-											})
-											.on("end", () => {
-												const validationError = validateCsvData(fileRows);
-												if (validationError) {
-													fs.unlinkSync(req.file.path);
-													return res.json({
-														status: "fail",
-														error: validationError,
-													});
+								let fileRows = []
+								csv.parseFile(req.file.path)
+								.on("data",  (data) => {
+									fileRows.push(data); 
+								})
+								.on("end", () => {
+
+
+
+									const validationError = validateCsvData(fileRows);
+									if (validationError) {
+										fs.unlinkSync(req.file.path);
+									 return res.json({ 
+										status:"fail_parse",
+										msg: validationError
+									 });
+									}
+									
+								admin.studentCount = fileRows.length - 1;
+
+
+								var promises = [];
+								
+								for(let i =1;i<fileRows.length;i++){
+
+									let data = fileRows[i];
+
+									promises.push(
+										Student.findOne({roll_no:data[1]})
+											.then(student =>{
+
+												if(student){
+													
+													student.name = data[0];
+													student.gpa = data[2];
+
+													return student.save()
+														.then(result=>{
+															return result;
+														})
+
 												}
 
-												admin.studentCount = fileRows.length - 1;
-												admin.save().then((result) => {
-													return res.json({
-														status: "success",
-														msg: "Successfully uploaded the student list.",
-													});
-												});
-											});
-									});
-							});
+											})
+
+									)
+								}
+								
+									Promise.all(promises)
+										.then(result=>{
+											admin.save()
+										.then(result=>{
+
+											return res.json({
+												status:"success",
+												msg:"Successfully uploaded the student list."
+											})
+
+										})
+
+									})
+
+								
+								
+								})
+											
+							})
+							
 						} else {
 							res.json({
 								status: "fail",
