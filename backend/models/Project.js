@@ -35,9 +35,9 @@ const UserSchema = new mongoose.Schema({
 		type: [mongoose.SchemaTypes.ObjectId],
 		ref: Student,
 	},
-	isExcluded: {
+	isIncluded: {
 		type: Boolean,
-		default: true,
+		default: false,
 	},
 });
 

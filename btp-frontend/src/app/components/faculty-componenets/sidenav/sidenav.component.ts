@@ -1,5 +1,20 @@
 import { Router } from "@angular/router";
-import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  Input,
+  ViewChild,
+  PipeTransform,
+  Pipe,
+} from "@angular/core";
+import {
+  MatListOption,
+  MatSelectionList,
+  MatSnackBar,
+} from "@angular/material";
+import { ProjectsService } from "src/app/services/projects/projects.service";
 
 @Component({
   selector: "app-sidenav",
@@ -15,10 +30,15 @@ export class SidenavComponent implements OnInit {
   @Output() projectClicked = new EventEmitter<Event>();
   @Output() addButton = new EventEmitter<Event>();
   @Output() programClicked = new EventEmitter<Event>();
+  @ViewChild("included", { static: false }) includedProjects: MatSelectionList;
 
   public selectedRow;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private projectService: ProjectsService,
+    private snackbar: MatSnackBar
+  ) {}
 
   ngOnInit() {}
 
@@ -26,6 +46,27 @@ export class SidenavComponent implements OnInit {
     this.addButton.emit(event);
     this.empty = false;
     this.selectedRow = null;
+  }
+
+  includeProjects() {
+    var toInclude = [];
+    for (const project of this.includedProjects.selectedOptions.selected.values()) {
+      toInclude.push(project.value);
+    }
+    for (const project of this.projects) {
+      if (toInclude.indexOf(project._id) == -1) {
+        project.isIncluded = false;
+      } else {
+        project.isIncluded = true;
+      }
+    }
+    this.projectService.includeProjects(toInclude).subscribe((result) => {
+      if (result["message"] == "success") {
+        this.snackbar.open("Updated Project Preferences", "Ok", {
+          duration: 3000,
+        });
+      }
+    });
   }
 
   onClick(project, index) {

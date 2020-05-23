@@ -358,7 +358,7 @@
           [disabled]="publishStudents"
           (click)="publishToStudents()"
         >
-          Publish Students
+          Publish to Students
         </button>
       </div>
       <div class="startAllocationButton">
@@ -368,7 +368,7 @@
           [disabled]="publishFaculty"
           (click)="publishToFaculty()"
         >
-          Publish Faculty
+          Publish to Faculties
         </button>
       </div>
       <!-- <div class="sendEmailsButton">
@@ -424,6 +424,9 @@
                 (click)="$event.stopPropagation()"
                 (change)="$event ? selection.toggle(row) : null"
                 [checked]="selection.isSelected(row)"
+                [disabled]="!row.isIncluded"
+                [matTooltip]="getTooltipInculsion(row)"
+                [matTooltipPosition]="position"
                 [aria-label]="checkboxLabel(row)"
               >
               </mat-checkbox>
@@ -435,6 +438,14 @@
               Title
             </th>
             <td mat-cell *matCellDef="let project">{{ project.title }}</td>
+          </ng-container>
+          <ng-container matColumnDef="isIncluded">
+            <th mat-header-cell *matHeaderCellDef [style.color]="background">
+              Project Excluded
+            </th>
+            <td mat-cell *matCellDef="let project">
+              {{ project.isIncluded ? "No" : "Yes" }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="Faculty">
             <th mat-header-cell *matHeaderCellDef>Faculty</th>
@@ -530,7 +541,7 @@
 
             <button
               mat-raised-button
-              color="accent"
+              color="primary"
               class="import_students"
               (click)="fileInput.click()"
             >

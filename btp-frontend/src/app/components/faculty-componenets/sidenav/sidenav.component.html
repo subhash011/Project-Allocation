@@ -1,28 +1,54 @@
 <div *ngIf="!programs_mode; else programsPanel">
+  <mat-selection-list #included>
+    <mat-list-option
+      *ngFor="let project of projects; let i = index"
+      (click)="onClick(project, i)"
+      [class.active]="i == selectedRow"
+      [selected]="project.isIncluded"
+      [value]="project._id"
+    >
+      <div class="text">
+        {{ project.title }}
+        <mat-icon *ngIf="project.isIncluded">check</mat-icon>
+      </div>
+    </mat-list-option>
+  </mat-selection-list>
 
-  <mat-nav-list *ngFor="let project of projects; let i = index" >
-    <a mat-list-item (click)="onClick(project, i)" [class.active]="i == selectedRow">
-    {{ project.title }}
-  </a>
-</mat-nav-list>
+  <button
+    color="warn"
+    mat-raised-button
+    class="add-button"
+    (click)="displayAdd(true)"
+  >
+    ADD
+  </button>
 
-<button color="warn" mat-raised-button class="add-button" (click)="displayAdd(true)">
-  ADD
-</button>
-
-<button color="warn" mat-raised-button class="add-button" (click)="displayHome()">
-  Overview
-</button>
-
+  <button
+    color="warn"
+    mat-raised-button
+    class="add-button"
+    (click)="displayHome()"
+  >
+    Overview
+  </button>
+  <button
+    color="warn"
+    mat-raised-button
+    class="add-button"
+    (click)="includeProjects()"
+  >
+    Include Selected Projects
+  </button>
 </div>
 
-
 <ng-template #programsPanel>
-  <mat-nav-list *ngFor="let program of programs; let i = index" >
-    <a mat-list-item (click)="onProgramClick(program, i)" [class.active]="i == selectedRow">
-    {{ program.full }}
-  </a>
-</mat-nav-list>
-
+  <mat-nav-list *ngFor="let program of programs; let i = index">
+    <a
+      mat-list-item
+      (click)="onProgramClick(program, i)"
+      [class.active]="i == selectedRow"
+    >
+      {{ program.full }}
+    </a>
+  </mat-nav-list>
 </ng-template>
-

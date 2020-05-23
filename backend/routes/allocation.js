@@ -250,6 +250,7 @@ router.post("/start/:id", (req, res) => {
 																		project.students_id.length,
 																	student_alloted: project.student_alloted,
 																	students_id: project.students_id,
+																	isIncluded: project.isIncluded,
 																};
 																arr.push(newProj);
 															}

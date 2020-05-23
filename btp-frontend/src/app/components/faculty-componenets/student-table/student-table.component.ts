@@ -32,6 +32,7 @@ export class StudentTableComponent implements OnInit {
 
   onSubmit() {
     if (this.adminStage == 2) {
+      localStorage.removeItem("sorted");
       this.projectService
         .savePreference(this.student_list, this.project._id)
         .subscribe((data) => {

@@ -9,7 +9,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { FormBuilder, Validators, FormControl } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { UserService } from "src/app/services/user/user.service";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, RootRenderer } from "@angular/core";
 import { MatStepper, MatTableDataSource } from "@angular/material";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -40,6 +40,7 @@ export class AdminComponent implements OnInit {
     "Preferences",
     "NoOfStudents",
     "Student",
+    "isIncluded",
   ];
   facultyCols = ["Name", "NoOfProjects", "Email", "Actions", "Violations"];
   studentCols = ["Name", "Email", "GPA", "ViewPref", "Actions"];
@@ -54,6 +55,7 @@ export class AdminComponent implements OnInit {
   // eighthFormGroup: FormGroup;
 
   public programName;
+  position = "above";
 
   public stage_no;
   dateSet = [];
@@ -158,6 +160,14 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (!localStorage.getItem("pf")) {
+      localStorage.setItem("pf", "true");
+    }
+    if (!localStorage.getItem("ps")) {
+      localStorage.setItem("ps", "true");
+    }
+    this.publishFaculty = localStorage.getItem("pf") == "true" ? true : false;
+    this.publishStudents = localStorage.getItem("ps") == "true" ? true : false;
     this.userService.getAdminInfo().subscribe((data) => {
       if (data["status"] == "success") {
         this.programName = data["stream"];
@@ -229,7 +239,7 @@ export class AdminComponent implements OnInit {
       if (projects["message"] == "success") {
         this.projects = projects["result"];
         this.dataSource = new MatTableDataSource(this.projects);
-        this.selectAll();
+        this.selectIncluded();
       } else {
         this.loginService.signOut();
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
@@ -237,6 +247,11 @@ export class AdminComponent implements OnInit {
         });
       }
     });
+  }
+  getTooltipInculsion(project) {
+    return project.isIncluded
+      ? null
+      : "This faculty has excluded the project. Contact the faculty if needed.";
   }
 
   getAllotedStudents(alloted) {
@@ -287,9 +302,7 @@ export class AdminComponent implements OnInit {
               }
             });
             if (this.stage_no >= 3) {
-              console.log("here");
               this.exportService.generateCSV_projects().subscribe((data) => {
-                console.log(data);
                 if (data["message"] == "success") {
                   this.exportService
                     .generateCSV_students()
@@ -505,6 +518,8 @@ export class AdminComponent implements OnInit {
                   if (data["status"] == "success") {
                     this.publishFaculty = false;
                     this.publishStudents = false;
+                    localStorage.setItem("pf", "false");
+                    localStorage.setItem("ps", "false");
                     if (this.stage_no == 3) {
                       this.userService
                         .updateStage(this.stage_no + 1)
@@ -1016,6 +1031,14 @@ export class AdminComponent implements OnInit {
       : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
 
+  selectIncluded() {
+    this.dataSource.data.forEach((row) => {
+      row.isIncluded
+        ? this.selection.select(row)
+        : this.selection.deselect(row);
+    });
+  }
+
   selectAll() {
     this.dataSource.data.forEach((row) => this.selection.select(row));
   }
@@ -1196,6 +1219,8 @@ export class AdminComponent implements OnInit {
       if (result && result["message"] == "submit") {
         this.userService.updatePublish("faculty").subscribe((data) => {
           if (data["status"] == "success") {
+            this.publishFaculty = true;
+            localStorage.setItem("pf", "true");
             this.snackBar.open("Successfully published to faculty", "Ok", {
               duration: 10000,
             });
@@ -1218,6 +1243,8 @@ export class AdminComponent implements OnInit {
       if (result && result["message"] == "submit") {
         this.userService.updatePublish("student").subscribe((data) => {
           if (data["status"] == "success") {
+            this.publishStudents = true;
+            localStorage.setItem("ps", "true");
             this.snackBar.open("Successfully published to students", "Ok", {
               duration: 10000,
             });

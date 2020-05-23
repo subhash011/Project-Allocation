@@ -165,6 +165,21 @@ export class ProjectsService {
     return this.http.post(this.url, student_data, httpOptions);
   }
 
+  includeProjects(projects) {
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+
+    this.url = this.facultyBaseURL + "include_projects/" + id;
+
+    return this.http.post(this.url, { projects }, httpOptions);
+  }
+
   updateProject(project) {
     this.url = this.facultyBaseURL + "update/" + project.project_id;
 
