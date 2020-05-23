@@ -92,6 +92,7 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
           }
         },
         () => {
+          dialogRefLoad.close();
           this.snackBar.open(
             "Some Error Occured! If the Error Persists Please re-authenticate",
             "OK",

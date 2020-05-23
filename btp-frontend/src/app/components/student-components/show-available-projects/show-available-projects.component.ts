@@ -75,7 +75,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   getAllStudentPreferences() {
     var tempArray: any;
     var tempPref: any;
-
     this.projectService
       .getStudentPreference()
       .pipe(takeUntil(this.ngUnsubscribe))
@@ -118,7 +117,8 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                 this.projects.filterPredicate = (data: any, filter: string) =>
                   !filter ||
                   data.faculty_name.toLowerCase().includes(filter) ||
-                  data.title.toLowerCase().includes(filter);
+                  data.title.toLowerCase().includes(filter) ||
+                  data.description.toLowerCase().includes(filter);
                 this.loadingBar.stop();
               });
           }
@@ -176,10 +176,16 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   }
 
   addOnePreference(project) {
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Adding Preference, Please wait",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.projectService
       .addOneStudentPreference(project)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((result) => {
+        dialogRefLoad.close();
         if (result["message"] == "invalid-token") {
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {

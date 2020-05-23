@@ -8,7 +8,7 @@ import {
   SimpleChanges,
   OnDestroy,
 } from "@angular/core";
-import { MatTableDataSource, MatSnackBar } from "@angular/material";
+import { MatTableDataSource, MatSnackBar, MatDialog } from "@angular/material";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { LoginComponent } from "../../shared/login/login.component";
 import { UserService } from "src/app/services/user/user.service";
@@ -16,6 +16,7 @@ import { LoadingBarService } from "@ngx-loading-bar/core";
 import { ShowAvailableProjectsComponent } from "../show-available-projects/show-available-projects.component";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { LoaderComponent } from "../../shared/loader/loader.component";
 
 @Component({
   selector: "app-display-preferences",
@@ -32,17 +33,24 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private projectComponent: ShowAvailableProjectsComponent
   ) {}
 
   ngOnInit() {}
 
   removeOnePreference(preference) {
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Removing Preference, Please wait",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.projectService
       .removeOneStudentPreference(preference)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(
         (result) => {
+          dialogRefLoad.close();
           if (result["message"] == "invalid-token") {
             this.loginObject.signOut();
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
@@ -56,6 +64,7 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
           }
         },
         () => {
+          dialogRefLoad.close();
           this.snackBar.open(
             "Some Error Occured! If the Error Persists Please re-authenticate",
             "OK",
