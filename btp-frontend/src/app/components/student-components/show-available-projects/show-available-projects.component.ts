@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import {
   MatDialog,
   MatSnackBar,
@@ -19,6 +19,9 @@ import {
 import { SelectionModel } from "@angular/cdk/collections";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
 import { Router, ActivatedRoute } from "@angular/router";
+import { LoaderComponent } from "../../shared/loader/loader.component";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "app-show-available-projects",
@@ -35,12 +38,14 @@ import { Router, ActivatedRoute } from "@angular/router";
     ]),
   ],
 })
-export class ShowAvailableProjectsComponent implements OnInit {
+export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   @ViewChild("table", { static: false }) table: MatTable<any>;
   preferences: any = new MatTableDataSource([]);
   projects = new MatTableDataSource([]);
   expandedElement;
+  isAddDisabled: boolean = false;
   selection = new SelectionModel<any>(true, []);
+  private ngUnsubscribe: Subject<any> = new Subject();
   displayedColumns = [
     "select",
     "Title",
@@ -70,63 +75,64 @@ export class ShowAvailableProjectsComponent implements OnInit {
   getAllStudentPreferences() {
     var tempArray: any;
     var tempPref: any;
-    const user = this.projectService
+
+    this.projectService
       .getStudentPreference()
-      .toPromise()
-      .then((details) => {
-        if (details["message"] == "invalid-token") {
-          this.loginObject.signOut();
-          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-            duration: 3000,
-          });
-          return null;
-        }
-        if (details) {
-          this.preferences.data = details["result"];
-          tempPref = this.preferences.data.map((val) => val._id);
-          return details;
-        }
-      })
-      .then((preferences) => {
-        if (preferences) {
-          this.projectService
-            .getAllStudentProjects()
-            .toPromise()
-            .then((projects) => {
-              if (
-                projects["message"] == "invalid-client" ||
-                projects["message"] == "invalid-token"
-              ) {
-                this.loginObject.signOut();
-                this.snackBar.open(
-                  "Session Expired! Please Sign In Again",
-                  "OK",
-                  {
-                    duration: 3000,
-                  }
-                );
-              }
-              tempArray = projects["result"];
-              for (const project of tempArray) {
-                if (!tempPref.includes(project._id)) {
-                  this.projects.data.push(project);
-                }
-              }
-              this.projects = new MatTableDataSource(this.projects.data);
-              this.projects.filterPredicate = (data: any, filter: string) =>
-                !filter ||
-                data.faculty_name.toLowerCase().includes(filter) ||
-                data.title.toLowerCase().includes(filter);
-              this.loadingBar.stop();
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(
+        (result) => {
+          if (result["message"] == "invalid-token") {
+            this.loginObject.signOut();
+            this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+              duration: 3000,
             });
+            return null;
+          }
+          if (result) {
+            this.preferences.data = result["result"];
+            tempPref = this.preferences.data.map((val) => val._id);
+            this.projectService
+              .getAllStudentProjects()
+              .pipe(takeUntil(this.ngUnsubscribe))
+              .subscribe((projects) => {
+                if (
+                  projects["message"] == "invalid-client" ||
+                  projects["message"] == "invalid-token"
+                ) {
+                  this.loginObject.signOut();
+                  this.snackBar.open(
+                    "Session Expired! Please Sign In Again",
+                    "OK",
+                    {
+                      duration: 3000,
+                    }
+                  );
+                }
+                tempArray = projects["result"];
+                for (const project of tempArray) {
+                  if (!tempPref.includes(project._id)) {
+                    this.projects.data.push(project);
+                  }
+                }
+                this.projects = new MatTableDataSource(this.projects.data);
+                this.projects.filterPredicate = (data: any, filter: string) =>
+                  !filter ||
+                  data.faculty_name.toLowerCase().includes(filter) ||
+                  data.title.toLowerCase().includes(filter);
+                this.loadingBar.stop();
+              });
+          }
+        },
+        () => {
+          this.snackBar.open(
+            "Some Error Occured! If the Error Persists Please re-authenticate",
+            "OK",
+            {
+              duration: 3000,
+            }
+          );
         }
-      })
-      .catch(() => {
-        this.loginObject.signOut();
-        this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-          duration: 3000,
-        });
-      });
+      );
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -170,59 +176,66 @@ export class ShowAvailableProjectsComponent implements OnInit {
   }
 
   addOnePreference(project) {
-    this.projectService.addOneStudentPreference(project).subscribe((result) => {
-      if (result["message"] == "invalid-token") {
-        this.loginObject.signOut();
-        this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-          duration: 3000,
-        });
-      } else if (result["message"] == "success") {
-        this.projects.data = this.projects.data.filter((val) => {
-          return val._id != project._id;
-        });
-        this.preferences.data.push(project);
-        this.deselectProject(project);
-      }
-    });
-  }
-
-  onSubmit() {
-    this.loadingBar.start();
-    const preference = this.selection.selected;
     this.projectService
-      .appendStudentPreferences(preference)
-      .toPromise()
-      .then((res) => {
-        return res["message"];
-      })
-      .catch((err) => {
-        this.loadingBar.stop();
-        this.ngOnInit();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-          duration: 3000,
-        });
-      })
-      .then((message) => {
-        this.ngOnInit();
-        this.loadingBar.stop();
-        this.deselectAll();
-        if (message == "success") {
-          this.snackBar.open("Added to preferences", "OK", {
-            duration: 3000,
-          });
-        } else if (message == "invalid-token") {
-          this.loadingBar.stop();
+      .addOneStudentPreference(project)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((result) => {
+        if (result["message"] == "invalid-token") {
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
-        } else {
-          this.loadingBar.stop();
+        } else if (result["message"] == "success") {
+          this.projects.data = this.projects.data.filter((val) => {
+            return val._id != project._id;
+          });
+          this.preferences.data.push(project);
+          this.deselectProject(project);
+        }
+      });
+  }
+
+  onSubmit() {
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Adding to preferences, please wait",
+      disableClose: true,
+      hasBackdrop: true,
+    });
+    const preference = this.selection.selected;
+
+    this.projectService
+      .appendStudentPreferences(preference)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(
+        (result) => {
+          dialogRefLoad.close();
+          const message = result["message"];
+          this.ngOnInit();
+          dialogRefLoad.close();
+          this.deselectAll();
+          if (message == "success") {
+            this.snackBar.open("Added to preferences", "OK", {
+              duration: 3000,
+            });
+          } else if (message == "invalid-token") {
+            this.loginObject.signOut();
+            this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+              duration: 3000,
+            });
+          } else {
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
+            });
+          }
+        },
+        () => {
+          dialogRefLoad.close();
+          this.ngOnInit();
           this.snackBar.open("Some Error Occured! Try again later.", "OK", {
             duration: 3000,
           });
         }
-      });
+      );
   }
   updateProjects(event) {
     this.projects.data.push(event);
@@ -231,5 +244,9 @@ export class ShowAvailableProjectsComponent implements OnInit {
     });
     this.expandedElement = null;
     this.table.renderRows();
+  }
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

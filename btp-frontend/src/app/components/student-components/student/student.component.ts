@@ -3,9 +3,11 @@ import { HttpClient } from "@angular/common/http";
 import { MailService } from "./../../../services/mailing/mail.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../shared/login/login.component";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { UserService } from "src/app/services/user/user.service";
-import { identifierModuleUrl } from '@angular/compiler';
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { identifierModuleUrl } from "@angular/compiler";
 
 @Component({
   selector: "app-student",
@@ -13,7 +15,9 @@ import { identifierModuleUrl } from '@angular/compiler';
   styleUrls: ["./student.component.scss"],
   providers: [LoginComponent],
 })
-export class StudentComponent implements OnInit {
+export class StudentComponent implements OnInit, OnDestroy {
+  private ngUnsubscribe: Subject<any> = new Subject();
+
   constructor(
     private userService: UserService,
     private loginObject: LoginComponent,
@@ -25,13 +29,14 @@ export class StudentComponent implements OnInit {
   user: any;
   details: any;
   loaded: boolean = false;
-  publishStudents :boolean;
+  publishStudents: boolean;
   publishFaculty: boolean;
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.user = this.userService
       .getStudentDetails(this.user.id)
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data) => {
         if (data["status"] == "invalid-token") {
           this.loginObject.signOut();
@@ -42,18 +47,12 @@ export class StudentComponent implements OnInit {
           this.details = data["user_details"];
           this.loaded = true;
 
-          this.userService.getPublishMode("student")
-            .subscribe(data=>{
-              if(data["status"] == "success"){
-                this.publishStudents = data["studentPublish"] 
-                this.publishFaculty = data["facultyPublish"]
-              }
-            })
-
-
-
-
-
+          this.userService.getPublishMode("student").subscribe((data) => {
+            if (data["status"] == "success") {
+              this.publishStudents = data["studentPublish"];
+              this.publishFaculty = data["facultyPublish"];
+            }
+          });
         } else {
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
@@ -61,5 +60,9 @@ export class StudentComponent implements OnInit {
           });
         }
       });
+  }
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

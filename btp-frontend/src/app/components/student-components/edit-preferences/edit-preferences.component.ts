@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy } from "@angular/core";
 import { MatDialog, MatSnackBar, MatTableDataSource } from "@angular/material";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { LoginComponent } from "../../shared/login/login.component";
 import { UserService } from "src/app/services/user/user.service";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { takeUntil } from "rxjs/operators";
 import {
   trigger,
   style,
@@ -13,6 +14,8 @@ import {
   animate,
 } from "@angular/animations";
 import { ShowAvailableProjectsComponent } from "../show-available-projects/show-available-projects.component";
+import { LoaderComponent } from "../../shared/loader/loader.component";
+import { Subject } from "rxjs";
 
 @Component({
   selector: "app-edit-preferences",
@@ -32,8 +35,9 @@ import { ShowAvailableProjectsComponent } from "../show-available-projects/show-
     ]),
   ],
 })
-export class EditPreferencesComponent implements OnInit {
+export class EditPreferencesComponent implements OnInit, OnDestroy {
   @Input() preferences: any = new MatTableDataSource([]);
+  private ngUnsubscribe: Subject<any> = new Subject();
   finalPreferences: any = [];
   projects: any = [];
   expandedElement;
@@ -45,7 +49,8 @@ export class EditPreferencesComponent implements OnInit {
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private loadingBar: LoadingBarService
+    private loadingBar: LoadingBarService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {}
@@ -53,42 +58,40 @@ export class EditPreferencesComponent implements OnInit {
   displayedColumns = ["Title", "Faculty", "Email", "Intake", "Actions"];
 
   onSubmit() {
-    this.loadingBar.start();
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Saving preferences, please wait",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.projectService
       .storeStudentPreferences(this.preferences.data)
-      .toPromise()
-      .then((res) => {
-        if (res["message"] == "success") {
-          this.preferences.data = res["result"];
-        }
-        return res["message"];
-      })
-      .catch((err) => {
-        this.loadingBar.stop();
-        this.disable = false;
-        this.snackBar.open(
-          "Some Error Occured! If the Error Persists Please re-authenticate",
-          "OK",
-          {
-            duration: 3000,
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(
+        (result) => {
+          dialogRefLoad.close();
+          if (result["message"] == "success") {
+            this.preferences.data = result["result"];
+            this.snackBar.open("Preferences Saved Successfully", "OK", {
+              duration: 3000,
+            });
+          } else if (result["message"] == "invalid-token") {
+            this.disable = false;
+            this.loginObject.signOut();
+            this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+              duration: 3000,
+            });
+          } else {
+            this.disable = false;
+            this.snackBar.open(
+              "Some Error Occured! If the Error Persists Please re-authenticate",
+              "OK",
+              {
+                duration: 3000,
+              }
+            );
           }
-        );
-      })
-      .then((message) => {
-        this.loadingBar.stop();
-        if (message == "success") {
-          this.disable = true;
-          this.snackBar.open("Preferences Saved Successfully", "OK", {
-            duration: 3000,
-          });
-        } else if (message == "invalid-token") {
-          this.disable = false;
-          this.loginObject.signOut();
-          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-            duration: 3000,
-          });
-        } else {
-          this.disable = false;
+        },
+        () => {
           this.snackBar.open(
             "Some Error Occured! If the Error Persists Please re-authenticate",
             "OK",
@@ -97,74 +100,44 @@ export class EditPreferencesComponent implements OnInit {
             }
           );
         }
-      });
+      );
   }
-
-  getAllStudentPreferences() {
-    var tempArray: any;
-    var tempPref: any;
-    const user = this.projectService
-      .getStudentPreference()
-      .toPromise()
-      .then((details) => {
-        if (details["message"] == "invalid-token") {
-          this.loginObject.signOut();
-          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-            duration: 3000,
-          });
-          return null;
-        }
-        if (details) {
-          this.finalPreferences = this.preferences = details["result"];
-          tempPref = this.preferences.map((val) => val._id);
-          this.preferences = new MatTableDataSource(this.preferences);
-          return details;
-        }
-      })
-      .then((preferences) => {
-        if (preferences) {
-          this.projectService
-            .getAllStudentProjects()
-            .toPromise()
-            .then((projects) => {
-              tempArray = projects["result"];
-              for (const project of tempArray) {
-                if (!tempPref.includes(project._id)) {
-                  this.projects.push(project);
-                }
-              }
-              this.loaded = true;
-              this.loadingBar.stop();
-            });
-        }
-      })
-      .catch(() => {
-        this.loginObject.signOut();
-        this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-          duration: 3000,
-        });
-      });
-  }
-
   removePreference(preference) {
     this.projectService
       .removeOneStudentPreference(preference)
-      .subscribe((result) => {
-        if (result["message"] == "invalid-token") {
-          this.loginObject.signOut();
-          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
-            duration: 3000,
-          });
-        } else if (result["message"] == "success") {
-          this.preferences.data = this.preferences.data.filter((val) => {
-            return val._id != preference._id;
-          });
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(
+        (result) => {
+          if (result["message"] == "invalid-token") {
+            this.loginObject.signOut();
+            this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+              duration: 3000,
+            });
+          } else if (result["message"] == "success") {
+            this.preferences.data = this.preferences.data.filter((val) => {
+              return val._id != preference._id;
+            });
+          }
+        },
+        () => {
+          this.snackBar.open(
+            "Some Error Occured! If the Error Persists Please re-authenticate",
+            "OK",
+            {
+              duration: 3000,
+            }
+          );
         }
-      });
+      );
   }
   drop(event: CdkDragDrop<any[]>) {
     const previousIndex = this.preferences.data.indexOf(event.item.data);
     moveItemInArray(event.container.data, previousIndex, event.currentIndex);
     this.preferences = new MatTableDataSource(event.container.data);
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

@@ -499,9 +499,10 @@ export class AdminComponent implements OnInit {
                   }
                 });
 
-                this.userService.updatePublish("reset")
-                .subscribe(data=>{
-                  if(data["status"] == "success"){
+                this.userService.uploadAllocationFile().subscribe((data) => {});
+
+                this.userService.updatePublish("reset").subscribe((data) => {
+                  if (data["status"] == "success") {
                     this.publishFaculty = false;
                     this.publishStudents = false;
                     if (this.stage_no == 3) {
@@ -509,9 +510,6 @@ export class AdminComponent implements OnInit {
                         .updateStage(this.stage_no + 1)
                         .subscribe((data) => {
                           if (data["status"] == "success") {
-    
-                          
-    
                             this.snackBar.open(
                               "Allocation completed successfully",
                               "Ok",
@@ -539,13 +537,8 @@ export class AdminComponent implements OnInit {
                         }
                       );
                     }
-
                   }
-                })
-
-
-
-                
+                });
               } else if (data["message"] == "invalid-token") {
                 this.loginService.signOut();
                 this.snackBar.open(
@@ -1137,17 +1130,21 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  downloadFile_allocation() {
+    this.exportService.download("allocation").subscribe((data) => {
+      saveAs(data, `${this.programName}_allocation.csv`);
+    });
+  }
+
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-    if(this.fileToUpload.name.split(".")[1] == "csv"){
-
+    if (this.fileToUpload.name.split(".")[1] == "csv") {
       const dialogRef = this.dialog.open(DeletePopUpComponent, {
         width: "400px",
         height: "200px",
         data: {
           heading: "Confirm Upload",
-          message:
-            `Are you sure that you want to upload ${this.fileToUpload.name} ?`,
+          message: `Are you sure that you want to upload ${this.fileToUpload.name} ?`,
         },
       });
       dialogRef.afterClosed().subscribe((result) => {
@@ -1172,69 +1169,59 @@ export class AdminComponent implements OnInit {
             } 
            });
         }
-      })
-    }
-    else{
-      this.snackBar.open("Only .csv files are to imported. Other files types are not supported.", "Ok", {
-        duration: 10000,
       });
+    } else {
+      this.snackBar.open(
+        "Only .csv files are to imported. Other files types are not supported.",
+        "Ok",
+        {
+          duration: 10000,
+        }
+      );
     }
   }
 
-  publishToFaculty(){
+  publishToFaculty() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
       height: "200px",
       data: {
         heading: "Confirm Publish",
-        message:
-          `Are you sure that you want to publish this allocation to faculty ? `,
+        message: `Are you sure that you want to publish this allocation to faculty ? `,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
-
-        this.userService.updatePublish("faculty")
-          .subscribe(data=>{
-            if(data["status"] == "success"){
-              this.snackBar.open("Successfully published to faculty", "Ok", {
-                duration: 10000,
-              });
-            }
-          })
-
-
-
+        this.userService.updatePublish("faculty").subscribe((data) => {
+          if (data["status"] == "success") {
+            this.snackBar.open("Successfully published to faculty", "Ok", {
+              duration: 10000,
+            });
+          }
+        });
       }
-    })
-
+    });
   }
 
-  publishToStudents(){
+  publishToStudents() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
       height: "200px",
       data: {
         heading: "Confirm Publish",
-        message:
-          `Are you sure that you want to publish this allocation to students ? `,
+        message: `Are you sure that you want to publish this allocation to students ? `,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
-
-        this.userService.updatePublish("student")
-        .subscribe(data=>{
-          if(data["status"] == "success"){
+        this.userService.updatePublish("student").subscribe((data) => {
+          if (data["status"] == "success") {
             this.snackBar.open("Successfully published to students", "Ok", {
               duration: 10000,
             });
           }
-        })
-
+        });
       }
-    })
+    });
   }
-
-
 }
