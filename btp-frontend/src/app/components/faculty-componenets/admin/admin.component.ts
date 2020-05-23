@@ -1158,6 +1158,7 @@ export class AdminComponent implements OnInit {
              this.snackBar.open("Successfully uploaded the files.", "Ok", {
                duration: 10000,
              });
+             this.ngOnInit();
             }
             else if(data['status'] == "fail_parse"){
              this.snackBar.open(data['msg'], "Ok", {

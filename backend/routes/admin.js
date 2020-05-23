@@ -1561,7 +1561,8 @@ router.post("/uploadStudentList/:id",(req,res)=>{
 								})
 								.on("end", () => {
 
-									
+
+
 									const validationError = validateCsvData(fileRows);
 									if (validationError) {
 										fs.unlinkSync(req.file.path);
@@ -1572,7 +1573,38 @@ router.post("/uploadStudentList/:id",(req,res)=>{
 									}
 									
 								admin.studentCount = fileRows.length - 1;
-								admin.save()
+
+
+								var promises = [];
+								
+								for(let i =1;i<fileRows.length;i++){
+
+									let data = fileRows[i];
+
+									promises.push(
+										Student.findOne({roll_no:data[1]})
+											.then(student =>{
+
+												if(student){
+													
+													student.name = data[0];
+													student.gpa = data[2];
+
+													return student.save()
+														.then(result=>{
+															return result;
+														})
+
+												}
+
+											})
+
+									)
+								}
+								
+								Promise.all(promises)
+									.then(result=>{
+										admin.save()
 									.then(result=>{
 
 										return res.json({
@@ -1581,6 +1613,10 @@ router.post("/uploadStudentList/:id",(req,res)=>{
 										})
 
 									})
+
+								})
+
+								
 								
 								})
 
