@@ -74,6 +74,9 @@ export class AdminComponent implements OnInit {
   proceedButton2_ = true;
   proceedButton3_ = true;
 
+  publishStudents = true;
+  publishFaculty = true;
+
   index;
   faculties: any = [];
   students: any = [];
@@ -495,38 +498,54 @@ export class AdminComponent implements OnInit {
                     this.selection.select(row);
                   }
                 });
-                if (this.stage_no == 3) {
-                  this.userService
-                    .updateStage(this.stage_no + 1)
-                    .subscribe((data) => {
-                      if (data["status"] == "success") {
-                        this.snackBar.open(
-                          "Allocation completed successfully",
-                          "Ok",
-                          {
-                            duration: 3000,
+
+                this.userService.updatePublish("reset")
+                .subscribe(data=>{
+                  if(data["status"] == "success"){
+                    this.publishFaculty = false;
+                    this.publishStudents = false;
+                    if (this.stage_no == 3) {
+                      this.userService
+                        .updateStage(this.stage_no + 1)
+                        .subscribe((data) => {
+                          if (data["status"] == "success") {
+    
+                          
+    
+                            this.snackBar.open(
+                              "Allocation completed successfully",
+                              "Ok",
+                              {
+                                duration: 3000,
+                              }
+                            );
+                          } else {
+                            this.loginService.signOut();
+                            this.snackBar.open(
+                              "Session Timed Out! Please Sign-In again",
+                              "Ok",
+                              {
+                                duration: 3000,
+                              }
+                            );
                           }
-                        );
-                      } else {
-                        this.loginService.signOut();
-                        this.snackBar.open(
-                          "Session Timed Out! Please Sign-In again",
-                          "Ok",
-                          {
-                            duration: 3000,
-                          }
-                        );
-                      }
-                    });
-                } else {
-                  this.snackBar.open(
-                    "Allocation completed successfully",
-                    "Ok",
-                    {
-                      duration: 3000,
+                        });
+                    } else {
+                      this.snackBar.open(
+                        "Allocation completed successfully",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
                     }
-                  );
-                }
+
+                  }
+                })
+
+
+
+                
               } else if (data["message"] == "invalid-token") {
                 this.loginService.signOut();
                 this.snackBar.open(
@@ -1122,28 +1141,99 @@ export class AdminComponent implements OnInit {
     this.fileToUpload = files.item(0);
     if(this.fileToUpload.name.split(".")[1] == "csv"){
 
+      const dialogRef = this.dialog.open(DeletePopUpComponent, {
+        width: "400px",
+        height: "200px",
+        data: {
+          heading: "Confirm Upload",
+          message:
+            `Are you sure that you want to upload ${this.fileToUpload.name} ?`,
+        },
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result && result["message"] == "submit") {
+          this.exportService.uploadStudentList(this.fileToUpload,this.programName)
+          .subscribe(data => {
+            if(data["status"] == "success"){
+             this.snackBar.open("Successfully uploaded the files.", "Ok", {
+               duration: 10000,
+             });
+            }
+            else if(data['status'] == "fail_parse"){
+             this.snackBar.open(data['msg'], "Ok", {
+               duration: 10000,
+             });
+            }
+            else{
+             this.snackBar.open("There was an unexpected error. Please reload and try again!", "Ok", {
+               duration: 10000,
+             });
+            } 
+           });
+        }
+      })
     }
     else{
       this.snackBar.open("Only .csv files are to imported. Other files types are not supported.", "Ok", {
         duration: 10000,
       });
     }
-}
-
-  importStudents(){
-     this.exportService.uploadStudentList(this.fileToUpload,this.programName)
-     .subscribe(data => {
-       if(data["status"] == "success"){
-        this.snackBar.open("Successfully uploaded the files.", "Ok", {
-          duration: 10000,
-        });
-       }
-       else{
-        this.snackBar.open("There was an unexpected error. Please reload and try again!", "Ok", {
-          duration: 10000,
-        });
-       }
-      // do something, if upload success
-      });
   }
+
+  publishToFaculty(){
+    const dialogRef = this.dialog.open(DeletePopUpComponent, {
+      width: "400px",
+      height: "200px",
+      data: {
+        heading: "Confirm Publish",
+        message:
+          `Are you sure that you want to publish this allocation to faculty ? `,
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result["message"] == "submit") {
+
+        this.userService.updatePublish("faculty")
+          .subscribe(data=>{
+            if(data["status"] == "success"){
+              this.snackBar.open("Successfully published to faculty", "Ok", {
+                duration: 10000,
+              });
+            }
+          })
+
+
+
+      }
+    })
+
+  }
+
+  publishToStudents(){
+    const dialogRef = this.dialog.open(DeletePopUpComponent, {
+      width: "400px",
+      height: "200px",
+      data: {
+        heading: "Confirm Publish",
+        message:
+          `Are you sure that you want to publish this allocation to students ? `,
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result["message"] == "submit") {
+
+        this.userService.updatePublish("student")
+        .subscribe(data=>{
+          if(data["status"] == "success"){
+            this.snackBar.open("Successfully published to students", "Ok", {
+              duration: 10000,
+            });
+          }
+        })
+
+      }
+    })
+  }
+
+
 }

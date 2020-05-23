@@ -155,8 +155,7 @@ mat-tab{
 
 .finalStageButtons{
     display: inline-flex;
-    // margin-top:2%;
-    margin-left:20%;
+    margin-left:10%;
 }
 
 .reset {
@@ -178,10 +177,14 @@ mat-tab{
 }
 
 .student_download{
-    left:20%;
+    left:38%;
+    margin-top:2%; 
 }
 
 .flex-space{
     margin-top:2%;
 }
 
+.import_students{
+    left:20%;
+}

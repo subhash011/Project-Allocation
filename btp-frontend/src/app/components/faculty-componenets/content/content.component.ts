@@ -1,3 +1,4 @@
+import { UserService } from 'src/app/services/user/user.service';
 import { FacultyComponent } from "./../faculty/faculty.component";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -29,6 +30,9 @@ export class ContentComponent implements OnInit, DoCheck {
   @Input() public adminStage;
   public id;
 
+  public publishStudents: boolean;
+  public publishFaculty: boolean;
+
   Headers = ["Project Name", "#Students Applied", "#Students Alloted"];
 
   navigationSubscription;
@@ -52,7 +56,7 @@ export class ContentComponent implements OnInit, DoCheck {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private router: Router,
-    private location: Location,
+    private userService: UserService,
     private login: LoginComponent,
     private facultyComponent: FacultyComponent
   ) {}
@@ -60,6 +64,19 @@ export class ContentComponent implements OnInit, DoCheck {
   ngOnInit() {
     let id = localStorage.getItem("id");
     this.id = id;
+
+    this.userService.getPublishMode("faculty")
+      .subscribe(data=>{
+
+        if(data["status"] == "success"){
+          this.publishFaculty = data['facultyPublish'];
+          this.publishStudents = data['studentPublish'];
+        }
+
+      })
+    
+
+
   }
 
   ngDoCheck(): void {

@@ -351,7 +351,27 @@
           Start Allocation
         </button>
       </div>
-      <div class="sendEmailsButton">
+      <div class="startAllocationButton">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled] = "publishStudents"
+          (click)="publishToStudents()"
+        >
+          Publish Students
+        </button>
+      </div>
+      <div class="startAllocationButton">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled] = "publishFaculty"
+          (click)="publishToFaculty()"
+        >
+          Publish Faculty
+        </button>
+      </div>
+      <!-- <div class="sendEmailsButton">
         <button
           mat-raised-button
           color="accent"
@@ -360,7 +380,7 @@
         >
           Send Emails
         </button>
-      </div>
+      </div> -->
       <div class="sendEmailsButton">
         <button
           mat-raised-button
@@ -486,30 +506,41 @@
             <i class="material-icons">search</i>
           </button>
         </div>
-        <div class="flex-space" *ngIf="stage_no >= 3">
-          <button
+        <div class="flex-space">
+
+          <div  >
+
+            <button *ngIf="stage_no >= 3"
             mat-raised-button
             color="accent"
             class="student_download"
             (click)="downloadFile_student()"
-          >
+            >
             Export Preferences
           </button>
+            
+          <button
+          mat-raised-button
+          color="accent"
+          class="import_students"
+          (click)="fileInput.click()"
+        >
+          Import Students
+        </button>
         </div>
-        <!-- <input type="file"
-        (change)="handleFileInput($event.target.files)" /> -->
+        </div>
 
-        <input class="ng-hide" id="input-file-id" type="file" />
-        <label for="input-file-id" class="md-button md-raised md-primary">Choose Files</label>
-
+        <input type="file" style="display: none;"
+        (change)="handleFileInput($event.target.files)" #fileInput />
+<!-- 
         <button
         mat-raised-button
         color="accent"
-        class="student_download"
-        (click)="importStudents()"
+        class="import_students"
+        (click)="fileInput.click()"
       >
         Import Students
-      </button>
+      </button> -->
         <div class="display">
           <div class="table mat-elevation-z8">
             <table

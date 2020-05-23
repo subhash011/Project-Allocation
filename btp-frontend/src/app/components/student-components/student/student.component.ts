@@ -5,8 +5,12 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { UserService } from "src/app/services/user/user.service";
+<<<<<<< HEAD
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+=======
+import { identifierModuleUrl } from '@angular/compiler';
+>>>>>>> c1bb1a5e78a755fe322fb909d40aadcd89606697
 
 @Component({
   selector: "app-student",
@@ -28,6 +32,9 @@ export class StudentComponent implements OnInit, OnDestroy {
   user: any;
   details: any;
   loaded: boolean = false;
+  publishStudents :boolean;
+  publishFaculty: boolean;
+
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.user = this.userService
@@ -42,6 +49,19 @@ export class StudentComponent implements OnInit, OnDestroy {
         } else if (data["status"] == "success") {
           this.details = data["user_details"];
           this.loaded = true;
+
+          this.userService.getPublishMode("student")
+            .subscribe(data=>{
+              if(data["status"] == "success"){
+                this.publishStudents = data["studentPublish"] 
+                this.publishFaculty = data["facultyPublish"]
+              }
+            })
+
+
+
+
+
         } else {
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
