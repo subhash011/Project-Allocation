@@ -12,6 +12,7 @@ import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDialog } from "@angular/material/dialog";
+import { LoaderComponent } from "../../shared/loader/loader.component";
 
 @Pipe({
   name: "preference",
