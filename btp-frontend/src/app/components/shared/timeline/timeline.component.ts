@@ -41,6 +41,7 @@ export class TimelineComponent implements OnInit, OnChanges {
   displayTimeline: boolean;
   loaded: boolean = false;
   styles;
+  @Input() clone;
   ngOnChanges(changes: SimpleChanges) {
     this.program = changes.program.currentValue;
     this.ngOnInit();

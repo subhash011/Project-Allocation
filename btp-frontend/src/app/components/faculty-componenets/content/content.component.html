@@ -1,6 +1,6 @@
 <div class="container" *ngIf="empty; else notEmpty">
   <div class="app-timeline" *ngIf="!programs_mode; else goProgramMode">
-    <app-timeline *ngIf="!programs_mode" [program]="stream"></app-timeline>
+    <app-timeline *ngIf="!programs_mode" [program]="stream" [clone]="'temp'"></app-timeline>
   </div>
 
   <ng-template #goProgramMode>
