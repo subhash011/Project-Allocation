@@ -5,6 +5,8 @@ import { UserService } from "./../../../services/user/user.service";
 import { HttpHeaders } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
+import { MatDialog } from "@angular/material";
+import { LoaderComponent } from "../loader/loader.component";
 
 @Component({
   selector: "app-register",
@@ -19,7 +21,8 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
   branchStudent: any;
   head: string;
