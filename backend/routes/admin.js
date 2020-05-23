@@ -9,33 +9,29 @@ const Mapping = require("../models/Mapping");
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
-const csv = require('fast-csv');
+const csv = require("fast-csv");
 
-	
 function validateCsvData(rows) {
 	const dataRows = rows.slice(1, rows.length);
 	for (let i = 0; i < dataRows.length; i++) {
-	  const rowError = validateCsvRow(dataRows[i]);
-	  if (rowError) {
-		return `${rowError} on row ${i + 1}`
-	  }
+		const rowError = validateCsvRow(dataRows[i]);
+		if (rowError) {
+			return `${rowError} on row ${i + 1}`;
+		}
 	}
 	return;
 }
 
 function validateCsvRow(row) {
 	if (!row[0]) {
-	  return "invalid name"
-	}
-	else if (!Number.isInteger(Number(row[1]))) {
-	  return "invalid roll number"
-	}
-	else if (!Number(row[2])) {
-	  return "invalid gpa"
+		return "invalid name";
+	} else if (!Number.isInteger(Number(row[1]))) {
+		return "invalid roll number";
+	} else if (!Number(row[2])) {
+		return "invalid gpa";
 	}
 	return;
 }
-
 
 function studentPref(total, student) {
 	return total + "," + student.name;
@@ -170,6 +166,49 @@ function generateCSVStudents(data, program_name) {
 		}
 		return "success";
 	});
+}
+
+//here we have to note that the folder should have write permissions else you might face problems
+function generateCSVAllocation(data, program_name) {
+	let headers = "Title,Faculty,Student Intake,";
+	var file = path.resolve(__dirname, `../CSV/allocation/${program_name}.csv`);
+	var allotedCount = data.map((val) => {
+		return val.allotedCount;
+	});
+	var maxAlloted = Math.max(...allotedCount);
+	for (var i = 1; i <= maxAlloted; i++) {
+		headers += "Student Name ( " + i + " )," + "Roll no. ( " + i + " ),";
+	}
+	headers = headers.substring(0, headers.length - 1) + "\n";
+	if (maxAlloted == 0) {
+		fs.writeFile(file, headers, (err) => {
+			if (err) {
+				return "error";
+			}
+			return "success";
+		});
+		return;
+	}
+	var value = "";
+	for (const status of data) {
+		const arr = [status.title, status.faculty, status.studentIntake.toString()];
+		const students = status.student_alloted;
+		for (var i = 0; i < maxAlloted; i++) {
+			if (i < students.length) {
+				arr.push(students[i].name, students[i].roll_no);
+			} else {
+				arr.push("N/A");
+			}
+		}
+		value += arr.join() + "\n";
+		const write_obj = headers + value;
+		fs.writeFile(file, write_obj, (err) => {
+			if (err) {
+				return "error";
+			}
+			return "success";
+		});
+	}
 }
 
 router.get("/project/:id", (req, res) => {
@@ -1387,6 +1426,50 @@ router.get("/export_projects/:id", (req, res) => {
 	);
 });
 
+router.get("/export_allocation/:id", (req, res) => {
+	const id = req.params.id;
+	const idToken = req.headers.authorization;
+
+	Faculty.findOne({
+		google_id: { id: id, idToken: idToken },
+	}).then((faculty) => {
+		if (faculty && faculty.isAdmin) {
+			Admin.findOne({ admin_id: faculty._id }).then((admin) => {
+				var stream = admin.stream;
+				Project.find({ stream: stream })
+					.populate({
+						path: "faculty_id",
+						select: { name: 1 },
+						model: Faculty,
+					})
+					.populate({
+						path: "student_alloted",
+						select: { name: 1, roll_no: 1 },
+						model: Student,
+					})
+					.then((projects) => {
+						var data = projects.map((val) => {
+							var newProj = {
+								title: val.title,
+								faculty: val.faculty_id.name,
+								studentIntake: val.studentIntake,
+								student_alloted: val.student_alloted,
+								allotedCount: val.student_alloted.length,
+							};
+							return newProj;
+						});
+						const ans = generateCSVAllocation(data, stream);
+						res.send(ans);
+					});
+			});
+		} else {
+			res.json({
+				message: "invalid-token",
+			});
+		}
+	});
+});
+
 router.get("/export_students/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
@@ -1508,116 +1591,88 @@ router.get("/download_csv/:id/:role", (req, res) => {
 		});
 });
 
-
-router.post("/uploadStudentList/:id",(req,res)=>{
-
-
+router.post("/uploadStudentList/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 
-	Faculty.findOne({google_id:{id:id,idToken:idToken}})
-		.then(faculty=>{
-
-			if(faculty){
-				Admin.findOne({admin_id:faculty._id})
-					.then(admin=>{
-						if(admin){
-
+	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+		.then((faculty) => {
+			if (faculty) {
+				Admin.findOne({ admin_id: faculty._id })
+					.then((admin) => {
+						if (admin) {
 							const storage = multer.diskStorage({
-								destination: function(req, file, cb) {
-									cb(null, 'CSV/StudentList');
+								destination: function (req, file, cb) {
+									cb(null, "CSV/StudentList");
 								},
-							
-								filename: function(req, file, cb) {
+
+								filename: function (req, file, cb) {
 									cb(null, admin.stream + ".csv");
-								}
-							})
-
-
-							let upload = multer({ storage: storage }).single('student_list');
-
-							upload(req, res, function(err) {
-								
-								
-								if (!req.file) {
-									return res.send('Please select a file to upload');
-								}
-								else if (err instanceof multer.MulterError) {
-									return res.send(err);
-								}
-								else if (err) {
-									return res.send(err);
-								}
-
-								let fileRows = []
-								csv.parseFile(req.file.path)
-								.on("data",  (data) => {
-									fileRows.push(data); 
-								})
-								.on("end", () => {
-
-									
-									const validationError = validateCsvData(fileRows);
-									if (validationError) {
-										fs.unlinkSync(req.file.path);
-									 return res.json({ 
-										status:"fail",
-										error: validationError
-									 });
-									}
-									
-								admin.studentCount = fileRows.length - 1;
-								admin.save()
-									.then(result=>{
-
-										return res.json({
-											status:"success",
-											msg:"Successfully uploaded the student list."
-										})
-
-									})
-								
-								})
-
-								
+								},
 							});
-						
-						}
-						else{
+
+							let upload = multer({ storage: storage }).single("student_list");
+
+							upload(req, res, function (err) {
+								if (!req.file) {
+									return res.send("Please select a file to upload");
+								} else if (err instanceof multer.MulterError) {
+									return res.send(err);
+								} else if (err) {
+									return res.send(err);
+								}
+
+								let fileRows = [];
+								csv
+									.parseFile(req.file.path)
+									.on("data", (data) => {
+										fileRows.push(data);
+									})
+									.on("end", () => {
+										const validationError = validateCsvData(fileRows);
+										if (validationError) {
+											fs.unlinkSync(req.file.path);
+											return res.json({
+												status: "fail",
+												error: validationError,
+											});
+										}
+
+										admin.studentCount = fileRows.length - 1;
+										admin.save().then((result) => {
+											return res.json({
+												status: "success",
+												msg: "Successfully uploaded the student list.",
+											});
+										});
+									});
+							});
+						} else {
 							res.json({
-								status:"fail",
-								result:null
-							})
-
+								status: "fail",
+								result: null,
+							});
 						}
 					})
-					.catch(err=>{
+					.catch((err) => {
 						res.json({
-							status:"fail",
-							result:null
-						})
-					})
-			
-			}
-			else{
+							status: "fail",
+							result: null,
+						});
+					});
+			} else {
 				res.json({
-					status:"fail",
-					result:null
-				})
-
+					status: "fail",
+					result: null,
+				});
 			}
 		})
-		.catch(err=>{
+		.catch((err) => {
 			res.json({
-				status:"fail",
-				result:null
-			})
-		})
-
-
-
-})
-
-
+				status: "fail",
+				result: null,
+			});
+		});
+});
 
 module.exports = router;
