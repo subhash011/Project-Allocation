@@ -3,8 +3,10 @@ import { HttpClient } from "@angular/common/http";
 import { MailService } from "./../../../services/mailing/mail.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../../shared/login/login.component";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { UserService } from "src/app/services/user/user.service";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "app-student",
@@ -12,7 +14,9 @@ import { UserService } from "src/app/services/user/user.service";
   styleUrls: ["./student.component.scss"],
   providers: [LoginComponent],
 })
-export class StudentComponent implements OnInit {
+export class StudentComponent implements OnInit, OnDestroy {
+  private ngUnsubscribe: Subject<any> = new Subject();
+
   constructor(
     private userService: UserService,
     private loginObject: LoginComponent,
@@ -28,6 +32,7 @@ export class StudentComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.user = this.userService
       .getStudentDetails(this.user.id)
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data) => {
         if (data["status"] == "invalid-token") {
           this.loginObject.signOut();
@@ -44,5 +49,9 @@ export class StudentComponent implements OnInit {
           });
         }
       });
+  }
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

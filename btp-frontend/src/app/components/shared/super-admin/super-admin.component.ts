@@ -76,118 +76,104 @@ export class SuperAdminComponent implements OnInit {
 
   ngOnInit() {
     this.loadingBar.start();
-    this.userService
-      .getAllBranches()
-      .toPromise()
-      .then((maps) => {
-        this.maps = maps["result"];
-        this.branches = this.maps.map((val) => {
-          var newMap = {
-            name: val.full,
-            short: val.short,
-          };
-          return newMap;
-        });
+    this.userService.getAllBranches().subscribe((maps) => {
+      this.maps = maps["result"];
+      this.branches = this.maps.map((val) => {
+        var newMap = {
+          name: val.full,
+          short: val.short,
+        };
+        return newMap;
       });
-    this.userService
-      .getAllMaps()
-      .toPromise()
-      .then((maps) => {
-        this.maps = maps["result"];
-        this.programs = this.maps.map((val) => {
-          var newMap = {
-            name: val.full,
-            short: val.short,
-            map: val.map,
-          };
-          return newMap;
-        });
-        return this.programs;
-      })
-      .then((branches) => {
-        this.userService
-          .getAllProjects()
-          .toPromise()
-          .then((projects) => {
-            if (projects["message"] == "success") {
-              const project = projects["result"];
-              for (const branch of branches) {
-                this.projects[branch.short] = project.filter((val) => {
-                  return val.stream == branch.short;
-                });
-              }
-            } else {
-              this.snackBar.open("Please Sign-In Again to continue", "Ok", {
-                duration: 3000,
+    });
+    this.userService.getAllMaps().subscribe((maps) => {
+      this.maps = maps["result"];
+      this.programs = this.maps.map((val) => {
+        var newMap = {
+          name: val.full,
+          short: val.short,
+          map: val.map,
+        };
+        return newMap;
+      });
+      const branches = this.programs;
+      this.userService.getAllProjects().subscribe(
+        (projects) => {
+          if (projects["message"] == "success") {
+            const project = projects["result"];
+            for (const branch of branches) {
+              this.projects[branch.short] = project.filter((val) => {
+                return val.stream == branch.short;
               });
-              this.login.signOut();
             }
-          })
-          .catch((err) => {
+          } else {
             this.snackBar.open("Please Sign-In Again to continue", "Ok", {
               duration: 3000,
             });
             this.login.signOut();
+          }
+        },
+        () => {
+          this.snackBar.open("Please Sign-In Again to continue", "Ok", {
+            duration: 3000,
           });
+          this.login.signOut();
+        }
+      );
 
-        this.userService
-          .getAllStudents()
-          .toPromise()
-          .then((result) => {
-            if (result["message"] == "success") {
-              if (result["result"] == "no-students") {
-                this.students = {};
-              } else {
-                var i = 0;
-                for (const branch of this.programs) {
-                  this.students[branch.short] = result["result"][branch.short];
-                  i++;
-                }
+      this.userService.getAllStudents().subscribe(
+        (result) => {
+          if (result["message"] == "success") {
+            if (result["result"] == "no-students") {
+              this.students = {};
+            } else {
+              var i = 0;
+              for (const branch of this.programs) {
+                this.students[branch.short] = result["result"][branch.short];
+                i++;
               }
             }
-            this.loadingBar.stop();
-          })
-          .catch(() => {
-            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
-              duration: 3000,
-            });
-            this.login.signOut();
+          }
+          this.loadingBar.stop();
+        },
+        () => {
+          this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+            duration: 3000,
           });
-        this.userService
-          .getAllFaculties()
-          .toPromise()
-          .then((result) => {
-            if (result["message"] == "success") {
-              if (result["result"] == "no-faculties") {
-                this.faculties = {};
-              } else {
-                var i = 0;
-                for (const branch of this.programs) {
-                  this.faculties[branch.short] = result["result"][branch.short];
-                  i++;
-                  this.hasAdmins[branch.short] =
-                    this.faculties[branch.short].filter((val) => {
-                      if (
-                        val.adminProgram &&
-                        val.adminProgram == branch.short
-                      ) {
-                        return true;
-                      }
-                      return false;
-                    }).length > 0
-                      ? true
-                      : false;
-                }
+          this.login.signOut();
+        }
+      );
+      this.userService.getAllFaculties().subscribe(
+        (result) => {
+          if (result["message"] == "success") {
+            if (result["result"] == "no-faculties") {
+              this.faculties = {};
+            } else {
+              var i = 0;
+              for (const branch of this.programs) {
+                this.faculties[branch.short] = result["result"][branch.short];
+                i++;
+                this.hasAdmins[branch.short] =
+                  this.faculties[branch.short].filter((val) => {
+                    if (val.adminProgram && val.adminProgram == branch.short) {
+                      return true;
+                    }
+                    return false;
+                  }).length > 0
+                    ? true
+                    : false;
               }
             }
-          })
-          .catch(() => {
-            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
-              duration: 3000,
-            });
-            this.login.signOut();
+          }
+        },
+        () => {
+          this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+            duration: 3000,
           });
-      });
+          this.login.signOut();
+        }
+      );
+    });
   }
 
   addPrograms() {
@@ -320,10 +306,8 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.loadingBar.start();
-        this.userService
-          .removeFaculty(faculty)
-          .toPromise()
-          .then((result) => {
+        this.userService.removeFaculty(faculty).subscribe(
+          (result) => {
             if (result["message"] == "success") {
               this.snackBar.open("Successfully Deleted Faculty", "OK", {
                 duration: 3000,
@@ -343,32 +327,27 @@ export class SuperAdminComponent implements OnInit {
               );
             }
             this.ngOnInit();
-          })
-          .catch(() => {
+          },
+          () => {
             this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
               duration: 3000,
             });
-          });
+          }
+        );
       }
     });
   }
   addAdmin(faculty, branch) {
     this.loadingBar.start();
-    this.userService
-      .addAdmin(faculty, branch)
-      .toPromise()
-      .then(() => {
-        this.ngOnInit();
-      });
+    this.userService.addAdmin(faculty, branch).subscribe(() => {
+      this.ngOnInit();
+    });
   }
   removeAdmin(faculty) {
     this.loadingBar.start();
-    this.userService
-      .removeAdmin(faculty)
-      .toPromise()
-      .then(() => {
-        this.ngOnInit();
-      });
+    this.userService.removeAdmin(faculty).subscribe(() => {
+      this.ngOnInit();
+    });
   }
 
   getToolTipToRemoveFaculty(faculty, branch) {
@@ -398,10 +377,8 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.loadingBar.start();
-        this.userService
-          .removeStudent(student)
-          .toPromise()
-          .then((result) => {
+        this.userService.removeStudent(student).subscribe(
+          (result) => {
             if (result["message"] == "success") {
               this.snackBar.open("Successfully Deleted Student", "OK", {
                 duration: 3000,
@@ -412,18 +389,14 @@ export class SuperAdminComponent implements OnInit {
               });
             }
             this.ngOnInit();
-          })
-          .catch((err) => {
+          },
+          () => {
             this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
               duration: 3000,
             });
-          });
+          }
+        );
       }
     });
-  }
-  getURL() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    return "url('https://img.icons8.com/material/48/000000/person-male.png')";
-    // return "url(" + user.photoUrl + ")";
   }
 }
