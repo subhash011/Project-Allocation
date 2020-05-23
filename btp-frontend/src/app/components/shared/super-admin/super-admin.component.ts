@@ -12,8 +12,10 @@ import {
   OnChanges,
   SimpleChange,
   SimpleChanges,
+  ViewChild,
 } from "@angular/core";
-import { LoaderComponent } from '../loader/loader.component';
+import { LoaderComponent } from "../loader/loader.component";
+import { MatTable } from "@angular/material";
 
 @Component({
   selector: "app-super-admin",
@@ -22,6 +24,8 @@ import { LoaderComponent } from '../loader/loader.component';
   providers: [LoginComponent],
 })
 export class SuperAdminComponent implements OnInit {
+  @ViewChild("table", { static: false }) table: MatTable<any>;
+
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
@@ -188,21 +192,44 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
-        this.loadingBar.start();
         var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Loading Please Wait ....",
+          data: "Adding Program. Please Wait ....",
           disableClose: true,
           hasBackdrop: true,
         });
         this.userService.setProgram(data["map"]).subscribe((data) => {
           dialogRef.close();
           if (data["message"] == "success") {
-            this.ngOnInit();
+            var val = data["result"];
+            var newMap = {
+              name: val.full,
+              short: val.short,
+              map: val.map,
+            };
+            this.programs.push(newMap);
+            this.programs = [...this.programs];
             const snackBarRef = this.snackBar.open(
               "Added Program Successfully",
               "Ok",
               {
                 duration: 3000,
+              }
+            );
+          } else if (data["message"] == "invalid-token") {
+            this.login.signOut();
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In Again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+          } else {
+            this.snackBar.open(
+              "Some error occured! If error persists re-authenticate",
+              "Ok",
+              {
+                duration: 5000,
               }
             );
           }
@@ -220,10 +247,8 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
-        this.loadingBar.start();
-
         var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Loading Please Wait ....",
+          data: "Removing Program, Please Wait ....",
           disableClose: true,
           hasBackdrop: true,
         });
@@ -240,7 +265,7 @@ export class SuperAdminComponent implements OnInit {
               }
             );
           } else {
-            this.ngOnInit();
+            this.programs = this.programs.filter((val) => val.short != short);
             this.snackBar.open("Removed Program", "Ok", {
               duration: 3000,
             });
@@ -261,21 +286,25 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
-        this.loadingBar.start();
-
         var dialogRef = this.dialog.open(LoaderComponent, {
           data: "Loading Please Wait ....",
           disableClose: true,
           hasBackdrop: true,
         });
 
-
         this.userService.setBranch(data["map"]).subscribe((data) => {
           dialogRef.close();
           if (data["message"] == "success") {
-            this.ngOnInit();
+            const val = data["result"];
+            var newMap = {
+              name: val.full,
+              short: val.short,
+            };
+            this.branches.push(newMap);
+            //the below line is necessary to render the table
+            this.branches = [...this.branches];
             const snackBarRef = this.snackBar.open(
-              "Added Branch Successfully",
+              "Added Stream Successfully",
               "Ok",
               {
                 duration: 3000,
@@ -297,10 +326,8 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
-        this.loadingBar.start();
-
         var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Loading Please Wait ....",
+          data: "Removing stream. Please wait...",
           disableClose: true,
           hasBackdrop: true,
         });
@@ -317,7 +344,7 @@ export class SuperAdminComponent implements OnInit {
               }
             );
           } else {
-            this.ngOnInit();
+            this.branches = this.branches.filter((val) => val.short != short);
             this.snackBar.open("Removed Stream", "Ok", {
               duration: 3000,
             });
@@ -337,16 +364,22 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
-        this.loadingBar.start();
         var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Loading Please Wait ....",
+          data: "Removing faculty. Please Wait ....",
           disableClose: true,
           hasBackdrop: true,
         });
-        this.userService.removeFaculty(faculty).subscribe(
+        this.userService.removeFaculty(faculty._id).subscribe(
           (result) => {
             dialogRef.close();
             if (result["message"] == "success") {
+              for (const program of this.programs) {
+                this.faculties[program.short] = this.faculties[
+                  program.short
+                ].filter((val) => {
+                  return val._id != faculty._id;
+                });
+              }
               this.snackBar.open("Successfully Deleted Faculty", "OK", {
                 duration: 3000,
               });
@@ -364,7 +397,6 @@ export class SuperAdminComponent implements OnInit {
                 }
               );
             }
-            this.ngOnInit();
           },
           () => {
             this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
@@ -376,15 +408,61 @@ export class SuperAdminComponent implements OnInit {
     });
   }
   addAdmin(faculty, branch) {
-    this.loadingBar.start();
-    this.userService.addAdmin(faculty, branch).subscribe(() => {
-      this.ngOnInit();
+    var dialogRef = this.dialog.open(LoaderComponent, {
+      data: "Adding admin. Please Wait ....",
+      disableClose: true,
+      hasBackdrop: true,
+    });
+    this.userService.addAdmin(faculty._id, branch).subscribe((result) => {
+      dialogRef.close();
+      if (result["message"] == "success") {
+        this.hasAdmins[branch] = true;
+        for (const program of this.programs) {
+          this.faculties[program.short] = this.faculties[program.short].map(
+            (val) => {
+              if (val._id == faculty._id) {
+                val.isAdmin = true;
+                val.adminProgram = branch;
+              }
+              return val;
+            }
+          );
+        }
+      } else if (result["message"] == "invalid-token") {
+        this.login.signOut();
+        this.snackBar.open("Session Timed Out! Please Sign-In Again", "Ok", {
+          duration: 3000,
+        });
+      }
     });
   }
-  removeAdmin(faculty) {
-    this.loadingBar.start();
-    this.userService.removeAdmin(faculty).subscribe(() => {
-      this.ngOnInit();
+  removeAdmin(faculty, branch) {
+    var dialogRef = this.dialog.open(LoaderComponent, {
+      data: "Adding admin. Please Wait ....",
+      disableClose: true,
+      hasBackdrop: true,
+    });
+    this.userService.removeAdmin(faculty._id).subscribe((result) => {
+      dialogRef.close();
+      if (result["message"] == "success") {
+        this.hasAdmins[branch] = false;
+        for (const program of this.programs) {
+          this.faculties[program.short] = this.faculties[program.short].map(
+            (val) => {
+              if (val._id == faculty._id) {
+                val.isAdmin = false;
+                val.adminProgram = result["result"];
+              }
+              return val;
+            }
+          );
+        }
+      } else if (result["message"] == "invalid-token") {
+        this.login.signOut();
+        this.snackBar.open("Session Timed Out! Please Sign-In Again", "Ok", {
+          duration: 3000,
+        });
+      }
     });
   }
 

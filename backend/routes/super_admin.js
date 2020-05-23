@@ -365,7 +365,10 @@ router.post("/addAdmin/:id", (req, res) => {
 									admin
 										.save()
 										.then((admin) => {
-											//success here
+											res.json({
+												message: "success",
+												result: faculty.isAdmin,
+											});
 										})
 										.catch((err) => {
 											res.json({
@@ -373,10 +376,6 @@ router.post("/addAdmin/:id", (req, res) => {
 												result: null,
 											});
 										});
-								});
-								res.json({
-									message: "success",
-									result: faculty.isAdmin,
 								});
 							} else {
 								res.json({
@@ -418,14 +417,14 @@ router.post("/removeAdmin/:id", (req, res) => {
 						.then((faculty) => {
 							if (faculty) {
 								faculty.isAdmin = false;
-								faculty.adminProgram = null;
+								faculty.adminProgram = undefined;
 								faculty.save().then((faculty) => {
 									Admin.findOneAndDelete({
 										admin_id: faculty._id,
 									}).then((admin) => {
 										res.json({
 											message: "success",
-											result: faculty.isAdmin,
+											result: faculty.adminProgram,
 										});
 									});
 								});
