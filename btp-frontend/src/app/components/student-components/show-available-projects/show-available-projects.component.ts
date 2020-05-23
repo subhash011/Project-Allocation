@@ -217,7 +217,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
           dialogRefLoad.close();
           const message = result["message"];
           this.ngOnInit();
-          dialogRefLoad.close();
           this.deselectAll();
           if (message == "success") {
             this.snackBar.open("Added to preferences", "OK", {

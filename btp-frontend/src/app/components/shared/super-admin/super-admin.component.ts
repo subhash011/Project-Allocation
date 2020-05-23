@@ -379,6 +379,9 @@ export class SuperAdminComponent implements OnInit {
                 ].filter((val) => {
                   return val._id != faculty._id;
                 });
+                this.projects[program.short] = this.projects[
+                  program.short
+                ].filter((val) => val.faculty_id != faculty._id);
               }
               this.snackBar.open("Successfully Deleted Faculty", "OK", {
                 duration: 3000,
