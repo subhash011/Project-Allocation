@@ -13,6 +13,7 @@ import {
   SimpleChange,
   SimpleChanges,
 } from "@angular/core";
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: "app-super-admin",
@@ -188,7 +189,13 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
         this.loadingBar.start();
+        var dialogRef = this.dialog.open(LoaderComponent, {
+          data: "Loading Please Wait ....",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         this.userService.setProgram(data["map"]).subscribe((data) => {
+          dialogRef.close();
           if (data["message"] == "success") {
             this.ngOnInit();
             const snackBarRef = this.snackBar.open(
@@ -214,7 +221,15 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.loadingBar.start();
+
+        var dialogRef = this.dialog.open(LoaderComponent, {
+          data: "Loading Please Wait ....",
+          disableClose: true,
+          hasBackdrop: true,
+        });
+
         this.userService.removeProgram(short).subscribe((result) => {
+          dialogRef.close();
           if (result["message"] == "invalid-token") {
             this.login.signOut();
             this.snackBar.open(
@@ -247,7 +262,16 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
         this.loadingBar.start();
+
+        var dialogRef = this.dialog.open(LoaderComponent, {
+          data: "Loading Please Wait ....",
+          disableClose: true,
+          hasBackdrop: true,
+        });
+
+
         this.userService.setBranch(data["map"]).subscribe((data) => {
+          dialogRef.close();
           if (data["message"] == "success") {
             this.ngOnInit();
             const snackBarRef = this.snackBar.open(
@@ -274,7 +298,15 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.loadingBar.start();
+
+        var dialogRef = this.dialog.open(LoaderComponent, {
+          data: "Loading Please Wait ....",
+          disableClose: true,
+          hasBackdrop: true,
+        });
+
         this.userService.removeBranch(short).subscribe((result) => {
+          dialogRef.close();
           if (result["message"] == "invalid-token") {
             this.login.signOut();
             this.snackBar.open(
@@ -306,8 +338,14 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         this.loadingBar.start();
+        var dialogRef = this.dialog.open(LoaderComponent, {
+          data: "Loading Please Wait ....",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         this.userService.removeFaculty(faculty).subscribe(
           (result) => {
+            dialogRef.close();
             if (result["message"] == "success") {
               this.snackBar.open("Successfully Deleted Faculty", "OK", {
                 duration: 3000,

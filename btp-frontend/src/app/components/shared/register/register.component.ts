@@ -169,10 +169,18 @@ export class RegisterComponent implements OnInit {
       var position = "";
       position = localStorage.getItem("role");
       var id = _user.id;
+
+      var dialogRef = this.dialog.open(LoaderComponent, {
+        data: "Loading Please Wait ....",
+        disableClose: true,
+        hasBackdrop: true,
+      });
+
       this.userService
         .registerUser(user, httpOptions, position, id)
         .toPromise()
         .then((data: any) => {
+          dialogRef.close();
           if (data["registration"] == "success") {
             localStorage.setItem("role", position);
             localStorage.setItem("isRegistered", "true");

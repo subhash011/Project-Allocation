@@ -1,3 +1,4 @@
+import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from "./../../shared/login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProjectsService } from "./../../../services/projects/projects.service";
@@ -5,6 +6,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import { UserService } from "src/app/services/user/user.service";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: "app-faculty",
@@ -36,7 +38,8 @@ export class FacultyComponent implements OnInit {
     private loginService: LoginComponent,
     private projectService: ProjectsService,
     private userService: UserService,
-    private navbar: NavbarComponent
+    private navbar: NavbarComponent,
+    private dialog:MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -97,8 +100,15 @@ export class FacultyComponent implements OnInit {
   }
 
   displayProject(project) {
+
+    var dialogRef = this.dialog.open(LoaderComponent, {
+      data: "Loading Please Wait ....",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.projectService.getStudentsApplied(project._id).subscribe((data) => {
       if (data["status"] == "success") {
+        dialogRef.close();
         this.student_list = data["students"];
         if (this.adminStage < 2) {
           localStorage.setItem("sorted", "false");
@@ -152,7 +162,13 @@ export class FacultyComponent implements OnInit {
   }
 
   displayProgram(program) {
+    var dialogRef = this.dialog.open(LoaderComponent, {
+      data: "Loading Please Wait ....",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.userService.getFacultyProgramDetails(program).subscribe((data) => {
+      dialogRef.close();
       if (data["status"] == "success") {
         this.program_details = data["program_details"];
       } else {

@@ -11,6 +11,7 @@ import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
 import { Location } from "@angular/common";
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: "app-content",
@@ -99,10 +100,15 @@ export class ContentComponent implements OnInit, DoCheck {
         description: this.ProjectForm.get("description").value,
         stream: this.stream,
       };
-
+      var dialogRef = this.dialog.open(LoaderComponent, {
+        data: "Loading Please Wait ....",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       if (project.studentIntake > 0 && project.duration > 0) {
         this.projectService.saveProject(project).subscribe((data) => {
           if (data["save"] == "success") {
+            dialogRef.close();
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
@@ -262,10 +268,19 @@ export class ContentComponent implements OnInit, DoCheck {
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           if (result["message"] == "submit") {
+
+            var dialogRef = this.dialog.open(LoaderComponent, {
+              data: "Loading Please Wait ....",
+              disableClose: true,
+              hasBackdrop: true,
+            });
+
+
             this.projectService
               .deleteProject(project._id)
               .toPromise()
               .then((result) => {
+                dialogRef.close();
                 if (result["status"] == "success") {
                   let snackBarRef = this.snackBar.open(
                     "Successfully Deleted",

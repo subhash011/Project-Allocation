@@ -1,3 +1,4 @@
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from "@angular/router";
 import {
   Component,
@@ -15,6 +16,7 @@ import {
   MatSnackBar,
 } from "@angular/material";
 import { ProjectsService } from "src/app/services/projects/projects.service";
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: "app-sidenav",
@@ -37,7 +39,8 @@ export class SidenavComponent implements OnInit {
   constructor(
     private router: Router,
     private projectService: ProjectsService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private dialog:MatDialog
   ) {}
 
   ngOnInit() {}
@@ -60,7 +63,13 @@ export class SidenavComponent implements OnInit {
         project.isIncluded = true;
       }
     }
+    var dialogRef = this.dialog.open(LoaderComponent, {
+      data: "Loading Please Wait ....",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.projectService.includeProjects(toInclude).subscribe((result) => {
+      dialogRef.close();
       if (result["message"] == "success") {
         this.snackbar.open("Updated Project Preferences", "Ok", {
           duration: 3000,

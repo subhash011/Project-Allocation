@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material/dialog";
 import { ProjectsService } from "src/app/services/projects/projects.service";
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: "app-submit-pop-up",
@@ -11,7 +12,8 @@ export class SubmitPopUpComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private projectService: ProjectsService,
-    private dialogRef: MatDialogRef<SubmitPopUpComponent>
+    private dialogRef: MatDialogRef<SubmitPopUpComponent>,
+    private dialog : MatDialog
   ) {}
 
   ngOnInit() {}
@@ -19,7 +21,13 @@ export class SubmitPopUpComponent implements OnInit {
     this.dialogRef.close({ message: "closed" });
   }
   onSubmit() {
+    var dialogRef = this.dialog.open(LoaderComponent, {
+      data: "Loading Please Wait ....",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.projectService.updateProject(this.data).subscribe((data) => {
+      dialogRef.close();
       if (data["status"] == "success") {
         this.dialogRef.close({ message: "submit" });
       } else if (data["status"] == "fail1") {

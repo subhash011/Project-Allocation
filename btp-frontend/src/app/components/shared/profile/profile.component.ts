@@ -8,6 +8,7 @@ import { UserService } from "./../../../services/user/user.service";
 import { Component, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { DeletePopUpComponent } from "../../faculty-componenets/delete-pop-up/delete-pop-up.component";
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: "app-profile",
@@ -164,7 +165,15 @@ export class ProfileComponent implements OnInit {
       const faculty = {
         name: this.facultyFormGroup.get("name").value,
       };
+
+      var dialogRef = this.dialog.open(LoaderComponent, {
+        data: "Loading Please Wait ....",
+        disableClose: true,
+        hasBackdrop: true,
+      });
+
       this.userService.updateFacultyProfile(faculty).subscribe((data) => {
+        dialogRef.close();
         if (data["status"] == "success") {
           let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
             duration: 3000,
@@ -188,7 +197,13 @@ export class ProfileComponent implements OnInit {
       const programs = {
         programs: this.programGroup.get("programs").value,
       };
+      var dialogRef = this.dialog.open(LoaderComponent, {
+        data: "Loading Please Wait ....",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       this.userService.setPrograms(programs).subscribe((data) => {
+        dialogRef.close();
         if (data["status"] == "success") {
           let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
             duration: 3000,
@@ -222,7 +237,15 @@ export class ProfileComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
+
+        var dialogRef = this.dialog.open(LoaderComponent, {
+          data: "Loading Please Wait ....",
+          disableClose: true,
+          hasBackdrop: true,
+        });
+
         this.userService.deleteFacultyProgram(obj).subscribe((data) => {
+          dialogRef.close();
           if (data["status"] == "success") {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
