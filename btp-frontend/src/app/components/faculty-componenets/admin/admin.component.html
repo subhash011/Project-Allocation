@@ -354,8 +354,8 @@
       <div class="startAllocationButton">
         <button
           mat-raised-button
-          color="primary"
-          [disabled] = "publishStudents"
+          color="accent"
+          [disabled]="publishStudents"
           (click)="publishToStudents()"
         >
           Publish Students
@@ -365,7 +365,7 @@
         <button
           mat-raised-button
           color="primary"
-          [disabled] = "publishFaculty"
+          [disabled]="publishFaculty"
           (click)="publishToFaculty()"
         >
           Publish Faculty
@@ -388,6 +388,16 @@
           (click)="downloadFile_project()"
         >
           Export Preferences
+        </button>
+      </div>
+
+      <div class="sendEmailsButton">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="downloadFile_allocation()"
+        >
+          Export Allocation
         </button>
       </div>
     </div>
@@ -507,40 +517,34 @@
           </button>
         </div>
         <div class="flex-space">
-
-          <div  >
-
-            <button *ngIf="stage_no >= 3"
-            mat-raised-button
-            color="accent"
-            class="student_download"
-            (click)="downloadFile_student()"
+          <div>
+            <button
+              *ngIf="stage_no >= 3"
+              mat-raised-button
+              color="accent"
+              class="student_download"
+              (click)="downloadFile_student()"
             >
-            Export Preferences
-          </button>
-            
-          <button
-          mat-raised-button
-          color="accent"
-          class="import_students"
-          (click)="fileInput.click()"
-        >
-          Import Students
-        </button>
-        </div>
+              Export Preferences
+            </button>
+
+            <button
+              mat-raised-button
+              color="accent"
+              class="import_students"
+              (click)="fileInput.click()"
+            >
+              Import Students
+            </button>
+          </div>
         </div>
 
-        <input type="file" style="display: none;"
-        (change)="handleFileInput($event.target.files)" #fileInput />
-<!-- 
-        <button
-        mat-raised-button
-        color="accent"
-        class="import_students"
-        (click)="fileInput.click()"
-      >
-        Import Students
-      </button> -->
+        <input
+          type="file"
+          style="display: none;"
+          (change)="handleFileInput($event.target.files)"
+          #fileInput
+        />
         <div class="display">
           <div class="table mat-elevation-z8">
             <table

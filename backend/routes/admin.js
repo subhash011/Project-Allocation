@@ -201,7 +201,7 @@ function generateCSVAllocation(data, program_name) {
 			if (i < students.length) {
 				arr.push(students[i].name, students[i].roll_no);
 			} else {
-				arr.push("N/A");
+				arr.push("N/A", "N/A");
 			}
 		}
 		value += arr.join() + "\n";
@@ -1463,7 +1463,9 @@ router.get("/export_allocation/:id", (req, res) => {
 							return newProj;
 						});
 						const ans = generateCSVAllocation(data, stream);
-						res.send(ans);
+						res.json({
+							message: "success",
+						});
 					});
 			});
 		} else {
@@ -1563,6 +1565,11 @@ router.get("/download_csv/:id/:role", (req, res) => {
 								var file = path.resolve(
 									__dirname,
 									`../CSV/students/${filename}.csv`
+								);
+							else if (role == "allocation")
+								var file = path.resolve(
+									__dirname,
+									`../CSV/allocation/${filename}.csv`
 								);
 							else var file = null;
 

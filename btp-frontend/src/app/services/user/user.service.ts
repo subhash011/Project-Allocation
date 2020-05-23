@@ -13,7 +13,7 @@ import * as moment from "moment";
 export class UserService {
   private url: string;
   private root = environment.apiUrl;
-  private base_url = this.root; 
+  private base_url = this.root;
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -194,6 +194,19 @@ export class UserService {
     return this.http.post(this.url, obj, httpOptions);
   }
 
+  uploadAllocationFile() {
+    let id = localStorage.getItem("id");
+    let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    this.url = this.base_url + "admin/export_allocation/" + id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.get(this.url, httpOptions);
+  }
+
   getFacultyStreamEmails() {
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -311,8 +324,7 @@ export class UserService {
     return this.http.post(this.url, obj, httpOptions);
   }
 
-  setStudentCount(cap){
-
+  setStudentCount(cap) {
     const obj = {
       cap: cap,
     };
@@ -329,11 +341,7 @@ export class UserService {
     };
 
     return this.http.post(this.url, obj, httpOptions);
-
-
   }
-
-
 
   setPrograms(programs) {
     let id = localStorage.getItem("id");
@@ -568,7 +576,7 @@ export class UserService {
     return this.http.get(this.url);
   }
 
-  validateAllocation(projects,studentsEnrolled){
+  validateAllocation(projects, studentsEnrolled) {
     const user = JSON.parse(localStorage.getItem("user"));
     const id = user.id;
     const idToken = user.idToken;
@@ -580,10 +588,14 @@ export class UserService {
       }),
     };
 
-    return this.http.post(this.url,{projects:projects,students:studentsEnrolled},httpOptions);
+    return this.http.post(
+      this.url,
+      { projects: projects, students: studentsEnrolled },
+      httpOptions
+    );
   }
 
-  revertStage(stage_no){
+  revertStage(stage_no) {
     const user = JSON.parse(localStorage.getItem("user"));
     const id = user.id;
     const idToken = user.idToken;
@@ -594,10 +606,10 @@ export class UserService {
         Authorization: idToken,
       }),
     };
-    return this.http.post(this.url, {stage : stage_no}, httpOptions);
+    return this.http.post(this.url, { stage: stage_no }, httpOptions);
   }
 
-  resetUsers(){
+  resetUsers() {
     const user = JSON.parse(localStorage.getItem("user"));
     const id = user.id;
     const idToken = user.idToken;
@@ -609,10 +621,10 @@ export class UserService {
         Authorization: idToken,
       }),
     };
-   return this.http.post(this.url, {message:"hi"} ,httpOptions);
+    return this.http.post(this.url, { message: "hi" }, httpOptions);
   }
 
-  updatePublish(key){
+  updatePublish(key) {
     const user = JSON.parse(localStorage.getItem("user"));
     const id = user.id;
     const idToken = user.idToken;
@@ -624,11 +636,10 @@ export class UserService {
         Authorization: idToken,
       }),
     };
-   return this.http.post(this.url ,{mode:key}, httpOptions);
-
+    return this.http.post(this.url, { mode: key }, httpOptions);
   }
 
-  getPublishMode(key){
+  getPublishMode(key) {
     const user = JSON.parse(localStorage.getItem("user"));
     const id = user.id;
     const idToken = user.idToken;
@@ -640,8 +651,6 @@ export class UserService {
         Authorization: idToken,
       }),
     };
-   return this.http.post(this.url , {mode:key}, httpOptions);
-
+    return this.http.post(this.url, { mode: key }, httpOptions);
   }
-
 }
