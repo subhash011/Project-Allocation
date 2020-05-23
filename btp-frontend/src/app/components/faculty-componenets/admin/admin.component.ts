@@ -638,6 +638,8 @@ export class AdminComponent implements OnInit {
                     );
                   }
                 });
+            } else {
+              dialogRefLoad.close();
             }
           });
         } else if (this.stage_no == 1) {
@@ -668,6 +670,7 @@ export class AdminComponent implements OnInit {
                     });
                   } else {
                     this.loginService.signOut();
+                    dialogRefLoad.close();
                     this.snackBar.open(
                       "Session Timed Out! Please Sign-In again",
                       "Ok",
@@ -696,6 +699,7 @@ export class AdminComponent implements OnInit {
                       }
                     );
                   } else {
+                    dialogRefLoad.close();
                     this.loadingBar.stop();
                     this.snackBar.open(
                       "Mails not sent! Please try again.",
@@ -707,6 +711,7 @@ export class AdminComponent implements OnInit {
                   }
                 });
             } else {
+              dialogRefLoad.close();
               this.loadingBar.stop();
               this.snackBar.open(
                 "Unable to fetch mails! If the error persists re-authenticate.",
@@ -721,110 +726,6 @@ export class AdminComponent implements OnInit {
       }
     });
   }
-
-  // sendRemainder() {
-  //   const dialogRef = this.dialog.open(DeletePopUpComponent, {
-  //     width: "400px",
-  //     height: "200px",
-  //     disableClose: false,
-  //     hasBackdrop: true,
-  //     data: {
-  //       heading: "Confirm Sending Remainders",
-  //       message:
-  //         "Are you sure you want to send remainders? This cannot be undone.",
-  //     },
-  //   });
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result && result["message"] == "submit") {
-  //       var dialogRefLoad = this.dialog.open(LoaderComponent, {
-  //         data: "Sending mails, Please wait as this may take a while",
-  //         disableClose: true,
-  //         hasBackdrop: true,
-  //       });
-  //       if (this.stage_no == 1) {
-  //         this.userService.getStudentStreamEmails().subscribe((data1) => {
-  //           dialogRefLoad.close();
-  //           if (data1["status"] == "success") {
-  //             this.mailer
-  //               .adminToStudents(
-  //                 data1["result"],
-  //                 this.curr_deadline,
-  //                 data1["stream"],
-  //                 true
-  //               )
-  //               .subscribe((data) => {
-  //                 if (data["status"] == "success") {
-  //                   let snackBarRef = this.snackBar.open(
-  //                     "Remainders have been sent",
-  //                     "Ok",
-  //                     {
-  //                       duration: 3000,
-  //                     }
-  //                   );
-
-  //                   snackBarRef.afterDismissed().subscribe(() => {
-  //                     this.ngOnInit();
-  //                   });
-  //                   snackBarRef.onAction().subscribe(() => {
-  //                     this.ngOnInit();
-  //                   });
-  //                 } else {
-  //                   this.loginService.signOut();
-  //                   this.snackBar.open(
-  //                     "Session Timed Out! Please Sign-In again",
-  //                     "Ok",
-  //                     {
-  //                       duration: 3000,
-  //                     }
-  //                   );
-  //                 }
-  //               });
-  //           }
-  //         });
-  //       } else {
-  //         this.userService.getFacultyStreamEmails().subscribe((data1) => {
-  //           dialogRefLoad.close();
-  //           if (data1["status"] == "success") {
-  //             this.mailer
-  //               .adminToFaculty(
-  //                 this.stage_no,
-  //                 data1["result"],
-  //                 this.curr_deadline,
-  //                 data1["stream"],
-  //                 true
-  //               )
-  //               .subscribe((data2) => {
-  //                 if (data2["message"] == "success") {
-  //                   let snackBarRef = this.snackBar.open(
-  //                     "Remainders have been sent",
-  //                     "Ok",
-  //                     {
-  //                       duration: 3000,
-  //                     }
-  //                   );
-  //                   snackBarRef.afterDismissed().subscribe(() => {
-  //                     this.ngOnInit();
-  //                   });
-  //                   snackBarRef.onAction().subscribe(() => {
-  //                     this.ngOnInit();
-  //                   });
-  //                 } else {
-  //                   this.loginService.signOut();
-  //                   this.snackBar.open(
-  //                     "Session Timed Out! Please Sign-In again",
-  //                     "Ok",
-  //                     {
-  //                       duration: 3000,
-  //                     }
-  //                   );
-  //                 }
-  //               });
-  //           }
-  //         });
-  //       }
-  //     }
-  //   });
-  // }
 
   setProjectCap() {
     if (this.fifthFormGroup.controls["fifthCtrl"].value > 0) {
@@ -987,34 +888,6 @@ export class AdminComponent implements OnInit {
         }
       });
   }
-
-  // setStudentCount() {
-  //   if (this.eighthFormGroup.controls["eighthCtrl"].value > 0) {
-  //     this.userService
-  //       .setStudentCount(this.eighthFormGroup.get("eighthCtrl").value)
-  //       .subscribe((data) => {
-  //         if (data["status"] == "success") {
-  //           this.snackBar.open(data["msg"], "Ok", {
-  //             duration: 3000,
-  //           });
-  //           this.ngOnInit();
-  //         } else {
-  //           this.loginService.signOut();
-  //           this.snackBar.open(
-  //             "Session Timed Out! Please Sign-In again",
-  //             "Ok",
-  //             {
-  //               duration: 3000,
-  //             }
-  //           );
-  //         }
-  //       });
-  //   } else {
-  //     this.snackBar.open("Please enter a valid number", "Ok", {
-  //       duration: 3000,
-  //     });
-  //   }
-  // }
 
   isAllSelected() {
     const numSelected = this.selection.selected
