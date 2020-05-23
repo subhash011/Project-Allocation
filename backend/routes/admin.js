@@ -13,6 +13,11 @@ const csv = require('fast-csv');
 
 	
 function validateCsvData(rows) {
+
+	if(rows[0].length >= 4){
+		return "Only three columns(Name, Roll no., Gpa) are allowed. More than 3 columns detected.";
+	}
+
 	const dataRows = rows.slice(1, rows.length);
 	for (let i = 0; i < dataRows.length; i++) {
 	  const rowError = validateCsvRow(dataRows[i]);
@@ -1617,6 +1622,201 @@ router.post("/uploadStudentList/:id",(req,res)=>{
 
 
 })
+
+router.post("/updatePublish/:id",(req,res)=>{
+
+	const id = req.params.id;
+	const idToken = req.headers.authorization;
+	const mode = req.body.mode;
+
+
+	Faculty.findOne({google_id:{id:id,idToken:idToken}})
+		.then(faculty=>{
+
+			if(faculty){
+				Admin.findOne({admin_id:faculty._id})
+					.then(admin=>{
+						if(admin){
+
+							if(mode == "reset"){
+								admin.publishStudents = false;
+								admin.publishFaculty = false;
+							}
+							else if(mode == "student"){
+								admin.publishStudents = true;
+							}
+							else if(mode == "faculty"){
+								admin.publishFaculty = true;
+							}
+
+							
+							admin.save()
+								.then(result=>{
+									res.json({
+										status:"success",
+										msg:null
+									})
+								})
+						}
+						else{
+							res.json({
+								status:"fail",
+								msg:null
+							})
+						}
+					})
+					.catch(err=>{
+						res.json({
+							status:"fail",
+							msg:null
+						})
+					})
+			}	
+			else{
+				res.json({
+					status:"fail",
+					msg:null
+				})
+			}
+			
+
+
+		})
+		.catch(err=>{
+			res.json({
+				status:"fail",
+				msg:null
+			})
+		})
+
+
+
+})
+
+
+router.post("/getPublish/:id",(req,res)=>{
+
+
+	const id = req.params.id;
+	const idToken = req.headers.authorization;
+	const mode = req.body.mode;
+
+	if(mode == "student"){
+
+
+		Student.findOne({google_id:{id:id,idToken:idToken}})
+			.then(student=>{
+
+				if(student){
+					Admin.findOne({stream:student.stream})
+						.then(admin=>{
+
+							if(admin){
+
+								res.json({
+									status:"success",
+									studentPublish:admin.publishStudents,
+									facultyPublish : admin.publishFaculty
+								})
+	
+
+
+
+							}
+							else{
+								res.json({
+									status:"fail",
+									result:null
+								})
+							}
+
+
+						})
+						.catch(err=>{
+							res.json({
+								status:"fail",
+								result:null
+							})
+						})
+				}
+				else{
+					res.json({
+						status:"fail",
+						result:null
+					})
+				}
+
+
+			})
+			.catch(err=>{
+				res.json({
+					status:"fail",
+					result:null
+				})
+			})
+
+	}
+	else if(mode == "faculty"){
+
+		Faculty.findOne({google_id:{id:id,idToken:idToken}})
+		.then(faculty=>{
+
+			if(faculty){
+				Admin.findOne({admin_id:faculty._id})
+					.then(admin=>{
+
+						if(admin){
+
+							res.json({
+								status:"success",
+								studentPublish:admin.publishStudents,
+								facultyPublish : admin.publishFaculty
+							})
+
+
+						}
+						else{
+							res.json({
+								status:"fail",
+								result:null
+							})
+						}
+
+
+					})
+					.catch(err=>{
+						res.json({
+							status:"fail",
+							result:null
+						})
+					})
+			}
+			else{
+				res.json({
+					status:"fail",
+					result:null
+				})
+			}
+
+
+		})
+		.catch(err=>{
+			res.json({
+				status:"fail",
+				result:null
+			})
+		})
+	}
+	else{
+		res.json({
+			status:"fail",
+			result:null
+		})
+	}
+
+
+})
+
 
 
 

@@ -21,37 +21,36 @@ router.post("/user_check", (req, res) => {
 			const email = userDetails.email.split("@");
 			const email_check = email[1];
 
-			// if (superAdmins.includes(userDetails.email)) {
-			// 	SuperAdmin.findOne({ email: userDetails.email }).then((user) => {
-			// 		if (user) {
-			// 			user.google_id.idToken = userDetails.idToken;
-			// 			role = "super_admin";
-			// 			user
-			// 				.save()
-			// 				.then((result) => {
-			// 					res.json({
-			// 						isRegistered: true,
-			// 						position: role,
-			// 						user_details: userDetails,
-			// 					});
-			// 				})
-			// 				.catch((err) => {
-			// 					res.json({
-			// 						isRegistered: true,
-			// 						position: "error",
-			// 						user_details: "SuperAdmin Not Saved - DB Error",
-			// 					});
-			// 				});
-			// 		} else {
-			// 			res.json({
-			// 				isRegistered: false,
-			// 				position: "super_admin",
-			// 				user_details: userDetails,
-			// 			});
-			// 		}
-			// 	});
-			// } else 
-			if (email_check === "smail.iitpkd.ac.in") {
+			if (superAdmins.includes(userDetails.email)) {
+				SuperAdmin.findOne({ email: userDetails.email }).then((user) => {
+					if (user) {
+						user.google_id.idToken = userDetails.idToken;
+						role = "super_admin";
+						user
+							.save()
+							.then((result) => {
+								res.json({
+									isRegistered: true,
+									position: role,
+									user_details: userDetails,
+								});
+							})
+							.catch((err) => {
+								res.json({
+									isRegistered: true,
+									position: "error",
+									user_details: "SuperAdmin Not Saved - DB Error",
+								});
+							});
+					} else {
+						res.json({
+							isRegistered: false,
+							position: "super_admin",
+							user_details: userDetails,
+						});
+					}
+				});
+			} else if (email_check === "smail.iitpkd.ac.in") {
 				const rollno = email[0];
 				Student.findOne({ email: userDetails.email })
 					.then((user) => {

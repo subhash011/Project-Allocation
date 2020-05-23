@@ -1,8 +1,8 @@
 <app-timeline
-  *ngIf="details && loaded && !details.project_alloted"
+  *ngIf="details && loaded && !publishStudents "
   [program]="details.stream"
 ></app-timeline>
-<div class="display" *ngIf="details && details.project_alloted">
+<div class="display" *ngIf="details && details.project_alloted && publishStudents ">
   <div class="allocationStatus">
     <h1><b>Project Alloted : &emsp;&emsp;&emsp;</b></h1>
   </div>
