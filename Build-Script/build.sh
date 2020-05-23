@@ -5,8 +5,16 @@
 
 str=$1
 
-pushd /opt/Project-Allocation
+pushd /opt/Project-Allocation/
 sudo git pull
+popd
+
+pushd /opt/Project-Allocation/backend/
+npm i --save
+popd
+
+pushd /opt/Project-Allocation/btp-frontend/
+npm i --save
 popd
 
 if [ "$str" == "yes" ]
