@@ -1,83 +1,160 @@
-<div *ngIf="clone != 'temp'">
-    <div class="timer" *ngIf="admins && admins.startDate && displayTimeline && loaded">
-        <span class="days_left"><strong>Current stage ends in : </strong>
-        <countdown-timer [end]="curDeadline"></countdown-timer>
-        <span class="text"><b>About this stage :</b> {{ message }}</span>
+<div *ngIf="clone != 'temp' && admins && admins.startDate; else studentElse">
+  <div
+    class="timer"
+    *ngIf="admins && admins.startDate && displayTimeline && loaded"
+  >
+    <span class="days_left"
+      ><strong>Current stage ends in : </strong>
+      <countdown-timer [end]="curDeadline"></countdown-timer>
+      <span class="text"><b>About this stage :</b> {{ message }}</span>
+    </span>
+  </div>
+
+  <div class="group" *ngIf="loaded">
+    <a
+      matTooltip="Faculties Start Project Allocation"
+      matTooltipPosition="above"
+      [ngStyle]="icon"
+      class="stage-1-icon start icon"
+    >
+      <mat-icon *ngIf="!startCompleted">check_circle_outline</mat-icon>
+      <mat-icon *ngIf="startCompleted">check_circle</mat-icon>
+    </a>
+    <mat-progress-bar
+      class="stage-1"
+      mode="determinate"
+      [value]="stageOne"
+    ></mat-progress-bar>
+    <a
+      matTooltip="Projects are decided by the faculties"
+      matTooltipPosition="above"
+      [ngStyle]="icon"
+      class="stage-1-icon icon"
+    >
+      <mat-icon *ngIf="stageOneCompleted">check_circle</mat-icon>
+      <mat-icon *ngIf="!stageOneCompleted">check_circle_outline</mat-icon>
+    </a>
+    <mat-progress-bar
+      class="stage-1"
+      mode="determinate"
+      [value]="stageTwo"
+    ></mat-progress-bar>
+    <a
+      matTooltip="Students finish submitting their preferences"
+      matTooltipPosition="above"
+      [ngStyle]="icon"
+      class="stage-1-icon icon"
+    >
+      <mat-icon *ngIf="stageTwoCompleted">check_circle</mat-icon>
+      <mat-icon *ngIf="!stageTwoCompleted">check_circle_outline</mat-icon>
+    </a>
+    <mat-progress-bar
+      class="stage-1"
+      mode="determinate"
+      [value]="stageThree"
+    ></mat-progress-bar>
+    <a
+      matTooltip="Faculties finish submitting their preferences"
+      matTooltipPosition="above"
+      [ngStyle]="icon"
+      class="stage-1-icon icon"
+    >
+      <mat-icon *ngIf="stageThreeCompleted">check_circle</mat-icon>
+      <mat-icon *ngIf="!stageThreeCompleted">check_circle_outline</mat-icon>
+    </a>
+    <mat-progress-bar
+      class="stage-1 mobile"
+      mode="determinate"
+      [value]="stageFour"
+    ></mat-progress-bar>
+    <a
+      class="mobile"
+      matTooltip="Projects are alloted"
+      matTooltipPosition="above"
+      [ngStyle]="icon"
+      class="stage-1-icon icon"
+    >
+      <mat-icon class="mobile" *ngIf="stageFourCompleted"
+        >check_circle</mat-icon
+      >
+      <mat-icon class="mobile" *ngIf="!stageFourCompleted"
+        >check_circle_outline</mat-icon
+      >
+    </a>
+  </div>
+
+  <div
+    class="timer-text mobile"
+    [ngStyle]="styles"
+    *ngIf="admins && admins.startDate && displayTimeline && loaded && next"
+  >
+    <span class="below-text"><b>About next stage :</b> {{ next }}</span>
+  </div>
+</div>
+
+<div *ngIf="clone == 'temp' && admins.startDate; else facultyElse">
+  <mat-card class="program-details">
+    <mat-card-title> Stage {{ stage + 1 }} of 4 </mat-card-title>
+    <mat-horizontal-stepper [labelPosition]="'bottom'" #stepper>
+      <mat-step>
+        <ng-template matStepLabel>Current Stage ends in</ng-template>
+        <span class="days_left"
+          ><strong>Current stage ends in : </strong>
+          <countdown-timer [end]="curDeadline"></countdown-timer>
         </span>
-    </div>
-    
-    <div class="group" *ngIf="loaded">
-        <a matTooltip="Faculties Start Project Allocation" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon start icon">
-            <mat-icon *ngIf="!startCompleted">check_circle_outline</mat-icon>
-            <mat-icon *ngIf="startCompleted">check_circle</mat-icon>
-        </a>
-        <mat-progress-bar class="stage-1" mode="determinate" [value]="stageOne"></mat-progress-bar>
-        <a matTooltip="Projects are decided by the faculties" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon icon">
-            <mat-icon *ngIf="stageOneCompleted">check_circle</mat-icon>
-            <mat-icon *ngIf="!stageOneCompleted">check_circle_outline</mat-icon>
-        </a>
-        <mat-progress-bar class="stage-1" mode="determinate" [value]="stageTwo"></mat-progress-bar>
-        <a matTooltip="Students finish submitting their preferences" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon icon">
-            <mat-icon *ngIf="stageTwoCompleted">check_circle</mat-icon>
-            <mat-icon *ngIf="!stageTwoCompleted">check_circle_outline</mat-icon>
-        </a>
-        <mat-progress-bar class="stage-1" mode="determinate" [value]="stageThree"></mat-progress-bar>
-        <a matTooltip="Faculties finish submitting their preferences" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon icon">
-            <mat-icon *ngIf="stageThreeCompleted">check_circle</mat-icon>
-            <mat-icon *ngIf="!stageThreeCompleted">check_circle_outline</mat-icon>
-        </a>
-        <mat-progress-bar class="stage-1 mobile" mode="determinate" [value]="stageFour"></mat-progress-bar>
-        <a class="mobile" matTooltip="Projects are alloted" matTooltipPosition="above" [ngStyle]="icon" class="stage-1-icon icon">
-            <mat-icon class="mobile" *ngIf="stageFourCompleted">check_circle</mat-icon>
-            <mat-icon class="mobile" *ngIf="!stageFourCompleted">check_circle_outline</mat-icon>
-        </a>
-    </div>
-    
-    <div class="timer-text mobile"  [ngStyle]="styles" *ngIf="admins && admins.startDate && displayTimeline && loaded && next">
-        <span class="below-text"><b>About next stage :</b> {{ next }}</span>
-    </div>
-
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>About this stage</ng-template>
+        <h3>
+          <strong>About this stage</strong>
+        </h3>
+        <div>
+          {{ message }}
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>About next stage</ng-template>
+        <h4>
+          <strong>About next stage</strong>
+        </h4>
+        <div>
+          {{ next }}
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-card>
 </div>
 
-<div *ngIf="clone == 'temp'">
+<ng-template #facultyElse>
+  <mat-card class="program-details" *ngIf="clone == 'temp'">
+    <mat-card-title><u>Description of stages</u></mat-card-title>
+    <br />
+    <br />
+    <mat-card-content>
+      <p>Stage 1 : Faculties start adding projects to the portal</p>
+      <p>Stage 2 : Students give their preferences for the projects</p>
+      <p>
+        Stage 3 : Faculties give prefernces among the students who chose their
+        projects
+      </p>
+      <p>Stage 4 : Projects will be alloted</p>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
 
-
-    <mat-card class="program-details">
-        <mat-card-title>
-            Stage {{admins.stage + 1}} of 4
-        </mat-card-title>
-         <mat-horizontal-stepper [labelPosition]="'bottom'" #stepper>
-        <mat-step>
-            <ng-template matStepLabel>Current Stage ends in</ng-template>
-            <span class="days_left"><strong>Current stage ends in : </strong>
-            <countdown-timer [end]="curDeadline"></countdown-timer>
-            </span>
-        </mat-step>
-        <mat-step >
-            <ng-template matStepLabel>About this stage</ng-template>
-            <h3>
-                <strong>About this stage</strong>
-            </h3>
-            <div>
-                {{ message }}
-            </div>
-
-        </mat-step>
-        <mat-step>
-            <ng-template matStepLabel>About next stage</ng-template>
-            <h4>
-                <strong>About next stage</strong>
-            </h4>
-            <div>
-                {{ next }}
-            </div>
-        </mat-step>
-      </mat-horizontal-stepper>
-
-    </mat-card>
-
-
-
-   
-
-</div>
+<ng-template #studentElse>
+  <mat-card class="program-details students" *ngIf="clone != 'temp'">
+    <mat-card-title><u>Description of stages</u></mat-card-title>
+    <br />
+    <br />
+    <mat-card-content>
+      <p>Stage 1 : Faculties start adding projects to the portal</p>
+      <p>Stage 2 : Students give their preferences for the projects</p>
+      <p>
+        Stage 3 : Faculties give prefernces among the students who chose their
+        projects
+      </p>
+      <p>Stage 4 : Projects will be alloted</p>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
