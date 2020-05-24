@@ -19,6 +19,7 @@ import { ShowPreferencesComponent } from "../../student-components/show-preferen
 import { ShowStudentPreferencesComponent } from "../show-student-preferences/show-student-preferences.component";
 import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/show-faculty-preferences.component";
 import { saveAs } from "file-saver";
+import * as moment from "moment";
 
 @Component({
   selector: "app-admin",
@@ -451,6 +452,7 @@ export class AdminComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result["message"] == "submit") {
+          date = moment(new Date(date)).format();
           this.userService.setDeadline(date).subscribe((data) => {
             if (data["status"] == "success") {
               let snackBarRef = this.snackBar.open(
