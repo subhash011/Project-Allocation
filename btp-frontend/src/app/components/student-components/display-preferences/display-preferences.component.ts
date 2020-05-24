@@ -26,6 +26,7 @@ import { LoaderComponent } from "../../shared/loader/loader.component";
 export class DisplayPreferencesComponent implements OnInit, OnDestroy {
   @Input() preferences: any = [];
   @Output() updateProjects = new EventEmitter<any>();
+  @Input() stage: number = 0;
 
   private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -40,6 +41,12 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
   ngOnInit() {}
 
   removeOnePreference(preference) {
+    if (this.stage >= 2) {
+      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
+        duration: 3000,
+      });
+      return;
+    }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Removing Preference, Please wait",
       disableClose: true,

@@ -3,6 +3,7 @@
     <mat-drawer #side mode="side" closed>
       <app-display-preferences
         [preferences]="preferences.data"
+        [stage]="stage"
         (updateProjects)="updateProjects($event)"
       ></app-display-preferences>
     </mat-drawer>
@@ -36,6 +37,7 @@
         mat-raised-button
         class="add-preferences"
         color="primary"
+        [disabled]="stage >= 2"
         (click)="onSubmit($event)"
       >
         Add to Preferences
@@ -140,5 +142,6 @@
 
 <app-edit-preferences
   [preferences]="preferences"
+  [stage]="stage"
   *ngIf="isPrefenceEdit()"
 ></app-edit-preferences>

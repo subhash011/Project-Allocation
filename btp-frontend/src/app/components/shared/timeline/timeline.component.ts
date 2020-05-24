@@ -182,6 +182,8 @@ export class TimelineComponent implements OnInit, OnChanges {
                   this.displayTimeline = false;
                 }
               }
+            } else {
+              this.displayTimeline = false;
             }
           } else {
             this.displayTimeline = false;

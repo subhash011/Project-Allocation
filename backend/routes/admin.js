@@ -1141,7 +1141,8 @@ router.post("/revertStage/:id", (req, res) => {
 							}
 							admin.stage = stage - 1;
 						}
-
+						admin.publishFaculty = false;
+						admin.publishStudents = false;
 						var promises = [];
 
 						if (stage >= 3) {
@@ -1258,6 +1259,8 @@ router.post("/reset/:id", (req, res) => {
 				.then((admin) => {
 					admin.startDate = undefined;
 					admin.deadlines = [];
+					admin.publishFaculty = false;
+					admin.publishStudents = false;
 					admin.stage = 0;
 					admin.save().then((admin) => {
 						return admin;

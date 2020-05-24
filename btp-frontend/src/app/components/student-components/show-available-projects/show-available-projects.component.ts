@@ -44,6 +44,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   projects = new MatTableDataSource([]);
   expandedElement;
   isAddDisabled: boolean = false;
+  stage = 0;
   selection = new SelectionModel<any>(true, []);
   private ngUnsubscribe: Subject<any> = new Subject();
   displayedColumns = [
@@ -61,12 +62,21 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private cdRef: UserService,
     private loadingBar: LoadingBarService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
     this.preferences.data = [];
     this.projects.data = [];
+    this.userService
+      .getStreamStage()
+      .toPromise()
+      .then((result) => {
+        if (result["message"] == "success") {
+          this.stage = result["result"];
+        }
+      });
     this.getAllStudentPreferences();
   }
   isPrefenceEdit() {
@@ -176,6 +186,12 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   }
 
   addOnePreference(project) {
+    if (this.stage >= 2) {
+      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
+        duration: 3000,
+      });
+      return;
+    }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Adding Preference, Please wait",
       disableClose: true,
@@ -202,6 +218,12 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    if (this.stage >= 2) {
+      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
+        duration: 3000,
+      });
+      return;
+    }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Adding to preferences, please wait",
       disableClose: true,
