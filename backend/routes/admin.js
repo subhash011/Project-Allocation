@@ -1661,36 +1661,39 @@ router.post("/uploadStudentList/:id", (req, res) => {
 
 										admin.studentCount = fileRows.length - 1;
 
-										var promises = [];
+										var promises = [];												
 
-										mongoose.connection.db
-											.listCollections({ name: "students" })
-											.next((err, col_exist) => {
-												if (col_exist) {
-													promises.push(
-														mongoose.connection.db
-															.dropCollection("students")
-															.then((result) => {
-																return result;
-															})
-													);
-												}
+										for (let i = 1; i < fileRows.length; i++) {
+												let data = fileRows[i];
+												
+												promises.push(
+													Student.findOne({roll_no:data[1]})
+														.then(student=>{
+															if(student){
 
-												for (let i = 1; i < fileRows.length; i++) {
-													let data = fileRows[i];
-													const newStudent = new Student({
-														name: data[0],
-														roll_no: data[1],
-														gpa: data[2],
-														stream: admin.stream,
-														email: data[1] + "@smail.iitpkd.ac.in",
-													});
-													promises.push(
-														newStudent.save().then((result) => {
-															return result;
+																student.name = data[0];
+																student.gpa = data[2];
+																
+																return student.save()
+																	.then(result=>{
+																		return result;
+																	})
+															}
+															else{
+																const newStudent = new Student({
+																	name: data[0],
+																	roll_no: data[1],
+																	gpa: data[2],
+																	stream: admin.stream,
+																	email: data[1] + "@smail.iitpkd.ac.in",
+																});
+																return newStudent.save().then((result) => {
+																	return result;
+																})
+															}
 														})
-													);
-												}
+												)												
+											}
 
 												Promise.all(promises).then((result) => {
 													admin.save().then((result) => {
@@ -1700,7 +1703,7 @@ router.post("/uploadStudentList/:id", (req, res) => {
 														});
 													});
 												});
-											});
+											
 									});
 							});
 						} else {
