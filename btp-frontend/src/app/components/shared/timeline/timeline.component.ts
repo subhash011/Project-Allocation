@@ -16,7 +16,7 @@ import * as moment from "moment";
   name: "countdown",
 })
 export class CountDown implements PipeTransform {
-  transform(value, now, index) {
+  transform(value, now) {
     var str = "";
     var currentTime = now.getTime();
     var endTime = value.getTime();
