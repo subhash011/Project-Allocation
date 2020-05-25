@@ -668,7 +668,8 @@
                   Projects (Included/Total)
                 </th>
                 <td mat-cell *matCellDef="let faculty">
-                  {{ faculty.includedProjectsCount / faculty.noOfProjects }}
+                  {{ faculty.includedProjectsCount }} /
+                  {{ faculty.noOfProjects }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="Actions">
