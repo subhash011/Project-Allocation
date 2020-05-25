@@ -783,20 +783,26 @@ router.delete("/student/:id", (req, res) => {
 					})
 					.then((projects) => {
 						if (projects) {
-							for (const project of projects) {
-								var projectid = mongoose.Types.ObjectId(project);
+							var promises = [];
+							for (const projec of projects) {
 								promises.push(
-									Project.findById(projectid).then((project) => {
-										project.students_id = project.students_id.filter(
-											(val) => !val.toString() == mid
-										);
-										project.student_alloted = project.student_alloted.filter(
-											(val) => !val.toString() == mid
-										);
-										project.save().then((project) => {
-											return project;
-										});
-									})
+									Project.findById(mongoose.Types.ObjectId(projec)).then(
+										(project) => {
+											project.students_id = project.students_id.filter(
+												(val) => {
+													return val.toString() != mid.toString();
+												}
+											);
+											project.student_alloted = project.student_alloted.filter(
+												(val) => {
+													return val.toString() != mid.toString();
+												}
+											);
+											return project.save().then((project) => {
+												return project;
+											});
+										}
+									)
 								);
 							}
 							Promise.all(promises).then((result) => {
@@ -1665,49 +1671,46 @@ router.post("/uploadStudentList/:id", (req, res) => {
 
 										admin.studentCount = fileRows.length - 1;
 
-										var promises = [];												
+										var promises = [];
 
 										for (let i = 1; i < fileRows.length; i++) {
-												let data = fileRows[i];
-												
-												promises.push(
-													Student.findOne({roll_no:data[1]})
-														.then(student=>{
-															if(student){
+											let data = fileRows[i];
 
-																student.name = data[0];
-																student.gpa = data[2];
-																
-																return student.save()
-																	.then(result=>{
-																		return result;
-																	})
-															}
-															else{
-																const newStudent = new Student({
-																	name: data[0],
-																	roll_no: data[1],
-																	gpa: data[2],
-																	stream: admin.stream,
-																	email: data[1] + "@smail.iitpkd.ac.in",
-																});
-																return newStudent.save().then((result) => {
-																	return result;
-																})
-															}
-														})
-												)												
-											}
+											promises.push(
+												Student.findOne({ roll_no: data[1] }).then(
+													(student) => {
+														if (student) {
+															student.name = data[0];
+															student.gpa = data[2];
 
-												Promise.all(promises).then((result) => {
-													admin.save().then((result) => {
-														return res.json({
-															status: "success",
-															msg: "Successfully uploaded the student list.",
-														});
-													});
+															return student.save().then((result) => {
+																return result;
+															});
+														} else {
+															const newStudent = new Student({
+																name: data[0],
+																roll_no: data[1],
+																gpa: data[2],
+																stream: admin.stream,
+																email: data[1] + "@smail.iitpkd.ac.in",
+															});
+															return newStudent.save().then((result) => {
+																return result;
+															});
+														}
+													}
+												)
+											);
+										}
+
+										Promise.all(promises).then((result) => {
+											admin.save().then((result) => {
+												return res.json({
+													status: "success",
+													msg: "Successfully uploaded the student list.",
 												});
-											
+											});
+										});
 									});
 							});
 						} else {
