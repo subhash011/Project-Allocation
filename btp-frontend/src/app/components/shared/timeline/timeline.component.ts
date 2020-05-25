@@ -107,7 +107,7 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.timer = setInterval(() => {
       this.currentTime = new Date();
-    }, 1000);
+    }, 60000);
     this.initialize();
     this.loadingBar.start();
     if (localStorage.getItem("role") == "student") {

@@ -50,7 +50,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     "isIncluded",
   ];
   facultyCols = ["Name", "NoOfProjects", "Email", "Actions", "Violations"];
-  studentCols = ["Name", "Email", "GPA","Registered","ViewPref", "Actions"];
+  studentCols = ["Name", "Email", "GPA", "Registered", "ViewPref", "Actions"];
 
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -171,7 +171,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.timer = setInterval(() => {
       this.currentTime = new Date();
-    }, 1000);
+    }, 60000);
     if (!localStorage.getItem("pf")) {
       localStorage.setItem("pf", "true");
     }
