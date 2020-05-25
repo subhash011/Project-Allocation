@@ -217,7 +217,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onSubmit() {
+  onSubmit(event) {
     if (this.stage >= 2) {
       this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
         duration: 3000,
