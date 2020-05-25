@@ -112,7 +112,7 @@
       ><u> Stage {{ admins.stage + 1 }} of 4 </u></mat-card-title
     >
     <br />
-    <mat-card-content>
+    <mat-card-content class="card-content">
       <div class="content">
         <p>
           <ng-template matStepLabel>Current Stage ends in</ng-template>
@@ -138,9 +138,14 @@
   </mat-card>
 </div>
 
-<div *ngIf="loaded && (!admins || !(admins && admins.startDate))">
-  <mat-card class="program-details">
-    <mat-card-title><u>Description of stages</u></mat-card-title>
+<div
+  class="general"
+  *ngIf="loaded && (!admins || !(admins && admins.startDate))"
+>
+  <mat-card class="general-details">
+    <mat-card-title class="general-title"
+      ><u>Description of stages</u></mat-card-title
+    >
     <br />
     <br />
     <mat-card-content>
