@@ -650,7 +650,7 @@ router.get("/members/:id", (req, res) => {
 											email: val.email,
 											gpa: val.gpa,
 											project_alloted: val.project_alloted,
-											isRegistered:val.isRegistered
+											isRegistered: val.isRegistered,
 										};
 										return newStud;
 									});
@@ -1643,7 +1643,11 @@ router.post("/uploadStudentList/:id", (req, res) => {
 								csv
 									.parseFile(req.file.path)
 									.on("data", (data) => {
-										fileRows.push(data);
+										fileRows.push([
+											data[0].trim(),
+											data[1].trim(),
+											data[2].trim(),
+										]);
 									})
 									.on("end", () => {
 										const validationError = validateCsvData(fileRows);
@@ -1659,33 +1663,32 @@ router.post("/uploadStudentList/:id", (req, res) => {
 
 										var promises = [];
 
-										mongoose.connection.db.listCollections({name: 'students'})
-											.next((err,col_exist)=>{
-												
-												if(col_exist){
+										mongoose.connection.db
+											.listCollections({ name: "students" })
+											.next((err, col_exist) => {
+												if (col_exist) {
 													promises.push(
-														mongoose.connection.db.dropCollection('students')
-															.then(result=>{
+														mongoose.connection.db
+															.dropCollection("students")
+															.then((result) => {
 																return result;
 															})
-													)
+													);
 												}
 
 												for (let i = 1; i < fileRows.length; i++) {
 													let data = fileRows[i];
 													const newStudent = new Student({
-														name:data[0],
-														roll_no:data[1],
-														gpa:data[2],
-														stream:admin.stream,
-														email: data[1]+"@smail.iitpkd.ac.in",
-														
-													})
+														name: data[0],
+														roll_no: data[1],
+														gpa: data[2],
+														stream: admin.stream,
+														email: data[1] + "@smail.iitpkd.ac.in",
+													});
 													promises.push(
-														newStudent.save()
-															.then(result=>{
-																return result
-															})
+														newStudent.save().then((result) => {
+															return result;
+														})
 													);
 												}
 
@@ -1697,11 +1700,7 @@ router.post("/uploadStudentList/:id", (req, res) => {
 														});
 													});
 												});
-
-
-											})	
-									
-
+											});
 									});
 							});
 						} else {
