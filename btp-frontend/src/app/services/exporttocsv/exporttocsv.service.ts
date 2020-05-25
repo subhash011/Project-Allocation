@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Type } from "@angular/core";
 import { environment } from "src/environments/environment";
 
 @Injectable({
@@ -61,10 +61,10 @@ export class ExporttocsvService {
     const httpOptions = {
       headers: new HttpHeaders({
         Authorization: idToken,
-        "enc-type": "multipart/form-data",
+        enctype: "multipart/form-data",
       }),
     };
-
+    console.log(httpOptions);
     this.url = this.base_url + "admin/uploadStudentList/" + id;
     const formData: FormData = new FormData();
     formData.append("student_list", fileToUpload, programName);

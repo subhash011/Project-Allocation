@@ -1617,7 +1617,7 @@ router.post("/uploadStudentList/:id", (req, res) => {
 				Admin.findOne({ admin_id: faculty._id })
 					.then((admin) => {
 						if (admin) {
-							var file_path = path.resolve(__dirname, "../CSV/StudentList");
+							var file_path = path.resolve(__dirname, "CSV/StudentList/");
 							const storage = multer.diskStorage({
 								destination: function (req, file, cb) {
 									cb(null, file_path);
