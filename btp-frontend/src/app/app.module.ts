@@ -48,6 +48,7 @@ import { ShowAvailableProjectsComponent } from "./components/student-components/
 import { EditPreferencesComponent } from "./components/student-components/edit-preferences/edit-preferences.component";
 import { DisplayPreferencesComponent } from "./components/student-components/display-preferences/display-preferences.component";
 import { PreferencePipe } from "./components/faculty-componenets/student-table/student-table.component";
+import { ShowPreferencesComponent } from "./components/student-components/show-preferences/show-preferences.component";
 const googleLoginOption: LoginOpt = {
   prompt: "select_account",
 };
@@ -95,6 +96,7 @@ export function provideConfig() {
     DisplayPreferencesComponent,
     PreferencePipe,
     CountDown,
+    ShowPreferencesComponent,
   ],
   entryComponents: [
     SubmitPopUpComponent,
