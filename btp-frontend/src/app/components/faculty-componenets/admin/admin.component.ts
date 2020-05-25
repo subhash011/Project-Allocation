@@ -531,7 +531,6 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      dialogRefLoad.close();
       this.snackBar.open("Plese choose the deadline", "Ok", {
         duration: 3000,
       });
