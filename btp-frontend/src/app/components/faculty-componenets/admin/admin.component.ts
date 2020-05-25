@@ -29,6 +29,20 @@ import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/sho
 import { saveAs } from "file-saver";
 import * as moment from "moment";
 
+@Pipe({
+  name: "getAllotedStudents",
+})
+export class AllotedStudents implements PipeTransform {
+  transform(alloted) {
+    var ans = "";
+    for (const allot of alloted) {
+      ans += allot.name + ", ";
+    }
+    ans = ans.substring(0, ans.length - 2);
+    return ans;
+  }
+}
+
 @Component({
   selector: "app-admin",
   templateUrl: "./admin.component.html",
@@ -48,8 +62,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     "Duration",
     "Preferences",
     "NoOfStudents",
-    "Student",
     "isIncluded",
+    "Student",
   ];
   facultyCols = ["Name", "NoOfProjects", "Email", "Actions", "Violations"];
   studentCols = ["Name", "Email", "GPA", "Registered", "ViewPref", "Actions"];

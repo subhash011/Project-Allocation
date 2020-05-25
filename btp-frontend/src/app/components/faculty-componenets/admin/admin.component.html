@@ -127,7 +127,7 @@
           <ng-template matStepLabel>
             Creating Projects
             <div *ngIf="stage_no > 0" class="datelabel">
-              {{ dateSet[0].toDateString() }}
+              {{ dateSet[0] | date: "fullDate" }}
             </div>
           </ng-template>
 
@@ -178,7 +178,7 @@
           <ng-template matStepLabel>
             Student Preferences
             <div *ngIf="stage_no > 1" class="datelabel">
-              {{ dateSet[1].toDateString() }}
+              {{ dateSet[1] | date: "fullDate" }}
             </div>
           </ng-template>
 
@@ -232,7 +232,7 @@
             >Faculty Preferences
 
             <div *ngIf="stage_no > 2" class="datelabel">
-              {{ dateSet[2].toDateString() }}
+              {{ dateSet[2] | date: "fullDate" }}
             </div>
           </ng-template>
 
@@ -460,7 +460,7 @@
                   project.student_alloted && project.student_alloted.length > 0
                 "
               >
-                {{ getAllotedStudents(project.student_alloted) }}
+                {{ project.student_alloted | getAllotedStudents }}
               </div>
             </td>
           </ng-container>
