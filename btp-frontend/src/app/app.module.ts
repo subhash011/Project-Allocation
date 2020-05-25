@@ -1,3 +1,4 @@
+import { ShowPreferencesComponent } from './components/student-components/show-preferences/show-preferences.component';
 import { ExporttocsvService } from "./services/exporttocsv/exporttocsv.service";
 import { UserService } from "./services/user/user.service";
 import { ThemePickerComponent } from "./components/shared/theme-picker/theme-picker.component";
@@ -93,6 +94,7 @@ export function provideConfig() {
     EditPreferencesComponent,
     DisplayPreferencesComponent,
     PreferencePipe,
+    ShowPreferencesComponent
   ],
   entryComponents: [
     SubmitPopUpComponent,
