@@ -73,13 +73,27 @@
 }
 
 .program-details {
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-top: 50px;
+  display: inline-block;
+  max-width: fit-content;
+  text-align: center;
+}
+
+.faculty-card {
+  width: 100%;
+  text-align: center;
+}
+
+mat-card-content {
+  display: inline-block;
+}
+
+.content {
+  text-align: left;
 }
 
 mat-card-title {
   margin-top: 5%;
-  margin-left: 43%;
 }
 
 .students {

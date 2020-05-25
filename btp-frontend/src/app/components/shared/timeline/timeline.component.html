@@ -102,41 +102,39 @@
 </div>
 
 <div
+  class="faculty-card"
   *ngIf="
     clone == 'temp' && admins && admins.startDate && displayTimeline && loaded
   "
 >
   <mat-card class="program-details">
-    <mat-card-title> Stage {{ admins.stage + 1 }} of 4 </mat-card-title>
-    <mat-horizontal-stepper [labelPosition]="'bottom'">
-      <mat-step>
-        <ng-template matStepLabel>Current Stage ends in</ng-template>
-        <span class="days_left"
-          ><strong *ngIf="curDeadline"
-            >Current stage ends in :
-            {{ curDeadline | countdown: currentTime }}</strong
-          >
-        </span>
-      </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>About this stage</ng-template>
-        <h3>
-          <strong>About this stage</strong>
-        </h3>
-        <div>
-          {{ message }}
-        </div>
-      </mat-step>
-      <mat-step *ngIf="next">
-        <ng-template matStepLabel>About next stage</ng-template>
-        <h4>
-          <strong>About next stage</strong>
-        </h4>
-        <div>
-          {{ next }}
-        </div>
-      </mat-step>
-    </mat-horizontal-stepper>
+    <mat-card-title
+      ><u> Stage {{ admins.stage + 1 }} of 4 </u></mat-card-title
+    >
+    <br />
+    <mat-card-content>
+      <div class="content">
+        <p>
+          <ng-template matStepLabel>Current Stage ends in</ng-template>
+          <span class="days_left"
+            ><strong *ngIf="curDeadline"
+              >Current stage ends in :
+              {{ curDeadline | countdown: currentTime }}</strong
+            >
+          </span>
+        </p>
+        <br />
+        <p>
+          <ng-template matStepLabel>About this stage</ng-template>
+          <span><strong>About this stage</strong> : {{ message }}</span>
+        </p>
+        <br />
+        <p>
+          <ng-template matStepLabel>About next stage</ng-template>
+          <span><strong>About next stage : </strong> {{ next }}</span>
+        </p>
+      </div>
+    </mat-card-content>
   </mat-card>
 </div>
 
