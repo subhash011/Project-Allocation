@@ -71,7 +71,6 @@
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
-
 .program-details {
   margin-top: 50px;
   display: inline-block;
@@ -79,12 +78,17 @@
   text-align: center;
 }
 
+.general-details {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
 .faculty-card {
   width: 100%;
   text-align: center;
 }
 
-mat-card-content {
+.card-content {
   display: inline-block;
 }
 
@@ -94,6 +98,14 @@ mat-card-content {
 
 mat-card-title {
   margin-top: 5%;
+}
+
+.general {
+  margin-top: 50px;
+}
+
+.general-title {
+  margin-left: 43%;
 }
 
 .students {
