@@ -50,7 +50,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     "isIncluded",
   ];
   facultyCols = ["Name", "NoOfProjects", "Email", "Actions", "Violations"];
-  studentCols = ["Name", "Email", "GPA", "ViewPref", "Actions"];
+  studentCols = ["Name", "Email", "GPA","Registered","ViewPref", "Actions"];
 
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;

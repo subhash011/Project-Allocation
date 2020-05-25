@@ -15,6 +15,7 @@ const superAdmins = process.env.SUPER_ADMINS.split(",");
 
 router.post("/user_check", (req, res) => {
 	const userDetails = req.body;
+	
 	oauth(userDetails.idToken)
 		.then((user) => {
 			const id = user["sub"];
@@ -55,7 +56,15 @@ router.post("/user_check", (req, res) => {
 				Student.findOne({ email: userDetails.email })
 					.then((user) => {
 						if (user) {
-							user.google_id.idToken = userDetails.idToken;
+							if(!user.isRegistered){
+								user.google_id.idToken = userDetails.idToken;
+								user.google_id.id = id;
+								user.isRegistered = true;
+							}
+							else{
+								user.google_id.idToken = userDetails.idToken;
+							}
+
 							user
 								.save()
 								.then((result) => {
@@ -73,90 +82,100 @@ router.post("/user_check", (req, res) => {
 									});
 								});
 						} else {
-							Mapping.find().then((programs) => {
-								let cur_program;
-								for (const branch of programs) {
-									const pattern = new RegExp(branch.map.split("|")[1]);
-									if (
-										pattern.exec(rollno) &&
-										pattern.exec(rollno).index == branch.length
-									) {
-										cur_program = branch.short;
-										break;
-									}
-								}
 
-								const file = path.resolve(
-									__dirname,
-									`../CSV/StudentList/${cur_program}.csv`
-								);
 
-								let studentRow = [];
-								const stream = fs.createReadStream(file);
-								stream.on("error", function () {
-									res.json({
-										isRegistered: false,
-										position: "student",
-										user_details: userDetails,
-										msg: "The co-ordinator has not uploaded the student list.",
-									});
-								});
+							res.json({
+								isRegistered: false,
+								position: "student",
+								user_details: userDetails,
+								msg:
+									"Your name was not in the list of students provided by the co-ordinator. Please contact your stream co-ordinator.",
+							})
 
-								csv
-									.parseStream(stream)
-									.on("data", (data) => {
-										if (data[0] == "Name") {
-											return;
-										}
+							// Mapping.find().then((programs) => {
+							// 	let cur_program;
+							// 	for (const branch of programs) {
+							// 		const pattern = new RegExp(branch.map.split("|")[1]);
+							// 		if (
+							// 			pattern.exec(rollno) &&
+							// 			pattern.exec(rollno).index == branch.length
+							// 		) {
+							// 			cur_program = branch.short;
+							// 			break;
+							// 		}
+							// 	}
 
-										if (rollno == data[1]) {
-											studentRow = data;
-										} else {
-											return;
-										}
-									})
-									.on("end", () => {
-										if (studentRow.length != 0) {
-											const newUser = new Student({
-												name: studentRow[0],
-												roll_no: rollno,
-												google_id: {
-													id: id,
-													idToken: userDetails.idToken,
-												},
-												email: userDetails.email,
-												gpa: Number(studentRow[2]),
-												stream: cur_program,
-											});
+							// 	const file = path.resolve(
+							// 		__dirname,
+							// 		`../CSV/StudentList/${cur_program}.csv`
+							// 	);
 
-											newUser
-												.save()
-												.then((result) => {
-													res.json({
-														isRegistered: true,
-														position: "student",
-														user_details: userDetails,
-													});
-												})
-												.catch((err) => {
-													res.json({
-														isRegistered: false,
-														position: "student",
-														user_details: userDetails,
-														msg: "save error",
-													});
-												});
-										} else {
-											res.json({
-												isRegistered: false,
-												position: "student",
-												user_details: userDetails,
-												msg:
-													"Your name was not in the list of students provided by the co-ordinator.",
-											});
-										}
-									});
-							});
+							// 	let studentRow = [];
+							// 	const stream = fs.createReadStream(file);
+							// 	stream.on("error", function () {
+							// 		res.json({
+							// 			isRegistered: false,
+							// 			position: "student",
+							// 			user_details: userDetails,
+							// 			msg: "The co-ordinator has not uploaded the student list.",
+							// 		});
+							// 	});
+
+							// 	csv
+							// 		.parseStream(stream)
+							// 		.on("data", (data) => {
+							// 			if (data[0] == "Name") {
+							// 				return;
+							// 			}
+
+							// 			if (rollno == data[1]) {
+							// 				studentRow = data;
+							// 			} else {
+							// 				return;
+							// 			}
+							// 		})
+							// 		.on("end", () => {
+							// 			if (studentRow.length != 0) {
+							// 				const newUser = new Student({
+							// 					name: studentRow[0],
+							// 					roll_no: rollno,
+							// 					google_id: {
+							// 						id: id,
+							// 						idToken: userDetails.idToken,
+							// 					},
+							// 					email: userDetails.email,
+							// 					gpa: Number(studentRow[2]),
+							// 					stream: cur_program,
+							// 				});
+
+							// 				newUser
+							// 					.save()
+							// 					.then((result) => {
+							// 						res.json({
+							// 							isRegistered: true,
+							// 							position: "student",
+							// 							user_details: userDetails,
+							// 						});
+							// 					})
+							// 					.catch((err) => {
+							// 						res.json({
+							// 							isRegistered: false,
+							// 							position: "student",
+							// 							user_details: userDetails,
+							// 							msg: "save error",
+							// 						});
+							// 					});
+							// 			} else {
+							// 				res.json({
+							// 					isRegistered: false,
+							// 					position: "student",
+							// 					user_details: userDetails,
+							// 					msg:
+							// 						"Your name was not in the list of students provided by the co-ordinator.",
+							// 				});
+							// 			}
+							// 		});
+							// });
 						}
 					})
 					.catch((err) => {

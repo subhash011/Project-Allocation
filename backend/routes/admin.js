@@ -650,6 +650,7 @@ router.get("/members/:id", (req, res) => {
 											email: val.email,
 											gpa: val.gpa,
 											project_alloted: val.project_alloted,
+											isRegistered:val.isRegistered
 										};
 										return newStud;
 									});
@@ -1658,33 +1659,49 @@ router.post("/uploadStudentList/:id", (req, res) => {
 
 										var promises = [];
 
-										for (let i = 1; i < fileRows.length; i++) {
-											let data = fileRows[i];
-
-											promises.push(
-												Student.findOne({ roll_no: data[1] }).then(
-													(student) => {
-														if (student) {
-															student.name = data[0];
-															student.gpa = data[2];
-
-															return student.save().then((result) => {
+										mongoose.connection.db.listCollections({name: 'students'})
+											.next((err,col_exist)=>{
+												
+												if(col_exist){
+													promises.push(
+														mongoose.connection.db.dropCollection('students')
+															.then(result=>{
 																return result;
-															});
-														}
-													}
-												)
-											);
-										}
+															})
+													)
+												}
 
-										Promise.all(promises).then((result) => {
-											admin.save().then((result) => {
-												return res.json({
-													status: "success",
-													msg: "Successfully uploaded the student list.",
+												for (let i = 1; i < fileRows.length; i++) {
+													let data = fileRows[i];
+													const newStudent = new Student({
+														name:data[0],
+														roll_no:data[1],
+														gpa:data[2],
+														stream:admin.stream,
+														email: data[1]+"@smail.iitpkd.ac.in",
+														
+													})
+													promises.push(
+														newStudent.save()
+															.then(result=>{
+																return result
+															})
+													);
+												}
+
+												Promise.all(promises).then((result) => {
+													admin.save().then((result) => {
+														return res.json({
+															status: "success",
+															msg: "Successfully uploaded the student list.",
+														});
+													});
 												});
-											});
-										});
+
+
+											})	
+									
+
 									});
 							});
 						} else {

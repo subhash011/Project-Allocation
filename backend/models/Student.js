@@ -12,11 +12,9 @@ const UserSchema = new mongoose.Schema({
     google_id: {
         id: {
             type: String,
-            required: true,
         },
         idToken: {
-            type: String,
-            required: true,
+            type: String
         },
     },
     email: {
@@ -36,6 +34,10 @@ const UserSchema = new mongoose.Schema({
     },
     project_alloted: {
         type: mongoose.SchemaTypes.ObjectId,
+    },
+    isRegistered:{
+        type:Boolean,
+        default:false
     },
     date: {
         type: Date,

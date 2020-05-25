@@ -60,8 +60,8 @@ export class ExporttocsvService {
 
     const httpOptions = {
       headers: new HttpHeaders({
+        "enctype": "multipart/form-data",
         Authorization: idToken,
-        "enc-type": "multipart/form-data",
       }),
     };
 
