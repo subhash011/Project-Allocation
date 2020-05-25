@@ -771,48 +771,50 @@ router.delete("/student/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	const mid = req.headers.body;
-	Admin.findOne({ google_id: { id: id, idToken: idToken } }).then((admin) => {
-		if (admin) {
-			Student.findByIdAndDelete(mongoose.Types.ObjectId(mid))
-				.then((student) => {
-					if (student) return student.projects_preference;
-					else return null;
-				})
-				.then((projects) => {
-					if (projects) {
-						for (const project of projects) {
-							var projectid = mongoose.Types.ObjectId(project);
-							promises.push(
-								Project.findById(projectid).then((project) => {
-									project.students_id = project.students_id.filter(
-										(val) => !val.toString() == mid
-									);
-									project.student_alloted = project.student_alloted.filter(
-										(val) => !val.toString() == mid
-									);
-									project.save().then((project) => {
-										return project;
-									});
-								})
-							);
+	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
+		(faculty) => {
+			if (faculty && faculty.isAdmin) {
+				Student.findByIdAndDelete(mongoose.Types.ObjectId(mid))
+					.then((student) => {
+						if (student) return student.projects_preference;
+						else return null;
+					})
+					.then((projects) => {
+						if (projects) {
+							for (const project of projects) {
+								var projectid = mongoose.Types.ObjectId(project);
+								promises.push(
+									Project.findById(projectid).then((project) => {
+										project.students_id = project.students_id.filter(
+											(val) => !val.toString() == mid
+										);
+										project.student_alloted = project.student_alloted.filter(
+											(val) => !val.toString() == mid
+										);
+										project.save().then((project) => {
+											return project;
+										});
+									})
+								);
+							}
+							Promise.all(promises).then((result) => {
+								res.json({ result: result, message: "success" });
+							});
+						} else {
+							res.json({ message: "success" });
 						}
-						Promise.all(promises).then((result) => {
-							res.json({ result: result, message: "success" });
-						});
-					} else {
-						res.json({ message: "success" });
-					}
-				})
-				.catch((err) => {
-					res.status(500);
+					})
+					.catch((err) => {
+						res.status(500);
+					});
+			} else {
+				res.json({
+					message: "invalid-token",
+					result: null,
 				});
-		} else {
-			res.json({
-				message: "invalid-token",
-				result: null,
-			});
+			}
 		}
-	});
+	);
 });
 
 router.post("/set_projectCap/:id", (req, res) => {
