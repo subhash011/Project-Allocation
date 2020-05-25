@@ -174,7 +174,7 @@ export class RegisterComponent implements OnInit {
       var id = _user.id;
 
       var dialogRef = this.dialog.open(LoaderComponent, {
-        data: "Loading Please Wait ....",
+        data: "Please wait ....",
         disableClose: true,
         hasBackdrop: true,
       });

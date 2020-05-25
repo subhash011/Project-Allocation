@@ -67,7 +67,7 @@ export class StudentTableComponent implements OnInit {
       localStorage.removeItem("sorted");
 
       var dialogRef = this.dialog.open(LoaderComponent, {
-        data: "Loading Please Wait ....",
+        data: "Please wait ....",
         disableClose: true,
         hasBackdrop: true,
       });
@@ -86,10 +86,16 @@ export class StudentTableComponent implements OnInit {
           }
         });
     } else {
+      var dialogRef = this.dialog.open(LoaderComponent, {
+        data: "Please wait ....",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       if (this.adminStage < 2) {
         this.student_list.sort((a, b) => {
           return b.gpa - a.gpa;
         });
+        dialogRef.close();
         this.snackBar.open(
           "Preferences can be edited only in the next stage.",
           "Ok",
@@ -98,6 +104,7 @@ export class StudentTableComponent implements OnInit {
           }
         );
       } else {
+        dialogRef.close();
         this.snackBar.open("You cannot edit preferences anymore", "Ok", {
           duration: 3000,
         });

@@ -531,6 +531,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       });
     } else {
+      dialogRefLoad.close();
       this.snackBar.open("Plese choose the deadline", "Ok", {
         duration: 3000,
       });
@@ -829,9 +830,15 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   setStudentCap() {
     if (this.sixthFormGroup.controls["sixthCtrl"].value > 0) {
+      var dialogRefLoad = this.dialog.open(LoaderComponent, {
+        data: "Please wait ...",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       this.userService
         .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
         .subscribe((data) => {
+          dialogRefLoad.close();
           if (data["status"] == "success") {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -849,6 +856,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
         });
     } else {
+      dialogRefLoad.close();
       let snackBarRef = this.snackBar.open(
         "Please enter a valid number",
         "Ok",
@@ -861,9 +869,15 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   setStudentsPerFaculty() {
     if (this.seventhFormGroup.controls["seventhCtrl"].value > 0) {
+      var dialogRefLoad = this.dialog.open(LoaderComponent, {
+        data: "Please wait ...",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       this.userService
         .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
         .subscribe((data) => {
+          dialogRefLoad.close();
           if (data["status"] == "success") {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -881,6 +895,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
         });
     } else {
+      dialogRefLoad.close();
       this.snackBar.open("Please enter a valid number", "Ok", {
         duration: 3000,
       });
@@ -1011,7 +1026,13 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Please wait ...",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         this.userService.revertStage(currStage).subscribe((data) => {
+          dialogRefLoad.close();
           if ((data["status"] = "success")) {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -1061,8 +1082,14 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Please wait ...",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         this.loadingBar.start();
         this.userService.resetUsers().subscribe((result) => {
+          dialogRefLoad.close();
           this.loadingBar.stop();
           if (result["message"] == "success") {
             this.snackBar.open(
@@ -1122,9 +1149,15 @@ export class AdminComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result && result["message"] == "submit") {
+          var dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: "Please wait ...",
+            disableClose: true,
+            hasBackdrop: true,
+          });
           this.exportService
             .uploadStudentList(this.fileToUpload, this.programName)
             .subscribe((data) => {
+              dialogRefLoad.close();
               if (data["status"] == "success") {
                 this.snackBar.open("Successfully uploaded the files.", "Ok", {
                   duration: 10000,
