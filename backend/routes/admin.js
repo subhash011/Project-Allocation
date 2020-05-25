@@ -1611,16 +1611,16 @@ router.get("/download_csv/:id/:role", (req, res) => {
 router.post("/uploadStudentList/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
-
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.then((faculty) => {
 			if (faculty) {
 				Admin.findOne({ admin_id: faculty._id })
 					.then((admin) => {
 						if (admin) {
+							var file_path = path.resolve(__dirname, "../CSV/StudentList");
 							const storage = multer.diskStorage({
 								destination: function (req, file, cb) {
-									cb(null, "CSV/StudentList");
+									cb(null, file_path);
 								},
 
 								filename: function (req, file, cb) {
@@ -1629,7 +1629,6 @@ router.post("/uploadStudentList/:id", (req, res) => {
 							});
 
 							let upload = multer({ storage: storage }).single("student_list");
-
 							upload(req, res, function (err) {
 								if (!req.file) {
 									return res.send("Please select a file to upload");
