@@ -176,7 +176,7 @@ export class UserService {
   }
 
   setDeadline(date) {
-    const str = date.toDateString();
+    const str = date;
     const obj = {
       deadline: moment(str).format("YYYY-MM-DD"),
     };

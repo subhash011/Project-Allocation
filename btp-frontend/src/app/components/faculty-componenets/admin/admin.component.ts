@@ -19,6 +19,7 @@ import { ShowPreferencesComponent } from "../../student-components/show-preferen
 import { ShowStudentPreferencesComponent } from "../show-student-preferences/show-student-preferences.component";
 import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/show-faculty-preferences.component";
 import { saveAs } from "file-saver";
+import * as moment from "moment";
 
 @Component({
   selector: "app-admin",
@@ -451,6 +452,7 @@ export class AdminComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result["message"] == "submit") {
+          date = moment(new Date(date)).format();
           this.userService.setDeadline(date).subscribe((data) => {
             if (data["status"] == "success") {
               let snackBarRef = this.snackBar.open(
@@ -1026,6 +1028,12 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  downloadFile_format() {
+    this.exportService.download("format").subscribe((data) => {
+      saveAs(data, `${this.programName}_format.csv`);
+    });
+  }
+
   downloadFile_allocation() {
     this.exportService.download("allocation").subscribe((data) => {
       saveAs(data, `${this.programName}_allocation.csv`);
@@ -1090,6 +1098,11 @@ export class AdminComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
+      var dialogRefLoad = this.dialog.open(LoaderComponent, {
+        data: "Sending mails, Please wait as this may take a while",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       if (result && result["message"] == "submit") {
         this.userService.updatePublish("faculty").subscribe((data) => {
           if (data["status"] == "success") {
@@ -1100,6 +1113,7 @@ export class AdminComponent implements OnInit {
                 this.mailer
                   .publishMail("faculty", data1["result"], data1["streamFull"])
                   .subscribe((data) => {
+                    dialogRefLoad.close();
                     this.snackBar.open(
                       "Successfully published to students and mails have been sent.",
                       "Ok",
@@ -1126,6 +1140,11 @@ export class AdminComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
+      var dialogRefLoad = this.dialog.open(LoaderComponent, {
+        data: "Sending mails, Please wait as this may take a while",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       if (result && result["message"] == "submit") {
         this.userService.updatePublish("student").subscribe((data) => {
           if (data["status"] == "success") {
@@ -1136,8 +1155,9 @@ export class AdminComponent implements OnInit {
                 this.mailer
                   .publishMail("student", data1["result"], data1["streamFull"])
                   .subscribe((data) => {
+                    dialogRefLoad.close();
                     this.snackBar.open(
-                      "Successfully published to students and mails have been sent.",
+                      "Successfully published to faculties and mails have been sent.",
                       "Ok",
                       {
                         duration: 10000,

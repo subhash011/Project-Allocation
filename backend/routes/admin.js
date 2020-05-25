@@ -394,7 +394,7 @@ router.post("/setDeadline/:id", (req, res) => {
 	const date = req.body.deadline;
 
 	const format_date = new Date(date);
-	format_date.setHours(18, 30);
+	format_date.setHours(23, 59);
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.then((faculty) => {
 			Admin.findOne({ admin_id: faculty._id })
@@ -1141,7 +1141,8 @@ router.post("/revertStage/:id", (req, res) => {
 							}
 							admin.stage = stage - 1;
 						}
-
+						admin.publishFaculty = false;
+						admin.publishStudents = false;
 						var promises = [];
 
 						if (stage >= 3) {
@@ -1258,6 +1259,8 @@ router.post("/reset/:id", (req, res) => {
 				.then((admin) => {
 					admin.startDate = undefined;
 					admin.deadlines = [];
+					admin.publishFaculty = false;
+					admin.publishStudents = false;
 					admin.stage = 0;
 					admin.save().then((admin) => {
 						return admin;
@@ -1572,6 +1575,8 @@ router.get("/download_csv/:id/:role", (req, res) => {
 									__dirname,
 									`../CSV/allocation/${filename}.csv`
 								);
+							else if (role == "format")
+								var file = path.resolve(__dirname, `../CSV/format.csv`);
 							else var file = null;
 
 							res.download(file);
@@ -1634,75 +1639,55 @@ router.post("/uploadStudentList/:id", (req, res) => {
 									return res.send(err);
 								}
 
-
-								let fileRows = []
-								csv.parseFile(req.file.path)
-								.on("data",  (data) => {
-									fileRows.push(data); 
-								})
-								.on("end", () => {
-
-
-
-									const validationError = validateCsvData(fileRows);
-									if (validationError) {
-										fs.unlinkSync(req.file.path);
-									 return res.json({ 
-										status:"fail_parse",
-										msg: validationError
-									 });
-									}
-									
-								admin.studentCount = fileRows.length - 1;
-
-
-								var promises = [];
-								
-								for(let i =1;i<fileRows.length;i++){
-
-									let data = fileRows[i];
-
-									promises.push(
-										Student.findOne({roll_no:data[1]})
-											.then(student =>{
-
-												if(student){
-													
-													student.name = data[0];
-													student.gpa = data[2];
-
-													return student.save()
-														.then(result=>{
-															return result;
-														})
-
-												}
-
-											})
-
-									)
-								}
-								
-									Promise.all(promises)
-										.then(result=>{
-											admin.save()
-										.then(result=>{
-
-											return res.json({
-												status:"success",
-												msg:"Successfully uploaded the student list."
-											})
-
-										})
-
+								let fileRows = [];
+								csv
+									.parseFile(req.file.path)
+									.on("data", (data) => {
+										fileRows.push(data);
 									})
+									.on("end", () => {
+										const validationError = validateCsvData(fileRows);
+										if (validationError) {
+											fs.unlinkSync(req.file.path);
+											return res.json({
+												status: "fail_parse",
+												msg: validationError,
+											});
+										}
 
-								
-								
-								})
-											
-							})
-							
+										admin.studentCount = fileRows.length - 1;
+
+										var promises = [];
+
+										for (let i = 1; i < fileRows.length; i++) {
+											let data = fileRows[i];
+
+											promises.push(
+												Student.findOne({ roll_no: data[1] }).then(
+													(student) => {
+														if (student) {
+															student.name = data[0];
+															student.gpa = data[2];
+
+															return student.save().then((result) => {
+																return result;
+															});
+														}
+													}
+												)
+											);
+										}
+
+										Promise.all(promises).then((result) => {
+											admin.save().then((result) => {
+												return res.json({
+													status: "success",
+													msg: "Successfully uploaded the student list.",
+												});
+											});
+										});
+									});
+							});
 						} else {
 							res.json({
 								status: "fail",

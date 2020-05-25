@@ -37,6 +37,7 @@ import { Subject } from "rxjs";
 })
 export class EditPreferencesComponent implements OnInit, OnDestroy {
   @Input() preferences: any = new MatTableDataSource([]);
+  @Input() stage: number = 0;
   private ngUnsubscribe: Subject<any> = new Subject();
   finalPreferences: any = [];
   projects: any = [];
@@ -58,6 +59,12 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
   displayedColumns = ["Title", "Faculty", "Email", "Intake", "Actions"];
 
   onSubmit() {
+    if (this.stage >= 2) {
+      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
+        duration: 3000,
+      });
+      return;
+    }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Saving preferences, please wait",
       disableClose: true,
@@ -104,6 +111,12 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
       );
   }
   removePreference(preference) {
+    if (this.stage >= 2) {
+      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
+        duration: 3000,
+      });
+      return;
+    }
     this.projectService
       .removeOneStudentPreference(preference)
       .pipe(takeUntil(this.ngUnsubscribe))

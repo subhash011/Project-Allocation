@@ -1,4 +1,10 @@
-<button class="submit" mat-raised-button color="primary" (click)="onSubmit()">
+<button
+  class="submit"
+  [disabled]="stage >= 2"
+  mat-raised-button
+  color="primary"
+  (click)="onSubmit()"
+>
   Submit Preferences
 </button>
 

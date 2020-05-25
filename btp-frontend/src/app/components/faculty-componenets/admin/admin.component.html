@@ -371,17 +371,7 @@
           Publish to Faculties
         </button>
       </div>
-      <!-- <div class="sendEmailsButton">
-        <button
-          mat-raised-button
-          color="accent"
-          [disabled]="allocationMail"
-          (click)="sendEmails()"
-        >
-          Send Emails
-        </button>
-      </div> -->
-      <div class="sendEmailsButton">
+      <div class="startAllocationButton">
         <button
           mat-raised-button
           color="accent"
@@ -391,7 +381,7 @@
         </button>
       </div>
 
-      <div class="sendEmailsButton">
+      <div class="startAllocationButton">
         <button
           mat-raised-button
           color="primary"
@@ -546,6 +536,14 @@
               (click)="fileInput.click()"
             >
               Import Students
+            </button>
+            <button
+              mat-raised-button
+              color="accent"
+              class="download-format"
+              (click)="downloadFile_format()"
+            >
+              Download file format
             </button>
           </div>
         </div>
