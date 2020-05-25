@@ -60,11 +60,10 @@ export class ExporttocsvService {
 
     const httpOptions = {
       headers: new HttpHeaders({
-        "enctype": "multipart/form-data",
+        enctype: "multipart/form-data",
         Authorization: idToken,
       }),
     };
-    console.log(httpOptions);
     this.url = this.base_url + "admin/uploadStudentList/" + id;
     const formData: FormData = new FormData();
     formData.append("student_list", fileToUpload, programName);
