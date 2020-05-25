@@ -322,23 +322,8 @@
 
     <div class="finalStageButtons" *ngIf="stage_no >= 3">
       <div class="startAllocationButton">
-        <button
-          mat-raised-button
-          color="primary"
-          [disabled]="allocationButton"
-          (click)="startAllocation()"
-        >
+        <button mat-raised-button color="primary" (click)="startAllocation()">
           Start Allocation
-        </button>
-      </div>
-      <div class="startAllocationButton">
-        <button
-          mat-raised-button
-          color="accent"
-          [disabled]="publishStudents"
-          (click)="publishToStudents()"
-        >
-          Publish to Students
         </button>
       </div>
       <div class="startAllocationButton">
@@ -349,6 +334,16 @@
           (click)="publishToFaculty()"
         >
           Publish to Faculties
+        </button>
+      </div>
+      <div class="startAllocationButton">
+        <button
+          mat-raised-button
+          color="accent"
+          [disabled]="publishStudents"
+          (click)="publishToStudents()"
+        >
+          Publish to Students
         </button>
       </div>
       <div class="startAllocationButton">
@@ -669,9 +664,11 @@
                 <td mat-cell *matCellDef="let faculty">{{ faculty.email }}</td>
               </ng-container>
               <ng-container matColumnDef="NoOfProjects">
-                <th mat-header-cell *matHeaderCellDef>Number Of Projects</th>
+                <th mat-header-cell *matHeaderCellDef>
+                  Projects (Included/Total)
+                </th>
                 <td mat-cell *matCellDef="let faculty">
-                  {{ faculty.noOfProjects }}
+                  {{ faculty.includedProjectsCount / faculty.noOfProjects }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="Actions">

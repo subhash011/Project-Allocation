@@ -15,6 +15,8 @@ import {
   ViewChild,
   RootRenderer,
   OnDestroy,
+  Pipe,
+  PipeTransform,
 } from "@angular/core";
 import { MatStepper, MatTableDataSource } from "@angular/material";
 import { LoadingBarService } from "@ngx-loading-bar/core";
@@ -525,8 +527,11 @@ export class AdminComponent implements OnInit, OnDestroy {
                   }
                 });
 
-                this.userService.uploadAllocationFile().subscribe((data) => {});
-
+                // this.userService.uploadAllocationFile().subscribe((data) => {});
+                localStorage.setItem(
+                  "allocationMap",
+                  JSON.stringify(data["allocationMap"])
+                );
                 this.userService.updatePublish("reset").subscribe((data) => {
                   if (data["status"] == "success") {
                     this.publishFaculty = false;
@@ -906,15 +911,18 @@ export class AdminComponent implements OnInit, OnDestroy {
     const numSelected = this.selection.selected
       ? this.selection.selected.length
       : 0;
-    const numRows = this.dataSource.data ? this.dataSource.data.length : 0;
+    var numRows = 0;
+    if (this.dataSource.data) {
+      this.dataSource.data.forEach((row) => {
+        numRows += row.isIncluded ? 1 : 0;
+      });
+    }
     return numSelected === numRows;
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach((row) => this.selection.select(row));
+    this.isAllSelected() ? this.selection.clear() : this.selectIncluded();
   }
 
   selectIncluded() {
@@ -1126,7 +1134,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   .subscribe((data) => {
                     dialogRefLoad.close();
                     this.snackBar.open(
-                      "Successfully published to students and mails have been sent.",
+                      "Successfully published to faculties and mails have been sent.",
                       "Ok",
                       {
                         duration: 10000,
@@ -1168,7 +1176,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   .subscribe((data) => {
                     dialogRefLoad.close();
                     this.snackBar.open(
-                      "Successfully published to faculties and mails have been sent.",
+                      "Successfully published to students and mails have been sent.",
                       "Ok",
                       {
                         duration: 10000,

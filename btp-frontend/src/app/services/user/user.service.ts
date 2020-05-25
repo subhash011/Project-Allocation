@@ -629,14 +629,18 @@ export class UserService {
     const id = user.id;
     const idToken = user.idToken;
     this.url = this.base_url + "admin/updatePublish/" + id;
-
+    const allocationMap = JSON.parse(localStorage.getItem("allocationMap"));
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         Authorization: idToken,
       }),
     };
-    return this.http.post(this.url, { mode: key }, httpOptions);
+    return this.http.post(
+      this.url,
+      { mode: key, allocationMap: allocationMap },
+      httpOptions
+    );
   }
 
   getPublishMode(key) {

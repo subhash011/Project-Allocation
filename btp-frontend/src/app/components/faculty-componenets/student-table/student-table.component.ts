@@ -29,6 +29,9 @@ export class PreferencePipe implements PipeTransform {
         if (index == -1) {
           return "N/A";
         }
+        if (index > 2) {
+          return ">3";
+        }
         return index + 1;
       }
     }

@@ -580,10 +580,11 @@ router.get("/members/:id", (req, res) => {
 										var studentCapErr = false;
 										var studentsPerFacultyErr = false;
 										var projects = val.project_list;
+										var includedProjects = 0;
 										projects = projects.filter((project) => {
+											includedProjects += project.isIncluded ? 1 : 0;
 											return project.stream == admin.stream;
 										});
-
 										if (projects.length > admin.project_cap) {
 											projectCapErr = true;
 										}
@@ -608,6 +609,7 @@ router.get("/members/:id", (req, res) => {
 											project_cap: projectCapErr,
 											student_cap: studentCapErr,
 											studentsPerFaculty: studentsPerFacultyErr,
+											includedProjectsCount: includedProjects,
 										};
 										return newFac;
 									});
@@ -1737,7 +1739,7 @@ router.post("/updatePublish/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	const mode = req.body.mode;
-
+	const allocationStatus = req.body.allocationMap;
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.then((faculty) => {
 			if (faculty) {
@@ -1752,12 +1754,133 @@ router.post("/updatePublish/:id", (req, res) => {
 							} else if (mode == "faculty") {
 								admin.publishFaculty = true;
 							}
-
 							admin.save().then((result) => {
-								res.json({
-									status: "success",
-									msg: null,
-								});
+								var promises = [];
+								var stream = admin.stream;
+								if (mode != "reset") {
+									Project.find({ stream: stream }).then((projects) => {
+										for (const project of projects) {
+											project.student_alloted = [];
+											promises.push(
+												project.save().then((project) => {
+													return project;
+												})
+											);
+										}
+										Promise.all(promises).then((projects) => {
+											promises = [];
+											Student.find({ stream: stream }).then((students) => {
+												for (const student of students) {
+													student.project_alloted = undefined;
+													promises.push(
+														student.save().then((student) => {
+															return student;
+														})
+													);
+												}
+												Promise.all(promises).then((result) => {
+													for (const key in allocationStatus) {
+														if (allocationStatus.hasOwnProperty(key)) {
+															const studentsList = allocationStatus[key];
+															for (const student of studentsList) {
+																promises.push(
+																	Student.findByIdAndUpdate(
+																		mongoose.Types.ObjectId(student),
+																		{
+																			project_alloted: mongoose.Types.ObjectId(
+																				key
+																			),
+																		}
+																	).then((student) => {
+																		return student;
+																	})
+																);
+															}
+														}
+													}
+													Promise.all(promises).then((result) => {
+														promises = [];
+														for (const key in allocationStatus) {
+															if (allocationStatus.hasOwnProperty(key)) {
+																const studentsList = allocationStatus[
+																	key
+																].map((val) => mongoose.Types.ObjectId(val));
+																promises.push(
+																	Project.findByIdAndUpdate(
+																		mongoose.Types.ObjectId(key),
+																		{
+																			student_alloted: studentsList,
+																		}
+																	).then((project) => {
+																		return project;
+																	})
+																);
+															}
+														}
+														Promise.all(promises)
+															.then((result) => {
+																Object.keys(allocationStatus).map(function (
+																	key,
+																	value
+																) {
+																	allocationStatus[key] = allocationStatus[
+																		key
+																	].map((val) => val.name);
+																});
+																Project.find({ stream: stream })
+																	.populate("faculty_id", null, Faculty)
+																	.populate({
+																		path: "students_id",
+																		select: { name: 1, roll_no: 1 },
+																		model: Student,
+																	})
+																	.populate("student_alloted", null, Student)
+																	.then((projects) => {
+																		var arr = [];
+																		for (const project of projects) {
+																			const newProj = {
+																				_id: project._id,
+																				faculty_id: project.faculty_id,
+																				title: project.title,
+																				description: project.description,
+																				stream: project.stream,
+																				duration: project.duration,
+																				faculty: project.faculty_id.name,
+																				studentIntake: project.studentIntake,
+																				numberOfPreferences:
+																					project.students_id.length,
+																				student_alloted:
+																					project.student_alloted,
+																				students_id: project.students_id,
+																				isIncluded: project.isIncluded,
+																			};
+																			arr.push(newProj);
+																		}
+																		res.json({
+																			status: "success",
+																			message: null,
+																		});
+																	})
+																	.catch(() => {
+																		res.status(500);
+																	});
+															})
+															.catch((err) => {
+																res.json({
+																	message: "fail",
+																});
+															});
+													});
+												});
+											});
+										});
+									});
+								} else {
+									res.json({
+										status: "success",
+										message: null,
+									});
+								}
 							});
 						} else {
 							res.json({
