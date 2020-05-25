@@ -58,16 +58,6 @@ export class CountDown implements PipeTransform {
 export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
   @Input() program;
 
-  getValue(endTime, currentTime) {
-    var currentTime = currentTime.getTime();
-    var endTime = endTime.getTime();
-    var ms = endTime - currentTime; // ms of difference
-    var days = Math.round(ms / 86400000);
-    var hrs = Math.round((ms % 86400000) / 3600000);
-    var mins = Math.round(((ms % 86400000) % 3600000) / 60000);
-    return days + "D " + hrs + "H " + mins + "M ";
-  }
-
   constructor(
     private userService: UserService,
     private loadingBar: LoadingBarService
