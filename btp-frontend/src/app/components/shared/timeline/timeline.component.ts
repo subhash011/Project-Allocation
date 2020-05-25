@@ -6,15 +6,58 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  Pipe,
+  PipeTransform,
+  OnDestroy,
 } from "@angular/core";
+import * as moment from "moment";
+
+@Pipe({
+  name: "countdown",
+})
+export class CountDown implements PipeTransform {
+  transform(value, now) {
+    var str = "";
+    var currentTime = now.getTime();
+    var endTime = value.getTime();
+    var distance = endTime - currentTime; // ms of difference
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    str +=
+      days == 0
+        ? ""
+        : days > 9
+        ? days + " days "
+        : "0" + days + (days == 1 ? " day " : " days ");
+    str +=
+      hrs == 0
+        ? ""
+        : hrs > 9
+        ? hrs + " hours "
+        : "0" + hrs + (hrs == 1 ? " hour " : " hours ");
+    str +=
+      mins == 0
+        ? ""
+        : mins > 9
+        ? mins + " minutes "
+        : "0" + mins + (mins == 1 ? " minute " : " minutes ");
+    if (days == 0 && hrs == 0 && mins == 0) {
+      return "This stage has ended";
+    }
+    return str;
+  }
+}
 
 @Component({
   selector: "app-timeline",
   templateUrl: "./timeline.component.html",
   styleUrls: ["./timeline.component.scss"],
 })
-export class TimelineComponent implements OnInit, OnChanges {
+export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
   @Input() program;
+
   constructor(
     private userService: UserService,
     private loadingBar: LoadingBarService
@@ -36,11 +79,13 @@ export class TimelineComponent implements OnInit, OnChanges {
   stageThree: number;
   stageFour: number;
   message: String;
+  currentTime: Date = new Date();
   next: String;
   icon;
   displayTimeline: boolean;
   loaded: boolean = false;
   styles;
+  timer;
   @Input() clone;
   ngOnChanges(changes: SimpleChanges) {
     this.program = changes.program.currentValue;
@@ -60,6 +105,9 @@ export class TimelineComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.timer = setInterval(() => {
+      this.currentTime = new Date();
+    }, 1000);
     this.initialize();
     this.loadingBar.start();
     if (localStorage.getItem("role") == "student") {
@@ -171,6 +219,8 @@ export class TimelineComponent implements OnInit, OnChanges {
                   }
                 }
                 if (this.stage == 4 && i == 4) {
+                  this.message = null;
+                  this.next = null;
                   this.stageThreeCompleted = true;
                   this.stageThree = 100;
                   this.stageOneCompleted = true;
@@ -188,9 +238,9 @@ export class TimelineComponent implements OnInit, OnChanges {
           } else {
             this.displayTimeline = false;
           }
-          this.loadingBar.stop();
-          this.loaded = true;
         }
+        this.loadingBar.stop();
+        this.loaded = true;
       });
     } else {
       this.icon = {
@@ -228,6 +278,7 @@ export class TimelineComponent implements OnInit, OnChanges {
                     Math.abs(
                       this.dates[0].getTime() - this.startDate.getTime()
                     );
+                  this.curDeadline = moment(this.curDeadline).toDate();
                   this.stageOne = this.stageOne * 100;
                   if (this.stageOne >= 100) {
                     this.stageOne = 100;
@@ -320,9 +371,9 @@ export class TimelineComponent implements OnInit, OnChanges {
           } else {
             this.displayTimeline = false;
           }
-          this.loadingBar.stop();
-          this.loaded = true;
         }
+        this.loadingBar.stop();
+        this.loaded = true;
       });
     }
   }
@@ -337,5 +388,9 @@ export class TimelineComponent implements OnInit, OnChanges {
   refresh(program) {
     this.program = program.short;
     this.ngOnInit();
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timer);
   }
 }

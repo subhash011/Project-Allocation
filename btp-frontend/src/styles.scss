@@ -11,90 +11,96 @@ $theme: mat-light-theme($primary, $accent);
 html,
 body,
 app-root {
-    height: 100%;
-    margin: 0;
-    overflow-x: hidden;
+  height: 100%;
+  margin: 0;
+  overflow-x: hidden;
 }
 
 body::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 body {
-    -ms-overflow-style: none;
+  -ms-overflow-style: none;
 }
 
 .no-toolbar-padding .mat-dialog-container {
-    padding-top: 0;
-    padding-left: 0;
-    padding-right: 0;
-    overflow: hidden;
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
 }
 
 body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 ::ng-deep .mat-horizontal-stepper-header {
-    pointer-events: none !important;
+  pointer-events: none !important;
 }
 
 @mixin styleStepLine($index) {
-    .mat-horizontal-stepper-header {
-        &+.mat-stepper-horizontal-line:nth-child(#{$index}) {
-            height: 2px;
-            background-image: linear-gradient(to right, #f03e81, #f03e81);
-        }
+  .mat-horizontal-stepper-header {
+    & + .mat-stepper-horizontal-line:nth-child(#{$index}) {
+      height: 2px;
+      background-image: linear-gradient(to right, #f03e81, #f03e81);
     }
+  }
 }
 
 @mixin styleEditedStepIcon($index) {
-    .mat-horizontal-stepper-header:nth-child(#{$index}) {
-        .mat-step-icon:not(.mat-step-icon-selected) {
-            background-color: red;
-        }
+  .mat-horizontal-stepper-header:nth-child(#{$index}) {
+    .mat-step-icon:not(.mat-step-icon-selected) {
+      background-color: red;
     }
+  }
 }
 
 @mixin styleUnEditedStepIcon($index) {
-    .mat-horizontal-stepper-header:nth-child(#{$index}) {
-        .mat-step-icon:not(.mat-step-icon-selected) {
-            background-color: #e8e8e8;
-        }
+  .mat-horizontal-stepper-header:nth-child(#{$index}) {
+    .mat-step-icon:not(.mat-step-icon-selected) {
+      background-color: #e8e8e8;
     }
+  }
 }
 
 .last-edited-step-1 {
-    @include styleStepLine(2);
+  @include styleStepLine(2);
 }
 
 .last-edited-step-2 {
-    @include styleStepLine(2);
-    @include styleStepLine(4);
+  @include styleStepLine(2);
+  @include styleStepLine(4);
 }
 
 .last-edited-step-3 {
-    @include styleStepLine(2);
-    @include styleStepLine(4);
-    @include styleStepLine(6);
+  @include styleStepLine(2);
+  @include styleStepLine(4);
+  @include styleStepLine(6);
 }
 
-.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before,
-.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after,
-[dir="rtl"] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after,
-[dir="rtl"] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before {
-    width: 0 !important;
+.mat-stepper-label-position-bottom
+  .mat-horizontal-stepper-header:not(:first-child)::before,
+.mat-stepper-label-position-bottom
+  .mat-horizontal-stepper-header:not(:last-child)::after,
+[dir="rtl"]
+  .mat-stepper-label-position-bottom
+  .mat-horizontal-stepper-header:not(:first-child)::after,
+[dir="rtl"]
+  .mat-stepper-label-position-bottom
+  .mat-horizontal-stepper-header:not(:last-child)::before {
+  width: 0 !important;
 }
 
 .mat-step-header .mat-step-header-ripple {
-    display: none;
+  display: none;
 }
 
 .mat-step-header.cdk-keyboard-focused,
 .mat-step-header.cdk-program-focused,
 .mat-step-header:hover {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 // .mat-stepper-label-position-bottom .mat-horizontal-stepper-header {

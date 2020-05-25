@@ -1,4 +1,3 @@
-import { ShowPreferencesComponent } from './components/student-components/show-preferences/show-preferences.component';
 import { ExporttocsvService } from "./services/exporttocsv/exporttocsv.service";
 import { UserService } from "./services/user/user.service";
 import { ThemePickerComponent } from "./components/shared/theme-picker/theme-picker.component";
@@ -31,8 +30,10 @@ import { RefreshComponent } from "./components/faculty-componenets/refresh/refre
 import { SuperAdminComponent } from "./components/shared/super-admin/super-admin.component";
 import { Ng2SearchPipeModule } from "ng2-search-filter";
 import { AdminComponent } from "./components/faculty-componenets/admin/admin.component";
-import { TimelineComponent } from "./components/shared/timeline/timeline.component";
-import { CountdownTimerModule } from "ngx-countdown-timer";
+import {
+  TimelineComponent,
+  CountDown,
+} from "./components/shared/timeline/timeline.component";
 import { environment } from "../environments/environment";
 import { AddMapComponent } from "./components/shared/add-map/add-map.component";
 import { LoadingBarModule } from "@ngx-loading-bar/core";
@@ -47,8 +48,8 @@ import { ShowAvailableProjectsComponent } from "./components/student-components/
 import { EditPreferencesComponent } from "./components/student-components/edit-preferences/edit-preferences.component";
 import { DisplayPreferencesComponent } from "./components/student-components/display-preferences/display-preferences.component";
 import { PreferencePipe } from "./components/faculty-componenets/student-table/student-table.component";
+import { ShowPreferencesComponent } from "./components/student-components/show-preferences/show-preferences.component";
 const googleLoginOption: LoginOpt = {
-  // scope: "https://mail.google.com/",
   prompt: "select_account",
 };
 const config = new AuthServiceConfig([
@@ -94,7 +95,8 @@ export function provideConfig() {
     EditPreferencesComponent,
     DisplayPreferencesComponent,
     PreferencePipe,
-    ShowPreferencesComponent
+    CountDown,
+    ShowPreferencesComponent,
   ],
   entryComponents: [
     SubmitPopUpComponent,
@@ -116,7 +118,6 @@ export function provideConfig() {
     FormsModule,
     ReactiveFormsModule,
     Ng2SearchPipeModule,
-    CountdownTimerModule.forRoot(),
     LoadingBarModule,
     TypingAnimationModule,
     ClipboardModule,
