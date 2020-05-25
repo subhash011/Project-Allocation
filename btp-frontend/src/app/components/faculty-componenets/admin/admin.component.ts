@@ -1126,7 +1126,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   .subscribe((data) => {
                     dialogRefLoad.close();
                     this.snackBar.open(
-                      "Successfully published to students and mails have been sent.",
+                      "Successfully published to faculties and mails have been sent.",
                       "Ok",
                       {
                         duration: 10000,
@@ -1168,7 +1168,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   .subscribe((data) => {
                     dialogRefLoad.close();
                     this.snackBar.open(
-                      "Successfully published to faculties and mails have been sent.",
+                      "Successfully published to students and mails have been sent.",
                       "Ok",
                       {
                         duration: 10000,
