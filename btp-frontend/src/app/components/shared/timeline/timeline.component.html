@@ -5,8 +5,10 @@
   "
 >
   <span class="days_left"
-    ><strong>Current stage ends in : </strong>
-    <countdown-timer [end]="curDeadline"></countdown-timer>
+    ><strong *ngIf="curDeadline"
+      >Current stage ends in :
+      {{ curDeadline | countdown: currentTime }}</strong
+    >
     <span class="text"><b>About this stage :</b> {{ message }}</span>
   </span>
 </div>
@@ -106,12 +108,14 @@
 >
   <mat-card class="program-details">
     <mat-card-title> Stage {{ admins.stage + 1 }} of 4 </mat-card-title>
-    <mat-horizontal-stepper [labelPosition]="'bottom'" #stepper>
+    <mat-horizontal-stepper [labelPosition]="'bottom'">
       <mat-step>
         <ng-template matStepLabel>Current Stage ends in</ng-template>
         <span class="days_left"
-          ><strong>Current stage ends in : </strong>
-          <countdown-timer [end]="curDeadline"></countdown-timer>
+          ><strong *ngIf="curDeadline"
+            >Current stage ends in :
+            {{ curDeadline | countdown: currentTime }}</strong
+          >
         </span>
       </mat-step>
       <mat-step>
@@ -123,7 +127,7 @@
           {{ message }}
         </div>
       </mat-step>
-      <mat-step>
+      <mat-step *ngIf="next">
         <ng-template matStepLabel>About next stage</ng-template>
         <h4>
           <strong>About next stage</strong>
@@ -136,7 +140,7 @@
   </mat-card>
 </div>
 
-<div *ngIf="!admins || !(admins && admins.startDate)">
+<div *ngIf="loaded && (!admins || !(admins && admins.startDate))">
   <mat-card class="program-details">
     <mat-card-title><u>Description of stages</u></mat-card-title>
     <br />

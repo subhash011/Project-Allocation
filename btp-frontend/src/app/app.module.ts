@@ -30,8 +30,10 @@ import { RefreshComponent } from "./components/faculty-componenets/refresh/refre
 import { SuperAdminComponent } from "./components/shared/super-admin/super-admin.component";
 import { Ng2SearchPipeModule } from "ng2-search-filter";
 import { AdminComponent } from "./components/faculty-componenets/admin/admin.component";
-import { TimelineComponent } from "./components/shared/timeline/timeline.component";
-import { CountdownTimerModule } from "ngx-countdown-timer";
+import {
+  TimelineComponent,
+  CountDown,
+} from "./components/shared/timeline/timeline.component";
 import { environment } from "../environments/environment";
 import { AddMapComponent } from "./components/shared/add-map/add-map.component";
 import { LoadingBarModule } from "@ngx-loading-bar/core";
@@ -47,7 +49,6 @@ import { EditPreferencesComponent } from "./components/student-components/edit-p
 import { DisplayPreferencesComponent } from "./components/student-components/display-preferences/display-preferences.component";
 import { PreferencePipe } from "./components/faculty-componenets/student-table/student-table.component";
 const googleLoginOption: LoginOpt = {
-  // scope: "https://mail.google.com/",
   prompt: "select_account",
 };
 const config = new AuthServiceConfig([
@@ -93,6 +94,7 @@ export function provideConfig() {
     EditPreferencesComponent,
     DisplayPreferencesComponent,
     PreferencePipe,
+    CountDown,
   ],
   entryComponents: [
     SubmitPopUpComponent,
@@ -114,7 +116,6 @@ export function provideConfig() {
     FormsModule,
     ReactiveFormsModule,
     Ng2SearchPipeModule,
-    CountdownTimerModule.forRoot(),
     LoadingBarModule,
     TypingAnimationModule,
     ClipboardModule,

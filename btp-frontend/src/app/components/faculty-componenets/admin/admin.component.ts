@@ -9,7 +9,13 @@ import { MatDialog } from "@angular/material/dialog";
 import { FormBuilder, Validators, FormControl } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { UserService } from "src/app/services/user/user.service";
-import { Component, OnInit, ViewChild, RootRenderer } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  RootRenderer,
+  OnDestroy,
+} from "@angular/core";
 import { MatStepper, MatTableDataSource } from "@angular/material";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -27,7 +33,7 @@ import * as moment from "moment";
   styleUrls: ["./admin.component.scss"],
   providers: [LoginComponent],
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
   public details; // For displaying the projects tab
   public faculty_projects;
   public fileToUpload: File = null;
@@ -97,6 +103,8 @@ export class AdminComponent implements OnInit {
   selection = new SelectionModel(true, []);
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
+  timer;
+  currentTime: Date = new Date();
 
   constructor(
     private userService: UserService,
@@ -161,6 +169,9 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.timer = setInterval(() => {
+      this.currentTime = new Date();
+    }, 1000);
     if (!localStorage.getItem("pf")) {
       localStorage.setItem("pf", "true");
     }
@@ -1170,5 +1181,8 @@ export class AdminComponent implements OnInit {
         });
       }
     });
+  }
+  ngOnDestroy() {
+    clearInterval(this.timer);
   }
 }
