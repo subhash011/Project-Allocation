@@ -49,6 +49,7 @@ export class SuperAdminComponent implements OnInit {
     "Stream",
     "Email-ID",
     "CGPA",
+    "isRegistered",
     "Actions",
   ];
   displayedColumnsProjects: string[] = [

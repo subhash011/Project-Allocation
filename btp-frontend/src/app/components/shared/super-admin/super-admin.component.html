@@ -152,6 +152,12 @@
                 <th mat-header-cell *matHeaderCellDef>CGPA</th>
                 <td mat-cell *matCellDef="let student">{{ student.gpa }}</td>
               </ng-container>
+              <ng-container matColumnDef="isRegistered">
+                <th mat-header-cell *matHeaderCellDef>Registered</th>
+                <td mat-cell *matCellDef="let student">
+                  {{ student.isRegistered ? "Yes" : "No" }}
+                </td>
+              </ng-container>
               <ng-container matColumnDef="Actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let student">

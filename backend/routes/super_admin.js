@@ -54,11 +54,9 @@ router.post("/register/:id", (req, res) => {
 });
 
 router.get("/student/details/:id", (req, res) => {
-	var streamwise = [];
 	var student = {};
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
-	var students;
 	var branches = [];
 	Mapping.find()
 		.then((maps) => {
@@ -86,10 +84,10 @@ router.get("/student/details/:id", (req, res) => {
 												stream: val.stream,
 												email: val.email,
 												roll_no: val.roll_no,
+												isRegistered: val.isRegistered,
 											};
 											return newStud;
 										});
-										streamwise.push(temp);
 										student[branch] = temp;
 									}
 									res.json({
@@ -193,7 +191,6 @@ router.get("/faculty/details/:id", (req, res) => {
 });
 
 router.delete("/student/:id", (req, res) => {
-	//start authentication here
 	const id = mongoose.Types.ObjectId(req.headers.body);
 	const google_user_id = req.params.id;
 	const idToken = req.headers.authorization;
@@ -351,32 +348,31 @@ router.post("/addAdmin/:id", (req, res) => {
 				google_id: { id: google_user_id, idToken: idToken },
 			}).then((user) => {
 				if (user) {
-					Faculty.findById(id)
+					Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
+						isAdmin: true,
+						adminProgram: branch,
+					})
 						.then((faculty) => {
 							if (faculty) {
-								faculty.isAdmin = true;
-								faculty.adminProgram = branch;
-								faculty.save().then((faculty) => {
-									var admin = new Admin({
-										admin_id: faculty._id,
-										stream: branch,
-										deadlines: [],
-									});
-									admin
-										.save()
-										.then((admin) => {
-											res.json({
-												message: "success",
-												result: faculty.isAdmin,
-											});
-										})
-										.catch((err) => {
-											res.json({
-												message: "error",
-												result: null,
-											});
-										});
+								var admin = new Admin({
+									admin_id: faculty._id,
+									stream: branch,
+									deadlines: [],
 								});
+								admin
+									.save()
+									.then((admin) => {
+										res.json({
+											message: "success",
+											result: faculty.isAdmin,
+										});
+									})
+									.catch((err) => {
+										res.json({
+											message: "error",
+											result: null,
+										});
+									});
 							} else {
 								res.json({
 									message: "success",
@@ -413,19 +409,18 @@ router.post("/removeAdmin/:id", (req, res) => {
 				google_id: { id: google_user_id, idToken: idToken },
 			}).then((user) => {
 				if (user) {
-					Faculty.findById(id)
+					Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
+						isAdmin: false,
+						$unset: { adminProgram: 1 },
+					})
 						.then((faculty) => {
 							if (faculty) {
-								faculty.isAdmin = false;
-								faculty.adminProgram = undefined;
-								faculty.save().then((faculty) => {
-									Admin.findOneAndDelete({
-										admin_id: faculty._id,
-									}).then((admin) => {
-										res.json({
-											message: "success",
-											result: faculty.adminProgram,
-										});
+								Admin.findOneAndDelete({
+									admin_id: faculty._id,
+								}).then((admin) => {
+									res.json({
+										message: "success",
+										result: faculty.adminProgram,
 									});
 								});
 							} else {
@@ -463,8 +458,8 @@ router.get("/projects/:id", (req, res) => {
 				(user) => {
 					if (user) {
 						Project.find()
-							.populate("faculty_id")
-							.populate("student_alloted")
+							.populate("faculty_id", null, Faculty)
+							.populate("student_alloted", null, Student)
 							.then((projects) => {
 								var arr = [];
 								for (const project of projects) {
