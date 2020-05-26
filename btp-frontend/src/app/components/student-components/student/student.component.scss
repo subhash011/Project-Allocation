@@ -7,6 +7,18 @@ mat-toolbar {
   margin-left: 10%;
 }
 
+.display-review {
+  margin-top: 50px;
+  width: 100%;
+  text-align: center;
+}
+
+.card-review {
+  display: inline-block;
+  text-align: center;
+  width: fit-content;
+}
+
 .display {
   overflow: hidden;
   width: 100%;

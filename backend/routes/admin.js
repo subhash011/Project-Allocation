@@ -1753,17 +1753,21 @@ router.post("/updatePublish/:id", (req, res) => {
 					.then((admin) => {
 						if (admin) {
 							if (mode == "reset") {
-								admin.publishStudents = false;
-								admin.publishFaculty = false;
 							} else if (mode == "student") {
 								admin.publishStudents = true;
 							} else if (mode == "faculty") {
 								admin.publishFaculty = true;
+								admin.publishStudents = false;
 							}
 							admin.save().then((result) => {
 								var promises = [];
 								var stream = admin.stream;
-								if (mode != "reset") {
+								if (!allocationStatus) {
+									res.json({
+										status: "success",
+										message: null,
+									});
+								} else if (mode != "reset") {
 									Project.find({ stream: stream }).then((projects) => {
 										for (const project of projects) {
 											project.student_alloted = [];

@@ -1,8 +1,23 @@
 <app-timeline
-  *ngIf="details && loaded && !publishStudents "
+  *ngIf="details && loaded && !publishStudents && !reviewContition"
   [program]="details.stream"
 ></app-timeline>
-<div class="display" *ngIf="details && details.project_alloted && publishStudents ">
+<div class="display-review" *ngIf="reviewContition">
+  <mat-card class="card-review">
+    <div class="review">
+      <h1>
+        <b
+          >The allocation status has been published to faculties. You will be
+          getting the allocation results shortly.</b
+        >
+      </h1>
+    </div>
+  </mat-card>
+</div>
+<div
+  class="display"
+  *ngIf="details && details.project_alloted && publishStudents"
+>
   <div class="allocationStatus">
     <h1><b>Project Alloted : &emsp;&emsp;&emsp;</b></h1>
   </div>

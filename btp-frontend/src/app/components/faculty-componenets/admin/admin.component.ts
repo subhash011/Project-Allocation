@@ -282,7 +282,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       : "This faculty has excluded the project. Contact the faculty if needed.";
   }
 
-
   proceed() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
@@ -295,13 +294,11 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
-
         var dialogRefLoad = this.dialog.open(LoaderComponent, {
           data: "Please wait ...",
           disableClose: true,
           hasBackdrop: true,
         });
-
 
         this.stage_no++;
         this.stepper.next();
@@ -359,6 +356,10 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
   }
 
+  discardAllocation() {
+    localStorage.removeItem("allocationMap");
+  }
+
   removeFaculty(id) {
     let dialogRef = this.dialog.open(DeletePopUpComponent, {
       height: "200px",
@@ -370,7 +371,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
-
         var dialogRefLoad = this.dialog.open(LoaderComponent, {
           data: "Please wait ...",
           disableClose: true,
@@ -412,7 +412,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
-
         var dialogRefLoad = this.dialog.open(LoaderComponent, {
           data: "Please wait ...",
           disableClose: true,
@@ -498,7 +497,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result["message"] == "submit") {
-
           var dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: "Please wait ...",
             disableClose: true,
@@ -568,17 +566,16 @@ export class AdminComponent implements OnInit, OnDestroy {
                   }
                 });
 
-                // this.userService.uploadAllocationFile().subscribe((data) => {});
                 localStorage.setItem(
                   "allocationMap",
                   JSON.stringify(data["allocationMap"])
                 );
                 this.userService.updatePublish("reset").subscribe((data) => {
                   if (data["status"] == "success") {
-                    this.publishFaculty = false;
                     this.publishStudents = false;
-                    localStorage.setItem("pf", "false");
+                    this.publishFaculty = false;
                     localStorage.setItem("ps", "false");
+                    localStorage.setItem("pf", "false");
                     if (this.stage_no == 3) {
                       this.userService
                         .updateStage(this.stage_no + 1)
@@ -788,7 +785,6 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   setProjectCap() {
     if (this.fifthFormGroup.controls["fifthCtrl"].value > 0) {
-      
       var dialogRefLoad = this.dialog.open(LoaderComponent, {
         data: "Please wait ...",
         disableClose: true,
@@ -1031,6 +1027,8 @@ export class AdminComponent implements OnInit, OnDestroy {
           hasBackdrop: true,
         });
         this.userService.revertStage(currStage).subscribe((data) => {
+          localStorage.setItem("pf", "false");
+          localStorage.setItem("ps", "false");
           dialogRefLoad.close();
           if ((data["status"] = "success")) {
             this.snackBar.open(data["msg"], "Ok", {
@@ -1199,14 +1197,15 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      var dialogRefLoad = this.dialog.open(LoaderComponent, {
-        data: "Sending mails, Please wait as this may take a while",
-        disableClose: true,
-        hasBackdrop: true,
-      });
       if (result && result["message"] == "submit") {
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Sending mails, Please wait as this may take a while",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         this.userService.updatePublish("faculty").subscribe((data) => {
           if (data["status"] == "success") {
+            this.userService.uploadAllocationFile().subscribe(() => {});
             this.publishFaculty = true;
             localStorage.setItem("pf", "true");
             this.userService.getFacultyStreamEmails().subscribe((data1) => {
@@ -1241,14 +1240,15 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      var dialogRefLoad = this.dialog.open(LoaderComponent, {
-        data: "Sending mails, Please wait as this may take a while",
-        disableClose: true,
-        hasBackdrop: true,
-      });
       if (result && result["message"] == "submit") {
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Sending mails, Please wait as this may take a while",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         this.userService.updatePublish("student").subscribe((data) => {
           if (data["status"] == "success") {
+            this.userService.uploadAllocationFile().subscribe(() => {});
             this.publishStudents = true;
             localStorage.setItem("ps", "true");
             this.userService.getStudentStreamEmails().subscribe((data1) => {

@@ -6,7 +6,7 @@ import { LoginComponent } from "./../../shared/login/login.component";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { UserService } from "src/app/services/user/user.service";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, flatMap } from "rxjs/operators";
 import { identifierModuleUrl } from "@angular/compiler";
 
 @Component({
@@ -31,6 +31,7 @@ export class StudentComponent implements OnInit, OnDestroy {
   loaded: boolean = false;
   publishStudents: boolean;
   publishFaculty: boolean;
+  reviewContition: boolean;
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem("user"));
@@ -51,6 +52,12 @@ export class StudentComponent implements OnInit, OnDestroy {
             if (data["status"] == "success") {
               this.publishStudents = data["studentPublish"];
               this.publishFaculty = data["facultyPublish"];
+              if (
+                this.publishStudents == false &&
+                this.publishFaculty == true
+              ) {
+                this.reviewContition = true;
+              }
             }
           });
         } else {
