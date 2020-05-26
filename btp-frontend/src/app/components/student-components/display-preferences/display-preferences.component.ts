@@ -48,7 +48,7 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
       return;
     }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
-      data: "Removing Preference, Please wait",
+      data: "Removing Preference, Please wait ...",
       disableClose: true,
       hasBackdrop: true,
     });

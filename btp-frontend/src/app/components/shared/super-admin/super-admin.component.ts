@@ -194,7 +194,7 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
         var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Adding Program. Please Wait ....",
+          data: "Adding Program. Please wait ...",
           disableClose: true,
           hasBackdrop: true,
         });
@@ -249,7 +249,7 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Removing Program, Please Wait ....",
+          data: "Removing Program, Please wait ...",
           disableClose: true,
           hasBackdrop: true,
         });
@@ -288,7 +288,7 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
         var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Loading Please Wait ....",
+          data: "Please wait ...",
           disableClose: true,
           hasBackdrop: true,
         });
@@ -328,7 +328,7 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Removing stream. Please wait...",
+          data: "Removing stream. Please wait ...",
           disableClose: true,
           hasBackdrop: true,
         });
@@ -366,7 +366,7 @@ export class SuperAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
         var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Removing faculty. Please Wait ....",
+          data: "Removing faculty. Please wait ...",
           disableClose: true,
           hasBackdrop: true,
         });
@@ -413,7 +413,7 @@ export class SuperAdminComponent implements OnInit {
   }
   addAdmin(faculty, branch) {
     var dialogRef = this.dialog.open(LoaderComponent, {
-      data: "Adding admin. Please Wait ....",
+      data: "Adding admin. Please wait ...",
       disableClose: true,
       hasBackdrop: true,
     });
@@ -442,7 +442,7 @@ export class SuperAdminComponent implements OnInit {
   }
   removeAdmin(faculty, branch) {
     var dialogRef = this.dialog.open(LoaderComponent, {
-      data: "Adding admin. Please Wait ....",
+      data: "Adding admin. Please wait ...",
       disableClose: true,
       hasBackdrop: true,
     });
@@ -496,9 +496,15 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
+        var dialogRef = this.dialog.open(LoaderComponent, {
+          data: "Please wait ....",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         this.loadingBar.start();
         this.userService.removeStudent(student).subscribe(
           (result) => {
+            dialogRef.close();
             if (result["message"] == "success") {
               this.snackBar.open("Successfully Deleted Student", "OK", {
                 duration: 3000,

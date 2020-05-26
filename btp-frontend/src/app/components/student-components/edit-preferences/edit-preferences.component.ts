@@ -66,7 +66,7 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
       return;
     }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
-      data: "Saving preferences, please wait",
+      data: "Saving preferences, Please wait ...",
       disableClose: true,
       hasBackdrop: true,
     });
@@ -117,11 +117,17 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
       });
       return;
     }
+    var dialogRef = this.dialog.open(LoaderComponent, {
+      data: "Please wait ....",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.projectService
       .removeOneStudentPreference(preference)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(
         (result) => {
+          dialogRef.close();
           if (result["message"] == "invalid-token") {
             this.loginObject.signOut();
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {

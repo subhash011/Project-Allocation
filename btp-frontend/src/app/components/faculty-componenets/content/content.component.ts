@@ -270,7 +270,7 @@ export class ContentComponent implements OnInit, DoCheck {
           if (result["message"] == "submit") {
 
             var dialogRef = this.dialog.open(LoaderComponent, {
-              data: "Loading Please Wait ....",
+              data: "Please wait ....",
               disableClose: true,
               hasBackdrop: true,
             });

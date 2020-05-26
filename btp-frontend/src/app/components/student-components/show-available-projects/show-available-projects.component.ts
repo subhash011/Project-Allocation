@@ -193,7 +193,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       return;
     }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
-      data: "Adding Preference, Please wait",
+      data: "Adding Preference, Please wait ...",
       disableClose: true,
       hasBackdrop: true,
     });
@@ -225,7 +225,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       return;
     }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
-      data: "Adding to preferences, please wait",
+      data: "Adding to preferences, Please wait ...",
       disableClose: true,
       hasBackdrop: true,
     });

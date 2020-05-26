@@ -102,7 +102,7 @@ export class FacultyComponent implements OnInit {
   displayProject(project) {
 
     var dialogRef = this.dialog.open(LoaderComponent, {
-      data: "Loading Please Wait ....",
+      data: "Please wait ....",
       disableClose: true,
       hasBackdrop: true,
     });
@@ -163,7 +163,7 @@ export class FacultyComponent implements OnInit {
 
   displayProgram(program) {
     var dialogRef = this.dialog.open(LoaderComponent, {
-      data: "Loading Please Wait ....",
+      data: "Please wait ....",
       disableClose: true,
       hasBackdrop: true,
     });

@@ -167,7 +167,7 @@ export class ProfileComponent implements OnInit {
       };
 
       var dialogRef = this.dialog.open(LoaderComponent, {
-        data: "Loading Please Wait ....",
+        data: "Please wait ....",
         disableClose: true,
         hasBackdrop: true,
       });
@@ -198,7 +198,7 @@ export class ProfileComponent implements OnInit {
         programs: this.programGroup.get("programs").value,
       };
       var dialogRef = this.dialog.open(LoaderComponent, {
-        data: "Loading Please Wait ....",
+        data: "Please wait ....",
         disableClose: true,
         hasBackdrop: true,
       });

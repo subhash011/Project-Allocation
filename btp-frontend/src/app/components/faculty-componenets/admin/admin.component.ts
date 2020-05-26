@@ -282,14 +282,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       : "This faculty has excluded the project. Contact the faculty if needed.";
   }
 
-  getAllotedStudents(alloted) {
-    var ans = "";
-    for (const allot of alloted) {
-      ans += allot.name + ", ";
-    }
-    ans = ans.substring(0, ans.length - 2);
-    return ans;
-  }
 
   proceed() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
@@ -303,6 +295,14 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
+
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Please wait ...",
+          disableClose: true,
+          hasBackdrop: true,
+        });
+
+
         this.stage_no++;
         this.stepper.next();
         this.proceedButton1 = true;
@@ -331,6 +331,7 @@ export class AdminComponent implements OnInit, OnDestroy {
             });
             if (this.stage_no >= 3) {
               this.exportService.generateCSV_projects().subscribe((data) => {
+                dialogRefLoad.close();
                 if (data["message"] == "success") {
                   this.exportService
                     .generateCSV_students()
@@ -341,7 +342,9 @@ export class AdminComponent implements OnInit, OnDestroy {
                 }
               });
             }
+            dialogRefLoad.close();
           } else {
+            dialogRefLoad.close();
             this.loginService.signOut();
             this.snackBar.open(
               "Session Timed Out! Please Sign-In again",
@@ -367,10 +370,18 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
+
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Please wait ...",
+          disableClose: true,
+          hasBackdrop: true,
+        });
+
         this.userService
           .removeFacultyAdmin(id)
           .toPromise()
           .then((result) => {
+            dialogRefLoad.close();
             if (result["message"] == "success") {
               this.snackBar.open("Removed Faculty", "Ok", {
                 duration: 3000,
@@ -401,10 +412,18 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
+
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Please wait ...",
+          disableClose: true,
+          hasBackdrop: true,
+        });
+
         this.userService
           .removeStudentAdmin(id)
           .toPromise()
           .then((result) => {
+            dialogRefLoad.close();
             if (result["message"] == "success") {
               this.snackBar.open("Removed Student", "Ok", {
                 duration: 3000,
@@ -479,8 +498,16 @@ export class AdminComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result["message"] == "submit") {
+
+          var dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: "Please wait ...",
+            disableClose: true,
+            hasBackdrop: true,
+          });
+
           date = moment(new Date(date)).format();
           this.userService.setDeadline(date).subscribe((data) => {
+            dialogRefLoad.close();
             if (data["status"] == "success") {
               let snackBarRef = this.snackBar.open(
                 "Deadline set successfully!!",
@@ -761,9 +788,17 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   setProjectCap() {
     if (this.fifthFormGroup.controls["fifthCtrl"].value > 0) {
+      
+      var dialogRefLoad = this.dialog.open(LoaderComponent, {
+        data: "Please wait ...",
+        disableClose: true,
+        hasBackdrop: true,
+      });
+
       this.userService
         .setProjectCap(this.fifthFormGroup.get("fifthCtrl").value)
         .subscribe((data) => {
+          dialogRefLoad.close();
           if (data["status"] == "success") {
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -781,6 +816,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
         });
     } else {
+      dialogRefLoad.close();
       let snackBarRef = this.snackBar.open(
         "Please enter a valid number",
         "Ok",
@@ -793,9 +829,15 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   setStudentCap() {
     if (this.sixthFormGroup.controls["sixthCtrl"].value > 0) {
+      var dialogRefLoad = this.dialog.open(LoaderComponent, {
+        data: "Please wait ...",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       this.userService
         .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
         .subscribe((data) => {
+          dialogRefLoad.close();
           if (data["status"] == "success") {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -813,6 +855,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
         });
     } else {
+      dialogRefLoad.close();
       let snackBarRef = this.snackBar.open(
         "Please enter a valid number",
         "Ok",
@@ -825,9 +868,15 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   setStudentsPerFaculty() {
     if (this.seventhFormGroup.controls["seventhCtrl"].value > 0) {
+      var dialogRefLoad = this.dialog.open(LoaderComponent, {
+        data: "Please wait ...",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       this.userService
         .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
         .subscribe((data) => {
+          dialogRefLoad.close();
           if (data["status"] == "success") {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -845,6 +894,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
         });
     } else {
+      dialogRefLoad.close();
       this.snackBar.open("Please enter a valid number", "Ok", {
         duration: 3000,
       });
@@ -975,7 +1025,13 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result["message"] == "submit") {
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Please wait ...",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         this.userService.revertStage(currStage).subscribe((data) => {
+          dialogRefLoad.close();
           if ((data["status"] = "success")) {
             this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
@@ -1025,8 +1081,14 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
+        var dialogRefLoad = this.dialog.open(LoaderComponent, {
+          data: "Please wait ...",
+          disableClose: true,
+          hasBackdrop: true,
+        });
         this.loadingBar.start();
         this.userService.resetUsers().subscribe((result) => {
+          dialogRefLoad.close();
           this.loadingBar.stop();
           if (result["message"] == "success") {
             this.snackBar.open(
@@ -1086,9 +1148,15 @@ export class AdminComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe((result) => {
         if (result && result["message"] == "submit") {
+          var dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: "Please wait ...",
+            disableClose: true,
+            hasBackdrop: true,
+          });
           this.exportService
             .uploadStudentList(this.fileToUpload, this.programName)
             .subscribe((data) => {
+              dialogRefLoad.close();
               if (data["status"] == "success") {
                 this.snackBar.open("Successfully uploaded the files.", "Ok", {
                   duration: 10000,

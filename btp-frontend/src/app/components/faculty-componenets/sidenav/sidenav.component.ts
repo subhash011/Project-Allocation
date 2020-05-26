@@ -64,7 +64,7 @@ export class SidenavComponent implements OnInit {
       }
     }
     var dialogRef = this.dialog.open(LoaderComponent, {
-      data: "Loading Please Wait ....",
+      data: "Please wait ....",
       disableClose: true,
       hasBackdrop: true,
     });
