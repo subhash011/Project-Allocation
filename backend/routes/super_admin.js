@@ -213,40 +213,17 @@ router.delete("/student/:id", (req, res) => {
 				.select("_id")
 				.then((user) => {
 					if (user) {
-						var promises = [];
-						Student.findByIdAndDelete(id)
-							.then((student) => {
-								if (student) return student.projects_preference;
-								else return null;
-							})
-							.then((projects) => {
-								if (projects) {
-									for (const project of projects) {
-										var projectid = mongoose.Types.ObjectId(project);
-										promises.push(
-											Project.findById(projectid).then((project) => {
-												project.students_id = project.students_id.filter(
-													(val) => !val.equals(id)
-												);
-												project.student_alloted = project.student_alloted.filter(
-													(val) => !val.equals(id)
-												);
-												project.save().then((project) => {
-													return project;
-												});
-											})
-										);
-									}
-									Promise.all(promises).then((result) => {
-										res.json({ result: null, message: "success" });
-									});
-								} else {
-									res.json({ message: "error" });
-								}
-							})
-							.catch((err) => {
-								res.status(500);
+						Student.findByIdAndDelete(id).then(() => {
+							var updateCondition = {
+								$pullAll: { students_id: [id], student_alloted: [id] },
+							};
+							Project.updateMany({}, updateCondition).then(() => {
+								res.json({
+									message: "success",
+									result: null,
+								});
 							});
+						});
 					} else {
 						res.json({
 							message: "invalid-token",
@@ -277,65 +254,26 @@ router.delete("/faculty/:id", (req, res) => {
 				.then((user) => {
 					if (user) {
 						Faculty.findByIdAndDelete(id).then((faculty) => {
-							if (!faculty) {
-								res.json({ result: "no-faculty", message: "success" });
-								return;
-							}
-							var projects = faculty.project_list;
-							var promises = [];
-							for (const project of projects) {
-								var project_id = mongoose.Types.ObjectId(project);
-								promises.push(
-									Project.findByIdAndDelete(project_id).then((project) => {
-										return project;
-									})
-								);
-							}
-							Promise.all(promises)
-								.then((result) => {
-									return result;
-								})
-								.catch((err) => {
-									res.status(500);
-								})
-								.then((projects) => {
-									promises = [];
-									projects_id = projects.map((val) => String(val._id));
-									students_id = projects.map((val) => val.students_id);
-									var students = [];
-									for (const ids of students_id) {
-										var studentid = ids.map((val) => val.toString());
-										students = [...students, ...studentid];
-									}
-									students_id = students.unique();
-									for (const student of students_id) {
-										studentID = mongoose.Types.ObjectId(student);
-										promises.push(
-											Student.findById(studentID).then((student) => {
-												student.projects_preference = student.projects_preference.filter(
-													(val) => !projects_id.includes(String(val))
-												);
-												student.projects_preference.map((val) =>
-													mongoose.Types.ObjectId(val)
-												);
-												student.save().then((student) => {
-													return student;
-												});
-												return student._id;
-											})
-										);
-									}
-									Promise.all(promises)
-										.then((result) => {
-											res.json({ result: null, message: "success" });
-										})
-										.catch((err) => {
-											res.status(500);
+							var projectList = faculty.project_list;
+							Project.deleteMany({ _id: { $in: projectList } }).then(() => {
+								var updateResult = {
+									$pullAll: {
+										projects_preference: projectList,
+									},
+								};
+								Student.updateMany({}, updateResult).then(() => {
+									var updateCondition = {
+										project_alloted: { $in: projectList },
+									};
+									updateResult = { $unset: { project_alloted: "" } };
+									Student.updateMany(updateCondition, updateResult).then(() => {
+										res.json({
+											message: "success",
+											result: null,
 										});
-								})
-								.catch((err) => {
-									res.status(500);
+									});
 								});
+							});
 						});
 					} else {
 						res.json({
