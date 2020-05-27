@@ -35,6 +35,8 @@ router.post("/maps/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+		.lean()
+		.select("_id")
 		.then((user) => {
 			if (user) {
 				const newMap = new Mapping({
@@ -68,8 +70,10 @@ router.delete("/maps/remove/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	const short = req.headers.body;
-	SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
-		(user) => {
+	SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+		.lean()
+		.select("_id")
+		.then((user) => {
 			if (user) {
 				Mapping.findOneAndDelete({ short: short })
 					.then((map) => {
@@ -90,8 +94,7 @@ router.delete("/maps/remove/:id", (req, res) => {
 					result: null,
 				});
 			}
-		}
-	);
+		});
 });
 
 router.get("/branches", (req, res) => {
@@ -122,6 +125,8 @@ router.post("/branches/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+		.lean()
+		.select("_id")
 		.then((user) => {
 			if (user) {
 				const newMap = new Streams({
@@ -153,8 +158,10 @@ router.delete("/branches/remove/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	const short = req.headers.body;
-	SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
-		(user) => {
+	SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+		.lean()
+		.select("_id")
+		.then((user) => {
 			if (user) {
 				Streams.findOneAndDelete({ short: short })
 					.then((map) => {
@@ -175,8 +182,7 @@ router.delete("/branches/remove/:id", (req, res) => {
 					result: null,
 				});
 			}
-		}
-	);
+		});
 });
 
 router.get("/allDetails", (req, res) => {

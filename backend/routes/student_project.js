@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Project = require("../models/Project");
+const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
 const oauth = require("../config/oauth");
 
@@ -12,7 +13,9 @@ router.get("/:id", (req, res) => {
 	const idToken = req.headers.authorization;
 	oauth(idToken)
 		.then((user) => {
-			var promise = Student.findOne({ google_id: { id: id, idToken: idToken } })
+			Student.findOne({ google_id: { id: id, idToken: idToken } })
+				.lean()
+				.select("stream")
 				.then((student) => {
 					if (student) {
 						return student["stream"];
@@ -26,7 +29,13 @@ router.get("/:id", (req, res) => {
 				.then((stream) => {
 					if (stream) {
 						Project.find({ stream: stream })
-							.populate("faculty_id")
+							.lean()
+							.select("-students_id -student_alloted -isIncluded -__v")
+							.populate({
+								path: "faculty_id",
+								select: "name email",
+								model: Faculty,
+							})
 							.then((projects) => {
 								for (const project of projects) {
 									var details = {
@@ -62,6 +71,7 @@ router.get("/preference/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	Student.findOne({ google_id: { id: id, idToken: idToken } })
+		.lean()
 		.populate({
 			path: "projects_preference",
 			select: {
@@ -78,6 +88,7 @@ router.get("/preference/:id", (req, res) => {
 					name: 1,
 					email: 1,
 				},
+				model: Faculty,
 			},
 		})
 		.then((student) => {
@@ -163,6 +174,8 @@ router.post("/preference/:id", (req, res) => {
 							}
 							Promise.all(promises).then((result) => {
 								Student.findById(studentID)
+									.lean()
+									.select("-google_id -date -__v")
 									.populate({
 										path: "projects_preference",
 										select: {
@@ -179,6 +192,7 @@ router.post("/preference/:id", (req, res) => {
 												name: 1,
 												email: 1,
 											},
+											model: Faculty,
 										},
 									})
 									.then((student) => {

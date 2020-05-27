@@ -1,4 +1,4 @@
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog } from "@angular/material/dialog";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProjectsService } from "./../../../services/projects/projects.service";
@@ -6,7 +6,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import { UserService } from "src/app/services/user/user.service";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
-import { LoaderComponent } from '../../shared/loader/loader.component';
+import { LoaderComponent } from "../../shared/loader/loader.component";
 
 @Component({
   selector: "app-faculty",
@@ -39,7 +39,7 @@ export class FacultyComponent implements OnInit {
     private projectService: ProjectsService,
     private userService: UserService,
     private navbar: NavbarComponent,
-    private dialog:MatDialog
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -100,7 +100,6 @@ export class FacultyComponent implements OnInit {
   }
 
   displayProject(project) {
-
     var dialogRef = this.dialog.open(LoaderComponent, {
       data: "Please wait ....",
       disableClose: true,
@@ -136,7 +135,6 @@ export class FacultyComponent implements OnInit {
     this.empty = false;
   }
   addProject(state) {
-    console.log(this.adminStage);
     if (this.adminStage == undefined || this.adminStage == null) {
       this.add = !state;
       this.snackBar.open(

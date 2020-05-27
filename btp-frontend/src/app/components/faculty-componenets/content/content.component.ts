@@ -1,4 +1,4 @@
-import { UserService } from 'src/app/services/user/user.service';
+import { UserService } from "src/app/services/user/user.service";
 import { FacultyComponent } from "./../faculty/faculty.component";
 import { LoginComponent } from "./../../shared/login/login.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -11,7 +11,7 @@ import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
 import { Location } from "@angular/common";
-import { LoaderComponent } from '../../shared/loader/loader.component';
+import { LoaderComponent } from "../../shared/loader/loader.component";
 
 @Component({
   selector: "app-content",
@@ -66,18 +66,12 @@ export class ContentComponent implements OnInit, DoCheck {
     let id = localStorage.getItem("id");
     this.id = id;
 
-    this.userService.getPublishMode("faculty")
-      .subscribe(data=>{
-
-        if(data["status"] == "success"){
-          this.publishFaculty = data['facultyPublish'];
-          this.publishStudents = data['studentPublish'];
-        }
-
-      })
-    
-
-
+    this.userService.getPublishMode("faculty").subscribe((data) => {
+      if (data["status"] == "success") {
+        this.publishFaculty = data["facultyPublish"];
+        this.publishStudents = data["studentPublish"];
+      }
+    });
   }
 
   ngDoCheck(): void {
@@ -107,8 +101,8 @@ export class ContentComponent implements OnInit, DoCheck {
       });
       if (project.studentIntake > 0 && project.duration > 0) {
         this.projectService.saveProject(project).subscribe((data) => {
+          dialogRef.close();
           if (data["save"] == "success") {
-            dialogRef.close();
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
@@ -268,13 +262,11 @@ export class ContentComponent implements OnInit, DoCheck {
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           if (result["message"] == "submit") {
-
             var dialogRef = this.dialog.open(LoaderComponent, {
               data: "Please wait ....",
               disableClose: true,
               hasBackdrop: true,
             });
-
 
             this.projectService
               .deleteProject(project._id)

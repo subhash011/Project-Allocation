@@ -798,7 +798,7 @@ router.delete("/student/:id", (req, res) => {
 													return val.toString() != mid.toString();
 												}
 											);
-											return project.save().then((project) => {
+											project.save().then((project) => {
 												return project;
 											});
 										}
@@ -1739,6 +1739,73 @@ router.post("/uploadStudentList/:id", (req, res) => {
 				result: null,
 			});
 		});
+});
+
+router.get("/allocationStatus/:id", (req, res) => {
+	const id = req.params.id;
+	const idToken = req.headers.authorization;
+	const allocationStatus = req.body.allocationMap;
+	var result = [];
+	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
+		(faculty) => {
+			Admin.findOne({ admin_id: faculty._id }).then((admin) => {
+				Project.find({ stream: admin.stream })
+					.populate({
+						path: "faculty_id",
+						select: "-google_id -date -__v -stream",
+						model: Faculty,
+					})
+					.populate({
+						path: "students_id",
+						select: { name: 1, roll_no: 1 },
+						model: Student,
+					})
+					.then((projects) => {
+						var promises = [];
+						Student.find().then((students) => {
+							var students = students.map((val) => {
+								var newStud = {
+									_id: val._id,
+									name: val.name,
+									roll_no: val.roll_no,
+								};
+								return newStud;
+							});
+							for (const project of projects) {
+								const pid = project._id.toString();
+								const studentList = allocationStatus[pid];
+								if (!allocationStatus[pid]) {
+									student_alloted = [];
+								} else {
+									var student_alloted = students.filter((val) => {
+										return studentList.indexOf(val._id.toString()) != -1;
+									});
+								}
+								var newProj = {
+									_id: project._id,
+									faculty_id: project.faculty_id,
+									title: project.title,
+									description: project.description,
+									stream: project.stream,
+									duration: project.duration,
+									faculty: project.faculty_id.name,
+									studentIntake: project.studentIntake,
+									numberOfPreferences: project.students_id.length,
+									student_alloted: student_alloted,
+									students_id: project.students_id,
+									isIncluded: project.isIncluded,
+								};
+								result.push(newProj);
+							}
+							res.json({
+								message: "success",
+								result: result,
+							});
+						});
+					});
+			});
+		}
+	);
 });
 
 router.post("/updatePublish/:id", (req, res) => {

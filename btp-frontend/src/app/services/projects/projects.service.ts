@@ -40,6 +40,12 @@ export class ProjectsService {
     return this.http.get(this.url_pref, httpOptions);
   }
   storeStudentPreferences(preferences) {
+    preferences = preferences.map((val) => {
+      var newProj = {
+        _id: val._id,
+      };
+      return newProj;
+    });
     const id = localStorage.getItem("id");
     this.url_post = this.studentBaseURL + "preference/" + id;
     const user = JSON.parse(localStorage.getItem("user"));

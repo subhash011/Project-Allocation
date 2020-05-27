@@ -59,6 +59,7 @@ router.get("/student/details/:id", (req, res) => {
 	const idToken = req.headers.authorization;
 	var branches = [];
 	Mapping.find()
+		.lean()
 		.then((maps) => {
 			branches = maps.map((val) => val.short);
 			for (const branch of branches) {
@@ -66,10 +67,16 @@ router.get("/student/details/:id", (req, res) => {
 			}
 		})
 		.then((user) => {
-			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
-				(user) => {
+			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+				.lean()
+				.select("_id")
+				.then((user) => {
 					if (user) {
 						Student.find()
+							.lean()
+							.select(
+								"-google_id -date -__v -projects_preference -project_alloted"
+							)
 							.then((students) => {
 								if (students) {
 									for (const branch of branches) {
@@ -110,8 +117,7 @@ router.get("/student/details/:id", (req, res) => {
 							result: null,
 						});
 					}
-				}
-			);
+				});
 		})
 		.catch(() => {
 			res.json({
@@ -128,6 +134,7 @@ router.get("/faculty/details/:id", (req, res) => {
 	var branches = [];
 	const idToken = req.headers.authorization;
 	Mapping.find()
+		.lean()
 		.then((maps) => {
 			branches = maps.map((val) => val.short);
 			for (const branch of branches) {
@@ -135,10 +142,14 @@ router.get("/faculty/details/:id", (req, res) => {
 			}
 		})
 		.then((user) => {
-			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
-				(user) => {
+			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+				.lean()
+				.select("_id")
+				.then((user) => {
 					if (user) {
 						Faculty.find()
+							.lean()
+							.select("-google_id -date -__v -project_list")
 							.then((faculties) => {
 								if (faculties) {
 									for (const branch of branches) {
@@ -179,8 +190,7 @@ router.get("/faculty/details/:id", (req, res) => {
 							result: null,
 						});
 					}
-				}
-			);
+				});
 		})
 		.catch(() => {
 			res.json({
@@ -198,49 +208,52 @@ router.delete("/student/:id", (req, res) => {
 		.then((user) => {
 			SuperAdmin.findOne({
 				google_id: { id: google_user_id, idToken: idToken },
-			}).then((user) => {
-				if (user) {
-					var promises = [];
-					Student.findByIdAndDelete(id)
-						.then((student) => {
-							if (student) return student.projects_preference;
-							else return null;
-						})
-						.then((projects) => {
-							if (projects) {
-								for (const project of projects) {
-									var projectid = mongoose.Types.ObjectId(project);
-									promises.push(
-										Project.findById(projectid).then((project) => {
-											project.students_id = project.students_id.filter(
-												(val) => !val.equals(id)
-											);
-											project.student_alloted = project.student_alloted.filter(
-												(val) => !val.equals(id)
-											);
-											project.save().then((project) => {
-												return project;
-											});
-										})
-									);
+			})
+				.lean()
+				.select("_id")
+				.then((user) => {
+					if (user) {
+						var promises = [];
+						Student.findByIdAndDelete(id)
+							.then((student) => {
+								if (student) return student.projects_preference;
+								else return null;
+							})
+							.then((projects) => {
+								if (projects) {
+									for (const project of projects) {
+										var projectid = mongoose.Types.ObjectId(project);
+										promises.push(
+											Project.findById(projectid).then((project) => {
+												project.students_id = project.students_id.filter(
+													(val) => !val.equals(id)
+												);
+												project.student_alloted = project.student_alloted.filter(
+													(val) => !val.equals(id)
+												);
+												project.save().then((project) => {
+													return project;
+												});
+											})
+										);
+									}
+									Promise.all(promises).then((result) => {
+										res.json({ result: null, message: "success" });
+									});
+								} else {
+									res.json({ message: "error" });
 								}
-								Promise.all(promises).then((result) => {
-									res.json({ result: result, message: "success" });
-								});
-							} else {
-								res.json({ message: "error" });
-							}
-						})
-						.catch((err) => {
-							res.status(500);
+							})
+							.catch((err) => {
+								res.status(500);
+							});
+					} else {
+						res.json({
+							message: "invalid-token",
+							result: null,
 						});
-				} else {
-					res.json({
-						message: "invalid-token",
-						result: null,
-					});
-				}
-			});
+					}
+				});
 		})
 		.catch(() => {
 			res.json({
@@ -258,76 +271,79 @@ router.delete("/faculty/:id", (req, res) => {
 		.then((user) => {
 			SuperAdmin.findOne({
 				google_id: { id: google_user_id, idToken: idToken },
-			}).then((user) => {
-				if (user) {
-					Faculty.findByIdAndDelete(id).then((faculty) => {
-						if (!faculty) {
-							res.json({ result: "no-faculty", message: "success" });
-							return;
-						}
-						var projects = faculty.project_list;
-						var promises = [];
-						for (const project of projects) {
-							var project_id = mongoose.Types.ObjectId(project);
-							promises.push(
-								Project.findByIdAndDelete(project_id).then((project) => {
-									return project;
-								})
-							);
-						}
-						Promise.all(promises)
-							.then((result) => {
-								return result;
-							})
-							.catch((err) => {
-								res.status(500);
-							})
-							.then((projects) => {
-								promises = [];
-								projects_id = projects.map((val) => String(val._id));
-								students_id = projects.map((val) => val.students_id);
-								var students = [];
-								for (const ids of students_id) {
-									var studentid = ids.map((val) => val.toString());
-									students = [...students, ...studentid];
-								}
-								students_id = students.unique();
-								for (const student of students_id) {
-									studentID = mongoose.Types.ObjectId(student);
-									promises.push(
-										Student.findById(studentID).then((student) => {
-											student.projects_preference = student.projects_preference.filter(
-												(val) => !projects_id.includes(String(val))
-											);
-											student.projects_preference.map((val) =>
-												mongoose.Types.ObjectId(val)
-											);
-											student.save().then((student) => {
-												return student;
-											});
-											return student._id;
-										})
-									);
-								}
-								Promise.all(promises)
-									.then((result) => {
-										res.json({ result: result, message: "success" });
+			})
+				.lean()
+				.select("_id")
+				.then((user) => {
+					if (user) {
+						Faculty.findByIdAndDelete(id).then((faculty) => {
+							if (!faculty) {
+								res.json({ result: "no-faculty", message: "success" });
+								return;
+							}
+							var projects = faculty.project_list;
+							var promises = [];
+							for (const project of projects) {
+								var project_id = mongoose.Types.ObjectId(project);
+								promises.push(
+									Project.findByIdAndDelete(project_id).then((project) => {
+										return project;
 									})
-									.catch((err) => {
-										res.status(500);
-									});
-							})
-							.catch((err) => {
-								res.status(500);
-							});
-					});
-				} else {
-					res.json({
-						message: "invalid-token",
-						result: null,
-					});
-				}
-			});
+								);
+							}
+							Promise.all(promises)
+								.then((result) => {
+									return result;
+								})
+								.catch((err) => {
+									res.status(500);
+								})
+								.then((projects) => {
+									promises = [];
+									projects_id = projects.map((val) => String(val._id));
+									students_id = projects.map((val) => val.students_id);
+									var students = [];
+									for (const ids of students_id) {
+										var studentid = ids.map((val) => val.toString());
+										students = [...students, ...studentid];
+									}
+									students_id = students.unique();
+									for (const student of students_id) {
+										studentID = mongoose.Types.ObjectId(student);
+										promises.push(
+											Student.findById(studentID).then((student) => {
+												student.projects_preference = student.projects_preference.filter(
+													(val) => !projects_id.includes(String(val))
+												);
+												student.projects_preference.map((val) =>
+													mongoose.Types.ObjectId(val)
+												);
+												student.save().then((student) => {
+													return student;
+												});
+												return student._id;
+											})
+										);
+									}
+									Promise.all(promises)
+										.then((result) => {
+											res.json({ result: null, message: "success" });
+										})
+										.catch((err) => {
+											res.status(500);
+										});
+								})
+								.catch((err) => {
+									res.status(500);
+								});
+						});
+					} else {
+						res.json({
+							message: "invalid-token",
+							result: null,
+						});
+					}
+				});
 		})
 		.catch(() => {
 			res.json({
@@ -346,50 +362,53 @@ router.post("/addAdmin/:id", (req, res) => {
 		.then((user) => {
 			SuperAdmin.findOne({
 				google_id: { id: google_user_id, idToken: idToken },
-			}).then((user) => {
-				if (user) {
-					Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
-						isAdmin: true,
-						adminProgram: branch,
-					})
-						.then((faculty) => {
-							if (faculty) {
-								var admin = new Admin({
-									admin_id: faculty._id,
-									stream: branch,
-									deadlines: [],
-								});
-								admin
-									.save()
-									.then((admin) => {
-										res.json({
-											message: "success",
-											result: faculty.isAdmin,
-										});
-									})
-									.catch((err) => {
-										res.json({
-											message: "error",
-											result: null,
-										});
-									});
-							} else {
-								res.json({
-									message: "success",
-									result: "no-faculty",
-								});
-							}
+			})
+				.lean()
+				.select("_id")
+				.then((user) => {
+					if (user) {
+						Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
+							isAdmin: true,
+							adminProgram: branch,
 						})
-						.catch(() => {
-							res.status(500);
+							.then((faculty) => {
+								if (faculty) {
+									var admin = new Admin({
+										admin_id: faculty._id,
+										stream: branch,
+										deadlines: [],
+									});
+									admin
+										.save()
+										.then((admin) => {
+											res.json({
+												message: "success",
+												result: faculty.isAdmin,
+											});
+										})
+										.catch((err) => {
+											res.json({
+												message: "error",
+												result: null,
+											});
+										});
+								} else {
+									res.json({
+										message: "success",
+										result: "no-faculty",
+									});
+								}
+							})
+							.catch(() => {
+								res.status(500);
+							});
+					} else {
+						res.json({
+							message: "invalid-token",
+							result: null,
 						});
-				} else {
-					res.json({
-						message: "invalid-token",
-						result: null,
-					});
-				}
-			});
+					}
+				});
 		})
 		.catch(() => {
 			res.json({
@@ -407,39 +426,42 @@ router.post("/removeAdmin/:id", (req, res) => {
 		.then((user) => {
 			SuperAdmin.findOne({
 				google_id: { id: google_user_id, idToken: idToken },
-			}).then((user) => {
-				if (user) {
-					Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
-						isAdmin: false,
-						$unset: { adminProgram: 1 },
-					})
-						.then((faculty) => {
-							if (faculty) {
-								Admin.findOneAndDelete({
-									admin_id: faculty._id,
-								}).then((admin) => {
+			})
+				.lean()
+				.select("_id")
+				.then((user) => {
+					if (user) {
+						Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
+							isAdmin: false,
+							$unset: { adminProgram: 1 },
+						})
+							.then((faculty) => {
+								if (faculty) {
+									Admin.findOneAndDelete({
+										admin_id: faculty._id,
+									}).then((admin) => {
+										res.json({
+											message: "success",
+											result: faculty.adminProgram,
+										});
+									});
+								} else {
 									res.json({
 										message: "success",
-										result: faculty.adminProgram,
+										result: "no-faculty",
 									});
-								});
-							} else {
-								res.json({
-									message: "success",
-									result: "no-faculty",
-								});
-							}
-						})
-						.catch(() => {
-							res.status(500);
+								}
+							})
+							.catch(() => {
+								res.status(500);
+							});
+					} else {
+						res.json({
+							message: "invalid-token",
+							result: null,
 						});
-				} else {
-					res.json({
-						message: "invalid-token",
-						result: null,
-					});
-				}
-			});
+					}
+				});
 		})
 		.catch(() => {
 			res.json({
@@ -454,12 +476,22 @@ router.get("/projects/:id", (req, res) => {
 	const idToken = req.headers.authorization;
 	oauth(idToken)
 		.then((user) => {
-			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
-				(user) => {
+			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+				.lean()
+				.select("_id")
+				.then((user) => {
 					if (user) {
 						Project.find()
-							.populate("faculty_id", null, Faculty)
-							.populate("student_alloted", null, Student)
+							.populate({
+								path: "faculty_id",
+								select: { name: 1, _id: 1 },
+								model: Faculty,
+							})
+							.populate({
+								path: "student_alloted",
+								select: { name: 1, roll_no: 1 },
+								model: Student,
+							})
 							.then((projects) => {
 								var arr = [];
 								for (const project of projects) {
@@ -487,8 +519,7 @@ router.get("/projects/:id", (req, res) => {
 							result: null,
 						});
 					}
-				}
-			);
+				});
 		})
 		.catch(() => {
 			res.json({

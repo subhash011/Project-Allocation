@@ -20,7 +20,6 @@ export class MailService {
       }),
     };
     const body = {
-      user: user,
       mailBody: `Dear Students and Faculty Members,
 
 The project allocation for program ${program} has been completed. Please login to the project allocation portal to view the projects/students allocated to you.
@@ -53,7 +52,6 @@ Project Coordinator (${program})
 
     if (remainder) {
       var body = {
-        user: user,
         mailBody: `Dear Faculty Member,
     A Gentle Remainder.
 
@@ -67,7 +65,6 @@ ${stream} Admin
     } else {
       if (stage == 0) {
         var body = {
-          user: user,
           mailBody: `Dear Faculty Members,
 
   Please login to the project allocation portal and add projects that you would like to offer to students of program ${stream}. Note that the deadline for this phase is ${
@@ -83,7 +80,6 @@ Project Coordinator (${stream})
         };
       } else if (stage == 2) {
         var body = {
-          user: user,
           mailBody: `Dear Faculty Members,
 
   Please login to the project allocation portal and record your preference among students who have opted to work with you. Note that the default order of preference is the decreasing order of CGPA. The deadline for this phase is ${
@@ -121,7 +117,6 @@ Project Coordinator (${stream})
 
     if (remainder) {
       var body = {
-        user: user,
         mailBody: `Dear Student,
     A Gentle Remainder.
 
@@ -134,7 +129,6 @@ ${stream} Admin
       };
     } else {
       var body = {
-        user: user,
         mailBody: `Dear Students,
 
     Please login to the project allocation portal and record your preference among projects offered to program ${stream}. Note that it is better to have as many projects as possible in your preference list. The deadline for this phase is ${
@@ -153,8 +147,7 @@ Project Coordinator (${stream})
     return this.http.post(url, body, httpOptions);
   }
 
-  publishMail(role,emails,program){
-
+  publishMail(role, emails, program) {
     const user = JSON.parse(localStorage.getItem("user"));
     var url = this.base_url + "send";
     const httpOptions = {
@@ -164,9 +157,8 @@ Project Coordinator (${stream})
       }),
     };
 
-    if(role == "student"){
+    if (role == "student") {
       var body = {
-        user: user,
         mailBody: `Dear Students,
 
 The project allocation for program ${program} has been completed. Please login to the project allocation portal to view the projects/students allocated to you.
@@ -178,13 +170,8 @@ Project Coordinator (${program})
         to: emails,
         subject: `${program}: Project Allocation Completed`,
       };
-
-
-    }
-
-    else if(role == "faculty"){
+    } else if (role == "faculty") {
       var body = {
-        user: user,
         mailBody: `Dear Faculty Members,
 
 The project allocation for program ${program} has been completed. Please login to the project allocation portal to view the projects/students allocated to you.
@@ -199,7 +186,6 @@ Project Coordinator (${program})
     }
 
     return this.http.post(url, body, httpOptions);
-
   }
 
   formatAMPM(curr_date) {

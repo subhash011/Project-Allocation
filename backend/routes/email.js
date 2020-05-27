@@ -24,7 +24,6 @@ sendEmail = (mailOptions, transporter) =>
 const text = "start over again";
 
 router.post("/send", (req, res) => {
-	const user = req.body.user;
 	const to = req.body.to;
 	const subject = req.body.subject;
 	const mailBody = req.body.mailBody;
@@ -40,11 +39,6 @@ router.post("/send", (req, res) => {
 		auth: {
 			user: process.env.PAP_MAIL,
 			pass: process.env.PAP_PASS,
-			// type: "OAuth2",
-			// user: user.email,
-			// clientId: process.env.GOOGLE_CLIENT_ID,
-			// clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-			// accessToken: user.authToken,
 		},
 	});
 	sendEmail(options, transport)

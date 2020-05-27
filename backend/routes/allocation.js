@@ -56,6 +56,10 @@ router.post("/start/:id", (req, res) => {
 	var stream;
 	pids = projects.map((val) => val._id);
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+		.lean()
+		.select({
+			isAdmin: 1,
+		})
 		.then((faculty) => {
 			if (faculty) {
 				if (faculty.isAdmin) {
