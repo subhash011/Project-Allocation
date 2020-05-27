@@ -546,8 +546,9 @@ export class AdminComponent implements OnInit, OnDestroy {
       disableClose: true,
       hasBackdrop: true,
     });
+    const length = this.students.filter((val) => val.isRegistered).length;
     this.userService
-      .validateAllocation(selectedProjects, this.students.length)
+      .validateAllocation(selectedProjects, length)
       .subscribe((data) => {
         if (data["status"] == "success") {
           this.projectService
@@ -920,8 +921,10 @@ export class AdminComponent implements OnInit, OnDestroy {
             }
           }
 
+          const length = this.students.filter((val) => val.isRegistered).length;
+
           this.userService
-            .validateAllocation(this.selection.selected, this.students.length)
+            .validateAllocation(this.selection.selected, length)
             .subscribe((data) => {
               if (data["status"] == "success") {
                 this.allocationButton = false;

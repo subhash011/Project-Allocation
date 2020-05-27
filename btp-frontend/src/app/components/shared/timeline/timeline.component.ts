@@ -21,30 +21,38 @@ export class CountDown implements PipeTransform {
     var currentTime = now.getTime();
     var endTime = value.getTime();
     var distance = endTime - currentTime; // ms of difference
-    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    var hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    str +=
-      days == 0
-        ? ""
-        : days > 9
-        ? days + " days "
-        : "0" + days + (days == 1 ? " day " : " days ");
-    str +=
-      hrs == 0
-        ? ""
-        : hrs > 9
-        ? hrs + " hours "
-        : "0" + hrs + (hrs == 1 ? " hour " : " hours ");
-    str +=
-      mins == 0
-        ? ""
-        : mins > 9
-        ? mins + " minutes "
-        : "0" + mins + (mins == 1 ? " minute " : " minutes ");
+    var days, hrs, mins, seconds;
+    if (distance > 0) {
+      days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      str +=
+        days == 0
+          ? ""
+          : days > 9
+          ? days + " days "
+          : "0" + days + (days == 1 ? " day " : " days ");
+      str +=
+        hrs == 0
+          ? ""
+          : hrs > 9
+          ? hrs + " hours "
+          : "0" + hrs + (hrs == 1 ? " hour " : " hours ");
+      str +=
+        mins == 0
+          ? ""
+          : mins > 9
+          ? mins + " minutes "
+          : "0" + mins + (mins == 1 ? " minute " : " minutes ");
+    } else {
+      days = 0;
+      hrs = 0;
+      mins = 0;
+      seconds = 0;
+    }
     if (days == 0 && hrs == 0 && mins == 0) {
-      return "This stage has ended";
+      return "This stage has ended.";
     }
     return str;
   }
