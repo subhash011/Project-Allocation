@@ -59,6 +59,7 @@ router.post("/start/:id", (req, res) => {
 		.lean()
 		.select({
 			isAdmin: 1,
+			adminProgram: 1,
 		})
 		.then((faculty) => {
 			if (faculty) {
@@ -84,6 +85,7 @@ router.post("/start/:id", (req, res) => {
 							students.sort((a, b) => {
 								return b.gpa - a.gpa;
 							});
+							students = students.filter((val) => val.isRegistered);
 							return students;
 						})
 					);
