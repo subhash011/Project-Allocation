@@ -65,11 +65,14 @@ router.post("/start/:id", (req, res) => {
 			if (faculty) {
 				if (faculty.isAdmin) {
 					stream = faculty.adminProgram;
+
+					var projectsCondition = {
+						stream: stream,
+						_id: { $in: pids },
+					};
+
 					promises.push(
-						Project.find({ stream: stream }).then((projectList) => {
-							projectList = projectList.filter((val) => {
-								return pids.indexOf(val._id.toString()) != -1;
-							});
+						Project.find(projectsCondition).then((projectList) => {
 							projects = projectList;
 							projects.sort((a, b) => {
 								return a.students_id.length - b.students_id.length;

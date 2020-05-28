@@ -420,6 +420,7 @@ router.get("/projects/:id", (req, res) => {
 				.then((user) => {
 					if (user) {
 						Project.find()
+							.lean()
 							.populate({
 								path: "faculty_id",
 								select: { name: 1, _id: 1 },

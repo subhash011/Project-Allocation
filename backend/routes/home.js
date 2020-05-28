@@ -9,6 +9,7 @@ const Mapping = require("../models/Mapping");
 const Streams = require("../models/Streams");
 router.get("/maps", (req, res) => {
 	Mapping.find()
+		.lean()
 		.then((maps) => {
 			if (maps) {
 				res.json({
@@ -99,6 +100,7 @@ router.delete("/maps/remove/:id", (req, res) => {
 
 router.get("/branches", (req, res) => {
 	Streams.find()
+		.lean()
 		.then((maps) => {
 			if (maps) {
 				res.json({
@@ -183,11 +185,6 @@ router.delete("/branches/remove/:id", (req, res) => {
 				});
 			}
 		});
-});
-
-router.get("/allDetails", (req, res) => {
-	var promises = [];
-	var students = {};
 });
 
 module.exports = router;

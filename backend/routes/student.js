@@ -121,20 +121,24 @@ router.get("/stage/:id", (req, res) => {
 		});
 });
 
+//this method is for updating student profile
 router.post("/update/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	const document = req.body;
-	Student.findOne({ google_id: { id: id, idToken: idToken } })
+	var updateResult = {
+		name: document.name,
+		gpa: document.gpa,
+	};
+	Student.findOneAndUpdate(
+		{ google_id: { id: id, idToken: idToken } },
+		updateResult
+	)
 		.then((student) => {
 			if (student) {
-				student.name = document.name;
-				student.gpa = document.gpa;
-				student.save().then((student) => {
-					res.json({
-						message: "success",
-						result: student,
-					});
+				res.json({
+					message: "success",
+					result: student,
 				});
 			} else {
 				res.json({
