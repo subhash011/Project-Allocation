@@ -174,7 +174,22 @@ router.post("/start/:id", (req, res) => {
 							.populate({ path: "faculty_id", select: "name", model: Faculty })
 							.populate({
 								path: "students_id",
-								select: { name: 1, roll_no: 1 },
+								select: { name: 1, roll_no: 1, project_alloted: 1 },
+								model: Student,
+								populate: {
+									path: "project_alloted",
+									select: { title: 1, faculty_id: 1 },
+									model: Project,
+									populate: {
+										path: "faculty_id",
+										select: { name: 1 },
+										model: Faculty,
+									},
+								},
+							})
+							.populate({
+								path: "student_alloted",
+								select: "name roll_no gpa",
 								model: Student,
 							})
 							.then((projects) => {
