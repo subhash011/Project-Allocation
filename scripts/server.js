@@ -16,21 +16,21 @@ app.use(cors());
 app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
-var mongoConnect = process.env.MONGO_URL;
+var mongoConnect = process.env.MONGO_URL_LOCAL;
 //connect to mongodb
 // mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/Testing
 
 mongoose
-    .connect('mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/test', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => {
-        console.log("connected to mongodb");
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+	.connect(mongoConnect, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	})
+	.then(() => {
+		console.log("connected to mongodb");
+	})
+	.catch((err) => {
+		console.log(err);
+	});
 
 //define all routes below this
 const student = require("./routes/student");
@@ -48,10 +48,10 @@ app.use("/allocation", allocation);
 const PORT = process.env.PORT || 8000;
 
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
+	res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
 });
 
 //start server
 app.listen(PORT, () => {
-    console.log("Server connected to port " + PORT);
+	console.log("Server connected to port " + PORT);
 });

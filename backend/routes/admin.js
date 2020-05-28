@@ -973,20 +973,24 @@ router.get("/fetchAllMails/:id", (req, res) => {
 							}
 						}
 						promises.push(
-							Faculty.find({ programs: { $elemMatch: programAdmin } }).then(
-								(faculty) => {
+							Faculty.find({ programs: { $elemMatch: programAdmin } })
+								.lean()
+								.select("email")
+								.then((faculty) => {
 									faculties = faculty.map((val) => {
 										return val.email;
 									});
 									return faculties;
-								}
-							)
+								})
 						);
 						promises.push(
-							Student.find({ stream: stream }).then((student) => {
-								students = student.map((val) => val.email);
-								return students;
-							})
+							Student.find({ stream: stream, isRegistered: true })
+								.lean()
+								.select("email")
+								.then((student) => {
+									students = student.map((val) => val.email);
+									return students;
+								})
 						);
 						Promise.all(promises).then((result) => {
 							var answer = [...result[0], ...result[1]];
@@ -1262,54 +1266,35 @@ router.post("/revertStage/:id", (req, res) => {
 router.post("/reset/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
-	var promises = [];
-	var admin_info;
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then((user) => {
 		if (user && user.isAdmin) {
-			Admin.findOne({ admin_id: user._id })
-				.then((admin) => {
-					admin.startDate = undefined;
-					admin.deadlines = [];
-					admin.publishFaculty = false;
-					admin.publishStudents = false;
-					admin.stage = 0;
-					admin.save().then((admin) => {
-						return admin;
-					});
-					return admin;
-				})
-				.then((admin) => {
+			var updateResult = {
+				$unset: {
+					startDate: "",
+				},
+				deadlines: [],
+				publishFaculty: false,
+				publishStudents: false,
+				stage: 0,
+				studentCount: 0,
+			};
+			Admin.findOneAndUpdate({ admin_id: user._id }, updateResult).then(
+				(admin) => {
 					const stream = admin.stream;
-					Student.find({ stream: stream }).then((students) => {
-						for (const student of students) {
-							promises.push(
-								Student.findByIdAndDelete(student._id).then((student) => {
-									return student;
-								})
-							);
-						}
-						Promise.all(promises).then((result) => {
-							promises = [];
-							Project.find({ stream: stream }).then((projects) => {
-								for (const project of projects) {
-									promises.push(
-										project
-											.updateOne({ student_alloted: [], students_id: [] })
-											.then((project) => {
-												return project;
-											})
-									);
-								}
-								Promise.all(promises).then((result) => {
-									res.json({
-										message: "success",
-										result: null,
-									});
-								});
+					Student.deleteMany({ stream: stream }).then(() => {
+						updateResult = {
+							project_alloted: [],
+							students_id: [],
+						};
+						Project.updateMany({ stream: stream }, updateResult).then(() => {
+							res.json({
+								message: "success",
+								result: null,
 							});
 						});
 					});
-				});
+				}
+			);
 		} else {
 			res.json({
 				message: "invalid-token",
