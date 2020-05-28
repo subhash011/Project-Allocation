@@ -1737,7 +1737,7 @@ router.get("/allocationStatus/:id", (req, res) => {
 				Project.find({ stream: admin.stream })
 					.populate({
 						path: "faculty_id",
-						select: "-google_id -date -__v -stream",
+						select: "-google_id -date -__v",
 						model: Faculty,
 					})
 					.populate({

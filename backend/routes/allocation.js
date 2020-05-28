@@ -65,8 +65,6 @@ router.post("/start/:id", (req, res) => {
 			if (faculty) {
 				if (faculty.isAdmin) {
 					stream = faculty.adminProgram;
-					//reset dbs first
-					//start algorithm here
 					promises.push(
 						Project.find({ stream: stream }).then((projectList) => {
 							projectList = projectList.filter((val) => {
