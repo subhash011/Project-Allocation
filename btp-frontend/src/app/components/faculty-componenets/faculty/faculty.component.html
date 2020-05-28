@@ -14,7 +14,7 @@
               </button>
             </div>
         </mat-toolbar>
-        <app-sidenav [projects]="projects" [routeParams]="routeParams" [programs]="programs" [empty]="empty" (projectClicked)="displayProject($event)" [programs_mode]="programs_mode" (addButton)="addProject($event)" (programClicked)="displayProgram($event)"></app-sidenav>
+        <app-sidenav [projects]="projects" [adminStage]="adminStage" [routeParams]="routeParams" [programs]="programs" [empty]="empty" (projectClicked)="displayProject($event)" [programs_mode]="programs_mode" (addButton)="addProject($event)" (programClicked)="displayProgram($event)"></app-sidenav>
     </mat-sidenav>
 
     <mat-sidenav-content>

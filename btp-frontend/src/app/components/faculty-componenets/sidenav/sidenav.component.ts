@@ -29,6 +29,7 @@ export class SidenavComponent implements OnInit {
   @Input() public programs;
   @Input() public programs_mode;
   @Input() public routeParams;
+  @Input() public adminStage;
   @Output() projectClicked = new EventEmitter<Event>();
   @Output() addButton = new EventEmitter<Event>();
   @Output() programClicked = new EventEmitter<Event>();
