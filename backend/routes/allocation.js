@@ -171,7 +171,7 @@ router.post("/start/:id", (req, res) => {
 						var student_alloted = [];
 						var promises = [];
 						Project.find({ stream: stream })
-							.populate("faculty_id", null, Faculty)
+							.populate({ path: "faculty_id", select: "name", model: Faculty })
 							.populate({
 								path: "students_id",
 								select: { name: 1, roll_no: 1 },

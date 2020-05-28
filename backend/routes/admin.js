@@ -227,7 +227,11 @@ router.get("/project/:id", (req, res) => {
 							if (admin) {
 								const stream = admin.stream;
 								Project.find({ stream: stream })
-									.populate("faculty_id", null, Faculty)
+									.populate({
+										path: "faculty_id",
+										select: "name",
+										model: Faculty,
+									})
 									.populate({
 										path: "students_id",
 										select: { name: 1, roll_no: 1, project_alloted: 1 },
@@ -243,13 +247,16 @@ router.get("/project/:id", (req, res) => {
 											},
 										},
 									})
-									.populate("student_alloted", null, Student)
+									.populate({
+										path: "student_alloted",
+										select: "name roll_no gpa",
+										model: Student,
+									})
 									.then((projects) => {
 										var arr = [];
 										for (const project of projects) {
 											const newProj = {
 												_id: project._id,
-												faculty_id: project.faculty_id,
 												title: project.title,
 												description: project.description,
 												stream: project.stream,
@@ -1030,7 +1037,7 @@ router.post("/validateAllocation/:id", (req, res) => {
 								for (const project of selectedProjects) {
 									count_sum += Number(project.studentIntake);
 								}
-								
+
 								if (count_sum >= Math.min(students, admin.studentCount)) {
 									res.json({
 										status: "success",
@@ -1047,7 +1054,7 @@ router.post("/validateAllocation/:id", (req, res) => {
 									for (const project of projects) {
 										count += project.studentIntake;
 									}
-									if (count >=  Math.min(students, admin.studentCount)) {
+									if (count >= Math.min(students, admin.studentCount)) {
 										res.json({
 											status: "success",
 											msg: "Allocation can start",
@@ -1736,7 +1743,7 @@ router.get("/allocationStatus/:id", (req, res) => {
 				Project.find({ stream: admin.stream })
 					.populate({
 						path: "faculty_id",
-						select: "-google_id -date -__v -stream",
+						select: "name",
 						model: Faculty,
 					})
 					.populate({
@@ -1767,7 +1774,6 @@ router.get("/allocationStatus/:id", (req, res) => {
 								}
 								var newProj = {
 									_id: project._id,
-									faculty_id: project.faculty_id,
 									title: project.title,
 									description: project.description,
 									stream: project.stream,
@@ -1895,7 +1901,11 @@ router.post("/updatePublish/:id", (req, res) => {
 																		select: { name: 1, roll_no: 1 },
 																		model: Student,
 																	})
-																	.populate("student_alloted", null, Student)
+																	.populate({
+																		path: "student_alloted",
+																		select: "name",
+																		model: Student,
+																	})
 																	.then((projects) => {
 																		var arr = [];
 																		for (const project of projects) {
