@@ -43,6 +43,8 @@ router.get("/details/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("-google_id -date")
         .then((user) => {
             if (user) {
                 res.json({
@@ -167,9 +169,12 @@ router.get("/getAllPrograms/:id", (req, res) => {
     const idToken = req.headers.authorization;
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("_id")
         .then((faculty) => {
             if (faculty) {
                 Mapping.find()
+                    .lean()
                     .then((result) => {
                         if (result) {
                             res.json({
@@ -209,95 +214,36 @@ router.post("/deleteProgram/:id", (req, res) => {
     const idToken = req.headers.authorization;
     const curr_program = req.body.program;
 
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+    var updateConfig = {
+        $pull : {programs : curr_program}
+    }
+
+
+    Faculty.findOneAndUpdate({ google_id: { id: id, idToken: idToken } },updateConfig)
         .then((faculty) => {
             if (faculty) {
-                const new_programs = faculty.programs.filter((program) => {
-                    if (program.full != curr_program.full) {
-                        return program;
-                    }
-                });
-                faculty.programs = new_programs;
+               
+                Project.find({faculty_id : faculty._id, stream : curr_program.short})
+                    .then(projects =>{
 
-                Project.find({
-                    faculty_id: faculty._id,
-                    stream: curr_program.short,
-                }).then((projects_temp) => {
-                    var project_list = [];
-
-                    for (const project of projects_temp) {
-                        project_list.push(project._id);
-                    }
-
-                    var projects = project_list;
-                    var promises = [];
-                    for (const project of projects) {
-                        var project_id = mongoose.Types.ObjectId(project);
-                        promises.push(
-                            Project.findByIdAndDelete(project_id).then((project) => {
-                                return project;
-                            })
-                        );
-                    }
-                    Promise.all(promises)
-                        .then((result) => {
-                            return result;
-                        })
-                        .catch((err) => {
-                            res.status(500);
-                        })
-                        .then((projects) => {
-                            promises = [];
-                            projects_id = projects.map((val) => String(val._id));
-                            students_id = projects.map((val) => val.students_id);
-                            var students = [];
-                            for (const ids of students_id) {
-                                var studentid = [String(ids)];
-                                students = [...students, ...studentid];
-                            }
-                            students_id = students.unique();
-                            for (const student of students_id) {
-                                studentID = mongoose.Types.ObjectId(student);
-                                promises.push(
-                                    Student.findById(studentID).then((student) => {
-                                        student.projects_preference = student.projects_preference.filter(
-                                            (val) => !projects_id.includes(String(val))
-                                        );
-                                        student.projects_preference.map((val) =>
-                                            mongoose.Types.ObjectId(val)
-                                        );
-                                        student.save().then((student) => {
-                                            return student;
+                        const project_ids = projects.map(project => project._id);
+                        
+                        Project.deleteMany({faculty_id : faculty._id, stream : curr_program.short})
+                            .then(result=>{
+                                
+                                updateConfig = {
+                                    $pullAll : {projects_preference: project_ids}
+                                }
+                                Student.updateMany({stream:curr_program.short},updateConfig)
+                                    .then(result=>{
+                                        res.json({
+                                            status: "success",
+                                            msg: "Successfully removed the program.",
                                         });
-                                        return student._id;
                                     })
-                                );
-                            }
-                            Promise.all(promises)
-                                .then((result) => {
-                                    faculty
-                                        .save()
-                                        .then((result) => {
-                                            res.json({
-                                                status: "success",
-                                                msg: "Successfully removed the program!!",
-                                            });
-                                        })
-                                        .catch((err) => {
-                                            res.json({
-                                                status: "fail",
-                                                result: null,
-                                            });
-                                        });
-                                })
-                                .catch((err) => {
-                                    res.status(500);
-                                });
-                        })
-                        .catch((err) => {
-                            res.status(500);
-                        });
-                });
+                            })
+
+                    })
             } else {
                 res.json({
                     status: "fail",
@@ -318,10 +264,11 @@ router.get("/getFacultyPrograms/:id", (req, res) => {
     const idToken = req.headers.authorization;
 
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("programs")
         .then((faculty) => {
             if (faculty) {
                 const programs = faculty.programs;
-                const adminProgram = faculty.adminProgram;
                 res.json({
                     status: "success",
                     programs: programs,
@@ -347,8 +294,11 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
     const program = req.body.program;
     var facultyDetails = {};
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("_id")
         .then((faculty) => {
             Admin.findOne({ stream: program.short })
+                .lean()
                 .then((admin) => {
                     if (admin) {
                         var stage = admin.stage;
@@ -356,8 +306,8 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                             var deadline = admin.deadlines[admin.deadlines.length - 1];
                         else var deadline = null;
 
-                        Project.find({ faculty_id: faculty.id, stream: program.short })
-                            .populate("student_alloted", null, Student)
+                        Project.find({ faculty_id: faculty._id, stream: program.short })
+                            .populate({path:"student_alloted", select:"-google_id -date", model:Student})
                             .then((result) => {
                                 const obj = {
                                     program: program,
@@ -379,8 +329,8 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                             });
                     } else {
                         if (faculty) {
-                            Project.find({ faculty_id: faculty.id, stream: program.short })
-                                .populate("student_alloted", null, Student)
+                            Project.find({ faculty_id: faculty._id, stream: program.short })
+                                .populate({path:"student_alloted", select:"-google_id -date", model:Student})
                                 .then((projects) => {
                                     const obj = {
                                         program: program,
@@ -420,6 +370,7 @@ router.post("/getAdminInfo_program/:id", (req, res) => {
     const program = req.body.program;
 
     Admin.findOne({ stream: program })
+        .lean()
         .then((admin) => {
             if (admin) {
                 res.json({

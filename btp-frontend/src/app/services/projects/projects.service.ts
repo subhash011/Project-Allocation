@@ -152,6 +152,11 @@ export class ProjectsService {
   }
 
   savePreference(student_order, project_id) {
+
+    student_order = student_order.map((per) => {
+      return per._id;
+    });
+
     const student_data = {
       student: student_order,
       project_id: project_id,

@@ -13,20 +13,17 @@ router.post("/:id", (req, res) => {
 	const stream = req.body.stream;
 
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-		.then((user) => {
-			if (user) {
-				Project.find({ faculty_id: user._id })
+		.lean()
+		.select("_id")
+		.then((faculty) => {
+			if (faculty) {
+				Project.find({ faculty_id: faculty._id, stream : stream })
+					.lean()
 					.then((projects) => {
-						const stream_projects = [];
 						if (projects) {
-							for (const proj of projects) {
-								if (proj.stream == stream) {
-									stream_projects.push(proj);
-								}
-							}
 							res.json({
 								status: "success",
-								project_details: stream_projects,
+								project_details: projects,
 							});
 						} else {
 							res.json({
@@ -78,7 +75,10 @@ router.post("/add/:id", (req, res) => {
 					faculty_id: user._id,
 				});
 
-				Admin.findOne({ stream: stream }).then((admin) => {
+				Admin.findOne({ stream: stream })
+				.lean()
+				.select("project_cap student_cap studentsPerFaculty")
+				.then((admin) => {
 					if (admin) {
 						Project.find({ faculty_id: user._id, stream: stream })
 							.then((projects) => {
@@ -169,10 +169,12 @@ router.post("/applied/:id", (req, res) => {
 	const project_id = req.body.project;
 	const idToken = req.headers.authorization;
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+		.lean()
+		.select("_id")
 		.then((faculty) => {
 			if (faculty) {
 				Project.findById(mongoose.Types.ObjectId(project_id))
-					.populate("students_id", null, Student)
+					.populate({path:"students_id", select:"-google_id -stream -date -email -isRegistered",model:Student})
 					.then((project) => {
 						res.json({
 							status: "success",
@@ -202,8 +204,10 @@ router.post("/include_projects/:id", (req, res) => {
 	var projects = req.body.projects;
 	projects = projects.map((val) => mongoose.Types.ObjectId(val));
 	const idToken = req.headers.authorization;
-	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
-		(faculty) => {
+	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+	.lean()
+	.select("_id")
+	.then((faculty) => {
 			if (faculty) {
 				const faculty_id = faculty._id;
 				var conditions = {
@@ -233,42 +237,29 @@ router.post("/include_projects/:id", (req, res) => {
 
 router.post("/save_preference/:id", (req, res) => {
 	const id = req.params.id;
-	const student = req.body.student;
+	const student_ids = req.body.student;
 	const project_id = req.body.project_id;
 	const idToken = req.headers.authorization;
-	let student_ids = [];
 
-	student.forEach((per) => {
-		student_ids.push(mongoose.Types.ObjectId(per._id));
-	});
 
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-		.then((user) => {
-			if (user) {
-				Project.findById({ _id: project_id })
-					.then((project) => {
-						project.students_id = student_ids;
-						project
-							.save()
-							.then((result) => {
-								res.json({
-									status: "success",
-									msg: "Your preferences are saved",
-								});
-							})
-							.catch((err) => {
-								res.json({
-									status: "fail",
-									msg: "Reload and Please try again !",
-								});
-							});
-					})
-					.catch((err) => {
-						res.json({
-							status: "fail",
-							msg: "Project Not Found!!! Please Reload",
-						});
+		.lean()
+		.select("_id")
+		.then((faculty) => {
+			if (faculty) {
+				Project.findByIdAndUpdate(project_id,{students_id:student_ids})
+				.then((project) => {
+					res.json({
+						status: "success",
+						msg: "Your preferences are saved",
 					});
+				})
+				.catch((err) => {
+					res.json({
+						status: "fail",
+						msg: "Project Not Found!!! Please Reload",
+					});
+				});					
 			} else {
 				res.json({
 					status: "fail",
@@ -300,7 +291,12 @@ router.post("/update/:id", (req, res) => {
 
 			const stream = project.stream;
 
-			Admin.findOne({ stream: stream }).then((admin) => {
+			Admin.findOne({ stream: stream })
+			.select({
+				student_cap:1,
+				studentsPerFaculty:1
+			})
+			.then((admin) => {
 				if (admin) {
 					Project.find({ faculty_id: project.faculty_id, stream: stream }).then(
 						(projects) => {
@@ -362,56 +358,40 @@ router.delete("/delete/:id", (req, res) => {
 			let students_id = result.students_id;
 			let faculty_id = result.faculty_id;
 
-			Faculty.findById({ _id: faculty_id }).then((faculty) => {
-				let project_list = faculty.project_list;
-				let new_list = project_list.filter((project) => {
-					if (project.toString() != id) {
-						return project;
+			var updateConfig = {
+				$pull : { project_list : id } 
+			}
+
+			Faculty.findByIdAndUpdate(faculty_id,updateConfig)
+				.then(result=>{
+
+					updateConfig = {
+						$pull : {projects_preference : id}
 					}
-				});
-				faculty.project_list = new_list;
 
-				faculty
-					.save()
-					.then((result) => {
-						Student.find({
-							_id: { $in: students_id },
-						})
-							.then((students) => {
-								students.forEach((student) => {
-									let project_pref = student.projects_preference;
-									student.projects_preference = project_pref.filter(
-										(project_id) => {
-											if (project_id.toString() != id) {
-												return project_id;
-											}
-										}
-									);
-								});
-
-								students.forEach((student) => {
-									student.save();
-								});
-
-								res.json({
-									status: "success",
-									msg: "The project has been successfully deleted",
-								});
-							})
-							.catch((err) => {
-								res.json({
-									status: "fail",
-									msg: "Unable to update student preferences",
-								});
+					Student.updateMany({_id: { $in: students_id }},updateConfig)
+						.then(result =>{
+							res.json({
+								status: "success",
+								msg: "The project has been successfully deleted",
 							});
-					})
-					.catch((err) => {
-						res.json({
-							status: "fail",
-							msg: "Unable to Update the faculty details",
+
+						})
+						.catch((err) => {
+							res.json({
+								status: "fail",
+								msg: "Unable to update student preferences",
+							});
 						});
+
+				})
+				.catch((err) => {
+					res.json({
+						status: "fail",
+						msg: "Please reload and try again!!!",
 					});
-			});
+				});
+			
 		})
 		.catch((err) => {
 			res.json({

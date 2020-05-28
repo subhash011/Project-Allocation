@@ -1030,7 +1030,7 @@ router.post("/validateAllocation/:id", (req, res) => {
 								for (const project of selectedProjects) {
 									count_sum += Number(project.studentIntake);
 								}
-
+								
 								if (count_sum >= Math.min(students, admin.studentCount)) {
 									res.json({
 										status: "success",
@@ -1047,8 +1047,7 @@ router.post("/validateAllocation/:id", (req, res) => {
 									for (const project of projects) {
 										count += project.studentIntake;
 									}
-
-									if (count >= admin.studentCount) {
+									if (count >=  Math.min(students, admin.studentCount)) {
 										res.json({
 											status: "success",
 											msg: "Allocation can start",
