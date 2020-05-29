@@ -107,7 +107,7 @@ router.post("/add/:id", (req, res) => {
 										});
 									}
 
-									if (
+									else if (
 										student_count + Number(project_details.studentIntake) >
 										admin.studentsPerFaculty
 									) {
@@ -137,6 +137,7 @@ router.post("/add/:id", (req, res) => {
 								}
 							})
 							.catch((err) => {
+								console.log(err)
 								res.json({
 									save: "fail",
 									msg: " There was an error, Please try again!", //Display the messages in flash messages
