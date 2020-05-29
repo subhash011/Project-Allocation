@@ -64,8 +64,6 @@ export class StudentTableComponent implements OnInit {
 
   onSubmit() {
     if (this.adminStage == 2) {
-      localStorage.removeItem("sorted");
-
       var dialogRef = this.dialog.open(LoaderComponent, {
         data: "Please wait ....",
         disableClose: true,
@@ -76,6 +74,7 @@ export class StudentTableComponent implements OnInit {
         .subscribe((data) => {
           dialogRef.close();
           if (data["status"] == "success") {
+            localStorage.removeItem(this.project._id);
             let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });

@@ -110,16 +110,15 @@ export class FacultyComponent implements OnInit {
         dialogRef.close();
         this.student_list = data["students"];
         if (this.adminStage < 2) {
-          localStorage.setItem("sorted", "false");
+          localStorage.setItem(project._id, "false");
           this.student_list.sort((a, b) => {
             return b.gpa - a.gpa;
           });
         } else if (this.adminStage == 2) {
-          if (localStorage.getItem("sorted") == "false") {
+          if (localStorage.getItem(project._id) == "false") {
             this.student_list.sort((a, b) => {
               return b.gpa - a.gpa;
             });
-            localStorage.removeItem("sorted");
           }
         }
       } else {

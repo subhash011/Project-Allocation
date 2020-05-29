@@ -1,5 +1,5 @@
 <div *ngIf="!programs_mode; else programsPanel">
-  <mat-selection-list #included *ngIf="adminStage >= 2; else normalList">
+  <mat-selection-list #included *ngIf="adminStage == 2; else normalList">
     <mat-list-option
       *ngFor="let project of projects; let i = index"
       (click)="onClick(project, i)"
@@ -15,24 +15,16 @@
   </mat-selection-list>
 
   <ng-template #normalList>
-    
-    <mat-nav-list >
-  
+    <mat-nav-list>
       <mat-list-item
-      *ngFor="let project of projects; let i = index"
+        *ngFor="let project of projects; let i = index"
         (click)="onClick(project, i)"
         [class.active]="i == selectedRow"
       >
-      {{ project.title }}
+        {{ project.title }}
       </mat-list-item>
-  
-  
     </mat-nav-list>
-
   </ng-template>
-
-
-
 
   <button
     color="warn"
@@ -52,7 +44,7 @@
     Overview
   </button>
   <button
-    *ngIf="adminStage >= 2"
+    *ngIf="adminStage == 2"
     color="warn"
     mat-raised-button
     class="add-button"

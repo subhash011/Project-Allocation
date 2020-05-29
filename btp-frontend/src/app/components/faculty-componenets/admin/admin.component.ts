@@ -1208,6 +1208,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         });
         this.userService.updatePublish("faculty").subscribe((data) => {
           if (data["status"] == "success") {
+            this.dataSource = new MatTableDataSource(data["result"]);
             this.userService.uploadAllocationFile().subscribe(() => {});
             this.publishFaculty = true;
             localStorage.setItem("pf", "true");
@@ -1249,8 +1250,10 @@ export class AdminComponent implements OnInit, OnDestroy {
           disableClose: true,
           hasBackdrop: true,
         });
+
         this.userService.updatePublish("student").subscribe((data) => {
           if (data["status"] == "success") {
+            this.dataSource = new MatTableDataSource(data["result"]);
             this.userService.uploadAllocationFile().subscribe(() => {});
             this.publishStudents = true;
             localStorage.setItem("ps", "true");
