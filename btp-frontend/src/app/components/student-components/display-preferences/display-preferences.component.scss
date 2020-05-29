@@ -24,15 +24,36 @@ mat-toolbar {
   max-width: 100%;
 }
 
+mat-icon:hover {
+  cursor: pointer;
+}
+
+.example-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.example-viewport {
+  -ms-overflow-style: none;
+}
+
+.example-viewport {
+  height: 100%;
+  width: 100%;
+}
+
 .list {
   min-height: 60px;
-  width: 100%;
   border-radius: 4px;
   display: block;
 }
 
-mat-icon:hover {
-  cursor: pointer;
+.emptyBlock {
+  padding-left: 33%;
+  font-size: large;
+}
+
+.expansion-panel {
+  padding: 5px 2px;
 }
 
 .list-item {
@@ -43,24 +64,9 @@ mat-icon:hover {
   font-size: 14px;
 }
 
-.example-viewport::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE and Edge */
-.example-viewport {
-  -ms-overflow-style: none;
-}
-
-.example-viewport {
-  height: 100%;
-  width: 100%;
-}
-
 .list-item:last-child {
   border: none;
 }
-
 .disable_ripple:hover {
   background: red !important;
 }

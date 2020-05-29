@@ -10,7 +10,10 @@
               </mat-panel-title>
               <mat-panel-description>
                 <div class="fill-space"></div>
-                <mat-icon (click)="removeOnePreference(preference)"
+                <mat-icon
+                  (click)="
+                    removeOnePreference(preference); $event.stopPropagation()
+                  "
                   >delete</mat-icon
                 >
               </mat-panel-description>

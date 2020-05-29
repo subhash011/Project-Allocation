@@ -31,6 +31,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatRippleModule } from "@angular/material/core";
 import { MatBadgeModule } from "@angular/material/badge";
 import { ScrollingModule } from "@angular/cdk/scrolling";
+import { MatChipsModule } from "@angular/material/chips";
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -64,6 +65,7 @@ const MaterialComponents = [
   MatRippleModule,
   MatBadgeModule,
   ScrollingModule,
+  MatChipsModule,
 ];
 
 @NgModule({

@@ -180,6 +180,22 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     this.preferences = new MatTableDataSource(event.container.data);
   }
 
+  moveOneUp(project) {
+    if (project == 0) {
+      return;
+    }
+    moveItemInArray(this.preferences.data, project, project - 1);
+    this.preferences.data = [...this.preferences.data];
+  }
+
+  moveOneDown(project) {
+    if (project == this.preferences.data.length) {
+      return;
+    }
+    moveItemInArray(this.preferences.data, project, project + 1);
+    this.preferences.data = [...this.preferences.data];
+  }
+
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

@@ -17,8 +17,7 @@ import {
   animate,
 } from "@angular/animations";
 import { SelectionModel } from "@angular/cdk/collections";
-import { NavbarComponent } from "../../shared/navbar/navbar.component";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router } from "@angular/router";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -59,7 +58,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private cdRef: UserService,
     private loadingBar: LoadingBarService,
     private router: Router,
     private userService: UserService
@@ -211,6 +209,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             return val._id != project._id;
           });
           this.preferences.data.push(project);
+          this.preferences.data = [...this.preferences.data];
           this.deselectProject(project);
         }
       });
@@ -251,6 +250,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             this.loginObject.signOut();
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
+              panelClass: ["success-snackbar"],
             });
           } else {
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
@@ -267,6 +267,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         }
       );
   }
+
   updateProjects(event) {
     this.projects.data.push(event);
     this.preferences.data = this.preferences.data.filter((val) => {
@@ -275,6 +276,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     this.expandedElement = null;
     this.table.renderRows();
   }
+
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
