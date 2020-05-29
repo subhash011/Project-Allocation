@@ -14,9 +14,14 @@ mat-toolbar {
   flex: 1 1 auto;
 }
 
+.icon {
+  float: right;
+}
+
 .expansion-panel {
   float: left;
-  max-width: 90%;
+  min-width: 100%;
+  max-width: 100%;
 }
 
 .list {
@@ -24,10 +29,6 @@ mat-toolbar {
   width: 100%;
   border-radius: 4px;
   display: block;
-}
-.accordion {
-  float: left;
-  min-width: 100%;
 }
 
 mat-icon:hover {
@@ -46,7 +47,6 @@ mat-icon:hover {
   border: none;
 }
 
-.remove-icon {
-  padding-left: 5px;
-  padding-top: 10px;
+.disable_ripple:hover {
+  background: red !important;
 }

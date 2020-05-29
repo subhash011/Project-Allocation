@@ -30,6 +30,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatRippleModule } from "@angular/material/core";
 import { MatBadgeModule } from "@angular/material/badge";
+import { ScrollingModule } from "@angular/cdk/scrolling";
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -62,6 +63,7 @@ const MaterialComponents = [
   MatProgressSpinnerModule,
   MatRippleModule,
   MatBadgeModule,
+  ScrollingModule,
 ];
 
 @NgModule({

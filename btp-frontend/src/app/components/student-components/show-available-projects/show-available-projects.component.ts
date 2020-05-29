@@ -22,7 +22,6 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-
 @Component({
   selector: "app-show-available-projects",
   templateUrl: "./show-available-projects.component.html",

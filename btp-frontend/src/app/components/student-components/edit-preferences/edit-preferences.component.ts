@@ -56,7 +56,14 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {}
 
-  displayedColumns = ["Title", "Faculty", "Email", "Intake", "Actions"];
+  displayedColumns = [
+    "Title",
+    "Faculty",
+    "Email",
+    "Intake",
+    "Actions",
+    "Submit",
+  ];
 
   onSubmit() {
     if (this.stage >= 2) {

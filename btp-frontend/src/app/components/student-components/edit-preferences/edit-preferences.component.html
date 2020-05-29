@@ -1,4 +1,4 @@
-<button
+<!-- <button
   class="submit"
   [disabled]="stage >= 2"
   mat-raised-button
@@ -6,8 +6,7 @@
   (click)="onSubmit()"
 >
   Submit Preferences
-</button>
-
+</button> -->
 <div class="display">
   <div class="table mat-elevation-z8">
     <mat-table
@@ -38,6 +37,22 @@
       </ng-container>
       <ng-container matColumnDef="Intake">
         <mat-header-cell *matHeaderCellDef> Student Intake </mat-header-cell>
+        <mat-cell *matCellDef="let preference">
+          {{ preference.studentIntake }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="Submit">
+        <mat-header-cell *matHeaderCellDef>
+          <button
+            class="submit"
+            [disabled]="stage >= 2"
+            mat-raised-button
+            color="primary"
+            (click)="onSubmit()"
+          >
+            Submit Preferences
+          </button>
+        </mat-header-cell>
         <mat-cell *matCellDef="let preference">
           {{ preference.studentIntake }}
         </mat-cell>

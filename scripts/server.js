@@ -16,7 +16,7 @@ app.use(cors());
 app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
-var mongoConnect = process.env.MONGO_URL_LOCAL;
+var mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
 // mongodb+srv://btpall:btpall@cluster0-kpuyi.mongodb.net/Testing
 

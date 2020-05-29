@@ -6,19 +6,18 @@ mat-table {
   z-index: 2;
 }
 
-.table::-webkit-scrollbar {
-  display: none;
-}
+// .table::-webkit-scrollbar {
+//   display: none;
+// }
+
+// .table {
+//   -ms-overflow-style: none;
+// }
 
 .table {
-  -ms-overflow-style: none;
-}
-
-.table {
-  max-height: 700px;
+  max-height: 1000px;
   overflow: auto;
-  width: 90%;
-  margin-left: 5%;
+  width: 100%;
 }
 
 .cdk-drag-preview {
@@ -29,7 +28,10 @@ mat-table {
 }
 
 .cdk-drag-placeholder {
-  opacity: 0;
+  background: #ccc;
+  border: dotted 3px #999;
+  min-height: 60px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .cdk-drag-animating {
@@ -42,13 +44,6 @@ mat-table {
 
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.submit {
-  float: right;
-  margin-right: 10%;
-  margin-top: 100px;
-  margin-bottom: 30px;
 }
 
 .mat-row {
