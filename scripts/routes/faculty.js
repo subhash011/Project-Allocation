@@ -63,6 +63,14 @@ router.post("/add/:num", (req, res) => {
 
 		const faculty = new Faculty({
 			name: names,
+			email: names + "@abc.com",
+			stream: "CSE",
+			programs: [
+				{
+					full: "UGCSE",
+					short: "UGCSE",
+				},
+			],
 		});
 
 		promises.push(

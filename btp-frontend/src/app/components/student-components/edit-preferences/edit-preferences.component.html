@@ -46,6 +46,8 @@
         <mat-header-cell *matHeaderCellDef>
           <button
             class="submit"
+            [matBadge]="preferences.data.length"
+            matBadgeColor="accent"
             [disabled]="stage >= 2"
             mat-raised-button
             color="primary"
@@ -56,11 +58,13 @@
         </mat-header-cell>
         <mat-cell
           (click)="$event.stopPropagation()"
-          *matCellDef="let preference; let i = dataIndex"
+          *matCellDef="let preference"
         >
-          <mat-icon mat-button (click)="moveOneUp(i)">arrow_upward</mat-icon>
-          <mat-icon mat-button (click)="moveOneDown(i)"
-            >arrow_downward</mat-icon
+          <mat-icon
+            matTooltip="Remove {{ preference.title }} from preferences"
+            [matTooltipPosition]="'above'"
+            (click)="removePreference(preference)"
+            >delete</mat-icon
           >
         </mat-cell>
       </ng-container>
@@ -70,24 +74,34 @@
         </mat-header-cell>
         <mat-cell
           (click)="$event.stopPropagation()"
-          *matCellDef="let preference"
+          *matCellDef="let preference; let i = dataIndex"
         >
           <mat-icon
-            matTooltip="Remove project"
-            [matTooltipPosition]="'above'"
-            (click)="removePreference(preference)"
-            >delete</mat-icon
-          >
-          <mat-icon
-            matTooltip="Push project to top"
+            *ngIf="i != 0"
+            matTooltip="Push {{ preference.title }} to top"
             [matTooltipPosition]="'above'"
             (click)="moveToTop(preference)"
+            >vertical_align_top</mat-icon
+          >
+          <mat-icon
+            *ngIf="i != preferences.data.length - 1"
+            matTooltip="Push {{ preference.title }} to bottom"
+            [matTooltipPosition]="'above'"
+            (click)="moveToBottom(preference)"
+            >vertical_align_bottom</mat-icon
+          >
+          <mat-icon
+            *ngIf="i != 0"
+            matTooltip="Move {{ preference.title }} up"
+            [matTooltipPosition]="'above'"
+            (click)="moveOneUp(i)"
             >arrow_upward</mat-icon
           >
           <mat-icon
-            matTooltip="Push project to bottom"
+            *ngIf="i != preferences.data.length - 1"
+            matTooltip="Move {{ preference.title }} down"
             [matTooltipPosition]="'above'"
-            (click)="moveToBottom(preference)"
+            (click)="moveOneDown(i)"
             >arrow_downward</mat-icon
           >
         </mat-cell>

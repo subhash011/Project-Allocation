@@ -8,14 +8,16 @@
         </h1>
         <div class="fill-space"></div>
       </mat-toolbar>
-      <app-display-preferences
-        [preferences]="preferences.data"
-        [stage]="stage"
-        (updateProjects)="updateProjects($event)"
-      ></app-display-preferences>
+      <div class="display-preferences">
+        <app-display-preferences
+          [preferences]="preferences.data"
+          [stage]="stage"
+          (updateProjects)="updateProjects($event)"
+        ></app-display-preferences>
+      </div>
     </mat-sidenav>
     <mat-sidenav-content>
-      <mat-toolbar color="accent" class="toolbar">
+      <mat-toolbar color="accent">
         <button
           [matTooltip]="side.opened ? 'close preferences' : 'view preferences'"
           matTooltipPosition="above"
@@ -110,7 +112,12 @@
                 (click)="$event.stopPropagation()"
                 *matCellDef="let project"
               >
-                <mat-icon (click)="addOnePreference(project)">add</mat-icon>
+                <mat-icon
+                  matTooltip="Add {{ project.title }} to preferences"
+                  [matTooltipPosition]="'above'"
+                  (click)="addOnePreference(project)"
+                  >add</mat-icon
+                >
               </td>
             </ng-container>
             <ng-container matColumnDef="expandedDetail">

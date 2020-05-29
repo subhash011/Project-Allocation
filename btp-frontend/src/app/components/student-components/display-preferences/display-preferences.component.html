@@ -11,6 +11,8 @@
               <mat-panel-description>
                 <div class="fill-space"></div>
                 <mat-icon
+                  matTooltip="Remove {{ preference.title }} from preferences"
+                  [matTooltipPosition]="'above'"
                   (click)="
                     removeOnePreference(preference); $event.stopPropagation()
                   "

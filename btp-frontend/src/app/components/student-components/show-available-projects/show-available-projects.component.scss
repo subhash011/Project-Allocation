@@ -22,10 +22,6 @@ mat-icon:hover {
   cursor: pointer;
 }
 
-app-display-preferences {
-  overflow: hidden;
-}
-
 .add-preferences {
   float: right;
   margin-top: 60px;
@@ -82,6 +78,11 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .display {
   z-index: 2;
+}
+
+.display-preferences {
+  height: 100%;
+  width: 100%;
 }
 
 .table::-webkit-scrollbar {

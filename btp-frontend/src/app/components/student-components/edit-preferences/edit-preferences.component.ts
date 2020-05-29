@@ -189,7 +189,7 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
   }
 
   moveOneDown(project) {
-    if (project == this.preferences.data.length) {
+    if (project == this.preferences.data.length - 1) {
       return;
     }
     moveItemInArray(this.preferences.data, project, project + 1);
