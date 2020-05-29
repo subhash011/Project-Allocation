@@ -51,7 +51,9 @@ export class FacultyComponent implements OnInit {
       if (data["status"] == "success") {
         const user_info = data["user_details"];
         this.name = user_info.name;
-        this.navbar.programsVisible = true;
+        if (user_info.programs.length > 0) {
+          this.navbar.programsVisible = true;
+        }
         this.navbar.programs = user_info.programs;
         this.activatedRoute.queryParams.subscribe((params) => {
           this.routeParams = params;

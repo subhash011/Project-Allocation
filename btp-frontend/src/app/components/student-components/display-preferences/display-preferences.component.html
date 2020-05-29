@@ -5,8 +5,8 @@
   </h1>
   <div class="fill-space"></div>
 </mat-toolbar>
-<div class="list" *ngIf="preferences && preferences.length != 0; else empty">
-  <mat-accordion class="accordion">
+<mat-accordion class="accordion">
+  <div class="list" *ngIf="preferences && preferences.length != 0; else empty">
     <div class="list-item" *ngFor="let preference of preferences">
       <div class="expansion-panel">
         <mat-expansion-panel>
@@ -27,8 +27,8 @@
         >
       </div>
     </div>
-  </mat-accordion>
-</div>
+  </div>
+</mat-accordion>
 
 <ng-template #empty>
   <div class="emptyBlock" style="padding-top: 10%;">

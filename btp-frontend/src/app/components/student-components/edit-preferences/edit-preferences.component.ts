@@ -110,6 +110,23 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
         }
       );
   }
+
+  moveToTop(preference) {
+    this.preferences.data = this.preferences.data.filter((val) => {
+      return val._id != preference._id;
+    });
+    this.preferences.data.unshift(preference);
+    this.preferences.data = [...this.preferences.data];
+  }
+
+  moveToBottom(preference) {
+    this.preferences.data = this.preferences.data.filter((val) => {
+      return val._id != preference._id;
+    });
+    this.preferences.data.push(preference);
+    this.preferences.data = [...this.preferences.data];
+  }
+
   removePreference(preference) {
     if (this.stage >= 2) {
       this.snackBar.open("You cannot edit preferences anymore!", "Ok", {

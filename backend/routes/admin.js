@@ -694,7 +694,6 @@ router.get("/members/:id", (req, res) => {
 		});
 });
 
-//check delete faculty
 router.delete("/faculty/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
@@ -709,30 +708,34 @@ router.delete("/faculty/:id", (req, res) => {
 						programAdmin = program;
 					}
 				}
-				Faculty.findById(mid).then((faculty) => {
-					Project.find({
+				Project.find({
+					stream: programAdmin.short,
+					faculty_id: mid,
+				}).then((projects) => {
+					var projectIDs = projects.map((val) => val._id);
+					Project.deleteMany({
 						stream: programAdmin.short,
-						faculty_id: faculty._id,
-					}).then((projects) => {
-						var projectIDs = projects.map((val) => val._id);
-						Project.deleteMany({
-							stream: programAdmin.short,
-							faculty_id: faculty._id,
-						}).then(() => {
-							var updateResult = {
-								$pullAll: { projects_preference: projectIDs },
+						faculty_id: mid,
+					}).then(() => {
+						var updateResult = {
+							$pullAll: { projects_preference: projectIDs },
+						};
+						Student.updateMany(
+							{ stream: programAdmin.short },
+							updateResult
+						).then(() => {
+							var updateCondition = {
+								project_alloted: { $in: projectIDs },
 							};
-							Student.updateMany(
-								{ stream: programAdmin.short },
-								updateResult
-							).then((students) => {
-								faculty.project_list = faculty.project_list.filter((val) => {
-									return projectIDs.indexOf(val.toString()) == -1;
-								});
-								faculty.programs = faculty.programs.filter((val) => {
-									return JSON.stringify(val) != JSON.stringify(programAdmin);
-								});
-								faculty.save().then((faculty) => {
+							updateResult = {
+								$unset: { project_alloted: "" },
+							};
+							Student.updateMany(updateCondition, updateResult).then(() => {
+								updateResult = {
+									$pullAll: { project_list: projectIDs },
+									$pull: { programs: programAdmin },
+								};
+								Faculty.findByIdAndUpdate(mid, updateResult).then(() => {
 									res.json({
 										message: "success",
 										result: null,
@@ -747,7 +750,6 @@ router.delete("/faculty/:id", (req, res) => {
 	);
 });
 
-//check delete student
 router.delete("/student/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;

@@ -16,7 +16,7 @@ mat-toolbar {
 
 .expansion-panel {
   float: left;
-  min-width: 80%;
+  max-width: 90%;
 }
 
 .list {
@@ -44,4 +44,9 @@ mat-icon:hover {
 
 .list-item:last-child {
   border: none;
+}
+
+.remove-icon {
+  padding-left: 5px;
+  padding-top: 10px;
 }
