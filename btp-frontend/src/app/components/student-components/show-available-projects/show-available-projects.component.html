@@ -1,13 +1,20 @@
 <div *ngIf="!isPrefenceEdit()">
-  <mat-drawer-container class="example-container">
-    <mat-drawer #side mode="side" closed>
+  <mat-sidenav-container class="example-container">
+    <mat-sidenav class="drawer" #side mode="side" opened>
+      <mat-toolbar color="accent" class="toolbar">
+        <div class="fill-space"></div>
+        <h1 class="heading">
+          Current Preferences
+        </h1>
+        <div class="fill-space"></div>
+      </mat-toolbar>
       <app-display-preferences
         [preferences]="preferences.data"
         [stage]="stage"
         (updateProjects)="updateProjects($event)"
       ></app-display-preferences>
-    </mat-drawer>
-    <mat-drawer-content>
+    </mat-sidenav>
+    <mat-sidenav-content>
       <mat-toolbar color="accent" class="toolbar">
         <button
           [matTooltip]="side.opened ? 'close preferences' : 'view preferences'"
@@ -142,8 +149,8 @@
           </table>
         </div>
       </div>
-    </mat-drawer-content>
-  </mat-drawer-container>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>
 
 <app-edit-preferences

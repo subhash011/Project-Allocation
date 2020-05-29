@@ -24,6 +24,14 @@ body {
   -ms-overflow-style: none;
 }
 
+.mat-drawer-inner-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .no-toolbar-padding .mat-dialog-container {
   padding-top: 0;
   padding-left: 0;

@@ -43,6 +43,20 @@ mat-icon:hover {
   font-size: 14px;
 }
 
+.example-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+.example-viewport {
+  -ms-overflow-style: none;
+}
+
+.example-viewport {
+  height: 100%;
+  width: 100%;
+}
+
 .list-item:last-child {
   border: none;
 }

@@ -6,14 +6,6 @@ mat-table {
   z-index: 2;
 }
 
-// .table::-webkit-scrollbar {
-//   display: none;
-// }
-
-// .table {
-//   -ms-overflow-style: none;
-// }
-
 .table {
   max-height: 1000px;
   overflow: auto;

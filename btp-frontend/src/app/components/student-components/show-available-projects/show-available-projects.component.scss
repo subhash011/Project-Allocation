@@ -1,4 +1,4 @@
-mat-drawer {
+mat-sidenav {
   width: 50%;
 }
 
@@ -20,6 +20,10 @@ mat-form-field {
 
 mat-icon:hover {
   cursor: pointer;
+}
+
+app-display-preferences {
+  overflow: hidden;
 }
 
 .add-preferences {

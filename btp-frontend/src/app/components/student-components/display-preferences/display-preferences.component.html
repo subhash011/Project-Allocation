@@ -1,35 +1,30 @@
-<mat-toolbar color="accent" class="toolbar">
-  <div class="fill-space"></div>
-  <h1 class="heading">
-    Current Preferences
-  </h1>
-  <div class="fill-space"></div>
-</mat-toolbar>
-<div class="list" *ngIf="preferences && preferences.length != 0; else empty">
-  <mat-accordion class="accordion">
-    <div class="list-item" *ngFor="let preference of preferences">
-      <div class="expansion-panel">
-        <mat-expansion-panel>
-          <mat-expansion-panel-header class="disable_ripple">
-            <mat-panel-title class="ep">
-              Project Title : {{ preference["title"] }}
-            </mat-panel-title>
-            <mat-panel-description>
-              <div class="fill-space"></div>
-              <mat-icon (click)="removeOnePreference(preference)"
-                >delete</mat-icon
-              >
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <p>Faculty Name : {{ preference["faculty_name"] }}</p>
-          <p>Faculty Email : {{ preference["faculty_email"] }}</p>
-          <p>Description : {{ preference["description"] }}</p>
-          <p>Student Intake : {{ preference["studentIntake"] }}</p>
-        </mat-expansion-panel>
+<cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+  <div class="list" *ngIf="preferences && preferences.length != 0; else empty">
+    <mat-accordion class="accordion">
+      <div class="list-item" *cdkVirtualFor="let preference of preferences">
+        <div class="expansion-panel">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header class="disable_ripple">
+              <mat-panel-title class="ep">
+                Project Title : {{ preference["title"] }}
+              </mat-panel-title>
+              <mat-panel-description>
+                <div class="fill-space"></div>
+                <mat-icon (click)="removeOnePreference(preference)"
+                  >delete</mat-icon
+                >
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Faculty Name : {{ preference["faculty_name"] }}</p>
+            <p>Faculty Email : {{ preference["faculty_email"] }}</p>
+            <p>Description : {{ preference["description"] }}</p>
+            <p>Student Intake : {{ preference["studentIntake"] }}</p>
+          </mat-expansion-panel>
+        </div>
       </div>
-    </div>
-  </mat-accordion>
-</div>
+    </mat-accordion>
+  </div>
+</cdk-virtual-scroll-viewport>
 
 <ng-template #empty>
   <div class="emptyBlock" style="padding-top: 10%;">
