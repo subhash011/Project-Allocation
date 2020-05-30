@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
 	studentIntake: {
 		type: Number,
 		required: true,
-	},
+	},	
 	stream: {
 		type: String,
 		required: true,

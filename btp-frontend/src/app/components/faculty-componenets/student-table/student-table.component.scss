@@ -108,13 +108,15 @@ mat-list-item {
 .render {
   width: 33.33%;
   float: right;
+  margin-top:7px;
 }
 
 .data {
   margin-left: 15%;
 }
 
-.saveButton {
-  margin-left: 2%;
-  margin-top: 2%;
+.saveButton{
+  width: 33.33%;
+  float: right;
+  bottom: 10px;
 }

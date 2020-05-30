@@ -122,4 +122,36 @@ export class StudentTableComponent implements OnInit {
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.student_list, event.previousIndex, event.currentIndex);
   }
+
+  moveToTop(project){
+
+    this.student_list = this.student_list.filter((val) => {
+      return val._id != project._id;
+    });
+    this.student_list.unshift(project);
+  }
+
+  moveToBottom(project){
+
+    this.student_list = this.student_list.filter((val) => {
+      return val._id != project._id;
+    });
+    this.student_list.push(project);
+
+  }
+
+  moveOneUp(index){
+    if (index == 0) {
+      return;
+    }
+    moveItemInArray(this.student_list, index, index - 1);
+  }
+
+  moveOneDown(index){
+    if (index == this.student_list.length - 1) {
+      return;
+    }
+    moveItemInArray(this.student_list, index, index + 1);
+  }
+
 }
