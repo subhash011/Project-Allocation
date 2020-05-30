@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+  HostListener,
+} from "@angular/core";
 import {
   MatDialog,
   MatSnackBar,
@@ -41,8 +47,13 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   preferences: any = new MatTableDataSource([]);
   projects = new MatTableDataSource([]);
   expandedElement;
+  tableHeight: number = window.innerHeight * 0.7;
   isAddDisabled: boolean = false;
   stage = 0;
+  sidenavWidth: number = 50;
+  isActive: boolean = false;
+  indexHover: number = -1;
+  showToggleOnSidenav: boolean = false;
   selection = new SelectionModel<any>(true, []);
   private ngUnsubscribe: Subject<any> = new Subject();
   displayedColumns = [
@@ -62,8 +73,24 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     private router: Router,
     private userService: UserService
   ) {}
-
+  @HostListener("window:resize", ["$event"])
+  onResize(event) {
+    this.tableHeight = event.target.innerHeight * 0.7;
+    if (event.target.innerWidth <= 1400) {
+      this.showToggleOnSidenav = true;
+      this.sidenavWidth = 100;
+    } else {
+      this.showToggleOnSidenav = false;
+      this.sidenavWidth = 50;
+    }
+  }
+  dialogRefLoad;
   ngOnInit() {
+    this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Loading. Please wait! ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     if (this.isPrefenceEdit()) {
       this.preferences.data = [];
       this.projectService
@@ -71,6 +98,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe(
           (result) => {
+            this.dialogRefLoad.close();
             if (result && result["message"] == "success") {
               this.preferences.data = result["result"];
             } else if (result["message"] == "invalid-token") {
@@ -86,6 +114,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             }
           },
           () => {
+            this.dialogRefLoad.close();
             this.snackBar.open(
               "Some Error Occured! If the Error Persists Please re-authenticate",
               "OK",
@@ -121,6 +150,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       .subscribe(
         (result) => {
           if (result["message"] == "invalid-token") {
+            this.dialogRefLoad.close();
             this.loginObject.signOut();
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
@@ -134,6 +164,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
               .getAllStudentProjects()
               .pipe(takeUntil(this.ngUnsubscribe))
               .subscribe((projects) => {
+                this.dialogRefLoad.close();
                 if (
                   projects["message"] == "invalid-client" ||
                   projects["message"] == "invalid-token"
@@ -164,6 +195,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
           }
         },
         () => {
+          this.dialogRefLoad.close();
           this.snackBar.open(
             "Some Error Occured! If the Error Persists Please re-authenticate",
             "OK",

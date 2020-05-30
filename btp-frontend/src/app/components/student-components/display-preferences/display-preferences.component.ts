@@ -29,7 +29,8 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
   @Input() stage: number = 0;
 
   private ngUnsubscribe: Subject<any> = new Subject();
-
+  isActive: boolean = false;
+  indexHover: number = -1;
   constructor(
     private projectService: ProjectsService,
     private loginObject: LoginComponent,

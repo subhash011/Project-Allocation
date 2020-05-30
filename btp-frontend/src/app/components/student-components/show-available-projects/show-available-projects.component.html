@@ -1,12 +1,28 @@
 <div *ngIf="!isPrefenceEdit()">
   <mat-sidenav-container class="example-container">
-    <mat-sidenav class="drawer" #side mode="side" opened>
+    <mat-sidenav
+      [style.width.%]="sidenavWidth"
+      class="drawer"
+      #side
+      mode="side"
+      opened
+    >
       <mat-toolbar color="accent" class="toolbar">
         <div class="fill-space"></div>
         <h1 class="heading">
           Current Preferences
         </h1>
         <div class="fill-space"></div>
+        <button
+          *ngIf="showToggleOnSidenav"
+          [matTooltip]="side.opened ? 'close preferences' : 'view preferences'"
+          matTooltipPosition="above"
+          mat-button
+          class="show-preferences"
+          (click)="side.toggle()"
+        >
+          <mat-icon>list</mat-icon>
+        </button>
       </mat-toolbar>
       <div class="display-preferences">
         <app-display-preferences
@@ -53,7 +69,7 @@
       </button>
 
       <div class="display">
-        <div class="table mat-elevation-z8">
+        <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
           <table
             #table
             mat-table
@@ -145,9 +161,16 @@
             ></tr>
             <tr
               mat-row
-              *matRowDef="let element; columns: displayedColumns"
-              class="example-element-row"
+              *matRowDef="
+                let element;
+                let i = dataIndex;
+                columns: displayedColumns
+              "
+              class="example-element-row remove-background"
               [class.example-expanded-row]="expandedElement === element"
+              (mouseenter)="isActive = true; indexHover = i"
+              (mouseleave)="isActive = false; indexHover = -1"
+              [class.mat-elevation-z8]="isActive && indexHover == i"
               (click)="
                 expandedElement = expandedElement === element ? null : element
               "

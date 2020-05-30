@@ -1,4 +1,3 @@
-import { LoadingBarService } from "@ngx-loading-bar/core";
 import { HttpClient } from "@angular/common/http";
 import { MailService } from "./../../../services/mailing/mail.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -8,6 +7,8 @@ import { UserService } from "src/app/services/user/user.service";
 import { Subject } from "rxjs";
 import { takeUntil, flatMap } from "rxjs/operators";
 import { identifierModuleUrl } from "@angular/compiler";
+import { LoaderComponent } from "../../shared/loader/loader.component";
+import { MatDialog } from "@angular/material";
 
 @Component({
   selector: "app-student",
@@ -17,14 +18,13 @@ import { identifierModuleUrl } from "@angular/compiler";
 })
 export class StudentComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<any> = new Subject();
+  dialogRefLoad: any;
 
   constructor(
     private userService: UserService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private mailService: MailService,
-    private http: HttpClient,
-    private loadingService: LoadingBarService
+    private dialog: MatDialog
   ) {}
   user: any;
   details: any;
@@ -34,12 +34,18 @@ export class StudentComponent implements OnInit, OnDestroy {
   reviewContition: boolean;
 
   ngOnInit() {
+    this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Loading. Please wait! ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.user = JSON.parse(localStorage.getItem("user"));
     this.user = this.userService
       .getStudentDetails(this.user.id)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data) => {
         if (data["status"] == "invalid-token") {
+          this.dialogRefLoad.close();
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
@@ -49,6 +55,7 @@ export class StudentComponent implements OnInit, OnDestroy {
           this.loaded = true;
 
           this.userService.getPublishMode("student").subscribe((data) => {
+            this.dialogRefLoad.close();
             if (data["status"] == "success") {
               this.publishStudents = data["studentPublish"];
               this.publishFaculty = data["facultyPublish"];
@@ -61,6 +68,7 @@ export class StudentComponent implements OnInit, OnDestroy {
             }
           });
         } else {
+          this.dialogRefLoad.close();
           this.loginObject.signOut();
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,

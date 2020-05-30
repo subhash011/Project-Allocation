@@ -1,6 +1,6 @@
-mat-sidenav {
-  width: 50%;
-}
+// mat-sidenav {
+//   width: 50%;
+// }
 
 .example-container {
   display: flex;
@@ -51,6 +51,10 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .example-element-row td {
   border-bottom-width: 0;
+}
+
+[mat-row].remove-background {
+  background: none;
 }
 
 .example-element-detail {

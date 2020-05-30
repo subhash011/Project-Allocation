@@ -8,7 +8,7 @@ import { UserService } from "./../../../services/user/user.service";
 import { Component, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { DeletePopUpComponent } from "../../faculty-componenets/delete-pop-up/delete-pop-up.component";
-import { LoaderComponent } from '../loader/loader.component';
+import { LoaderComponent } from "../loader/loader.component";
 
 @Component({
   selector: "app-profile",
@@ -24,32 +24,49 @@ export class ProfileComponent implements OnInit {
   role = "";
   checked = false;
   editStatus = "Edit";
+  dialogRefLoad: any;
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private login: LoginComponent,
-    private dialog: MatDialog,
-    private loadingBar: LoadingBarService
+    private dialog: MatDialog
   ) {}
   ngOnInit() {
-    this.loadingBar.start();
+    this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Loading. Please wait! ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.role = localStorage.getItem("role");
     if (this.role == "student") {
       user = this.userService
         .getStudentDetails(localStorage.getItem("id"))
-        .subscribe((data) => {
-          this.user_info = data["user_details"];
-          this.studentFormGroup.controls["name"].setValue(this.user_info.name);
-          this.studentFormGroup.controls["gpa"].setValue(this.user_info.gpa);
-          this.loadingBar.stop();
-        });
+        .subscribe(
+          (data) => {
+            this.dialogRefLoad.close();
+            this.user_info = data["user_details"];
+            this.studentFormGroup.controls["name"].setValue(
+              this.user_info.name
+            );
+            this.studentFormGroup.controls["gpa"].setValue(this.user_info.gpa);
+          },
+          () => {
+            this.dialogRefLoad.close();
+            let snackBarRef = this.snackBar.open(
+              "Some error occured, if the error persists re-authenticate",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+          }
+        );
     } else if (this.role == "faculty" || this.role == "admin") {
       var user: any;
-      this.userService
-        .getFacultyDetails(localStorage.getItem("id"))
-        .toPromise()
-        .then((data) => {
+      this.userService.getFacultyDetails(localStorage.getItem("id")).subscribe(
+        (data) => {
+          this.dialogRefLoad.close();
           if (data["status"] == "success") {
             this.user_info = data["user_details"];
             this.faculty_programs = this.user_info["programs"];
@@ -78,15 +95,20 @@ export class ProfileComponent implements OnInit {
                 duration: 3000,
               }
             );
-            snackBarRef.afterDismissed().subscribe(() => {
-              this.login.signOut();
-            });
-            snackBarRef.onAction().subscribe(() => {
-              this.login.signOut();
-            });
+            this.login.signOut();
           }
-          this.loadingBar.stop();
-        });
+        },
+        () => {
+          this.dialogRefLoad.close();
+          let snackBarRef = this.snackBar.open(
+            "Some error occured, if the error persists re-authenticate",
+            "Ok",
+            {
+              duration: 3000,
+            }
+          );
+        }
+      );
     }
   }
 
@@ -237,7 +259,6 @@ export class ProfileComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result["message"] == "submit") {
-
         var dialogRef = this.dialog.open(LoaderComponent, {
           data: "Loading Please Wait ....",
           disableClose: true,

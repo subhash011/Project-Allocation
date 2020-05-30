@@ -1,9 +1,17 @@
 <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
   <div class="list" *ngIf="preferences && preferences.length != 0; else empty">
     <mat-accordion class="accordion">
-      <div class="list-item" *cdkVirtualFor="let preference of preferences">
+      <div
+        class="list-item"
+        *cdkVirtualFor="let preference of preferences; let i = index"
+      >
         <div class="expansion-panel">
-          <mat-expansion-panel>
+          <mat-expansion-panel
+            [class.mat-elevation-z24]="isActive && indexHover == i"
+            #panel
+            (mouseenter)="isActive = true; indexHover = i"
+            (mouseleave)="isActive = false; indexHover = -1"
+          >
             <mat-expansion-panel-header class="disable_ripple">
               <mat-panel-title class="ep">
                 Project Title : {{ preference["title"] }}

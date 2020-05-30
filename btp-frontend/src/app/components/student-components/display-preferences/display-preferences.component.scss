@@ -67,5 +67,5 @@ mat-icon:hover {
   border: none;
 }
 .disable_ripple:hover {
-  background-color: mix(rgb(161, 47, 47), #6d1414, 0.5) !important;
+  z-index: 555555 !important;
 }

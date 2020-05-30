@@ -48,7 +48,6 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
   finalPreferences: any = [];
   projects: any = [];
   expandedElement;
-  loaded: boolean;
   disable: boolean;
   isExpansionDetailRow = (i: number, row: any) =>
     row.hasOwnProperty("detailRow");
@@ -56,7 +55,6 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private loadingBar: LoadingBarService,
     private dialog: MatDialog
   ) {}
   tableStyle;

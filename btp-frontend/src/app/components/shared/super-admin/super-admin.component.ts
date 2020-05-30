@@ -25,13 +25,13 @@ import { MatTable } from "@angular/material";
 })
 export class SuperAdminComponent implements OnInit {
   @ViewChild("table", { static: false }) table: MatTable<any>;
+  dialogRefLoad: any;
 
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private login: LoginComponent,
-    private loadingBar: LoadingBarService
+    private login: LoginComponent
   ) {}
   index = 0;
   background = "primary";
@@ -81,7 +81,11 @@ export class SuperAdminComponent implements OnInit {
   hasAdmins = {};
 
   ngOnInit() {
-    this.loadingBar.start();
+    this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Loading. Please wait! ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.userService.getAllBranches().subscribe((maps) => {
       this.maps = maps["result"];
       this.branches = this.maps.map((val) => {
@@ -113,6 +117,7 @@ export class SuperAdminComponent implements OnInit {
               });
             }
           } else {
+            this.dialogRefLoad.close();
             this.snackBar.open("Please Sign-In Again to continue", "Ok", {
               duration: 3000,
             });
@@ -120,6 +125,7 @@ export class SuperAdminComponent implements OnInit {
           }
         },
         () => {
+          this.dialogRefLoad.close();
           this.snackBar.open("Please Sign-In Again to continue", "Ok", {
             duration: 3000,
           });
@@ -140,9 +146,9 @@ export class SuperAdminComponent implements OnInit {
               }
             }
           }
-          this.loadingBar.stop();
         },
         () => {
+          this.dialogRefLoad.close();
           this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
             duration: 3000,
           });
@@ -151,6 +157,7 @@ export class SuperAdminComponent implements OnInit {
       );
       this.userService.getAllFaculties().subscribe(
         (result) => {
+          this.dialogRefLoad.close();
           if (result["message"] == "success") {
             if (result["result"] == "no-faculties") {
               this.faculties = {};
@@ -173,6 +180,7 @@ export class SuperAdminComponent implements OnInit {
           }
         },
         () => {
+          this.dialogRefLoad.close();
           this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
             duration: 3000,
           });
@@ -501,7 +509,6 @@ export class SuperAdminComponent implements OnInit {
           disableClose: true,
           hasBackdrop: true,
         });
-        this.loadingBar.start();
         this.userService.removeStudent(student).subscribe(
           (result) => {
             dialogRef.close();

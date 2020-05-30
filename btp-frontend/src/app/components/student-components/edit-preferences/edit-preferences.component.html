@@ -38,7 +38,7 @@
       </ng-container>
       <ng-container matColumnDef="Intake">
         <mat-header-cell *matHeaderCellDef> Student Intake </mat-header-cell>
-        <mat-cell *matCellDef="let preference">
+        <mat-cell class="align-right" *matCellDef="let preference">
           {{ preference.studentIntake }}
         </mat-cell>
       </ng-container>
@@ -125,7 +125,7 @@
         *matHeaderRowDef="displayedColumns; sticky: true"
       ></mat-header-row>
       <mat-row
-        *matRowDef="let row; columns: displayedColumns; let i = index"
+        *matRowDef="let row; columns: displayedColumns; let i = dataIndex"
         class="example-element-row"
         [class.example-expanded-row]="expandedElement === row"
         (click)="expandedElement = expandedElement === row ? null : row"
