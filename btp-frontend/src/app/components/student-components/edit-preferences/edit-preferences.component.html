@@ -9,7 +9,7 @@
 </button> -->
 
 <div class="display">
-  <div class="table mat-elevation-z8">
+  <div class="table mat-elevation-z8" [style.max-height.px]="height - 64">
     <mat-table
       [dataSource]="preferences"
       multiTemplateDataRows

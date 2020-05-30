@@ -64,6 +64,39 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    if (this.isPrefenceEdit()) {
+      this.preferences.data = [];
+      this.projectService
+        .getStudentPreference()
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(
+          (result) => {
+            if (result && result["message"] == "success") {
+              this.preferences.data = result["result"];
+            } else if (result["message"] == "invalid-token") {
+              this.loginObject.signOut();
+              this.snackBar.open(
+                "Session Expired! Please Sign In Again",
+                "OK",
+                {
+                  duration: 3000,
+                }
+              );
+              return null;
+            }
+          },
+          () => {
+            this.snackBar.open(
+              "Some Error Occured! If the Error Persists Please re-authenticate",
+              "OK",
+              {
+                duration: 3000,
+              }
+            );
+          }
+        );
+      return;
+    }
     this.preferences.data = [];
     this.projects.data = [];
     this.userService
@@ -94,7 +127,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             });
             return null;
           }
-          if (result) {
+          if (result && result["message"] == "success") {
             this.preferences.data = result["result"];
             tempPref = this.preferences.data.map((val) => val._id);
             this.projectService

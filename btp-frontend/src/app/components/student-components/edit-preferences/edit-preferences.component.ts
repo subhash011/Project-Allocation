@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  OnDestroy,
+  HostListener,
+} from "@angular/core";
 import { MatDialog, MatSnackBar, MatTableDataSource } from "@angular/material";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { LoginComponent } from "../../shared/login/login.component";
@@ -53,8 +59,18 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     private loadingBar: LoadingBarService,
     private dialog: MatDialog
   ) {}
+  tableStyle;
+  height: number = window.innerHeight;
+  ngOnInit() {
+    this.tableStyle = {
+      "max-height.px": this.height - 64,
+    };
+  }
 
-  ngOnInit() {}
+  @HostListener("window:resize", ["$event"])
+  onResize(event) {
+    this.height = event.target.innerHeight;
+  }
 
   displayedColumns = [
     "Title",

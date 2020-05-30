@@ -313,7 +313,7 @@
         mat-input
         placeholder="Search by any ... "
         name="search"
-        [(ngModel)]="project"
+        (keyup)="applyFilter($event)"
       />
       <button class="searchButton" href="#">
         <i class="material-icons">search</i>
@@ -369,11 +369,7 @@
 
     <div class="display">
       <div class="table mat-elevation-z8">
-        <table
-          mat-table
-          [dataSource]="dataSource | filter: project"
-          class="mat-elevation-z8"
-        >
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
           <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
               <mat-checkbox
@@ -529,7 +525,7 @@
           (change)="handleFileInput($event.target.files)"
           #fileInput
         />
-        <div class="display">
+        <div class="display-student">
           <div class="table mat-elevation-z8">
             <table
               mat-table

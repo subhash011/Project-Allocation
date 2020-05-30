@@ -267,6 +267,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       if (projects["message"] == "success") {
         this.projects = projects["result"];
         this.dataSource = new MatTableDataSource(this.projects);
+        this.dataSource.filterPredicate = (data: any, filter: string) =>
+          !filter ||
+          data.faculty.toLowerCase().includes(filter) ||
+          data.title.toLowerCase().includes(filter) ||
+          data.description.toLowerCase().includes(filter);
         this.selectIncluded();
       } else {
         this.loginService.signOut();
@@ -1061,7 +1066,10 @@ export class AdminComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ShowFacultyPreferencesComponent, {
       disableClose: false,
       hasBackdrop: true,
+      maxHeight: "700px",
+      minWidth: "800px",
       data: project,
+      panelClass: ["custom-dialog-container"],
     });
   }
 
@@ -1069,7 +1077,10 @@ export class AdminComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ShowStudentPreferencesComponent, {
       disableClose: false,
       hasBackdrop: true,
+      maxHeight: "700px",
+      minWidth: "800px",
       data: student,
+      panelClass: ["custom-dialog-container"],
     });
   }
 
@@ -1277,6 +1288,10 @@ export class AdminComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   ngOnDestroy() {
     clearInterval(this.timer);

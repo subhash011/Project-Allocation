@@ -1,39 +1,43 @@
-<div *ngIf="preferences.projects_preference.length != 0; else elseBlock">
-  <div
-    class="list-item"
-    *ngFor="let preference of preferences.projects_preference"
-  >
-    <mat-accordion>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Faculty : {{ preference["faculty_name"] }}
-          </mat-panel-title>
-          <mat-panel-description>
-            <div class="flex-space"></div>
-            Project Title : {{ preference["title"] }}
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <p>Faculty Email : {{ preference["faculty_email"] }}</p>
-        <p>Description : {{ preference["description"] }}</p>
-      </mat-expansion-panel>
-    </mat-accordion>
-    <div class="flex-space"></div>
-  </div>
-  <button mat-raised-button color="accent" (click)="close()">Close</button>
-  <div #container class="copy">
-    <button
-      mat-raised-button
-      color="primary"
-      ngxClipboard
-      [cbContent]="value"
-      [container]="container"
-      (cbOnSuccess)="copied($event)"
-    >
-      Copy to Clipboard
-    </button>
-  </div>
-</div>
+<mat-dialog-content>
+  <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+    <div *ngIf="preferences.projects_preference.length != 0; else elseBlock">
+      <div
+        class="list-item"
+        *cdkVirtualFor="let preference of preferences.projects_preference"
+      >
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Faculty : {{ preference["faculty_name"] }}
+              </mat-panel-title>
+              <mat-panel-description>
+                <div class="flex-space"></div>
+                Project Title : {{ preference["title"] }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Faculty Email : {{ preference["faculty_email"] }}</p>
+            <p>Description : {{ preference["description"] }}</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+        <div class="flex-space"></div>
+      </div>
+      <button mat-raised-button color="accent" (click)="close()">Close</button>
+      <div #container class="copy">
+        <button
+          mat-raised-button
+          color="primary"
+          ngxClipboard
+          [cbContent]="value"
+          [container]="container"
+          (cbOnSuccess)="copied($event)"
+        >
+          Copy to Clipboard
+        </button>
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</mat-dialog-content>
 <ng-template #elseBlock>
   No preferences to display
 </ng-template>

@@ -9,6 +9,17 @@
   float: right;
 }
 
+.example-viewport {
+  height: 800px;
+  width: 800px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .list-item {
   padding: 20px 10px;
   box-sizing: border-box;

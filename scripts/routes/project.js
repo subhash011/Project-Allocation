@@ -46,11 +46,12 @@ router.post("/add", (req, res) => {
 
 	Faculty.find({})
 		.then((faculties) => {
+			faculties = [faculties[1]];
 			for (const faculty of faculties) {
 				const num = 20;
 
 				for (let index = 0; index < num; index++) {
-					let names = faculty.name + "_p" + (index + 1);
+					let names = faculty.name + "_pr" + (index + 1);
 					let studentIntake = 2;
 
 					const project = new Project({

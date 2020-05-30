@@ -39,6 +39,14 @@ body {
   overflow: hidden;
 }
 
+.custom-dialog-container .mat-dialog-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;

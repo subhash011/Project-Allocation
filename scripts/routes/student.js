@@ -47,13 +47,16 @@ router.post("/add/:n", (req, res) => {
 	var promises = [];
 	for (let index = 0; index < count; index++) {
 		names.push("s" + (index + 1));
-		roll.push("1118010" + (index < 9 ? "0" + index : index));
+		roll.push("1118010" + (index + 1 < 9 ? "0" + (index + 1) : index + 1));
 		gpas.push((Math.random() * 5 + 5).toFixed(2));
 		const student = new Student({
 			name: names[index],
 			gpa: gpas[index],
 			roll_no: roll[index],
-			email: roll[index] + "@abc.com",
+			email:
+				index == 1 || index == 41
+					? roll[index] + "@smail.iitpkd.ac.in"
+					: roll[index] + "@abc.com",
 			stream: "UGCSE",
 			isRegistered: true,
 		});
@@ -86,7 +89,7 @@ router.post("/projects/add", (req, res) => {
 		const students = result[0];
 		const projects = result[1];
 		for (const student of students) {
-			const number = Math.floor(Math.random() * 3 + 2);
+			const number = 30;
 			const arr = getRandom(projects, number);
 			shuffle(arr);
 			student.projects_preference = arr;
