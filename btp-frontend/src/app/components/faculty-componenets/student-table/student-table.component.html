@@ -29,12 +29,18 @@
       <div class="render"><strong>Roll No</strong></div>
       <div class="flex-grow"></div>
       <div class="render"><strong>Preference</strong></div>
+      <div class="flex-grow"></div>
+      <div class="saveButton">
+          <button  mat-raised-button color="warn" (click)="onSubmit()">
+            Save Preferences
+          </button>
+      </div>
     </div>
   </mat-card>
 
   <div
     class="example-box"
-    *ngFor="let student of student_list"
+    *ngFor="let student of student_list;let i = index"
     [cdkDragDisabled]="adminStage != 2 ? true : false"
     cdkDrag
   >
@@ -59,11 +65,40 @@
         <div class="render"  *ngIf="student._id">
           {{ "" | preference:project._id:student._id:student_list}}
         </div>
+        <div class="flex-grow"></div>
+        <div class="render">
+          <mat-icon
+            *ngIf="i != 0"
+            matTooltip="Push {{ project.title }} to top"
+            [matTooltipPosition]="'above'"
+            (click)="moveToTop(student_list[i])"
+            >vertical_align_top</mat-icon
+          >
+          <mat-icon
+            *ngIf="i != student_list.length - 1"
+            matTooltip="Push {{ project.title }} to bottom"
+            [matTooltipPosition]="'above'"
+            (click)="moveToBottom(student_list[i])"
+            >vertical_align_bottom</mat-icon
+          >
+          <mat-icon
+            *ngIf="i != 0"
+            matTooltip="Move {{ project.title }} up"
+            [matTooltipPosition]="'above'"
+            (click)="moveOneUp(i)"
+            >arrow_upward</mat-icon
+          >
+          <mat-icon
+            *ngIf="i != student_list.length - 1"
+            matTooltip="Move {{ project.title }} down"
+            [matTooltipPosition]="'above'"
+            (click)="moveOneDown(i)"
+            >arrow_downward</mat-icon
+          >
+        </div>
       </div>
     </mat-list-item>
   </div>
 </div>
 
-<button class="saveButton" mat-raised-button color="warn" (click)="onSubmit()">
-  Save Preferences
-</button>
+

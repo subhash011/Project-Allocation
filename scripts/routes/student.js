@@ -68,6 +68,38 @@ router.post("/add/:n", (req, res) => {
 	});
 });
 
+
+router.post("/projects/single",(req,res)=>{
+
+	Student.find()
+		.then(students=>{
+
+			var student_list = students.map(student=>{
+				return student._id
+			})
+
+			Project.findOne({title:"Sai Vamsi_p2"})
+				.then(project=>{
+
+
+					project.students_id = student_list;
+
+					project.save()
+						.then(result=>{
+							res.json(result);
+						})
+
+				})
+
+		})
+
+})
+
+
+
+
+
+
 router.post("/projects/add", (req, res) => {
 	var promises = [];
 	promises.push(
