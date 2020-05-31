@@ -85,6 +85,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   curr_deadline;
   startDate;
   minDate;
+  isActive: boolean = false;
+  indexHover: number = -1;
   projects: any = [];
   background = "primary";
   //Buttons

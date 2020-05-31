@@ -432,7 +432,7 @@
             <th mat-header-cell *matHeaderCellDef>Preferences</th>
             <td mat-cell *matCellDef="let project">
               <mat-icon
-                matTooltip="View faculty preferences"
+                matTooltip="Prefences of {{ project.faculty }}"
                 matTooltipPosition="above"
                 (click)="showPreferencesProject(project)"
               >
@@ -461,7 +461,14 @@
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: columns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; let i = index; columns: columns"
+            class="remove-background"
+            (mouseenter)="isActive = true; indexHover = i"
+            (mouseleave)="isActive = false; indexHover = -1"
+            [class.mat-elevation-z8]="isActive && indexHover == i"
+          ></tr>
         </table>
       </div>
     </div>
@@ -560,7 +567,7 @@
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let student">
                   <mat-icon
-                    matTooltip="Remove Student"
+                    matTooltip="Remove {{ student.name }}"
                     matTooltipPosition="right"
                     (click)="removeStudent(student._id)"
                   >
@@ -574,7 +581,7 @@
                 </th>
                 <td mat-cell *matCellDef="let student">
                   <mat-icon
-                    matTooltip="View student preferences"
+                    matTooltip="Prefences of {{ student.name }}"
                     matTooltipPosition="above"
                     (click)="showPreferences(student)"
                   >
@@ -586,7 +593,14 @@
                 mat-header-row
                 *matHeaderRowDef="studentCols; sticky: true"
               ></tr>
-              <tr mat-row *matRowDef="let row; columns: studentCols"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; let i = index; columns: studentCols"
+                class="remove-background"
+                (mouseenter)="isActive = true; indexHover = i"
+                (mouseleave)="isActive = false; indexHover = -1"
+                [class.mat-elevation-z8]="isActive && indexHover == i"
+              ></tr>
             </table>
           </div>
         </div>
@@ -664,7 +678,7 @@
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let faculty">
                   <mat-icon
-                    matTooltip="Remove Faculty"
+                    matTooltip="Remove {{ faculty.name }}"
                     matTooltipPosition="right"
                     (click)="removeFaculty(faculty._id)"
                     >delete_outline</mat-icon
@@ -675,7 +689,14 @@
                 mat-header-row
                 *matHeaderRowDef="facultyCols; sticky: true"
               ></tr>
-              <tr mat-row *matRowDef="let row; columns: facultyCols"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; let i = index; columns: facultyCols"
+                class="remove-background"
+                (mouseenter)="isActive = true; indexHover = i"
+                (mouseleave)="isActive = false; indexHover = -1"
+                [class.mat-elevation-z8]="isActive && indexHover == i"
+              ></tr>
             </table>
           </div>
         </div>

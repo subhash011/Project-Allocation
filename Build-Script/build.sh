@@ -6,7 +6,7 @@
 str=$1
 
 pushd /opt/Project-Allocation/
-echo '1234' | sudo -S git pull
+sudo git pull
 popd
 
 pushd /opt/Project-Allocation/backend/
