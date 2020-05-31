@@ -28,7 +28,6 @@ import { SubmitPopUpComponent } from "./components/faculty-componenets/submit-po
 import { DeletePopUpComponent } from "./components/faculty-componenets/delete-pop-up/delete-pop-up.component";
 import { RefreshComponent } from "./components/faculty-componenets/refresh/refresh.component";
 import { SuperAdminComponent } from "./components/shared/super-admin/super-admin.component";
-import { Ng2SearchPipeModule } from "ng2-search-filter";
 import {
   AdminComponent,
   AllotedStudents,
@@ -52,6 +51,7 @@ import { EditPreferencesComponent } from "./components/student-components/edit-p
 import { DisplayPreferencesComponent } from "./components/student-components/display-preferences/display-preferences.component";
 import { PreferencePipe } from "./components/faculty-componenets/student-table/student-table.component";
 import { ShowPreferencesComponent } from "./components/student-components/show-preferences/show-preferences.component";
+import { MatSortModule } from "@angular/material/sort";
 const googleLoginOption: LoginOpt = {
   prompt: "select_account",
 };
@@ -121,10 +121,10 @@ export function provideConfig() {
     DragDropModule,
     FormsModule,
     ReactiveFormsModule,
-    Ng2SearchPipeModule,
     LoadingBarModule,
     TypingAnimationModule,
     ClipboardModule,
+    MatSortModule,
   ],
   exports: [ClipboardModule],
   providers: [

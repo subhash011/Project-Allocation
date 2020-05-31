@@ -1,6 +1,6 @@
-<mat-dialog-content>
+<mat-dialog-content *ngIf="preferences.students_id.length != 0; else elseBlock">
   <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
-    <div *ngIf="preferences.students_id.length != 0; else elseBlock">
+    <div>
       <div
         class="list-item"
         *cdkVirtualFor="let preference of preferences.students_id"
@@ -36,22 +36,24 @@
         </mat-accordion>
         <div class="flex-space"></div>
       </div>
-      <button mat-raised-button color="accent" (click)="close()">Close</button>
-      <div #container class="copy">
-        <button
-          mat-raised-button
-          color="primary"
-          ngxClipboard
-          [cbContent]="value"
-          [container]="container"
-          (cbOnSuccess)="copied($event)"
-        >
-          Copy to Clipboard
-        </button>
-      </div>
     </div>
   </cdk-virtual-scroll-viewport>
+  <button mat-raised-button color="accent" (click)="close()">Close</button>
+  <div #container class="copy">
+    <button
+      mat-raised-button
+      color="primary"
+      ngxClipboard
+      [cbContent]="value"
+      [container]="container"
+      (cbOnSuccess)="copied($event)"
+    >
+      Copy to Clipboard
+    </button>
+  </div>
 </mat-dialog-content>
 <ng-template #elseBlock>
-  No preferences to display
+  <div class="text">
+    No preferences to display
+  </div>
 </ng-template>

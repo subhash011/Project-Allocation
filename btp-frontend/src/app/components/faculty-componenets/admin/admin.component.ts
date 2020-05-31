@@ -18,7 +18,7 @@ import {
   Pipe,
   PipeTransform,
 } from "@angular/core";
-import { MatStepper, MatTableDataSource } from "@angular/material";
+import { MatStepper, MatTableDataSource, MatSort } from "@angular/material";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { SelectionModel } from "@angular/cdk/collections";
 import { ResetComponent } from "../reset/reset.component";
@@ -103,8 +103,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   publishFaculty = true;
 
   index;
-  faculties: any = [];
-  students: any = [];
+  faculties: any = new MatTableDataSource([]);
+  students: any = new MatTableDataSource([]);
   student;
   faculty;
 
@@ -130,7 +130,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     private mailer: MailService,
     private projectService: ProjectsService,
     private loginService: LoginComponent,
-    private activatedRoute: ActivatedRoute,
     private loadingBar: LoadingBarService,
     private exportService: ExporttocsvService
   ) {
@@ -219,17 +218,24 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.seventhFormGroup.controls["seventhCtrl"].setValue(
           this.studentsPerFaculty
         );
-        // this.eighthFormGroup.controls["eighthCtrl"].setValue(this.studentCount);
 
         this.userService
           .getMembersForAdmin()
           .toPromise()
           .then((result) => {
             if (result["message"] == "success") {
-              this.faculties = result["result"]["faculties"];
-              this.students = result["result"]["students"];
+              this.faculties.data = result["result"]["faculties"];
+              this.students.data = result["result"]["students"];
+              this.faculties.filterPredicate = (data: any, filter: string) =>
+                !filter ||
+                data.name.toLowerCase().includes(filter) ||
+                data.email.toLowerCase().includes(filter);
+              this.students.filterPredicate = (data: any, filter: string) =>
+                !filter ||
+                data.name.toLowerCase().includes(filter) ||
+                data.email.toLowerCase().includes(filter);
               let flag = false;
-              for (const faculty of this.faculties) {
+              for (const faculty of this.faculties.data) {
                 if (
                   faculty.project_cap ||
                   faculty.student_cap ||
@@ -551,7 +557,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       disableClose: true,
       hasBackdrop: true,
     });
-    const length = this.students.filter((val) => val.isRegistered).length;
+    const length = this.students.data.filter((val) => val.isRegistered).length;
     this.userService
       .validateAllocation(selectedProjects, length)
       .subscribe((data) => {
@@ -909,10 +915,10 @@ export class AdminComponent implements OnInit, OnDestroy {
       .toPromise()
       .then((result) => {
         if (result["message"] == "success") {
-          this.faculties = result["result"]["faculties"];
-          this.students = result["result"]["students"];
+          this.faculties.data = result["result"]["faculties"];
+          this.students.data = result["result"]["students"];
           let flag = false;
-          for (const faculty of this.faculties) {
+          for (const faculty of this.faculties.data) {
             if (
               faculty.project_cap ||
               faculty.student_cap ||
@@ -926,7 +932,8 @@ export class AdminComponent implements OnInit, OnDestroy {
             }
           }
 
-          const length = this.students.filter((val) => val.isRegistered).length;
+          const length = this.students.data.filter((val) => val.isRegistered)
+            .length;
 
           this.userService
             .validateAllocation(this.selection.selected, length)
@@ -1289,9 +1296,15 @@ export class AdminComponent implements OnInit, OnDestroy {
       }
     });
   }
-  applyFilter(event: Event) {
+  applyFilter(event: Event, who: string) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (who == "project") {
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    } else if (who == "student") {
+      this.students.filter = filterValue.trim().toLowerCase();
+    } else if (who == "faculty") {
+      this.faculties.filter = filterValue.trim().toLowerCase();
+    }
   }
   ngOnDestroy() {
     clearInterval(this.timer);

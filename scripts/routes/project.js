@@ -46,7 +46,6 @@ router.post("/add", (req, res) => {
 
 	Faculty.find({})
 		.then((faculties) => {
-			faculties = [faculties[1]];
 			for (const faculty of faculties) {
 				const num = 20;
 

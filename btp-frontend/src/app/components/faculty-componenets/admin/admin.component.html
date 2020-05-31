@@ -313,7 +313,7 @@
         mat-input
         placeholder="Search by any ... "
         name="search"
-        (keyup)="applyFilter($event)"
+        (keyup)="applyFilter($event, 'project')"
       />
       <button class="searchButton" href="#">
         <i class="material-icons">search</i>
@@ -482,7 +482,7 @@
             mat-input
             placeholder="Search by any ... "
             name="search"
-            [(ngModel)]="student"
+            (keyup)="applyFilter($event, 'student')"
           />
           <button class="searchButton" href="#">
             <i class="material-icons">search</i>
@@ -527,11 +527,7 @@
         />
         <div class="display-student">
           <div class="table mat-elevation-z8">
-            <table
-              mat-table
-              [dataSource]="students | filter: student"
-              class="mat-elevation-z8"
-            >
+            <table mat-table [dataSource]="students" class="mat-elevation-z8">
               <ng-container matColumnDef="Name">
                 <th
                   mat-header-cell
@@ -604,7 +600,7 @@
             mat-input
             placeholder="Search by any ... "
             name="search"
-            [(ngModel)]="faculty"
+            (keyup)="applyFilter($event, 'faculty')"
           />
           <button class="searchButton" href="#">
             <i class="material-icons">search</i>
@@ -619,11 +615,7 @@
             </p>
           </div>
           <div class="table mat-elevation-z8">
-            <table
-              mat-table
-              [dataSource]="faculties | filter: faculty"
-              class="mat-elevation-z8"
-            >
+            <table mat-table [dataSource]="faculties" class="mat-elevation-z8">
               <ng-container matColumnDef="Name">
                 <th
                   mat-header-cell

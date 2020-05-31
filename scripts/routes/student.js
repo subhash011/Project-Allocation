@@ -71,37 +71,21 @@ router.post("/add/:n", (req, res) => {
 	});
 });
 
+router.post("/projects/single", (req, res) => {
+	Student.find().then((students) => {
+		var student_list = students.map((student) => {
+			return student._id;
+		});
 
-router.post("/projects/single",(req,res)=>{
+		Project.findOne({ title: "Sai Vamsi_p2" }).then((project) => {
+			project.students_id = student_list;
 
-	Student.find()
-		.then(students=>{
-
-			var student_list = students.map(student=>{
-				return student._id
-			})
-
-			Project.findOne({title:"Sai Vamsi_p2"})
-				.then(project=>{
-
-
-					project.students_id = student_list;
-
-					project.save()
-						.then(result=>{
-							res.json(result);
-						})
-
-				})
-
-		})
-
-})
-
-
-
-
-
+			project.save().then((result) => {
+				res.json(result);
+			});
+		});
+	});
+});
 
 router.post("/projects/add", (req, res) => {
 	var promises = [];
@@ -121,7 +105,7 @@ router.post("/projects/add", (req, res) => {
 		const students = result[0];
 		const projects = result[1];
 		for (const student of students) {
-			const number = 30;
+			const number = 15;
 			const arr = getRandom(projects, number);
 			shuffle(arr);
 			student.projects_preference = arr;

@@ -7,7 +7,7 @@
 >
   <mat-tab label="Faculty">
     <mat-tab-group *ngIf="index == 0" animationDuration="0" [selectedIndex]="0">
-      <mat-tab *ngFor="let branch of programs" [label]="branch.name">
+      <mat-tab *ngFor="let branch of programs.data" [label]="branch.name">
         <div class="searchBox">
           <input
             class="searchInput"
@@ -16,7 +16,7 @@
             mat-input
             placeholder="Search by any ... "
             name="search"
-            [(ngModel)]="faculty"
+            (keyup)="applyFilter($event, branch, 'faculty')"
           />
           <button class="searchButton" href="#">
             <i class="material-icons">search</i>
@@ -27,7 +27,7 @@
             <table
               mat-table
               #table
-              [dataSource]="faculties[branch.short] | filter: faculty"
+              [dataSource]="faculties[branch.short]"
               class="mat-elevation-z8"
             >
               <ng-container matColumnDef="Name">
@@ -109,7 +109,7 @@
   </mat-tab>
   <mat-tab label="Student">
     <mat-tab-group *ngIf="index == 1" animationDuration="0" [selectedIndex]="0">
-      <mat-tab *ngFor="let branch of programs" [label]="branch.name">
+      <mat-tab *ngFor="let branch of programs.data" [label]="branch.name">
         <div class="searchBox">
           <input
             class="searchInput"
@@ -117,7 +117,7 @@
             type="search"
             placeholder="Search by any ... "
             name="search"
-            [(ngModel)]="student"
+            (keyup)="applyFilter($event, branch, 'student')"
           />
           <button class="searchButton" href="#">
             <i class="material-icons">search</i>
@@ -127,7 +127,7 @@
           <div class="table mat-elevation-z8">
             <table
               mat-table
-              [dataSource]="students[branch.short] | filter: student"
+              [dataSource]="students[branch.short]"
               class="mat-elevation-z8"
             >
               <ng-container tainer matColumnDef="Name">
@@ -164,7 +164,7 @@
                   <button
                     color="warn"
                     mat-raised-button
-                    (click)="deleteStudent(student._id)"
+                    (click)="deleteStudent(student)"
                   >
                     Remove
                   </button>
@@ -186,7 +186,7 @@
   </mat-tab>
   <mat-tab label="Projects">
     <mat-tab-group *ngIf="index == 2" animationDuration="0" [selectedIndex]="0">
-      <mat-tab *ngFor="let branch of programs" [label]="branch.name">
+      <mat-tab *ngFor="let branch of programs.data" [label]="branch.name">
         <div class="searchBox">
           <input
             class="searchInput"
@@ -194,7 +194,7 @@
             type="search"
             placeholder="Search by any ... "
             name="search"
-            [(ngModel)]="project"
+            (keyup)="applyFilter($event, branch, 'project')"
           />
           <button class="searchButton" href="#">
             <i class="material-icons">search</i>
@@ -204,7 +204,7 @@
           <div class="table mat-elevation-z8">
             <table
               mat-table
-              [dataSource]="projects[branch['short']] | filter: project"
+              [dataSource]="projects[branch.short]"
               class="mat-elevation-z8"
             >
               <ng-container tainer matColumnDef="Title">
@@ -320,11 +320,7 @@
             >add</mat-icon
           >
         </div>
-        <table
-          mat-table
-          [dataSource]="programs | filter: map"
-          class="mat-elevation-z8"
-        >
+        <table mat-table [dataSource]="programs" class="mat-elevation-z8">
           <ng-container tainer matColumnDef="Branch">
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
               Program Name
@@ -344,19 +340,19 @@
           <ng-container matColumnDef="FacCount">
             <th mat-header-cell *matHeaderCellDef>No. Of Faculties</th>
             <td mat-cell *matCellDef="let map">
-              {{ faculties[map.short] ? faculties[map.short].length : 0 }}
+              {{ faculties[map.short] ? faculties[map.short].data.length : 0 }}
             </td>
           </ng-container>
           <ng-container matColumnDef="StudCount">
             <th mat-header-cell *matHeaderCellDef>No. Of Students</th>
             <td mat-cell *matCellDef="let map">
-              {{ students[map.short] ? students[map.short].length : 0 }}
+              {{ students[map.short] ? students[map.short].data.length : 0 }}
             </td>
           </ng-container>
           <ng-container matColumnDef="ProjCount">
             <th mat-header-cell *matHeaderCellDef>No. Of Projects</th>
             <td mat-cell *matCellDef="let map">
-              {{ projects[map.short] ? projects[map.short].length : 0 }}
+              {{ projects[map.short] ? projects[map.short].data.length : 0 }}
             </td>
           </ng-container>
           <ng-container matColumnDef="Actions">

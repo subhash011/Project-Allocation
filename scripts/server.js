@@ -16,7 +16,7 @@ app.use(cors());
 app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
-var mongoConnect = process.env.MONGO_URL;
+var mongoConnect = process.env.MONGO_URL_LOCAL;
 
 mongoose
 	.connect(mongoConnect, {

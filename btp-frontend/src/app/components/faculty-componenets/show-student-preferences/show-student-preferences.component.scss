@@ -10,7 +10,7 @@
 }
 
 .example-viewport {
-  height: 800px;
+  height: 500px;
   width: 800px;
   scroll-behavior: smooth;
   scrollbar-width: none;
@@ -18,6 +18,10 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.text {
+  text-align: center;
 }
 
 .list-item {
