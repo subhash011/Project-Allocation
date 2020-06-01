@@ -53,7 +53,7 @@ export class ProfileComponent implements OnInit {
           },
           () => {
             this.dialogRefLoad.close();
-            let snackBarRef = this.snackBar.open(
+            this.snackBar.open(
               "Some error occured, if the error persists re-authenticate",
               "Ok",
               {
@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit {
               if (data["status"] == "success") {
                 this.programs = data["programs"];
               } else {
-                let snackBarRef = this.snackBar.open(
+                this.snackBar.open(
                   "Session Timed Out! Please Sign in Again!",
                   "Ok",
                   {
@@ -88,7 +88,7 @@ export class ProfileComponent implements OnInit {
               }
             });
           } else {
-            let snackBarRef = this.snackBar.open(
+            this.snackBar.open(
               "Session Timed Out! Please Sign in Again!",
               "Ok",
               {
@@ -100,7 +100,7 @@ export class ProfileComponent implements OnInit {
         },
         () => {
           this.dialogRefLoad.close();
-          let snackBarRef = this.snackBar.open(
+          this.snackBar.open(
             "Some error occured, if the error persists re-authenticate",
             "Ok",
             {
@@ -159,10 +159,14 @@ export class ProfileComponent implements OnInit {
         name: this.studentFormGroup.get("name").value,
         gpa: this.studentFormGroup.get("gpa").value,
       };
+      var dialogRef = this.dialog.open(LoaderComponent, {
+        data: "Please wait ....",
+        disableClose: true,
+        hasBackdrop: true,
+      });
       this.userService
         .updateStudentProfile(student)
-        .toPromise()
-        .then((result) => {
+        .subscribe((result) => {
           if (result["message"] == "success") {
             this.snackBar.open("Profile Updated Sucessfully", "Ok", {
               duration: 3000,
@@ -178,6 +182,12 @@ export class ProfileComponent implements OnInit {
               }
             );
           }
+        },() => {
+          dialogRef.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
     }
   }
@@ -197,11 +207,11 @@ export class ProfileComponent implements OnInit {
       this.userService.updateFacultyProfile(faculty).subscribe((data) => {
         dialogRef.close();
         if (data["status"] == "success") {
-          let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+          this.snackBar.open(data["msg"], "Ok", {
             duration: 3000,
           });
         } else {
-          let snackBarRef = this.snackBar.open(
+          this.snackBar.open(
             "Session Timed Out! Please Sign in Again!",
             "Ok",
             {
@@ -210,6 +220,12 @@ export class ProfileComponent implements OnInit {
           );
           this.login.signOut();
         }
+      },() => {
+        dialogRef.close();
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
+        });
       });
     }
   }
@@ -227,12 +243,12 @@ export class ProfileComponent implements OnInit {
       this.userService.setPrograms(programs).subscribe((data) => {
         dialogRef.close();
         if (data["status"] == "success") {
-          let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+          this.snackBar.open(data["msg"], "Ok", {
             duration: 3000,
           });
           this.ngOnInit();
         } else {
-          let snackBarRef = this.snackBar.open(
+         this.snackBar.open(
             "Session Timed Out! Please Sign in Again!",
             "Ok",
             {
@@ -241,6 +257,12 @@ export class ProfileComponent implements OnInit {
           );
           this.login.signOut();
         }
+      },() => {
+        dialogRef.close();
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
+        });
       });
     }
   }
@@ -268,12 +290,12 @@ export class ProfileComponent implements OnInit {
         this.userService.deleteFacultyProgram(obj).subscribe((data) => {
           dialogRef.close();
           if (data["status"] == "success") {
-            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+            this.snackBar.open(data["msg"], "Ok", {
               duration: 3000,
             });
             this.ngOnInit();
           } else {
-            let snackBarRef = this.snackBar.open(
+            this.snackBar.open(
               "Session Timed Out! Please Sign in Again!",
               "Ok",
               {
@@ -284,6 +306,12 @@ export class ProfileComponent implements OnInit {
           }
         });
       }
+    },() => {
+      dialogRef.close();
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
     });
   }
 }

@@ -47,6 +47,12 @@ export class FacultyComponent implements OnInit {
       this.id = params.get("id");
     });
 
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Please wait ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
+
     this.userDetails.getFacultyDetails(this.id).subscribe((data) => {
       if (data["status"] == "success") {
         const user_info = data["user_details"];
@@ -82,15 +88,40 @@ export class FacultyComponent implements OnInit {
                   this.userService
                     .getAdminInfo_program(this.stream)
                     .subscribe((data) => {
+                      dialogRefLoad.close();
                       if (data["status"] == "success") {
                         this.adminStage = data["admin"].stage;
                       } else {
                         this.adminStage = undefined;
                       }
+                    },() => {
+                      dialogRefLoad.close();
+                      this.ngOnInit();
+                      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                        duration: 3000,
+                      });
                     });
                 }
+              },() => {
+                dialogRefLoad.close();
+                this.ngOnInit();
+                this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                  duration: 3000,
+                });
+              });
+            },() => {
+              dialogRefLoad.close();
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
               });
             });
+        },() => {
+          dialogRefLoad.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
       } else {
         this.loginService.signOut();
@@ -98,6 +129,12 @@ export class FacultyComponent implements OnInit {
           duration: 3000,
         });
       }
+    },() => {
+      dialogRefLoad.close();
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
     });
   }
 
@@ -129,6 +166,12 @@ export class FacultyComponent implements OnInit {
           duration: 3000,
         });
       }
+    },() => {
+      dialogRef.close();
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
     });
 
     this.project = project;
@@ -176,6 +219,12 @@ export class FacultyComponent implements OnInit {
           duration: 3000,
         });
       }
+    },() => {
+      dialogRef.close();
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
     });
   }
 }

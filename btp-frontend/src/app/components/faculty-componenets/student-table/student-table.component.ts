@@ -83,6 +83,12 @@ export class StudentTableComponent implements OnInit {
               duration: 3000,
             });
           }
+        },() => {
+          dialogRef.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
     } else {
       var dialogRef = this.dialog.open(LoaderComponent, {
