@@ -69,6 +69,12 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
               return val._id != preference._id;
             });
             this.updateProjects.emit(preference);
+          } else if (result["message"] == "stage-ended") {
+            this.snackBar.open(
+              "Stage has ended! You cannot edit preferences anymore",
+              "Ok",
+              { duration: 3000 }
+            );
           }
         },
         () => {

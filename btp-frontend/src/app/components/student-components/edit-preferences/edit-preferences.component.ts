@@ -108,6 +108,12 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
             });
+          } else if (result["message"] == "stage-ended") {
+            this.snackBar.open(
+              "Stage has ended! You cannot edit preferences anymore",
+              "Ok",
+              { duration: 3000 }
+            );
           } else {
             this.disable = false;
             this.snackBar.open(
@@ -171,6 +177,12 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
             });
+          } else if (result["message"] == "stage-ended") {
+            this.snackBar.open(
+              "Stage has ended! You cannot edit preferences anymore",
+              "Ok",
+              { duration: 3000 }
+            );
           } else if (result["message"] == "success") {
             this.preferences.data = this.preferences.data.filter((val) => {
               return val._id != preference._id;

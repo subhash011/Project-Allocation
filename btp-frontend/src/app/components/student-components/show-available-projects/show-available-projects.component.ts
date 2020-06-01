@@ -276,6 +276,12 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
           this.preferences.data.push(project);
           this.preferences.data = [...this.preferences.data];
           this.deselectProject(project);
+        } else if (result["message"] == "stage-ended") {
+          this.snackBar.open(
+            "Stage has ended! You cannot edit preferences anymore",
+            "Ok",
+            { duration: 3000 }
+          );
         }
       });
   }
@@ -317,6 +323,12 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
               duration: 3000,
               panelClass: ["success-snackbar"],
             });
+          } else if (result["message"] == "stage-ended") {
+            this.snackBar.open(
+              "Stage has ended! You cannot edit preferences anymore",
+              "Ok",
+              { duration: 3000 }
+            );
           } else {
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
