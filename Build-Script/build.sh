@@ -5,26 +5,28 @@
 
 str=$1
 
-pushd /opt/Project-Allocation/
-echo '1234' | sudo -S git pull
+echo "$str"
+
+pushd /home/subhash011/Desktop/Project-Allocation/
+echo '***REMOVED***' | sudo -S git pull
 popd
 
-pushd /opt/Project-Allocation/backend/
+pushd /home/subhash011/Desktop/Project-Allocation/backend/
 npm i --save
 popd
 
-pushd /opt/Project-Allocation/btp-frontend/
+pushd /home/subhash011/Desktop/Project-Allocation/btp-frontend/
 npm i --save
 popd
 
 if [ "$str" == "yes" ]
 then
-	pushd /opt/Project-Allocation/btp-frontend/
-	ng build --prod
+	pushd /home/subhash011/Desktop/Project-Allocation/btp-frontend/
+	ng build
 	popd
 fi
 
 
-pushd /opt/Project-Allocation
-pm2 restart all
-popd
+# pushd /home/subhash011/Desktop/Project-Allocation
+# pm2 restart all
+# popd
