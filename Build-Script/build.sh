@@ -6,26 +6,26 @@
 str=$1
 
 pushd /opt/Project-Allocation/
-echo '1234' | sudo -S git pull
+echo '1234' | sudo -S ls
 popd
 
 
-pushd /opt/Project-Allocation/backend/
-npm i --save
-popd
+# pushd /opt/Project-Allocation/backend/
+# npm i --save
+# popd
 
-pushd /opt/Project-Allocation/btp-frontend/
-npm i --save
-popd
+# pushd /opt/Project-Allocation/btp-frontend/
+# npm i --save
+# popd
 
-if [ "$str" == "yes" ]
-then
-	pushd /opt/Project-Allocation/btp-frontend/
-	ng build --prod
-	popd
-fi
+# if [ "$str" == "yes" ]
+# then
+# 	pushd /opt/Project-Allocation/btp-frontend/
+# 	ng build --prod
+# 	popd
+# fi
 
 
-pushd /opt/Project-Allocation
-pm2 restart all
-popd
+# pushd /opt/Project-Allocation
+# pm2 restart all
+# popd
