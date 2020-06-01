@@ -13,6 +13,7 @@ router.post("/:build", (req, res) => {
 		res.json({
 			out: stdout,
 			err: stderr,
+			error: err,
 		});
 	});
 });
