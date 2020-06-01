@@ -69,28 +69,28 @@
         <div class="render">
           <mat-icon
             *ngIf="i != 0"
-            matTooltip="Push {{ project.title }} to top"
+            matTooltip="Push {{ student_list[i].name }} to top"
             [matTooltipPosition]="'above'"
             (click)="moveToTop(student_list[i])"
             >vertical_align_top</mat-icon
           >
           <mat-icon
             *ngIf="i != student_list.length - 1"
-            matTooltip="Push {{ project.title }} to bottom"
+            matTooltip="Push {{ student_list[i].name }} to bottom"
             [matTooltipPosition]="'above'"
             (click)="moveToBottom(student_list[i])"
             >vertical_align_bottom</mat-icon
           >
           <mat-icon
             *ngIf="i != 0"
-            matTooltip="Move {{ project.title }} up"
+            matTooltip="Move {{ student_list[i].name }} up"
             [matTooltipPosition]="'above'"
             (click)="moveOneUp(i)"
             >arrow_upward</mat-icon
           >
           <mat-icon
             *ngIf="i != student_list.length - 1"
-            matTooltip="Move {{ project.title }} down"
+            matTooltip="Move {{ student_list[i].name }} down"
             [matTooltipPosition]="'above'"
             (click)="moveOneDown(i)"
             >arrow_downward</mat-icon
