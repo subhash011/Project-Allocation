@@ -75,7 +75,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   fifthFormGroup: FormGroup;
   sixthFormGroup: FormGroup;
   seventhFormGroup: FormGroup;
-  // eighthFormGroup: FormGroup;
 
   public programName;
   position = "above";
@@ -156,9 +155,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.seventhFormGroup = this.formBuilder.group({
       seventhCtrl: [this.studentsPerFaculty],
     });
-    // this.eighthFormGroup = this.formBuilder.group({
-    //   eighthCtrl: [this.studentCount],
-    // });
   }
 
   ngAfterViewInit() {
@@ -186,6 +182,13 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Please wait ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
+
     this.timer = setInterval(() => {
       this.currentTime = new Date();
     }, 60000);
@@ -204,7 +207,6 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.dateSet = data["deadlines"];
         this.projectCap = data["projectCap"];
         this.studentCap = data["studentCap"];
-        // this.studentCount = data["studentCount"];
         this.studentsPerFaculty = data["studentsPerFaculty"];
         this.dateSet = this.dateSet.map((date) => {
           return new Date(date);
@@ -223,8 +225,8 @@ export class AdminComponent implements OnInit, OnDestroy {
 
         this.userService
           .getMembersForAdmin()
-          .toPromise()
-          .then((result) => {
+          .subscribe((result) => {
+            dialogRefLoad.close();
             if (result["message"] == "success") {
               this.faculties.data = result["result"]["faculties"];
               this.students.data = result["result"]["students"];
@@ -262,14 +264,28 @@ export class AdminComponent implements OnInit, OnDestroy {
                 }
               );
             }
-          });
+          },
+          () => {
+            dialogRefLoad.close()
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
+            });
+          }
+          );
       } else {
         this.loginService.signOut();
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
       }
-    });
+    },() => {
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
+    }
+    );
 
     this.projectService.getAllStreamProjects().subscribe((projects) => {
       if (projects["message"] == "success") {
@@ -287,7 +303,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           duration: 3000,
         });
       }
-    });
+    },() => {
+      dialogRefLoad.close()
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
+    }
+    );
   }
   getTooltipInculsion(project) {
     console.log("here");
@@ -365,7 +388,15 @@ export class AdminComponent implements OnInit, OnDestroy {
               }
             );
           }
-        });
+        },
+        () => {
+          dialogRefLoad.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
+        }
+        );
       }
     });
   }
@@ -393,8 +424,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
         this.userService
           .removeFacultyAdmin(id)
-          .toPromise()
-          .then((result) => {
+          .subscribe((result) => {
             dialogRefLoad.close();
             if (result["message"] == "success") {
               this.snackBar.open("Removed Faculty", "Ok", {
@@ -416,7 +446,15 @@ export class AdminComponent implements OnInit, OnDestroy {
                 }
               );
             }
-          });
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
+            });
+          }
+          );
       }
     });
   }
@@ -439,8 +477,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
         this.userService
           .removeStudentAdmin(id)
-          .toPromise()
-          .then((result) => {
+          .subscribe((result) => {
             dialogRefLoad.close();
             if (result["message"] == "success") {
               this.snackBar.open("Removed Student", "Ok", {
@@ -464,7 +501,15 @@ export class AdminComponent implements OnInit, OnDestroy {
                 }
               );
             }
-          });
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
+            });
+          }
+          );
       }
     });
   }
@@ -533,7 +578,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           this.userService.setDeadline(date).subscribe((data) => {
             dialogRefLoad.close();
             if (data["status"] == "success") {
-              let snackBarRef = this.snackBar.open(
+             this.snackBar.open(
                 "Deadline set successfully!!",
                 "Ok",
                 {
@@ -551,7 +596,15 @@ export class AdminComponent implements OnInit, OnDestroy {
                 }
               );
             }
-          });
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
+            });
+          }
+          );
         }
       });
     } else {
@@ -651,7 +704,15 @@ export class AdminComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 });
               }
-            });
+            },
+            () => {
+              dialogRef.close();
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
+            }
+            );
         } else {
           dialogRef.close();
           this.snackBar.open(
@@ -662,7 +723,15 @@ export class AdminComponent implements OnInit, OnDestroy {
             }
           );
         }
-      });
+      },
+      () => {
+        dialogRef.close();
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
+        });
+      }   
+      );
   }
 
   sendEmails() {
@@ -724,7 +793,15 @@ export class AdminComponent implements OnInit, OnDestroy {
             } else {
               dialogRefLoad.close();
             }
-          });
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
+            });
+          }
+          );
         } else if (this.stage_no == 1) {
           this.userService.getStudentStreamEmails().subscribe((data1) => {
             if (data1["status"] == "success") {
@@ -764,7 +841,15 @@ export class AdminComponent implements OnInit, OnDestroy {
                   }
                 });
             }
-          });
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
+            });
+          }
+          );
         } else {
           this.userService.fetchAllMails().subscribe((result) => {
             if (result["message"] == "success") {
@@ -804,7 +889,15 @@ export class AdminComponent implements OnInit, OnDestroy {
                 }
               );
             }
-          });
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
+            });
+          }
+          );
         }
       }
     });
@@ -837,6 +930,12 @@ export class AdminComponent implements OnInit, OnDestroy {
               }
             );
           }
+        },() => {
+          dialogRefLoad.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
     } else {
       dialogRefLoad.close();
@@ -876,10 +975,16 @@ export class AdminComponent implements OnInit, OnDestroy {
               }
             );
           }
+        },() => {
+          dialogRefLoad.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
     } else {
       dialogRefLoad.close();
-      let snackBarRef = this.snackBar.open(
+      this.snackBar.open(
         "Please enter a valid number",
         "Ok",
         {
@@ -915,6 +1020,12 @@ export class AdminComponent implements OnInit, OnDestroy {
               }
             );
           }
+        },() => {
+          dialogRefLoad.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
     } else {
       dialogRefLoad.close();
@@ -927,8 +1038,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   validateFields() {
     this.userService
       .getMembersForAdmin()
-      .toPromise()
-      .then((result) => {
+      .subscribe((result) => {
         if (result["message"] == "success") {
           this.faculties.data = result["result"]["faculties"];
           this.students.data = result["result"]["students"];
@@ -987,6 +1097,11 @@ export class AdminComponent implements OnInit, OnDestroy {
                 if (!flag) this.proceedButton3_ = false;
               }
               this.minDate = new Date();
+            },() => {
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
             });
         } else {
           this.loginService.signOut();
@@ -994,6 +1109,11 @@ export class AdminComponent implements OnInit, OnDestroy {
             duration: 3000,
           });
         }
+      },() => {
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
+        });
       });
   }
 
@@ -1079,6 +1199,12 @@ export class AdminComponent implements OnInit, OnDestroy {
               duration: 3000,
             });
           }
+        },() => {
+          dialogRefLoad.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
       }
     });
@@ -1140,32 +1266,86 @@ export class AdminComponent implements OnInit, OnDestroy {
             });
             this.loginService.signOut();
           }
+        },() => {
+          dialogRefLoad.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
       }
     });
   }
 
   downloadFile_project() {
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Please wait ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.exportService.download("project").subscribe((data) => {
+      dialogRefLoad.close();
       saveAs(data, `${this.programName}_faculty.csv`);
+    },() => {
+      dialogRefLoad.close();
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
     });
   }
 
   downloadFile_student() {
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Please wait ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.exportService.download("student").subscribe((data) => {
+      dialogRefLoad.close();
       saveAs(data, `${this.programName}_students.csv`);
+    },() => {
+      dialogRefLoad.close();
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
     });
   }
 
   downloadFile_format() {
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Please wait ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.exportService.download("format").subscribe((data) => {
+      dialogRefLoad.close();
       saveAs(data, `${this.programName}_format.csv`);
+    },() => {
+      dialogRefLoad.close();
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
     });
   }
 
   downloadFile_allocation() {
+    var dialogRefLoad = this.dialog.open(LoaderComponent, {
+      data: "Please wait ...",
+      disableClose: true,
+      hasBackdrop: true,
+    });
     this.exportService.download("allocation").subscribe((data) => {
+      dialogRefLoad.close();
       saveAs(data, `${this.programName}_allocation.csv`);
+    },() => {
+      dialogRefLoad.close();
+      this.ngOnInit();
+      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        duration: 3000,
+      });
     });
   }
 
@@ -1209,6 +1389,12 @@ export class AdminComponent implements OnInit, OnDestroy {
                   }
                 );
               }
+            },() => {
+              dialogRefLoad.close();
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
             });
         }
       });
@@ -1262,6 +1448,12 @@ export class AdminComponent implements OnInit, OnDestroy {
               }
             });
           }
+        },() => {
+          dialogRefLoad.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
       }
     });
@@ -1287,7 +1479,13 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.userService.updatePublish("student").subscribe((data) => {
           if (data["status"] == "success") {
             this.dataSource = new MatTableDataSource(data["result"]);
-            this.userService.uploadAllocationFile().subscribe(() => {});
+            this.userService.uploadAllocationFile().subscribe(() => {},() => {
+              dialogRefLoad.close();
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
+            });
             this.publishStudents = true;
             localStorage.setItem("ps", "true");
             this.userService.getStudentStreamEmails().subscribe((data1) => {
@@ -1305,6 +1503,12 @@ export class AdminComponent implements OnInit, OnDestroy {
                     );
                   });
               }
+            },() => {
+              dialogRefLoad.close();
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
             });
           }
         });

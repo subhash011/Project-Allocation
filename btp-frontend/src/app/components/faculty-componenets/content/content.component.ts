@@ -65,7 +65,7 @@ export class ContentComponent implements OnInit, DoCheck {
   ngOnInit() {
     let id = localStorage.getItem("id");
     this.id = id;
-
+    
     this.userService.getPublishMode("faculty").subscribe((data) => {
       if (data["status"] == "success") {
         this.publishFaculty = data["facultyPublish"];
@@ -157,6 +157,12 @@ export class ContentComponent implements OnInit, DoCheck {
               }
             );
           }
+        },() => {
+          dialogRef.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         });
       } else {
         this.snackBar.open("Please Enter Valid Data", "OK", {
@@ -293,6 +299,12 @@ export class ContentComponent implements OnInit, DoCheck {
                           },
                         });
                       });
+                  },() => {
+                    dialogRef.close();
+                    this.ngOnInit();
+                    this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                      duration: 3000,
+                    });
                   });
                   snackBarRef.onAction().subscribe(() => {
                     this.router

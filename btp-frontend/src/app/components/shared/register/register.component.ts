@@ -181,13 +181,12 @@ export class RegisterComponent implements OnInit {
 
       this.userService
         .registerUser(user, httpOptions, position, id)
-        .toPromise()
-        .then((data: any) => {
+        .subscribe((data: any) => {
           dialogRef.close();
           if (data["registration"] == "success") {
             localStorage.setItem("role", position);
             localStorage.setItem("isRegistered", "true");
-            var snackBarRef = this.snackBar.open(
+           this.snackBar.open(
               "Registration Successful",
               "Ok",
               {
@@ -197,7 +196,7 @@ export class RegisterComponent implements OnInit {
             var route = "/" + position + "/" + id;
             this.router.navigate([route]);
           } else {
-            var snackBarRef = this.snackBar.open(
+           this.snackBar.open(
               "Registration Failed! Please Try Again",
               "Ok",
               {
@@ -205,16 +204,13 @@ export class RegisterComponent implements OnInit {
               }
             );
           }
+        },() => {
+          dialogRef.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
         })
-        .catch(() => {
-          var snackBarRef = this.snackBar.open(
-            "Registration Failed! Please Try Again",
-            "Ok",
-            {
-              duration: 3000,
-            }
-          );
-        });
     }
   }
 }
