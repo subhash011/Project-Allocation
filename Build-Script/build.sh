@@ -4,13 +4,13 @@
 # else use -----> ./build.sh no
 
 str=$1
+password=$2
 path="/home/subhash011/Desktop/Project-Allocation/"
 backend="backend"
 frontend="btp-frontend"
-echo "$str"
 
 pushd "$path"
-echo '1234' | sudo -S git pull
+echo $password | sudo -S git pull
 popd
 
 pushd "${path}${backend}"

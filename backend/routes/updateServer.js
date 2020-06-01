@@ -22,9 +22,12 @@ async function executeScript(comm) {
 
 router.post("/:build", (req, res) => {
   const param = req.params.build;
+  const password = process.env.PASSWORD;
+  req.setTimeout(300000);
+  res.setTimeout(300000);
   var file_path = path.resolve(
     __dirname,
-    `../../Build-Script/build.sh ${param}`
+    `../../Build-Script/build.sh ${param} ${password}`
   );
   executeScript(file_path).then((result) => {
     res.status(200).send(result);
