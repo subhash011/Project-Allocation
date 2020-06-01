@@ -27,6 +27,6 @@ then
 fi
 
 
-# pushd /opt/Project-Allocation
-# pm2 restart all
-# popd
+pushd /opt/Project-Allocation
+pm2 restart all
+popd
