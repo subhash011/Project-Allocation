@@ -9,7 +9,7 @@ router.post("/:build", (req, res) => {
 		__dirname,
 		`../../Build-Script/build.sh ${param}`
 	);
-	cp.exec(file_path, (err, stdout, stderr) => {
+	cp.exec('echo ls', (err, stdout, stderr) => {
 		res.json({
 			out: stdout,
 			err: stderr,
@@ -26,7 +26,6 @@ router.post("/logs",(req,res)=>{
 		});
     })
 });
-
 
 
 
