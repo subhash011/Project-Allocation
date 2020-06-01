@@ -4,30 +4,32 @@
 # else use -----> ./build.sh no
 
 str=$1
-
+path="/home/subhash011/Desktop/Project-Allocation/"
+backend="backend"
+frontend="btp-frontend"
 echo "$str"
 
-pushd /home/subhash011/Desktop/Project-Allocation/
+pushd "$path"
 echo '1234' | sudo -S git pull
 popd
 
-pushd /home/subhash011/Desktop/Project-Allocation/backend/
+pushd "${path}${backend}"
 npm i --save
 popd
 
-pushd /home/subhash011/Desktop/Project-Allocation/btp-frontend/
+pushd "${path}${frontend}"
 npm i --save
 popd
 
 if [ "$str" == "yes" ]
 then
-	pushd /home/subhash011/Desktop/Project-Allocation/btp-frontend/
-	ng build
+	pushd "${path}${frontend}"
+	ng build --prod
 	popd
 fi
 
 
-# pushd /home/subhash011/Desktop/Project-Allocation
+# pushd $path
 # pm2 restart all
 # popd
 
