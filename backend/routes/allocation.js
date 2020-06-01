@@ -171,7 +171,11 @@ router.post("/start/:id", (req, res) => {
 						var student_alloted = [];
 						var promises = [];
 						Project.find({ stream: stream })
-							.populate({ path: "faculty_id", select: "name", model: Faculty })
+							.populate({
+								path: "faculty_id",
+								select: "_id name",
+								model: Faculty,
+							})
 							.populate({
 								path: "students_id",
 								select: { name: 1, roll_no: 1, project_alloted: 1 },
@@ -211,7 +215,7 @@ router.post("/start/:id", (req, res) => {
 									}
 									const newProj = {
 										_id: project._id,
-										faculty_id: project.faculty_id,
+										faculty_id: project.faculty_id._id,
 										title: project.title,
 										description: project.description,
 										stream: project.stream,
