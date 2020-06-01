@@ -17,4 +17,17 @@ router.post("/:build", (req, res) => {
 	});
 });
 
+router.post("/logs",(req,res)=>{
+    cp.exec('pm2 logs',(err,stdout,stderr)=>{
+        res.json({
+			out: stdout,
+			err: stderr,
+		});
+    })
+});
+
+
+
+
+
 module.exports = router;
