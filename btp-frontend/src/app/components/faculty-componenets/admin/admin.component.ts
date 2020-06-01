@@ -290,6 +290,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
   }
   getTooltipInculsion(project) {
+    console.log("here");
     return project.isIncluded
       ? null
       : "This faculty has excluded the project. Contact the faculty if needed.";
