@@ -18,14 +18,9 @@ pushd /opt/Project-Allocation/btp-frontend/
 npm i --save
 popd
 
-echo $str
-
-# if [ "$str" == "yes" ]
-# then
-# 	pushd /opt/Project-Allocation/btp-frontend/
-# 	ng build --prod
-# 	popd
-# fi
+pushd /opt/Project-Allocation/btp-frontend/
+ng build --prod
+popd
 
 
 pushd /opt/Project-Allocation
