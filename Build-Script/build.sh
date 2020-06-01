@@ -11,20 +11,20 @@ popd
 
 echo "$str"
 
-# pushd /opt/Project-Allocation/backend/
-# npm i --save
-# popd
+pushd /opt/Project-Allocation/backend/
+npm i --save
+popd
 
-# pushd /opt/Project-Allocation/btp-frontend/
-# npm i --save
-# popd
+pushd /opt/Project-Allocation/btp-frontend/
+npm i --save
+popd
 
-# if [ "$str" == "yes" ]
-# then
-# 	pushd /opt/Project-Allocation/btp-frontend/
-# 	ng build --prod
-# 	popd
-# fi
+if [ "$str" == "yes" ]
+then
+	pushd /opt/Project-Allocation/btp-frontend/
+	ng build --prod
+	popd
+fi
 
 
 # pushd /opt/Project-Allocation
