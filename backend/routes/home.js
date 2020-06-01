@@ -19,7 +19,7 @@ router.get("/maps", (req, res) => {
 			} else {
 				res.json({
 					message: "success",
-					result: null,
+					result: [],
 				});
 			}
 		})
@@ -110,7 +110,7 @@ router.get("/branches", (req, res) => {
 			} else {
 				res.json({
 					message: "success",
-					result: null,
+					result: [],
 				});
 			}
 		})

@@ -76,106 +76,143 @@ export class SuperAdminComponent implements OnInit {
       disableClose: true,
       hasBackdrop: true,
     });
-    this.userService.getAllBranches().subscribe((maps) => {
-      this.maps = maps["result"];
-      this.branches.data = this.maps.map((val) => {
-        var newMap = {
-          name: val.full,
-          short: val.short,
-        };
-        return newMap;
-      });
-    });
-    this.userService.getAllMaps().subscribe((maps) => {
-      this.maps = maps["result"];
-      this.programs.data = this.maps.map((val) => {
-        var newMap = {
-          name: val.full,
-          short: val.short,
-          map: val.map,
-        };
-        return newMap;
-      });
+    this.userService.getAllBranches().subscribe(
+      (maps) => {
+        if (maps["message"] == "success") {
+          this.maps = maps["result"];
+          this.branches.data = this.maps.map((val) => {
+            var newMap = {
+              name: val.full,
+              short: val.short,
+            };
+            return newMap;
+          });
+        } else {
+          this.snackBar.open(
+            "Some error occured! Please re-authenticate if the error persists",
+            "Ok",
+            {
+              duration: 3000,
+            }
+          );
+        }
+      },
+      () => {
+        this.dialogRefLoad.close();
+        this.snackBar.open(
+          "Some error occured! Please re-authenticate if the error persists",
+          "Ok",
+          {
+            duration: 3000,
+          }
+        );
+      }
+    );
+    this.userService.getAllMaps().subscribe(
+      (maps) => {
+        this.maps = maps["result"];
+        this.programs.data = this.maps.map((val) => {
+          var newMap = {
+            name: val.full,
+            short: val.short,
+            map: val.map,
+          };
+          return newMap;
+        });
 
-      this.userService.getAllStudents().subscribe(
-        (result) => {
-          if (result["message"] == "success") {
-            if (result["result"] == "no-students") {
-              for (const branch of this.programs.data) {
-                this.students[branch.short] = new MatTableDataSource([]);
-              }
-            } else {
-              var i = 0;
-              for (const branch of this.programs.data) {
-                this.students[branch.short] = new MatTableDataSource(
-                  result["result"][branch.short]
-                );
-                this.students[branch.short].filterPredicate = (
-                  data: any,
-                  filter: string
-                ) =>
-                  !filter ||
-                  data.name.toLowerCase().includes(filter) ||
-                  data.roll_no.toLowerCase().includes(filter);
+        this.userService.getAllStudents().subscribe(
+          (result) => {
+            if (result["message"] == "success") {
+              if (result["result"] == "no-students") {
+                for (const branch of this.programs.data) {
+                  this.students[branch.short] = new MatTableDataSource([]);
+                }
+              } else {
+                var i = 0;
+                for (const branch of this.programs.data) {
+                  this.students[branch.short] = new MatTableDataSource(
+                    result["result"][branch.short]
+                  );
+                  this.students[branch.short].filterPredicate = (
+                    data: any,
+                    filter: string
+                  ) =>
+                    !filter ||
+                    data.name.toLowerCase().includes(filter) ||
+                    data.roll_no.toLowerCase().includes(filter);
+                }
               }
             }
+          },
+          () => {
+            this.dialogRefLoad.close();
+            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+              duration: 3000,
+            });
+            this.login.signOut();
           }
-        },
-        () => {
-          this.dialogRefLoad.close();
-          this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
-            duration: 3000,
-          });
-          this.login.signOut();
-        }
-      );
+        );
 
-      this.getAllProjects();
+        this.getAllProjects();
 
-      this.userService.getAllFaculties().subscribe(
-        (result) => {
-          this.dialogRefLoad.close();
-          if (result["message"] == "success") {
-            if (result["result"] == "no-faculties") {
-              for (const branch of this.programs.data) {
-                this.faculties[branch.short] = new MatTableDataSource([]);
-              }
-            } else {
-              var i = 0;
-              for (const branch of this.programs.data) {
-                this.faculties[branch.short] = new MatTableDataSource(
-                  result["result"][branch.short]
-                );
-                this.faculties[branch.short].filterPredicate = (
-                  data: any,
-                  filter: string
-                ) =>
-                  !filter ||
-                  data.name.toLowerCase().includes(filter) ||
-                  data.stream.toLowerCase().includes(filter) ||
-                  data.email.toLowerCase().includes(filter);
-                this.hasAdmins[branch.short] =
-                  this.faculties[branch.short].data.filter((val) => {
-                    if (val.adminProgram && val.adminProgram == branch.short) {
-                      return true;
-                    }
-                    return false;
-                  }).length > 0
-                    ? true
-                    : false;
+        this.userService.getAllFaculties().subscribe(
+          (result) => {
+            this.dialogRefLoad.close();
+            if (result["message"] == "success") {
+              if (result["result"] == "no-faculties") {
+                for (const branch of this.programs.data) {
+                  this.faculties[branch.short] = new MatTableDataSource([]);
+                }
+              } else {
+                var i = 0;
+                for (const branch of this.programs.data) {
+                  this.faculties[branch.short] = new MatTableDataSource(
+                    result["result"][branch.short]
+                  );
+                  this.faculties[branch.short].filterPredicate = (
+                    data: any,
+                    filter: string
+                  ) =>
+                    !filter ||
+                    data.name.toLowerCase().includes(filter) ||
+                    data.stream.toLowerCase().includes(filter) ||
+                    data.email.toLowerCase().includes(filter);
+                  this.hasAdmins[branch.short] =
+                    this.faculties[branch.short].data.filter((val) => {
+                      if (
+                        val.adminProgram &&
+                        val.adminProgram == branch.short
+                      ) {
+                        return true;
+                      }
+                      return false;
+                    }).length > 0
+                      ? true
+                      : false;
+                }
               }
             }
+          },
+          () => {
+            this.dialogRefLoad.close();
+            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+              duration: 3000,
+            });
+            this.login.signOut();
           }
-        },
-        () => {
-          this.dialogRefLoad.close();
-          this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+        );
+      },
+      () => {
+        this.dialogRefLoad.close();
+        this.snackBar.open(
+          "Some error occured! Please re-authenticate if the error persists",
+          "Ok",
+          {
             duration: 3000,
-          });
-          this.login.signOut();
-        }
-      );
-    });
+          }
+        );
+      }
+    );
   }
 
   getAllProjects() {
