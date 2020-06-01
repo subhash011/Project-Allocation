@@ -460,7 +460,8 @@ export class AdminComponent implements OnInit, OnDestroy {
       }
     });
   }
-  removeStudent(id) {
+  removeStudent(student) {
+    const id = student._id;
     let dialogRef = this.dialog.open(DeletePopUpComponent, {
       height: "200px",
       width: "300px",
@@ -489,7 +490,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               });
               this.projects.data.forEach((project) => {
                 project.students_id = project.students_id.filter((val) => {
-                  return val._id != id;
+                  return val.roll_no != student.roll_no;
                 });
               });
               this.projects.data = [...this.projects.data];
