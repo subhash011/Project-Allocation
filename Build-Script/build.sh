@@ -18,6 +18,8 @@ pushd /opt/Project-Allocation/btp-frontend/
 npm i --save
 popd
 
+echo $str
+
 if [ "$str" == "yes" ]
 then
 	pushd /opt/Project-Allocation/btp-frontend/
