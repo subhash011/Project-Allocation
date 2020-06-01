@@ -430,7 +430,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               this.faculties.data = this.faculties.data.filter((val) => {
                 return val._id != id;
               });
-              this.projects.data = this.projects.data.filter((val) => {
+              this.dataSource.data = this.dataSource.data.filter((val) => {
                 return val.faculty_id != id;
               });
             } else {
