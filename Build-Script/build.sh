@@ -9,8 +9,6 @@ pushd /opt/Project-Allocation/
 echo '1234' | sudo -S git pull
 popd
 
-echo "$str"
-
 pushd /opt/Project-Allocation/backend/
 npm i --save
 popd
