@@ -315,7 +315,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     );
   }
   getTooltipInculsion(project) {
-    console.log("here");
     return project.isIncluded
       ? null
       : "This faculty has excluded the project. Contact the faculty if needed.";
@@ -435,7 +434,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               this.faculties.data = this.faculties.data.filter((val) => {
                 return val._id != id;
               });
-              this.projects.data = this.projects.data.filter((val) => {
+              this.dataSource.data = this.dataSource.data.filter((val) => {
                 return val.faculty_id != id;
               });
             } else {
@@ -488,12 +487,12 @@ export class AdminComponent implements OnInit, OnDestroy {
               this.students.data = this.students.data.filter((val) => {
                 return val._id != id;
               });
-              this.projects.data.forEach((project) => {
+              this.dataSource.data.forEach((project) => {
                 project.students_id = project.students_id.filter((val) => {
-                  return val.roll_no != student.roll_no;
+                  return val.roll_no != student.email.split("@")[0];
                 });
               });
-              this.projects.data = [...this.projects.data];
+              this.dataSource.data = [...this.dataSource.data];
             } else {
               this.loginService.signOut();
               this.snackBar.open(
