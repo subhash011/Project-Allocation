@@ -8,7 +8,7 @@ str=$1
 echo "$str"
 
 pushd /home/subhash011/Desktop/Project-Allocation/
-echo 'yHdE$2018' | sudo -S git pull
+echo '1234' | sudo -S git pull
 popd
 
 pushd /home/subhash011/Desktop/Project-Allocation/backend/
