@@ -151,7 +151,7 @@ export class ProjectsService {
     return this.http.post(this.url, student_data, httpOptions);
   }
 
-  savePreference(student_order, project_id) {
+  savePreference(student_order, project_id, stream) {
 
     student_order = student_order.map((per) => {
       return per._id;
@@ -160,6 +160,7 @@ export class ProjectsService {
     const student_data = {
       student: student_order,
       project_id: project_id,
+      stream: stream
     };
 
     let id = localStorage.getItem("id");

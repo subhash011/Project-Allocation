@@ -241,39 +241,55 @@ router.post("/save_preference/:id", (req, res) => {
 	const student_ids = req.body.student;
 	const project_id = req.body.project_id;
 	const idToken = req.headers.authorization;
+	const stream = req.body.stream;
 
 
-	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+	Admin.findOne({stream:stream})
 		.lean()
-		.select("_id")
-		.then((faculty) => {
-			if (faculty) {
-				Project.findByIdAndUpdate(project_id,{students_id:student_ids})
-				.then((project) => {
-					res.json({
-						status: "success",
-						msg: "Your preferences are saved",
+		.select("stage")
+		.then(admin=>{
+			if(admin.stage == 2){
+				Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+					.lean()
+					.select("_id")
+					.then((faculty) => {
+						if (faculty) {
+							Project.findByIdAndUpdate(project_id,{students_id:student_ids})
+							.then((project) => {
+								res.json({
+									status: "success",
+									msg: "Your preferences are saved",
+								});
+							})
+							.catch((err) => {
+								res.json({
+									status: "fail",
+									msg: "Project Not Found!!! Please Reload",
+								});
+							});					
+						} else {
+							res.json({
+								status: "fail",
+								msg: "Invalid Login",
+							});
+						}
+					})
+					.catch((err) => {
+						res.json({
+							status: "fail",
+							msg: "Authentication Error",
+						});
 					});
-				})
-				.catch((err) => {
-					res.json({
-						status: "fail",
-						msg: "Project Not Found!!! Please Reload",
-					});
-				});					
-			} else {
+			}
+			else{
 				res.json({
 					status: "fail",
-					msg: "Invalid Login",
+					msg: "You cannot edit preferences anymore.",
 				});
 			}
 		})
-		.catch((err) => {
-			res.json({
-				status: "fail",
-				msg: "Authentication Error",
-			});
-		});
+
+	
 });
 
 router.post("/update/:id", (req, res) => {
