@@ -125,7 +125,7 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
         left: "0",
       };
       this.styles = {
-        "margin-left.%": "35",
+        "margin-left.%": "0",
       };
       this.stream = this.program;
       this.userService.getAllAdminDetails().subscribe((result) => {

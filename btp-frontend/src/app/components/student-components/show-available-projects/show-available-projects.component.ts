@@ -262,28 +262,36 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     this.projectService
       .addOneStudentPreference(project)
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((result) => {
-        dialogRefLoad.close();
-        if (result["message"] == "invalid-token") {
-          this.loginObject.signOut();
-          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+      .subscribe(
+        (result) => {
+          dialogRefLoad.close();
+          if (result["message"] == "invalid-token") {
+            this.loginObject.signOut();
+            this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+              duration: 3000,
+            });
+          } else if (result["message"] == "success") {
+            this.projects.data = this.projects.data.filter((val) => {
+              return val._id != project._id;
+            });
+            this.preferences.data.push(project);
+            this.preferences.data = [...this.preferences.data];
+            this.deselectProject(project);
+          } else if (result["message"] == "stage-ended") {
+            this.snackBar.open(
+              "Stage has ended! You cannot edit preferences anymore",
+              "Ok",
+              { duration: 3000 }
+            );
+          }
+        },
+        () => {
+          dialogRefLoad.close();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
             duration: 3000,
           });
-        } else if (result["message"] == "success") {
-          this.projects.data = this.projects.data.filter((val) => {
-            return val._id != project._id;
-          });
-          this.preferences.data.push(project);
-          this.preferences.data = [...this.preferences.data];
-          this.deselectProject(project);
-        } else if (result["message"] == "stage-ended") {
-          this.snackBar.open(
-            "Stage has ended! You cannot edit preferences anymore",
-            "Ok",
-            { duration: 3000 }
-          );
         }
-      });
+      );
   }
 
   onSubmit(event) {
@@ -307,13 +315,13 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         (result) => {
           dialogRefLoad.close();
           const message = result["message"];
-          this.preferences.data = [...this.preferences.data, ...preference];
-          const preferenceId = preference.map((val) => val._id);
-          this.projects.data = this.projects.data.filter((val) => {
-            return preferenceId.indexOf(val._id) == -1;
-          });
           this.deselectAll();
           if (message == "success") {
+            this.preferences.data = [...this.preferences.data, ...preference];
+            const preferenceId = preference.map((val) => val._id);
+            this.projects.data = this.projects.data.filter((val) => {
+              return preferenceId.indexOf(val._id) == -1;
+            });
             this.snackBar.open("Added to preferences", "OK", {
               duration: 3000,
             });
@@ -323,7 +331,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
               duration: 3000,
               panelClass: ["success-snackbar"],
             });
-          } else if (result["message"] == "stage-ended") {
+          } else if (message == "stage-ended") {
             this.snackBar.open(
               "Stage has ended! You cannot edit preferences anymore",
               "Ok",
@@ -337,7 +345,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         },
         () => {
           dialogRefLoad.close();
-          this.ngOnInit();
           this.snackBar.open("Some Error Occured! Try again later.", "OK", {
             duration: 3000,
           });
