@@ -430,15 +430,11 @@ export class AdminComponent implements OnInit, OnDestroy {
               this.snackBar.open("Removed Faculty", "Ok", {
                 duration: 3000,
               });
-              this.ngOnInit();
-
-              this.students.data = this.students.data.filter((val) => {
+              this.faculties.data = this.faculties.data.filter((val) => {
                 return val._id != id;
-              });               
-              this.projects.data.forEach((project) => {
-                project.students_id = project.students_id.filter((val) => {
-                  return val._id != id;
-                });
+              });
+              this.projects.data = this.projects.data.filter((val) => {
+                return val.faculty_id != id;
               });
             } else {
               this.loginService.signOut();
@@ -487,7 +483,14 @@ export class AdminComponent implements OnInit, OnDestroy {
               this.snackBar.open("Removed Student", "Ok", {
                 duration: 3000,
               });
-              this.ngOnInit();
+              this.students.data = this.students.data.filter((val) => {
+                return val._id != id;
+              });
+              this.projects.data.forEach((project) => {
+                project.students_id = project.students_id.filter((val) => {
+                  return val._id != id;
+                });
+              });
             } else {
               this.loginService.signOut();
               this.snackBar.open(
