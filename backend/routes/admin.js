@@ -233,7 +233,7 @@ router.get("/project/:id", (req, res) => {
 								.lean()
 								.populate({
 									path: "faculty_id",
-									select: "name",
+									select: "_id name",
 									model: Faculty,
 								})
 								.populate({
@@ -262,6 +262,7 @@ router.get("/project/:id", (req, res) => {
 										const newProj = {
 											_id: project._id,
 											title: project.title,
+											faculty_id: project.faculty_id._id,
 											description: project.description,
 											stream: project.stream,
 											studentIntake: project.studentIntake,
@@ -1582,7 +1583,7 @@ router.get("/allocationStatus/:id", (req, res) => {
 							model: Project,
 							populate: {
 								path: "faculty_id",
-								select: { name: 1 },
+								select: { _id: 1, name: 1 },
 								model: Faculty,
 							},
 						},
@@ -1616,6 +1617,7 @@ router.get("/allocationStatus/:id", (req, res) => {
 								var newProj = {
 									_id: project._id,
 									title: project.title,
+									faculty_id: project.faculty_id._id,
 									description: project.description,
 									stream: project.stream,
 									duration: project.duration,
@@ -1756,7 +1758,7 @@ router.post("/updatePublish/:id", (req, res) => {
 																			model: Project,
 																			populate: {
 																				path: "faculty_id",
-																				select: { name: 1 },
+																				select: { _id: 1, name: 1 },
 																				model: Faculty,
 																			},
 																		},
@@ -1771,7 +1773,7 @@ router.post("/updatePublish/:id", (req, res) => {
 																		for (const project of projects) {
 																			const newProj = {
 																				_id: project._id,
-																				faculty_id: project.faculty_id,
+																				faculty_id: project.faculty_id._id,
 																				title: project.title,
 																				description: project.description,
 																				stream: project.stream,
