@@ -134,29 +134,28 @@ router.post("/preference/:id", (req, res) => {
 	var studentStream;
 	var studentID;
 	const idToken = req.headers.authorization;
-	oauth(idToken)
-		.then((user) => {
-			Student.findOneAndUpdate(
-				{ google_id: { id: id, idToken: idToken } },
-				{ projects_preference: project_idArr }
-			)
-				.then((student) => {
-					if (student) {
-						studentStream = student.stream;
-						studentID = student._id;
-						return student._id;
-					} else {
-						return null;
-					}
-				})
-				.then((student) => {
-					if (student) {
-						Admin.findOne({ stream: student.stream }).then((admin) => {
-							if (admin.stage >= 2) {
-								res.json({
-									message: "stage-ended",
-								});
+	Student.findOne({ google_id: { id: id, idToken: idToken } }).then((user) => {
+		if (user) {
+			Admin.findOne({ stream: user.stream }).then((admin) => {
+				if (admin.stage >= 2) {
+					res.json({
+						message: "stage-ended",
+					});
+				} else {
+					Student.findByIdAndUpdate(user._id, {
+						projects_preference: project_idArr,
+					})
+						.then((student) => {
+							if (student) {
+								studentStream = student.stream;
+								studentID = student._id;
+								return student._id;
 							} else {
+								return null;
+							}
+						})
+						.then((student) => {
+							if (student) {
 								Project.find({ stream: studentStream }).then((projects) => {
 									var promises = [];
 									for (const project of projects) {
@@ -222,19 +221,18 @@ router.post("/preference/:id", (req, res) => {
 											});
 									});
 								});
+							} else {
+								res.json({ message: "invalid-token" });
 							}
 						});
-					} else {
-						res.json({ message: "invalid-token" });
-					}
-				});
-		})
-		.catch(() => {
-			res.json({
-				message: "invalid-client",
-				result: null,
+				}
 			});
-		});
+		} else {
+			res.json({
+				message: "invalid-token",
+			});
+		}
+	});
 });
 
 router.post("/append/preference/:id", (req, res) => {
@@ -246,38 +244,45 @@ router.post("/append/preference/:id", (req, res) => {
 	var updateResult = {
 		$push: { projects_preference: { $each: project_idArr } },
 	};
-	Student.findOneAndUpdate(
-		{ google_id: { id: id, idToken: idToken } },
-		updateResult
-	).then((student) => {
-		if (student) {
-			Admin.findOne({ stream: student.stream }).then((admin) => {
+	Student.findOne({ google_id: { id: id, idToken: idToken } }).then((user) => {
+		if (user) {
+			Admin.findOne({ stream: user.stream }).then((admin) => {
 				if (admin.stage >= 2) {
 					res.json({
 						message: "stage-ended",
 					});
 				} else {
-					studentStream = student.stream;
-					var studentID = student._id;
-					var updateCondition = {
-						stream: studentStream,
-						_id: { $in: project_idArr },
-					};
-					updateResult = {
-						$push: { students_id: studentID },
-					};
-					Project.updateMany(updateCondition, updateResult).then((projects) => {
-						res.json({
-							message: "success",
-							result: projects,
-						});
+					Student.findByIdAndUpdate(user._id, updateResult).then((student) => {
+						if (student) {
+							studentStream = student.stream;
+							var studentID = student._id;
+							var updateCondition = {
+								stream: studentStream,
+								_id: { $in: project_idArr },
+							};
+							updateResult = {
+								$push: { students_id: studentID },
+							};
+							Project.updateMany(updateCondition, updateResult).then(
+								(projects) => {
+									res.json({
+										message: "success",
+										result: projects,
+									});
+								}
+							);
+						} else {
+							res.json({
+								message: "invalid-token",
+								result: null,
+							});
+						}
 					});
 				}
 			});
 		} else {
 			res.json({
 				message: "invalid-token",
-				result: null,
 			});
 		}
 	});
@@ -292,34 +297,39 @@ router.post("/remove/preference/:id", (req, res) => {
 	var updateResult = {
 		$pull: { projects_preference: projects },
 	};
-	Student.findOneAndUpdate(
-		{ google_id: { id: id, idToken: idToken } },
-		updateResult
-	).then((student) => {
-		if (student) {
-			Admin.findOne({ stream: student.stream }).then((admin) => {
+	Student.findOne({ google_id: { id: id, idToken: idToken } }).then((user) => {
+		if (user) {
+			Admin.findOne({ stream: user.stream }).then((admin) => {
 				if (admin.stage >= 2) {
 					res.json({
 						message: "stage-ended",
 					});
 				} else {
-					var studentID = student._id;
-					updateResult = {
-						$pull: { students_id: studentID },
-					};
-					Project.findByIdAndUpdate(
-						mongoose.Types.ObjectId(projects),
-						updateResult
-					).then((project) => {
-						res.json({
-							message: "success",
-							result: null,
-						});
+					Student.findByIdAndUpdate(user._id, updateResult).then((student) => {
+						if (student) {
+							var studentID = student._id;
+							updateResult = {
+								$pull: { students_id: studentID },
+							};
+							Project.findByIdAndUpdate(
+								mongoose.Types.ObjectId(projects),
+								updateResult
+							).then((project) => {
+								res.json({
+									message: "success",
+									result: null,
+								});
+							});
+						} else {
+							req.json({
+								message: "invalid-token",
+							});
+						}
 					});
 				}
 			});
 		} else {
-			req.json({
+			res.json({
 				message: "invalid-token",
 			});
 		}
@@ -335,34 +345,39 @@ router.post("/add/preference/:id", (req, res) => {
 	var updateResult = {
 		$push: { projects_preference: projects },
 	};
-	Student.findOneAndUpdate(
-		{ google_id: { id: id, idToken: idToken } },
-		updateResult
-	).then((student) => {
-		if (student) {
-			Admin.findOne({ stream: student.stream }).then((admin) => {
+	Student.findOne({ google_id: { id: id, idToken: idToken } }).then((user) => {
+		if (user) {
+			Admin.findOne({ stream: user.stream }).then((admin) => {
 				if (admin.stage >= 2) {
 					res.json({
 						message: "stage-ended",
 					});
 				} else {
-					var studentID = student._id;
-					updateResult = {
-						$push: { students_id: studentID },
-					};
-					Project.findByIdAndUpdate(
-						mongoose.Types.ObjectId(projects),
-						updateResult
-					).then((project) => {
-						res.json({
-							message: "success",
-							result: null,
-						});
+					Student.findByIdAndUpdate(user._id, updateResult).then((student) => {
+						if (student) {
+							var studentID = student._id;
+							updateResult = {
+								$push: { students_id: studentID },
+							};
+							Project.findByIdAndUpdate(
+								mongoose.Types.ObjectId(projects),
+								updateResult
+							).then((project) => {
+								res.json({
+									message: "success",
+									result: null,
+								});
+							});
+						} else {
+							req.json({
+								message: "invalid-token",
+							});
+						}
 					});
 				}
 			});
 		} else {
-			req.json({
+			res.json({
 				message: "invalid-token",
 			});
 		}
