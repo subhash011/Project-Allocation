@@ -266,7 +266,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.ngOnInit();
               this.snackBar.open("Some Error Occured! Try again later.", "OK", {
                 duration: 3000,
               });
@@ -280,7 +279,6 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       },
       () => {
-        this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
@@ -307,7 +305,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
@@ -315,7 +312,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     );
   }
   getTooltipInculsion(project) {
-    console.log("here");
     return project.isIncluded
       ? null
       : "This faculty has excluded the project. Contact the faculty if needed.";
@@ -394,7 +390,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.ngOnInit();
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
@@ -488,12 +483,12 @@ export class AdminComponent implements OnInit, OnDestroy {
               this.students.data = this.students.data.filter((val) => {
                 return val._id != id;
               });
-              this.projects.data.forEach((project) => {
+              this.dataSource.data.forEach((project) => {
                 project.students_id = project.students_id.filter((val) => {
-                  return val.roll_no != student.roll_no;
+                  return val.roll_no != student.email.split("@")[0];
                 });
               });
-              this.projects.data = [...this.projects.data];
+              this.dataSource.data = [...this.dataSource.data];
             } else {
               this.loginService.signOut();
               this.snackBar.open(
@@ -507,7 +502,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.ngOnInit();
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
@@ -724,7 +718,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRef.close();
-        this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
@@ -765,19 +758,13 @@ export class AdminComponent implements OnInit, OnDestroy {
                   .subscribe((data2) => {
                     dialogRefLoad.close();
                     if (data2["message"] == "success") {
-                      let snackBarRef = this.snackBar.open(
+                     this.snackBar.open(
                         "Mails have been sent",
                         "Ok",
                         {
                           duration: 3000,
                         }
                       );
-                      snackBarRef.afterDismissed().subscribe(() => {
-                        this.ngOnInit();
-                      });
-                      snackBarRef.onAction().subscribe(() => {
-                        this.ngOnInit();
-                      });
                     } else {
                       this.loginService.signOut();
                       this.snackBar.open(
@@ -795,7 +782,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.ngOnInit();
               this.snackBar.open("Some Error Occured! Try again later.", "OK", {
                 duration: 3000,
               });
@@ -814,20 +800,13 @@ export class AdminComponent implements OnInit, OnDestroy {
                   .subscribe((data) => {
                     dialogRefLoad.close();
                     if (data["message"] == "success") {
-                      let snackBarRef = this.snackBar.open(
+                      this.snackBar.open(
                         "Mails have been sent",
                         "Ok",
                         {
                           duration: 3000,
                         }
                       );
-
-                      snackBarRef.afterDismissed().subscribe(() => {
-                        this.ngOnInit();
-                      });
-                      snackBarRef.onAction().subscribe(() => {
-                        this.ngOnInit();
-                      });
                     } else {
                       this.loginService.signOut();
                       dialogRefLoad.close();
@@ -844,7 +823,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.ngOnInit();
               this.snackBar.open("Some Error Occured! Try again later.", "OK", {
                 duration: 3000,
               });
@@ -893,7 +871,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.ngOnInit();
               this.snackBar.open("Some Error Occured! Try again later.", "OK", {
                 duration: 3000,
               });
@@ -918,7 +895,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           (data) => {
             dialogRefLoad.close();
             if (data["status"] == "success") {
-              let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+              this.snackBar.open(data["msg"], "Ok", {
                 duration: 3000,
               });
               this.validateFields();
@@ -935,7 +912,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.ngOnInit();
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
@@ -943,7 +919,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         );
     } else {
       dialogRefLoad.close();
-      let snackBarRef = this.snackBar.open(
+      this.snackBar.open(
         "Please enter a valid number",
         "Ok",
         {
@@ -983,7 +959,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.ngOnInit();
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
@@ -1027,7 +1002,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.ngOnInit();
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
@@ -1105,7 +1079,6 @@ export class AdminComponent implements OnInit, OnDestroy {
                 this.minDate = new Date();
               },
               () => {
-                this.ngOnInit();
                 this.snackBar.open(
                   "Some Error Occured! Try again later.",
                   "OK",
@@ -1123,7 +1096,6 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       },
       () => {
-        this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
@@ -1217,7 +1189,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.ngOnInit();
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
@@ -1291,7 +1262,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.ngOnInit();
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
@@ -1314,7 +1284,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
@@ -1335,7 +1304,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
@@ -1356,7 +1324,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
@@ -1377,7 +1344,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
@@ -1429,7 +1395,6 @@ export class AdminComponent implements OnInit, OnDestroy {
               },
               () => {
                 dialogRefLoad.close();
-                this.ngOnInit();
                 this.snackBar.open(
                   "Some Error Occured! Try again later.",
                   "OK",
@@ -1499,7 +1464,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.ngOnInit();
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
@@ -1533,7 +1497,6 @@ export class AdminComponent implements OnInit, OnDestroy {
               () => {},
               () => {
                 dialogRefLoad.close();
-                this.ngOnInit();
                 this.snackBar.open(
                   "Some Error Occured! Try again later.",
                   "OK",
@@ -1568,7 +1531,6 @@ export class AdminComponent implements OnInit, OnDestroy {
               },
               () => {
                 dialogRefLoad.close();
-                this.ngOnInit();
                 this.snackBar.open(
                   "Some Error Occured! Try again later.",
                   "OK",
