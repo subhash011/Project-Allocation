@@ -182,7 +182,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Please wait ...",
       disableClose: true,
@@ -200,116 +199,119 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
     this.publishFaculty = localStorage.getItem("pf") == "true" ? true : false;
     this.publishStudents = localStorage.getItem("ps") == "true" ? true : false;
-    this.userService.getAdminInfo().subscribe((data) => {
-      if (data["status"] == "success") {
-        this.programName = data["stream"];
-        this.stage_no = data["stage"];
-        this.dateSet = data["deadlines"];
-        this.projectCap = data["projectCap"];
-        this.studentCap = data["studentCap"];
-        this.studentsPerFaculty = data["studentsPerFaculty"];
-        this.dateSet = this.dateSet.map((date) => {
-          return new Date(date);
-        });
-        this.startDate = data["startDate"];
-        this.ngAfterViewInit();
-        this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-        this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
-        this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
-        this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
-        this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
-        this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
-        this.seventhFormGroup.controls["seventhCtrl"].setValue(
-          this.studentsPerFaculty
-        );
-
-        this.userService
-          .getMembersForAdmin()
-          .subscribe((result) => {
-            dialogRefLoad.close();
-            if (result["message"] == "success") {
-              this.faculties.data = result["result"]["faculties"];
-              this.students.data = result["result"]["students"];
-              this.faculties.filterPredicate = (data: any, filter: string) =>
-                !filter ||
-                data.name.toLowerCase().includes(filter) ||
-                data.email.toLowerCase().includes(filter);
-              this.students.filterPredicate = (data: any, filter: string) =>
-                !filter ||
-                data.name.toLowerCase().includes(filter) ||
-                data.email.toLowerCase().includes(filter);
-              let flag = false;
-              for (const faculty of this.faculties.data) {
-                if (
-                  faculty.project_cap ||
-                  faculty.student_cap ||
-                  faculty.studentsPerFaculty
-                ) {
-                  this.proceedButton1_ = true;
-                  this.proceedButton2_ = true;
-                  this.proceedButton3_ = true;
-                  flag = true;
-                  break;
-                }
-              }
-
-              this.validateFields();
-            } else {
-              this.loginService.signOut();
-              this.snackBar.open(
-                "Session Timed Out! Please Sign-In again",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
-            }
-          },
-          () => {
-            dialogRefLoad.close()
-            this.ngOnInit();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-              duration: 3000,
-            });
-          }
+    this.userService.getAdminInfo().subscribe(
+      (data) => {
+        if (data["status"] == "success") {
+          this.programName = data["stream"];
+          this.stage_no = data["stage"];
+          this.dateSet = data["deadlines"];
+          this.projectCap = data["projectCap"];
+          this.studentCap = data["studentCap"];
+          this.studentsPerFaculty = data["studentsPerFaculty"];
+          this.dateSet = this.dateSet.map((date) => {
+            return new Date(date);
+          });
+          this.startDate = data["startDate"];
+          this.ngAfterViewInit();
+          this.curr_deadline = this.dateSet[this.dateSet.length - 1];
+          this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
+          this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
+          this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
+          this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
+          this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
+          this.seventhFormGroup.controls["seventhCtrl"].setValue(
+            this.studentsPerFaculty
           );
-      } else {
-        this.loginService.signOut();
-        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+
+          this.userService.getMembersForAdmin().subscribe(
+            (result) => {
+              dialogRefLoad.close();
+              if (result["message"] == "success") {
+                this.faculties.data = result["result"]["faculties"];
+                this.students.data = result["result"]["students"];
+                this.faculties.filterPredicate = (data: any, filter: string) =>
+                  !filter ||
+                  data.name.toLowerCase().includes(filter) ||
+                  data.email.toLowerCase().includes(filter);
+                this.students.filterPredicate = (data: any, filter: string) =>
+                  !filter ||
+                  data.name.toLowerCase().includes(filter) ||
+                  data.email.toLowerCase().includes(filter);
+                let flag = false;
+                for (const faculty of this.faculties.data) {
+                  if (
+                    faculty.project_cap ||
+                    faculty.student_cap ||
+                    faculty.studentsPerFaculty
+                  ) {
+                    this.proceedButton1_ = true;
+                    this.proceedButton2_ = true;
+                    this.proceedButton3_ = true;
+                    flag = true;
+                    break;
+                  }
+                }
+
+                this.validateFields();
+              } else {
+                this.loginService.signOut();
+                this.snackBar.open(
+                  "Session Timed Out! Please Sign-In again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
+              }
+            },
+            () => {
+              dialogRefLoad.close();
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
+            }
+          );
+        } else {
+          this.loginService.signOut();
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
+        }
+      },
+      () => {
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
       }
-    },() => {
-      this.ngOnInit();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-        duration: 3000,
-      });
-    }
     );
 
-    this.projectService.getAllStreamProjects().subscribe((projects) => {
-      if (projects["message"] == "success") {
-        this.projects = projects["result"];
-        this.dataSource = new MatTableDataSource(this.projects);
-        this.dataSource.filterPredicate = (data: any, filter: string) =>
-          !filter ||
-          data.faculty.toLowerCase().includes(filter) ||
-          data.title.toLowerCase().includes(filter) ||
-          data.description.toLowerCase().includes(filter);
-        this.selectIncluded();
-      } else {
-        this.loginService.signOut();
-        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+    this.projectService.getAllStreamProjects().subscribe(
+      (projects) => {
+        if (projects["message"] == "success") {
+          this.projects = projects["result"];
+          this.dataSource = new MatTableDataSource(this.projects);
+          this.dataSource.filterPredicate = (data: any, filter: string) =>
+            !filter ||
+            data.faculty.toLowerCase().includes(filter) ||
+            data.title.toLowerCase().includes(filter) ||
+            data.description.toLowerCase().includes(filter);
+          this.selectIncluded();
+        } else {
+          this.loginService.signOut();
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
+        }
+      },
+      () => {
+        dialogRefLoad.close();
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
       }
-    },() => {
-      dialogRefLoad.close()
-      this.ngOnInit();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-        duration: 3000,
-      });
-    }
     );
   }
   getTooltipInculsion(project) {
@@ -342,60 +344,61 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.proceedButton1 = true;
         this.proceedButton2 = true;
         this.proceedButton3 = true;
-        this.userService.updateStage(this.stage_no).subscribe((data) => {
-          if (data["status"] == "success") {
-            let snackBarRef = this.snackBar.open(
-              "Successfully moved to the next stage!",
-              "Ok",
-              {
-                duration: 10000,
-              }
-            );
+        this.userService.updateStage(this.stage_no).subscribe(
+          (data) => {
+            if (data["status"] == "success") {
+              let snackBarRef = this.snackBar.open(
+                "Successfully moved to the next stage!",
+                "Ok",
+                {
+                  duration: 10000,
+                }
+              );
 
-            snackBarRef.afterDismissed().subscribe(() => {
-              if (this.stage_no >= 3) {
-                this.snackBar.open(
-                  "Please go to the project tab to start the allocation",
-                  "Ok",
-                  {
-                    duration: 10000,
-                  }
-                );
-              }
-            });
-            if (this.stage_no >= 3) {
-              this.exportService.generateCSV_projects().subscribe((data) => {
-                dialogRefLoad.close();
-                if (data["message"] == "success") {
-                  this.exportService
-                    .generateCSV_students()
-                    .subscribe((data) => {
-                      if (data["message"] == "success") {
-                      }
-                    });
+              snackBarRef.afterDismissed().subscribe(() => {
+                if (this.stage_no >= 3) {
+                  this.snackBar.open(
+                    "Please go to the project tab to start the allocation",
+                    "Ok",
+                    {
+                      duration: 10000,
+                    }
+                  );
                 }
               });
-            }
-            dialogRefLoad.close();
-          } else {
-            dialogRefLoad.close();
-            this.loginService.signOut();
-            this.snackBar.open(
-              "Session Timed Out! Please Sign-In again",
-              "Ok",
-              {
-                duration: 3000,
+              if (this.stage_no >= 3) {
+                this.exportService.generateCSV_projects().subscribe((data) => {
+                  dialogRefLoad.close();
+                  if (data["message"] == "success") {
+                    this.exportService
+                      .generateCSV_students()
+                      .subscribe((data) => {
+                        if (data["message"] == "success") {
+                        }
+                      });
+                  }
+                });
               }
-            );
+              dialogRefLoad.close();
+            } else {
+              dialogRefLoad.close();
+              this.loginService.signOut();
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
+            });
           }
-        },
-        () => {
-          dialogRefLoad.close();
-          this.ngOnInit();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
-        }
         );
       }
     });
@@ -422,9 +425,8 @@ export class AdminComponent implements OnInit, OnDestroy {
           hasBackdrop: true,
         });
 
-        this.userService
-          .removeFacultyAdmin(id)
-          .subscribe((result) => {
+        this.userService.removeFacultyAdmin(id).subscribe(
+          (result) => {
             dialogRefLoad.close();
             if (result["message"] == "success") {
               this.snackBar.open("Removed Faculty", "Ok", {
@@ -454,7 +456,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               duration: 3000,
             });
           }
-          );
+        );
       }
     });
   }
@@ -475,9 +477,8 @@ export class AdminComponent implements OnInit, OnDestroy {
           hasBackdrop: true,
         });
 
-        this.userService
-          .removeStudentAdmin(id)
-          .subscribe((result) => {
+        this.userService.removeStudentAdmin(id).subscribe(
+          (result) => {
             dialogRefLoad.close();
             if (result["message"] == "success") {
               this.snackBar.open("Removed Student", "Ok", {
@@ -491,6 +492,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   return val._id != id;
                 });
               });
+              this.projects.data = [...this.projects.data];
             } else {
               this.loginService.signOut();
               this.snackBar.open(
@@ -509,7 +511,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               duration: 3000,
             });
           }
-          );
+        );
       }
     });
   }
@@ -575,35 +577,32 @@ export class AdminComponent implements OnInit, OnDestroy {
           });
 
           date = moment(new Date(date)).format();
-          this.userService.setDeadline(date).subscribe((data) => {
-            dialogRefLoad.close();
-            if (data["status"] == "success") {
-             this.snackBar.open(
-                "Deadline set successfully!!",
-                "Ok",
-                {
+          this.userService.setDeadline(date).subscribe(
+            (data) => {
+              dialogRefLoad.close();
+              if (data["status"] == "success") {
+                this.snackBar.open("Deadline set successfully!!", "Ok", {
                   duration: 3000,
-                }
-              );
+                });
+                this.ngOnInit();
+              } else {
+                this.loginService.signOut();
+                this.snackBar.open(
+                  "Session Timed Out! Please Sign-In again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
+              }
+            },
+            () => {
+              dialogRefLoad.close();
               this.ngOnInit();
-            } else {
-              this.loginService.signOut();
-              this.snackBar.open(
-                "Session Timed Out! Please Sign-In again",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
             }
-          },
-          () => {
-            dialogRefLoad.close();
-            this.ngOnInit();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-              duration: 3000,
-            });
-          }
           );
         }
       });
@@ -626,13 +625,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       hasBackdrop: true,
     });
     const length = this.students.data.filter((val) => val.isRegistered).length;
-    this.userService
-      .validateAllocation(selectedProjects, length)
-      .subscribe((data) => {
+    this.userService.validateAllocation(selectedProjects, length).subscribe(
+      (data) => {
         if (data["status"] == "success") {
-          this.projectService
-            .startAllocation(selectedProjects)
-            .subscribe((data) => {
+          this.projectService.startAllocation(selectedProjects).subscribe(
+            (data) => {
               dialogRef.close();
               if (data["message"] == "success") {
                 selectedProjects = selectedProjects.map((val) =>
@@ -712,7 +709,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                 duration: 3000,
               });
             }
-            );
+          );
         } else {
           dialogRef.close();
           this.snackBar.open(
@@ -730,8 +727,8 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
-      }   
-      );
+      }
+    );
   }
 
   sendEmails() {
@@ -754,149 +751,152 @@ export class AdminComponent implements OnInit, OnDestroy {
           hasBackdrop: true,
         });
         if (this.stage_no == 0 || this.stage_no == 2) {
-          this.userService.getFacultyStreamEmails().subscribe((data1) => {
-            if (data1["status"] == "success") {
-              this.mailer
-                .adminToFaculty(
-                  this.stage_no,
-                  data1["result"],
-                  this.curr_deadline,
-                  data1["streamFull"]
-                )
-                .subscribe((data2) => {
-                  dialogRefLoad.close();
-                  if (data2["message"] == "success") {
-                    let snackBarRef = this.snackBar.open(
-                      "Mails have been sent",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                  } else {
-                    this.loginService.signOut();
-                    this.snackBar.open(
-                      "Session Timed Out! Please Sign-In again",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                  }
-                });
-            } else {
+          this.userService.getFacultyStreamEmails().subscribe(
+            (data1) => {
+              if (data1["status"] == "success") {
+                this.mailer
+                  .adminToFaculty(
+                    this.stage_no,
+                    data1["result"],
+                    this.curr_deadline,
+                    data1["streamFull"]
+                  )
+                  .subscribe((data2) => {
+                    dialogRefLoad.close();
+                    if (data2["message"] == "success") {
+                      let snackBarRef = this.snackBar.open(
+                        "Mails have been sent",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+                      snackBarRef.afterDismissed().subscribe(() => {
+                        this.ngOnInit();
+                      });
+                      snackBarRef.onAction().subscribe(() => {
+                        this.ngOnInit();
+                      });
+                    } else {
+                      this.loginService.signOut();
+                      this.snackBar.open(
+                        "Session Timed Out! Please Sign-In again",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+                    }
+                  });
+              } else {
+                dialogRefLoad.close();
+              }
+            },
+            () => {
               dialogRefLoad.close();
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
             }
-          },
-          () => {
-            dialogRefLoad.close();
-            this.ngOnInit();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-              duration: 3000,
-            });
-          }
           );
         } else if (this.stage_no == 1) {
-          this.userService.getStudentStreamEmails().subscribe((data1) => {
-            if (data1["status"] == "success") {
-              this.mailer
-                .adminToStudents(
-                  data1["result"],
-                  this.curr_deadline,
-                  data1["streamFull"]
-                )
-                .subscribe((data) => {
-                  dialogRefLoad.close();
-                  if (data["message"] == "success") {
-                    let snackBarRef = this.snackBar.open(
-                      "Mails have been sent",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-
-                    snackBarRef.afterDismissed().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                    snackBarRef.onAction().subscribe(() => {
-                      this.ngOnInit();
-                    });
-                  } else {
-                    this.loginService.signOut();
+          this.userService.getStudentStreamEmails().subscribe(
+            (data1) => {
+              if (data1["status"] == "success") {
+                this.mailer
+                  .adminToStudents(
+                    data1["result"],
+                    this.curr_deadline,
+                    data1["streamFull"]
+                  )
+                  .subscribe((data) => {
                     dialogRefLoad.close();
-                    this.snackBar.open(
-                      "Session Timed Out! Please Sign-In again",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                  }
-                });
+                    if (data["message"] == "success") {
+                      let snackBarRef = this.snackBar.open(
+                        "Mails have been sent",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+
+                      snackBarRef.afterDismissed().subscribe(() => {
+                        this.ngOnInit();
+                      });
+                      snackBarRef.onAction().subscribe(() => {
+                        this.ngOnInit();
+                      });
+                    } else {
+                      this.loginService.signOut();
+                      dialogRefLoad.close();
+                      this.snackBar.open(
+                        "Session Timed Out! Please Sign-In again",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+                    }
+                  });
+              }
+            },
+            () => {
+              dialogRefLoad.close();
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
             }
-          },
-          () => {
-            dialogRefLoad.close();
-            this.ngOnInit();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-              duration: 3000,
-            });
-          }
           );
         } else {
-          this.userService.fetchAllMails().subscribe((result) => {
-            if (result["message"] == "success") {
-              this.mailer
-                .allocateMail(result["result"], result["streamFull"])
-                .subscribe((result) => {
-                  dialogRefLoad.close();
-                  if (result["message"] == "success") {
-                    this.loadingBar.stop();
-                    this.snackBar.open(
-                      "Mails have been sent successfully.",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
-                  } else {
+          this.userService.fetchAllMails().subscribe(
+            (result) => {
+              if (result["message"] == "success") {
+                this.mailer
+                  .allocateMail(result["result"], result["streamFull"])
+                  .subscribe((result) => {
                     dialogRefLoad.close();
-                    this.loadingBar.stop();
-                    this.snackBar.open(
-                      "Mails not sent! Please try again.",
-                      "Ok",
-                      {
-                        duration: 3000,
-                      }
-                    );
+                    if (result["message"] == "success") {
+                      this.loadingBar.stop();
+                      this.snackBar.open(
+                        "Mails have been sent successfully.",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+                    } else {
+                      dialogRefLoad.close();
+                      this.loadingBar.stop();
+                      this.snackBar.open(
+                        "Mails not sent! Please try again.",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+                    }
+                  });
+              } else {
+                dialogRefLoad.close();
+                this.loadingBar.stop();
+                this.snackBar.open(
+                  "Unable to fetch mails! If the error persists re-authenticate.",
+                  "Ok",
+                  {
+                    duration: 10000,
                   }
-                });
-            } else {
+                );
+              }
+            },
+            () => {
               dialogRefLoad.close();
-              this.loadingBar.stop();
-              this.snackBar.open(
-                "Unable to fetch mails! If the error persists re-authenticate.",
-                "Ok",
-                {
-                  duration: 10000,
-                }
-              );
+              this.ngOnInit();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
             }
-          },
-          () => {
-            dialogRefLoad.close();
-            this.ngOnInit();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-              duration: 3000,
-            });
-          }
           );
         }
       }
@@ -913,30 +913,33 @@ export class AdminComponent implements OnInit, OnDestroy {
 
       this.userService
         .setProjectCap(this.fifthFormGroup.get("fifthCtrl").value)
-        .subscribe((data) => {
-          dialogRefLoad.close();
-          if (data["status"] == "success") {
-            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+        .subscribe(
+          (data) => {
+            dialogRefLoad.close();
+            if (data["status"] == "success") {
+              let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+                duration: 3000,
+              });
+              this.validateFields();
+            } else {
+              this.loginService.signOut();
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
-            this.validateFields();
-          } else {
-            this.loginService.signOut();
-            this.snackBar.open(
-              "Session Timed Out! Please Sign-In again",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
           }
-        },() => {
-          dialogRefLoad.close();
-          this.ngOnInit();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
-        });
+        );
     } else {
       dialogRefLoad.close();
       let snackBarRef = this.snackBar.open(
@@ -958,39 +961,38 @@ export class AdminComponent implements OnInit, OnDestroy {
       });
       this.userService
         .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
-        .subscribe((data) => {
-          dialogRefLoad.close();
-          if (data["status"] == "success") {
-            this.snackBar.open(data["msg"], "Ok", {
+        .subscribe(
+          (data) => {
+            dialogRefLoad.close();
+            if (data["status"] == "success") {
+              this.snackBar.open(data["msg"], "Ok", {
+                duration: 3000,
+              });
+              this.validateFields();
+            } else {
+              this.loginService.signOut();
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
-            this.validateFields();
-          } else {
-            this.loginService.signOut();
-            this.snackBar.open(
-              "Session Timed Out! Please Sign-In again",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
           }
-        },() => {
-          dialogRefLoad.close();
-          this.ngOnInit();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
-        });
+        );
     } else {
       dialogRefLoad.close();
-      this.snackBar.open(
-        "Please enter a valid number",
-        "Ok",
-        {
-          duration: 3000,
-        }
-      );
+      this.snackBar.open("Please enter a valid number", "Ok", {
+        duration: 3000,
+      });
     }
   }
 
@@ -1003,30 +1005,33 @@ export class AdminComponent implements OnInit, OnDestroy {
       });
       this.userService
         .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
-        .subscribe((data) => {
-          dialogRefLoad.close();
-          if (data["status"] == "success") {
-            this.snackBar.open(data["msg"], "Ok", {
+        .subscribe(
+          (data) => {
+            dialogRefLoad.close();
+            if (data["status"] == "success") {
+              this.snackBar.open(data["msg"], "Ok", {
+                duration: 3000,
+              });
+              this.validateFields();
+            } else {
+              this.loginService.signOut();
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+            }
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
-            this.validateFields();
-          } else {
-            this.loginService.signOut();
-            this.snackBar.open(
-              "Session Timed Out! Please Sign-In again",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
           }
-        },() => {
-          dialogRefLoad.close();
-          this.ngOnInit();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
-        });
+        );
     } else {
       dialogRefLoad.close();
       this.snackBar.open("Please enter a valid number", "Ok", {
@@ -1036,9 +1041,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   validateFields() {
-    this.userService
-      .getMembersForAdmin()
-      .subscribe((result) => {
+    this.userService.getMembersForAdmin().subscribe(
+      (result) => {
         if (result["message"] == "success") {
           this.faculties.data = result["result"]["faculties"];
           this.students.data = result["result"]["students"];
@@ -1062,59 +1066,68 @@ export class AdminComponent implements OnInit, OnDestroy {
 
           this.userService
             .validateAllocation(this.selection.selected, length)
-            .subscribe((data) => {
-              if (data["status"] == "success") {
-                this.allocationButton = false;
-                this.allocationMail = false;
+            .subscribe(
+              (data) => {
+                if (data["status"] == "success") {
+                  this.allocationButton = false;
+                  this.allocationMail = false;
 
-                if (this.dateSet.length == 1) {
-                  if (this.firstFormGroup.controls["firstCtrl"]) {
-                    this.proceedButton1 = false;
-                    if (!flag) this.proceedButton1_ = false;
+                  if (this.dateSet.length == 1) {
+                    if (this.firstFormGroup.controls["firstCtrl"]) {
+                      this.proceedButton1 = false;
+                      if (!flag) this.proceedButton1_ = false;
+                    }
+                  }
+                } else {
+                  this.allocationButton = true;
+                  this.allocationMail = true;
+
+                  if (this.dateSet.length == 1) {
+                    if (this.firstFormGroup.controls["firstCtrl"]) {
+                      this.proceedButton1 = false;
+                      this.proceedButton1_ = true;
+                    }
                   }
                 }
-              } else {
-                this.allocationButton = true;
-                this.allocationMail = true;
 
-                if (this.dateSet.length == 1) {
-                  if (this.firstFormGroup.controls["firstCtrl"]) {
-                    this.proceedButton1 = false;
-                    this.proceedButton1_ = true;
+                if (this.dateSet.length == 2) {
+                  if (this.secondFormGroup.controls["secondCtrl"]) {
+                    this.proceedButton2 = false;
+                    if (!flag) this.proceedButton2_ = false;
                   }
                 }
-              }
-
-              if (this.dateSet.length == 2) {
-                if (this.secondFormGroup.controls["secondCtrl"]) {
-                  this.proceedButton2 = false;
-                  if (!flag) this.proceedButton2_ = false;
+                if (this.dateSet.length == 3) {
+                  if (this.thirdFormGroup.controls["thirdCtrl"])
+                    this.proceedButton3 = false;
+                  if (!flag) this.proceedButton3_ = false;
                 }
+                this.minDate = new Date();
+              },
+              () => {
+                this.ngOnInit();
+                this.snackBar.open(
+                  "Some Error Occured! Try again later.",
+                  "OK",
+                  {
+                    duration: 3000,
+                  }
+                );
               }
-              if (this.dateSet.length == 3) {
-                if (this.thirdFormGroup.controls["thirdCtrl"])
-                  this.proceedButton3 = false;
-                if (!flag) this.proceedButton3_ = false;
-              }
-              this.minDate = new Date();
-            },() => {
-              this.ngOnInit();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-                duration: 3000,
-              });
-            });
+            );
         } else {
           this.loginService.signOut();
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
           });
         }
-      },() => {
+      },
+      () => {
         this.ngOnInit();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
-      });
+      }
+    );
   }
 
   isAllSelected() {
@@ -1176,36 +1189,39 @@ export class AdminComponent implements OnInit, OnDestroy {
           disableClose: true,
           hasBackdrop: true,
         });
-        this.userService.revertStage(currStage).subscribe((data) => {
-          localStorage.setItem("pf", "false");
-          localStorage.setItem("ps", "false");
-          dialogRefLoad.close();
-          if ((data["status"] = "success")) {
-            this.snackBar.open(data["msg"], "Ok", {
-              duration: 3000,
-            });
-            this.proceedButton1_ = true;
-            this.proceedButton2_ = true;
-            this.proceedButton3_ = true;
+        this.userService.revertStage(currStage).subscribe(
+          (data) => {
+            localStorage.setItem("pf", "false");
+            localStorage.setItem("ps", "false");
+            dialogRefLoad.close();
+            if ((data["status"] = "success")) {
+              this.snackBar.open(data["msg"], "Ok", {
+                duration: 3000,
+              });
+              this.proceedButton1_ = true;
+              this.proceedButton2_ = true;
+              this.proceedButton3_ = true;
 
-            this.proceedButton1 = true;
-            this.proceedButton2 = true;
-            this.proceedButton3 = true;
+              this.proceedButton1 = true;
+              this.proceedButton2 = true;
+              this.proceedButton3 = true;
 
-            this.stepper.previous();
+              this.stepper.previous();
+              this.ngOnInit();
+            } else {
+              this.snackBar.open("Could Not Revert, Please try again.", "Ok", {
+                duration: 3000,
+              });
+            }
+          },
+          () => {
+            dialogRefLoad.close();
             this.ngOnInit();
-          } else {
-            this.snackBar.open("Could Not Revert, Please try again.", "Ok", {
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
           }
-        },() => {
-          dialogRefLoad.close();
-          this.ngOnInit();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
-        });
+        );
       }
     });
   }
@@ -1247,32 +1263,39 @@ export class AdminComponent implements OnInit, OnDestroy {
           hasBackdrop: true,
         });
         this.loadingBar.start();
-        this.userService.resetUsers().subscribe((result) => {
-          dialogRefLoad.close();
-          this.loadingBar.stop();
-          if (result["message"] == "success") {
-            this.snackBar.open(
-              "The alllocation process has been reinitialised",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
-            this.stepper.reset();
+        this.userService.resetUsers().subscribe(
+          (result) => {
+            dialogRefLoad.close();
+            this.loadingBar.stop();
+            if (result["message"] == "success") {
+              this.snackBar.open(
+                "The alllocation process has been reinitialised",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+              this.stepper.reset();
+              this.ngOnInit();
+            } else if (result["message"] == "invalid-token") {
+              this.snackBar.open(
+                "Session Expired! Please Sign-In Again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+              this.loginService.signOut();
+            }
+          },
+          () => {
+            dialogRefLoad.close();
             this.ngOnInit();
-          } else if (result["message"] == "invalid-token") {
-            this.snackBar.open("Session Expired! Please Sign-In Again", "Ok", {
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
-            this.loginService.signOut();
           }
-        },() => {
-          dialogRefLoad.close();
-          this.ngOnInit();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
-        });
+        );
       }
     });
   }
@@ -1283,16 +1306,19 @@ export class AdminComponent implements OnInit, OnDestroy {
       disableClose: true,
       hasBackdrop: true,
     });
-    this.exportService.download("project").subscribe((data) => {
-      dialogRefLoad.close();
-      saveAs(data, `${this.programName}_faculty.csv`);
-    },() => {
-      dialogRefLoad.close();
-      this.ngOnInit();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-        duration: 3000,
-      });
-    });
+    this.exportService.download("project").subscribe(
+      (data) => {
+        dialogRefLoad.close();
+        saveAs(data, `${this.programName}_faculty.csv`);
+      },
+      () => {
+        dialogRefLoad.close();
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
+        });
+      }
+    );
   }
 
   downloadFile_student() {
@@ -1301,16 +1327,19 @@ export class AdminComponent implements OnInit, OnDestroy {
       disableClose: true,
       hasBackdrop: true,
     });
-    this.exportService.download("student").subscribe((data) => {
-      dialogRefLoad.close();
-      saveAs(data, `${this.programName}_students.csv`);
-    },() => {
-      dialogRefLoad.close();
-      this.ngOnInit();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-        duration: 3000,
-      });
-    });
+    this.exportService.download("student").subscribe(
+      (data) => {
+        dialogRefLoad.close();
+        saveAs(data, `${this.programName}_students.csv`);
+      },
+      () => {
+        dialogRefLoad.close();
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
+        });
+      }
+    );
   }
 
   downloadFile_format() {
@@ -1319,16 +1348,19 @@ export class AdminComponent implements OnInit, OnDestroy {
       disableClose: true,
       hasBackdrop: true,
     });
-    this.exportService.download("format").subscribe((data) => {
-      dialogRefLoad.close();
-      saveAs(data, `${this.programName}_format.csv`);
-    },() => {
-      dialogRefLoad.close();
-      this.ngOnInit();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-        duration: 3000,
-      });
-    });
+    this.exportService.download("format").subscribe(
+      (data) => {
+        dialogRefLoad.close();
+        saveAs(data, `${this.programName}_format.csv`);
+      },
+      () => {
+        dialogRefLoad.close();
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
+        });
+      }
+    );
   }
 
   downloadFile_allocation() {
@@ -1337,16 +1369,19 @@ export class AdminComponent implements OnInit, OnDestroy {
       disableClose: true,
       hasBackdrop: true,
     });
-    this.exportService.download("allocation").subscribe((data) => {
-      dialogRefLoad.close();
-      saveAs(data, `${this.programName}_allocation.csv`);
-    },() => {
-      dialogRefLoad.close();
-      this.ngOnInit();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-        duration: 3000,
-      });
-    });
+    this.exportService.download("allocation").subscribe(
+      (data) => {
+        dialogRefLoad.close();
+        saveAs(data, `${this.programName}_allocation.csv`);
+      },
+      () => {
+        dialogRefLoad.close();
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
+        });
+      }
+    );
   }
 
   handleFileInput(files: FileList) {
@@ -1369,33 +1404,40 @@ export class AdminComponent implements OnInit, OnDestroy {
           });
           this.exportService
             .uploadStudentList(this.fileToUpload, this.programName)
-            .subscribe((data) => {
-              dialogRefLoad.close();
-              if (data["status"] == "success") {
-                this.snackBar.open("Successfully uploaded the files.", "Ok", {
-                  duration: 10000,
-                });
-                this.ngOnInit();
-              } else if (data["status"] == "fail_parse") {
-                this.snackBar.open(data["msg"], "Ok", {
-                  duration: 10000,
-                });
-              } else {
-                this.snackBar.open(
-                  "There was an unexpected error. Please reload and try again!",
-                  "Ok",
-                  {
+            .subscribe(
+              (data) => {
+                dialogRefLoad.close();
+                if (data["status"] == "success") {
+                  this.snackBar.open("Successfully uploaded the files.", "Ok", {
                     duration: 10000,
+                  });
+                  this.ngOnInit();
+                } else if (data["status"] == "fail_parse") {
+                  this.snackBar.open(data["msg"], "Ok", {
+                    duration: 10000,
+                  });
+                } else {
+                  this.snackBar.open(
+                    "There was an unexpected error. Please reload and try again!",
+                    "Ok",
+                    {
+                      duration: 10000,
+                    }
+                  );
+                }
+              },
+              () => {
+                dialogRefLoad.close();
+                this.ngOnInit();
+                this.snackBar.open(
+                  "Some Error Occured! Try again later.",
+                  "OK",
+                  {
+                    duration: 3000,
                   }
                 );
               }
-            },() => {
-              dialogRefLoad.close();
-              this.ngOnInit();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-                duration: 3000,
-              });
-            });
+            );
         }
       });
     } else {
@@ -1425,36 +1467,43 @@ export class AdminComponent implements OnInit, OnDestroy {
           disableClose: true,
           hasBackdrop: true,
         });
-        this.userService.updatePublish("faculty").subscribe((data) => {
-          if (data["status"] == "success") {
-            this.dataSource = new MatTableDataSource(data["result"]);
-            this.userService.uploadAllocationFile().subscribe(() => {});
-            this.publishFaculty = true;
-            localStorage.setItem("pf", "true");
-            this.userService.getFacultyStreamEmails().subscribe((data1) => {
-              if (data1["status"] == "success") {
-                this.mailer
-                  .publishMail("faculty", data1["result"], data1["streamFull"])
-                  .subscribe((data) => {
-                    dialogRefLoad.close();
-                    this.snackBar.open(
-                      "Successfully published to faculties and mails have been sent.",
-                      "Ok",
-                      {
-                        duration: 10000,
-                      }
-                    );
-                  });
-              }
+        this.userService.updatePublish("faculty").subscribe(
+          (data) => {
+            if (data["status"] == "success") {
+              this.dataSource = new MatTableDataSource(data["result"]);
+              this.userService.uploadAllocationFile().subscribe(() => {});
+              this.publishFaculty = true;
+              localStorage.setItem("pf", "true");
+              this.userService.getFacultyStreamEmails().subscribe((data1) => {
+                if (data1["status"] == "success") {
+                  this.mailer
+                    .publishMail(
+                      "faculty",
+                      data1["result"],
+                      data1["streamFull"]
+                    )
+                    .subscribe((data) => {
+                      dialogRefLoad.close();
+                      this.snackBar.open(
+                        "Successfully published to faculties and mails have been sent.",
+                        "Ok",
+                        {
+                          duration: 10000,
+                        }
+                      );
+                    });
+                }
+              });
+            }
+          },
+          () => {
+            dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              duration: 3000,
             });
           }
-        },() => {
-          dialogRefLoad.close();
-          this.ngOnInit();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
-        });
+        );
       }
     });
   }
@@ -1479,37 +1528,55 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.userService.updatePublish("student").subscribe((data) => {
           if (data["status"] == "success") {
             this.dataSource = new MatTableDataSource(data["result"]);
-            this.userService.uploadAllocationFile().subscribe(() => {},() => {
-              dialogRefLoad.close();
-              this.ngOnInit();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-                duration: 3000,
-              });
-            });
+            this.userService.uploadAllocationFile().subscribe(
+              () => {},
+              () => {
+                dialogRefLoad.close();
+                this.ngOnInit();
+                this.snackBar.open(
+                  "Some Error Occured! Try again later.",
+                  "OK",
+                  {
+                    duration: 3000,
+                  }
+                );
+              }
+            );
             this.publishStudents = true;
             localStorage.setItem("ps", "true");
-            this.userService.getStudentStreamEmails().subscribe((data1) => {
-              if (data1["status"] == "success") {
-                this.mailer
-                  .publishMail("student", data1["result"], data1["streamFull"])
-                  .subscribe((data) => {
-                    dialogRefLoad.close();
-                    this.snackBar.open(
-                      "Successfully published to students and mails have been sent.",
-                      "Ok",
-                      {
-                        duration: 10000,
-                      }
-                    );
-                  });
+            this.userService.getStudentStreamEmails().subscribe(
+              (data1) => {
+                if (data1["status"] == "success") {
+                  this.mailer
+                    .publishMail(
+                      "student",
+                      data1["result"],
+                      data1["streamFull"]
+                    )
+                    .subscribe((data) => {
+                      dialogRefLoad.close();
+                      this.snackBar.open(
+                        "Successfully published to students and mails have been sent.",
+                        "Ok",
+                        {
+                          duration: 10000,
+                        }
+                      );
+                    });
+                }
+              },
+              () => {
+                dialogRefLoad.close();
+                this.ngOnInit();
+                this.snackBar.open(
+                  "Some Error Occured! Try again later.",
+                  "OK",
+                  {
+                    duration: 3000,
+                  }
+                );
               }
-            },() => {
-              dialogRefLoad.close();
-              this.ngOnInit();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-                duration: 3000,
-              });
-            });
+            );
           }
         });
       }
