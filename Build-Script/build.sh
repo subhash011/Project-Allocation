@@ -10,13 +10,13 @@ echo '1234' | sudo -S git pull
 popd
 
 
-# pushd /opt/Project-Allocation/backend/
-# npm i --save
-# popd
+pushd /opt/Project-Allocation/backend/
+npm i --save
+popd
 
-# pushd /opt/Project-Allocation/btp-frontend/
-# npm i --save
-# popd
+pushd /opt/Project-Allocation/btp-frontend/
+npm i --save
+popd
 
 # if [ "$str" == "yes" ]
 # then
@@ -26,6 +26,6 @@ popd
 # fi
 
 
-# pushd /opt/Project-Allocation
-# pm2 restart all
-# popd
+pushd /opt/Project-Allocation
+pm2 restart all
+popd
