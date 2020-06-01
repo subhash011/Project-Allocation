@@ -5,11 +5,11 @@
 
 str=$1
 
-echo "$str"
-# pushd /opt/Project-Allocation/
-# echo '1234' | sudo -S git pull
-# popd
+pushd /opt/Project-Allocation/
+echo '1234' | sudo -S git pull
+popd
 
+echo "$str"
 
 # pushd /opt/Project-Allocation/backend/
 # npm i --save
