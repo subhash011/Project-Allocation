@@ -431,6 +431,15 @@ export class AdminComponent implements OnInit, OnDestroy {
                 duration: 3000,
               });
               this.ngOnInit();
+
+              this.students.data = this.students.data.filter((val) => {
+                return val._id != id;
+              });               
+              this.projects.data.forEach((project) => {
+                project.students_id = project.students_id.filter((val) => {
+                  return val._id != id;
+                });
+              });
             } else {
               this.loginService.signOut();
               this.snackBar.open(
