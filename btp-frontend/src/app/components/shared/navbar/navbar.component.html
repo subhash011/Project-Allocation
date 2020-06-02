@@ -5,7 +5,9 @@
         <span class="navhead">IIT Palakkad</span>
       </button>
     </div>
-    <div *ngIf="isFaculty() && checkRegister()">
+    <div
+      *ngIf="((role | isFaculty) || (role | isAdmin)) && ('' | checkRegister)"
+    >
       <div class="flex-grow-left"></div>
       <button mat-button (click)="goToHome()" class="nav-text">
         Home
@@ -30,21 +32,13 @@
         </button>
       </mat-menu>
     </div>
-
-    <!-- </div> -->
-    <div *ngIf="isFaculty() && !isFaculty()">
-      <div class="flex-grow-left"></div>
-      <button mat-button [routerLink]="getAddProjects()" class="nav-text">
-        Add Projects
-      </button>
-    </div>
-    <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin() && checkRegister()">
+    <div *ngIf="role | isStudent">
       <div class="flex-grow-left"></div>
       <button mat-button [routerLink]="getUrlProjects()" class="nav-text">
         Add Preferences
       </button>
     </div>
-    <div *ngIf="isUser() && !isFaculty() && !isSuperAdmin() && checkRegister()">
+    <div *ngIf="role | isStudent">
       <div class="flex-grow-left"></div>
       <button mat-button class="nav-text" [routerLink]="getUrlPreferences()">
         Reorder Preferences
@@ -53,7 +47,7 @@
     <div class="flex-space"></div>
     <div class="flex-grow-right"></div>
     <div>
-      <div *ngIf="isUser() && !isSuperAdmin() && checkRegister()">
+      <div *ngIf="(role | isUser) && ('' | checkRegister)">
         <div class="flex-grow-right"></div>
         <button mat-button routerLink="/help">
           <span class="nav-text">Help</span>
@@ -66,12 +60,12 @@
           <button mat-menu-item [routerLink]="getProfile()">
             Profile
           </button>
-          <button mat-menu-item (click)="getAdmin()" *ngIf="isAdmin()">
+          <button mat-menu-item (click)="getAdmin()" *ngIf="role | isAdmin">
             Co-ordinator
           </button>
         </mat-menu>
       </div>
-      <div *ngIf="isSuperAdmin()">
+      <div *ngIf="role | isSuper">
         <button mat-button routerLink="/help">
           Help
         </button>
@@ -80,10 +74,18 @@
     <div class="flex-grow-right"></div>
     <app-theme-picker class="primary-toolbar"></app-theme-picker>
     <div class="flex-grow-right primary-toolbar"></div>
-    <app-login class="primary-toolbar"></app-login>
+    <app-login
+      (isSignedIn)="changeRole()"
+      (isSignedOut)="role = 'none'"
+      class="primary-toolbar"
+    ></app-login>
   </mat-toolbar-row>
   <mat-toolbar-row class="mobile">
-    <app-login class="login-mobile"></app-login>
+    <app-login
+      (isSignedIn)="changeRole()"
+      (isSignedOut)="role = 'none'"
+      class="login-mobile"
+    ></app-login>
     <app-theme-picker class="theme-mobile"></app-theme-picker>
   </mat-toolbar-row>
 </mat-toolbar>

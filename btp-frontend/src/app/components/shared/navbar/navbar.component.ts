@@ -2,7 +2,37 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoginComponent } from "./../login/login.component";
 import { UserService } from "../../../services/user/user.service";
 import { Router } from "@angular/router";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
+
+@Pipe({
+  name: "checkRegister",
+})
+export class CheckRegister implements PipeTransform {
+  transform(value) {
+    const role = localStorage.getItem("role");
+    console.log(role);
+    return (
+      role == "faculty" ||
+      role == "admin" ||
+      role == "student" ||
+      role == "super_admin"
+    );
+  }
+}
+
+@Pipe({
+  name: "isUser",
+})
+export class IsUser implements PipeTransform {
+  transform(value) {
+    if (localStorage.getItem("isLogged") == "true") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
@@ -159,5 +189,9 @@ export class NavbarComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  changeRole() {
+    this.role = localStorage.getItem("role");
   }
 }

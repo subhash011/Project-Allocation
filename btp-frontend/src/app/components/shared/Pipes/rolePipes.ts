@@ -5,7 +5,6 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class FacultyCheck implements PipeTransform {
   transform(value) {
-    console.log("here");
     return value == "faculty";
   }
 }

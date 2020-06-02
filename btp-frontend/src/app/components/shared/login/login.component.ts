@@ -2,7 +2,14 @@ import { UserService } from "./../../../services/user/user.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpClient } from "@angular/common/http";
 import { LocalAuthService } from "../../../services/local-auth/local-auth.service";
-import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Pipe,
+  PipeTransform,
+  Output,
+  EventEmitter,
+} from "@angular/core";
 import { AuthService } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
 import { Router } from "@angular/router";
@@ -15,6 +22,8 @@ import { LoaderComponent } from "../loader/loader.component";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
+  @Output() isSignedIn = new EventEmitter<any>();
+  @Output() isSignedOut = new EventEmitter<any>();
   dialogRefLoad: any;
   isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
   constructor(
@@ -68,14 +77,13 @@ export class LoginComponent implements OnInit {
         localStorage.setItem("user", JSON.stringify(userModified));
         localStorage.setItem("isLoggedIn", "true");
         this.isLoggedIn = true;
-        this.localAuth
-          .checkUser(user)
-          .toPromise()
-          .then((data) => {
+        this.localAuth.checkUser(user).subscribe(
+          (data) => {
             this.dialogRefLoad.close();
             const navObj = this.localAuth.validate(data);
             localStorage.setItem("id", data["user_details"]["id"]);
             localStorage.setItem("role", data["position"]);
+            this.isSignedIn.emit(data["position"]);
             const route = navObj.route.split("/");
             if (route[1] == "register") {
               localStorage.setItem("isRegistered", "false");
@@ -86,7 +94,7 @@ export class LoginComponent implements OnInit {
             if (navObj.error === "none") {
               this.router.navigate([navObj.route]);
             } else {
-              this.authService.signOut().then(() => {});
+              this.signOut();
               this.snackBar.open(navObj.error, "Ok", {
                 duration: 10000,
               });
@@ -98,7 +106,7 @@ export class LoginComponent implements OnInit {
               this.router.navigate([""]);
             }
             if (data["position"] == "error") {
-              this.authService.signOut().then(() => {});
+              this.signOut();
               this.snackBar.open(
                 "Use the institute mail-id to access the portal",
                 "Ok",
@@ -113,8 +121,8 @@ export class LoginComponent implements OnInit {
               localStorage.removeItem("id");
               this.router.navigate([""]);
             }
-          })
-          .catch(() => {
+          },
+          () => {
             this.dialogRefLoad.close();
             this.snackBar.open(
               "Some error occured. Check your network connection and try again!",
@@ -123,7 +131,8 @@ export class LoginComponent implements OnInit {
                 duration: 3000,
               }
             );
-          });
+          }
+        );
       })
       .catch((err) => {
         if (err == "User cancelled login or did not fully authorize.") {
@@ -148,6 +157,7 @@ export class LoginComponent implements OnInit {
         duration: 3000,
       });
     });
+    this.isSignedOut.emit();
     localStorage.setItem("isLoggedIn", "false");
     this.isLoggedIn = false;
     localStorage.setItem("role", "none");

@@ -11,7 +11,11 @@ import { SocialLoginModule, LoginOpt } from "angularx-social-login";
 import { AuthServiceConfig, GoogleLoginProvider } from "angularx-social-login";
 import { LoginComponent } from "./components/shared/login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { NavbarComponent } from "./components/shared/navbar/navbar.component";
+import {
+  NavbarComponent,
+  CheckRegister,
+  IsUser,
+} from "./components/shared/navbar/navbar.component";
 import { RegisterComponent } from "./components/shared/register/register.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { StudentComponent } from "./components/student-components/student/student.component";
@@ -119,6 +123,8 @@ export function provideConfig() {
     SuperAdminCheck,
     FacultyTooltipSuper,
     UserPhoto,
+    CheckRegister,
+    IsUser,
   ],
   entryComponents: [
     SubmitPopUpComponent,
