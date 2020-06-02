@@ -1,30 +1,36 @@
 #! /bin/bash
 
-# if changes in btp-frontend folder use -----> ./build.sh yes
-# else use -----> ./build.sh no
+#str should be yes if we need to build the frontend
+#password should be set in the .env file as PASSWORD
+#path is the path of the project directory and should be set in .env as PATH
 
 str=$1
+password=$2
+path=$3
+backend="backend"
+frontend="btp-frontend"
 
-pushd /opt/Project-Allocation/
-echo '1234' | sudo -S git pull
+pushd "$path"
+echo $password | sudo -S git pull
 popd
 
-pushd /opt/Project-Allocation/backend/
+pushd "${path}${backend}"
 npm i --save
 popd
 
-pushd /opt/Project-Allocation/btp-frontend/
+pushd "${path}${frontend}"
 npm i --save
 popd
 
 if [ "$str" == "yes" ]
 then
-	pushd /opt/Project-Allocation/btp-frontend/
+	pushd "${path}${frontend}"
 	ng build --prod
 	popd
 fi
 
 
-pushd /opt/Project-Allocation
-pm2 restart all
-popd
+# pushd $path
+# pm2 restart all
+# popd
+
