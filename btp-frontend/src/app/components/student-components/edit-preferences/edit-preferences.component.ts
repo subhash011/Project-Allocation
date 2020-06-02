@@ -22,6 +22,7 @@ import {
 import { ShowAvailableProjectsComponent } from "../show-available-projects/show-available-projects.component";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { Subject } from "rxjs";
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Component({
   selector: "app-edit-preferences",
@@ -55,7 +56,8 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private navbar:NavbarComponent
   ) {}
   tableStyle;
   height: number = window.innerHeight;
@@ -104,10 +106,11 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
             });
           } else if (result["message"] == "invalid-token") {
             this.disable = false;
-            this.loginObject.signOut();
+            this.navbar.role = "none";
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
             });
+            this.loginObject.signOut();
           } else if (result["message"] == "stage-ended") {
             this.snackBar.open(
               "Stage has ended! You cannot edit preferences anymore",
@@ -173,10 +176,11 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
         (result) => {
           dialogRef.close();
           if (result["message"] == "invalid-token") {
-            this.loginObject.signOut();
+            this.navbar.role = "none";
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
             });
+            this.loginObject.signOut();
           } else if (result["message"] == "stage-ended") {
             this.snackBar.open(
               "Stage has ended! You cannot edit preferences anymore",

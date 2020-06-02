@@ -5,6 +5,7 @@ import { ProjectsService } from "src/app/services/projects/projects.service";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { Subject } from "rxjs";
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Component({
   selector: "app-student-projects",
@@ -18,7 +19,8 @@ export class StudentProjectsComponent implements OnInit, OnDestroy {
   constructor(
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private navbar:NavbarComponent
   ) {}
   ngOnInit() {
     this.getStudentPreferences();
@@ -31,10 +33,11 @@ export class StudentProjectsComponent implements OnInit, OnDestroy {
     const user = this.projectService.getStudentPreference().subscribe(
       (details) => {
         if (details["message"] == "token-expired") {
-          this.loginObject.signOut();
+          this.navbar.role = "none";
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
+          this.loginObject.signOut();
         } else {
           this.preferences = details["result"];
         }

@@ -17,6 +17,7 @@ import { ShowAvailableProjectsComponent } from "../show-available-projects/show-
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { LoaderComponent } from "../../shared/loader/loader.component";
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Component({
   selector: "app-display-preferences",
@@ -36,7 +37,7 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private projectComponent: ShowAvailableProjectsComponent
+    private navbar:NavbarComponent
   ) {}
 
   ngOnInit() {}
@@ -60,10 +61,11 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
         (result) => {
           dialogRefLoad.close();
           if (result["message"] == "invalid-token") {
-            this.loginObject.signOut();
+            this.navbar.role = "none";
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
             });
+            this.loginObject.signOut();
           } else if (result["message"] == "success") {
             this.preferences = this.preferences.filter((val) => {
               return val._id != preference._id;

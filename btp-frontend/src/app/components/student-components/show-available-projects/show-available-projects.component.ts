@@ -29,6 +29,7 @@ import { Router } from "@angular/router";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Pipe({
   name: "isPreferenceEdit",
@@ -82,7 +83,8 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private loadingBar: LoadingBarService,
     public router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private navbar:NavbarComponent
   ) {}
   @HostListener("window:resize", ["$event"])
   onResize(event) {
@@ -113,7 +115,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             if (result && result["message"] == "success") {
               this.preferences.data = result["result"];
             } else if (result["message"] == "invalid-token") {
-              this.loginObject.signOut();
+              this.navbar.role = "none";
               this.snackBar.open(
                 "Session Expired! Please Sign In Again",
                 "OK",
@@ -121,6 +123,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 }
               );
+              this.loginObject.signOut();
               return null;
             }
           },
@@ -162,10 +165,11 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         (result) => {
           this.dialogRefLoad.close();
           if (result["message"] == "invalid-token") {
-            this.loginObject.signOut();
+            this.navbar.role = "none";
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
             });
+            this.loginObject.signOut();
             return null;
           } else if (result && result["message"] == "success") {
             this.preferences.data = result["result"];
@@ -178,7 +182,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                   projects["message"] == "invalid-client" ||
                   projects["message"] == "invalid-token"
                 ) {
-                  this.loginObject.signOut();
+                  this.navbar.role = "none";
                   this.snackBar.open(
                     "Session Expired! Please Sign In Again",
                     "OK",
@@ -186,6 +190,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                       duration: 3000,
                     }
                   );
+                  this.loginObject.signOut();
                 }
                 tempArray = projects["result"];
                 for (const project of tempArray) {
@@ -275,10 +280,11 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         (result) => {
           dialogRefLoad.close();
           if (result["message"] == "invalid-token") {
-            this.loginObject.signOut();
+            this.navbar.role = "none";
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
             });
+            this.loginObject.signOut();
           } else if (result["message"] == "success") {
             this.projects.data = this.projects.data.filter((val) => {
               return val._id != project._id;
@@ -335,11 +341,12 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
               duration: 3000,
             });
           } else if (message == "invalid-token") {
-            this.loginObject.signOut();
+            this.navbar.role = "none";
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
               panelClass: ["success-snackbar"],
             });
+            this.loginObject.signOut();
           } else if (message == "stage-ended") {
             this.snackBar.open(
               "Stage has ended! You cannot edit preferences anymore",

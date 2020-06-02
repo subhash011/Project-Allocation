@@ -9,6 +9,7 @@ import { takeUntil, flatMap } from "rxjs/operators";
 import { identifierModuleUrl } from "@angular/compiler";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { MatDialog } from "@angular/material";
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Component({
   selector: "app-student",
@@ -24,7 +25,8 @@ export class StudentComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private navbar:NavbarComponent
   ) {}
   user: any;
   details: any;
@@ -46,10 +48,11 @@ export class StudentComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         if (data["status"] == "invalid-token") {
           this.dialogRefLoad.close();
-          this.loginObject.signOut();
+          this.navbar.role = "none";
           this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
             duration: 3000,
           });
+          this.loginObject.signOut();
         } else if (data["status"] == "success") {
           this.details = data["user_details"];
           this.loaded = true;
