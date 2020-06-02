@@ -60,9 +60,14 @@
                     publishFaculty
                   "
                 >
-                  <div *ngFor="let student of project.student_alloted">
-                    {{ student.name }} &nbsp;
-                  </div>
+                  <!-- <div *ngFor="let student of project.student_alloted"> -->
+                    <!-- {{ student.name }} &nbsp; -->
+                    <mat-icon
+                    matTooltip="Alloted Students"
+                    matTooltipPosition="above"
+                    (click)="showstudentAlloted(project)"
+                  > open_in_new</mat-icon>
+                  <!-- </div> -->
                 </div>
               </td>
             </ng-container>
