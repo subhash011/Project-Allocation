@@ -65,7 +65,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="row" *ngIf="!isSuperAdmin() && getRole()">
+          <div class="row" *ngIf="role | isStudent">
             <mat-form-field class="full-width">
               <mat-select placeholder="Program" formControlName="branch">
                 <mat-option
@@ -82,7 +82,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="row" *ngIf="!isSuperAdmin() && isFaculty()">
+          <div class="row" *ngIf="role | isFaculty">
             <mat-form-field class="full-width">
               <mat-select [placeholder]="head" formControlName="branch">
                 <mat-option
@@ -100,7 +100,7 @@
             </mat-form-field>
           </div>
           <!-- </div> -->
-          <div class="row" *ngIf="getRole()">
+          <div class="row" *ngIf="role | isStudent">
             <mat-form-field class="full-width">
               <input
                 matInput

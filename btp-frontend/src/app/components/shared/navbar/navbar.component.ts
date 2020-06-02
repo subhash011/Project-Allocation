@@ -10,7 +10,6 @@ import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
 export class CheckRegister implements PipeTransform {
   transform(value) {
     const role = localStorage.getItem("role");
-    console.log(role);
     return (
       role == "faculty" ||
       role == "admin" ||
@@ -21,14 +20,24 @@ export class CheckRegister implements PipeTransform {
 }
 
 @Pipe({
-  name: "isUser",
+  name: "links",
 })
-export class IsUser implements PipeTransform {
+export class GetLinksForNavBar implements PipeTransform {
   transform(value) {
-    if (localStorage.getItem("isLogged") == "true") {
-      return true;
-    } else {
-      return false;
+    if (value == "profile") {
+      return "profile/" + localStorage.getItem("id");
+    } else if (value == "home") {
+      if (localStorage.getItem("role") == "admin") {
+        return "faculty" + "/" + localStorage.getItem("id");
+      } else {
+        return localStorage.getItem("role") + "/" + localStorage.getItem("id");
+      }
+    } else if (value == "studentProjects") {
+      return (
+        localStorage.getItem("role") + "/projects/" + localStorage.getItem("id")
+      );
+    } else if (value == "studentPreferences") {
+      return "student" + "/preferences/" + localStorage.getItem("id");
     }
   }
 }

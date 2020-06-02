@@ -1,4 +1,4 @@
-<div *ngIf="!isPrefenceEdit()">
+<div *ngIf="!(router.url | isPreferenceEdit); else elseBlock">
   <mat-sidenav-container class="example-container">
     <mat-sidenav
       [style.width.%]="sidenavWidth"
@@ -188,8 +188,9 @@
   </mat-sidenav-container>
 </div>
 
-<app-edit-preferences
-  [preferences]="preferences"
-  [stage]="stage"
-  *ngIf="isPrefenceEdit()"
-></app-edit-preferences>
+<ng-template #elseBlock>
+  <app-edit-preferences
+    [preferences]="preferences"
+    [stage]="stage"
+  ></app-edit-preferences>
+</ng-template>

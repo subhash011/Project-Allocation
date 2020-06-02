@@ -4,6 +4,8 @@ import {
   ViewChild,
   OnDestroy,
   HostListener,
+  Pipe,
+  PipeTransform,
 } from "@angular/core";
 import {
   MatDialog,
@@ -27,6 +29,15 @@ import { Router } from "@angular/router";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+
+@Pipe({
+  name: "isPreferenceEdit",
+})
+export class IsPreferenceEdit implements PipeTransform {
+  transform(value: string) {
+    return value.includes("preferences") ? true : false;
+  }
+}
 @Component({
   selector: "app-show-available-projects",
   templateUrl: "./show-available-projects.component.html",
@@ -70,7 +81,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
     private loadingBar: LoadingBarService,
-    private router: Router,
+    public router: Router,
     private userService: UserService
   ) {}
   @HostListener("window:resize", ["$event"])

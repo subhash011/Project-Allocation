@@ -1,7 +1,7 @@
 <mat-toolbar class="mat-elevation-z8" color="primary">
   <mat-toolbar-row>
     <div>
-      <button mat-button [routerLink]="getURLHome()">
+      <button mat-button [routerLink]="'home' | links">
         <span class="navhead">IIT Palakkad</span>
       </button>
     </div>
@@ -34,20 +34,33 @@
     </div>
     <div *ngIf="role | isStudent">
       <div class="flex-grow-left"></div>
-      <button mat-button [routerLink]="getUrlProjects()" class="nav-text">
+      <button
+        mat-button
+        [routerLink]="'studentProjects' | links"
+        class="nav-text"
+      >
         Add Preferences
       </button>
     </div>
     <div *ngIf="role | isStudent">
       <div class="flex-grow-left"></div>
-      <button mat-button class="nav-text" [routerLink]="getUrlPreferences()">
+      <button
+        mat-button
+        class="nav-text"
+        [routerLink]="'studentPreferences' | links"
+      >
         Reorder Preferences
       </button>
     </div>
     <div class="flex-space"></div>
     <div class="flex-grow-right"></div>
     <div>
-      <div *ngIf="(role | isUser) && ('' | checkRegister)">
+      <div
+        *ngIf="
+          ((role | isFaculty) || (role | isAdmin) || (role | isStudent)) &&
+          ('' | checkRegister)
+        "
+      >
         <div class="flex-grow-right"></div>
         <button mat-button routerLink="/help">
           <span class="nav-text">Help</span>
@@ -57,7 +70,7 @@
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
         <mat-menu #beforeMenu="matMenu" xPosition="before">
-          <button mat-menu-item [routerLink]="getProfile()">
+          <button mat-menu-item [routerLink]="'profile' | links">
             Profile
           </button>
           <button mat-menu-item (click)="getAdmin()" *ngIf="role | isAdmin">

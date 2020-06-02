@@ -25,8 +25,10 @@ export class RegisterComponent implements OnInit {
     private dialog: MatDialog
   ) {}
   branchStudent: any;
+  role = localStorage.getItem("role");
   head: string;
   ngOnInit() {
+    this.role = localStorage.getItem("role");
     this.userService.getAllBranches().subscribe((maps) => {
       this.maps = maps["result"];
       for (const map of this.maps) {
@@ -179,38 +181,31 @@ export class RegisterComponent implements OnInit {
         hasBackdrop: true,
       });
 
-      this.userService
-        .registerUser(user, httpOptions, position, id)
-        .subscribe((data: any) => {
+      this.userService.registerUser(user, httpOptions, position, id).subscribe(
+        (data: any) => {
           dialogRef.close();
           if (data["registration"] == "success") {
             localStorage.setItem("role", position);
             localStorage.setItem("isRegistered", "true");
-           this.snackBar.open(
-              "Registration Successful",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
+            this.snackBar.open("Registration Successful", "Ok", {
+              duration: 3000,
+            });
             var route = "/" + position + "/" + id;
             this.router.navigate([route]);
           } else {
-           this.snackBar.open(
-              "Registration Failed! Please Try Again",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
+            this.snackBar.open("Registration Failed! Please Try Again", "Ok", {
+              duration: 3000,
+            });
           }
-        },() => {
+        },
+        () => {
           dialogRef.close();
           this.ngOnInit();
           this.snackBar.open("Some Error Occured! Try again later.", "OK", {
             duration: 3000,
           });
-        })
+        }
+      );
     }
   }
 }

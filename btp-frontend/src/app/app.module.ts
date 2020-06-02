@@ -14,7 +14,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {
   NavbarComponent,
   CheckRegister,
-  IsUser,
+  GetLinksForNavBar,
 } from "./components/shared/navbar/navbar.component";
 import { RegisterComponent } from "./components/shared/register/register.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -56,7 +56,10 @@ import { LoaderComponent } from "./components/shared/loader/loader.component";
 import { ShowStudentPreferencesComponent } from "./components/faculty-componenets/show-student-preferences/show-student-preferences.component";
 import { ClipboardModule } from "ngx-clipboard";
 import { ShowFacultyPreferencesComponent } from "./components/faculty-componenets/show-faculty-preferences/show-faculty-preferences.component";
-import { ShowAvailableProjectsComponent } from "./components/student-components/show-available-projects/show-available-projects.component";
+import {
+  ShowAvailableProjectsComponent,
+  IsPreferenceEdit,
+} from "./components/student-components/show-available-projects/show-available-projects.component";
 import { EditPreferencesComponent } from "./components/student-components/edit-preferences/edit-preferences.component";
 import { DisplayPreferencesComponent } from "./components/student-components/display-preferences/display-preferences.component";
 import { PreferencePipe } from "./components/faculty-componenets/student-table/student-table.component";
@@ -124,7 +127,8 @@ export function provideConfig() {
     FacultyTooltipSuper,
     UserPhoto,
     CheckRegister,
-    IsUser,
+    GetLinksForNavBar,
+    IsPreferenceEdit,
   ],
   entryComponents: [
     SubmitPopUpComponent,

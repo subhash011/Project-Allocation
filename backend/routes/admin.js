@@ -38,7 +38,7 @@ function validateCsvRow(row) {
 }
 
 function studentPref(total, student) {
-	return total + "," + student.name;
+	return total + "," + student.name + "," + student.roll_no;
 }
 
 function projectPref(total, project) {
@@ -99,7 +99,10 @@ function generateCSVProjects(data, program_name) {
 		headers = headers.substring(0, headers.length - 1) + "\n";
 	}
 	for (let ind = 1; ind <= s_length; ind++) {
-		headers += ind == s_length ? `Preference.${ind}\n` : `Preference.${ind},`;
+		headers +=
+			ind == s_length
+				? `Preference.${ind} ( Name ),Preference.${ind} ( Roll no. )\n`
+				: `Preference.${ind} ( Name ),Preference.${ind} ( Roll no. )`;
 	}
 
 	let str = "";
