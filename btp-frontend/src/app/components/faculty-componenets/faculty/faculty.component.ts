@@ -124,6 +124,7 @@ export class FacultyComponent implements OnInit {
           });
         });
       } else {
+        dialogRefLoad.close();
         this.loginService.signOut();
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
