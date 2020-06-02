@@ -1,7 +1,8 @@
 #! /bin/bash
 
-# if changes in btp-frontend folder use -----> ./build.sh yes
-# else use -----> ./build.sh no
+#str should be yes if we need to build the frontend
+#password should be set in the .env file as PASSWORD
+#path is the path of the project directory and should be set in .env as PATH
 
 str=$1
 password=$2
