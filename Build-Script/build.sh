@@ -5,7 +5,7 @@
 
 str=$1
 password=$2
-path="/home/subhash011/Desktop/Project-Allocation/"
+path=$3
 backend="backend"
 frontend="btp-frontend"
 
