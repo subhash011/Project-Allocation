@@ -1,4 +1,47 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  Pipe,
+  PipeTransform,
+} from "@angular/core";
+
+@Pipe({
+  name: "isFaculty",
+})
+export class FacultyCheck implements PipeTransform {
+  transform(value) {
+    return value == "faculty";
+  }
+}
+
+@Pipe({
+  name: "isAdmin",
+})
+export class AdminCheck implements PipeTransform {
+  transform(value) {
+    return value == "admin";
+  }
+}
+
+@Pipe({
+  name: "isStudent",
+})
+export class StudentCheck implements PipeTransform {
+  transform(value) {
+    return value == "student";
+  }
+}
+
+@Pipe({
+  name: "isSuper",
+})
+export class SuperAdminCheck implements PipeTransform {
+  transform(value) {
+    return value == "super_admin";
+  }
+}
 
 @Component({
   selector: "app-help",
@@ -12,7 +55,10 @@ export class HelpComponent implements OnInit {
   constructor() {}
   background = "primary";
   index;
-  ngOnInit() {}
+  role: string = localStorage.getItem("role");
+  ngOnInit() {
+    this.role = localStorage.getItem("role");
+  }
   gotost(i) {
     const video = this.help.nativeElement;
     if (i == 1) {

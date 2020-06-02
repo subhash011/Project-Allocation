@@ -17,7 +17,7 @@ export class NavbarComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
   programsVisible: boolean = false;
-  role: string = "admin";
+  role: string = localStorage.getItem("role");
   checkPrograms: boolean = false;
   programs;
   adminProgram;

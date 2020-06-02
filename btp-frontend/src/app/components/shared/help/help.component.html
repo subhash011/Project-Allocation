@@ -343,7 +343,10 @@
       </div>
     </div>
   </mat-tab>
-  <mat-tab label="Faculty/Co-ordinator" *ngIf="isFaculty() || isSuperAdmin()">
+  <mat-tab
+    label="Faculty/Co-ordinator"
+    *ngIf="(role | isFaculty) || (role | isSuper)"
+  >
     <mat-tab-group
       *ngIf="index == 2"
       [selectedIndex]="0"
@@ -420,7 +423,7 @@
       </mat-tab>
     </mat-tab-group>
   </mat-tab>
-  <mat-tab label="Super Admin" *ngIf="isSuperAdmin()">
+  <mat-tab label="Super Admin" *ngIf="role | isSuper">
     <div class="container">
       <h1 class="head">
         <b><u>Super admin's guide for the application.</u></b>

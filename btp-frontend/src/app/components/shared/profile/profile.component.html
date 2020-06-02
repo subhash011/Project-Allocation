@@ -1,7 +1,7 @@
 <div class="profile">
-  <div *ngIf="getStudentDiv()">
+  <div *ngIf="role | isStudent">
     <mat-card class="example-card">
-      <img mat-card-avatar [src]="getUrl()" class="image" />
+      <img mat-card-avatar [src]="'' | userPhoto" class="image" />
       <div *ngIf="user_info">
         <form [formGroup]="studentFormGroup" class="facultyForm">
           <p class="example-full-width">
@@ -20,7 +20,7 @@
       </div>
     </mat-card>
   </div>
-  <div *ngIf="getFacultyDiv()">
+  <div *ngIf="(role | isFaculty) || (role | isAdmin)">
     <mat-tab-group
       [backgroundColor]="'primary'"
       animationDuration="0"
@@ -29,7 +29,7 @@
     >
       <mat-tab label="About Me">
         <mat-card class="example-card">
-          <img mat-card-avatar [src]="getUrl()" class="image" />
+          <img mat-card-avatar [src]="'' | userPhoto" class="image" />
           <div *ngIf="user_info">
             <form [formGroup]="facultyFormGroup" class="facultyForm">
               <mat-form-field class="example-full-width">

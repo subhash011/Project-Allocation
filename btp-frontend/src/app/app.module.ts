@@ -19,7 +19,10 @@ import { FacultyComponent } from "./components/faculty-componenets/faculty/facul
 import { HomeComponent } from "./components/home/home.component";
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ProfileComponent } from "./components/shared/profile/profile.component";
+import {
+  ProfileComponent,
+  UserPhoto,
+} from "./components/shared/profile/profile.component";
 import { StudentProjectsComponent } from "./components/student-components/student-projects/student-projects.component";
 import { ContentComponent } from "./components/faculty-componenets/content/content.component";
 import { SidenavComponent } from "./components/faculty-componenets/sidenav/sidenav.component";
@@ -27,7 +30,10 @@ import { StudentTableComponent } from "./components/faculty-componenets/student-
 import { SubmitPopUpComponent } from "./components/faculty-componenets/submit-pop-up/submit-pop-up.component";
 import { DeletePopUpComponent } from "./components/faculty-componenets/delete-pop-up/delete-pop-up.component";
 import { RefreshComponent } from "./components/faculty-componenets/refresh/refresh.component";
-import { SuperAdminComponent } from "./components/shared/super-admin/super-admin.component";
+import {
+  SuperAdminComponent,
+  FacultyTooltipSuper,
+} from "./components/shared/super-admin/super-admin.component";
 import {
   AdminComponent,
   AllotedStudents,
@@ -52,6 +58,12 @@ import { DisplayPreferencesComponent } from "./components/student-components/dis
 import { PreferencePipe } from "./components/faculty-componenets/student-table/student-table.component";
 import { ShowPreferencesComponent } from "./components/student-components/show-preferences/show-preferences.component";
 import { MatSortModule } from "@angular/material/sort";
+import {
+  FacultyCheck,
+  AdminCheck,
+  StudentCheck,
+  SuperAdminCheck,
+} from "./components/shared/Pipes/rolePipes";
 const googleLoginOption: LoginOpt = {
   prompt: "select_account",
 };
@@ -101,6 +113,12 @@ export function provideConfig() {
     CountDown,
     ShowPreferencesComponent,
     AllotedStudents,
+    FacultyCheck,
+    AdminCheck,
+    StudentCheck,
+    SuperAdminCheck,
+    FacultyTooltipSuper,
+    UserPhoto,
   ],
   entryComponents: [
     SubmitPopUpComponent,

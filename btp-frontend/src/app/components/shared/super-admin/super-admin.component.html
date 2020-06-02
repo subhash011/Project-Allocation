@@ -59,7 +59,10 @@
                 <td mat-cell *matCellDef="let faculty">
                   <span
                     [matTooltip]="
-                      getToolTipToRemoveFaculty(faculty, branch.short)
+                      faculty.isAdmin
+                        | getToolTipToRemoveFaculty
+                          : faculty.adminProgram
+                          : branch.short
                     "
                     matTooltipPosition="above"
                     ><button

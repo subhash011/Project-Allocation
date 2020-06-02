@@ -1,9 +1,8 @@
-import { LoadingBarService } from "@ngx-loading-bar/core";
 import { UserService } from "./../../../services/user/user.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpClient } from "@angular/common/http";
 import { LocalAuthService } from "../../../services/local-auth/local-auth.service";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
 import { AuthService } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
 import { Router } from "@angular/router";
@@ -17,18 +16,21 @@ import { LoaderComponent } from "../loader/loader.component";
 })
 export class LoginComponent implements OnInit {
   dialogRefLoad: any;
+  isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
   constructor(
     private authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
     private localAuth: LocalAuthService,
-    private snackBar: MatSnackBar,
-    private loadingBar: LoadingBarService
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
     if (!localStorage.getItem("isLoggedIn")) {
       localStorage.setItem("isLoggedIn", "false");
+      this.isLoggedIn = false;
+    } else {
+      this.isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
     }
   }
   userActivity() {
@@ -65,6 +67,7 @@ export class LoginComponent implements OnInit {
         };
         localStorage.setItem("user", JSON.stringify(userModified));
         localStorage.setItem("isLoggedIn", "true");
+        this.isLoggedIn = true;
         this.localAuth
           .checkUser(user)
           .toPromise()
@@ -88,6 +91,7 @@ export class LoginComponent implements OnInit {
                 duration: 10000,
               });
               localStorage.setItem("isLoggedIn", "false");
+              this.isLoggedIn = false;
               localStorage.setItem("role", "none");
               localStorage.removeItem("user");
               localStorage.removeItem("id");
@@ -103,6 +107,7 @@ export class LoginComponent implements OnInit {
                 }
               );
               localStorage.setItem("isLoggedIn", "false");
+              this.isLoggedIn = false;
               localStorage.setItem("role", "none");
               localStorage.removeItem("user");
               localStorage.removeItem("id");
@@ -144,6 +149,7 @@ export class LoginComponent implements OnInit {
       });
     });
     localStorage.setItem("isLoggedIn", "false");
+    this.isLoggedIn = false;
     localStorage.setItem("role", "none");
     localStorage.removeItem("user");
     localStorage.removeItem("id");

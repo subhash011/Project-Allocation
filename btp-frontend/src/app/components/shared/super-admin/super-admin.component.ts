@@ -4,9 +4,36 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "./../../faculty-componenets/delete-pop-up/delete-pop-up.component";
 import { MatDialog } from "@angular/material/dialog";
 import { UserService } from "./../../../services/user/user.service";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Pipe,
+  PipeTransform,
+} from "@angular/core";
 import { LoaderComponent } from "../loader/loader.component";
 import { MatTable, MatTableDataSource } from "@angular/material";
+
+@Pipe({
+  name: "getToolTipToRemoveFaculty",
+})
+export class FacultyTooltipSuper implements PipeTransform {
+  transform(isAdmin, adminProgram, branch) {
+    if (isAdmin) {
+      if (adminProgram == branch) {
+        return "Remove co-ordinator Status to delete the faculty";
+      } else {
+        return (
+          "This faculty is a co-ordinator for " +
+          adminProgram +
+          " please remove the co-ordinator status to remove the faculty"
+        );
+      }
+    } else {
+      return "";
+    }
+  }
+}
 
 @Component({
   selector: "app-super-admin",
@@ -542,22 +569,6 @@ export class SuperAdminComponent implements OnInit {
         });
       }
     });
-  }
-
-  getToolTipToRemoveFaculty(faculty, branch) {
-    if (faculty.isAdmin) {
-      if (faculty.adminProgram == branch) {
-        return "Remove co-ordinator Status to delete the faculty";
-      } else {
-        return (
-          "This faculty is a co-ordinator for " +
-          faculty.adminProgram +
-          " please remove the co-ordinator status to remove the faculty"
-        );
-      }
-    } else {
-      return "";
-    }
   }
 
   deleteStudent(student) {

@@ -5,11 +5,20 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { Validators } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
 import { UserService } from "./../../../services/user/user.service";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { DeletePopUpComponent } from "../../faculty-componenets/delete-pop-up/delete-pop-up.component";
 import { LoaderComponent } from "../loader/loader.component";
 
+@Pipe({
+  name: "userPhoto",
+})
+export class UserPhoto implements PipeTransform {
+  transform(value) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user["photoUrl"];
+  }
+}
 @Component({
   selector: "app-profile",
   templateUrl: "./profile.component.html",
@@ -21,7 +30,7 @@ export class ProfileComponent implements OnInit {
   programs;
   faculty_programs = [];
   user_info: any;
-  role = "";
+  role: string = localStorage.getItem("role");
   checked = false;
   editStatus = "Edit";
   dialogRefLoad: any;
@@ -164,9 +173,8 @@ export class ProfileComponent implements OnInit {
         disableClose: true,
         hasBackdrop: true,
       });
-      this.userService
-        .updateStudentProfile(student)
-        .subscribe((result) => {
+      this.userService.updateStudentProfile(student).subscribe(
+        (result) => {
           if (result["message"] == "success") {
             this.snackBar.open("Profile Updated Sucessfully", "Ok", {
               duration: 3000,
@@ -182,13 +190,15 @@ export class ProfileComponent implements OnInit {
               }
             );
           }
-        },() => {
+        },
+        () => {
           dialogRef.close();
           this.ngOnInit();
           this.snackBar.open("Some Error Occured! Try again later.", "OK", {
             duration: 3000,
           });
-        });
+        }
+      );
     }
   }
 
@@ -204,29 +214,32 @@ export class ProfileComponent implements OnInit {
         hasBackdrop: true,
       });
 
-      this.userService.updateFacultyProfile(faculty).subscribe((data) => {
-        dialogRef.close();
-        if (data["status"] == "success") {
-          this.snackBar.open(data["msg"], "Ok", {
+      this.userService.updateFacultyProfile(faculty).subscribe(
+        (data) => {
+          dialogRef.close();
+          if (data["status"] == "success") {
+            this.snackBar.open(data["msg"], "Ok", {
+              duration: 3000,
+            });
+          } else {
+            this.snackBar.open(
+              "Session Timed Out! Please Sign in Again!",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+            this.login.signOut();
+          }
+        },
+        () => {
+          dialogRef.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
             duration: 3000,
           });
-        } else {
-          this.snackBar.open(
-            "Session Timed Out! Please Sign in Again!",
-            "Ok",
-            {
-              duration: 3000,
-            }
-          );
-          this.login.signOut();
         }
-      },() => {
-        dialogRef.close();
-        this.ngOnInit();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-          duration: 3000,
-        });
-      });
+      );
     }
   }
 
@@ -240,54 +253,8 @@ export class ProfileComponent implements OnInit {
         disableClose: true,
         hasBackdrop: true,
       });
-      this.userService.setPrograms(programs).subscribe((data) => {
-        dialogRef.close();
-        if (data["status"] == "success") {
-          this.snackBar.open(data["msg"], "Ok", {
-            duration: 3000,
-          });
-          this.ngOnInit();
-        } else {
-         this.snackBar.open(
-            "Session Timed Out! Please Sign in Again!",
-            "Ok",
-            {
-              duration: 3000,
-            }
-          );
-          this.login.signOut();
-        }
-      },() => {
-        dialogRef.close();
-        this.ngOnInit();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-          duration: 3000,
-        });
-      });
-    }
-  }
-
-  deleteProgram(program) {
-    const obj = {
-      program: program,
-    };
-
-    let dialogRef = this.dialog.open(DeletePopUpComponent, {
-      height: "200px",
-      data: {
-        heading: "Confirm Deletion",
-        message: "Are you sure you want to remove the branch",
-      },
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result["message"] == "submit") {
-        var dialogRef = this.dialog.open(LoaderComponent, {
-          data: "Loading Please Wait ....",
-          disableClose: true,
-          hasBackdrop: true,
-        });
-
-        this.userService.deleteFacultyProgram(obj).subscribe((data) => {
+      this.userService.setPrograms(programs).subscribe(
+        (data) => {
           dialogRef.close();
           if (data["status"] == "success") {
             this.snackBar.open(data["msg"], "Ok", {
@@ -304,14 +271,66 @@ export class ProfileComponent implements OnInit {
             );
             this.login.signOut();
           }
+        },
+        () => {
+          dialogRef.close();
+          this.ngOnInit();
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            duration: 3000,
+          });
+        }
+      );
+    }
+  }
+
+  deleteProgram(program) {
+    const obj = {
+      program: program,
+    };
+
+    let dialogRef = this.dialog.open(DeletePopUpComponent, {
+      height: "200px",
+      data: {
+        heading: "Confirm Deletion",
+        message: "Are you sure you want to remove the branch",
+      },
+    });
+    dialogRef.afterClosed().subscribe(
+      (result) => {
+        if (result["message"] == "submit") {
+          var dialogRef = this.dialog.open(LoaderComponent, {
+            data: "Loading Please Wait ....",
+            disableClose: true,
+            hasBackdrop: true,
+          });
+
+          this.userService.deleteFacultyProgram(obj).subscribe((data) => {
+            dialogRef.close();
+            if (data["status"] == "success") {
+              this.snackBar.open(data["msg"], "Ok", {
+                duration: 3000,
+              });
+              this.ngOnInit();
+            } else {
+              this.snackBar.open(
+                "Session Timed Out! Please Sign in Again!",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
+              this.login.signOut();
+            }
+          });
+        }
+      },
+      () => {
+        dialogRef.close();
+        this.ngOnInit();
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
         });
       }
-    },() => {
-      dialogRef.close();
-      this.ngOnInit();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-        duration: 3000,
-      });
-    });
+    );
   }
 }
