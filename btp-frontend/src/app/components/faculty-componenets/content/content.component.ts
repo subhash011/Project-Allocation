@@ -12,6 +12,7 @@ import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
 import { Location } from "@angular/common";
 import { LoaderComponent } from "../../shared/loader/loader.component";
+import { ShowStudentAllotedComponent } from '../show-student-alloted/show-student-alloted.component';
 
 @Component({
   selector: "app-content",
@@ -326,4 +327,21 @@ export class ContentComponent implements OnInit, DoCheck {
       });
     }
   }
+
+  showstudentAlloted(project){
+
+    const dialogRef = this.dialog.open(ShowStudentAllotedComponent, {
+      disableClose: false,
+      hasBackdrop: true,
+      maxHeight: "700px",
+      minWidth: "800px",
+      data: project,
+      panelClass: ["custom-dialog-container"],
+    });
+
+  }
+
+
+
+
 }

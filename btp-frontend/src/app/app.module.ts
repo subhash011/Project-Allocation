@@ -71,6 +71,7 @@ import {
   StudentCheck,
   SuperAdminCheck,
 } from "./components/shared/Pipes/rolePipes";
+import { ShowStudentAllotedComponent } from "./components/faculty-componenets/show-student-alloted/show-student-alloted.component";
 const googleLoginOption: LoginOpt = {
   prompt: "select_account",
 };
@@ -129,6 +130,7 @@ export function provideConfig() {
     CheckRegister,
     GetLinksForNavBar,
     IsPreferenceEdit,
+    ShowStudentAllotedComponent,
   ],
   entryComponents: [
     SubmitPopUpComponent,
@@ -138,6 +140,7 @@ export function provideConfig() {
     LoaderComponent,
     ShowStudentPreferencesComponent,
     ShowFacultyPreferencesComponent,
+    ShowStudentAllotedComponent,
   ],
   imports: [
     BrowserModule,
