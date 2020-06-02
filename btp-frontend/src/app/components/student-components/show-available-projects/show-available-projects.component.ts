@@ -149,22 +149,20 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(
         (result) => {
+          this.dialogRefLoad.close();
           if (result["message"] == "invalid-token") {
-            this.dialogRefLoad.close();
             this.loginObject.signOut();
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,
             });
             return null;
-          }
-          if (result && result["message"] == "success") {
+          } else if (result && result["message"] == "success") {
             this.preferences.data = result["result"];
             tempPref = this.preferences.data.map((val) => val._id);
             this.projectService
               .getAllStudentProjects()
               .pipe(takeUntil(this.ngUnsubscribe))
               .subscribe((projects) => {
-                this.dialogRefLoad.close();
                 if (
                   projects["message"] == "invalid-client" ||
                   projects["message"] == "invalid-token"

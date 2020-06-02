@@ -54,23 +54,31 @@ export class StudentComponent implements OnInit, OnDestroy {
           this.details = data["user_details"];
           this.loaded = true;
 
-          this.userService.getPublishMode("student").subscribe((data) => {
-            this.dialogRefLoad.close();
-            if (data["status"] == "success") {
-              this.publishStudents = data["studentPublish"];
-              this.publishFaculty = data["facultyPublish"];
-              if (
-                this.publishStudents == false &&
-                this.publishFaculty == true
-              ) {
-                this.reviewContition = true;
+          this.userService.getPublishMode("student").subscribe(
+            (data) => {
+              this.dialogRefLoad.close();
+              if (data["status"] == "success") {
+                this.publishStudents = data["studentPublish"];
+                this.publishFaculty = data["facultyPublish"];
+                if (
+                  this.publishStudents == false &&
+                  this.publishFaculty == true
+                ) {
+                  this.reviewContition = true;
+                }
               }
+            },
+            () => {
+              this.dialogRefLoad.close();
+              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                duration: 3000,
+              });
             }
-          });
+          );
         } else {
           this.dialogRefLoad.close();
           this.loginObject.signOut();
-          this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
+          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
             duration: 3000,
           });
         }
