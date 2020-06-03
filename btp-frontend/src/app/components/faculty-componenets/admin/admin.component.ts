@@ -44,6 +44,22 @@ export class AllotedStudents implements PipeTransform {
   }
 }
 
+@Pipe({
+  name:"getIncludedOfTotal"
+})
+export class GetIncludedOfTotal implements PipeTransform {
+  transform(faculties) {
+    let included = 0;
+    let total = 0;
+    faculties.forEach(faculty => {
+      included += faculty.includedProjectsCount;
+      total += faculty.noOfProjects;
+      return;
+    })
+    return included + " / " + total;
+  }
+}
+
 @Component({
   selector: "app-admin",
   templateUrl: "./admin.component.html",
@@ -1560,6 +1576,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     } else if (who == "student") {
       this.students.filter = filterValue.trim().toLowerCase();
+      this.studentCount = this.students.filteredData.length;
     } else if (who == "faculty") {
       this.faculties.filter = filterValue.trim().toLowerCase();
     }

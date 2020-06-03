@@ -37,10 +37,12 @@ import { RefreshComponent } from "./components/faculty-componenets/refresh/refre
 import {
   SuperAdminComponent,
   FacultyTooltipSuper,
+  GetRegisteredCount,
 } from "./components/shared/super-admin/super-admin.component";
 import {
   AdminComponent,
   AllotedStudents,
+  GetIncludedOfTotal,
 } from "./components/faculty-componenets/admin/admin.component";
 import {
   TimelineComponent,
@@ -133,6 +135,8 @@ export function provideConfig() {
     IsPreferenceEdit,
     ShowStudentAllotedComponent,
     CheckLogIn,
+    GetIncludedOfTotal,
+    GetRegisteredCount
   ],
   entryComponents: [
     SubmitPopUpComponent,

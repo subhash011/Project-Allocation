@@ -42,20 +42,24 @@
                   Name
                 </th>
                 <td mat-cell *matCellDef="let faculty">{{ faculty.name }}</td>
+                <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{faculties[branch.short].filteredData.length}} </td>
               </ng-container>
               <ng-container matColumnDef="Stream">
                 <th mat-header-cell *matHeaderCellDef>Stream</th>
                 <td mat-cell *matCellDef="let faculty">{{ faculty.stream }}</td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="Email-ID">
                 <th mat-header-cell *matHeaderCellDef>Email-ID</th>
                 <td mat-cell *matCellDef="let faculty">{{ faculty.email }}</td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="isAdmin">
                 <th mat-header-cell *matHeaderCellDef>Co-ordinator</th>
                 <td mat-cell *matCellDef="let faculty">
                   {{ faculty.isAdmin ? faculty.adminProgram : "NO" }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="Actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -98,6 +102,7 @@
                     Remove Co-ordinator Status
                   </button>
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <tr
                 mat-header-row
@@ -107,6 +112,7 @@
                 mat-row
                 *matRowDef="let row; columns: displayedColumnsFaculty"
               ></tr>
+              <tr mat-footer-row *matFooterRowDef="displayedColumnsFaculty; sticky: true"></tr>
             </table>
           </div>
         </div>
@@ -148,24 +154,29 @@
                   Name
                 </th>
                 <td mat-cell *matCellDef="let student">{{ student.name }}</td>
+                <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{students[branch.short].filteredData.length}} </td>
               </ng-container>
               <ng-container matColumnDef="Stream">
                 <th mat-header-cell *matHeaderCellDef>Stream</th>
                 <td mat-cell *matCellDef="let student">{{ student.stream }}</td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="Email-ID">
                 <th mat-header-cell *matHeaderCellDef>Email-ID</th>
                 <td mat-cell *matCellDef="let student">{{ student.email }}</td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="CGPA">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>CGPA</th>
                 <td mat-cell *matCellDef="let student">{{ student.gpa }}</td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="isRegistered">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Registered</th>
                 <td mat-cell *matCellDef="let student">
                   {{ student.isRegistered ? "Yes" : "No" }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef> <b>Registered : </b> {{students[branch.short].filteredData | getRegisteredCount}} </td>
               </ng-container>
               <ng-container matColumnDef="Actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -178,6 +189,7 @@
                     Remove
                   </button>
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <tr
                 mat-header-row
@@ -187,6 +199,7 @@
                 mat-row
                 *matRowDef="let row; columns: displayedColumnsStudent"
               ></tr>
+              <tr mat-footer-row *matFooterRowDef="displayedColumnsStudent; sticky: true"></tr>
             </table>
           </div>
         </div>
@@ -228,6 +241,7 @@
                   Title
                 </th>
                 <td mat-cell *matCellDef="let project">{{ project.title }}</td>
+                <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{projects[branch.short].filteredData.length}} </td>
               </ng-container>
               <ng-container tainer matColumnDef="Faculty">
                 <th
@@ -241,10 +255,12 @@
                 <td mat-cell *matCellDef="let project">
                   {{ project.faculty }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="Stream">
                 <th mat-header-cell *matHeaderCellDef>Program</th>
                 <td mat-cell *matCellDef="let project">{{ project.stream }}</td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="NoOfStudents">
                 <th mat-sort-header mat-header-cell *matHeaderCellDef>
@@ -253,12 +269,14 @@
                 <td mat-cell *matCellDef="let project">
                   {{ project.numberOfPreferences }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="Duration">
                 <th mat-sort-header mat-header-cell *matHeaderCellDef>Duration (in months)</th>
                 <td mat-cell *matCellDef="let project">
                   {{ project.duration }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <tr
                 mat-header-row
@@ -268,6 +286,7 @@
                 mat-row
                 *matRowDef="let row; columns: displayedColumnsProjects"
               ></tr>
+              <tr mat-footer-row *matFooterRowDef="displayedColumnsProjects; sticky: true"></tr>
             </table>
           </div>
         </div>

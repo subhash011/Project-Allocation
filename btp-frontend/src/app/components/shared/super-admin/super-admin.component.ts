@@ -15,6 +15,21 @@ import { LoaderComponent } from "../loader/loader.component";
 import { MatTable, MatTableDataSource, MatSort } from "@angular/material";
 
 @Pipe({
+  name:"getRegisteredCount"
+})
+export class GetRegisteredCount implements PipeTransform {
+  transform(students) {
+    let registered = 0;
+    let total = 0;
+    students.forEach(student => {
+      total++;
+      registered += student.isRegistered ? 1 : 0;
+    });
+    return registered;
+  }
+}
+
+@Pipe({
   name: "getToolTipToRemoveFaculty",
 })
 export class FacultyTooltipSuper implements PipeTransform {
@@ -148,6 +163,8 @@ export class SuperAdminComponent implements OnInit {
         });
         for (const program of this.programs.data) {
           this.faculties[program.short] = new MatTableDataSource([]);
+          this.students[program.short] = new MatTableDataSource([]);
+          this.projects[program.short] = new MatTableDataSource([]);
         }
         this.userService.getAllStudents().subscribe(
           (result) => {

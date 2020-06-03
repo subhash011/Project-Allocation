@@ -382,6 +382,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               <mat-checkbox
                 (change)="$event ? masterToggle() : null"
+                (click)="$event.stopPropagation()"
                 [checked]="selection.hasValue() && isAllSelected()"
                 [indeterminate]="selection.hasValue() && !isAllSelected()"
                 [aria-label]="checkboxLabel(null)"
@@ -550,7 +551,7 @@
           #fileInput
         />
 
-        <div class="register_total">
+        <!-- <div class="register_total">
           <mat-form-field class="registered ">
             <mat-label>Registered</mat-label>
             <input
@@ -571,7 +572,7 @@
               [(ngModel)]="studentCount"
             />
           </mat-form-field>
-        </div>
+        </div> -->
 
         <div class="display-student">
           <div class="table mat-elevation-z8">
@@ -592,18 +593,21 @@
                   Name
                 </th>
                 <td mat-cell *matCellDef="let student">{{ student.name }}</td>
+                 <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{studentCount}} </td>
               </ng-container>
               <ng-container matColumnDef="Email">
                 <th mat-header-cell *matHeaderCellDef>Email-ID</th>
                 <td mat-cell *matCellDef="let student">
                   {{ student.email }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="GPA">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>CGPA</th>
                 <td mat-cell *matCellDef="let student">
                   {{ student.gpa }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="Registered">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -612,6 +616,7 @@
                 <td mat-cell *matCellDef="let student">
                   {{ student.isRegistered ? "Yes" : "No" }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef> <b>Registered : </b>  {{students.filteredData | getRegisteredCount}} </td>
               </ng-container>
               <ng-container matColumnDef="Actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -624,6 +629,7 @@
                     delete_outline</mat-icon
                   >
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="ViewPref">
                 <th mat-header-cell *matHeaderCellDef>
@@ -638,6 +644,7 @@
                     open_in_new</mat-icon
                   >
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <tr
                 mat-header-row
@@ -651,6 +658,7 @@
                 (mouseleave)="isActive = false; indexHover = -1"
                 [class.mat-elevation-z8]="isActive && indexHover == i"
               ></tr>
+              <tr mat-footer-row *matFooterRowDef="studentCols; sticky: true"></tr>
             </table>
           </div>
         </div>
@@ -696,6 +704,7 @@
                   Name
                 </th>
                 <td mat-cell *matCellDef="let faculty">{{ faculty.name }}</td>
+                <td mat-footer-cell *matFooterCellDef><b> Total : </b> {{ faculties.filteredData.length }} </td>
               </ng-container>
               <ng-container matColumnDef="Violations">
                 <th
@@ -717,10 +726,12 @@
                       : ""
                   }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="Email">
                 <th mat-header-cell *matHeaderCellDef>Email-ID</th>
                 <td mat-cell *matCellDef="let faculty">{{ faculty.email }}</td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="NoOfProjects">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -730,6 +741,7 @@
                   {{ faculty.includedProjectsCount }} /
                   {{ faculty.noOfProjects }}
                 </td>
+                <td mat-footer-cell *matFooterCellDef> <b>Total Included : </b> {{ faculties.filteredData | getIncludedOfTotal }} </td>
               </ng-container>
               <ng-container matColumnDef="Actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -741,6 +753,7 @@
                     >delete_outline</mat-icon
                   >
                 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <tr
                 mat-header-row
@@ -754,6 +767,7 @@
                 (mouseleave)="isActive = false; indexHover = -1"
                 [class.mat-elevation-z8]="isActive && indexHover == i"
               ></tr>
+              <tr mat-footer-row *matFooterRowDef="facultyCols; sticky: true"></tr>
             </table>
           </div>
         </div>
