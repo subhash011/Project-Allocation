@@ -9,13 +9,21 @@ import {
   PipeTransform,
   Output,
   EventEmitter,
-  ChangeDetectorRef,
 } from "@angular/core";
 import { AuthService } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material";
 import { LoaderComponent } from "../loader/loader.component";
+
+@Pipe({
+  name:"checkLogIn"
+})
+export class CheckLogIn implements PipeTransform {
+  transform(value) {
+    return localStorage.getItem("isLoggedIn") == "true";
+  }
+}
 
 @Component({
   selector: "app-login",
@@ -26,15 +34,13 @@ export class LoginComponent implements OnInit {
   @Output() isSignedIn = new EventEmitter<any>();
   @Output() isSignedOut = new EventEmitter<any>();
   dialogRefLoad: any;
-  update:String = new String("no");
   isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
   constructor(
     private authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
     private localAuth: LocalAuthService,
-    private snackBar: MatSnackBar,
-    private cd: ChangeDetectorRef
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -156,20 +162,16 @@ export class LoginComponent implements OnInit {
 
   signOut(): void {
     this.authService.signOut().then(() => {
+      localStorage.setItem("isLoggedIn", "false");
+      this.isLoggedIn = false;
+      localStorage.setItem("role", "none");
+      localStorage.removeItem("user");
+      localStorage.removeItem("id");
       this.isSignedIn.emit([false,"none"]);
       this.snackBar.open("Signed Out", "Ok", {
         duration: 3000,
       });
+      this.router.navigate([""]);
     });
-    localStorage.setItem("isLoggedIn", "false");
-    this.isLoggedIn = false;
-    this.update = new String("yes")
-    localStorage.setItem("role", "none");
-    localStorage.removeItem("user");
-    localStorage.removeItem("id");
-    this.router.navigate([""]);
-  }
-  getLoginStatus(){
-    return localStorage.getItem("isLoggedIn") == "true"
   }
 }

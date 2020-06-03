@@ -9,7 +9,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { SocialLoginModule, LoginOpt } from "angularx-social-login";
 import { AuthServiceConfig, GoogleLoginProvider } from "angularx-social-login";
-import { LoginComponent } from "./components/shared/login/login.component";
+import { LoginComponent, CheckLogIn } from "./components/shared/login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {
   NavbarComponent,
@@ -131,6 +131,7 @@ export function provideConfig() {
     GetLinksForNavBar,
     IsPreferenceEdit,
     ShowStudentAllotedComponent,
+    CheckLogIn
   ],
   entryComponents: [
     SubmitPopUpComponent,

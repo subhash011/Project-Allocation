@@ -4,7 +4,7 @@
       matRipple
       matRippleCentered="true"
       class="google-btn"
-      *ngIf="!getLoginStatus()"
+      *ngIf="!(isLoggedIn|checkLogIn)"
     >
       <img src="../../../../assets/btn_google_signin_light_focus_web.png" />
     </div>
@@ -12,10 +12,10 @@
       class="sign-out"
       matTooltip="Sign Out"
       matTooltipPosition="below"
-      *ngIf="getLoginStatus()"
+      *ngIf="(isLoggedIn|checkLogIn)"
       >exit_to_app</mat-icon
     >
   </a>
 </div>
 
-
+{{isLoggedIn}}
