@@ -72,6 +72,7 @@ import {
   SuperAdminCheck,
 } from "./components/shared/Pipes/rolePipes";
 import { ShowStudentAllotedComponent } from "./components/faculty-componenets/show-student-alloted/show-student-alloted.component";
+import { MatTableModule } from '@angular/material';
 const googleLoginOption: LoginOpt = {
   prompt: "select_account",
 };
@@ -131,7 +132,7 @@ export function provideConfig() {
     GetLinksForNavBar,
     IsPreferenceEdit,
     ShowStudentAllotedComponent,
-    CheckLogIn
+    CheckLogIn,
   ],
   entryComponents: [
     SubmitPopUpComponent,
@@ -157,6 +158,8 @@ export function provideConfig() {
     TypingAnimationModule,
     ClipboardModule,
     MatSortModule,
+    MatTableModule,
+    MatSortModule
   ],
   exports: [ClipboardModule],
   providers: [

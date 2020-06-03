@@ -27,12 +27,15 @@
             <table
               mat-table
               #table
+              matSort
+              (matSortChange) = "sortFaculties($event,branch)"
               [dataSource]="faculties[branch.short]"
               class="mat-elevation-z8"
             >
               <ng-container matColumnDef="Name">
                 <th
                   mat-header-cell
+                  mat-sort-header
                   *matHeaderCellDef
                   [style.color]="background"
                 >
@@ -130,6 +133,8 @@
           <div class="table mat-elevation-z8">
             <table
               mat-table
+              matSort
+              (matSortChange)="sortStudents($event,branch)"
               [dataSource]="students[branch.short]"
               class="mat-elevation-z8"
             >
@@ -137,6 +142,7 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
+                  mat-sort-header
                   [style.color]="background"
                 >
                   Name
@@ -152,11 +158,11 @@
                 <td mat-cell *matCellDef="let student">{{ student.email }}</td>
               </ng-container>
               <ng-container matColumnDef="CGPA">
-                <th mat-header-cell *matHeaderCellDef>CGPA</th>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>CGPA</th>
                 <td mat-cell *matCellDef="let student">{{ student.gpa }}</td>
               </ng-container>
               <ng-container matColumnDef="isRegistered">
-                <th mat-header-cell *matHeaderCellDef>Registered</th>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Registered</th>
                 <td mat-cell *matCellDef="let student">
                   {{ student.isRegistered ? "Yes" : "No" }}
                 </td>
@@ -207,12 +213,15 @@
           <div class="table mat-elevation-z8">
             <table
               mat-table
+              matSort
+              (matSortChange)="sortProjects($event,branch)"
               [dataSource]="projects[branch.short]"
               class="mat-elevation-z8"
             >
               <ng-container tainer matColumnDef="Title">
                 <th
                   mat-header-cell
+                  mat-sort-header
                   *matHeaderCellDef
                   [style.color]="background"
                 >
@@ -223,6 +232,7 @@
               <ng-container tainer matColumnDef="Faculty">
                 <th
                   mat-header-cell
+                  mat-sort-header
                   *matHeaderCellDef
                   [style.color]="background"
                 >
@@ -237,7 +247,7 @@
                 <td mat-cell *matCellDef="let project">{{ project.stream }}</td>
               </ng-container>
               <ng-container matColumnDef="NoOfStudents">
-                <th mat-header-cell *matHeaderCellDef>
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>
                   Number Of Students Applied
                 </th>
                 <td mat-cell *matCellDef="let project">
@@ -245,7 +255,7 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="Duration">
-                <th mat-header-cell *matHeaderCellDef>Duration (in months)</th>
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Duration (in months)</th>
                 <td mat-cell *matCellDef="let project">
                   {{ project.duration }}
                 </td>

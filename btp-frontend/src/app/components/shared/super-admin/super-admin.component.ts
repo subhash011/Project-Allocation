@@ -12,7 +12,7 @@ import {
   PipeTransform,
 } from "@angular/core";
 import { LoaderComponent } from "../loader/loader.component";
-import { MatTable, MatTableDataSource } from "@angular/material";
+import { MatTable, MatTableDataSource, MatSort } from "@angular/material";
 
 @Pipe({
   name: "getToolTipToRemoveFaculty",
@@ -146,7 +146,9 @@ export class SuperAdminComponent implements OnInit {
           };
           return newMap;
         });
-
+        for (const program of this.programs.data) {
+          this.faculties[program.short] = new MatTableDataSource([]);
+        }
         this.userService.getAllStudents().subscribe(
           (result) => {
             if (result["message"] == "success") {
@@ -625,5 +627,44 @@ export class SuperAdminComponent implements OnInit {
     } else if (who == "project") {
       this.projects[branch.short].filter = filterValue.trim().toLowerCase();
     }
+  }
+
+  sortFaculties(event,branch) {
+    const isAsc = event.direction == "asc"
+    this.faculties[branch.short].data = this.faculties[branch.short].data.sort((a,b) => {
+      switch (event.active) {
+        case 'Name': return this.compare(a.name, b.name, isAsc);
+        default: return 0;
+      }
+    })
+  }
+
+  sortStudents(event,branch) {
+    const isAsc = event.direction == "asc"
+    this.students[branch.short].data = this.students[branch.short].data.sort((a,b) => {
+      switch (event.active) {
+        case 'Name': return this.compare(a.name, b.name, isAsc);
+        case 'CGPA':return this.compare(a.gpa,b.gpa,isAsc);
+        case 'isRegistered':return this.compare(a.isRegistered,b.isRegistered,isAsc);
+        default: return 0;
+      }
+    })
+  }
+
+  sortProjects(event,branch) {
+    const isAsc = event.direction == "asc"
+    this.projects[branch.short].data = this.projects[branch.short].data.sort((a,b) => {
+      switch (event.active) {
+        case 'Faculty': return this.compare(a.faculty, b.faculty, isAsc);
+        case 'NoOfStudents':return this.compare(a.numberOfPreferences,b.numberOfPreferences,isAsc);
+        case 'Duration':return this.compare(a.duration,b.duration,isAsc);
+        case 'Title':return this.compare(a.title,b.title,isAsc);
+        default: return 0;
+      }
+    })
+  }
+
+  compare(a: number | string, b: number | string, isAsc: boolean) {
+   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 }
