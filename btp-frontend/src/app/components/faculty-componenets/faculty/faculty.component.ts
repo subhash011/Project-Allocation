@@ -125,10 +125,11 @@ export class FacultyComponent implements OnInit {
         });
       } else {
         dialogRefLoad.close();
-        this.loginService.signOut();
+        this.navbar.role = "none"
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     },() => {
       dialogRefLoad.close();
@@ -162,10 +163,11 @@ export class FacultyComponent implements OnInit {
           }
         }
       } else {
-        this.loginService.signOut();
+        this.navbar.role = "none"
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     },() => {
       dialogRef.close();

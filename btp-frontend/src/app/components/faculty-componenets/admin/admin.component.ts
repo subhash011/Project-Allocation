@@ -29,6 +29,7 @@ import { ShowStudentPreferencesComponent } from "../show-student-preferences/sho
 import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/show-faculty-preferences.component";
 import { saveAs } from "file-saver";
 import * as moment from "moment";
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Pipe({
   name: "getAllotedStudents",
@@ -178,7 +179,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     private projectService: ProjectsService,
     private loginService: LoginComponent,
     private loadingBar: LoadingBarService,
-    private exportService: ExporttocsvService
+    private exportService: ExporttocsvService,
+    private navbar:NavbarComponent
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -308,7 +310,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
                 this.validateFields();
               } else {
-                this.loginService.signOut();
+                this.navbar.role = "none"
                 this.snackBar.open(
                   "Session Timed Out! Please Sign-In again",
                   "Ok",
@@ -316,6 +318,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                     duration: 3000,
                   }
                 );
+                this.loginService.signOut();
               }
             },
             () => {
@@ -326,10 +329,11 @@ export class AdminComponent implements OnInit, OnDestroy {
             }
           );
         } else {
-          this.loginService.signOut();
+          this.navbar.role = "none"
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
           });
+          this.loginService.signOut();
         }
       },
       () => {
@@ -352,10 +356,11 @@ export class AdminComponent implements OnInit, OnDestroy {
             data.description.toLowerCase().includes(filter);
           this.selectIncluded();
         } else {
-          this.loginService.signOut();
+          this.navbar.role = "none"
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
           });
+          this.loginService.signOut();
         }
       },
       () => {
@@ -433,7 +438,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               dialogRefLoad.close();
             } else {
               dialogRefLoad.close();
-              this.loginService.signOut();
+              this.navbar.role = "none"
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -441,6 +446,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 }
               );
+              this.loginService.signOut();
             }
           },
           () => {
@@ -489,7 +495,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                 return val.faculty_id != id;
               });
             } else {
-              this.loginService.signOut();
+              this.navbar.role = "none"
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -497,6 +503,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 }
               );
+              this.loginService.signOut();
             }
           },
           () => {
@@ -547,7 +554,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               });
               this.dataSource.data = [...this.dataSource.data];
             } else {
-              this.loginService.signOut();
+              this.navbar.role = "none"
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -555,6 +562,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 }
               );
+              this.loginService.signOut();
             }
           },
           () => {
@@ -638,7 +646,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                 });
                 this.ngOnInit();
               } else {
-                this.loginService.signOut();
+                this.navbar.role = "none"
                 this.snackBar.open(
                   "Session Timed Out! Please Sign-In again",
                   "Ok",
@@ -646,6 +654,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                     duration: 3000,
                   }
                 );
+                this.loginService.signOut();
               }
             },
             () => {
@@ -718,7 +727,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                               }
                             );
                           } else {
-                            this.loginService.signOut();
+                            this.navbar.role = "none"
                             this.snackBar.open(
                               "Session Timed Out! Please Sign-In again",
                               "Ok",
@@ -726,6 +735,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                                 duration: 3000,
                               }
                             );
+                            this.loginService.signOut();
                           }
                         });
                     } else {
@@ -740,7 +750,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   }
                 });
               } else if (data["message"] == "invalid-token") {
-                this.loginService.signOut();
+                this.navbar.role = "none"
                 this.snackBar.open(
                   "Session Expired! Sign-In and try again",
                   "Ok",
@@ -748,6 +758,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                     duration: 3000,
                   }
                 );
+                this.loginService.signOut();
               } else {
                 this.snackBar.open("Some error occured! Try again", "Ok", {
                   duration: 3000,
@@ -819,7 +830,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                         duration: 3000,
                       });
                     } else {
-                      this.loginService.signOut();
+                      this.navbar.role = "none"
                       this.snackBar.open(
                         "Session Timed Out! Please Sign-In again",
                         "Ok",
@@ -827,6 +838,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                           duration: 3000,
                         }
                       );
+                      this.loginService.signOut();
                     }
                   });
               } else {
@@ -857,7 +869,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                         duration: 3000,
                       });
                     } else {
-                      this.loginService.signOut();
+                      this.navbar.role = "none"
                       dialogRefLoad.close();
                       this.snackBar.open(
                         "Session Timed Out! Please Sign-In again",
@@ -866,6 +878,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                           duration: 3000,
                         }
                       );
+                      this.loginService.signOut();
                     }
                   });
               }
@@ -949,7 +962,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               });
               this.validateFields();
             } else {
-              this.loginService.signOut();
+              this.navbar.role = "none"
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -957,6 +970,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 }
               );
+              this.loginService.signOut();
             }
           },
           () => {
@@ -992,7 +1006,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               });
               this.validateFields();
             } else {
-              this.loginService.signOut();
+              this.navbar.role = "none"
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -1000,6 +1014,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 }
               );
+              this.loginService.signOut();
             }
           },
           () => {
@@ -1035,7 +1050,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               });
               this.validateFields();
             } else {
-              this.loginService.signOut();
+              this.navbar.role = "none"
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -1043,6 +1058,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 }
               );
+              this.loginService.signOut();
             }
           },
           () => {
@@ -1134,10 +1150,11 @@ export class AdminComponent implements OnInit, OnDestroy {
               }
             );
         } else {
-          this.loginService.signOut();
+          this.navbar.role = "none"
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
           });
+          this.loginService.signOut();
         }
       },
       () => {
@@ -1302,6 +1319,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 }
               );
+              this.navbar.role = "none"
               this.loginService.signOut();
             }
           },

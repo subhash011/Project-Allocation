@@ -13,6 +13,7 @@ import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
 import { Location } from "@angular/common";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { ShowStudentAllotedComponent } from '../show-student-alloted/show-student-alloted.component';
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Component({
   selector: "app-content",
@@ -60,7 +61,7 @@ export class ContentComponent implements OnInit, DoCheck {
     private router: Router,
     private userService: UserService,
     private login: LoginComponent,
-    private facultyComponent: FacultyComponent
+    private navbar: NavbarComponent
   ) {}
 
   ngOnInit() {
@@ -149,7 +150,7 @@ export class ContentComponent implements OnInit, DoCheck {
               duration: 3000,
             });
           } else {
-            this.login.signOut();
+            this.navbar.role = "none"
             this.snackBar.open(
               "Session Timed Out! Please Sign-In again",
               "Ok",
@@ -157,6 +158,7 @@ export class ContentComponent implements OnInit, DoCheck {
                 duration: 3000,
               }
             );
+            this.login.signOut();
           }
         },() => {
           dialogRef.close();
@@ -236,7 +238,7 @@ export class ContentComponent implements OnInit, DoCheck {
                 });
               } else if (result["message"] == "closed") {
               } else {
-                this.login.signOut();
+                this.navbar.role = "none"
                 this.snackBar.open(
                   "Session Timed Out! Please Sign-In again",
                   "Ok",
@@ -244,6 +246,7 @@ export class ContentComponent implements OnInit, DoCheck {
                     duration: 3000,
                   }
                 );
+                this.login.signOut();
               }
             }
           });

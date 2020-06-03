@@ -115,6 +115,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             if (result && result["message"] == "success") {
               this.preferences.data = result["result"];
             } else if (result["message"] == "invalid-token") {
+              this.loginObject.isLoggedIn = false;
               this.navbar.role = "none";
               this.snackBar.open(
                 "Session Expired! Please Sign In Again",
@@ -165,6 +166,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         (result) => {
           this.dialogRefLoad.close();
           if (result["message"] == "invalid-token") {
+            this.loginObject.isLoggedIn = false;
             this.navbar.role = "none";
             this.snackBar.open("Session Expired! Please Sign In Again", "OK", {
               duration: 3000,

@@ -19,6 +19,7 @@ import { LoaderComponent } from "../loader/loader.component";
 
 @Pipe({
   name:"checkLogIn",
+  pure:false
 })
 export class CheckLogIn implements PipeTransform {
   transform(value) {
@@ -41,7 +42,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private localAuth: LocalAuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -54,7 +55,7 @@ export class LoginComponent implements OnInit {
   }
   userActivity() {
     if (localStorage.getItem("isLoggedIn") == "true") {
-      this.signOut();
+      this.signOut(true);
     } else {
       this.signInWithGoogle();
     }
@@ -161,11 +162,13 @@ export class LoginComponent implements OnInit {
       });
   }
 
-  signOut(): void {
+  signOut(userClick?:boolean): void {
     this.authService.signOut().then(() => {
-      this.snackBar.open("Signed Out", "Ok", {
-        duration: 3000,
-      });
+      if(userClick) {
+        this.snackBar.open("Signed Out", "Ok", {
+          duration: 3000,
+        });
+      }
     }).catch(err => {
       console.log(err);
     });
@@ -178,7 +181,6 @@ export class LoginComponent implements OnInit {
     this.router.navigate([""]);
   }
   checkLoggedIn() {
-    console.log("here")
     return localStorage.getItem("isLoggedIn") == "true";
   }
 }
