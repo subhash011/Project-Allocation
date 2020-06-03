@@ -32,7 +32,6 @@ export class CheckLogIn implements PipeTransform {
 })
 export class LoginComponent implements OnInit {
   @Output() isSignedIn = new EventEmitter<any>();
-  @Output() isSignedOut = new EventEmitter<any>();
   dialogRefLoad: any;
   isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
   constructor(
