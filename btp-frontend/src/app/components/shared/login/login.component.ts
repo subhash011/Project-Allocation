@@ -9,6 +9,7 @@ import {
   PipeTransform,
   Output,
   EventEmitter,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { AuthService } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
@@ -17,7 +18,7 @@ import { MatDialog } from "@angular/material";
 import { LoaderComponent } from "../loader/loader.component";
 
 @Pipe({
-  name:"checkLogIn"
+  name:"checkLogIn",
 })
 export class CheckLogIn implements PipeTransform {
   transform(value) {
@@ -29,6 +30,7 @@ export class CheckLogIn implements PipeTransform {
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
+  changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
   @Output() isSignedIn = new EventEmitter<any>();
@@ -161,16 +163,22 @@ export class LoginComponent implements OnInit {
 
   signOut(): void {
     this.authService.signOut().then(() => {
-      localStorage.setItem("isLoggedIn", "false");
-      this.isLoggedIn = false;
-      localStorage.setItem("role", "none");
-      localStorage.removeItem("user");
-      localStorage.removeItem("id");
-      this.isSignedIn.emit([false,"none"]);
       this.snackBar.open("Signed Out", "Ok", {
         duration: 3000,
       });
-      this.router.navigate([""]);
+    }).catch(err => {
+      console.log(err);
     });
+    localStorage.setItem("isLoggedIn", "false");
+    this.isLoggedIn = false;
+    localStorage.setItem("role", "none");
+    localStorage.removeItem("user");
+    localStorage.removeItem("id");
+    this.isSignedIn.emit([false,"none"]);
+    this.router.navigate([""]);
+  }
+  checkLoggedIn() {
+    console.log("here")
+    return localStorage.getItem("isLoggedIn") == "true";
   }
 }
