@@ -41,6 +41,8 @@ import {
 import {
   AdminComponent,
   AllotedStudents,
+  StudentIntake,
+  ActiveProjects,
 } from "./components/faculty-componenets/admin/admin.component";
 import {
   TimelineComponent,
@@ -133,6 +135,8 @@ export function provideConfig() {
     IsPreferenceEdit,
     ShowStudentAllotedComponent,
     CheckLogIn,
+    StudentIntake,
+    ActiveProjects,
   ],
   entryComponents: [
     SubmitPopUpComponent,

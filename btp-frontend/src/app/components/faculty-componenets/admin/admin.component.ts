@@ -44,6 +44,33 @@ export class AllotedStudents implements PipeTransform {
   }
 }
 
+@Pipe({
+  name: "getStudentIntake",
+})
+export class StudentIntake implements PipeTransform {
+  transform(projects) {
+    let sum = 0;
+    for(let project of projects){
+      sum += project.studentIntake
+    }
+    return sum;
+  }
+}
+
+@Pipe({
+  name: "getActiveProjects",
+})
+export class ActiveProjects implements PipeTransform {
+  transform(projects) {
+    let sum = 0;
+    projects.forEach(project=>{
+      if(project.isIncluded)
+        sum++;
+    })
+    return sum;
+  }
+}
+
 @Component({
   selector: "app-admin",
   templateUrl: "./admin.component.html",
@@ -303,12 +330,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           this.projects = projects["result"];
           this.dataSource.data = this.projects;
           this.projectCount = this.projects.length;
-          let counter = 0;
-          this.projects.forEach(project=>{
-            if(project.isIncluded)
-              counter++;
-          })
-          this.availableProjects = counter;
           this.dataSource.filterPredicate = (data: any, filter: string) =>
             !filter ||
             data.faculty.toLowerCase().includes(filter) ||
