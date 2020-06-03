@@ -32,6 +32,7 @@ import { MatRippleModule } from "@angular/material/core";
 import { MatBadgeModule } from "@angular/material/badge";
 import { ScrollingModule } from "@angular/cdk/scrolling";
 import { MatChipsModule } from "@angular/material/chips";
+import {MatSortModule} from '@angular/material/sort';
 const MaterialComponents = [
   MatButtonModule,
   MatToolbarModule,
@@ -66,6 +67,7 @@ const MaterialComponents = [
   MatBadgeModule,
   ScrollingModule,
   MatChipsModule,
+  MatSortModule
 ];
 
 @NgModule({

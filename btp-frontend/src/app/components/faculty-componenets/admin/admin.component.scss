@@ -51,7 +51,7 @@ mat-sidenav-content {
 }
 
 .display-student {
-  padding-top: 30px;
+  padding-bottom: 5%;
 }
 
 .fill-remaining-space {
@@ -129,7 +129,6 @@ mat-icon:hover {
 }
 
 .display {
-  padding-top: 5%;
   padding-bottom: 2%;
   padding-right: 1%;
   z-index: 2;
@@ -194,4 +193,23 @@ mat-tab {
 
 .import_students {
   margin-left: 1%;
+}
+
+.register_total{
+  margin-left:70%;
+}
+
+.registered{
+  padding-right: 2%;
+}
+
+.table_info{
+  width:90px;
+}
+
+.display_faculties{
+  padding-top:5%;
+  padding-bottom: 2%;
+  padding-right: 1%;
+  z-index: 2;
 }

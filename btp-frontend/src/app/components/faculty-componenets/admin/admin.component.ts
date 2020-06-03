@@ -18,7 +18,8 @@ import {
   Pipe,
   PipeTransform,
 } from "@angular/core";
-import { MatStepper, MatTableDataSource, MatSort } from "@angular/material";
+import { MatStepper, MatTableDataSource } from "@angular/material";
+import { MatSort, Sort } from "@angular/material/sort";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { SelectionModel } from "@angular/cdk/collections";
 import { ResetComponent } from "../reset/reset.component";
@@ -112,11 +113,14 @@ export class AdminComponent implements OnInit, OnDestroy {
   studentsPerFaculty;
   projectCap;
   studentCap;
-  studentCount;
+  studentCount = 0;
+  registeredCount = 0;
+  projectCount=0;
+  availableProjects=0;
   days_left;
   project: any;
 
-  dataSource: any = [];
+  dataSource: any = new MatTableDataSource([]);
   selection = new SelectionModel(true, []);
 
   @ViewChild("stepper", { static: false }) stepper: MatStepper;
@@ -229,6 +233,14 @@ export class AdminComponent implements OnInit, OnDestroy {
               if (result["message"] == "success") {
                 this.faculties.data = result["result"]["faculties"];
                 this.students.data = result["result"]["students"];
+                this.studentCount = result["result"]["students"].length;
+                let counter = 0;
+                this.students.data.forEach((student) => {
+                  if (student.isRegistered) {
+                    counter++;
+                  }
+                });
+                this.registeredCount = counter;
                 this.faculties.filterPredicate = (data: any, filter: string) =>
                   !filter ||
                   data.name.toLowerCase().includes(filter) ||
@@ -289,7 +301,14 @@ export class AdminComponent implements OnInit, OnDestroy {
       (projects) => {
         if (projects["message"] == "success") {
           this.projects = projects["result"];
-          this.dataSource = new MatTableDataSource(this.projects);
+          this.dataSource.data = this.projects;
+          this.projectCount = this.projects.length;
+          let counter = 0;
+          this.projects.forEach(project=>{
+            if(project.isIncluded)
+              counter++;
+          })
+          this.availableProjects = counter;
           this.dataSource.filterPredicate = (data: any, filter: string) =>
             !filter ||
             data.faculty.toLowerCase().includes(filter) ||
@@ -477,6 +496,8 @@ export class AdminComponent implements OnInit, OnDestroy {
           (result) => {
             dialogRefLoad.close();
             if (result["message"] == "success") {
+              if (student.isRegistered) this.registeredCount--;
+              this.studentCount--;
               this.snackBar.open("Removed Student", "Ok", {
                 duration: 3000,
               });
@@ -758,13 +779,9 @@ export class AdminComponent implements OnInit, OnDestroy {
                   .subscribe((data2) => {
                     dialogRefLoad.close();
                     if (data2["message"] == "success") {
-                     this.snackBar.open(
-                        "Mails have been sent",
-                        "Ok",
-                        {
-                          duration: 3000,
-                        }
-                      );
+                      this.snackBar.open("Mails have been sent", "Ok", {
+                        duration: 3000,
+                      });
                     } else {
                       this.loginService.signOut();
                       this.snackBar.open(
@@ -800,13 +817,9 @@ export class AdminComponent implements OnInit, OnDestroy {
                   .subscribe((data) => {
                     dialogRefLoad.close();
                     if (data["message"] == "success") {
-                      this.snackBar.open(
-                        "Mails have been sent",
-                        "Ok",
-                        {
-                          duration: 3000,
-                        }
-                      );
+                      this.snackBar.open("Mails have been sent", "Ok", {
+                        duration: 3000,
+                      });
                     } else {
                       this.loginService.signOut();
                       dialogRefLoad.close();
@@ -919,13 +932,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         );
     } else {
       dialogRefLoad.close();
-      this.snackBar.open(
-        "Please enter a valid number",
-        "Ok",
-        {
-          duration: 3000,
-        }
-      );
+      this.snackBar.open("Please enter a valid number", "Ok", {
+        duration: 3000,
+      });
     }
   }
 
@@ -1557,5 +1566,67 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     clearInterval(this.timer);
+  }
+
+  sortStudents(event) {
+    const isAsc = event.direction == "asc";
+    this.students.data = this.students.data.sort((a, b) => {
+      switch (event.active) {
+        case "Name":
+          return this.compare(a.name, b.name, isAsc);
+        case "GPA":
+          return this.compare(a.gpa, b.gpa, isAsc);
+        case "Registered":
+          return this.compare(a.isRegistered, b.isRegistered, isAsc);
+        default:
+          return 0;
+      }
+    });
+  }
+
+  sortFaculty(event) {
+    const isAsc = event.direction == "asc";
+    this.faculties.data = this.faculties.data.sort((a, b) => {
+      switch (event.active) {
+        case "Name":
+          return this.compare(a.name, b.name, isAsc);
+        case "GPA":
+          return this.compare(a.gpa, b.gpa, isAsc);
+        case "Registered":
+          return this.compare(a.isRegistered, b.isRegistered, isAsc);
+        case "NoOfProjects":
+          return this.compare(a.noOfProjects, b.noOfProjects, isAsc);
+        default:
+          return 0;
+      }
+    });
+  }
+
+  sortProjects(event) {
+    const isAsc = event.direction == "asc";
+    this.dataSource.data = this.dataSource.data.sort((a, b) => {
+      switch (event.active) {
+        case "select":
+          return this.compare(this.selection.isSelected(a), this.selection.isSelected(b), isAsc);
+        case "Title":
+          return this.compare(a.title, b.title, isAsc);
+        case "Faculty":
+          return this.compare(a.faculty, b.faculty, isAsc);
+        case "Duration":
+          return this.compare(a.duration, b.duration, isAsc);
+        case "isIncluded":
+          return this.compare(a.isIncluded, b.isIncluded, isAsc);
+        case "studentIntake":
+          return this.compare(a.studentIntake, b.studentIntake, isAsc);
+        case "NoOfStudents":
+          return this.compare(a.numberOfPreferences, b.numberOfPreferences, isAsc);
+        default:
+          return 0;
+      }
+    });
+  }
+
+  compare(a: number | string | boolean, b: number | string | boolean, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 }
