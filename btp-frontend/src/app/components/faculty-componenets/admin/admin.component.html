@@ -345,7 +345,7 @@
     </div>
 
 
-    <div class="register_total">
+    <!-- <div class="register_total">
       <mat-form-field class="registered">
         <mat-label>Active</mat-label>
         <input
@@ -366,7 +366,7 @@
           [(ngModel)]="projectCount"
         />
       </mat-form-field>
-    </div>
+    </div> -->
 
 
     <div class="display">
@@ -401,6 +401,7 @@
               >
               </mat-checkbox>
             </td>
+            <td mat-footer-cell *matFooterCellDef> <b>Selected : </b> {{this.selection.selected.length}} </td>
           </ng-container>
 
           <ng-container matColumnDef="Title">
@@ -413,6 +414,7 @@
               Title
             </th>
             <td mat-cell *matCellDef="let project">{{ project.title }}</td>
+            <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{projectCount}} </td>
           </ng-container>
           <ng-container matColumnDef="isIncluded">
             <th mat-header-cell *matHeaderCellDef [style.color]="background" mat-sort-header>
@@ -421,14 +423,17 @@
             <td mat-cell *matCellDef="let project">
               {{ project.isIncluded ? "No" : "Yes" }}
             </td>
+            <td mat-footer-cell *matFooterCellDef></td>
           </ng-container>
           <ng-container matColumnDef="Faculty">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Faculty</th>
             <td mat-cell *matCellDef="let project">{{ project.faculty }}</td>
+            <td mat-footer-cell *matFooterCellDef><b>Active Projects : </b> {{projects | getActiveProjects}}</td>
           </ng-container>
           <ng-container matColumnDef="Duration">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Duration</th>
             <td mat-cell *matCellDef="let project">{{ project.duration }}</td>
+            <td mat-footer-cell *matFooterCellDef></td>
           </ng-container>
           <ng-container matColumnDef="studentIntake">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -437,6 +442,7 @@
             <td mat-cell *matCellDef="let project">
               {{ project.studentIntake }}
             </td>
+            <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{projects | getStudentIntake}} </td>
           </ng-container>
           <ng-container matColumnDef="NoOfStudents">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -445,6 +451,7 @@
             <td mat-cell *matCellDef="let project">
               {{ project.numberOfPreferences }}
             </td>
+            <td mat-footer-cell *matFooterCellDef></td>
           </ng-container>
           <ng-container matColumnDef="Preferences">
             <th mat-header-cell *matHeaderCellDef>Preferences</th>
@@ -457,6 +464,7 @@
                 open_in_new</mat-icon
               >
             </td>
+            <td mat-footer-cell *matFooterCellDef></td>
           </ng-container>
           <ng-container matColumnDef="Student">
             <th mat-header-cell *matHeaderCellDef>Alloted To</th>
@@ -477,6 +485,7 @@
                 {{ project.student_alloted | getAllotedStudents }}
               </div>
             </td>
+            <td mat-footer-cell *matFooterCellDef></td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
           <tr
@@ -487,6 +496,7 @@
             (mouseleave)="isActive = false; indexHover = -1"
             [class.mat-elevation-z8]="isActive && indexHover == i"
           ></tr>
+          <tr mat-footer-row *matFooterRowDef="columns"></tr>
         </table>
       </div>
     </div>

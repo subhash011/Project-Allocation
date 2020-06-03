@@ -43,6 +43,8 @@ import {
   AdminComponent,
   AllotedStudents,
   GetIncludedOfTotal,
+  StudentIntake,
+  ActiveProjects,
 } from "./components/faculty-componenets/admin/admin.component";
 import {
   TimelineComponent,
@@ -136,7 +138,9 @@ export function provideConfig() {
     ShowStudentAllotedComponent,
     CheckLogIn,
     GetIncludedOfTotal,
-    GetRegisteredCount
+    GetRegisteredCount,
+    StudentIntake,
+    ActiveProjects,
   ],
   entryComponents: [
     SubmitPopUpComponent,
