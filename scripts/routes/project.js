@@ -51,7 +51,7 @@ router.post("/add", (req, res) => {
 
 				for (let index = 0; index < num; index++) {
 					let names = faculty.name + "_pr" + (index + 1);
-					let studentIntake = 2;
+					let studentIntake = getRandomInt(1,5);
 
 					const project = new Project({
 						title: names,
@@ -60,6 +60,7 @@ router.post("/add", (req, res) => {
 						description: names,
 						duration: 1,
 						stream: "UGCSE",
+						isIncluded:(studentIntake <= 2 ? false:true)
 					});
 
 					faculty.project_list.push(project._id);
@@ -100,5 +101,11 @@ router.post("/add", (req, res) => {
 			console.log(err);
 		});
 });
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 module.exports = router;

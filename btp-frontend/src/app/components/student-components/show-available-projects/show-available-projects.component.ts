@@ -99,6 +99,13 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   }
   dialogRefLoad;
   ngOnInit() {
+    if (window.innerWidth <= 1300) {
+      this.showToggleOnSidenav = true;
+      this.sidenavWidth = 100;
+    } else {
+      this.showToggleOnSidenav = false;
+      this.sidenavWidth = 50;
+    }
     this.dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Loading. Please wait! ...",
       disableClose: true,

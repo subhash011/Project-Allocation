@@ -32,6 +32,21 @@ import * as moment from "moment";
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Pipe({
+  name:"selectedLength"
+})
+export class SelectedLength implements PipeTransform {
+  transform(selected, filteredData) {
+    selected = selected.map(val => val._id);
+    filteredData = filteredData.map(val => val._id);
+    let count = 0;
+    selected.forEach(project => {
+      count += filteredData.indexOf(project) != -1 ? 1 : 0
+    })
+    return count;
+  }
+}
+
+@Pipe({
   name: "getAllotedStudents",
 })
 export class AllotedStudents implements PipeTransform {

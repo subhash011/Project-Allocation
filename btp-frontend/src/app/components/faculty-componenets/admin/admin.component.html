@@ -401,7 +401,7 @@
               >
               </mat-checkbox>
             </td>
-            <td mat-footer-cell *matFooterCellDef> <b>Selected : </b> {{this.selection.selected.length}} </td>
+            <td mat-footer-cell *matFooterCellDef> <b>Selected : </b> {{this.selection.selected | selectedLength:dataSource.filteredData}} </td>
           </ng-container>
 
           <ng-container matColumnDef="Title">

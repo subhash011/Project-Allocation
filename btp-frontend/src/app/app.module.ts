@@ -45,6 +45,7 @@ import {
   GetIncludedOfTotal,
   StudentIntake,
   ActiveProjects,
+  SelectedLength,
 } from "./components/faculty-componenets/admin/admin.component";
 import {
   TimelineComponent,
@@ -141,6 +142,7 @@ export function provideConfig() {
     GetRegisteredCount,
     StudentIntake,
     ActiveProjects,
+    SelectedLength
   ],
   entryComponents: [
     SubmitPopUpComponent,
