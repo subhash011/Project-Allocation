@@ -39,10 +39,14 @@
           <li>
             <h4>Co-ordinator</h4>
             <p>
+              Co-ordinator has to import the student list containing
+              Name,Rollno.,CGPA of each student in csv format in the
+              Manage->Students tab to enable the students to register. Note that
+              students not present in this list wont be able to register.
               Presets help to control the number of students assigned to each
               faculty. These are assigned by the Co-ordinator of each program
               and is unique to a program. Co-ordinator is responsible for
-              setting the deadlines of the programs. Mails will be sent to the
+              setting the deadlines of the programs. Mails can be sent to the
               particular groups of users about the deadline. Please note that
               this is not automated for any of the stages i.e you have to click
               the Send Mails button.
@@ -66,11 +70,6 @@
                     <b>Students Per Faculty</b>: This is the maximum number of
                     students each faculty can intake considering all the
                     projects they floated. This is not set to anything in the
-                    start.
-                  </li>
-                  <li>
-                    <b>Number of Students</b>: This is the number of students
-                    involved in the program. This is not set to anything in the
                     start.
                   </li>
                 </ul>
@@ -116,13 +115,28 @@
         <h4>Flow of the Process</h4>
         <ul>
           <li>
-            Before the start of the allocation all the students and faculty have
-            to register into the application.
+            Super Admin has to add the respective programs and streams.
           </li>
+
           <li>
-            The Super Admin has to choose the Co-ordinators of each program.
-            Note that every program should have a unique Co-ordinator.
+            All the faculty members have to register to the portal choosing
+            their respective stream. If your stream is not present in the
+            registraion page please contact the Super Admin to add it.
           </li>
+
+          <li>
+            Super Admin has to then choose a Co-ordinator to each program. Do
+            note that one faculty member can behave as a Co-ordinator only for
+            one program.
+          </li>
+
+          <li>
+            Each Co-ordinator has to then import the student list in a csv file
+            containing Name,Rollno.,CGPA of each student. Do note that only the
+            students in this list will be able to register to the portal.
+            Students not in this list wont be able to register to the portal.
+          </li>
+
           <li>
             The Co-ordinators of each program have to start the allocation by
             setting the first deadline and fillng in the presets. On setting the
@@ -142,7 +156,9 @@
             Co-ordinators have to proceed to the next stage by hitting the
             proceed button. Co-ordinators have to make sure that no faculty have
             violated the presets, otherwise you wont be able to move to the next
-            stage.
+            stage. Note that there are some violations which have to be resolved
+            in the Manage->Faculty tab otherwise you wont be able to proceed to
+            the next stage.
           </li>
           <li>
             <b>Start of Stage 2</b>
@@ -162,13 +178,18 @@
           </li>
           <li>
             Faculty have to fill in their preferences of students for each
-            project they floated.
+            project they floated. In this stage faculty can choose which
+            projects they finally want to float of the all the projects they
+            floated.
           </li>
           <li>
             <b>End of Stage 3</b>
           </li>
           <li>
             <b>Stage 4 is Allocation</b>
+          </li>
+          <li>
+            Co-ordinator can try out various allocations in the Project tab and then can publish to Faculty or Students. Do note that on publishing the allocation details to Faculty or Students mails will be sent to the respective groups automatically.
           </li>
         </ul>
         <br />
@@ -247,6 +268,9 @@
                 allocation.
               </li>
               <li>
+                Faculty also have to select a final list of projects from all the projects they floated which they finally want to offer.
+              </li>
+              <li>
                 Students wont be able to edit their preferences further.
               </li>
             </ol>
@@ -260,9 +284,9 @@
             <ol>
               <li>
                 Project Allocation allocates program wise, and after the
-                allocation make sure to click on the Send Mails button to send
+                allocation make sure to click on the <b>Publish to Faculty</b> and the <b>Publish to Students</b> button to send
                 mails to all the members involved in that particular program
-                indicating the end of the allocation.
+                indicating the end of the allocation and to publish the details of the allocation to the respective group.
               </li>
               <li>
                 Now you can exclude projects from the allocation by deselecting
