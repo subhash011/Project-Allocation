@@ -154,9 +154,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   proceedButton2 = true;
   proceedButton3 = true;
 
-  allocationButton = true;
-  allocationMail = true;
-
   proceedButton1_ = true;
   proceedButton2_ = true;
   proceedButton3_ = true;
@@ -174,7 +171,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   projectCap;
   studentCap;
   studentCount = 0;
-  registeredCount = 0;
   projectCount=0;
   availableProjects=0;
   days_left;
@@ -304,14 +300,8 @@ export class AdminComponent implements OnInit, OnDestroy {
               if (result["message"] == "success") {
                 this.faculties.data = result["result"]["faculties"];
                 this.students.data = result["result"]["students"];
+                this.sortStudents({direction:"asc",active:"Name"});
                 this.studentCount = result["result"]["students"].length;
-                let counter = 0;
-                this.students.data.forEach((student) => {
-                  if (student.isRegistered) {
-                    counter++;
-                  }
-                });
-                this.registeredCount = counter;
                 this.faculties.filterPredicate = (data: any, filter: string) =>
                   !filter ||
                   data.name.toLowerCase().includes(filter) ||
@@ -335,7 +325,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   }
                 }
 
-                this.validateFields();
+                this.getAllocationValidation(flag);
               } else {
                 this.navbar.role = "none"
                 this.snackBar.open(
@@ -566,7 +556,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           (result) => {
             dialogRefLoad.close();
             if (result["message"] == "success") {
-              if (student.isRegistered) this.registeredCount--;
               this.studentCount--;
               this.snackBar.open("Removed Student", "Ok", {
                 duration: 3000,
@@ -1106,6 +1095,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   validateFields() {
     this.userService.getMembersForAdmin().subscribe(
       (result) => {
+
+
         if (result["message"] == "success") {
           this.faculties.data = result["result"]["faculties"];
           this.students.data = result["result"]["students"];
@@ -1123,8 +1114,27 @@ export class AdminComponent implements OnInit, OnDestroy {
               break;
             }
           }
+          this.getAllocationValidation(flag);
+        } else {
+          this.navbar.role = "none"
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
+          this.loginService.signOut();
+        }
+      },
+      () => {
+        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+          duration: 3000,
+        });
+      }
+    );
+  }
 
-          const length = this.students.data.filter((val) => val.isRegistered)
+
+  getAllocationValidation(flag){
+
+    const length = this.students.data.filter((val) => val.isRegistered)
             .length;
 
           this.userService
@@ -1132,8 +1142,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             .subscribe(
               (data) => {
                 if (data["status"] == "success") {
-                  this.allocationButton = false;
-                  this.allocationMail = false;
 
                   if (this.dateSet.length == 1) {
                     if (this.firstFormGroup.controls["firstCtrl"]) {
@@ -1142,8 +1150,6 @@ export class AdminComponent implements OnInit, OnDestroy {
                     }
                   }
                 } else {
-                  this.allocationButton = true;
-                  this.allocationMail = true;
 
                   if (this.dateSet.length == 1) {
                     if (this.firstFormGroup.controls["firstCtrl"]) {
@@ -1176,21 +1182,9 @@ export class AdminComponent implements OnInit, OnDestroy {
                 );
               }
             );
-        } else {
-          this.navbar.role = "none"
-          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-            duration: 3000,
-          });
-          this.loginService.signOut();
-        }
-      },
-      () => {
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-          duration: 3000,
-        });
-      }
-    );
   }
+
+
 
   isAllSelected() {
     const numSelected = this.selection.selected

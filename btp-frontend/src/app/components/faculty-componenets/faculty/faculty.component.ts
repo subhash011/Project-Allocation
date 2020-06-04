@@ -224,7 +224,6 @@ export class FacultyComponent implements OnInit {
       }
     },() => {
       dialogRef.close();
-      this.ngOnInit();
       this.snackBar.open("Some Error Occured! Try again later.", "OK", {
         duration: 3000,
       });
