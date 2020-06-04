@@ -300,7 +300,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               if (result["message"] == "success") {
                 this.faculties.data = result["result"]["faculties"];
                 this.students.data = result["result"]["students"];
-                this.sortStudents({direction:"asc",active:"Name"});
+                this.sortStudents({direction:"asc",active:"Email"});
                 this.studentCount = result["result"]["students"].length;
                 this.faculties.filterPredicate = (data: any, filter: string) =>
                   !filter ||
@@ -1653,6 +1653,8 @@ export class AdminComponent implements OnInit, OnDestroy {
         case "GPA":
           return this.compare(a.gpa, b.gpa, isAsc);
         case "Registered":
+          return this.compare(a.isRegistered, b.isRegistered, isAsc);
+        case "Email":
           return this.compare(a.isRegistered, b.isRegistered, isAsc);
         default:
           return 0;
