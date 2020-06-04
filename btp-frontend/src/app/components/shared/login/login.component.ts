@@ -10,6 +10,13 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  ApplicationRef,
+  ViewChild,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
 } from "@angular/core";
 import { AuthService } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
@@ -35,6 +42,8 @@ export class CheckLogIn implements PipeTransform {
 })
 export class LoginComponent implements OnInit {
   @Output() isSignedIn = new EventEmitter<any>();
+  @Input() role:string;
+  @ViewChild("sigInDiv",{static:false}) signInDiv:ElementRef
   dialogRefLoad: any;
   isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
   constructor(
@@ -43,8 +52,9 @@ export class LoginComponent implements OnInit {
     private dialog: MatDialog,
     private localAuth: LocalAuthService,
     private snackBar: MatSnackBar,
+    private cdRef:ChangeDetectorRef,
+    private app:ApplicationRef
   ) {}
-
   ngOnInit() {
     if (!localStorage.getItem("isLoggedIn")) {
       localStorage.setItem("isLoggedIn", "false");
@@ -179,8 +189,5 @@ export class LoginComponent implements OnInit {
     localStorage.removeItem("id");
     this.isSignedIn.emit([false,"none"]);
     this.router.navigate([""]);
-  }
-  checkLoggedIn() {
-    return localStorage.getItem("isLoggedIn") == "true";
   }
 }

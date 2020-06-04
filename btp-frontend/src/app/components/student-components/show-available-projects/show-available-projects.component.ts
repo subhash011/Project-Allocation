@@ -140,9 +140,11 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
           }
         );
       return;
+    } else  {
+      this.preferences.data = [];
+      this.projects.data = [];
+      this.getAllStudentPreferences();
     }
-    this.preferences.data = [];
-    this.projects.data = [];
     this.userService
       .getStreamStage()
       .toPromise()
@@ -151,7 +153,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
           this.stage = result["result"];
         }
       });
-    this.getAllStudentPreferences();
   }
   isPrefenceEdit() {
     return this.router.url.includes("preferences") ? true : false;

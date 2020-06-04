@@ -88,6 +88,7 @@
     <app-theme-picker class="primary-toolbar"></app-theme-picker>
     <div class="flex-grow-right primary-toolbar"></div>
     <app-login
+      [role]="role"
       (isSignedIn)="changeRole()"
       class="primary-toolbar"
     ></app-login>
