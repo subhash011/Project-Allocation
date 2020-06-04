@@ -17,6 +17,7 @@ import {
   OnDestroy,
   Pipe,
   PipeTransform,
+  HostListener,
 } from "@angular/core";
 import { MatStepper, MatTableDataSource } from "@angular/material";
 import { MatSort, Sort } from "@angular/material/sort";
@@ -112,7 +113,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   public details; // For displaying the projects tab
   public faculty_projects;
   public fileToUpload: File = null;
-
+  projectTableHeight:number = window.innerHeight * 0.7;
+  studentTableHeight:number = window.innerHeight * 0.65;
   columns: string[] = [
     "select",
     "Title",
@@ -218,6 +220,16 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.seventhFormGroup = this.formBuilder.group({
       seventhCtrl: [this.studentsPerFaculty],
     });
+  }
+  @HostListener("window:resize", ["$event"])
+  onResize(event) {
+    if(event.target.innerHeight <= 1400) {
+      this.projectTableHeight = event.target.innerHeight * 0.65;
+      this.studentTableHeight = event.target.innerHeight * 0.60;
+    } else {
+      this.projectTableHeight = event.target.innerHeight * 0.7;
+      this.studentTableHeight = event.target.innerHeight * 0.65;
+    }
   }
 
   ngAfterViewInit() {

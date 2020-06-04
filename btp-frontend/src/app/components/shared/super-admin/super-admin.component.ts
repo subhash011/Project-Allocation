@@ -10,6 +10,7 @@ import {
   ViewChild,
   Pipe,
   PipeTransform,
+  HostListener,
 } from "@angular/core";
 import { LoaderComponent } from "../loader/loader.component";
 import { MatTable, MatTableDataSource, MatSort } from "@angular/material";
@@ -105,13 +106,21 @@ export class SuperAdminComponent implements OnInit {
   students: any = {};
   faculty;
   project;
+  tableHeight:number = window.innerHeight * 0.7;
   map;
   student;
   maps: any = [];
   branches: any = new MatTableDataSource([]);
   programs: any = new MatTableDataSource([]);
   hasAdmins = {};
-
+  @HostListener("window:resize", ["$event"])
+  onResize(event) {
+    if (event.target.innerWidth <= 1400) {
+      this.tableHeight = event.target.innerHeight * 0.65;
+    } else {
+      this.tableHeight = event.target.innerHeight * 0.7;
+    }
+  }
   ngOnInit() {
     this.dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Loading. Please wait! ...",

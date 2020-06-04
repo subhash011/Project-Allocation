@@ -23,7 +23,7 @@
           </button>
         </div>
         <div class="display">
-          <div class="table mat-elevation-z8">
+          <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
             <table
               mat-table
               #table
@@ -136,7 +136,7 @@
           </button>
         </div>
         <div class="display">
-          <div class="table mat-elevation-z8">
+          <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
             <table
               mat-table
               matSort
@@ -223,7 +223,7 @@
           </button>
         </div>
         <div class="display">
-          <div class="table mat-elevation-z8">
+          <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
             <table
               mat-table
               matSort
@@ -295,7 +295,7 @@
   </mat-tab>
   <mat-tab label="Streams">
     <div class="display">
-      <div class="table mat-elevation-z8">
+      <div  [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
         <div class="add-icon">
           <mat-icon
             matTooltip="Click to add stream"
@@ -343,7 +343,7 @@
   </mat-tab>
   <mat-tab label="Programs">
     <div class="display">
-      <div class="table mat-elevation-z8">
+      <div  [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
         <div class="add-icon">
           <mat-icon
             matTooltip="Click to add program"

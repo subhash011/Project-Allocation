@@ -1,9 +1,8 @@
-<cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
   <div class="list" *ngIf="preferences && preferences.length != 0; else empty">
     <mat-accordion class="accordion">
       <div
         class="list-item"
-        *cdkVirtualFor="let preference of preferences; let i = index"
+        *ngFor="let preference of preferences; let i = index"
       >
         <div class="expansion-panel">
           <mat-expansion-panel
@@ -37,7 +36,6 @@
       </div>
     </mat-accordion>
   </div>
-</cdk-virtual-scroll-viewport>
 
 <ng-template #empty>
   <div class="emptyBlock" style="padding-top: 10%;">

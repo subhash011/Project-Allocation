@@ -88,7 +88,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   ) {}
   @HostListener("window:resize", ["$event"])
   onResize(event) {
-    this.tableHeight = event.target.innerHeight * 0.7;
+    this.tableHeight = event.target.innerHeight * 0.65;
     if (event.target.innerWidth <= 1400) {
       this.showToggleOnSidenav = true;
       this.sidenavWidth = 100;
