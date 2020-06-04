@@ -1655,7 +1655,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         case "Registered":
           return this.compare(a.isRegistered, b.isRegistered, isAsc);
         case "Email":
-          return this.compare(a.isRegistered, b.isRegistered, isAsc);
+          return this.compare(a.email.split("@")[0], b.email.split("@")[0], isAsc);
         default:
           return 0;
       }
