@@ -1,4 +1,4 @@
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import {
   Component,
@@ -16,7 +16,9 @@ import {
   MatSnackBar,
 } from "@angular/material";
 import { ProjectsService } from "src/app/services/projects/projects.service";
-import { LoaderComponent } from '../../shared/loader/loader.component';
+import { LoaderComponent } from "../../shared/loader/loader.component";
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
+import { LoginComponent } from "../../shared/login/login.component";
 
 @Component({
   selector: "app-sidenav",
@@ -41,7 +43,9 @@ export class SidenavComponent implements OnInit {
     private router: Router,
     private projectService: ProjectsService,
     private snackbar: MatSnackBar,
-    private dialog:MatDialog
+    private dialog: MatDialog,
+    private navbar: NavbarComponent,
+    private loginObject: LoginComponent
   ) {}
 
   ngOnInit() {}
@@ -69,14 +73,27 @@ export class SidenavComponent implements OnInit {
       disableClose: true,
       hasBackdrop: true,
     });
-    this.projectService.includeProjects(toInclude).subscribe((result) => {
-      dialogRef.close();
-      if (result["message"] == "success") {
-        this.snackbar.open("Updated Project Preferences", "Ok", {
-          duration: 3000,
-        });
+    this.projectService.includeProjects(toInclude).subscribe(
+      (result) => {
+        dialogRef.close();
+        if (result["message"] == "success") {
+          this.snackbar.open("Updated Project Preferences", "Ok", {
+            duration: 3000,
+          });
+        }
+      },
+      () => {
+        this.snackbar.open(
+          "Some Error Occured! Please re-authenticate.",
+          "OK",
+          {
+            duration: 3000,
+          }
+        );
+        this.navbar.role = "none";
+        this.loginObject.signOut();
       }
-    });
+    );
   }
 
   onClick(project, index) {

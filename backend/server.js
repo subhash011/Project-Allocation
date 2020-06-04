@@ -76,7 +76,7 @@ const mail = require("./routes/email");
 app.use("/api/email", mail);
 
 const updateServer = require("./routes/updateServer");
-app.use("/api" + process.env.SECRET_ROUTE,updateServer)
+app.use("/api" + process.env.SECRET_ROUTE, updateServer);
 
 const PORT = process.env.PORT || 8080;
 

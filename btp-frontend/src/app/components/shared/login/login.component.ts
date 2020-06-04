@@ -25,8 +25,8 @@ import { MatDialog } from "@angular/material";
 import { LoaderComponent } from "../loader/loader.component";
 
 @Pipe({
-  name:"checkLogIn",
-  pure:false
+  name: "checkLogIn",
+  pure: false,
 })
 export class CheckLogIn implements PipeTransform {
   transform(value) {
@@ -38,12 +38,12 @@ export class CheckLogIn implements PipeTransform {
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
-  changeDetection:ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
   @Output() isSignedIn = new EventEmitter<any>();
-  @Input() role:string;
-  @ViewChild("sigInDiv",{static:false}) signInDiv:ElementRef
+  @Input() role: string;
+  @ViewChild("sigInDiv", { static: false }) signInDiv: ElementRef;
   dialogRefLoad: any;
   isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
   constructor(
@@ -52,8 +52,8 @@ export class LoginComponent implements OnInit {
     private dialog: MatDialog,
     private localAuth: LocalAuthService,
     private snackBar: MatSnackBar,
-    private cdRef:ChangeDetectorRef,
-    private app:ApplicationRef
+    private cdRef: ChangeDetectorRef,
+    private app: ApplicationRef
   ) {}
   ngOnInit() {
     if (!localStorage.getItem("isLoggedIn")) {
@@ -94,6 +94,7 @@ export class LoginComponent implements OnInit {
           photoUrl: user.photoUrl,
           email: user.email,
           name: user.name,
+          authToken:user.authToken
         };
         localStorage.setItem("user", JSON.stringify(userModified));
         localStorage.setItem("isLoggedIn", "true");
@@ -172,22 +173,26 @@ export class LoginComponent implements OnInit {
       });
   }
 
-  signOut(userClick?:boolean): void {
-    this.authService.signOut().then(() => {
-      if(userClick) {
-        this.snackBar.open("Signed Out", "Ok", {
-          duration: 3000,
-        });
-      }
-    }).catch(err => {
-      console.log(err);
-    });
+  signOut(userClick?: boolean): void {
+    this.authService
+      .signOut()
+      .then(() => {
+        if (userClick) {
+          this.snackBar.open("Signed Out", "Ok", {
+            duration: 3000,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     localStorage.setItem("isLoggedIn", "false");
     this.isLoggedIn = false;
     localStorage.setItem("role", "none");
-    localStorage.removeItem("user");
     localStorage.removeItem("id");
-    this.isSignedIn.emit([false,"none"]);
+    let user = {};
+    localStorage.setItem("user", JSON.stringify(user));
+    this.isSignedIn.emit([false, "none"]);
     this.router.navigate([""]);
   }
 }

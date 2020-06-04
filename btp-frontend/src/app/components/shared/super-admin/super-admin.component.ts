@@ -16,13 +16,13 @@ import { LoaderComponent } from "../loader/loader.component";
 import { MatTable, MatTableDataSource, MatSort } from "@angular/material";
 
 @Pipe({
-  name:"getRegisteredCount"
+  name: "getRegisteredCount",
 })
 export class GetRegisteredCount implements PipeTransform {
   transform(students) {
     let registered = 0;
     let total = 0;
-    students.forEach(student => {
+    students.forEach((student) => {
       total++;
       registered += student.isRegistered ? 1 : 0;
     });
@@ -106,7 +106,7 @@ export class SuperAdminComponent implements OnInit {
   students: any = {};
   faculty;
   project;
-  tableHeight:number = window.innerHeight * 0.7;
+  tableHeight: number = window.innerHeight * 0.7;
   map;
   student;
   maps: any = [];
@@ -188,7 +188,10 @@ export class SuperAdminComponent implements OnInit {
                   this.students[branch.short] = new MatTableDataSource(
                     result["result"][branch.short]
                   );
-                  this.sortStudents({direction:"asc",active:"Name"},branch);
+                  this.sortStudents(
+                    { direction: "asc", active: "Name" },
+                    branch
+                  );
                   this.students[branch.short].filterPredicate = (
                     data: any,
                     filter: string
@@ -225,7 +228,10 @@ export class SuperAdminComponent implements OnInit {
                   this.faculties[branch.short] = new MatTableDataSource(
                     result["result"][branch.short]
                   );
-                  this.sortFaculties({direction:"asc",active:"Name"},branch);
+                  this.sortFaculties(
+                    { direction: "asc", active: "Name" },
+                    branch
+                  );
                   this.faculties[branch.short].filterPredicate = (
                     data: any,
                     filter: string
@@ -283,7 +289,7 @@ export class SuperAdminComponent implements OnInit {
               return val.stream == branch.short;
             });
             this.projects[branch.short] = new MatTableDataSource(projectsTemp);
-            this.sortProjects({direction:"asc",active:"Title"},branch);
+            this.sortProjects({ direction: "asc", active: "Title" }, branch);
             this.projects[branch.short].filterPredicate = (
               data: any,
               filter: string
@@ -658,42 +664,63 @@ export class SuperAdminComponent implements OnInit {
     }
   }
 
-  sortFaculties(event,branch) {
-    const isAsc = event.direction == "asc"
-    this.faculties[branch.short].data = this.faculties[branch.short].data.sort((a,b) => {
-      switch (event.active) {
-        case 'Name': return this.compare(a.name, b.name, isAsc);
-        default: return 0;
+  sortFaculties(event, branch) {
+    const isAsc = event.direction == "asc";
+    this.faculties[branch.short].data = this.faculties[branch.short].data.sort(
+      (a, b) => {
+        switch (event.active) {
+          case "Name":
+            return this.compare(a.name, b.name, isAsc);
+          default:
+            return 0;
+        }
       }
-    })
+    );
   }
 
-  sortStudents(event,branch) {
-    const isAsc = event.direction == "asc"
-    this.students[branch.short].data = this.students[branch.short].data.sort((a,b) => {
-      switch (event.active) {
-        case 'Name': return this.compare(a.name, b.name, isAsc);
-        case 'CGPA':return this.compare(a.gpa,b.gpa,isAsc);
-        case 'isRegistered':return this.compare(a.isRegistered,b.isRegistered,isAsc);
-        default: return 0;
+  sortStudents(event, branch) {
+    const isAsc = event.direction == "asc";
+    this.students[branch.short].data = this.students[branch.short].data.sort(
+      (a, b) => {
+        switch (event.active) {
+          case "Name":
+            return this.compare(a.name, b.name, isAsc);
+          case "CGPA":
+            return this.compare(a.gpa, b.gpa, isAsc);
+          case "isRegistered":
+            return this.compare(a.isRegistered, b.isRegistered, isAsc);
+          default:
+            return 0;
+        }
       }
-    })
+    );
   }
 
-  sortProjects(event,branch) {
-    const isAsc = event.direction == "asc"
-    this.projects[branch.short].data = this.projects[branch.short].data.sort((a,b) => {
-      switch (event.active) {
-        case 'Faculty': return this.compare(a.faculty, b.faculty, isAsc);
-        case 'NoOfStudents':return this.compare(a.numberOfPreferences,b.numberOfPreferences,isAsc);
-        case 'Duration':return this.compare(a.duration,b.duration,isAsc);
-        case 'Title':return this.compare(a.title,b.title,isAsc);
-        default: return 0;
+  sortProjects(event, branch) {
+    const isAsc = event.direction == "asc";
+    this.projects[branch.short].data = this.projects[branch.short].data.sort(
+      (a, b) => {
+        switch (event.active) {
+          case "Faculty":
+            return this.compare(a.faculty, b.faculty, isAsc);
+          case "NoOfStudents":
+            return this.compare(
+              a.numberOfPreferences,
+              b.numberOfPreferences,
+              isAsc
+            );
+          case "Duration":
+            return this.compare(a.duration, b.duration, isAsc);
+          case "Title":
+            return this.compare(a.title, b.title, isAsc);
+          default:
+            return 0;
+        }
       }
-    })
+    );
   }
 
   compare(a: number | string, b: number | string, isAsc: boolean) {
-   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 }

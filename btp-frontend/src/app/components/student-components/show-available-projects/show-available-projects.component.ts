@@ -29,7 +29,7 @@ import { Router } from "@angular/router";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
 @Pipe({
   name: "isPreferenceEdit",
@@ -59,7 +59,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   preferences: any = new MatTableDataSource([]);
   projects = new MatTableDataSource([]);
   expandedElement;
-  tableHeight: number = window.innerHeight * 0.7;
+  tableHeight: number = window.innerHeight * 0.65;
   isAddDisabled: boolean = false;
   stage = 0;
   sidenavWidth: number = 50;
@@ -84,7 +84,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     private loadingBar: LoadingBarService,
     public router: Router,
     private userService: UserService,
-    private navbar:NavbarComponent
+    private navbar: NavbarComponent
   ) {}
   @HostListener("window:resize", ["$event"])
   onResize(event) {
@@ -138,16 +138,18 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
           () => {
             this.dialogRefLoad.close();
             this.snackBar.open(
-              "Some Error Occured! If the Error Persists Please re-authenticate",
+              "Some Error Occured! Please re-authenticate.",
               "OK",
               {
                 duration: 3000,
               }
             );
+            this.navbar.role = "none";
+            this.loginObject.signOut();
           }
         );
       return;
-    } else  {
+    } else {
       this.preferences.data = [];
       this.projects.data = [];
       this.getAllStudentPreferences();
@@ -221,12 +223,14 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         () => {
           this.dialogRefLoad.close();
           this.snackBar.open(
-            "Some Error Occured! If the Error Persists Please re-authenticate",
+            "Some Error Occured! Please re-authenticate",
             "OK",
             {
               duration: 3000,
             }
           );
+          this.navbar.role = "none";
+          this.loginObject.signOut();
         }
       );
   }
@@ -306,15 +310,23 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             this.snackBar.open(
               "Stage has ended! You cannot edit preferences anymore",
               "Ok",
-              { duration: 3000 }
+              {
+                duration: 3000,
+              }
             );
           }
         },
         () => {
           dialogRefLoad.close();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            "Some Error Occured! Please re-authenticate.",
+            "OK",
+            {
+              duration: 3000,
+            }
+          );
+          this.navbar.role = "none";
+          this.loginObject.signOut();
         }
       );
   }
@@ -371,9 +383,15 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         },
         () => {
           dialogRefLoad.close();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            "Some Error Occured! Please re-authenticate.",
+            "OK",
+            {
+              duration: 3000,
+            }
+          );
+          this.navbar.role = "none";
+          this.loginObject.signOut();
         }
       );
   }

@@ -30,19 +30,19 @@ import { ShowStudentPreferencesComponent } from "../show-student-preferences/sho
 import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/show-faculty-preferences.component";
 import { saveAs } from "file-saver";
 import * as moment from "moment";
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
 @Pipe({
-  name:"selectedLength"
+  name: "selectedLength",
 })
 export class SelectedLength implements PipeTransform {
   transform(selected, filteredData) {
-    selected = selected.map(val => val._id);
-    filteredData = filteredData.map(val => val._id);
+    selected = selected.map((val) => val._id);
+    filteredData = filteredData.map((val) => val._id);
     let count = 0;
-    selected.forEach(project => {
-      count += filteredData.indexOf(project) != -1 ? 1 : 0
-    })
+    selected.forEach((project) => {
+      count += filteredData.indexOf(project) != -1 ? 1 : 0;
+    });
     return count;
   }
 }
@@ -62,17 +62,17 @@ export class AllotedStudents implements PipeTransform {
 }
 
 @Pipe({
-  name:"getIncludedOfTotal"
+  name: "getIncludedOfTotal",
 })
 export class GetIncludedOfTotal implements PipeTransform {
   transform(faculties) {
     let included = 0;
     let total = 0;
-    faculties.forEach(faculty => {
+    faculties.forEach((faculty) => {
       included += faculty.includedProjectsCount;
       total += faculty.noOfProjects;
       return;
-    })
+    });
     return included + " / " + total;
   }
 }
@@ -82,8 +82,8 @@ export class GetIncludedOfTotal implements PipeTransform {
 export class StudentIntake implements PipeTransform {
   transform(projects) {
     let sum = 0;
-    for(let project of projects){
-      sum += project.studentIntake
+    for (let project of projects) {
+      sum += project.studentIntake;
     }
     return sum;
   }
@@ -95,10 +95,9 @@ export class StudentIntake implements PipeTransform {
 export class ActiveProjects implements PipeTransform {
   transform(projects) {
     let sum = 0;
-    projects.forEach(project=>{
-      if(project.isIncluded)
-        sum++;
-    })
+    projects.forEach((project) => {
+      if (project.isIncluded) sum++;
+    });
     return sum;
   }
 }
@@ -113,8 +112,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   public details; // For displaying the projects tab
   public faculty_projects;
   public fileToUpload: File = null;
-  projectTableHeight:number = window.innerHeight * 0.7;
-  studentTableHeight:number = window.innerHeight * 0.65;
+  projectTableHeight: number = window.innerHeight * 0.65;
+  studentTableHeight: number = window.innerHeight * 0.6;
   columns: string[] = [
     "select",
     "Title",
@@ -171,8 +170,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   projectCap;
   studentCap;
   studentCount = 0;
-  projectCount=0;
-  availableProjects=0;
+  projectCount = 0;
+  availableProjects = 0;
   days_left;
   project: any;
 
@@ -193,7 +192,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     private loginService: LoginComponent,
     private loadingBar: LoadingBarService,
     private exportService: ExporttocsvService,
-    private navbar:NavbarComponent
+    private navbar: NavbarComponent
   ) {
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: [this.dateSet[0]],
@@ -219,11 +218,11 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
   @HostListener("window:resize", ["$event"])
   onResize(event) {
-    if(event.target.innerHeight <= 1400) {
+    if (event.target.innerHeight <= 1400) {
       this.projectTableHeight = event.target.innerHeight * 0.65;
-      this.studentTableHeight = event.target.innerHeight * 0.60;
+      this.studentTableHeight = event.target.innerHeight * 0.6;
     } else {
-      this.projectTableHeight = event.target.innerHeight * 0.7;
+      this.projectTableHeight = event.target.innerHeight * 0.65;
       this.studentTableHeight = event.target.innerHeight * 0.65;
     }
   }
@@ -300,7 +299,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               if (result["message"] == "success") {
                 this.faculties.data = result["result"]["faculties"];
                 this.students.data = result["result"]["students"];
-                this.sortStudents({direction:"asc",active:"Email"});
+                this.sortStudents({ direction: "asc", active: "Email" });
                 this.studentCount = result["result"]["students"].length;
                 this.faculties.filterPredicate = (data: any, filter: string) =>
                   !filter ||
@@ -327,7 +326,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
                 this.getAllocationValidation(flag);
               } else {
-                this.navbar.role = "none"
+                this.navbar.role = "none";
                 this.snackBar.open(
                   "Session Timed Out! Please Sign-In again",
                   "Ok",
@@ -356,9 +355,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        this.navbar.role = "none"
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     );
 
@@ -385,10 +386,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        dialogRefLoad.close();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        this.navbar.role = "none"
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     );
   }
@@ -459,7 +461,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               dialogRefLoad.close();
             } else {
               dialogRefLoad.close();
-              this.navbar.role = "none"
+              this.navbar.role = "none";
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -472,9 +474,11 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            this.navbar.role = "none"
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
               duration: 3000,
             });
+            this.loginService.signOut();
           }
         );
       }
@@ -516,7 +520,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                 return val.faculty_id != id;
               });
             } else {
-              this.navbar.role = "none"
+              this.navbar.role = "none";
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -529,10 +533,11 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.ngOnInit();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            this.navbar.role = "none"
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
               duration: 3000,
             });
+            this.loginService.signOut();
           }
         );
       }
@@ -574,7 +579,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               });
               this.dataSource.data = [...this.dataSource.data];
             } else {
-              this.navbar.role = "none"
+              this.navbar.role = "none";
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -587,9 +592,11 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            this.navbar.role = "none"
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
               duration: 3000,
             });
+            this.loginService.signOut();
           }
         );
       }
@@ -666,7 +673,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                 });
                 this.ngOnInit();
               } else {
-                this.navbar.role = "none"
+                this.navbar.role = "none";
                 this.snackBar.open(
                   "Session Timed Out! Please Sign-In again",
                   "Ok",
@@ -679,10 +686,11 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.ngOnInit();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              this.navbar.role = "none"
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                 duration: 3000,
               });
+              this.loginService.signOut();
             }
           );
         }
@@ -747,7 +755,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                               }
                             );
                           } else {
-                            this.navbar.role = "none"
+                            this.navbar.role = "none";
                             this.snackBar.open(
                               "Session Timed Out! Please Sign-In again",
                               "Ok",
@@ -770,7 +778,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                   }
                 });
               } else if (data["message"] == "invalid-token") {
-                this.navbar.role = "none"
+                this.navbar.role = "none";
                 this.snackBar.open(
                   "Session Expired! Sign-In and try again",
                   "Ok",
@@ -787,10 +795,11 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRef.close();
-              this.ngOnInit();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              this.navbar.role = "none"
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                 duration: 3000,
               });
+              this.loginService.signOut();
             }
           );
         } else {
@@ -806,9 +815,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRef.close();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        this.navbar.role = "none"
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     );
   }
@@ -850,7 +861,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                         duration: 3000,
                       });
                     } else {
-                      this.navbar.role = "none"
+                      this.navbar.role = "none";
                       this.snackBar.open(
                         "Session Timed Out! Please Sign-In again",
                         "Ok",
@@ -867,9 +878,11 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              this.navbar.role = "none"
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                 duration: 3000,
               });
+              this.loginService.signOut();
             }
           );
         } else if (this.stage_no == 1) {
@@ -889,7 +902,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                         duration: 3000,
                       });
                     } else {
-                      this.navbar.role = "none"
+                      this.navbar.role = "none";
                       dialogRefLoad.close();
                       this.snackBar.open(
                         "Session Timed Out! Please Sign-In again",
@@ -905,9 +918,11 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              this.navbar.role = "none"
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                 duration: 3000,
               });
+              this.loginService.signOut();
             }
           );
         } else {
@@ -953,9 +968,11 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              this.navbar.role = "none"
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                 duration: 3000,
               });
+              this.loginService.signOut();
             }
           );
         }
@@ -982,7 +999,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               });
               this.validateFields();
             } else {
-              this.navbar.role = "none"
+              this.navbar.role = "none";
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -995,9 +1012,11 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            this.navbar.role = "none"
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
               duration: 3000,
             });
+            this.loginService.signOut();
           }
         );
     } else {
@@ -1026,7 +1045,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               });
               this.validateFields();
             } else {
-              this.navbar.role = "none"
+              this.navbar.role = "none";
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -1039,9 +1058,11 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            this.navbar.role = "none"
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
               duration: 3000,
             });
+            this.loginService.signOut();
           }
         );
     } else {
@@ -1070,7 +1091,7 @@ export class AdminComponent implements OnInit, OnDestroy {
               });
               this.validateFields();
             } else {
-              this.navbar.role = "none"
+              this.navbar.role = "none";
               this.snackBar.open(
                 "Session Timed Out! Please Sign-In again",
                 "Ok",
@@ -1083,9 +1104,11 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            this.navbar.role = "none"
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
               duration: 3000,
             });
+            this.loginService.signOut();
           }
         );
     } else {
@@ -1099,8 +1122,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   validateFields() {
     this.userService.getMembersForAdmin().subscribe(
       (result) => {
-
-
         if (result["message"] == "success") {
           this.faculties.data = result["result"]["faculties"];
           this.students.data = result["result"]["students"];
@@ -1120,7 +1141,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
           this.getAllocationValidation(flag);
         } else {
-          this.navbar.role = "none"
+          this.navbar.role = "none";
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
           });
@@ -1128,67 +1149,60 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       },
       () => {
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        this.navbar.role = "none"
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     );
   }
 
+  getAllocationValidation(flag) {
+    const length = this.students.data.filter((val) => val.isRegistered).length;
 
-  getAllocationValidation(flag){
-
-    const length = this.students.data.filter((val) => val.isRegistered)
-            .length;
-
-          this.userService
-            .validateAllocation(this.selection.selected, length)
-            .subscribe(
-              (data) => {
-                if (data["status"] == "success") {
-
-                  if (this.dateSet.length == 1) {
-                    if (this.firstFormGroup.controls["firstCtrl"]) {
-                      this.proceedButton1 = false;
-                      if (!flag) this.proceedButton1_ = false;
-                    }
-                  }
-                } else {
-
-                  if (this.dateSet.length == 1) {
-                    if (this.firstFormGroup.controls["firstCtrl"]) {
-                      this.proceedButton1 = false;
-                      this.proceedButton1_ = true;
-                    }
-                  }
-                }
-
-                if (this.dateSet.length == 2) {
-                  if (this.secondFormGroup.controls["secondCtrl"]) {
-                    this.proceedButton2 = false;
-                    if (!flag) this.proceedButton2_ = false;
-                  }
-                }
-                if (this.dateSet.length == 3) {
-                  if (this.thirdFormGroup.controls["thirdCtrl"])
-                    this.proceedButton3 = false;
-                  if (!flag) this.proceedButton3_ = false;
-                }
-                this.minDate = new Date();
-              },
-              () => {
-                this.snackBar.open(
-                  "Some Error Occured! Try again later.",
-                  "OK",
-                  {
-                    duration: 3000,
-                  }
-                );
+    this.userService
+      .validateAllocation(this.selection.selected, length)
+      .subscribe(
+        (data) => {
+          if (data["status"] == "success") {
+            if (this.dateSet.length == 1) {
+              if (this.firstFormGroup.controls["firstCtrl"]) {
+                this.proceedButton1 = false;
+                if (!flag) this.proceedButton1_ = false;
               }
-            );
+            }
+          } else {
+            if (this.dateSet.length == 1) {
+              if (this.firstFormGroup.controls["firstCtrl"]) {
+                this.proceedButton1 = false;
+                this.proceedButton1_ = true;
+              }
+            }
+          }
+
+          if (this.dateSet.length == 2) {
+            if (this.secondFormGroup.controls["secondCtrl"]) {
+              this.proceedButton2 = false;
+              if (!flag) this.proceedButton2_ = false;
+            }
+          }
+          if (this.dateSet.length == 3) {
+            if (this.thirdFormGroup.controls["thirdCtrl"])
+              this.proceedButton3 = false;
+            if (!flag) this.proceedButton3_ = false;
+          }
+          this.minDate = new Date();
+        },
+        () => {
+          this.navbar.role = "none"
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
+          this.loginService.signOut();
+        }
+      );
   }
-
-
 
   isAllSelected() {
     const numSelected = this.selection.selected
@@ -1276,9 +1290,11 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            this.navbar.role = "none"
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
               duration: 3000,
             });
+            this.loginService.signOut();
           }
         );
       }
@@ -1344,15 +1360,17 @@ export class AdminComponent implements OnInit, OnDestroy {
                   duration: 3000,
                 }
               );
-              this.navbar.role = "none"
+              this.navbar.role = "none";
               this.loginService.signOut();
             }
           },
           () => {
             dialogRefLoad.close();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            this.navbar.role = "none"
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
               duration: 3000,
             });
+            this.loginService.signOut();
           }
         );
       }
@@ -1372,9 +1390,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        this.navbar.role = "none"
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     );
   }
@@ -1392,9 +1412,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        this.navbar.role = "none"
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     );
   }
@@ -1412,9 +1434,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        this.navbar.role = "none"
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     );
   }
@@ -1432,9 +1456,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+        this.navbar.role = "none"
+        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
+        this.loginService.signOut();
       }
     );
   }
@@ -1483,13 +1509,11 @@ export class AdminComponent implements OnInit, OnDestroy {
               },
               () => {
                 dialogRefLoad.close();
-                this.snackBar.open(
-                  "Some Error Occured! Try again later.",
-                  "OK",
-                  {
-                    duration: 3000,
-                  }
-                );
+                this.navbar.role = "none"
+                this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                  duration: 3000,
+                });
+                this.loginService.signOut();
               }
             );
         }
@@ -1552,9 +1576,11 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+            this.navbar.role = "none"
+            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
               duration: 3000,
             });
+            this.loginService.signOut();
           }
         );
       }
@@ -1619,13 +1645,11 @@ export class AdminComponent implements OnInit, OnDestroy {
               },
               () => {
                 dialogRefLoad.close();
-                this.snackBar.open(
-                  "Some Error Occured! Try again later.",
-                  "OK",
-                  {
-                    duration: 3000,
-                  }
-                );
+                this.navbar.role = "none"
+                this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+                  duration: 3000,
+                });
+                this.loginService.signOut();
               }
             );
           }
@@ -1659,7 +1683,11 @@ export class AdminComponent implements OnInit, OnDestroy {
         case "Registered":
           return this.compare(a.isRegistered, b.isRegistered, isAsc);
         case "Email":
-          return this.compare(Number(a.email.split("@")[0]), Number(b.email.split("@")[0]), isAsc);
+          return this.compare(
+            Number(a.email.split("@")[0]),
+            Number(b.email.split("@")[0]),
+            isAsc
+          );
         default:
           return 0;
       }
@@ -1689,7 +1717,11 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.dataSource.data = this.dataSource.data.sort((a, b) => {
       switch (event.active) {
         case "select":
-          return this.compare(this.selection.isSelected(a), this.selection.isSelected(b), isAsc);
+          return this.compare(
+            this.selection.isSelected(a),
+            this.selection.isSelected(b),
+            isAsc
+          );
         case "Title":
           return this.compare(a.title, b.title, isAsc);
         case "Faculty":
@@ -1701,14 +1733,22 @@ export class AdminComponent implements OnInit, OnDestroy {
         case "studentIntake":
           return this.compare(a.studentIntake, b.studentIntake, isAsc);
         case "NoOfStudents":
-          return this.compare(a.numberOfPreferences, b.numberOfPreferences, isAsc);
+          return this.compare(
+            a.numberOfPreferences,
+            b.numberOfPreferences,
+            isAsc
+          );
         default:
           return 0;
       }
     });
   }
 
-  compare(a: number | string | boolean, b: number | string | boolean, isAsc: boolean) {
+  compare(
+    a: number | string | boolean,
+    b: number | string | boolean,
+    isAsc: boolean
+  ) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 }

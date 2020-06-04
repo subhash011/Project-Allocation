@@ -96,32 +96,40 @@ export class FacultyComponent implements OnInit {
                       }
                     },() => {
                       dialogRefLoad.close();
-                      this.ngOnInit();
-                      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                      this.navbar.role = "none"
+                      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                         duration: 3000,
                       });
+                      this.loginService.signOut();
                     });
                 }
               },() => {
                 dialogRefLoad.close();
-                this.ngOnInit();
-                this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+                this.navbar.role = "none"
+                this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                   duration: 3000,
                 });
+                this.loginService.signOut();
               });
             },() => {
               dialogRefLoad.close();
-              this.ngOnInit();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+              this.navbar.role = "none"
+              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
                 duration: 3000,
               });
+              this.loginService.signOut();
             });
         },() => {
           dialogRefLoad.close();
-          this.ngOnInit();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
+          this.snackBar.open(
+          "Some Error Occured! Please re-authenticate.",
+          "OK",
+            {
+              duration: 3000,
+            }
+          );
+          this.navbar.role = "none";
+          this.loginService.signOut();
         });
       } else {
         dialogRefLoad.close();
@@ -133,10 +141,11 @@ export class FacultyComponent implements OnInit {
       }
     },() => {
       dialogRefLoad.close();
-      this.ngOnInit();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+      this.navbar.role = "none"
+      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
         duration: 3000,
       });
+      this.loginService.signOut();
     });
   }
 
@@ -171,10 +180,11 @@ export class FacultyComponent implements OnInit {
       }
     },() => {
       dialogRef.close();
-      this.ngOnInit();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+      this.navbar.role = "none"
+      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
         duration: 3000,
       });
+      this.loginService.signOut();
     });
 
     this.project = project;
@@ -224,9 +234,11 @@ export class FacultyComponent implements OnInit {
       }
     },() => {
       dialogRef.close();
-      this.snackBar.open("Some Error Occured! Try again later.", "OK", {
+      this.navbar.role = "none"
+      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
         duration: 3000,
       });
+      this.loginService.signOut();
     });
   }
 }
