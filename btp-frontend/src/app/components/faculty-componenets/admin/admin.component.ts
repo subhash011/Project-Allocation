@@ -346,6 +346,7 @@ export class AdminComponent implements OnInit, OnDestroy {
             }
           );
         } else {
+          dialogRefLoad.close();
           this.navbar.role = "none"
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
@@ -354,6 +355,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       },
       () => {
+        dialogRefLoad.close();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
         });
@@ -373,6 +375,7 @@ export class AdminComponent implements OnInit, OnDestroy {
             data.description.toLowerCase().includes(filter);
           this.selectIncluded();
         } else {
+          dialogRefLoad.close();
           this.navbar.role = "none"
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
@@ -381,6 +384,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       },
       () => {
+        dialogRefLoad.close();
         dialogRefLoad.close();
         this.snackBar.open("Some Error Occured! Try again later.", "OK", {
           duration: 3000,
