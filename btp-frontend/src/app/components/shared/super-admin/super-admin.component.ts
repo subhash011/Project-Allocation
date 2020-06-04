@@ -188,6 +188,7 @@ export class SuperAdminComponent implements OnInit {
                   this.students[branch.short] = new MatTableDataSource(
                     result["result"][branch.short]
                   );
+                  this.sortStudents({direction:"asc",active:"Name"},branch);
                   this.students[branch.short].filterPredicate = (
                     data: any,
                     filter: string
@@ -224,6 +225,7 @@ export class SuperAdminComponent implements OnInit {
                   this.faculties[branch.short] = new MatTableDataSource(
                     result["result"][branch.short]
                   );
+                  this.sortFaculties({direction:"asc",active:"Name"},branch);
                   this.faculties[branch.short].filterPredicate = (
                     data: any,
                     filter: string
@@ -281,6 +283,7 @@ export class SuperAdminComponent implements OnInit {
               return val.stream == branch.short;
             });
             this.projects[branch.short] = new MatTableDataSource(projectsTemp);
+            this.sortProjects({direction:"asc",active:"Title"},branch);
             this.projects[branch.short].filterPredicate = (
               data: any,
               filter: string
