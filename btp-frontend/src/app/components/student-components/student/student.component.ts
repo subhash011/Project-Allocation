@@ -9,7 +9,7 @@ import { takeUntil, flatMap } from "rxjs/operators";
 import { identifierModuleUrl } from "@angular/compiler";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { MatDialog } from "@angular/material";
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
 @Component({
   selector: "app-student",
@@ -26,7 +26,7 @@ export class StudentComponent implements OnInit, OnDestroy {
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private navbar:NavbarComponent
+    private navbar: NavbarComponent
   ) {}
   user: any;
   details: any;
@@ -73,17 +73,28 @@ export class StudentComponent implements OnInit, OnDestroy {
             },
             () => {
               this.dialogRefLoad.close();
-              this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-                duration: 3000,
-              });
+              this.snackBar.open(
+                "Some Error Occured! Please re-authenticate.",
+                "OK",
+                {
+                  duration: 3000,
+                }
+              );
+              this.navbar.role = "none";
+              this.loginObject.signOut();
             }
           );
         } else {
           this.dialogRefLoad.close();
+          this.snackBar.open(
+            "Some Error Occured! Please re-authenticate.",
+            "OK",
+            {
+              duration: 3000,
+            }
+          );
+          this.navbar.role = "none";
           this.loginObject.signOut();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
-          });
         }
       });
   }

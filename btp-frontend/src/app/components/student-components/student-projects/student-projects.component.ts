@@ -5,7 +5,7 @@ import { ProjectsService } from "src/app/services/projects/projects.service";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { Subject } from "rxjs";
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
 @Component({
   selector: "app-student-projects",
@@ -20,7 +20,7 @@ export class StudentProjectsComponent implements OnInit, OnDestroy {
     private projectService: ProjectsService,
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
-    private navbar:NavbarComponent
+    private navbar: NavbarComponent
   ) {}
   ngOnInit() {
     this.getStudentPreferences();
@@ -43,9 +43,15 @@ export class StudentProjectsComponent implements OnInit, OnDestroy {
         }
       },
       () => {
-        this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          "Some Error Occured! Please re-authenticate.",
+          "OK",
+          {
+            duration: 3000,
+          }
+        );
+        this.navbar.role = "none";
+        this.loginObject.signOut();
       }
     );
   }

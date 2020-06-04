@@ -17,7 +17,7 @@ import { ShowAvailableProjectsComponent } from "../show-available-projects/show-
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { LoaderComponent } from "../../shared/loader/loader.component";
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
 @Component({
   selector: "app-display-preferences",
@@ -37,7 +37,7 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private navbar:NavbarComponent
+    private navbar: NavbarComponent
   ) {}
 
   ngOnInit() {}
@@ -82,12 +82,14 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
         () => {
           dialogRefLoad.close();
           this.snackBar.open(
-            "Some Error Occured! If the Error Persists Please re-authenticate",
+            "Some Error Occured! Please re-authenticate.",
             "OK",
             {
               duration: 3000,
             }
           );
+          this.navbar.role = "none";
+          this.loginObject.signOut();
         }
       );
   }
