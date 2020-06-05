@@ -71,9 +71,10 @@ table {
 th,
 td {
   overflow: hidden;
-  width: 10%;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;     
+  word-wrap: break-word;     
+  max-width: 200px;
 }
 
 .admin-button {

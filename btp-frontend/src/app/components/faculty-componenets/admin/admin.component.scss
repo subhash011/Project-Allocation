@@ -150,9 +150,18 @@ table {
 th,
 td {
   overflow: hidden;
-  width: 10%;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;     
+  word-wrap: break-word;     
+  max-width: 200px;
+}
+
+.align-right {
+  padding-left: 45px;
+}
+
+.align-center {
+  padding-left: 18px;
 }
 
 mat-tab {

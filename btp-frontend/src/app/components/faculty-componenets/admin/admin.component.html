@@ -420,7 +420,7 @@
             <th mat-header-cell *matHeaderCellDef [style.color]="background" mat-sort-header>
               Project Excluded
             </th>
-            <td mat-cell *matCellDef="let project">
+            <td class="align-center" mat-cell *matCellDef="let project">
               {{ project.isIncluded ? "No" : "Yes" }}
             </td>
             <td mat-footer-cell *matFooterCellDef></td>
@@ -432,30 +432,30 @@
           </ng-container>
           <ng-container matColumnDef="Duration">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Duration</th>
-            <td mat-cell *matCellDef="let project">{{ project.duration }}</td>
+            <td class="align-center" mat-cell *matCellDef="let project">{{ project.duration }}</td>
             <td mat-footer-cell *matFooterCellDef></td>
           </ng-container>
           <ng-container matColumnDef="studentIntake">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               Max Student Intake
             </th>
-            <td mat-cell *matCellDef="let project">
+            <td class="align-right" mat-cell *matCellDef="let project">
               {{ project.studentIntake }}
             </td>
-            <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{dataSource.filteredData | getStudentIntake}} </td>
+            <td class="align-center" mat-footer-cell *matFooterCellDef> <b>Total : </b> {{dataSource.filteredData | getStudentIntake}} </td>
           </ng-container>
           <ng-container matColumnDef="NoOfStudents">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               No.of preferences
             </th>
-            <td mat-cell *matCellDef="let project">
+            <td class="align-right" mat-cell *matCellDef="let project">
               {{ project.numberOfPreferences }}
             </td>
             <td mat-footer-cell *matFooterCellDef></td>
           </ng-container>
           <ng-container matColumnDef="Preferences">
             <th mat-header-cell *matHeaderCellDef>Preferences</th>
-            <td mat-cell *matCellDef="let project">
+            <td class="align-center" mat-cell *matCellDef="let project">
               <mat-icon
                 matTooltip="Prefences of {{ project.faculty }}"
                 matTooltipPosition="above"

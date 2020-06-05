@@ -62,7 +62,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   tableHeight: number = window.innerHeight * 0.65;
   isAddDisabled: boolean = false;
   stage = 0;
-  sidenavWidth: number = 50;
+  sidenavWidth: number = 30;
   isActive: boolean = false;
   indexHover: number = -1;
   showToggleOnSidenav: boolean = false;
@@ -71,9 +71,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   displayedColumns = [
     "select",
     "Title",
+    "Intake",
     "Faculty",
     "Email",
-    "Intake",
     "Actions",
   ];
   constructor(
@@ -94,7 +94,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       this.sidenavWidth = 100;
     } else {
       this.showToggleOnSidenav = false;
-      this.sidenavWidth = 50;
+      this.sidenavWidth = 30;
     }
   }
   dialogRefLoad;
@@ -104,7 +104,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       this.sidenavWidth = 100;
     } else {
       this.showToggleOnSidenav = false;
-      this.sidenavWidth = 50;
+      this.sidenavWidth = 30;
     }
     this.dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Loading. Please wait! ...",
