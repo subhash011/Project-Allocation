@@ -106,7 +106,7 @@ export class SuperAdminComponent implements OnInit {
   students: any = {};
   faculty;
   project;
-  tableHeight: number = window.innerHeight * 0.7;
+  tableHeight: number = window.innerHeight * 0.60;
   map;
   student;
   maps: any = [];
@@ -116,9 +116,9 @@ export class SuperAdminComponent implements OnInit {
   @HostListener("window:resize", ["$event"])
   onResize(event) {
     if (event.target.innerWidth <= 1400) {
-      this.tableHeight = event.target.innerHeight * 0.65;
+      this.tableHeight = event.target.innerHeight * 0.60;
     } else {
-      this.tableHeight = event.target.innerHeight * 0.7;
+      this.tableHeight = event.target.innerHeight * 0.60;
     }
   }
   ngOnInit() {

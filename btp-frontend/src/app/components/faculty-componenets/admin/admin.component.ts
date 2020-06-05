@@ -112,7 +112,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   public details; // For displaying the projects tab
   public faculty_projects;
   public fileToUpload: File = null;
-  projectTableHeight: number = window.innerHeight * 0.65;
+  projectTableHeight: number = window.innerHeight * 0.6;
   studentTableHeight: number = window.innerHeight * 0.6;
   columns: string[] = [
     "select",
@@ -219,11 +219,11 @@ export class AdminComponent implements OnInit, OnDestroy {
   @HostListener("window:resize", ["$event"])
   onResize(event) {
     if (event.target.innerHeight <= 1400) {
-      this.projectTableHeight = event.target.innerHeight * 0.65;
+      this.projectTableHeight = event.target.innerHeight * 0.60;
       this.studentTableHeight = event.target.innerHeight * 0.6;
     } else {
-      this.projectTableHeight = event.target.innerHeight * 0.65;
-      this.studentTableHeight = event.target.innerHeight * 0.65;
+      this.projectTableHeight = event.target.innerHeight * 0.60;
+      this.studentTableHeight = event.target.innerHeight * 0.60;
     }
   }
 
