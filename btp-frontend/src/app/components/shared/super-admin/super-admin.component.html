@@ -376,9 +376,9 @@
             </td>
           </ng-container>
           <ng-container matColumnDef="StudCount">
-            <th mat-header-cell *matHeaderCellDef>No. Of Students</th>
+            <th mat-header-cell *matHeaderCellDef>Students ( Registered/Total )</th>
             <td mat-cell *matCellDef="let map">
-              {{ students[map.short] ? students[map.short].data.length : 0 }}
+              {{ students[map.short] ? (students[map.short].data | getRegisteredCount) + " / " + students[map.short].data.length : 0 }}
             </td>
           </ng-container>
           <ng-container matColumnDef="ProjCount">
