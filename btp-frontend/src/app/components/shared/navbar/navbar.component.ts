@@ -23,18 +23,19 @@ export class CheckRegister implements PipeTransform {
   name: "links",
 })
 export class GetLinksForNavBar implements PipeTransform {
-  transform(value) {
+  transform(value,role) {
+    role = role == "admin" ? "faculty" : role;
     if (value == "profile") {
       return "profile/" + localStorage.getItem("id");
     } else if (value == "home") {
       if (localStorage.getItem("role") == "admin") {
         return "faculty" + "/" + localStorage.getItem("id");
       } else {
-        return localStorage.getItem("role") + "/" + localStorage.getItem("id");
+        return role + "/" + localStorage.getItem("id");
       }
     } else if (value == "studentProjects") {
       return (
-        localStorage.getItem("role") + "/projects/" + localStorage.getItem("id")
+        role + "/projects/" + localStorage.getItem("id")
       );
     } else if (value == "studentPreferences") {
       return "student" + "/preferences/" + localStorage.getItem("id");

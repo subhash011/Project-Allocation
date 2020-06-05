@@ -1,7 +1,7 @@
 <mat-toolbar class="mat-elevation-z8" color="primary">
   <mat-toolbar-row>
     <div>
-      <button mat-button [routerLink]="'home' | links">
+      <button mat-button [routerLink]="'home' | links:role">
         <span class="navhead">IIT Palakkad</span>
       </button>
     </div>
@@ -36,7 +36,7 @@
       <div class="flex-grow-left"></div>
       <button
         mat-button
-        [routerLink]="'studentProjects' | links"
+        [routerLink]="'studentProjects' | links:role"
         class="nav-text"
       >
         Add Preferences
@@ -47,7 +47,7 @@
       <button
         mat-button
         class="nav-text"
-        [routerLink]="'studentPreferences' | links"
+        [routerLink]="'studentPreferences' | links:role"
       >
         Reorder Preferences
       </button>
@@ -70,7 +70,7 @@
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
         <mat-menu #beforeMenu="matMenu" xPosition="before">
-          <button mat-menu-item [routerLink]="'profile' | links">
+          <button mat-menu-item [routerLink]="'profile' | links:role">
             Profile
           </button>
           <button mat-menu-item (click)="getAdmin()" *ngIf="role | isAdmin">
