@@ -6,7 +6,7 @@ import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Validators } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Component, OnInit, Input, DoCheck } from "@angular/core";
+import { Component, OnInit, Input, DoCheck, PipeTransform, Pipe } from "@angular/core";
 import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
@@ -14,6 +14,17 @@ import { Location } from "@angular/common";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { ShowStudentAllotedComponent } from '../show-student-alloted/show-student-alloted.component';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
+
+
+@Pipe({
+  name: "displayFacultyPublish",
+})
+export class FacultyPublish implements PipeTransform {
+  transform(student) {
+    return `${student.name} (${student.roll_no})`
+  }
+}
+
 
 @Component({
   selector: "app-content",

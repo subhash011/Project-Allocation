@@ -46,29 +46,18 @@
               <td mat-cell *matCellDef="let project">
                 <div
                   *ngIf="
-                    !publishFaculty &&
-                    (!project.student_alloted ||
-                      project.student_alloted.length <= 0)
-                  "
-                >
-                  N/A
-                </div>
-                <div
-                  *ngIf="
                     project.student_alloted &&
                     project.student_alloted.length > 0 &&
-                    publishFaculty
+                    publishFaculty; else elseBlock
                   "
                 >
-                  <!-- <div *ngFor="let student of project.student_alloted"> -->
-                    <!-- {{ student.name }} &nbsp; -->
-                    <mat-icon
-                    matTooltip="Alloted Students"
-                    matTooltipPosition="above"
-                    (click)="showstudentAlloted(project)"
-                  > open_in_new</mat-icon>
-                  <!-- </div> -->
+                  <div *ngFor="let student of project.student_alloted">
+                    {{ student | displayFacultyPublish }}
+                  </div>
                 </div>
+                <ng-template #elseBlock>
+                  N/A
+                </ng-template>
               </td>
             </ng-container>
 

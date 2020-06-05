@@ -28,7 +28,7 @@ import {
   UserPhoto,
 } from "./components/shared/profile/profile.component";
 import { StudentProjectsComponent } from "./components/student-components/student-projects/student-projects.component";
-import { ContentComponent } from "./components/faculty-componenets/content/content.component";
+import { ContentComponent, FacultyPublish } from "./components/faculty-componenets/content/content.component";
 import { SidenavComponent } from "./components/faculty-componenets/sidenav/sidenav.component";
 import { StudentTableComponent } from "./components/faculty-componenets/student-table/student-table.component";
 import { SubmitPopUpComponent } from "./components/faculty-componenets/submit-pop-up/submit-pop-up.component";
@@ -142,7 +142,8 @@ export function provideConfig() {
     GetRegisteredCount,
     StudentIntake,
     ActiveProjects,
-    SelectedLength
+    SelectedLength,
+    FacultyPublish,
   ],
   entryComponents: [
     SubmitPopUpComponent,
