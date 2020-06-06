@@ -94,6 +94,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 .display-preferences {
   height: 100%;
   width: 100%;
+  padding-top: 64px;
 }
 
 .table::-webkit-scrollbar {
@@ -119,4 +120,10 @@ th,td {
   white-space: normal;     
   word-wrap: break-word;     
   max-width: 200px;
+}
+
+.toolbar {
+  position: fixed;
+  z-index: 2;
+  border-right: 1px solid whitesmoke;
 }

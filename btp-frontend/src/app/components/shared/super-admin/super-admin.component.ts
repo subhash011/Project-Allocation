@@ -14,6 +14,7 @@ import {
 } from "@angular/core";
 import { LoaderComponent } from "../loader/loader.component";
 import { MatTable, MatTableDataSource, MatSort } from "@angular/material";
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Pipe({
   name: "getRegisteredCount",
@@ -65,7 +66,8 @@ export class SuperAdminComponent implements OnInit {
     private userService: UserService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private login: LoginComponent
+    private login: LoginComponent,
+    private navbar:NavbarComponent
   ) {}
   index = 0;
   background = "primary";
@@ -150,13 +152,11 @@ export class SuperAdminComponent implements OnInit {
       },
       () => {
         this.dialogRefLoad.close();
-        this.snackBar.open(
-          "Some error occured! Please re-authenticate if the error persists",
-          "Ok",
-          {
-            duration: 3000,
-          }
-        );
+        this.navbar.role = "none";
+        this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+          duration: 3000,
+        });
+        this.login.signOut();
       }
     );
     this.userService.getAllMaps().subscribe(
@@ -205,6 +205,7 @@ export class SuperAdminComponent implements OnInit {
           },
           () => {
             this.dialogRefLoad.close();
+            this.navbar.role = "none";
             this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
               duration: 3000,
             });
@@ -254,10 +255,18 @@ export class SuperAdminComponent implements OnInit {
                       : false;
                 }
               }
+            } else if(result["message"] == "invalid-token") {
+                this.dialogRefLoad.close();
+                this.navbar.role = "none";
+                this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+                  duration: 3000,
+                });
+                this.login.signOut();           
             }
           },
           () => {
             this.dialogRefLoad.close();
+            this.navbar.role = "none";
             this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
               duration: 3000,
             });
@@ -267,13 +276,11 @@ export class SuperAdminComponent implements OnInit {
       },
       () => {
         this.dialogRefLoad.close();
-        this.snackBar.open(
-          "Some error occured! Please re-authenticate if the error persists",
-          "Ok",
-          {
-            duration: 3000,
-          }
-        );
+        this.navbar.role = "none";
+        this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+          duration: 3000,
+        });
+        this.login.signOut();
       }
     );
   }
@@ -300,7 +307,8 @@ export class SuperAdminComponent implements OnInit {
           }
         } else {
           this.dialogRefLoad.close();
-          this.snackBar.open("Please Sign-In Again to continue", "Ok", {
+          this.navbar.role = "none";
+          this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
             duration: 3000,
           });
           this.login.signOut();
@@ -308,7 +316,8 @@ export class SuperAdminComponent implements OnInit {
       },
       () => {
         this.dialogRefLoad.close();
-        this.snackBar.open("Please Sign-In Again to continue", "Ok", {
+        this.navbar.role = "none";
+        this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
           duration: 3000,
         });
         this.login.signOut();
@@ -351,14 +360,12 @@ export class SuperAdminComponent implements OnInit {
               }
             );
           } else if (data["message"] == "invalid-token") {
+            this.dialogRefLoad.close();
+            this.navbar.role = "none";
+            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+              duration: 3000,
+            });
             this.login.signOut();
-            this.snackBar.open(
-              "Session Timed Out! Please Sign-In Again",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
           } else {
             this.snackBar.open(
               "Some error occured! If error persists re-authenticate",
@@ -391,14 +398,12 @@ export class SuperAdminComponent implements OnInit {
         this.userService.removeProgram(short).subscribe((result) => {
           dialogRef.close();
           if (result["message"] == "invalid-token") {
+            this.dialogRefLoad.close();
+            this.navbar.role = "none";
+            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+              duration: 3000,
+            });
             this.login.signOut();
-            this.snackBar.open(
-              "Session Timed Out! Please Sign-In Again",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
           } else {
             this.programs.data = this.programs.data.filter(
               (val) => val.short != short
@@ -472,14 +477,12 @@ export class SuperAdminComponent implements OnInit {
         this.userService.removeBranch(short).subscribe((result) => {
           dialogRef.close();
           if (result["message"] == "invalid-token") {
+            this.dialogRefLoad.close();
+            this.navbar.role = "none";
+            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+              duration: 3000,
+            });
             this.login.signOut();
-            this.snackBar.open(
-              "Session Timed Out! Please Sign-In Again",
-              "Ok",
-              {
-                duration: 3000,
-              }
-            );
           } else {
             this.branches.data = this.branches.data.filter(
               (val) => val.short != short
@@ -530,20 +533,21 @@ export class SuperAdminComponent implements OnInit {
                 duration: 3000,
               });
             } else {
+              this.dialogRefLoad.close();
+              this.navbar.role = "none";
+              this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+                duration: 3000,
+              });
               this.login.signOut();
-              this.snackBar.open(
-                "Session Expired! Please Sign-In Again.",
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
             }
           },
           () => {
-            this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
+            this.dialogRefLoad.close();
+            this.navbar.role = "none";
+            this.snackBar.open("Some error occured! Please Sign In Again", "Ok", {
               duration: 3000,
             });
+            this.login.signOut();
           }
         );
       }
@@ -571,10 +575,12 @@ export class SuperAdminComponent implements OnInit {
           });
         }
       } else if (result["message"] == "invalid-token") {
-        this.login.signOut();
-        this.snackBar.open("Session Timed Out! Please Sign-In Again", "Ok", {
+        this.dialogRefLoad.close();
+        this.navbar.role = "none";
+        this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
           duration: 3000,
         });
+        this.login.signOut();
       }
     });
   }
@@ -600,10 +606,12 @@ export class SuperAdminComponent implements OnInit {
           });
         }
       } else if (result["message"] == "invalid-token") {
-        this.login.signOut();
-        this.snackBar.open("Session Timed Out! Please Sign-In Again", "Ok", {
+        this.dialogRefLoad.close();
+        this.navbar.role = "none";
+        this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
           duration: 3000,
         });
+        this.login.signOut();
       }
     });
   }
@@ -641,12 +649,22 @@ export class SuperAdminComponent implements OnInit {
               this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
                 duration: 3000,
               });
+            } else {
+              this.dialogRefLoad.close();
+              this.navbar.role = "none";
+              this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+                duration: 3000,
+              });
+              this.login.signOut();
             }
           },
           () => {
-            this.snackBar.open("Some Error Occured! Try Again.", "Ok", {
+            this.dialogRefLoad.close();
+            this.navbar.role = "none";
+            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
               duration: 3000,
             });
+            this.login.signOut();
           }
         );
       }

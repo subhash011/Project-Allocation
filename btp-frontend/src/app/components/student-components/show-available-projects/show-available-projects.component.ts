@@ -63,6 +63,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   isAddDisabled: boolean = false;
   stage = 0;
   sidenavWidth: number = 30;
+  openedDrawerWidth = 100;
   isActive: boolean = false;
   indexHover: number = -1;
   showToggleOnSidenav: boolean = false;
@@ -89,12 +90,18 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   @HostListener("window:resize", ["$event"])
   onResize(event) {
     this.tableHeight = event.target.innerHeight * 0.65;
-    if (event.target.innerWidth <= 1400) {
+    const width = event.target.innerWidth;
+    if (width <= 1300) {
       this.showToggleOnSidenav = true;
       this.sidenavWidth = 100;
-    } else {
+      this.openedDrawerWidth = 100;
+    }else {
+      this.openedDrawerWidth = 30;
       this.showToggleOnSidenav = false;
       this.sidenavWidth = 30;
+    }
+    if(event.target.innerHeight <= 600) {
+      this.tableHeight = event.target.innerHeight * 0.5;
     }
   }
   dialogRefLoad;
@@ -403,6 +410,25 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     });
     this.expandedElement = null;
     this.table.renderRows();
+  }
+
+  openedSidenav(event) {
+    if(event) {
+      this.openedDrawerWidth = 30;
+      if(window.innerWidth <= 1400) {
+        this.openedDrawerWidth = 100;
+      }
+    } else {
+      this.openedDrawerWidth = 100;
+    }
+  }
+
+  startClosing() {
+    this.openedDrawerWidth = 100;
+  }
+
+  startOpening() {
+    this.openedDrawerWidth = 100;
   }
 
   ngOnDestroy() {
