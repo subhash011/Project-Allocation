@@ -62,7 +62,8 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   tableHeight: number = window.innerHeight * 0.65;
   isAddDisabled: boolean = false;
   stage = 0;
-  sidenavWidth: number = 30;
+  sidenavMaxWith = 30;
+  sidenavWidth: number = this.sidenavMaxWith;
   openedDrawerWidth = 100;
   isActive: boolean = false;
   indexHover: number = -1;
@@ -96,9 +97,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       this.sidenavWidth = 100;
       this.openedDrawerWidth = 100;
     }else {
-      this.openedDrawerWidth = 30;
+      this.openedDrawerWidth = this.sidenavMaxWith;
       this.showToggleOnSidenav = false;
-      this.sidenavWidth = 30;
+      this.sidenavWidth = this.sidenavMaxWith;
     }
     if(event.target.innerHeight <= 600) {
       this.tableHeight = event.target.innerHeight * 0.5;
@@ -111,7 +112,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       this.sidenavWidth = 100;
     } else {
       this.showToggleOnSidenav = false;
-      this.sidenavWidth = 30;
+      this.sidenavWidth = this.sidenavMaxWith;
     }
     this.dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Loading. Please wait! ...",
@@ -414,8 +415,8 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
 
   openedSidenav(event) {
     if(event) {
-      this.openedDrawerWidth = 30;
-      if(window.innerWidth <= 1400) {
+      this.openedDrawerWidth = this.sidenavMaxWith;
+      if(window.innerWidth <= 1300) {
         this.openedDrawerWidth = 100;
       }
     } else {
