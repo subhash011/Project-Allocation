@@ -62,7 +62,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   tableHeight: number = window.innerHeight * 0.65;
   isAddDisabled: boolean = false;
   stage = 0;
-  sidenavMaxWith = 30;
+  sidenavMaxWith = 40;
   sidenavWidth: number = this.sidenavMaxWith;
   openedDrawerWidth = 100;
   isActive: boolean = false;
