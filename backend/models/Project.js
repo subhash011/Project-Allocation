@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
 	},
 	isIncluded: {
 		type: Boolean,
-		default: false,
+		default: true,
 	},
 });
 

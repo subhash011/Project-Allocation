@@ -369,7 +369,7 @@
   </mat-tab>
   <mat-tab
     label="Faculty/Co-ordinator"
-    *ngIf="(role | isFaculty) || (role | isSuper)"
+    *ngIf="(role | isFaculty) || (role | isAdmin) || (role | isSuper)"
   >
     <mat-tab-group
       *ngIf="index == 2"

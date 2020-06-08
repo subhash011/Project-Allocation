@@ -93,7 +93,7 @@ function generateCSVProjects(data, program_name) {
 		});
 		return;
 	}
-	var s_length = data[0].students_id.split(",").length;
+	var s_length = data[0].students_id.split(",").length/2;
 	if (data[0].students_id == "") {
 		s_length = 0;
 		headers = headers.substring(0, headers.length - 1) + "\n";
@@ -101,8 +101,8 @@ function generateCSVProjects(data, program_name) {
 	for (let ind = 1; ind <= s_length; ind++) {
 		headers +=
 			ind == s_length
-				? `Preference.${ind} ( Name ),Preference.${ind} ( Roll no. )\n`
-				: `Preference.${ind} ( Name ),Preference.${ind} ( Roll no. )`;
+				? `Preference.${ind} ( Name ),Preference.${ind} ( Roll no. ),\n`
+				: `Preference.${ind} ( Name ),Preference.${ind} ( Roll no. ),`;
 	}
 
 	let str = "";
@@ -1187,7 +1187,7 @@ router.get("/export_projects/:id", (req, res) => {
 	const idToken = req.headers.authorization;
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.lean()
-		.select("_id")
+		.select("_id isAdmin")
 		.then((faculty) => {
 			if (faculty && faculty.isAdmin) {
 				Admin.findOne({ admin_id: faculty._id })
@@ -1246,7 +1246,6 @@ router.get("/export_projects/:id", (req, res) => {
 
 								const data = combineProjects(projects, students);
 								const answer = generateCSVProjects(data, programName);
-
 								res.json({
 									message: "success",
 								});
@@ -1505,8 +1504,6 @@ router.post("/uploadStudentList/:id", (req, res) => {
 											});
 										}
 
-										admin.studentCount = fileRows.length - 1;
-
 										var promises = [];
 
 										for (let i = 1; i < fileRows.length; i++) {
@@ -1540,12 +1537,15 @@ router.post("/uploadStudentList/:id", (req, res) => {
 										}
 
 										Promise.all(promises).then((result) => {
-											admin.save().then((result) => {
+											Student.find({stream:admin.stream}).select("_id").then(students => {
+												admin.studentCount = students.length;
+												admin.save().then((result) => {
 												return res.json({
 													status: "success",
 													msg: "Successfully uploaded the student list.",
 												});
 											});
+											})
 										});
 									});
 							});

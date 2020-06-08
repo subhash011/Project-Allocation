@@ -22,6 +22,7 @@
         [class.active]="i == selectedRow"
       >
         {{ project.title }}
+        <mat-icon *ngIf="project.isIncluded">check</mat-icon>
       </mat-list-item>
     </mat-nav-list>
   </ng-template>
