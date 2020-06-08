@@ -78,6 +78,7 @@ import {
 } from "./components/shared/Pipes/rolePipes";
 import { ShowStudentAllotedComponent } from "./components/faculty-componenets/show-student-alloted/show-student-alloted.component";
 import { MatTableModule } from '@angular/material';
+import { CdkDropListActualContainer } from './components/student-components/edit-preferences/edit-preferences.directive';
 const googleLoginOption: LoginOpt = {
   prompt: "select_account",
 };
@@ -144,6 +145,7 @@ export function provideConfig() {
     ActiveProjects,
     SelectedLength,
     FacultyPublish,
+    CdkDropListActualContainer
   ],
   entryComponents: [
     SubmitPopUpComponent,

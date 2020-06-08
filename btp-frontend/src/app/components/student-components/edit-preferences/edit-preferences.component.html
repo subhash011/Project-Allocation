@@ -4,6 +4,7 @@
       [dataSource]="preferences"
       multiTemplateDataRows
       class="mat-elevation-z8"
+      cdkDropListOrientation="vertical"
       cdkDropList
       [cdkDropListData]="preferences.data"
       (cdkDropListDropped)="drop($event)"
@@ -11,12 +12,12 @@
       <ng-container matColumnDef="Title">
         <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
         <mat-cell *matCellDef="let preference">
-          {{ preference.title }}
+          {{preference.title}}
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="Faculty">
-        <mat-header-cell *matHeaderCellDef> Faculty </mat-header-cell>
-        <mat-cell *matCellDef="let preference">
+        <mat-header-cell class="common-padding" *matHeaderCellDef> Faculty </mat-header-cell>
+        <mat-cell class="common-padding" *matCellDef="let preference">
           {{ preference.faculty_name }}
         </mat-cell>
       </ng-container>
@@ -121,6 +122,7 @@
         (click)="expandedElement = expandedElement === row ? null : row"
         [cdkDragData]="row"
         [style.border-bottom-width]="expandedElement == row ? '0px' : '1px'"
+        actualContainer="div.table"
         cdkDrag
       ></mat-row>
       <mat-row
