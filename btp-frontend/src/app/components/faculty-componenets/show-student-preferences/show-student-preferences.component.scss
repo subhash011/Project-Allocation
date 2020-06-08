@@ -9,8 +9,12 @@
   float: right;
 }
 
+.toolbar {
+  position: sticky;
+}
+
 .example-viewport {
-  height: 500px;
+  height: 400px;
   width: 800px;
   scroll-behavior: smooth;
   scrollbar-width: none;
@@ -24,8 +28,16 @@
   text-align: center;
 }
 
+mat-icon:hover {
+  cursor: pointer;
+}
+
+.fill-space {
+  flex: 1 1 auto;
+}
+
 .list-item {
-  padding: 20px 10px;
+  padding: 10px 10px;
   box-sizing: border-box;
   cursor: move;
   color: black;

@@ -33,12 +33,25 @@ mat-dialog-content {
   }
 }
 
+mat-icon:hover {
+  cursor: pointer;
+}
+
+.fill-space {
+  flex: 1 1 auto;
+}
+
 .text {
   text-align: center;
 }
 
+.toolbar {
+  position: sticky;
+}
+
+
 .list-item {
-  padding: 20px 10px;
+  padding: 10px 10px;
   box-sizing: border-box;
   cursor: move;
   color: black;

@@ -1,6 +1,22 @@
 <mat-dialog-content
   *ngIf="preferences.projects_preference.length != 0; else elseBlock"
 >
+  <mat-toolbar class="toolbar">
+    <mat-icon matTooltip="close pop-up" matTooltipPosition="above" color="accent" (click)="close()">close</mat-icon>
+    <div class="fill-space"></div>
+    <div #container class="copy">
+      <button
+        mat-raised-button
+        color="primary"
+        ngxClipboard
+        [cbContent]="value"
+        [container]="container"
+        (cbOnSuccess)="copied($event)"
+      >
+        Copy to Clipboard
+      </button>
+    </div>
+  </mat-toolbar>
   <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
     <div>
       <div
@@ -26,19 +42,6 @@
       </div>
     </div>
   </cdk-virtual-scroll-viewport>
-  <button mat-raised-button color="accent" (click)="close()">Close</button>
-  <div #container class="copy">
-    <button
-      mat-raised-button
-      color="primary"
-      ngxClipboard
-      [cbContent]="value"
-      [container]="container"
-      (cbOnSuccess)="copied($event)"
-    >
-      Copy to Clipboard
-    </button>
-  </div>
 </mat-dialog-content>
 <ng-template #elseBlock>
   <div class="text">
