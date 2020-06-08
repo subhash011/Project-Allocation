@@ -586,7 +586,7 @@ router.get("/members/:id", (req, res) => {
 							promises.push(
 								Faculty.find({ programs: { $elemMatch: programAdmin } })
 									.lean()
-									.populate("project_list", null, Project)
+									.populate({path:"project_list",select:{isIncluded:1,studentIntake:1,stream:1}, model:Project})
 									.then((faculties) => {
 										var temp = faculties.map((val) => {
 											var projectCapErr = false;
@@ -603,22 +603,37 @@ router.get("/members/:id", (req, res) => {
 											}
 
 											var student_count = 0;
+
+											let total = 0;
+											let included = 0;
+											let temp = 0;
 											for (const project of projects) {
 												student_count += project.studentIntake;
 												if (project.studentIntake > admin.student_cap) {
 													studentCapErr = true;
 												}
+
+												temp = project.studentIntake;
+											  if (project.isIncluded) {
+												total += temp;
+												included += temp;
+											  } else {
+												total += temp;
+											  }
 											}
 
 											if (student_count > admin.studentsPerFaculty) {
 												studentsPerFacultyErr = true;
 											}
 
+
 											var newFac = {
 												_id: val._id,
 												name: val.name,
 												noOfProjects: val.project_list.length,
 												email: val.email,
+												total_studentIntake:total,
+												included_studentIntake:included,
 												project_cap: projectCapErr,
 												student_cap: studentCapErr,
 												studentsPerFaculty: studentsPerFacultyErr,

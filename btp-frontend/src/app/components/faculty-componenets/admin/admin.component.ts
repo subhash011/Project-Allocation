@@ -81,11 +81,11 @@ export class GetIncludedOfTotal implements PipeTransform {
 })
 export class StudentIntake implements PipeTransform {
   transform(projects) {
-    let sum = 0;
-    for (let project of projects) {
-      sum += project.studentIntake;
-    }
-    return sum;
+      let sum = 0;
+      for (let project of projects) {
+        sum += project.studentIntake;
+      }
+      return sum;
   }
 }
 
@@ -125,7 +125,14 @@ export class AdminComponent implements OnInit, OnDestroy {
     "isIncluded",
     "Student",
   ];
-  facultyCols = ["Name", "NoOfProjects", "Email", "Actions", "Violations"];
+  facultyCols = [
+    "Name",
+    "NoOfProjects",
+    "StudentIntake",
+    "Email",
+    "Actions",
+    "Violations",
+  ];
   studentCols = ["Name", "Email", "GPA", "Registered", "ViewPref", "Actions"];
 
   firstFormGroup: FormGroup;
@@ -219,11 +226,11 @@ export class AdminComponent implements OnInit, OnDestroy {
   @HostListener("window:resize", ["$event"])
   onResize(event) {
     if (event.target.innerHeight <= 1400) {
-      this.projectTableHeight = event.target.innerHeight * 0.60;
+      this.projectTableHeight = event.target.innerHeight * 0.6;
       this.studentTableHeight = event.target.innerHeight * 0.6;
     } else {
-      this.projectTableHeight = event.target.innerHeight * 0.60;
-      this.studentTableHeight = event.target.innerHeight * 0.60;
+      this.projectTableHeight = event.target.innerHeight * 0.6;
+      this.studentTableHeight = event.target.innerHeight * 0.6;
     }
   }
 
@@ -346,7 +353,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           );
         } else {
           dialogRefLoad.close();
-          this.navbar.role = "none"
+          this.navbar.role = "none";
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
           });
@@ -355,7 +362,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.navbar.role = "none"
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
@@ -377,7 +384,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           this.selectIncluded();
         } else {
           dialogRefLoad.close();
-          this.navbar.role = "none"
+          this.navbar.role = "none";
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
           });
@@ -386,7 +393,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.navbar.role = "none"
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
@@ -474,10 +481,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.navbar.role = "none"
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
             this.loginService.signOut();
           }
         );
@@ -533,10 +544,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.navbar.role = "none"
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
             this.loginService.signOut();
           }
         );
@@ -592,10 +607,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.navbar.role = "none"
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
             this.loginService.signOut();
           }
         );
@@ -686,10 +705,14 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.navbar.role = "none"
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
+              this.navbar.role = "none";
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
               this.loginService.signOut();
             }
           );
@@ -795,10 +818,14 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRef.close();
-              this.navbar.role = "none"
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
+              this.navbar.role = "none";
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
               this.loginService.signOut();
             }
           );
@@ -815,7 +842,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRef.close();
-        this.navbar.role = "none"
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
@@ -878,10 +905,14 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.navbar.role = "none"
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
+              this.navbar.role = "none";
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
               this.loginService.signOut();
             }
           );
@@ -918,10 +949,14 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.navbar.role = "none"
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
+              this.navbar.role = "none";
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
               this.loginService.signOut();
             }
           );
@@ -968,10 +1003,14 @@ export class AdminComponent implements OnInit, OnDestroy {
             },
             () => {
               dialogRefLoad.close();
-              this.navbar.role = "none"
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
+              this.navbar.role = "none";
+              this.snackBar.open(
+                "Session Timed Out! Please Sign-In again",
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
               this.loginService.signOut();
             }
           );
@@ -1012,10 +1051,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.navbar.role = "none"
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
             this.loginService.signOut();
           }
         );
@@ -1058,10 +1101,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.navbar.role = "none"
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
             this.loginService.signOut();
           }
         );
@@ -1104,10 +1151,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.navbar.role = "none"
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
             this.loginService.signOut();
           }
         );
@@ -1149,7 +1200,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       },
       () => {
-        this.navbar.role = "none"
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
@@ -1195,7 +1246,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           this.minDate = new Date();
         },
         () => {
-          this.navbar.role = "none"
+          this.navbar.role = "none";
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
             duration: 3000,
           });
@@ -1290,10 +1341,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.navbar.role = "none"
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
             this.loginService.signOut();
           }
         );
@@ -1366,10 +1421,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.navbar.role = "none"
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
             this.loginService.signOut();
           }
         );
@@ -1390,7 +1449,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.navbar.role = "none"
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
@@ -1412,7 +1471,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.navbar.role = "none"
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
@@ -1434,7 +1493,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.navbar.role = "none"
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
@@ -1456,7 +1515,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       () => {
         dialogRefLoad.close();
-        this.navbar.role = "none"
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
@@ -1509,10 +1568,14 @@ export class AdminComponent implements OnInit, OnDestroy {
               },
               () => {
                 dialogRefLoad.close();
-                this.navbar.role = "none"
-                this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                  duration: 3000,
-                });
+                this.navbar.role = "none";
+                this.snackBar.open(
+                  "Session Timed Out! Please Sign-In again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
                 this.loginService.signOut();
               }
             );
@@ -1576,10 +1639,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           },
           () => {
             dialogRefLoad.close();
-            this.navbar.role = "none"
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-              duration: 3000,
-            });
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
             this.loginService.signOut();
           }
         );
@@ -1645,10 +1712,14 @@ export class AdminComponent implements OnInit, OnDestroy {
               },
               () => {
                 dialogRefLoad.close();
-                this.navbar.role = "none"
-                this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                  duration: 3000,
-                });
+                this.navbar.role = "none";
+                this.snackBar.open(
+                  "Session Timed Out! Please Sign-In again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
                 this.loginService.signOut();
               }
             );
@@ -1706,6 +1777,8 @@ export class AdminComponent implements OnInit, OnDestroy {
           return this.compare(a.isRegistered, b.isRegistered, isAsc);
         case "NoOfProjects":
           return this.compare(a.noOfProjects, b.noOfProjects, isAsc);
+        case "StudentIntake":
+          return this.compare(a.included_studentIntake, b.total_studentIntake, isAsc);
         default:
           return 0;
       }
