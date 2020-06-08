@@ -1778,7 +1778,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         case "NoOfProjects":
           return this.compare(a.noOfProjects, b.noOfProjects, isAsc);
         case "StudentIntake":
-          return this.compare(a.included_studentIntake, b.total_studentIntake, isAsc);
+          return this.compare(a.included_studentIntake, b.included_studentIntake, isAsc);
         default:
           return 0;
       }
