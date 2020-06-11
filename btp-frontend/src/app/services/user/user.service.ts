@@ -657,4 +657,23 @@ export class UserService {
     };
     return this.http.post(this.url, { mode: key }, httpOptions);
   }
+
+  superAdminEditFields(field, curVal,newVal) {
+    let value = {
+      curVal:curVal,
+      newVal:newVal
+    };
+    const user = JSON.parse(localStorage.getItem("user"));
+    const id = user.id;
+    const idToken = user.idToken;
+    this.url = `${this.base_url}super/${field}/${id}`;
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.post(this.url, value, httpOptions);
+  }
 }

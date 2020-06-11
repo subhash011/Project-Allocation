@@ -7,6 +7,7 @@ const Project = require("../models/Project");
 const SuperAdmin = require("../models/SuperAdmin");
 const Admin = require("../models/Admin_Info");
 const Mapping = require("../models/Mapping");
+const Streams = require("../models/Streams")
 const oauth = require("../config/oauth");
 Array.prototype.contains = function (v) {
 	for (var i = 0; i < this.length; i++) {
@@ -514,5 +515,151 @@ router.post("/create/:id", (req, res) => {
 			});
 		});
 });
+
+router.post("/edit/:field/:id",(req,res) => {
+	var field = req.params.field;
+	var id = req.params.id;
+	var idToken = req.headers.authorization;
+	var curVal = req.body.curVal;
+	var newVal = req.body.newVal;
+	SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(user => {
+		if(user) {
+			switch (field) {
+				case "programShort":
+					Mapping.findOneAndUpdate({short:curVal},{short:newVal}).then(map => {
+						var newMap = {
+							full:map.full,
+							short:newVal
+						};
+						var findCondition = {
+							programs : { $elemMatch : map }
+						};
+						var updateCondition = {
+							$pull : { programs : map },
+							$push : { programs : newMap }
+						}
+						var promises = [];
+						promises.push(
+							Faculty.updateMany(findCondition, updateCondition).then(faculties => {
+								return faculties;
+							})
+						);
+						promises.push(
+							Faculty.updateMany({programAdmin:curVal},{programAdmin:newVal}).then(faculties => {
+								return faculties;
+							})
+						)
+						promises.push(
+							Student.updateMany({stream:curVal},{stream:newVal}).then(students => {
+								return students;
+							})
+						);
+						promises.push(
+							Project.updateMany({stream:curVal},{stream:newVal}).then(projects => {
+								return projects;
+							})
+						);
+						promises.push(
+							Admin.updateMany({stream:curVal},{stream:newVal}).then(admin => {
+								return admin;
+							})
+						)
+						Promise.all(promises).then(() => {
+							res.json({
+								message:"success"
+							})
+						}).catch(() => {
+							res.json({
+								message:"error"
+							})
+						})
+					}).catch(() => {
+						res.json({
+							message:"error"
+						})
+					});
+					break;
+				case "programFull":
+					Mapping.findOneAndUpdate({full:curVal},{full:newVal}).then(map => {
+						var newMap = {
+							full:newVal,
+							short:map.short
+						};
+						var findCondition = {
+							programs : { $elemMatch : map }
+						};
+						var updateCondition = {
+							$pull : { programs : map },
+							$push : { programs : newMap }
+						}
+						Faculty.updateMany(findCondition,updateCondition).then(() => {
+							res.json({
+								message:"success",
+								result:null
+							})
+						}).catch(() => {
+							res.json({
+								message:"error"
+							})
+						})
+					}).catch(() => {
+						res.json({
+							message:"error"
+						})
+					});
+					break;
+				case "programMap":
+					Mapping.findOneAndUpdate({map:curVal},{map:newVal}).then(map => {
+						res.json({
+							message:"success",
+							result:"null"
+						})
+					}).catch(() => {
+						res.json({
+							message:"error"
+						})
+					}).catch(() => {
+						res.json({
+							message:"error"
+						})
+					})
+					break;
+				case "streamShort":
+					Streams.findOneAndUpdate({short:curVal},{short:newVal}).then(streams => {
+						Faculty.updateMany({stream:curVal},{stream:newVal}).then(() => {
+							res.json({
+								message:"success"
+							})
+						}).catch(() => {
+							res.json({
+								message:"error"
+							})
+						})
+					}).catch(() => {
+						res.json({
+							message:"error"
+						})
+					});
+				case "streamFull":
+					Streams.findOneAndUpdate({full:curVal},{full:newVal}).then(() => {
+						res.json({
+							message:"success"
+						})
+					}).catch(() => {
+						res.json({
+							message:"error"
+						})
+					});
+				default:
+					break;
+			}
+		} else {
+			res.json({
+				message:"invalid-token",
+				result:null
+			})
+		}
+	})
+})
 
 module.exports = router;

@@ -748,8 +748,21 @@ export class SuperAdminComponent implements OnInit {
     }
     else if(comment["message"] == "submit") {
       let currentShort = el["short"];
-      //current short = currentShort
-      //update Short = comment["value"]
+      this.userService.superAdminEditFields("programShort",currentShort,comment["value"]).subscribe(result => {
+        if(result["message"] == "invalid-token") {
+          this.snackBar.open("Session Timed Out! Please Sign-In Again.","Ok",{
+            duration:3000
+          })
+          this.navbar.role = "none";
+          this.login.signOut();
+        } else if(result["message"] == "success") {
+          this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
+        } else {
+          this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+        }
+      },() => {
+        this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+      })
     }
   }
 
@@ -759,8 +772,21 @@ export class SuperAdminComponent implements OnInit {
     }
     else if(comment["message"] == "submit") {
       let currentFull = el["name"];
-      //current full = currentFull
-      //update full = comment["value"]
+      this.userService.superAdminEditFields("programFull",currentFull,comment["value"]).subscribe(result => {
+        if(result["message"] == "invalid-token") {
+          this.snackBar.open("Session Timed Out! Please Sign-In Again.","Ok",{
+            duration:3000
+          })
+          this.navbar.role = "none";
+          this.login.signOut();
+        } else if(result["message"] == "success") {
+          this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
+        } else {
+          this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+        }
+      },() => {
+        this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+      })
     }
   }
 
@@ -770,8 +796,21 @@ export class SuperAdminComponent implements OnInit {
     }
     else if(comment["message"] == "submit") {
       let currentMap = el["map"];
-      //current map = currentMap
-      //update map = comment["value"]
+      this.userService.superAdminEditFields("programMap",currentMap,comment["value"]).subscribe(result => {
+        if(result["message"] == "invalid-token") {
+          this.snackBar.open("Session Timed Out! Please Sign-In Again.","Ok",{
+            duration:3000
+          })
+          this.navbar.role = "none";
+          this.login.signOut();
+        } else if(result["message"] == "success") {
+          this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
+        } else {
+          this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+        }
+      },() => {
+        this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+      })
     }
   }
 
@@ -781,8 +820,21 @@ export class SuperAdminComponent implements OnInit {
     }
     else if(comment["message"] == "submit") {
       let currentName = el["name"];
-      //current name = currentName
-      //update name = comment["value"]
+      this.userService.superAdminEditFields("streamFull",currentName,comment["value"]).subscribe(result => {
+        if(result["message"] == "invalid-token") {
+          this.snackBar.open("Session Timed Out! Please Sign-In Again.","Ok",{
+            duration:3000
+          })
+          this.navbar.role = "none";
+          this.login.signOut();
+        } else if(result["message"] == "success") {
+          this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
+        } else {
+          this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+        }
+      },() => {
+        this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+      })
     }
   }
 
@@ -792,8 +844,21 @@ export class SuperAdminComponent implements OnInit {
     }
     else if(comment["message"] == "submit") {
       let currentShort = el["short"];
-      //current short = currentShort
-      //update short = comment["value"]
+      this.userService.superAdminEditFields("streamShort",currentShort,comment["value"]).subscribe(result => {
+        if(result["message"] == "invalid-token") {
+          this.snackBar.open("Session Timed Out! Please Sign-In Again.","Ok",{
+            duration:3000
+          })
+          this.navbar.role = "none";
+          this.login.signOut();
+        } else if(result["message"] == "success") {
+          this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
+        } else {
+          this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+        }
+      },() => {
+        this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
+      })
     }
   }
 }
