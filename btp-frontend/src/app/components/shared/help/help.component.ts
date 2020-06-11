@@ -44,13 +44,13 @@ export class HelpComponent implements OnInit {
     if (i == 1) {
       video.currentTime = 0;
     } else if (i == 2) {
-      video.currentTime = 26;
+      video.currentTime = 31;
     } else if (i == 3) {
-      video.currentTime = 51;
+      video.currentTime = 55;
     } else if (i == 4) {
-      video.currentTime = 101;
+      video.currentTime = 109;
     } else {
-      video.currentTime = 128;
+      video.currentTime = 147;
     }
   }
 
@@ -59,9 +59,9 @@ export class HelpComponent implements OnInit {
     if (i == 1) {
       video.currentTime = 0;
     } else if (i == 2) {
-      video.currentTime = 112;
+      video.currentTime = 113;
     } else if (i == 3) {
-      video.currentTime = 162;
+      video.currentTime = 211;
     } else {
       video.currentTime = 194;
     }
