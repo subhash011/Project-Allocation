@@ -756,6 +756,12 @@ export class SuperAdminComponent implements OnInit {
           this.navbar.role = "none";
           this.login.signOut();
         } else if(result["message"] == "success") {
+          for (const program of this.programs.data) {
+            if(program.short == currentShort) {
+              program.short = comment["value"];
+            }
+          }
+          this.programs.data = [...this.programs.data];
           this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
         } else {
           this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
@@ -780,6 +786,12 @@ export class SuperAdminComponent implements OnInit {
           this.navbar.role = "none";
           this.login.signOut();
         } else if(result["message"] == "success") {
+          for (const program of this.programs.data) {
+            if(program.name == currentFull) {
+              program.name = comment["value"];
+            }
+          }
+          this.programs.data = [...this.programs.data];
           this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
         } else {
           this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
@@ -804,6 +816,12 @@ export class SuperAdminComponent implements OnInit {
           this.navbar.role = "none";
           this.login.signOut();
         } else if(result["message"] == "success") {
+          for (const program of this.programs.data) {
+            if(program.map == currentMap) {
+              program.map = comment["value"];
+            }
+          }
+          this.programs.data = [...this.programs.data];
           this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
         } else {
           this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
@@ -828,6 +846,12 @@ export class SuperAdminComponent implements OnInit {
           this.navbar.role = "none";
           this.login.signOut();
         } else if(result["message"] == "success") {
+          for (const stream of this.branches.data) {
+            if(stream.name == currentName) {
+              stream.name = comment["value"];
+            }
+          }
+          this.programs.data = [...this.programs.data];
           this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
         } else {
           this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
@@ -852,6 +876,12 @@ export class SuperAdminComponent implements OnInit {
           this.navbar.role = "none";
           this.login.signOut();
         } else if(result["message"] == "success") {
+          for (const stream of this.branches.data) {
+            if(stream.short == currentShort) {
+              stream.short = comment["value"];
+            }
+          }
+          this.programs.data = [...this.programs.data];
           this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
         } else {
           this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})

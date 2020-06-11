@@ -531,21 +531,27 @@ router.post("/edit/:field/:id",(req,res) => {
 							full:map.full,
 							short:newVal
 						};
+						var curMap = {
+							full:map.full,
+							short:map.short
+						}
 						var findCondition = {
-							programs : { $elemMatch : map }
+							programs : { $elemMatch : curMap }
 						};
 						var updateCondition = {
-							$pull : { programs : map },
-							$push : { programs : newMap }
+							$set: { "programs.$[filter]": newMap }
+						};
+						var filterCondition = {
+							arrayFilters: [ { "filter": curMap } ] 
 						}
 						var promises = [];
 						promises.push(
-							Faculty.updateMany(findCondition, updateCondition).then(faculties => {
+							Faculty.updateMany(findCondition, updateCondition,filterCondition).then(faculties => {
 								return faculties;
 							})
 						);
 						promises.push(
-							Faculty.updateMany({programAdmin:curVal},{programAdmin:newVal}).then(faculties => {
+							Faculty.updateMany({adminProgram:curVal},{adminProgram:newVal}).then(faculties => {
 								return faculties;
 							})
 						)
@@ -580,43 +586,47 @@ router.post("/edit/:field/:id",(req,res) => {
 					});
 					break;
 				case "programFull":
-					Mapping.findOneAndUpdate({full:curVal},{full:newVal}).then(map => {
+					Mapping.findOneAndUpdate({full:curVal},{full:newVal},{upsert:false,new:false}).then(map => {
 						var newMap = {
 							full:newVal,
 							short:map.short
 						};
+						var curMap = {
+							full:map.full,
+							short:map.short
+						}
 						var findCondition = {
-							programs : { $elemMatch : map }
+							programs : { $elemMatch : curMap  }
 						};
 						var updateCondition = {
-							$pull : { programs : map },
-							$push : { programs : newMap }
+							$set: { "programs.$[filter]": newMap }
+						};
+						var filterCondition = {
+							arrayFilters: [ { "filter": curMap } ] 
 						}
-						Faculty.updateMany(findCondition,updateCondition).then(() => {
+						Faculty.updateMany(findCondition,updateCondition,filterCondition).then(result => {
 							res.json({
 								message:"success",
 								result:null
 							})
-						}).catch(() => {
+						}).catch(err => {
 							res.json({
 								message:"error"
 							})
 						})
-					}).catch(() => {
+					}).catch((err) => {
 						res.json({
 							message:"error"
 						})
 					});
 					break;
 				case "programMap":
-					Mapping.findOneAndUpdate({map:curVal},{map:newVal}).then(map => {
+					let arr = curVal.split("|");
+					let length = arr[0];
+					Mapping.findOneAndUpdate({length:length,map:curVal},{length:newVal.split("|")[0],map:newVal}).then(map => {
 						res.json({
 							message:"success",
 							result:"null"
-						})
-					}).catch(() => {
-						res.json({
-							message:"error"
 						})
 					}).catch(() => {
 						res.json({
@@ -640,6 +650,7 @@ router.post("/edit/:field/:id",(req,res) => {
 							message:"error"
 						})
 					});
+					break;
 				case "streamFull":
 					Streams.findOneAndUpdate({full:curVal},{full:newVal}).then(() => {
 						res.json({

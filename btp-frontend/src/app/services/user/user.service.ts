@@ -666,7 +666,7 @@ export class UserService {
     const user = JSON.parse(localStorage.getItem("user"));
     const id = user.id;
     const idToken = user.idToken;
-    this.url = `${this.base_url}super/${field}/${id}`;
+    this.url = `${this.base_url}super/edit/${field}/${id}`;
 
     const httpOptions = {
       headers: new HttpHeaders({

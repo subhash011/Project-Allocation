@@ -306,13 +306,13 @@
           >
         </div>
         <table mat-table [dataSource]="branches" class="mat-elevation-z8">
-          <ng-container tainer matColumnDef="Stream">
+          <ng-container matColumnDef="Stream">
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
               Stream Name
             </th>
             <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
               <ng-container  *ngIf="map.name">
-                {{map.name}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+                {{map.name}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
               </ng-container>
               <sat-popover #p
                   hasBackdrop
@@ -323,13 +323,13 @@
               </sat-popover>
             </td>
           </ng-container>
-          <ng-container tainer matColumnDef="Short">
+          <ng-container matColumnDef="Short">
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
               Stream Abbrevation
             </th>
             <td mat-cell *matCellDef="let map">
               <ng-container  *ngIf="map.short">
-                {{map.short}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+                {{map.short}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
               </ng-container>
               <sat-popover #p
                   hasBackdrop
@@ -382,7 +382,7 @@
             </th>
             <td mat-cell  [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
               <ng-container *ngIf="map.name">
-                {{map.name}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+                {{map.name}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
               </ng-container>
               <sat-popover #p
                   hasBackdrop
@@ -393,13 +393,13 @@
               </sat-popover>
             </td>
           </ng-container>
-          <ng-container tainer matColumnDef="Short">
+          <ng-container matColumnDef="Short">
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
               Program Abbrevation
             </th>
             <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
               <ng-container *ngIf="map.short">
-                {{map.short}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+                {{map.short}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
               </ng-container>
               <sat-popover #p
                   hasBackdrop
@@ -414,13 +414,13 @@
             <th mat-header-cell *matHeaderCellDef>Map</th>
             <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
               <ng-container *ngIf="map.map">
-                {{map.map}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+                {{map.map}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
               </ng-container>
               <sat-popover #p
                   hasBackdrop
                   xAlign="start"
                   yAlign="start"
-                  (closed)="updateShortProgram(map, $event)">
+                  (closed)="updateProgramMap(map, $event)">
                 <app-inline-edit [head]="'Edit map'" [placeholder]="'New map'" [value]="map.map"></app-inline-edit>
               </sat-popover>
             </td>
