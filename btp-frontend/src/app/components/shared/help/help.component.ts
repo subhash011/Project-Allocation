@@ -21,9 +21,9 @@ export class HelpComponent implements OnInit {
     if (i == 1) {
       video.currentTime = 0;
     } else if (i == 2) {
-      video.currentTime = 27;
+      video.currentTime = 25;
     } else {
-      video.currentTime = 58;
+      video.currentTime = 53;
     }
   }
   gotosa(i) {
