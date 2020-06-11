@@ -37,6 +37,7 @@ import { NavbarComponent } from "../../shared/navbar/navbar.component";
 })
 export class SelectedLength implements PipeTransform {
   transform(selected, filteredData) {
+    console.log(selected);
     selected = selected.map((val) => val._id);
     filteredData = filteredData.map((val) => val._id);
     let count = 0;
@@ -81,11 +82,11 @@ export class GetIncludedOfTotal implements PipeTransform {
 })
 export class StudentIntake implements PipeTransform {
   transform(projects) {
-      let sum = 0;
-      for (let project of projects) {
-        sum += project.studentIntake;
-      }
-      return sum;
+    let sum = 0;
+    for (let project of projects) {
+      sum += project.studentIntake;
+    }
+    return sum;
   }
 }
 
@@ -177,7 +178,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   projectCap;
   studentCap;
   studentCount = 0;
-  projectCount = 0;
   availableProjects = 0;
   days_left;
   project: any;
@@ -375,7 +375,6 @@ export class AdminComponent implements OnInit, OnDestroy {
         if (projects["message"] == "success") {
           this.projects = projects["result"];
           this.dataSource.data = this.projects;
-          this.projectCount = this.projects.length;
           this.dataSource.filterPredicate = (data: any, filter: string) =>
             !filter ||
             data.faculty.toLowerCase().includes(filter) ||
@@ -1274,6 +1273,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   selectIncluded() {
+    this.selection.clear();
     this.dataSource.data.forEach((row) => {
       row.isIncluded
         ? this.selection.select(row)
@@ -1778,7 +1778,11 @@ export class AdminComponent implements OnInit, OnDestroy {
         case "NoOfProjects":
           return this.compare(a.noOfProjects, b.noOfProjects, isAsc);
         case "StudentIntake":
-          return this.compare(a.included_studentIntake, b.included_studentIntake, isAsc);
+          return this.compare(
+            a.included_studentIntake,
+            b.included_studentIntake,
+            isAsc
+          );
         default:
           return 0;
       }
