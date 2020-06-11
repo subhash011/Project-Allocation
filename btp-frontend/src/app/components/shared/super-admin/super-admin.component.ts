@@ -741,4 +741,59 @@ export class SuperAdminComponent implements OnInit {
   compare(a: number | string, b: number | string, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
+
+  updateShortProgram(el: any, comment: any) {
+    if(!comment || comment["message"] == "close") {
+      return;
+    }
+    else if(comment["message"] == "submit") {
+      let currentShort = el["short"];
+      //current short = currentShort
+      //update Short = comment["value"]
+    }
+  }
+
+  updateProgramFull(el:any,comment:any) {
+    if(!comment || comment["message"] == "close") {
+      return;
+    }
+    else if(comment["message"] == "submit") {
+      let currentFull = el["name"];
+      //current full = currentFull
+      //update full = comment["value"]
+    }
+  }
+
+  updateProgramMap(el:any,comment:any) {
+    if(!comment || comment["message"] == "close") {
+      return;
+    }
+    else if(comment["message"] == "submit") {
+      let currentMap = el["map"];
+      //current map = currentMap
+      //update map = comment["value"]
+    }
+  }
+
+  updateStreamName(el:any,comment:any) {
+    if(!comment || comment["message"] == "close") {
+      return;
+    }
+    else if(comment["message"] == "submit") {
+      let currentName = el["name"];
+      //current name = currentName
+      //update name = comment["value"]
+    }
+  }
+
+  updateStreamShort(el:any,comment:any) {
+    if(!comment || comment["message"] == "close") {
+      return;
+    }
+    else if(comment["message"] == "submit") {
+      let currentShort = el["short"];
+      //current short = currentShort
+      //update short = comment["value"]
+    }
+  }
 }

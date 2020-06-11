@@ -2081,3 +2081,7 @@ td.mat-footer-cell {
 app-home .container {
     background: linear-gradient(125deg, white 25%, #e91e63 25%);
 }
+
+.mat-subheading-2 {
+    color:  #e91e63;
+}

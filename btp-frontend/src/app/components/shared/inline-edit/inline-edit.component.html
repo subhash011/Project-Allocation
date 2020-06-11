@@ -1,0 +1,11 @@
+<form (ngSubmit)="onSubmit()">
+<h4 class="mat-subheading-2">{{head}}</h4>
+<mat-form-field>
+<input color="primary" matInput name="comment" placeholder="{{placeholder}}" [(ngModel)]="comment">
+</mat-form-field>
+
+<div class="actions">
+<button mat-button type="button" color="primary" (click)="onCancel()">CANCEL</button>
+<button mat-button type="submit" color="primary">SAVE</button>
+</div>
+</form>

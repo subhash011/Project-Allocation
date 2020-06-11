@@ -79,7 +79,9 @@ import {
 } from "./components/shared/Pipes/rolePipes";
 import { ShowStudentAllotedComponent } from "./components/faculty-componenets/show-student-alloted/show-student-alloted.component";
 import { MatTableModule } from '@angular/material';
+import { SatPopoverModule } from '@ncstate/sat-popover';
 import { CdkDropListActualContainer } from './components/student-components/edit-preferences/edit-preferences.directive';
+import { InlineEditComponent } from './components/shared/inline-edit/inline-edit.component';
 const googleLoginOption: LoginOpt = {
   prompt: "select_account",
 };
@@ -147,7 +149,8 @@ export function provideConfig() {
     SelectedLength,
     FacultyPublish,
     GetViolations,
-    CdkDropListActualContainer
+    CdkDropListActualContainer,
+    InlineEditComponent
   ],
   entryComponents: [
     SubmitPopUpComponent,
@@ -174,7 +177,8 @@ export function provideConfig() {
     ClipboardModule,
     MatSortModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    SatPopoverModule
   ],
   exports: [ClipboardModule],
   providers: [

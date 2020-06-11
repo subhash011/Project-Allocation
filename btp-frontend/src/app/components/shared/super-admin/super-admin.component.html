@@ -310,13 +310,35 @@
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
               Stream Name
             </th>
-            <td mat-cell *matCellDef="let map">{{ map.name }}</td>
+            <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
+              <ng-container  *ngIf="map.name">
+                {{map.name}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+              </ng-container>
+              <sat-popover #p
+                  hasBackdrop
+                  xAlign="start"
+                  yAlign="start"
+                  (closed)="updateStreamName(map, $event)">
+                <app-inline-edit [head]="'Edit name'" [placeholder]="'New name'" [value]="map.name"></app-inline-edit>
+              </sat-popover>
+            </td>
           </ng-container>
           <ng-container tainer matColumnDef="Short">
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
               Stream Abbrevation
             </th>
-            <td mat-cell *matCellDef="let map">{{ map.short }}</td>
+            <td mat-cell *matCellDef="let map">
+              <ng-container  *ngIf="map.short">
+                {{map.short}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+              </ng-container>
+              <sat-popover #p
+                  hasBackdrop
+                  xAlign="start"
+                  yAlign="start"
+                  (closed)="updateStreamShort(map, $event)">
+                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'" [value]="map.short"></app-inline-edit>
+              </sat-popover>
+            </td>
           </ng-container>
           <ng-container matColumnDef="Actions">
             <th mat-header-cell *matHeaderCellDef>Delete Stream</th>
@@ -354,21 +376,54 @@
           >
         </div>
         <table mat-table [dataSource]="programs" class="mat-elevation-z8">
-          <ng-container tainer matColumnDef="Branch">
+          <ng-container matColumnDef="Branch">
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
               Program Name
             </th>
-            <td mat-cell *matCellDef="let map">{{ map.name }}</td>
+            <td mat-cell  [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
+              <ng-container *ngIf="map.name">
+                {{map.name}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+              </ng-container>
+              <sat-popover #p
+                  hasBackdrop
+                  xAlign="start"
+                  yAlign="start"
+                  (closed)="updateProgramFull(map, $event)">
+                <app-inline-edit [head]="'Edit full name'" [placeholder]="'New full name'" [value]="map.name"></app-inline-edit>
+              </sat-popover>
+            </td>
           </ng-container>
           <ng-container tainer matColumnDef="Short">
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
               Program Abbrevation
             </th>
-            <td mat-cell *matCellDef="let map">{{ map.short }}</td>
+            <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
+              <ng-container *ngIf="map.short">
+                {{map.short}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+              </ng-container>
+              <sat-popover #p
+                  hasBackdrop
+                  xAlign="start"
+                  yAlign="start"
+                  (closed)="updateShortProgram(map, $event)">
+                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'" [value]="map.short"></app-inline-edit>
+              </sat-popover>
+            </td>
           </ng-container>
           <ng-container matColumnDef="Map">
             <th mat-header-cell *matHeaderCellDef>Map</th>
-            <td mat-cell *matCellDef="let map">{{ map.map }}</td>
+            <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
+              <ng-container *ngIf="map.map">
+                {{map.map}}<span class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
+              </ng-container>
+              <sat-popover #p
+                  hasBackdrop
+                  xAlign="start"
+                  yAlign="start"
+                  (closed)="updateShortProgram(map, $event)">
+                <app-inline-edit [head]="'Edit map'" [placeholder]="'New map'" [value]="map.map"></app-inline-edit>
+              </sat-popover>
+            </td>
           </ng-container>
           <ng-container matColumnDef="FacCount">
             <th mat-header-cell *matHeaderCellDef>No. Of Faculties</th>
