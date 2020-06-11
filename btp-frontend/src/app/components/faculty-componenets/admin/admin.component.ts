@@ -32,6 +32,36 @@ import { saveAs } from "file-saver";
 import * as moment from "moment";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
+
+@Pipe({
+  name:"getViolations"
+})
+export class GetViolations implements PipeTransform {
+  transform(stCap,prCap,stPerFac, tooltip?:boolean) {
+    let violations = [];
+    let flag = true;
+    if(stCap) {
+      flag = false;
+      violations.push("SPP");
+    }
+    if(prCap) {
+      flag = false;
+      violations.push("PFE")
+    }
+    if(stPerFac) {
+      flag = false;
+      violations.push("SPF");
+    }
+    if(flag && !tooltip) {
+      return "None"
+    }
+    if(tooltip && violations.length != 0) {
+      return "Some faculty has a violation, head to the manage tab to check the violations."
+    }
+    return violations.join(", ");
+  }
+}
+
 @Pipe({
   name: "selectedLength",
 })
