@@ -135,9 +135,11 @@
             >
               Send Emails
             </button>
-            <button mat-button [disabled]="proceedButton1_" (click)="proceed()">
-              Proceed
-            </button>
+            <span [matTooltip]="('1'|proceedPipe:studentCount:proceedButton1_:total_intake:proceedButton1)">
+              <button mat-button [disabled]="proceedButton1_" (click)="proceed()">
+                Proceed
+              </button>
+            </span>
             <div class="reset">
               <button
                 mat-raised-button
@@ -188,9 +190,11 @@
             <button mat-button (click)="stepDownStage()">
               Go Back
             </button>
+            <span [matTooltip]="('2'|proceedPipe:studentCount:proceedButton2_:total_intake:proceedButton2)" >
             <button mat-button [disabled]="proceedButton2_" (click)="proceed()">
               Proceed
             </button>
+            </span>
             <div class="reset">
               <button
                 mat-raised-button
@@ -242,9 +246,11 @@
             <button mat-button (click)="stepDownStage()">
               Go Back
             </button>
+            <span [matTooltip]="('3'|proceedPipe:studentCount:proceedButton3_:total_intake:proceedButton3)">
             <button mat-button [disabled]="proceedButton3_" (click)="proceed()">
               Proceed
             </button>
+            </span>
             <div class="reset">
               <button
                 mat-raised-button

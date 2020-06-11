@@ -63,11 +63,58 @@ export class GetViolations implements PipeTransform {
 }
 
 @Pipe({
+  name:"proceedPipe"
+})
+export class ProceedPipe implements PipeTransform {
+  transform(value,studentCount,proceedButton,total_intake,emailButton) {
+
+    console.log("here")
+
+    if(studentCount > total_intake){
+      return "Number of students are greater than the number of projects that can be alloted."
+    }
+    else{
+
+      if(emailButton){
+        return "Please set the deadline in order to proceed to the next stage."
+      }
+
+      switch(value){
+        case "1":
+          if(proceedButton){
+            return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations."
+          }
+          else{
+            return "Proceed"
+          }
+          
+        case "2":
+          if(proceedButton){
+            return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations."
+          }
+          else{
+            return "Proceed"
+          }
+  
+        case "3":
+          if(proceedButton){
+            return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations."
+          }
+          else{
+            return "Proceed"
+          }
+      }
+
+    }
+    
+  }
+}
+
+@Pipe({
   name: "selectedLength",
 })
 export class SelectedLength implements PipeTransform {
   transform(selected, filteredData) {
-    console.log(selected);
     selected = selected.map((val) => val._id);
     filteredData = filteredData.map((val) => val._id);
     let count = 0;
@@ -204,6 +251,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   student;
   faculty;
 
+  total_intake = 0;
   studentsPerFaculty;
   projectCap;
   studentCap;
@@ -335,6 +383,9 @@ export class AdminComponent implements OnInit, OnDestroy {
               dialogRefLoad.close();
               if (result["message"] == "success") {
                 this.faculties.data = result["result"]["faculties"];
+                this.faculties.data.forEach(faculty => {
+                  this.total_intake += faculty.included_studentIntake;
+                })
                 this.students.data = result["result"]["students"];
                 this.sortStudents({ direction: "asc", active: "Email" });
                 this.studentCount = result["result"]["students"].length;
