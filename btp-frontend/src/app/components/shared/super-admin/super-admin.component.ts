@@ -766,6 +766,21 @@ export class SuperAdminComponent implements OnInit {
           this.students[comment["value"]] = this.students[currentShort];
           this.projects[comment["value"]] = this.projects[currentShort];
           this.faculties[comment["value"]] = this.faculties[currentShort];
+          for (const program of this.programs.data) {
+            for (const faculty of this.faculties[program.short].data) {
+              if(faculty.isAdmin && faculty.adminProgram == currentShort) {
+                faculty.adminProgram = comment["value"];
+              }
+              this.faculties[program.short].data = [...this.faculties[program.short].data];
+            }
+          }
+          for (const program of this.programs.data) {
+            this.hasAdmins[program.short] = this.faculties[program.short].data.filter(faculty => {
+              if(faculty.isAdmin && faculty.adminProgram == program.short) {
+                return faculty;
+              }
+            }).length > 0 ? true : false;
+          }
           this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
         } else {
           this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
