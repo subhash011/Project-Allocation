@@ -63,6 +63,54 @@ export class GetViolations implements PipeTransform {
 }
 
 @Pipe({
+  name:"proceedPipe"
+})
+export class ProceedPipe implements PipeTransform {
+  transform(value,studentCount,proceedButton,total_intake,emailButton) {
+
+    console.log("here")
+
+    if(studentCount > total_intake){
+      return "Number of students are greater than the number of projects that can be alloted."
+    }
+    else{
+
+      if(emailButton){
+        return "Please set the deadline in order to proceed to the next stage."
+      }
+
+      switch(value){
+        case "1":
+          if(proceedButton){
+            return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations."
+          }
+          else{
+            return "Proceed"
+          }
+          
+        case "2":
+          if(proceedButton){
+            return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations."
+          }
+          else{
+            return "Proceed"
+          }
+  
+        case "3":
+          if(proceedButton){
+            return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations."
+          }
+          else{
+            return "Proceed"
+          }
+      }
+
+    }
+    
+  }
+}
+
+@Pipe({
   name: "selectedLength",
 })
 export class SelectedLength implements PipeTransform {
@@ -111,11 +159,11 @@ export class GetIncludedOfTotal implements PipeTransform {
 })
 export class StudentIntake implements PipeTransform {
   transform(projects) {
-      let sum = 0;
-      for (let project of projects) {
-        sum += project.studentIntake;
-      }
-      return sum;
+    let sum = 0;
+    for (let project of projects) {
+      sum += project.studentIntake;
+    }
+    return sum;
   }
 }
 
@@ -203,11 +251,11 @@ export class AdminComponent implements OnInit, OnDestroy {
   student;
   faculty;
 
+  total_intake = 0;
   studentsPerFaculty;
   projectCap;
   studentCap;
   studentCount = 0;
-  projectCount = 0;
   availableProjects = 0;
   days_left;
   project: any;
@@ -335,6 +383,9 @@ export class AdminComponent implements OnInit, OnDestroy {
               dialogRefLoad.close();
               if (result["message"] == "success") {
                 this.faculties.data = result["result"]["faculties"];
+                this.faculties.data.forEach(faculty => {
+                  this.total_intake += faculty.included_studentIntake;
+                })
                 this.students.data = result["result"]["students"];
                 this.sortStudents({ direction: "asc", active: "Email" });
                 this.studentCount = result["result"]["students"].length;
@@ -405,7 +456,6 @@ export class AdminComponent implements OnInit, OnDestroy {
         if (projects["message"] == "success") {
           this.projects = projects["result"];
           this.dataSource.data = this.projects;
-          this.projectCount = this.projects.length;
           this.dataSource.filterPredicate = (data: any, filter: string) =>
             !filter ||
             data.faculty.toLowerCase().includes(filter) ||
@@ -1304,6 +1354,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   selectIncluded() {
+    this.selection.clear();
     this.dataSource.data.forEach((row) => {
       row.isIncluded
         ? this.selection.select(row)
@@ -1808,7 +1859,11 @@ export class AdminComponent implements OnInit, OnDestroy {
         case "NoOfProjects":
           return this.compare(a.noOfProjects, b.noOfProjects, isAsc);
         case "StudentIntake":
-          return this.compare(a.included_studentIntake, b.included_studentIntake, isAsc);
+          return this.compare(
+            a.included_studentIntake,
+            b.included_studentIntake,
+            isAsc
+          );
         default:
           return 0;
       }

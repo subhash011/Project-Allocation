@@ -47,6 +47,7 @@ import {
   ActiveProjects,
   SelectedLength,
   GetViolations,
+  ProceedPipe,
 } from "./components/faculty-componenets/admin/admin.component";
 import {
   TimelineComponent,
@@ -150,7 +151,8 @@ export function provideConfig() {
     FacultyPublish,
     GetViolations,
     CdkDropListActualContainer,
-    InlineEditComponent
+    InlineEditComponent,
+    ProceedPipe,
   ],
   entryComponents: [
     SubmitPopUpComponent,
