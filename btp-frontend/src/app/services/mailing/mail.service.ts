@@ -25,6 +25,8 @@ export class MailService {
 
 The project allocation for program ${program} has been completed. Please login to the project allocation portal to view the projects/students allocated to you.
 
+The URL for the project allocation portal is : ${this.apiUrl}.
+
 Regards,
 ${user.name},
 Project Coordinator (${program})
