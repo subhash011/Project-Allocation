@@ -5,6 +5,8 @@ const Student = require("../models/Student");
 const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 
+
+
 router.post("/done", (req, res) => {
 	mongoose.connection.db.dropDatabase().then(() => {
 		res.send("success");

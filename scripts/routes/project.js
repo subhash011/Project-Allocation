@@ -5,6 +5,20 @@ const Student = require("../models/Student");
 const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 
+function getRandom(arr, n) {
+	var result = new Array(n),
+		len = arr.length,
+		taken = new Array(len);
+	if (n > len)
+		throw new RangeError("getRandom: more elements taken than available");
+	while (n--) {
+		var x = Math.floor(Math.random() * len);
+		result[n] = arr[x in taken ? taken[x] : x];
+		taken[x] = --len in taken ? taken[len] : len;
+	}
+	return result;
+}
+
 router.post("/:faculty/:num", (req, res) => {
 	const faculty_name = req.params.faculty;
 	const num = req.params.num;
@@ -48,18 +62,18 @@ router.post("/add", (req, res) => {
 		.then((faculties) => {
 			for (const faculty of faculties) {
 				const num = 20;
-
+				const programs = faculty.programs.map(val => val.short);
 				for (let index = 0; index < num; index++) {
 					let names = faculty.name + "_pr" + (index + 1);
 					let studentIntake = getRandomInt(1,5);
-
+					let st = getRandom(programs,1)[0];
 					const project = new Project({
 						title: names,
 						studentIntake: studentIntake,
 						faculty_id: faculty._id,
 						description: names,
 						duration: 1,
-						stream: "UGCSE",
+						stream: st,
 						isIncluded:(studentIntake <= 2 ? false:true)
 					});
 

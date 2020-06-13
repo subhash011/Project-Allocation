@@ -52,6 +52,10 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.custom-snack-bar-container {
+  max-width: 100% !important;
+}
+
 ::ng-deep .mat-horizontal-stepper-header {
   pointer-events: none !important;
 }

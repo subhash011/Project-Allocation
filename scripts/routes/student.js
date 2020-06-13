@@ -57,7 +57,7 @@ router.post("/add/:n", (req, res) => {
 				index == 1 || index == 41
 					? roll[index] + "@smail.iitpkd.ac.in"
 					: roll[index] + "@abc.com",
-			stream: "UGCSE",
+			stream: "UGEE",
 			isRegistered: true,
 		});
 		promises.push(
