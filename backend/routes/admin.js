@@ -594,9 +594,13 @@ router.get("/members/:id", (req, res) => {
 											var studentsPerFacultyErr = false;
 											var projects = val.project_list;
 											var includedProjects = 0;
+											var total_projects = 0;
 											projects = projects.filter((project) => {
-												includedProjects += project.isIncluded ? 1 : 0;
-												return project.stream == admin.stream;
+												if(project.stream == admin.stream){
+													includedProjects += project.isIncluded ? 1 : 0;
+													total_projects += 1;
+													return project;
+												}
 											});
 											if (projects.length > admin.project_cap) {
 												projectCapErr = true;
@@ -630,7 +634,7 @@ router.get("/members/:id", (req, res) => {
 											var newFac = {
 												_id: val._id,
 												name: val.name,
-												noOfProjects: val.project_list.length,
+												noOfProjects: total_projects,
 												email: val.email,
 												total_studentIntake:total,
 												included_studentIntake:included,
