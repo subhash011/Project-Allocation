@@ -1,0 +1,48 @@
+<div class="stages">
+  <div class="display">
+    <div class="table mat-elevation-z8">
+      <table
+        mat-table
+        #table
+        [dataSource]="stageDetails"
+        class="mat-elevation-z8"
+      >
+        <ng-container tainer matColumnDef="Program">
+          <th mat-header-cell *matHeaderCellDef>
+            Program
+          </th>
+          <td mat-cell *matCellDef="let admin">{{ admin.stream }}</td>
+        </ng-container>
+
+        <ng-container tainer matColumnDef="Stage">
+          <th mat-header-cell *matHeaderCellDef>
+            Stage (4)
+          </th>
+          <td mat-cell *matCellDef="let admin">
+            {{ admin.stage + 1 }}
+          </td>
+        </ng-container>
+
+        <ng-container tainer matColumnDef="Time">
+          <th mat-header-cell *matHeaderCellDef>
+            Time Left
+          </th>
+          <td mat-cell *matCellDef="let admin">
+            <span class="days_left"
+              ><strong *ngIf="admin.deadlines;else none">
+                {{admin.deadlines | countdown: currentTime }}</strong>
+                <ng-template #none>
+                    N/A
+                </ng-template>
+            </span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="stageTableCols"></tr>
+        <tr mat-row *matRowDef="let row; columns: stageTableCols"></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="all_projects"></div>

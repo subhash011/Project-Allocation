@@ -1,13 +1,7 @@
-<div class="container" *ngIf="empty; else notEmpty">
-  <div class="app-timeline" *ngIf="!programs_mode; else goProgramMode">
-    <app-timeline
-      *ngIf="!programs_mode"
-      [program]="stream"
-      [clone]="'temp'"
-    ></app-timeline>
-  </div>
-
-  <ng-template #goProgramMode>
+<div class="container" *ngIf="empty; else Forms">
+  
+  
+  <div *ngIf="!programs_mode">
     <div *ngIf="program_details">
       <app-timeline
         *ngIf="program_details"
@@ -67,10 +61,16 @@
         </div>
       </div>
     </div>
-  </ng-template>
+
+  </div>
+  
+
 </div>
-<ng-template #notEmpty>
-  <div class="container-add" *ngIf="add; else display">
+
+
+
+<ng-template #Forms>
+  <div class="container-add" *ngIf="add; else savePref_editProj">
     <form
       [formGroup]="ProjectForm"
       novalidate
@@ -152,7 +152,7 @@
       </mat-card>
     </form>
   </div>
-  <ng-template #display>
+  <ng-template #savePref_editProj>
     <mat-tab-group color="accent" animationDuration="0" dynamicHeight="true">
       <mat-tab label="Students">
         <app-student-table

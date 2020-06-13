@@ -84,6 +84,7 @@ import { MatTableModule } from '@angular/material';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 import { CdkDropListActualContainer } from './components/student-components/edit-preferences/edit-preferences.directive';
 import { InlineEditComponent } from './components/shared/inline-edit/inline-edit.component';
+import { FacultyHomeComponent } from './components/faculty-componenets/faculty-home/faculty-home.component';
 const googleLoginOption: LoginOpt = {
   prompt: "select_account",
 };
@@ -155,6 +156,7 @@ export function provideConfig() {
     InlineEditComponent,
     ProceedPipe,
     TotalIntake,
+    FacultyHomeComponent,
   ],
   entryComponents: [
     SubmitPopUpComponent,
