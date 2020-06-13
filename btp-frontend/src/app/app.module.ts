@@ -48,6 +48,7 @@ import {
   SelectedLength,
   GetViolations,
   ProceedPipe,
+  TotalIntake,
 } from "./components/faculty-componenets/admin/admin.component";
 import {
   TimelineComponent,
@@ -153,6 +154,7 @@ export function provideConfig() {
     CdkDropListActualContainer,
     InlineEditComponent,
     ProceedPipe,
+    TotalIntake,
   ],
   entryComponents: [
     SubmitPopUpComponent,

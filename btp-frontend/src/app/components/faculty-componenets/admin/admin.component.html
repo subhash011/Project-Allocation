@@ -748,7 +748,7 @@
                   {{ faculty.includedProjectsCount }} /
                   {{ faculty.noOfProjects }}
                 </td>
-                <td mat-footer-cell *matFooterCellDef> <b>Total Included : </b> {{ faculties.filteredData | getIncludedOfTotal }} </td>
+                <td mat-footer-cell *matFooterCellDef> <b>Total Projects : </b> {{ faculties.filteredData | getIncludedOfTotal }} </td>
               </ng-container>
               <ng-container matColumnDef="StudentIntake">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -758,7 +758,7 @@
                   {{ faculty.included_studentIntake }} /
                   {{ faculty.total_studentIntake }}
                 </td>
-                <td mat-footer-cell *matFooterCellDef> </td>
+                <td mat-footer-cell *matFooterCellDef> <b>Total Intake : </b> {{ faculties.filteredData | getTotalIntake}} </td>
               </ng-container>
               <ng-container matColumnDef="Actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>

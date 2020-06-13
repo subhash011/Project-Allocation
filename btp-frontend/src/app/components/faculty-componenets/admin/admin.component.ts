@@ -62,6 +62,27 @@ export class GetViolations implements PipeTransform {
   }
 }
 
+
+@Pipe({
+  name:"getTotalIntake"
+})
+export class TotalIntake implements PipeTransform{
+
+  transform(filteredData){
+
+    let total = 0;
+    let included = 0;
+
+    filteredData.forEach(faculty=>{
+      total+=faculty.total_studentIntake;
+      included +=faculty.included_studentIntake;
+    })
+    return `${included} / ${total}`;
+  }
+
+}
+
+
 @Pipe({
   name:"proceedPipe"
 })
