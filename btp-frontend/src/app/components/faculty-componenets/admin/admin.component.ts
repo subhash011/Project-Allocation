@@ -68,7 +68,6 @@ export class GetViolations implements PipeTransform {
 export class ProceedPipe implements PipeTransform {
   transform(value,studentCount,proceedButton,total_intake,emailButton) {
 
-    console.log("here")
 
     if(studentCount > total_intake){
       return "Number of students are greater than the number of projects that can be alloted."
