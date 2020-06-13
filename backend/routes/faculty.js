@@ -392,4 +392,79 @@ router.post("/getAdminInfo_program/:id", (req, res) => {
         });
 });
 
+router.get("/home/:id",(req,res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("-google_id")
+        .populate({
+            path:"project_list",
+            select:"students_id student_alloted title studentIntake description duration stream",
+            model:Project,
+            populate : {
+                path:"student_alloted",
+                select:"name roll_no",
+                model:Student
+            }
+        })
+        .then(faculty => {
+            if(!faculty) {
+                return null;
+            }
+            var facultyPrograms = faculty.programs.map(val => val.short);
+            let facultyProjects = faculty.project_list;
+            facultyProjects = facultyProjects.map(val => {
+                var newProj = {
+                    title:val.title,
+                    description:val.description,
+                    studentIntake:val.studentIntake,
+                    noOfPreferences:val.students_id.length,
+                    student_alloted:val.student_alloted,
+                    stream:val.stream,
+                    duration:val.duration
+                }
+                return newProj;
+            })
+            facultyProjects.sort((a,b) => {
+                return a.stream.localeCompare(b.stream)
+            });
+            return {
+                facultyPrograms:facultyPrograms,
+                facultyProjects:facultyProjects
+            }
+        }).then(facultyData => {
+            if(!facultyData) {
+                res.json({
+                    message:"invalid-token"
+                })
+                return;
+            }
+            let facultyProjects = facultyData.facultyProjects;
+            let facultyPrograms = facultyData.facultyPrograms;
+            Admin.find({stream:{ $in : facultyPrograms }})
+                .lean()
+                .select("deadlines stream stage")
+                .then(admins => {
+                    let stageDetails = admins.map(val => {
+                        var newDetail = {
+                            deadlines:val.deadlines,
+                            stream:val.stream,
+                            stage:val.stage
+                        }
+                        return newDetail;
+                    });
+                    res.json({
+                        message:"success",
+                        projects:facultyProjects,
+                        stageDetails:stageDetails
+                    });
+                })
+        }).catch(() => {
+            res.json({
+                message:"error"
+            })
+        })
+})
+
 module.exports = router;

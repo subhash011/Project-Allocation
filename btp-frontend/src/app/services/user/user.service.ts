@@ -676,4 +676,20 @@ export class UserService {
     };
     return this.http.post(this.url, value, httpOptions);
   }
+
+  //subscribe(data => {
+  //projects of the faculty => data.projects (all programs sorted according to program)
+  //deadlines of stage => data.stageDetails (deadlines array, stage, stream)
+  //})
+  facultyHomeDetails() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    this.url = this.base_url + "faculty/home/" + user.id;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: user.idToken
+      }),
+    };
+    return this.http.get(this.url, httpOptions);
+  }
 }
