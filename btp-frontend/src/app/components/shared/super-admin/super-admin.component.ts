@@ -336,6 +336,14 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
+        if(this.checkIfPresent("programFull",data.map.full) || this.checkIfPresent("programShort",data.map.short) 
+            || this.checkIfPresent("programMap",data.map.map)) {
+          this.snackBar.open("Duplicate entries are not allowed! Enter a unique name for every field.","Ok",{
+            duration:3000,
+            panelClass:"custom-snack-bar-container"
+          });
+          return;
+        }
         var dialogRef = this.dialog.open(LoaderComponent, {
           data: "Adding Program. Please wait ...",
           disableClose: true,
@@ -428,6 +436,13 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
+        if(this.checkIfPresent("streamFull",data.map.full) || this.checkIfPresent("streamShort",data.map.short)) {
+          this.snackBar.open("Duplicate entries are not allowed! Enter a unique name for every field.","Ok",{
+            duration:3000,
+            panelClass:"custom-snack-bar-container"
+          });
+          return;
+        }
         var dialogRef = this.dialog.open(LoaderComponent, {
           data: "Please wait ...",
           disableClose: true,
@@ -747,6 +762,22 @@ export class SuperAdminComponent implements OnInit {
       return;
     }
     else if(comment["message"] == "submit") {
+      if(this.checkIfPresent("programShort",comment["value"])) {
+        this.snackBar.open("Duplicate entries are not allowed! Enter a unique name for this field.","Ok",{
+          duration:3000,
+          panelClass:"custom-snack-bar-container"
+        });
+        return;
+      }
+      let str = comment["value"];
+      let regexp = new RegExp("^[a-zA-Z-_]*$");
+      if(!regexp.exec(str)) {
+        this.snackBar.open("Only letter, hyphens and underscores are allowd for short name.","Ok",{
+          duration:3000,
+          panelClass:"custom-snack-bar-container"
+        });
+        return;
+      }
       let currentShort = el["short"];
       this.userService.superAdminEditFields("programShort",currentShort,comment["value"]).subscribe(result => {
         if(result["message"] == "invalid-token") {
@@ -756,7 +787,6 @@ export class SuperAdminComponent implements OnInit {
           this.navbar.role = "none";
           this.login.signOut();
         } else if(result["message"] == "success") {
-          // this.ngOnInit();
           for (const program of this.programs.data) {
             if(program.short == currentShort) {
               program.short = comment["value"];
@@ -796,6 +826,13 @@ export class SuperAdminComponent implements OnInit {
       return;
     }
     else if(comment["message"] == "submit") {
+      if(this.checkIfPresent("programFull",comment["value"])) {
+        this.snackBar.open("Duplicate entries are not allowed! Enter a unique name for this field.","Ok",{
+          duration:3000,
+          panelClass:"custom-snack-bar-container"
+        });
+        return;
+      }
       let currentFull = el["name"];
       this.userService.superAdminEditFields("programFull",currentFull,comment["value"]).subscribe(result => {
         if(result["message"] == "invalid-token") {
@@ -826,6 +863,22 @@ export class SuperAdminComponent implements OnInit {
       return;
     }
     else if(comment["message"] == "submit") {
+      if(this.checkIfPresent("programMap",comment["value"])) {
+        this.snackBar.open("Duplicate entries are not allowed! Enter a unique name for this field.","Ok",{
+          duration:3000,
+          panelClass:"custom-snack-bar-container"
+        });
+        return;
+      }
+      let str = comment["value"];
+      let regexp = new RegExp("\\d+\\|\\w+");
+      if(!regexp.exec(str)) {
+        this.snackBar.open("Allowed pattern : number|pattern","Ok",{
+          duration:3000,
+          panelClass:"custom-snack-bar-container"
+        });
+        return;
+      }
       let currentMap = el["map"];
       this.userService.superAdminEditFields("programMap",currentMap,comment["value"]).subscribe(result => {
         if(result["message"] == "invalid-token") {
@@ -856,6 +909,13 @@ export class SuperAdminComponent implements OnInit {
       return;
     }
     else if(comment["message"] == "submit") {
+      if(this.checkIfPresent("streamFull",comment["value"])) {
+        this.snackBar.open("Duplicate entries are not allowed! Enter a unique name for this field.","Ok",{
+          duration:3000,
+          panelClass:"custom-snack-bar-container"
+        });
+        return;
+      }
       let currentName = el["name"];
       this.userService.superAdminEditFields("streamFull",currentName,comment["value"]).subscribe(result => {
         if(result["message"] == "invalid-token") {
@@ -886,6 +946,22 @@ export class SuperAdminComponent implements OnInit {
       return;
     }
     else if(comment["message"] == "submit") {
+      if(this.checkIfPresent("streamShort",comment["value"])) {
+        this.snackBar.open("Duplicate entries are not allowed! Enter a unique name for this field.","Ok",{
+          duration:3000,
+          panelClass:"custom-snack-bar-container"
+        });
+        return;
+      }
+      let str = comment["value"];
+      let regexp = new RegExp("^[a-zA-Z-_]*$");
+      if(!regexp.exec(str)) {
+        this.snackBar.open("Only letter, hyphens and underscores are allowd for short name.","Ok",{
+          duration:3000,
+          panelClass:"custom-snack-bar-container"
+        });
+        return;
+      }
       let currentShort = el["short"];
       this.userService.superAdminEditFields("streamShort",currentShort,comment["value"]).subscribe(result => {
         if(result["message"] == "invalid-token") {
@@ -916,6 +992,54 @@ export class SuperAdminComponent implements OnInit {
       },() => {
         this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
       })
+    }
+  }
+
+  checkIfPresent(field, newValue){
+    let isPresent:boolean = false;
+    switch (field) {
+      case "programFull":
+        for (const program of this.programs.data) {
+          if(program.name == newValue) {
+            isPresent = true;
+            break;
+          }
+        }
+        return isPresent;
+      case "programShort":
+        for (const program of this.programs.data) {
+          if(program.short == newValue) {
+            isPresent = true;
+            break;
+          }
+        }
+        return isPresent;
+      case "programMap":
+        for (const program of this.programs.data) {
+          if(program.map == newValue) {
+            isPresent = true;
+            break;
+          }
+        }
+        return isPresent;
+      case "streamFull":
+        for (const stream of this.branches.data) {
+          if(stream.name == newValue) {
+            isPresent = true;
+            break;
+          }
+        }
+        return isPresent;
+      case "streamShort":
+        for (const stream of this.branches.data) {
+          if(stream.short == newValue) {
+            isPresent = true;
+            break;
+          }
+        }
+        return isPresent;
+      default:
+        return !isPresent;
     }
   }
 }
