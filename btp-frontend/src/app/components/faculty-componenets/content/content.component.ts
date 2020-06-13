@@ -14,6 +14,7 @@ import { Location } from "@angular/common";
 import { LoaderComponent } from "../../shared/loader/loader.component";
 import { ShowStudentAllotedComponent } from '../show-student-alloted/show-student-alloted.component';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { SidenavComponent } from '../sidenav/sidenav.component';
 
 
 @Pipe({
@@ -96,6 +97,21 @@ export class ContentComponent implements OnInit, DoCheck {
         description: this.project.description,
       });
     }
+  }
+
+  displayHome() {
+    let id = localStorage.getItem("id");
+    this.router
+      .navigateByUrl("/refresh", { skipLocationChange: true })
+      .then(() => {
+        this.router.navigate(["/faculty", id], {
+          queryParams: {
+            name: this.routeParams.name,
+            abbr: this.routeParams.abbr,
+            mode: "programMode",
+          },
+        });
+      });
   }
 
   onSubmit() {

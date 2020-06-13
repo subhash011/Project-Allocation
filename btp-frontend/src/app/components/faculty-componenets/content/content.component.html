@@ -135,7 +135,8 @@
             </mat-form-field>
           </div>
         </mat-card-content>
-        <button
+        <mat-card-actions class="card-actions">
+          <button
           mat-raised-button
           class="submit_button"
           [disabled]="!ProjectForm.valid"
@@ -144,6 +145,10 @@
         >
           Submit
         </button>
+        <button mat-raised-button color="primary" (click)="displayHome()">
+          Cancel
+        </button>
+        </mat-card-actions>
       </mat-card>
     </form>
   </div>
@@ -241,26 +246,31 @@
                   </mat-error>
                 </div>
               </mat-card-content>
-              <button
-                mat-raised-button
-                *ngIf="adminStage == 0"
-                class="edit-submit"
-                [disabled]="!EditForm.valid"
-                color="primary"
-                type="submit"
-              >
-                Submit
-              </button>
-              <button
-                mat-raised-button
-                *ngIf="adminStage == 0"
-                class="deleteButton"
-                type="button"
-                color="primary"
-                (click)="deleteProject(project)"
-              >
-                Delete
-              </button>
+              <mat-card-actions class="card-actions">
+                <button
+                  mat-raised-button
+                  *ngIf="adminStage == 0"
+                  class="edit-submit"
+                  [disabled]="!EditForm.valid"
+                  color="primary"
+                  type="submit"
+                >
+                  Submit
+                </button>
+                <button
+                  mat-raised-button
+                  *ngIf="adminStage == 0"
+                  class="deleteButton"
+                  type="button"
+                  color="warn"
+                  (click)="deleteProject(project)"
+                >
+                  Delete
+                </button>
+                <button mat-raised-button color="primary" (click)="displayHome()">
+                  Cancel
+                </button>
+              </mat-card-actions>
             </mat-card>
           </form>
         </div>
