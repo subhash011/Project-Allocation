@@ -223,7 +223,8 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                   !filter ||
                   data.faculty_name.toLowerCase().includes(filter) ||
                   data.title.toLowerCase().includes(filter) ||
-                  data.description.toLowerCase().includes(filter);
+                  data.description.toLowerCase().includes(filter) || 
+                  data.faculty_email.toLowerCase().includes(filter);
                 this.loadingBar.stop();
               });
           }
@@ -245,12 +246,13 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.projects.filter = filterValue.trim().toLowerCase();
+    this.selection.clear();
   }
   isAllSelected() {
     const numSelected = this.selection.selected
       ? this.selection.selected.length
       : 0;
-    const numRows = this.projects.data ? this.projects.data.length : 0;
+    const numRows = this.projects.filteredData ? this.projects.filteredData.length : 0;
     return numSelected === numRows;
   }
 
@@ -258,11 +260,11 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.projects.data.forEach((row) => this.selection.select(row));
+      : this.projects.filteredData.forEach((row) => this.selection.select(row));
   }
 
   selectAll() {
-    this.projects.data.forEach((row) => this.selection.select(row));
+    this.projects.filteredData.forEach((row) => this.selection.select(row));
   }
 
   deselectAll() {
@@ -351,8 +353,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       disableClose: true,
       hasBackdrop: true,
     });
-    const preference = this.selection.selected;
-
+    var preference = this.selection.selected;
     this.projectService
       .appendStudentPreferences(preference)
       .pipe(takeUntil(this.ngUnsubscribe))
