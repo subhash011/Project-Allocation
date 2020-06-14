@@ -1,9 +1,14 @@
 <mat-toolbar class="mat-elevation-z8" color="primary">
   <mat-toolbar-row>
     <div>
-      <button mat-button [routerLink]="'home' | links:role">
+      <button *ngIf="!(role | isFaculty) && !(role | isAdmin); else elseBlock" mat-button [routerLink]="'home' | links:role">
         <span class="navhead">IIT Palakkad</span>
       </button>
+      <ng-template #elseBlock>
+        <button mat-button (click)="goToHome()">
+          <span class="navhead">IIT Palakkad</span>
+        </button>
+      </ng-template>
     </div>
     <div
       *ngIf="((role | isFaculty) || (role | isAdmin)) && ('' | checkRegister)"
