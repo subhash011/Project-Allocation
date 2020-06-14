@@ -55,7 +55,7 @@
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="stageTableCols"></tr>
+            <tr mat-header-row *matHeaderRowDef="stageTableCols;sticky:true"></tr>
             <tr mat-row *matRowDef="let row; columns: stageTableCols"></tr>
           </table>
         </div>
@@ -130,7 +130,7 @@
             </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="allProjectCols"></tr>
+          <tr mat-header-row *matHeaderRowDef="allProjectCols;sticky:true"></tr>
           <tr mat-row *matRowDef="let row; columns: allProjectCols"></tr>
         </table>
       </div>
