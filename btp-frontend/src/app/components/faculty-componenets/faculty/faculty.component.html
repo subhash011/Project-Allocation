@@ -3,7 +3,7 @@
         <mat-toolbar class="mat-elevation-z6" color="accent">
             <span class="fill-remaining-space"></span>
 
-            <h1 class="fill-remaining-space" >{{stream}}</h1>
+            <h1 class="fill-remaining-space" >My Projects</h1>
            
             <div class="mobile">
                 <span class="example-spacer"></span>
@@ -16,9 +16,9 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-        <mat-toolbar class="mat-elevation-z6" color="accent">
+        <mat-toolbar class="mat-elevation-z6" color="accent" *ngIf="curr_program">
             <span class="example-spacer"></span>
-            <h1>{{ "Welcome" }}</h1>
+            <h1>{{ curr_program.full }}</h1>
             <span class="example-spacer"></span>
             <button mat-button (click)="sidenav.toggle()"><mat-icon>list</mat-icon></button>
         </mat-toolbar>

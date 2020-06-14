@@ -101,35 +101,44 @@ export class FacultyComponent implements OnInit {
                 }
               );
 
-              this.userService.facultyHomeDetails().subscribe((data) => {
-                data["stageDetails"].forEach((val) => {
-                  if (val.deadlines.length > 0)
-                    val.deadlines = new Date(val.deadlines[val.deadlines.length - 1]);
-                  else val.deadlines = null;
-                });
-                this.stageHomeDetails = data["stageDetails"];
-                this.projectHomeDetails = data["projects"]
-                this.program_details = this.projectHomeDetails.filter(val => val.stream == this.stream);
-              },
-              () => {
-                dialogRefLoad.close();
-                this.navbar.role = "none";
-                this.snackBar.open(
-                  "Session Timed Out! Please Sign-In again",
-                  "Ok",
-                  {
-                    duration: 3000,
-                  }
-                );
-                this.loginService.signOut();
-              }
-              );
-
               this.userService.getFacultyPrograms().subscribe(
                 (data) => {
                   dialogRefLoad.close();
                   if (data["status"] == "success") {
                     this.programs = data["programs"];
+
+                    this.curr_program = this.programs.filter(val=>val.short == this.stream)[0];
+                    
+                    this.userService.facultyHomeDetails().subscribe((data) => {
+                      data["stageDetails"].forEach((val) => {
+                        if (val.deadlines.length > 0)
+                          val.deadlines = new Date(val.deadlines[val.deadlines.length - 1]);
+                        else val.deadlines = null;
+                        for(let program of this.programs){
+                          if(program.short == val.stream){
+                            val.full = program.full;
+                          }
+                        }
+                      });
+                     
+                      this.stageHomeDetails = data["stageDetails"];
+                      this.projectHomeDetails = data["projects"]
+                      this.program_details = this.projectHomeDetails.filter(val => val.stream == this.stream);
+                    },
+                    () => {
+                      dialogRefLoad.close();
+                      this.navbar.role = "none";
+                      this.snackBar.open(
+                        "Session Timed Out! Please Sign-In again",
+                        "Ok",
+                        {
+                          duration: 3000,
+                        }
+                      );
+                      this.loginService.signOut();
+                    }
+                    );
+                  
                   }
                 },
                 () => {

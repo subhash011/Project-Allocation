@@ -10,7 +10,7 @@ import { MatTableDataSource } from "@angular/material/table";
 export class FacultyHomeComponent implements OnInit {
   constructor(private userService: UserService) {}
 
-  public stageTableCols = ["Program", "Stage", "Time"];
+  public stageTableCols = ["Program","Abbreviation","Stage", "Time"];
   public allProjectCols = [
     "Program",
     "Project",
@@ -31,9 +31,11 @@ export class FacultyHomeComponent implements OnInit {
     this.stageDetails = this.stageDetails.sort((a, b) => {
       switch (event.active) {
         case "Program":
-          return this.compare(a.stream, b.stream, isAsc);
+          return this.compare(a.full, b.full, isAsc);
         case "Stage":
           return this.compare(a.stage, b.stage, isAsc);
+        case "Abbreviation":
+          return this.compare(a.stream, b.stream, isAsc);
         default:
           return 0;
       }
