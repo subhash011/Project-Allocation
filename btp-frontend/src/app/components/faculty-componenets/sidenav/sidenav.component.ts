@@ -29,12 +29,10 @@ export class SidenavComponent implements OnInit {
   @Input() public projects;
   @Input() public empty: boolean;
   @Input() public programs;
-  @Input() public programs_mode;
   @Input() public routeParams;
   @Input() public adminStage;
   @Output() projectClicked = new EventEmitter<Event>();
   @Output() addButton = new EventEmitter<Event>();
-  @Output() programClicked = new EventEmitter<Event>();
   @ViewChild("included", { static: false }) includedProjects: MatSelectionList;
 
   public selectedRow;
@@ -99,11 +97,6 @@ export class SidenavComponent implements OnInit {
   onClick(project, index) {
     this.projectClicked.emit(project);
     this.empty = false;
-    this.selectedRow = index;
-  }
-
-  onProgramClick(program, index) {
-    this.programClicked.emit(program);
     this.selectedRow = index;
   }
 

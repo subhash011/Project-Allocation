@@ -43,12 +43,17 @@ export class ContentComponent implements OnInit, DoCheck {
   @Input() public program_details;
   @Input() public routeParams;
   @Input() public adminStage;
+  @Input() public publishFaculty:boolean;
+  @Input() public publishStudents:boolean;
   public id;
 
-  public publishStudents: boolean;
-  public publishFaculty: boolean;
-
-  Headers = ["Project Name", "#Students Applied", "#Students Alloted"];
+  Headers =  [
+    "Program",
+    "Project",
+    "StudentsApplied",
+    "StudentIntake",
+    "StudentsAlloted",
+  ];
 
   navigationSubscription;
 
@@ -80,12 +85,12 @@ export class ContentComponent implements OnInit, DoCheck {
     let id = localStorage.getItem("id");
     this.id = id;
     
-    this.userService.getPublishMode("faculty").subscribe((data) => {
-      if (data["status"] == "success") {
-        this.publishFaculty = data["facultyPublish"];
-        this.publishStudents = data["studentPublish"];
-      }
-    });
+    // this.userService.getPublishMode("faculty").subscribe((data) => {
+    //   if (data["status"] == "success") {
+    //     this.publishFaculty = data["facultyPublish"];
+    //     this.publishStudents = data["studentPublish"];
+    //   }
+    // });
   }
 
   ngDoCheck(): void {
@@ -358,17 +363,33 @@ export class ContentComponent implements OnInit, DoCheck {
     }
   }
 
-  showstudentAlloted(project){
+  sortProjectDetails(event){
+    const isAsc = event.direction == "asc";
+    this.program_details = this.program_details.sort((a, b) => {
+      switch (event.active) {
+        case "Program":
+          return this.compare(a.stream, b.stream, isAsc);
+        case "Project":
+          return this.compare(a.stage, b.stage, isAsc);
+        case "Project":
+          return this.compare(a.title, b.title, isAsc);
+        case "StudentIntake":
+          return this.compare(a.studentIntake, b.studentIntake, isAsc);
+        case "StudentsApplied":
+          return this.compare(a.noOfPreferences, b.noOfPreferences, isAsc);
+        default:
+          return 0;
+      }
+    }); 
+    this.program_details = [...this.program_details]
+  }
 
-    const dialogRef = this.dialog.open(ShowStudentAllotedComponent, {
-      disableClose: false,
-      hasBackdrop: true,
-      maxHeight: "700px",
-      minWidth: "800px",
-      data: project,
-      panelClass: ["custom-dialog-container"],
-    });
-
+  compare(
+    a: number | string | boolean,
+    b: number | string | boolean,
+    isAsc: boolean
+  ) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
 

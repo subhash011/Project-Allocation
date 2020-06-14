@@ -25,10 +25,15 @@ export class FacultyComponent implements OnInit {
   public projects;
   public student_list;
   public programs;
-  public programs_mode: boolean = true;
+  public faculty_home: boolean = true;
   public program_details;
   public routeParams;
   public adminStage;
+  public curr_program;
+  public projectHomeDetails;
+  public stageHomeDetails;
+  public publishStudents;
+  public publishFaculty;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -53,100 +58,155 @@ export class FacultyComponent implements OnInit {
       hasBackdrop: true,
     });
 
-    this.userDetails.getFacultyDetails(this.id).subscribe((data) => {
-      if (data["status"] == "success") {
-        const user_info = data["user_details"];
-        this.name = user_info.name;
-        if (user_info.programs.length > 0) {
-          this.navbar.programsVisible = true;
-        }
-        this.navbar.programs = user_info.programs;
-        this.activatedRoute.queryParams.subscribe((params) => {
-          this.routeParams = params;
-          if (params.mode == "programMode") {
-            this.programs_mode = false;
+    this.userDetails.getFacultyDetails(this.id).subscribe(
+      (data) => {
+        if (data["status"] == "success") {
+          const user_info = data["user_details"];
+          this.name = user_info.name;
+          if (user_info.programs.length > 0) {
+            this.navbar.programsVisible = true;
           }
-          if (
-            Object.keys(params).length === 0 &&
-            params.constructor === Object
-          ) {
-            this.stream = user_info.stream;
-          } else {
-            this.stream = params.abbr;
-            this.empty = true;
-          }
+          this.navbar.programs = user_info.programs;
+          this.activatedRoute.queryParams.subscribe(
+            (params) => {
+              this.routeParams = params;
+              if (params.mode == "programMode") {
+                this.faculty_home = false;
+              }
+              if (
+                Object.keys(params).length === 0 &&
+                params.constructor === Object
+              ) {
+                this.stream = user_info.stream;
+              } else {
+                this.stream = params.abbr;
+                this.empty = true;
+              }
 
-          this.projectService
-            .getFacultyProjects(this.stream)
-            .subscribe((data) => {
-              this.projects = data["project_details"];
-
-              this.userService.getFacultyPrograms().subscribe((data) => {
-                if (data["status"] == "success") {
-                  this.programs = data["programs"];
-
-                  this.userService
-                    .getAdminInfo_program(this.stream)
-                    .subscribe((data) => {
-                      dialogRefLoad.close();
-                      if (data["status"] == "success") {
-                        this.adminStage = data["admin"].stage;
-                      } else {
-                        this.adminStage = undefined;
-                      }
-                    },() => {
-                      dialogRefLoad.close();
-                      this.navbar.role = "none"
-                      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                        duration: 3000,
-                      });
-                      this.loginService.signOut();
-                    });
+              this.projectService.getFacultyProjects(this.stream).subscribe(
+                (data) => {
+                  this.projects = data["project_details"];
+                },
+                () => {
+                  dialogRefLoad.close();
+                  this.navbar.role = "none";
+                  this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok",
+                    {
+                      duration: 3000,
+                    }
+                  );
+                  this.loginService.signOut();
                 }
-              },() => {
-                dialogRefLoad.close();
-                this.navbar.role = "none"
-                this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                  duration: 3000,
+              );
+
+              this.userService.facultyHomeDetails().subscribe((data) => {
+                data["stageDetails"].forEach((val) => {
+                  if (val.deadlines.length > 0)
+                    val.deadlines = new Date(val.deadlines[val.deadlines.length - 1]);
+                  else val.deadlines = null;
                 });
+                this.stageHomeDetails = data["stageDetails"];
+                this.projectHomeDetails = data["projects"]
+                this.program_details = this.projectHomeDetails.filter(val => val.stream == this.stream);
+              },
+              () => {
+                dialogRefLoad.close();
+                this.navbar.role = "none";
+                this.snackBar.open(
+                  "Session Timed Out! Please Sign-In again",
+                  "Ok",
+                  {
+                    duration: 3000,
+                  }
+                );
                 this.loginService.signOut();
+              }
+              );
+
+              this.userService.getFacultyPrograms().subscribe(
+                (data) => {
+                  dialogRefLoad.close();
+                  if (data["status"] == "success") {
+                    this.programs = data["programs"];
+                  }
+                },
+                () => {
+                  dialogRefLoad.close();
+                  this.navbar.role = "none";
+                  this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok",
+                    {
+                      duration: 3000,
+                    }
+                  );
+                  this.loginService.signOut();
+                }
+              );
+
+              this.userService.getAdminInfo_program(this.stream).subscribe(
+                (data) => {
+                  if (data["status"] == "success") {
+                    this.adminStage = data["admin"].stage;
+                  } else {
+                    this.adminStage = undefined;
+                  }
+                },
+                () => {
+                  dialogRefLoad.close();
+                  this.navbar.role = "none";
+                  this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok",
+                    {
+                      duration: 3000,
+                    }
+                  );
+                  this.loginService.signOut();
+                }
+              );
+
+              this.userService.getPublishMode("faculty").subscribe((data) => {
+                if (data["status"] == "success") {
+                  this.publishFaculty = data["facultyPublish"];
+                  this.publishStudents = data["studentPublish"];
+                }
               });
-            },() => {
+
+            },
+            () => {
               dialogRefLoad.close();
-              this.navbar.role = "none"
-              this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-                duration: 3000,
-              });
+              this.snackBar.open(
+                "Some Error Occured! Please re-authenticate.",
+                "OK",
+                {
+                  duration: 3000,
+                }
+              );
+              this.navbar.role = "none";
               this.loginService.signOut();
-            });
-        },() => {
-          dialogRefLoad.close();
-          this.snackBar.open(
-          "Some Error Occured! Please re-authenticate.",
-          "OK",
-            {
-              duration: 3000,
             }
           );
+        } else {
+          dialogRefLoad.close();
           this.navbar.role = "none";
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
           this.loginService.signOut();
-        });
-      } else {
+        }
+      },
+      () => {
         dialogRefLoad.close();
-        this.navbar.role = "none"
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
         this.loginService.signOut();
       }
-    },() => {
-      dialogRefLoad.close();
-      this.navbar.role = "none"
-      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-        duration: 3000,
-      });
-      this.loginService.signOut();
-    });
+    );
   }
 
   displayProject(project) {
@@ -155,37 +215,40 @@ export class FacultyComponent implements OnInit {
       disableClose: true,
       hasBackdrop: true,
     });
-    this.projectService.getStudentsApplied(project._id).subscribe((data) => {
-      if (data["status"] == "success") {
-        dialogRef.close();
-        this.student_list = data["students"];
-        if (this.adminStage < 2) {
-          localStorage.setItem(project._id, "false");
-          this.student_list.sort((a, b) => {
-            return b.gpa - a.gpa;
-          });
-        } else if (this.adminStage == 2) {
-          if (localStorage.getItem(project._id) == "false") {
+    this.projectService.getStudentsApplied(project._id).subscribe(
+      (data) => {
+        if (data["status"] == "success") {
+          dialogRef.close();
+          this.student_list = data["students"];
+          if (this.adminStage < 2) {
+            localStorage.setItem(project._id, "false");
             this.student_list.sort((a, b) => {
               return b.gpa - a.gpa;
             });
+          } else if (this.adminStage == 2) {
+            if (localStorage.getItem(project._id) == "false") {
+              this.student_list.sort((a, b) => {
+                return b.gpa - a.gpa;
+              });
+            }
           }
+        } else {
+          this.navbar.role = "none";
+          this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
+            duration: 3000,
+          });
+          this.loginService.signOut();
         }
-      } else {
-        this.navbar.role = "none"
+      },
+      () => {
+        dialogRef.close();
+        this.navbar.role = "none";
         this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
           duration: 3000,
         });
         this.loginService.signOut();
       }
-    },() => {
-      dialogRef.close();
-      this.navbar.role = "none"
-      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-        duration: 3000,
-      });
-      this.loginService.signOut();
-    });
+    );
 
     this.project = project;
     this.add = false;
@@ -216,29 +279,4 @@ export class FacultyComponent implements OnInit {
     }
   }
 
-  displayProgram(program) {
-    var dialogRef = this.dialog.open(LoaderComponent, {
-      data: "Please wait ....",
-      disableClose: true,
-      hasBackdrop: true,
-    });
-    this.userService.getFacultyProgramDetails(program).subscribe((data) => {
-      dialogRef.close();
-      if (data["status"] == "success") {
-        this.program_details = data["program_details"];
-      } else {
-        this.program_details = data["result"];
-        this.snackBar.open("No Admin assigned to this program!!", "Ok", {
-          duration: 3000,
-        });
-      }
-    },() => {
-      dialogRef.close();
-      this.navbar.role = "none"
-      this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
-        duration: 3000,
-      });
-      this.loginService.signOut();
-    });
-  }
 }

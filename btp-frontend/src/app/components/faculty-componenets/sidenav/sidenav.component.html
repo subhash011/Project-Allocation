@@ -1,4 +1,4 @@
-<div *ngIf="!programs_mode; else programsPanel">
+<div>
   <mat-selection-list #included *ngIf="adminStage == 2; else normalList">
     <mat-list-option
       *ngFor="let project of projects; let i = index"
@@ -54,15 +54,3 @@
     Include Checked Projects
   </button>
 </div>
-
-<ng-template #programsPanel>
-  <mat-nav-list *ngFor="let program of programs; let i = index">
-    <a
-      mat-list-item
-      (click)="onProgramClick(program, i)"
-      [class.active]="i == selectedRow"
-    >
-      {{ program.full }}
-    </a>
-  </mat-nav-list>
-</ng-template>

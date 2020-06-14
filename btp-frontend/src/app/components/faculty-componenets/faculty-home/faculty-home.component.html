@@ -1,101 +1,116 @@
-<div class="stages">
+<mat-tab-group
+  animationDuration="0"
+  backgroundColor="primary"
+  dynamicHeight="true"
+  mat-align-tabs="center"
+>
+  <mat-tab label="Home">
+    <div class="stages">
+      <div class="display">
+        <div class="table mat-elevation-z8">
+          <h2>Stages</h2>
+          <table
+            mat-table
+            #table
+            [dataSource]="stageDetails"
+            (matSortChange)="sortStages($event)"
+            class="mat-elevation-z8"
+            matSort
+          >
+            <ng-container tainer matColumnDef="Program">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Program
+              </th>
+              <td mat-cell *matCellDef="let admin">{{ admin.stream }}</td>
+            </ng-container>
 
-  <div class="display">
-    <div class="table mat-elevation-z8">
-      <h2>Stages</h2>
-      <table
-        mat-table
-        #table
-        [dataSource]="stageDetails"
-        (matSortChange)="sortStages($event)"
-        class="mat-elevation-z8"
-        matSort
-      >
-        <ng-container tainer matColumnDef="Program">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Program
-          </th>
-          <td mat-cell *matCellDef="let admin">{{ admin.stream }}</td>
-        </ng-container>
+            <ng-container tainer matColumnDef="Stage">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Stage (4)
+              </th>
+              <td mat-cell *matCellDef="let admin">
+                {{ admin.stage + 1 }}
+              </td>
+            </ng-container>
 
-        <ng-container tainer matColumnDef="Stage">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Stage (4)
-          </th>
-          <td mat-cell *matCellDef="let admin">
-            {{ admin.stage + 1 }}
-          </td>
-        </ng-container>
-
-        <ng-container tainer matColumnDef="Time">
-          <th mat-header-cell *matHeaderCellDef>
-            Time Left
-          </th>
-          <td mat-cell *matCellDef="let admin">
-            <span class="days_left"
-              ><strong *ngIf="admin.deadlines;else none">
-                {{admin.deadlines | countdown: currentTime }}</strong>
-                <ng-template #none>
+            <ng-container tainer matColumnDef="Time">
+              <th mat-header-cell *matHeaderCellDef>
+                Time Left
+              </th>
+              <td mat-cell *matCellDef="let admin">
+                <span class="days_left"
+                  ><strong *ngIf="admin.deadlines; else none">
+                    {{ admin.deadlines | countdown: currentTime }}</strong
+                  >
+                  <ng-template #none>
                     N/A
-                </ng-template>
-            </span>
-          </td>
-        </ng-container>
+                  </ng-template>
+                </span>
+              </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="stageTableCols"></tr>
-        <tr mat-row *matRowDef="let row; columns: stageTableCols"></tr>
-      </table>
+            <tr mat-header-row *matHeaderRowDef="stageTableCols"></tr>
+            <tr mat-row *matRowDef="let row; columns: stageTableCols"></tr>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<div class="all_projects">
+    <div class="all_projects">
+      <div class="display">
+        <div class="table mat-elevation-z8">
+          <h2>Project Details</h2>
+          <table
+            mat-table
+            #table
+            [dataSource]="projectDetails"
+            (matSortChange)="sortProjectDetails($event)"
+            class="mat-elevation-z8"
+            matSort
+          >
+            <ng-container tainer matColumnDef="Program">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Program
+              </th>
+              <td mat-cell *matCellDef="let project">{{ project.stream }}</td>
+            </ng-container>
 
-  <div class="display">
-    <div class="table mat-elevation-z8">
-      <h2>Project Details</h2>
-      <table
-        mat-table
-        #table
-        [dataSource]="projectDetails"
-        (matSortChange)="sortProjectDetails($event)"
-        class="mat-elevation-z8"
-        matSort
-      >
-        <ng-container tainer matColumnDef="Program">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Program
-          </th>
-          <td mat-cell *matCellDef="let project">{{ project.stream }}</td>
-        </ng-container>
+            <ng-container tainer matColumnDef="Project">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Project
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.title }}
+              </td>
+            </ng-container>
 
-        <ng-container tainer matColumnDef="Project">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Project
-          </th>
-          <td mat-cell *matCellDef="let project">
-            {{ project.title }}
-          </td>
-        </ng-container>
-
-        <ng-container tainer matColumnDef="StudentsApplied">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Students Applied
-          </th>
-          <td mat-cell *matCellDef="let project">
-            {{project.noOfPreferences}}
-          </td>
-        </ng-container>
-        <ng-container tainer matColumnDef="StudentsAlloted">
-          <th mat-header-cell *matHeaderCellDef>
-            Students Alloted
-          </th>
-          <td mat-cell *matCellDef="let project">
-            <div
+            <ng-container tainer matColumnDef="StudentsApplied">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Students Applied
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.noOfPreferences }}
+              </td>
+            </ng-container>
+            <ng-container tainer matColumnDef="StudentIntake">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Student Intake
+              </th>
+              <td mat-cell *matCellDef="let project">
+                {{ project.studentIntake }}
+              </td>
+            </ng-container>
+            <ng-container tainer matColumnDef="StudentsAlloted">
+              <th mat-header-cell *matHeaderCellDef>
+                Students Alloted
+              </th>
+              <td mat-cell *matCellDef="let project">
+                <div
                   *ngIf="
                     project.student_alloted &&
-                    project.student_alloted.length > 0 &&
-                    publishFaculty; else elseBlock
+                      project.student_alloted.length > 0 &&
+                      publishFaculty;
+                    else elseBlock
                   "
                 >
                   <div *ngFor="let student of project.student_alloted">
@@ -105,15 +120,14 @@
                 <ng-template #elseBlock>
                   N/A
                 </ng-template>
-          </td>
-        </ng-container>
+              </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="allProjectCols"></tr>
-        <tr mat-row *matRowDef="let row; columns: allProjectCols"></tr>
-      </table>
+            <tr mat-header-row *matHeaderRowDef="allProjectCols"></tr>
+            <tr mat-row *matRowDef="let row; columns: allProjectCols"></tr>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
-
-
-
-</div>
+  </mat-tab>
+</mat-tab-group>

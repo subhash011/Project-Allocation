@@ -1,73 +1,81 @@
 <div class="container" *ngIf="empty; else Forms">
-  
-  
-  <div *ngIf="!programs_mode">
-    <div *ngIf="program_details">
-      <app-timeline
-        *ngIf="program_details"
-        [program]="program_details.program.short"
-        [clone]="'temp'"
-      ></app-timeline>
-      <div class="flex-space" *ngIf="program_details"></div>
-      <div class="display">
-        <div class="table mat-elevation-z8">
-          <table
-            mat-table
-            #table
-            [dataSource]="program_details.projects"
-            class="mat-elevation-z8"
-          >
-            <ng-container tainer matColumnDef="Project Name">
-              <th mat-header-cell *matHeaderCellDef>
-                Project Name
-              </th>
-              <td mat-cell *matCellDef="let map">{{ map.title }}</td>
-            </ng-container>
+  <div *ngIf="program_details">
+    <app-timeline
+      *ngIf="program_details"
+      [program]="stream"
+      [clone]="'temp'"
+    ></app-timeline>
+    <!-- <div class="flex-space" *ngIf="program_details"></div> -->
+    <div class="display">
+      <div class="table mat-elevation-z8">
+        <table
+          mat-table
+          #table
+          (matSortChange)="sortProjectDetails($event)"
+          [dataSource]="program_details"
+          class="mat-elevation-z8"
+          matSort
+        >
+          <ng-container tainer matColumnDef="Program">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Program
+            </th>
+            <td mat-cell *matCellDef="let project">{{ project.stream }}</td>
+          </ng-container>
+          <ng-container tainer matColumnDef="Project">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Project
+            </th>
+            <td mat-cell *matCellDef="let project">{{ project.title }}</td>
+          </ng-container>
 
-            <ng-container tainer matColumnDef="#Students Applied">
-              <th mat-header-cell *matHeaderCellDef>
-                No of Students Applied
-              </th>
-              <td mat-cell *matCellDef="let map">
-                {{ map.students_id.length }}
-              </td>
-            </ng-container>
+          <ng-container tainer matColumnDef="StudentsApplied">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Students Applied
+            </th>
+            <td mat-cell *matCellDef="let project">
+              {{ project.noOfPreferences }}
+            </td>
+          </ng-container>
+          <ng-container tainer matColumnDef="StudentIntake">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Student Intake
+            </th>
+            <td mat-cell *matCellDef="let project">
+              {{ project.studentIntake }}
+            </td>
+          </ng-container>
 
-            <ng-container tainer matColumnDef="#Students Alloted">
-              <th mat-header-cell *matHeaderCellDef>
-                Students Alloted
-              </th>
-              <td mat-cell *matCellDef="let project">
-                <div
-                  *ngIf="
-                    project.student_alloted &&
+          <ng-container tainer matColumnDef="StudentsAlloted">
+            <th mat-header-cell *matHeaderCellDef>
+              Students Alloted
+            </th>
+            <td mat-cell *matCellDef="let project">
+              <div
+                *ngIf="
+                  project.student_alloted &&
                     project.student_alloted.length > 0 &&
-                    publishFaculty; else elseBlock
-                  "
-                >
-                  <div *ngFor="let student of project.student_alloted">
-                    {{ student | displayFacultyPublish }}
-                  </div>
+                    publishFaculty;
+                  else elseBlock
+                "
+              >
+                <div *ngFor="let student of project.student_alloted">
+                  {{ student | displayFacultyPublish }}
                 </div>
-                <ng-template #elseBlock>
-                  N/A
-                </ng-template>
-              </td>
-            </ng-container>
+              </div>
+              <ng-template #elseBlock>
+                N/A
+              </ng-template>
+            </td>
+          </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="Headers"></tr>
-            <tr mat-row *matRowDef="let row; columns: Headers"></tr>
-          </table>
-        </div>
+          <tr mat-header-row *matHeaderRowDef="Headers"></tr>
+          <tr mat-row *matRowDef="let row; columns: Headers"></tr>
+        </table>
       </div>
     </div>
-
   </div>
-  
-
 </div>
-
-
 
 <ng-template #Forms>
   <div class="container-add" *ngIf="add; else savePref_editProj">
@@ -137,17 +145,17 @@
         </mat-card-content>
         <mat-card-actions class="card-actions">
           <button
-          mat-raised-button
-          class="submit_button"
-          [disabled]="!ProjectForm.valid"
-          color="primary"
-          type="submit"
-        >
-          Submit
-        </button>
-        <button mat-raised-button color="primary" (click)="displayHome()">
-          Cancel
-        </button>
+            mat-raised-button
+            class="submit_button"
+            [disabled]="!ProjectForm.valid"
+            color="primary"
+            type="submit"
+          >
+            Submit
+          </button>
+          <button mat-raised-button color="primary" (click)="displayHome()">
+            Cancel
+          </button>
         </mat-card-actions>
       </mat-card>
     </form>
@@ -267,7 +275,11 @@
                 >
                   Delete
                 </button>
-                <button mat-raised-button color="primary" (click)="displayHome()">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="displayHome()"
+                >
                   Cancel
                 </button>
               </mat-card-actions>

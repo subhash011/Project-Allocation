@@ -1,5 +1,5 @@
 import { UserService } from "src/app/services/user/user.service";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
@@ -15,36 +15,20 @@ export class FacultyHomeComponent implements OnInit {
     "Program",
     "Project",
     "StudentsApplied",
+    "StudentIntake",
     "StudentsAlloted",
   ];
-  public projectDetails: any = new MatTableDataSource([]);
-  public stageDetails: any = new MatTableDataSource([]);
+  @Input() projectDetails : any = new MatTableDataSource([]);  
+  @Input() stageDetails: any = new MatTableDataSource([]);
+  @Input() publishFaculty : boolean;
+  @Input() publishStudents: boolean;
   currentTime: Date = new Date();
-  publishFaculty;
-  publishStudents;
 
-  ngOnInit() {
-    this.userService.facultyHomeDetails().subscribe((data) => {
-      data["stageDetails"].forEach((val) => {
-        if (val.deadlines.length > 0)
-          val.deadlines = new Date(val.deadlines[val.deadlines.length - 1]);
-        else val.deadlines = null;
-      });
-      this.stageDetails.data = data["stageDetails"];
-      this.projectDetails.data = data["projects"];
-      console.log(data);
-    });
-    this.userService.getPublishMode("faculty").subscribe((data) => {
-      if (data["status"] == "success") {
-        this.publishFaculty = data["facultyPublish"];
-        this.publishStudents = data["studentPublish"];
-      }
-    });
-  }
+  ngOnInit() {}
 
   sortStages(event) {
     const isAsc = event.direction == "asc";
-    this.stageDetails.data = this.stageDetails.data.sort((a, b) => {
+    this.stageDetails = this.stageDetails.sort((a, b) => {
       switch (event.active) {
         case "Program":
           return this.compare(a.stream, b.stream, isAsc);
@@ -54,11 +38,12 @@ export class FacultyHomeComponent implements OnInit {
           return 0;
       }
     });
+    this.stageDetails = [...this.stageDetails]
   }
 
   sortProjectDetails(event) {
     const isAsc = event.direction == "asc";
-    this.projectDetails.data = this.projectDetails.data.sort((a, b) => {
+    this.projectDetails = this.projectDetails.sort((a, b) => {
       switch (event.active) {
         case "Program":
           return this.compare(a.stream, b.stream, isAsc);
@@ -66,12 +51,15 @@ export class FacultyHomeComponent implements OnInit {
           return this.compare(a.stage, b.stage, isAsc);
         case "Project":
           return this.compare(a.title, b.title, isAsc);
+        case "StudentIntake":
+          return this.compare(a.studentIntake, b.studentIntake, isAsc);
         case "StudentsApplied":
           return this.compare(a.noOfPreferences, b.noOfPreferences, isAsc);
         default:
           return 0;
       }
     });
+    this.projectDetails = [...this.projectDetails]
   }
 
   compare(

@@ -417,12 +417,10 @@ router.get("/home/:id",(req,res) => {
             facultyProjects = facultyProjects.map(val => {
                 var newProj = {
                     title:val.title,
-                    description:val.description,
                     studentIntake:val.studentIntake,
                     noOfPreferences:val.students_id.length,
                     student_alloted:val.student_alloted,
                     stream:val.stream,
-                    duration:val.duration
                 }
                 return newProj;
             })
@@ -467,4 +465,4 @@ router.get("/home/:id",(req,res) => {
         })
 })
 
-module.exports = router;
+module.exports = router;     
