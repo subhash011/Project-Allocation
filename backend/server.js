@@ -83,6 +83,7 @@ app.use("/api/backup",backup);
 const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
+	console.log(req.url)
 	res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
 });
 
