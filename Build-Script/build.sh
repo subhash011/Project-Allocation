@@ -6,7 +6,7 @@
 
 str=$1
 password=$2
-path="/opt/Project-Allocation"
+path="/opt/Project-Allocation/"
 backend="backend"
 frontend="btp-frontend"
 
