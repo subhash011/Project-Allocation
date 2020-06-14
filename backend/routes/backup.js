@@ -45,7 +45,7 @@ router.get(`/${process.env.SECRET_KEY}/admin`,(req,res) => {
     })
 })
 
-router.get(`${process.env.SECRET_KEY}/mappings`,(req,res) => {
+router.get(`/${process.env.SECRET_KEY}/mappings`,(req,res) => {
     Mapping.find().then(streams => {
         res.send(streams);
     })
