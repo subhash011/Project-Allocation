@@ -246,8 +246,18 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.projects.filter = filterValue.trim().toLowerCase();
-    this.selection.clear();
+    this.changeSelection();
   }
+
+  changeSelection() {
+    let unfilteredData = this.projects.data.filter(val => !this.projects.filteredData.includes(val)).map(val => val._id);
+    this.projects.data.forEach(val => {
+      if(unfilteredData.includes(val._id)) {
+        this.deselectProject(val);
+      }
+    })
+  }
+
   isAllSelected() {
     const numSelected = this.selection.selected
       ? this.selection.selected.length
