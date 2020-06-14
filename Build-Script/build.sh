@@ -30,7 +30,7 @@ then
 fi
 
 
-# pushd $path
-# pm2 restart all
-# popd
+pushd $path
+pm2 restart all
+popd
 
