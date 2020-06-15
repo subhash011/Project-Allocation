@@ -43,6 +43,9 @@ app.use("/faculty", faculty);
 const allocation = require("./routes/allocation");
 app.use("/allocation", allocation);
 
+const backup = require("./routes/backup");
+app.use("/backup",backup);
+
 const PORT = process.env.PORT || 8000;
 
 app.get("*", (req, res) => {
