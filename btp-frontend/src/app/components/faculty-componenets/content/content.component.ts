@@ -122,7 +122,7 @@ export class ContentComponent implements OnInit, DoCheck {
   onSubmit() {
     if (this.ProjectForm.valid) {
       const project = {
-        title: this.ProjectForm.get("title").value,
+        title: this.ProjectForm.get("title").value.replace(/\s+/,' '),
         duration: this.ProjectForm.get("duration").value,
         studentIntake: this.ProjectForm.get("studentIntake").value,
         description: this.ProjectForm.get("description").value,
@@ -210,7 +210,7 @@ export class ContentComponent implements OnInit, DoCheck {
   onEditSubmit(param) {
     if (this.EditForm.valid) {
       const project = {
-        title: this.EditForm.get("title").value,
+        title: this.EditForm.get("title").value.replace(/\s+/,' '),
         duration: this.EditForm.get("duration").value,
         studentIntake: this.EditForm.get("studentIntake").value,
         description: this.EditForm.get("description").value,
