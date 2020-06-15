@@ -10,43 +10,43 @@ const Streams = require("../models/Streams");
 
 
 router.get(`/${process.env.SECRET_KEY}/streams`,(req,res) => {
-    Streams.find().then(streams => {
+    Streams.find().lean().select("-__v -_id").then(streams => {
         res.send(streams);
     })
 });
 
 router.get(`/${process.env.SECRET_KEY}/projects`,(req,res) => {
-    Project.find().then(streams => {
+    Project.find().lean().select("-_id -__v").then(streams => {
         res.send(streams);
     })
 });
 
 router.get(`/${process.env.SECRET_KEY}/students`,(req,res) => {
-    Student.find().then(streams => {
+    Student.find().lean().select("-google_id -_id -__v -date").then(streams => {
         res.send(streams);
     })
 })
 
 router.get(`/${process.env.SECRET_KEY}/faculty`,(req,res) => {
-    Faculty.find().then(streams => {
+    Faculty.find().lean().select("-google_id -_id -__v -date").then(streams => {
         res.send(streams);
     })
 })
 
 router.get(`/${process.env.SECRET_KEY}/super`,(req,res) => {
-    SuperAdmin.find().then(streams => {
+    SuperAdmin.find().lean().select("-google_id -_id -__v").then(streams => {
         res.send(streams);
     })
 })
 
 router.get(`/${process.env.SECRET_KEY}/admin`,(req,res) => {
-    Admin.find().then(streams => {
+    Admin.find().lean().select("-_id -__v").then(streams => {
         res.send(streams);
     })
 })
 
 router.get(`/${process.env.SECRET_KEY}/mappings`,(req,res) => {
-    Mapping.find().then(streams => {
+    Mapping.find().lean().select("-_id -__v").then(streams => {
         res.send(streams);
     })
 })
