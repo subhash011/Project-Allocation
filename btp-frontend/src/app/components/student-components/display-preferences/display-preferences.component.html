@@ -13,7 +13,7 @@
           >
             <mat-expansion-panel-header class="disable_ripple">
               <mat-panel-title class="ep">
-                Title : {{ preference["title"] }}
+                {{ preference["title"] }}
               </mat-panel-title>
               <mat-panel-description>
                 <div class="fill-space"></div>
@@ -27,10 +27,11 @@
                 >
               </mat-panel-description>
             </mat-expansion-panel-header>
-            <p>Faculty Name : {{ preference["faculty_name"] }}</p>
-            <p>Faculty Email : {{ preference["faculty_email"] }}</p>
-            <p>Student Intake : {{ preference["studentIntake"] }}</p>
-            <p>Description : {{ preference["description"] }}</p>
+            <p><b>Faculty Name :</b> {{ preference["faculty_name"] }}</p>
+            <p><b>Faculty Email :</b> {{ preference["faculty_email"] }}</p>
+            <p><b>Student Intake :</b> {{ preference["studentIntake"] }}</p>
+            <p><b>Duration (in months) :</b> {{ preference["duration"] }}</p>
+            <p><b>Description :</b> {{ preference["description"] }}</p>
           </mat-expansion-panel>
         </div>
       </div>
