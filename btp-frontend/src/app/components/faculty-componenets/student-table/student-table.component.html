@@ -19,7 +19,7 @@
 
 <h4 class="heading_pref">Preferences: <strong>Remaining student list will be appended in the decreasing order of CGPA.</strong></h4>
 
-  <div class="table mat-elevation-z8">
+  <div [style.max-height.px]="studentTableHeight" class="table mat-elevation-z8">
     <mat-table
     (matSortChange)="sortStudentTable($event)"
     [dataSource]="students"

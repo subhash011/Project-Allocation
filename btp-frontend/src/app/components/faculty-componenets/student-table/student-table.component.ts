@@ -9,6 +9,7 @@ import {
   PipeTransform,
   OnChanges,
   SimpleChanges,
+  HostListener,
 } from "@angular/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Router } from "@angular/router";
@@ -49,6 +50,7 @@ export class PreferencePipe implements PipeTransform {
   }
 }
 
+
 @Component({
   selector: "app-student-table",
   templateUrl: "./student-table.component.html",
@@ -77,6 +79,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
   public fields = ["Name", "CGPA", "Roll","Index", "Actions"];
   students:MatTableDataSource<any>;
   expandedElement:any;
+  studentTableHeight: number = window.innerHeight >= 1400 ? 600:400;
   constructor(
     private projectService: ProjectsService,
     private snackBar: MatSnackBar,
@@ -86,6 +89,16 @@ export class StudentTableComponent implements OnInit, OnChanges {
   ngOnChanges(simpleChanges:SimpleChanges){
     if(simpleChanges.student_list) {
       this.students = new MatTableDataSource(this.student_list);
+    }
+  }
+
+  @HostListener("window:resize", ["$event"])
+  onResize(event) {
+    if (event.target.innerHeight <= 1400) {
+      this.studentTableHeight = 400;
+    } 
+    else{
+      this.studentTableHeight = 600;
     }
   }
 
