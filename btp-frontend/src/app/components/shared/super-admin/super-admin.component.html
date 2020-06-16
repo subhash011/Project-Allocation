@@ -157,8 +157,8 @@
                 <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{students[branch.short].filteredData.length}} </td>
               </ng-container>
               <ng-container matColumnDef="Stream">
-                <th mat-header-cell *matHeaderCellDef>Program</th>
-                <td mat-cell *matCellDef="let student">{{ branch.short }}</td>
+                <th class="common-padding" mat-header-cell *matHeaderCellDef>Program</th>
+                <td class="common-padding" mat-cell *matCellDef="let student">{{ branch.short }}</td>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="Email-ID">
@@ -167,8 +167,8 @@
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="CGPA">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>CGPA</th>
-                <td mat-cell *matCellDef="let student">{{ student.gpa }}</td>
+                <th class="common-padding" mat-header-cell mat-sort-header *matHeaderCellDef>CGPA</th>
+                <td class="common-padding" mat-cell *matCellDef="let student">{{ student.gpa }}</td>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
               <ng-container matColumnDef="isRegistered">

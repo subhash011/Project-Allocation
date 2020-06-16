@@ -122,10 +122,10 @@ export class ContentComponent implements OnInit, DoCheck {
   onSubmit() {
     if (this.ProjectForm.valid) {
       const project = {
-        title: this.ProjectForm.get("title").value.replace(/\s+/,' '),
+        title: this.ProjectForm.get("title").value.replace(/  +/g,' '),
         duration: this.ProjectForm.get("duration").value,
         studentIntake: this.ProjectForm.get("studentIntake").value,
-        description: this.ProjectForm.get("description").value,
+        description: this.ProjectForm.get("description").value.replace(/  +/g,' '),
         stream: this.stream,
       };
       var dialogRef = this.dialog.open(LoaderComponent, {
@@ -210,10 +210,10 @@ export class ContentComponent implements OnInit, DoCheck {
   onEditSubmit(param) {
     if (this.EditForm.valid) {
       const project = {
-        title: this.EditForm.get("title").value.replace(/\s+/,' '),
+        title: this.EditForm.get("title").value.replace(/  +/g,' '),
         duration: this.EditForm.get("duration").value,
         studentIntake: this.EditForm.get("studentIntake").value,
-        description: this.EditForm.get("description").value,
+        description: this.EditForm.get("description").value.replace(/  +/g,' '),
         project_id: param._id,
       };
 

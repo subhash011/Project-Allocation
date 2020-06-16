@@ -10,14 +10,14 @@
       (cdkDropListDropped)="drop($event)"
     >
       <ng-container matColumnDef="Title">
-        <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
-        <mat-cell *matCellDef="let preference">
+        <mat-header-cell class="title" *matHeaderCellDef> Title </mat-header-cell>
+        <mat-cell class="title" *matCellDef="let preference">
           {{preference.title}}
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="Faculty">
-        <mat-header-cell class="common-padding" *matHeaderCellDef> Faculty </mat-header-cell>
-        <mat-cell class="common-padding" *matCellDef="let preference">
+        <mat-header-cell *matHeaderCellDef> Faculty </mat-header-cell>
+        <mat-cell *matCellDef="let preference">
           {{ preference.faculty_name }}
         </mat-cell>
       </ng-container>
@@ -31,6 +31,12 @@
         <mat-header-cell *matHeaderCellDef> Student Intake </mat-header-cell>
         <mat-cell class="align-right" *matCellDef="let preference">
           {{ preference.studentIntake }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="Duration">
+        <mat-header-cell *matHeaderCellDef>Duration(in months)</mat-header-cell>
+        <mat-cell class="align-center" *matCellDef="let preference">
+          {{ preference.duration }}
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="Submit">
