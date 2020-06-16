@@ -23,7 +23,7 @@
   <mat-card>
     <div class="row header data">
       <div class="render"><strong>Name</strong></div>
-      <div class="flex-grow"></div>
+      <div class="flex-grow gpa-field"></div>
       <div class="render"><strong>CGPA</strong></div>
       <div class="flex-grow"></div>
       <div class="render"><strong>Roll No</strong></div>
@@ -47,14 +47,10 @@
     <mat-list-item>
       <div class="row data">
         <div class="render">
-          {{
-            student.name.length > 20
-              ? student.name.substring(0, 15) + "...."
-              : student.name
-          }}
+          {{student.name}}
         </div>
         <div class="flex-grow"></div>
-        <div class="render">
+        <div class="render gpa-field">
           {{ student.gpa | number:'1.2-3'}}
         </div>
         <div class="flex-grow"></div>
