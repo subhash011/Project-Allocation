@@ -19,20 +19,26 @@ mat-table {
 }
 
 .mat-column-Title {
-  min-width: 350px;
+  min-width: 25%;
 }
 
 .mat-column-Duration {
   max-width: 200px;
+  padding-left: 20px;
 }
 
-.mat-column-studentIntake {
-  max-width: 200px;
+.mat-column-Intake {
+  max-width: 100px;
 }
 
 .mat-column-Faculty {
   padding-left: 20px;
 }
+
+.mat-column-Email {
+  padding-left: 20px;
+}
+
 
 .align-right {
   padding-left: 45px;
