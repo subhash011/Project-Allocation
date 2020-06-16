@@ -73,8 +73,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   displayedColumns = [
     "select",
     "Title",
-    "Intake",
     "Faculty",
+    "Intake",
+    "Duration",
     "Email",
     "Actions",
   ];

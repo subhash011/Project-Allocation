@@ -77,6 +77,7 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     "Faculty",
     "Email",
     "Intake",
+    "Duration",
     "Actions",
     "Submit",
   ];

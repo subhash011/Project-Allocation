@@ -105,13 +105,19 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="Title">
-              <th class="common-padding" mat-header-cell *matHeaderCellDef>Title</th>
-              <td class="common-padding" mat-cell *matCellDef="let project">{{ project.title }}</td>
+              <th mat-header-cell *matHeaderCellDef>Title</th>
+              <td mat-cell *matCellDef="let project">{{ project.title }}</td>
             </ng-container>
             <ng-container matColumnDef="Faculty">
               <th mat-header-cell *matHeaderCellDef>Faculty</th>
               <td mat-cell *matCellDef="let project">
                 {{ project.faculty_name }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Duration">
+              <th mat-header-cell *matHeaderCellDef>Duration(in months)</th>
+              <td class="align-head" mat-cell *matCellDef="let project">
+                {{ project.duration }}
               </td>
             </ng-container>
             <ng-container matColumnDef="Email">
