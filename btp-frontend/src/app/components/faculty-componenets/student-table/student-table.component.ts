@@ -7,12 +7,22 @@ import {
   ViewChild,
   Pipe,
   PipeTransform,
+  OnChanges,
+  SimpleChanges,
 } from "@angular/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDialog } from "@angular/material/dialog";
 import { LoaderComponent } from "../../shared/loader/loader.component";
+import { MatTableDataSource } from '@angular/material';
+import {
+  trigger,
+  style,
+  state,
+  transition,
+  animate,
+} from "@angular/animations";
 
 @Pipe({
   name: "preference",
@@ -26,6 +36,7 @@ export class PreferencePipe implements PipeTransform {
     for (const student of student_list) {
       if (student._id == student_id) {
         const index = student.projects_preference.indexOf(project_id);
+        student.index = index;
         if (index == -1) {
           return "N/A";
         }
@@ -42,25 +53,45 @@ export class PreferencePipe implements PipeTransform {
   selector: "app-student-table",
   templateUrl: "./student-table.component.html",
   styleUrls: ["./student-table.component.scss"],
+  animations: [
+    trigger("detailExpand", [
+      state(
+        "collapsed",
+        style({ height: "0px", minHeight: "0", display: "none" })
+      ),
+      state("expanded", style({ height: "*" })),
+      transition(
+        "expanded <=> collapsed",
+        animate("0ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+      ),
+    ]),
+  ],
 })
-export class StudentTableComponent implements OnInit {
+export class StudentTableComponent implements OnInit, OnChanges {
   @Input() public student_list;
   @Input() public project;
   @Input() public adminStage;
 
   @ViewChild("table", { static: false }) table;
 
-  public fields = ["Name", "CGPA", "Roll"];
-
+  public fields = ["Name", "CGPA", "Roll","Index", "Actions"];
+  students:MatTableDataSource<any>;
+  expandedElement:any;
   constructor(
     private projectService: ProjectsService,
-    private location: Location,
-    private router: Router,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
 
-  ngOnInit() {}
+  ngOnChanges(simpleChanges:SimpleChanges){
+    if(simpleChanges.student_list) {
+      this.students = new MatTableDataSource(this.student_list);
+    }
+  }
+
+  ngOnInit() {
+    this.students = new MatTableDataSource(this.student_list);
+  }
 
   onSubmit() {
     if (this.adminStage == 2) {
@@ -117,47 +148,71 @@ export class StudentTableComponent implements OnInit {
     }
   }
 
-  onListDrop(event: CdkDragDrop<string[]>) {
-    let previousIndex = this.student_list.findIndex(
+  drop(event: CdkDragDrop<string[]>) {
+    let previousIndex = this.students.data.findIndex(
       (row) => row === event.item.data
     );
-    moveItemInArray(this.student_list, previousIndex, event.currentIndex);
-    this.table.renderRows();
+    moveItemInArray(this.students.data, previousIndex, event.currentIndex);
+    this.students.data = [...this.students.data];
   }
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.student_list, event.previousIndex, event.currentIndex);
-  }
-
-  moveToTop(project){
-
-    this.student_list = this.student_list.filter((val) => {
-      return val._id != project._id;
+  moveToTop(student){
+    this.students.data = this.students.data.filter((val) => {
+      return val._id != student._id;
     });
-    this.student_list.unshift(project);
+    this.students.data.unshift(student);
+    this.students.data = [...this.students.data];
   }
 
   moveToBottom(project){
 
-    this.student_list = this.student_list.filter((val) => {
+    this.students.data = this.students.data.filter((val) => {
       return val._id != project._id;
     });
-    this.student_list.push(project);
-
+    this.students.data.push(project);
+    this.students.data = [...this.students.data];
   }
 
   moveOneUp(index){
     if (index == 0) {
       return;
     }
-    moveItemInArray(this.student_list, index, index - 1);
+    moveItemInArray(this.students.data, index, index - 1);
+    this.students.data = [...this.students.data];
   }
 
   moveOneDown(index){
-    if (index == this.student_list.length - 1) {
+    if (index == this.students.data.length - 1) {
       return;
     }
-    moveItemInArray(this.student_list, index, index + 1);
+    moveItemInArray(this.students.data, index, index + 1);
+    this.students.data = [...this.students.data];
+  }
+
+  sortStudentTable(event){
+    const isAsc = event.direction == "asc";
+    this.students.data = this.students.data.sort((a, b) => {
+      switch (event.active) {
+        case "Name":
+          return this.compare(a.name, b.name, isAsc);
+        case "CGPA":
+          return this.compare(a.gpa, b.gpa, isAsc);
+        case "Roll":
+          return this.compare(a.roll_no, b.roll_no, isAsc);
+        case "Index":
+          return this.compare(a.index, b.index, isAsc);
+        default:
+          return 0;
+      }
+    });
+  }
+
+  compare(
+    a: number | string | boolean,
+    b: number | string | boolean,
+    isAsc: boolean
+  ) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
 }
