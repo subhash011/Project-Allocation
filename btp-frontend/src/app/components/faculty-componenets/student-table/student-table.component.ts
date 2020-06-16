@@ -133,7 +133,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
         });
         dialogRef.close();
         this.snackBar.open(
-          "Preferences can be edited only in the next stage.",
+          "Preferences can be edited only in the further stages.",
           "Ok",
           {
             duration: 3000,
