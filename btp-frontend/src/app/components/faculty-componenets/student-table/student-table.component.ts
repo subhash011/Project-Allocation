@@ -36,6 +36,7 @@ export class PreferencePipe implements PipeTransform {
     for (const student of student_list) {
       if (student._id == student_id) {
         const index = student.projects_preference.indexOf(project_id);
+        student.index = index;
         if (index == -1) {
           return "N/A";
         }
@@ -147,14 +148,6 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
   }
 
-  onListDrop(event: CdkDragDrop<string[]>) {
-    let previousIndex = this.student_list.findIndex(
-      (row) => row === event.item.data
-    );
-    moveItemInArray(this.student_list, previousIndex, event.currentIndex);
-    this.table.renderRows();
-  }
-
   drop(event: CdkDragDrop<string[]>) {
     let previousIndex = this.students.data.findIndex(
       (row) => row === event.item.data
@@ -194,6 +187,32 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
     moveItemInArray(this.students.data, index, index + 1);
     this.students.data = [...this.students.data];
+  }
+
+  sortStudentTable(event){
+    const isAsc = event.direction == "asc";
+    this.students.data = this.students.data.sort((a, b) => {
+      switch (event.active) {
+        case "Name":
+          return this.compare(a.name, b.name, isAsc);
+        case "CGPA":
+          return this.compare(a.gpa, b.gpa, isAsc);
+        case "Roll":
+          return this.compare(a.roll_no, b.roll_no, isAsc);
+        case "Index":
+          return this.compare(a.index, b.index, isAsc);
+        default:
+          return 0;
+      }
+    });
+  }
+
+  compare(
+    a: number | string | boolean,
+    b: number | string | boolean,
+    isAsc: boolean
+  ) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
 }

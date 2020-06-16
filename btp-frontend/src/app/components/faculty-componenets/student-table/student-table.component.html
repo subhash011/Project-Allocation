@@ -21,6 +21,7 @@
 
   <div class="table mat-elevation-z8">
     <mat-table
+    (matSortChange)="sortStudentTable($event)"
     [dataSource]="students"
     multiTemplateDataRows
     class="mat-elevation-z8"
@@ -28,27 +29,28 @@
     cdkDropList
     [cdkDropListData]="students.data"
     (cdkDropListDropped)="drop($event)"
+    matSort
   >
     <ng-container matColumnDef="Name">
-      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
       <mat-cell *matCellDef="let preference">
         {{preference.name}}
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="CGPA">
-      <mat-header-cell *matHeaderCellDef> CGPA </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> CGPA </mat-header-cell>
       <mat-cell *matCellDef="let preference">
         {{ preference.gpa }}
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="Roll">
-      <mat-header-cell *matHeaderCellDef> Roll no. </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Roll no. </mat-header-cell>
       <mat-cell *matCellDef="let preference">
         {{ preference.roll_no }}
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="Index">
-      <mat-header-cell *matHeaderCellDef> Preference </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Preference </mat-header-cell>
       <mat-cell *matCellDef="let preference">
         {{ "" | preference:project._id:preference._id:students.data}}
       </mat-cell>
@@ -106,87 +108,3 @@
     ></mat-row>
   </mat-table>
 </div>
-<!-- <div class="example-list" cdkDropList (cdkDropListDropped)="drop($event)">
-  <mat-divider></mat-divider>
-  <mat-card>
-    <div class="row header data">
-      <div class="render"><strong>Name</strong></div>
-      <div class="flex-grow"></div>
-      <div class="render"><strong>CGPA</strong></div>
-      <div class="flex-grow"></div>
-      <div class="render"><strong>Roll No</strong></div>
-      <div class="flex-grow"></div>
-      <div class="render"><strong>Preference</strong></div>
-      <div class="flex-grow"></div>
-      <div class="saveButton">
-          <button  mat-raised-button color="warn" (click)="onSubmit()">
-            Save Preferences
-          </button>
-      </div>
-    </div>
-  </mat-card>
-
-  <div
-    class="example-box"
-    *ngFor="let student of student_list;let i = index"
-    [cdkDragDisabled]="adminStage != 2 ? true : false"
-    cdkDrag
-  >
-    <mat-list-item>
-      <div class="row data">
-        <div class="render">
-          {{
-            student.name.length > 20
-              ? student.name.substring(0, 15) + "...."
-              : student.name
-          }}
-        </div>
-        <div class="flex-grow"></div>
-        <div class="render">
-          {{ student.gpa | number:'1.2-3'}}
-        </div>
-        <div class="flex-grow"></div>
-        <div class="render">
-          {{ student.roll_no }}
-        </div>
-        <div class="flex-grow"></div>
-        <div class="render"  *ngIf="student._id">
-          {{ "" | preference:project._id:student._id:student_list}}
-        </div>
-        <div class="flex-grow"></div>
-        <div class="render">
-          <mat-icon
-            *ngIf="i != 0"
-            matTooltip="Push {{ student_list[i].name }} to top"
-            [matTooltipPosition]="'above'"
-            (click)="moveToTop(student_list[i])"
-            >vertical_align_top</mat-icon
-          >
-          <mat-icon
-            *ngIf="i != student_list.length - 1"
-            matTooltip="Push {{ student_list[i].name }} to bottom"
-            [matTooltipPosition]="'above'"
-            (click)="moveToBottom(student_list[i])"
-            >vertical_align_bottom</mat-icon
-          >
-          <mat-icon
-            *ngIf="i != 0"
-            matTooltip="Move {{ student_list[i].name }} up"
-            [matTooltipPosition]="'above'"
-            (click)="moveOneUp(i)"
-            >arrow_upward</mat-icon
-          >
-          <mat-icon
-            *ngIf="i != student_list.length - 1"
-            matTooltip="Move {{ student_list[i].name }} down"
-            [matTooltipPosition]="'above'"
-            (click)="moveOneDown(i)"
-            >arrow_downward</mat-icon
-          >
-        </div>
-      </div>
-    </mat-list-item>
-  </div>
-</div> -->
-
-
