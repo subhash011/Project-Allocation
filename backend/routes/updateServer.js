@@ -47,7 +47,7 @@ async function executeScript(comm) {
 router.post("/",verifyPostData, (req, res) => {
 	const parameter = "yes";
 	// res.status(200).send("success");
-	// req.setTimeout(300000);
+	req.setTimeout(300000);
 	// res.setTimeout(300000);
 	var file_path = path.resolve(
 		__dirname,
