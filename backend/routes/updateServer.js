@@ -31,6 +31,7 @@ function verifyPostData(req, res, next) {
 async function executeScript(comm) {
 	try {
 		const { stdout, stderr } = await exec(comm);
+		console.log(stdout);
 		return {
 			stdout: stdout,
 			stderr: stderr,
