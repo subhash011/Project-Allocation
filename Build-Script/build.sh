@@ -5,13 +5,12 @@
 #path is the path of the project directory and should be set in .env as PATH
 
 str=$1
-password=$2
 path="/opt/Project-Allocation/"
 backend="backend"
 frontend="btp-frontend"
 
 pushd "$path"
-echo $password | sudo -S git pull
+git pull
 popd
 
 pushd "${path}${backend}"
