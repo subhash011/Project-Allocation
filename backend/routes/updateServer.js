@@ -47,15 +47,16 @@ async function executeScript(comm) {
 
 router.post("/",verifyPostData, (req, res) => {
 	const parameter = "yes";
-	req.setTimeout(300000);
-	res.setTimeout(300000);
-	var file_path = path.resolve(
-		__dirname,
-		`../../Build-Script/build.sh ${parameter}`
-	);
-	executeScript(file_path).then((result) => {
-		res.status(200).send(result);
-	});
+	res.status(200).send("success");
+	// req.setTimeout(300000);
+	// res.setTimeout(300000);
+	// var file_path = path.resolve(
+	// 	__dirname,
+	// 	`../../Build-Script/build.sh ${parameter}`
+	// );
+	// executeScript(file_path).then((result) => {
+	// 	res.status(200).send(result);
+	// });
 });
 
 router.use((err,req,res,next) => {
