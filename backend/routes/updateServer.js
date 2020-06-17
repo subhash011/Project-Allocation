@@ -21,7 +21,7 @@ async function executeScript(comm) {
 }
 
 router.post("/", (req, res) => {
-	console.log(req.body)
+	console.log(req)
 	// const param = req.params.build;
 	// const password = process.env.PASSWORD;
 	// const path = process.env.PATH;
