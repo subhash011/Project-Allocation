@@ -78,8 +78,8 @@ app.use("/api/email", mail);
 const backup = require("./routes/backup");
 app.use("/api/backup",backup);
 
-const updateServer = require("./routes/updateServer");
-app.use("/api/updateServer", updateServer);
+// const updateServer = require("./routes/updateServer");
+// app.use("/api/updateServer", updateServer);
 
 const PORT = process.env.PORT || 8080;
 
