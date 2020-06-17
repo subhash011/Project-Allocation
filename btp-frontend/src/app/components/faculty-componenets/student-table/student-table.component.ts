@@ -114,7 +114,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
         hasBackdrop: true,
       });
       this.projectService
-        .savePreference(this.student_list, this.project._id, this.project.stream)
+        .savePreference(this.students.data, this.project._id, this.project.stream)
         .subscribe((data) => {
           dialogRef.close();
           if (data["status"] == "success") {
