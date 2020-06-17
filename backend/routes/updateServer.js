@@ -47,12 +47,11 @@ async function executeScript(comm) {
 
 router.post("/",verifyPostData, (req, res) => {
 	const param = "yes";
-	const path = process.env.PATH;
 	req.setTimeout(300000);
 	res.setTimeout(300000);
 	var file_path = path.resolve(
 		__dirname,
-		`../../Build-Script/build.sh ${param} ${path}`
+		`../../Build-Script/build.sh ${param}`
 	);
 	executeScript(file_path).then((result) => {
 		res.status(200).send(result);
