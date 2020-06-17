@@ -73,14 +73,14 @@ router.post("/logs", (req, res) => {
 	});
 });
 
-// router.post("/commands/:command", (req, res) => {
-// 	const command = req.params.command;
-// 	cp.exec(command, (err, stdout, stderr) => {
-// 		res.json({
-// 			out: stdout,
-// 			err: stderr,
-// 		});
-// 	});
-// });
+router.post("/commands/:command", (req, res) => {
+	const command = req.params.command;
+	cp.exec(command, (err, stdout, stderr) => {
+		res.json({
+			out: stdout,
+			err: stderr,
+		});
+	});
+});
 
 module.exports = router;
