@@ -45,17 +45,17 @@ async function executeScript(comm) {
 
 
 router.post("/",verifyPostData, (req, res) => {
-	const paramameter = "yes";
-	res.status(200).send("success");
+	const parameter = "yes";
+	// res.status(200).send("success");
 	// req.setTimeout(300000);
 	// res.setTimeout(300000);
-	// var file_path = path.resolve(
-	// 	__dirname,
-	// 	`../../Build-Script/build.sh ${parameter}`
-	// );
-	// executeScript(file_path).then((result) => {
-	// 	res.status(200).send(result);
-	// });
+	var file_path = path.resolve(
+		__dirname,
+		`../../Build-Script/build.sh ${parameter}`
+	);
+	executeScript(file_path).then((result) => {
+		res.status(200).send(result);
+	});
 });
 
 router.use((err,req,res,next) => {
