@@ -31,6 +31,7 @@ router.post("/send", (req, res) => {
 		bcc: to,
 		subject: subject,
 		text: mailBody,
+		replyTo: "Do not reply to this email pap@smail.iitpkd.ac.in"
 	};
 	const transport = nodemailer.createTransport({
 		host: "smtp.gmail.com",
