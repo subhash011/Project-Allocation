@@ -27,6 +27,8 @@ The project allocation for program ${program} has been completed. Please login t
 
 The URL for the project allocation portal is : ${this.apiUrl}.
 
+THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
+
 Regards,
 ${user.name},
 Project Coordinator (${program})
@@ -62,6 +64,8 @@ fmt1.format(curr_deadline) + " 11:59 pm"}.
 
 The URL for the project allocation portal is : ${this.apiUrl}.
 
+THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
+
 Regards,
 ${user.name},
 Project Coordinator (${stream})
@@ -73,10 +77,12 @@ Project Coordinator (${stream})
       var body = {
         mailBody: `Dear Faculty Members,
 
-Please login to the project allocation portal and record your preference among students who have opted to work with you. Note that the default order of preference is the decreasing order of CGPA. Also, make sure to indicate the final set of projects that you would like to offer. The deadline for this phase is ${
+Please login to the project allocation portal and record your preference among students who have opted to work with you. Note that the default order of preference is the decreasing order of CGPA. Also, make sure to indicate the final set of projects that you would like to offer and note that by default all your projects are included. The deadline for this phase is ${
 fmt1.format(curr_deadline) + " 11:59 pm"}.
 
 The URL for the project allocation portal is : ${this.apiUrl}.
+
+THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
 
 Regards,
 ${user.name},
@@ -115,6 +121,8 @@ fmt1.format(curr_deadline) + " 11:59 pm"}.
 
 The URL for the project allocation portal is : ${this.apiUrl}.
 
+THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
+
 Regards,
 ${user.name},
 Project Coordinator (${stream})
@@ -144,6 +152,8 @@ The project allocation for program ${program} has been completed. Please login t
 
 The URL for the project allocation portal is : ${this.apiUrl}.
 
+THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
+
 Regards,
 ${user.name},
 Project Coordinator (${program})
@@ -158,6 +168,8 @@ Project Coordinator (${program})
 The project allocation for program ${program} has been completed. Please login to the project allocation portal to view the projects/students allocated to you.
 
 The URL for the project allocation portal is : ${this.apiUrl}.
+
+THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
 
 Regards,
 ${user.name},
