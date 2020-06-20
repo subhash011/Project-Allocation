@@ -38,46 +38,47 @@ router.get("/",(req,res) => {
         let superAdmins = result[4].data;
         let admins = result[5].data;
         let projects = result[6].data;
-        mongoose.connection.dropDatabase();
-        let promises = [];
-        promises.push(
-            Streams.insertMany(streams).then(result => {
-                return result;
+        mongoose.connection.dropDatabase().then(() => {
+            let promises = [];
+            promises.push(
+                Streams.insertMany(streams).then(result => {
+                    return result;
+                })
+            );
+            promises.push(
+                Student.insertMany(students).then(result => {
+                    return result;
+                })
+            );
+            promises.push(
+                Faculty.insertMany(faculties).then(result => {
+                    return result;
+                })
+            );
+            promises.push(
+                Mapping.insertMany(mappings).then(result => {
+                    return result;
+                })
+            );
+            promises.push(
+                SuperAdmin.insertMany(superAdmins).then(result => {
+                    return result;
+                })
+            );
+            promises.push(
+                Admin.insertMany(admins).then(result => {
+                    return result;
+                })
+            );
+            promises.push(
+                Project.insertMany(projects).then(result => {
+                    return result;
+                })
+            );
+            Promise.all(promises).then(result => {
+                res.send(result);
             })
-        );
-        promises.push(
-            Student.insertMany(students).then(result => {
-                return result;
-            })
-        );
-        promises.push(
-            Faculty.insertMany(faculties).then(result => {
-                return result;
-            })
-        );
-        promises.push(
-            Mapping.insertMany(mappings).then(result => {
-                return result;
-            })
-        );
-        promises.push(
-            SuperAdmin.insertMany(superAdmins).then(result => {
-                return result;
-            })
-        );
-        promises.push(
-            Admin.insertMany(admins).then(result => {
-                return result;
-            })
-        );
-        promises.push(
-            Project.insertMany(projects).then(result => {
-                return result;
-            })
-        );
-        Promise.all(promises).then(result => {
-            res.send(result);
-        })
+        });
     })
 })
 
