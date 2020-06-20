@@ -328,6 +328,7 @@ router.get("/info/:id", (req, res) => {
 								projectCap: admin.project_cap,
 								studentCap: admin.student_cap,
 								stream: admin.stream,
+								email:faculty.email,
 								studentsPerFaculty: admin.studentsPerFaculty,
 								studentCount: admin.studentCount,
 							});
