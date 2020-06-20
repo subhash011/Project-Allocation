@@ -171,11 +171,15 @@ export class NavbarComponent implements OnInit {
 
   goToProgram(program) {
     let id = localStorage.getItem("id");
-    this.router.navigate(["/faculty", id], {
-      queryParams: {
-        abbr: program.short,
-        mode: "programMode",
-      },
+    this.router
+    .navigateByUrl("/refresh", { skipLocationChange: true })
+    .then(() => {
+      this.router.navigate(["/faculty", id], {
+        queryParams: {
+          abbr: program.short,
+          mode: "programMode",
+        },
+      });
     });
   }
 
