@@ -1167,6 +1167,7 @@ router.post("/reset/:id", (req, res) => {
 							updateResult = {
 								project_alloted: [],
 								students_id: [],
+								isIncluded:true,
 							};
 							Project.updateMany({ stream: stream }, updateResult).then(() => {
 								res.json({
