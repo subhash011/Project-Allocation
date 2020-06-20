@@ -30,13 +30,16 @@ export class FacultyComponent implements OnInit {
     public publishStudents;
     public publishFaculty;
 
+    public studentData;
+
     constructor(private activatedRoute : ActivatedRoute, private userDetails : UserService, private router : Router, private snackBar : MatSnackBar, private loginService : LoginComponent, private projectService : ProjectsService, private userService : UserService, private navbar : NavbarComponent, private dialog : MatDialog) {}
 
     ngOnInit(): void {
         this.activatedRoute.paramMap.subscribe((params : ParamMap) => {
             this.id = params.get("id");
         });
-        localStorage.setItem("student_project",JSON.stringify({}));
+        // localStorage.setItem("student_project",JSON.stringify({}));
+        this.studentData = {}
 
         var dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: "Please wait ...",
@@ -154,9 +157,8 @@ export class FacultyComponent implements OnInit {
 
     displayProject(project) {
 
-        let student_data = JSON.parse(localStorage.getItem("student_project"))
 
-        if (!student_data[project._id]) {
+        if (!this.studentData[project._id]) {
           var dialogRef = this.dialog.open(LoaderComponent, {
             data: "Please wait ....",
             disableClose: true,
@@ -178,9 +180,7 @@ export class FacultyComponent implements OnInit {
                             });
                         }
                     }
-                    let student_data = JSON.parse(localStorage.getItem("student_project"))
-                    student_data[project._id] = true
-                    localStorage.setItem("student_project", JSON.stringify(student_data));
+                    this.studentData[project._id] = this.student_list;
                 } else {
                     this.navbar.role = "none";
                     this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {duration: 3000});
@@ -194,6 +194,7 @@ export class FacultyComponent implements OnInit {
             });
         }
 
+      
         this.project = project;
         this.add = false;
         this.empty = false;
