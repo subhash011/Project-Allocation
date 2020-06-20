@@ -193,6 +193,9 @@ export class FacultyComponent implements OnInit {
                 this.loginService.signOut();
             });
         }
+        else{
+            this.student_list = this.studentData[project._id];
+        }
 
       
         this.project = project;
