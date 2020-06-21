@@ -188,7 +188,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
   moveToTop(student){
 
-    if(this.checkAdminStage){
+    if(this.checkAdminStage()){
       return;
     }
 
@@ -201,7 +201,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
   moveToBottom(project){
 
-    if(this.checkAdminStage){
+    if(this.checkAdminStage()){
       return;
     }
 
@@ -214,7 +214,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
   moveOneUp(index){
 
-    if(this.checkAdminStage){
+    if(this.checkAdminStage()){
       return;
     }
 
@@ -227,7 +227,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
   moveOneDown(index){
 
-    if(this.checkAdminStage){
+    if(this.checkAdminStage()){
       return;
     }
     if (index == this.students.data.length - 1) {

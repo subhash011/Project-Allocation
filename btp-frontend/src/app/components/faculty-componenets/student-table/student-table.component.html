@@ -17,11 +17,8 @@
     </mat-accordion>
     <div class="flex-space"></div>
     
-    <h4 *ngIf="index == 0" class="heading_pref">Preferences: <strong>Preferences among non preffered students will be appended to this table.</strong></h4>
-
-    <div class="flex-space"></div>
-
-  
+    <h4 *ngIf="index == 0" class="heading_pref">Preferences: <strong>Preferences among students who did not opt will be appended to this table.</strong></h4>
+    <h4 *ngIf="index == 1" class="heading_pref">Preferences: <strong>These preferences will be appended to preferences among students who opted.</strong></h4>
     <div [style.max-height.px]="studentTableHeight" class="table mat-elevation-z8">
       <mat-table
       (matSortChange)="sortStudentTable($event)"
