@@ -170,6 +170,11 @@ export class StudentTableComponent implements OnInit, OnChanges {
   }
 
   moveToTop(student){
+
+    if(this.checkAdminStage){
+      return;
+    }
+
     this.students.data = this.students.data.filter((val) => {
       return val._id != student._id;
     });
@@ -179,6 +184,10 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
   moveToBottom(project){
 
+    if(this.checkAdminStage){
+      return;
+    }
+
     this.students.data = this.students.data.filter((val) => {
       return val._id != project._id;
     });
@@ -187,6 +196,11 @@ export class StudentTableComponent implements OnInit, OnChanges {
   }
 
   moveOneUp(index){
+
+    if(this.checkAdminStage){
+      return;
+    }
+
     if (index == 0) {
       return;
     }
@@ -195,11 +209,24 @@ export class StudentTableComponent implements OnInit, OnChanges {
   }
 
   moveOneDown(index){
+
+    if(this.checkAdminStage){
+      return;
+    }
     if (index == this.students.data.length - 1) {
       return;
     }
     moveItemInArray(this.students.data, index, index + 1);
     this.students.data = [...this.students.data];
+  }
+
+  checkAdminStage(){
+    if(this.adminStage >=3 ){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   sortStudentTable(event){
