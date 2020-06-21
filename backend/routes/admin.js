@@ -1963,4 +1963,28 @@ router.post("/getPublish/:id", (req, res) => {
 	}
 });
 
+router.post("/updateLists/:id",(req,res) => {
+	const id = req.params.id;
+	const idToken = req.body.authorization;
+	Admin.findOne({google_id:{id:id,idToken:idToken}}).then(admin => {
+		var stream = admin.stream;
+		Student.find({stream:stream}).lean().select("_id").then(allStudents => {
+			allStudents = allStudents.map(val => val._id);
+			var aggregation = [
+				{ $match : { stream:stream } },
+				{ $addFields : { 
+						not_students_id : { $setDifference : [ allStudents,"$students_id" ] }
+					} 
+				}
+			]
+			Project.aggregate(aggregation).then(projects => {
+				res.json({
+					message:"success",
+					result:null
+				})
+			})
+		})
+	})
+})
+
 module.exports = router;
