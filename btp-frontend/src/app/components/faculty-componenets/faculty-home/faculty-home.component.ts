@@ -24,16 +24,7 @@ export class FacultyHomeComponent implements OnInit {
   @Input() publishStudents;
   currentTime: Date = new Date();
 
-  ngOnInit() {
-
-    // this.userService.getPublishMode("faculty").subscribe((data) => {
-    //   if (data["status"] == "success") {
-    //     this.publishFaculty = data["facultyPublish"];
-    //     this.publishStudents = data["studentPublish"];
-    //   }
-    // });
-
-  }
+  ngOnInit() {}
 
   sortStages(event) {
     const isAsc = event.direction == "asc";

@@ -16,7 +16,7 @@ import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDialog } from "@angular/material/dialog";
 import { LoaderComponent } from "../../shared/loader/loader.component";
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatTab } from '@angular/material';
 import {
   trigger,
   style,
@@ -73,11 +73,11 @@ export class StudentTableComponent implements OnInit, OnChanges {
   @Input() public student_list;
   @Input() public project;
   @Input() public adminStage;
-
-  @ViewChild("table", { static: false }) table;
-
+  @Input() public index;
+  
   public fields = ["Name", "CGPA", "Roll","Index", "Actions"];
   students:MatTableDataSource<any>;
+  non_students:MatTableDataSource<any>;
   expandedElement:any;
   studentTableHeight: number = window.innerHeight >= 1400 ? 600:400;
   constructor(
@@ -107,33 +107,40 @@ export class StudentTableComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
+
     if (this.adminStage == 2) {
       var dialogRef = this.dialog.open(LoaderComponent, {
         data: "Please wait ....",
         disableClose: true,
         hasBackdrop: true,
       });
-      this.projectService
-        .savePreference(this.students.data, this.project._id, this.project.stream)
-        .subscribe((data) => {
-          dialogRef.close();
-          if (data["status"] == "success") {
-            localStorage.removeItem(this.project._id);
-            let snackBarRef = this.snackBar.open(data["msg"], "Ok", {
+
+
+        this.projectService
+          .savePreference(this.students.data, this.project._id, this.project.stream, this.index)
+          .subscribe((data) => {
+            dialogRef.close();
+            if (data["status"] == "success") {
+              localStorage.removeItem(this.project._id);
+              this.snackBar.open(data["msg"], "Ok", {
+                duration: 3000,
+              });
+            } else {
+              this.snackBar.open(data["msg"], "Ok", {
+                duration: 3000,
+              });
+            }
+          },() => {
+            dialogRef.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
             });
-          } else {
-            this.snackBar.open(data["msg"], "Ok", {
-              duration: 3000,
-            });
-          }
-        },() => {
-          dialogRef.close();
-          this.ngOnInit();
-          this.snackBar.open("Some Error Occured! Try again later.", "OK", {
-            duration: 3000,
           });
-        });
+
+
+      
+
     } else {
       var dialogRef = this.dialog.open(LoaderComponent, {
         data: "Please wait ....",

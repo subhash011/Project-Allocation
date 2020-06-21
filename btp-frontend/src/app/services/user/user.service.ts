@@ -677,10 +677,6 @@ export class UserService {
     return this.http.post(this.url, value, httpOptions);
   }
 
-  //subscribe(data => {
-  //projects of the faculty => data.projects (all programs sorted according to program)
-  //deadlines of stage => data.stageDetails (deadlines array, stage, stream)
-  //})
   facultyHomeDetails() {
     const user = JSON.parse(localStorage.getItem("user"));
     this.url = this.base_url + "faculty/home/" + user.id;
@@ -692,4 +688,17 @@ export class UserService {
     };
     return this.http.get(this.url, httpOptions);
   }
+
+  updateList(stream){
+    this.url = this.base_url + "admin/updateLists/" + localStorage.getItem("id");
+    const idToken = JSON.parse(localStorage.getItem("user")).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: idToken,
+      }),
+    };
+    return this.http.post(this.url, { stream: stream }, httpOptions);
+  }
+
 }
