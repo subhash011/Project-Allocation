@@ -85,12 +85,12 @@ export class ContentComponent implements OnInit, DoCheck {
     let id = localStorage.getItem("id");
     this.id = id;
     
-    // this.userService.getPublishMode("faculty").subscribe((data) => {
-    //   if (data["status"] == "success") {
-    //     this.publishFaculty = data["facultyPublish"];
-    //     this.publishStudents = data["studentPublish"];
-    //   }
-    // });
+    this.userService.getPublishMode("faculty").subscribe((data) => {
+      if (data["status"] == "success") {
+        this.publishFaculty = data["facultyPublish"];
+        this.publishStudents = data["studentPublish"];
+      }
+    });
   }
 
   ngDoCheck(): void {

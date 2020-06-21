@@ -20,11 +20,22 @@ export class FacultyHomeComponent implements OnInit {
   ];
   @Input() projectDetails : any = new MatTableDataSource([]);  
   @Input() stageDetails: any = new MatTableDataSource([]);
-  @Input() publishFaculty : boolean;
-  @Input() publishStudents: boolean;
+  // @Input() publishFaculty : boolean;
+  // @Input() publishStudents: boolean;
+  public publishFaculty : boolean;
+  public publishStudents : boolean;
   currentTime: Date = new Date();
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    this.userService.getPublishMode("faculty").subscribe((data) => {
+      if (data["status"] == "success") {
+        this.publishFaculty = data["facultyPublish"];
+        this.publishStudents = data["studentPublish"];
+      }
+    });
+
+  }
 
   sortStages(event) {
     const isAsc = event.direction == "asc";
