@@ -350,31 +350,6 @@
       </div>
     </div>
 
-
-    <!-- <div class="register_total">
-      <mat-form-field class="registered">
-        <mat-label>Active</mat-label>
-        <input
-          matInput
-          class="table_info"
-          type="number"
-          [disabled]="true"
-          [(ngModel)]="availableProjects" 
-        />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Total</mat-label>
-        <input
-          class="table_info"
-          matInput
-          type="number"
-          [disabled]="true"
-          [(ngModel)]="projectCount"
-        />
-      </mat-form-field>
-    </div> -->
-
-
     <div class="display">
       <div [style.max-height.px]="projectTableHeight" class="table mat-elevation-z8">
         <table
@@ -566,29 +541,6 @@
           (change)="handleFileInput($event.target.files)"
           #fileInput
         />
-
-        <!-- <div class="register_total">
-          <mat-form-field class="registered ">
-            <mat-label>Registered</mat-label>
-            <input
-              class="table_info"
-              matInput
-              type="number"
-              [disabled]="true"
-              [(ngModel)]="registeredCount"
-            />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Total</mat-label>
-            <input
-              class="table_info"
-              matInput
-              type="number"
-              [disabled]="true"
-              [(ngModel)]="studentCount"
-            />
-          </mat-form-field>
-        </div> -->
 
         <div class="display-student">
           <div [style.max-height.px]="studentTableHeight" class="table mat-elevation-z8">

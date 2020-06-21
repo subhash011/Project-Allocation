@@ -108,10 +108,17 @@ table {
 
 th,
 td {
-    overflow: hidden;
-    width: 10%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;     
+  word-wrap: break-word;     
+  max-width: 200px;
+  min-width: 100px;
+}
+
+
+.align-center {
+    padding-left: 18px;
 }
 
 .top {
