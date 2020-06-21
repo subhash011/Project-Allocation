@@ -11,10 +11,12 @@ function combineProjects(projects, students) {
 	projects = projects;
 	studentIDS = students.map((val) => val._id);
 	projectIDS = projects.map((val) => val._id);
-	for (const project of projects) {
-		let studentsPreferred = project.students_id;
-		let studentsNotPreferred = project.not_students_id;
-		projects.students_id = [...studentsPreferred,...studentsNotPreferred];
+	var studentsPreferred = {};
+	var studentsNotPreferred = {};
+	for (var project of projects) {
+		studentsPreferred[project._id.toString()] = project.students_id;
+		studentsNotPreferred[project._id.toString()] = project.not_students_id;
+		project.students_id = [...studentsPreferred[project._id.toString()],...studentsNotPreferred[project._id.toString()]];
 	}
 	return projects;
 }
@@ -225,8 +227,8 @@ router.post("/start/:id", (req, res) => {
 										studentIntake: project.studentIntake,
 										numberOfPreferences: project.students_id.length,
 										student_alloted: studentsAlloted,
-										students_id: project.tempStudentsIDs,
-										not_students_id:project.tempNotStudentsIDs,
+										students_id: project.students_id,
+										not_students_id:project.not_students_id,
 										isIncluded: project.isIncluded,
 									};
 									arr.push(newProj);

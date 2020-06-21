@@ -1,4 +1,3 @@
-  <div *ngIf="index == 0">
     <h4 class="heading"></h4>
     <mat-accordion>
       <mat-expansion-panel>
@@ -18,9 +17,10 @@
     </mat-accordion>
     <div class="flex-space"></div>
     
-    <h4 class="heading_pref">Preferences: <strong>Preferences among non preffered students will be appended to this table.</strong></h4>
-  </div>
-  
+    <h4 *ngIf="index == 0" class="heading_pref">Preferences: <strong>Preferences among non preffered students will be appended to this table.</strong></h4>
+
+    <div class="flex-space"></div>
+
   
     <div [style.max-height.px]="studentTableHeight" class="table mat-elevation-z8">
       <mat-table
@@ -52,7 +52,7 @@
           {{ preference.roll_no }}
         </mat-cell>
       </ng-container>
-      <ng-container matColumnDef="Index">
+      <ng-container  matColumnDef="Index">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Preference </mat-header-cell>
         <mat-cell *matCellDef="let preference">
           {{ "" | preference:project._id:preference._id:students.data}}
@@ -100,10 +100,10 @@
         </mat-cell>
       </ng-container>
       <mat-header-row
-        *matHeaderRowDef="fields; sticky: true"
+        *matHeaderRowDef="index | getDisplayedColumns; sticky: true"
       ></mat-header-row>
       <mat-row
-        *matRowDef="let row; columns: fields; let i = dataIndex"
+        *matRowDef="let row; columns: index | getDisplayedColumns; let i = dataIndex"
         class="example-element-row"
         [cdkDragData]="row"
         [cdkDragDisabled]="this.adminStage >= 3"

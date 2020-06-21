@@ -50,6 +50,16 @@ export class PreferencePipe implements PipeTransform {
   }
 }
 
+@Pipe({
+  name:"getDisplayedColumns"
+})
+export class GetDisplayedColumns implements PipeTransform {
+  transform(index) {
+    let preferred = ["Name", "CGPA", "Roll","Index", "Actions"];
+    let notPreferred = ["Name", "CGPA", "Roll","Index", "Actions"];
+    return index == 0 ? preferred : notPreferred;
+  }
+}
 
 @Component({
   selector: "app-student-table",

@@ -168,7 +168,6 @@ export class FacultyComponent implements OnInit {
         });
             this.projectService.getStudentsApplied(project._id).subscribe((data) => {
                 dialogRef.close();
-                console.log(data)
                 if (data["status"] == "success") {
                     this.student_list = data["students"];
                     this.non_student_list = data["non_students"];
