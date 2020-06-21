@@ -1977,9 +1977,9 @@ router.post("/getPublish/:id", (req, res) => {
 
 router.post("/updateLists/:id",(req,res) => {
 	const id = req.params.id;
-	const idToken = req.body.authorization;
-	Faculty.findOne({google_id:{id:id,idToken:idToken}}).then(admin => {
-		var stream = "UGCSE";
+	const idToken = req.headers.authorization;
+	Faculty.findOne({google_id:{id:id,idToken:idToken}}).then(faculty => {
+		var stream = faculty.adminProgram;
 		Student.find({stream:stream}).lean().select("_id").then(allStudents => {
 			allStudents = allStudents.map(val => val._id);
 			var aggregation = [
@@ -1991,6 +1991,24 @@ router.post("/updateLists/:id",(req,res) => {
 			Project.updateMany({stream:stream},aggregation).then(projects => {
 				res.send(projects)
 			})
+			.catch(err=>{
+				res.json({
+					message:"fail",
+					result:null
+				})
+			})
+		})
+		.catch(err=>{
+			res.json({
+				message:"fail",
+				result:null
+			})
+		})
+	})
+	.catch(err=>{
+		res.json({
+			message:"fail",
+			result:null
 		})
 	})
 })

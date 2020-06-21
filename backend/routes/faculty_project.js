@@ -176,10 +176,12 @@ router.post("/applied/:id", (req, res) => {
 			if (faculty) {
 				Project.findById(mongoose.Types.ObjectId(project_id))
 					.populate({path:"students_id", select:"-google_id -stream -date -email -isRegistered",model:Student})
+					.populate({path:"not_students_id",select:"-google_id -stream -date -email -isRegistered",model:Student})
 					.then((project) => {
 						res.json({
 							status: "success",
 							students: project["students_id"],
+							non_students:project["not_students_id"]
 						});
 					})
 					.catch((err) => {
@@ -193,6 +195,7 @@ router.post("/applied/:id", (req, res) => {
 			}
 		})
 		.catch((err) => {
+			console.log(err)
 			res.json({
 				status: "fail",
 				students: "Authentication Error",
@@ -242,6 +245,7 @@ router.post("/save_preference/:id", (req, res) => {
 	const project_id = req.body.project_id;
 	const idToken = req.headers.authorization;
 	const stream = req.body.stream;
+	const index = req.body.index;
 
 
 	Admin.findOne({stream:stream})
@@ -254,19 +258,39 @@ router.post("/save_preference/:id", (req, res) => {
 					.select("_id")
 					.then((faculty) => {
 						if (faculty) {
-							Project.findByIdAndUpdate(project_id,{students_id:student_ids})
-							.then((project) => {
-								res.json({
-									status: "success",
-									msg: "Your preferences are saved",
-								});
-							})
-							.catch((err) => {
-								res.json({
-									status: "fail",
-									msg: "Project Not Found!!! Please Reload",
-								});
-							});					
+
+							if(index == 0){
+								Project.findByIdAndUpdate(project_id,{students_id:student_ids})
+								.then((project) => {
+									res.json({
+										status: "success",
+										msg: "Your preferences are saved",
+									});
+								})
+								.catch((err) => {
+									res.json({
+										status: "fail",
+										msg: "Project Not Found!!! Please Reload",
+									});
+								});					
+
+							}
+							else if(index == 1){
+								Project.findByIdAndUpdate(project_id,{not_students_id:student_ids})
+								.then((project) => {
+									res.json({
+										status: "success",
+										msg: "Your preferences are saved",
+									});
+								})
+								.catch((err) => {
+									res.json({
+										status: "fail",
+										msg: "Project Not Found!!! Please Reload",
+									});
+								});			
+							}
+
 						} else {
 							res.json({
 								status: "fail",
@@ -417,5 +441,56 @@ router.delete("/delete/:id", (req, res) => {
 			});
 		});
 });
+
+router.post("/notApplied/:id",(req,res)=>{
+
+	const id = req.params.id;
+	const idToken = req.headers.authorization;
+	const project_id = req.body.project;
+
+	console.log(project_id)
+
+	Faculty.findOne({google_id:{id:id,idToken:idToken}})
+		.lean()
+		.select("_id")
+		.then(faculty=>{
+
+			if(faculty){
+
+				Project.findById(mongoose.Types.ObjectId(project_id))
+					.lean()
+					.populate({path:"not_students_id",select:"-google_id -email -isRegistered -date",model:Student})
+					.then(project=>{
+
+						if(project){
+							
+							res.json({
+								status:"success",
+								non_students:project["not_students_id"]
+							})
+
+						}	
+						else{
+							res.json({
+								status:"fail",
+								result:null
+							})
+						}
+					})
+
+
+			}
+			else{
+				res.json({
+					status:"fail",
+					result:null
+				})
+			}
+
+
+		})
+
+
+})
 
 module.exports = router;

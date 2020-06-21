@@ -45,7 +45,9 @@ export class ContentComponent implements OnInit, DoCheck {
   @Input() public adminStage;
   @Input() public publishFaculty;
   @Input() public publishStudents;
+  @Input() public non_student_list;
   public id;
+  public index = 0;
 
   Headers =  [
     "Program",

@@ -134,9 +134,6 @@ export class ProjectsService {
   }
 
   getStudentsApplied(project_id) {
-    const student_data = {
-      project: project_id,
-    };
     let id = localStorage.getItem("id");
     let idToken = JSON.parse(localStorage.getItem("user")).idToken;
     const httpOptions = {
@@ -148,10 +145,10 @@ export class ProjectsService {
 
     this.url = this.facultyBaseURL + "applied/" + id;
 
-    return this.http.post(this.url, student_data, httpOptions);
+    return this.http.post(this.url, {project: project_id}, httpOptions);
   }
 
-  savePreference(student_order, project_id, stream) {
+  savePreference(student_order, project_id, stream, index) {
 
     student_order = student_order.map((per) => {
       return per._id;
@@ -160,7 +157,8 @@ export class ProjectsService {
     const student_data = {
       student: student_order,
       project_id: project_id,
-      stream: stream
+      stream: stream,
+      index : index
     };
 
     let id = localStorage.getItem("id");
@@ -225,5 +223,7 @@ export class ProjectsService {
       }),
     };
     return this.http.post(this.url, { projects: projects }, httpOptions);
+  
   }
+
 }
