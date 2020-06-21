@@ -116,7 +116,7 @@
                 *ngIf="
                   project.student_alloted &&
                     project.student_alloted.length > 0 &&
-                    publishFaculty;
+                    publishFaculty && publishFaculty[project.stream];
                   else elseBlock
                 "
               >

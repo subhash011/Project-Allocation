@@ -1917,27 +1917,31 @@ router.post("/getPublish/:id", (req, res) => {
 		Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 			.then((faculty) => {
 				if (faculty) {
-					Admin.findOne({ admin_id: faculty._id })
-						.then((admin) => {
-							if (admin) {
-								res.json({
-									status: "success",
-									studentPublish: admin.publishStudents,
-									facultyPublish: admin.publishFaculty,
-								});
-							} else {
-								res.json({
-									status: "fail",
-									result: null,
-								});
-							}
+					let programs = faculty.programs.map(val => val.short);
+					let promises = [];
+					let studentPublish = {};
+					let facultyPublish = {};
+					for (const program of programs) {
+						promises.push(
+							Admin.findOne({stream:program}).then(admin => {
+								studentPublish[program] = admin.publishStudents;
+								facultyPublish[program] = admin.publishFaculty;
+								return admin;
+							})
+						)
+					}
+					Promise.all(promises).then(result => {
+						res.json({
+							status:"success",
+							studentPublish:studentPublish,
+							facultyPublish:facultyPublish
 						})
-						.catch((err) => {
-							res.json({
-								status: "fail",
-								result: null,
-							});
+					}).catch(() => {
+						res.json({
+							status: "fail",
+							result: null,
 						});
+					})
 				} else {
 					res.json({
 						status: "fail",

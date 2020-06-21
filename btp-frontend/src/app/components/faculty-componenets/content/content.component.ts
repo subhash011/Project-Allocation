@@ -43,8 +43,8 @@ export class ContentComponent implements OnInit, DoCheck {
   @Input() public program_details;
   @Input() public routeParams;
   @Input() public adminStage;
-  @Input() public publishFaculty:boolean;
-  @Input() public publishStudents:boolean;
+  @Input() public publishFaculty;
+  @Input() public publishStudents;
   public id;
 
   Headers =  [
@@ -84,13 +84,6 @@ export class ContentComponent implements OnInit, DoCheck {
   ngOnInit() {
     let id = localStorage.getItem("id");
     this.id = id;
-    
-    this.userService.getPublishMode("faculty").subscribe((data) => {
-      if (data["status"] == "success") {
-        this.publishFaculty = data["facultyPublish"];
-        this.publishStudents = data["studentPublish"];
-      }
-    });
   }
 
   ngDoCheck(): void {
