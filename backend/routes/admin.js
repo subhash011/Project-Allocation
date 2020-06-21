@@ -49,7 +49,7 @@ function combineProjects(projects, students) {
 	students = students.map((val) => JSON.stringify(val));
 	for (const project of projects) {
 		const setA = new Set(project.students_id.map((val) => JSON.stringify(val)));
-		const setB = new Set(students);
+		const setB = new Set(project.not_students_id.map(val => JSON.stringify(val)));
 		const union = new Set([...setA, ...setB]);
 		project.students_id = [...union];
 		project.students_id = project.students_id.map((val) => JSON.parse(val));
@@ -1230,6 +1230,11 @@ router.get("/export_projects/:id", (req, res) => {
 										select: { _id: 1, name: 1, roll_no: 1 },
 										model: Student,
 									})
+									.populate({
+										path: "not_students_id",
+										select: { _id: 1, name: 1, roll_no: 1 },
+										model: Student,
+									})
 									.populate("student_alloted", { name: 1, roll_no: 1 }, Student)
 									.then((data) => {
 										var projects = data.map((val) => {
@@ -1598,6 +1603,11 @@ router.get("/allocationStatus/:id", (req, res) => {
 						model: Faculty,
 					})
 					.populate({
+						path: "not_students_id",
+						select: { project_alloted: 1, name: 1, roll_no: 1 },
+						model: Student,
+					})
+					.populate({
 						path: "students_id",
 						select: { name: 1, roll_no: 1, project_alloted: 1 },
 						model: Student,
@@ -1650,6 +1660,7 @@ router.get("/allocationStatus/:id", (req, res) => {
 									numberOfPreferences: project.students_id.length,
 									student_alloted: student_alloted,
 									students_id: project.students_id,
+									not_students_id:project.not_students_id,
 									isIncluded: project.isIncluded,
 								};
 								result.push(newProj);
@@ -1809,6 +1820,7 @@ router.post("/updatePublish/:id", (req, res) => {
 																				student_alloted:
 																					project.student_alloted,
 																				students_id: project.students_id,
+																				not_students_id:project.not_students_id,
 																				isIncluded: project.isIncluded,
 																			};
 																			arr.push(newProj);
