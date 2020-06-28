@@ -131,7 +131,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
           .subscribe((data) => {
             dialogRef.close();
             if (data["status"] == "success") {
-              localStorage.removeItem(this.project._id);
+              localStorage.setItem(this.project._id,"true");
               this.snackBar.open(data["msg"], "Ok", {
                 duration: 3000,
               });

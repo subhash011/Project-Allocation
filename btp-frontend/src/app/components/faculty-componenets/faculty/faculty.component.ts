@@ -172,6 +172,10 @@ export class FacultyComponent implements OnInit {
                     this.student_list = data["students"];
                     this.non_student_list = data["non_students"];
                     if (this.adminStage < 2) {
+                        let status = localStorage.getItem(project._id);
+                        if(status && status == "true") {
+                            return;
+                        }
                         localStorage.setItem(project._id, "false");
                         this.student_list.sort((a, b) => {
                             return b.gpa - a.gpa;
