@@ -378,7 +378,7 @@
         <table mat-table [dataSource]="programs" class="mat-elevation-z8">
           <ng-container matColumnDef="Branch">
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
-              Program Name
+              Program
             </th>
             <td mat-cell  [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
               <ng-container *ngIf="map.name">
@@ -395,7 +395,7 @@
           </ng-container>
           <ng-container matColumnDef="Short">
             <th mat-header-cell *matHeaderCellDef [style.color]="background">
-              Program Abbrevation
+              Abbrevation
             </th>
             <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
               <ng-container *ngIf="map.short">
@@ -408,6 +408,21 @@
                   (closed)="updateShortProgram(map, $event)">
                 <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'" [value]="map.short"></app-inline-edit>
               </sat-popover>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Stage">
+            <th mat-header-cell *matHeaderCellDef [style.color]="background">
+              Stage(out of 4)
+            </th>
+            <td mat-cell *matCellDef="let map">
+              <ng-container>
+                <span style="padding-left:20px" *ngIf="stages[map.short]; else stageElse">
+                  {{stages[map.short]}}
+                </span>
+                <ng-template #stageElse>
+                  <span style="padding-left:15px">N/A</span>
+                </ng-template>
+              </ng-container>
             </td>
           </ng-container>
           <ng-container matColumnDef="Map">

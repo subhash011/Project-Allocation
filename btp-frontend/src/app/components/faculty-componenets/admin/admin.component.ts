@@ -557,7 +557,6 @@ export class AdminComponent implements OnInit, OnDestroy {
 
                 this.userService.updateList(this.programName)
                   .subscribe(data =>{
-                    console.log(data)
                     if(data["status"] == "success"){
                     }
                   })

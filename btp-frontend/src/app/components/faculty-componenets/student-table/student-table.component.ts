@@ -50,6 +50,16 @@ export class PreferencePipe implements PipeTransform {
   }
 }
 
+@Pipe({
+  name:"getDisplayedColumns"
+})
+export class GetDisplayedColumns implements PipeTransform {
+  transform(index) {
+    let preferred = ["Name", "CGPA", "Roll","Index", "Actions"];
+    let notPreferred = ["Name", "CGPA", "Roll","Index", "Actions"];
+    return index == 0 ? preferred : notPreferred;
+  }
+}
 
 @Component({
   selector: "app-student-table",
@@ -122,7 +132,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
           .subscribe((data) => {
             dialogRef.close();
             if (data["status"] == "success") {
-              localStorage.removeItem(this.project._id);
+              localStorage.setItem(this.project._id,"true");
               this.snackBar.open(data["msg"], "Ok", {
                 duration: 3000,
               });
@@ -179,7 +189,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
   moveToTop(student){
 
-    if(this.checkAdminStage){
+    if(this.checkAdminStage()){
       return;
     }
 
@@ -192,7 +202,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
   moveToBottom(project){
 
-    if(this.checkAdminStage){
+    if(this.checkAdminStage()){
       return;
     }
 
@@ -205,7 +215,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
   moveOneUp(index){
 
-    if(this.checkAdminStage){
+    if(this.checkAdminStage()){
       return;
     }
 
@@ -218,7 +228,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
   moveOneDown(index){
 
-    if(this.checkAdminStage){
+    if(this.checkAdminStage()){
       return;
     }
     if (index == this.students.data.length - 1) {

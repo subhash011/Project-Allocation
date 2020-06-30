@@ -162,7 +162,7 @@
   </div>
   <ng-template #savePref_editProj>
     <mat-tab-group color="accent" [(selectedIndex)]="index" animationDuration="0" dynamicHeight="true">
-      <mat-tab label="Preferred Students">
+      <mat-tab label="Students who opted">
         <app-student-table
           *ngIf="student_list"
           [project]="project"
@@ -174,7 +174,7 @@
         </app-student-table>
       </mat-tab>
 
-      <mat-tab label="Non Preferred Students">
+      <mat-tab *ngIf="adminStage >= 2" label="Students who did not opt">
 
         <app-student-table
           *ngIf="non_student_list"

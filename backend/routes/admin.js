@@ -1244,6 +1244,7 @@ router.get("/export_projects/:id", (req, res) => {
 												studentIntake: val.studentIntake,
 												preferenceCount: val.students_id.length,
 												students_id: val.students_id,
+												not_students_id:val.not_students_id
 											};
 											return new_proj;
 										});
@@ -1980,7 +1981,10 @@ router.post("/updateLists/:id",(req,res) => {
 	const idToken = req.headers.authorization;
 	Faculty.findOne({google_id:{id:id,idToken:idToken}}).then(faculty => {
 		var stream = faculty.adminProgram;
-		Student.find({stream:stream}).lean().select("_id").then(allStudents => {
+		Student.find({stream:stream}).lean().select("_id gpa").then(allStudents => {
+			allStudents.sort((a,b) => {
+				return b.gpa - a.gpa
+			})
 			allStudents = allStudents.map(val => val._id);
 			var aggregation = [
 				{ $addFields : { 
