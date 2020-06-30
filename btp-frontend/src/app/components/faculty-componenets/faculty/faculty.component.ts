@@ -31,6 +31,7 @@ export class FacultyComponent implements OnInit {
     public publishFaculty;
     public non_student_list;
     public nonStudentData;
+    public reorder;
     
 
     public studentData;
@@ -168,28 +169,32 @@ export class FacultyComponent implements OnInit {
         });
             this.projectService.getStudentsApplied(project._id).subscribe((data) => {
                 dialogRef.close();
-                console.log(data)
+
                 if (data["status"] == "success") {
                     this.student_list = data["students"];
                     this.non_student_list = data["non_students"];
-                    if (this.adminStage < 2) {
-                        localStorage.setItem(project._id, "false");
+                    this.reorder = data["reorder"]
+
+
+                    if(this.reorder == 0){
                         this.student_list.sort((a, b) => {
                             return b.gpa - a.gpa;
                         });
                         this.non_student_list.sort((a,b)=>{
                             return b.gpa - a.gpa;
                         })
-                    } else if (this.adminStage == 2) {
-                        if (localStorage.getItem(project._id) == "false") {
-                            this.student_list.sort((a, b) => {
-                                return b.gpa - a.gpa;
-                            });
-                            this.non_student_list.sort((a,b)=>{
-                                return b.gpa - a.gpa;
-                            })
-                        }
-                    }   
+                    }
+                    else if(this.reorder == -1){
+                        this.non_student_list.sort((a,b)=>{
+                            return b.gpa - a.gpa;
+                        })
+                    }
+                    else if(this.reorder == 1){
+                        this.student_list.sort((a, b) => {
+                            return b.gpa - a.gpa;
+                        });
+                    }
+
                     this.studentData[project._id] = this.student_list;
                     this.nonStudentData[project._id] = this.non_student_list;
 

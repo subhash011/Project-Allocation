@@ -46,6 +46,7 @@ export class ContentComponent implements OnInit, DoCheck {
   @Input() public publishFaculty;
   @Input() public publishStudents;
   @Input() public non_student_list;
+  @Input() public reorder;
   public id;
   public index = 0;
 

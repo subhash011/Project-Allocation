@@ -181,6 +181,7 @@ router.post("/applied/:id", (req, res) => {
 						res.json({
 							status: "success",
 							students: project["students_id"],
+							reorder:project["reorder"],
 							non_students:project["not_students_id"]
 						});
 					})
@@ -246,7 +247,7 @@ router.post("/save_preference/:id", (req, res) => {
 	const idToken = req.headers.authorization;
 	const stream = req.body.stream;
 	const index = req.body.index;
-
+	let reorder = req.body.reorder;
 
 	Admin.findOne({stream:stream})
 		.lean()
@@ -260,7 +261,23 @@ router.post("/save_preference/:id", (req, res) => {
 						if (faculty) {
 
 							if(index == 0){
-								Project.findByIdAndUpdate(project_id,{students_id:student_ids})
+
+								if(reorder == 2){
+									reorder = 2;
+								}
+								else if(reorder == 0){
+									reorder = -1;
+								}
+								else if(reorder == -1){
+									reorder = -1;
+								}
+								else if(reorder == 1){
+									reorder = 2;
+								}
+								
+
+
+								Project.findByIdAndUpdate(project_id,{students_id:student_ids, reorder:reorder})
 								.then((project) => {
 									res.json({
 										status: "success",
@@ -276,7 +293,22 @@ router.post("/save_preference/:id", (req, res) => {
 
 							}
 							else if(index == 1){
-								Project.findByIdAndUpdate(project_id,{not_students_id:student_ids})
+
+								if(reorder == 2){
+									reorder = 2;
+								}
+								else if(reorder == 0){
+									reorder = 1;
+								}
+								else if(reorder == 1){
+									reorder = 1;
+								}
+								else if(reorder == -1){
+									reorder = 2;
+								}
+								
+
+								Project.findByIdAndUpdate(project_id,{not_students_id:student_ids, reorder:reorder})
 								.then((project) => {
 									res.json({
 										status: "success",

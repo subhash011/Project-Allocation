@@ -148,7 +148,7 @@ export class ProjectsService {
     return this.http.post(this.url, {project: project_id}, httpOptions);
   }
 
-  savePreference(student_order, project_id, stream, index) {
+  savePreference(student_order, project_id, stream, index, reorder) {
 
     student_order = student_order.map((per) => {
       return per._id;
@@ -158,7 +158,8 @@ export class ProjectsService {
       student: student_order,
       project_id: project_id,
       stream: stream,
-      index : index
+      index : index,
+      reorder: reorder
     };
 
     let id = localStorage.getItem("id");

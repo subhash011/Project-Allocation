@@ -74,6 +74,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
   @Input() public project;
   @Input() public adminStage;
   @Input() public index;
+  @Input() public reorder;
   
   public fields = ["Name", "CGPA", "Roll","Index", "Actions"];
   students:MatTableDataSource<any>;
@@ -117,7 +118,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
 
         this.projectService
-          .savePreference(this.students.data, this.project._id, this.project.stream, this.index)
+          .savePreference(this.students.data, this.project._id, this.project.stream, this.index, this.reorder)
           .subscribe((data) => {
             dialogRef.close();
             if (data["status"] == "success") {
