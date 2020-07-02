@@ -1782,7 +1782,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       height: "200px",
       data: {
         heading: "Confirm Publish",
-        message: `Are you sure that you want to publish this allocation to students ? Do note that mails will be sent automatically.`,
+        message: `Are you sure that you want to publish this allocation to students? Please ensure that the results are published to faculties before it is published to the students. Do note that mails will be sent automatically.`,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
