@@ -343,6 +343,7 @@
         <button
           mat-raised-button
           color="primary"
+          [disabled]="exportDisabled"
           (click)="downloadFile_allocation()"
         >
           Export Allocation

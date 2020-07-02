@@ -270,6 +270,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   students: any = new MatTableDataSource([]);
   student;
   faculty;
+  exportDisabled:boolean;
 
   total_intake = 0;
   studentsPerFaculty;
@@ -357,6 +358,10 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.exportDisabled = false;
+    if(localStorage.getItem("allocationMap")) {
+      this.discardAllocation();
+    }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Please wait ...",
       disableClose: true,
@@ -854,6 +859,7 @@ export class AdminComponent implements OnInit, OnDestroy {
             (data) => {
               dialogRef.close();
               if (data["message"] == "success") {
+                this.exportDisabled = true;
                 selectedProjects = selectedProjects.map((val) =>
                   String(val._id)
                 );
@@ -1722,7 +1728,12 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.userService.updatePublish("faculty").subscribe(
           (data) => {
             if (data["status"] == "success") {
+              this.exportDisabled = false;
+              if(localStorage.getItem("allocationMap")) {
+                this.discardAllocation();
+              }
               this.dataSource = new MatTableDataSource(data["result"]);
+              this.selectIncluded();
               this.userService.uploadAllocationFile().subscribe(() => {});
               this.publishFaculty = true;
               localStorage.setItem("pf", "true");
@@ -1784,7 +1795,12 @@ export class AdminComponent implements OnInit, OnDestroy {
 
         this.userService.updatePublish("student").subscribe((data) => {
           if (data["status"] == "success") {
+            this.exportDisabled = false;
+            if(localStorage.getItem("allocationMap")) {
+              this.discardAllocation();
+            }
             this.dataSource = new MatTableDataSource(data["result"]);
+            this.selectIncluded();
             this.userService.uploadAllocationFile().subscribe(
               () => {},
               () => {
