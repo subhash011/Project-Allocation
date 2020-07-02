@@ -49,7 +49,7 @@ function combineProjects(projects, students) {
 	students = students.map((val) => JSON.stringify(val));
 	for (const project of projects) {
 		const setA = new Set(project.students_id.map((val) => JSON.stringify(val)));
-		const setB = new Set(students);
+		const setB = new Set(project.not_students_id.map(val => JSON.stringify(val)));
 		const union = new Set([...setA, ...setB]);
 		project.students_id = [...union];
 		project.students_id = project.students_id.map((val) => JSON.parse(val));
@@ -1230,6 +1230,11 @@ router.get("/export_projects/:id", (req, res) => {
 										select: { _id: 1, name: 1, roll_no: 1 },
 										model: Student,
 									})
+									.populate({
+										path: "not_students_id",
+										select: { _id: 1, name: 1, roll_no: 1 },
+										model: Student,
+									})
 									.populate("student_alloted", { name: 1, roll_no: 1 }, Student)
 									.then((data) => {
 										var projects = data.map((val) => {
@@ -1239,6 +1244,7 @@ router.get("/export_projects/:id", (req, res) => {
 												studentIntake: val.studentIntake,
 												preferenceCount: val.students_id.length,
 												students_id: val.students_id,
+												not_students_id:val.not_students_id
 											};
 											return new_proj;
 										});
@@ -1598,6 +1604,11 @@ router.get("/allocationStatus/:id", (req, res) => {
 						model: Faculty,
 					})
 					.populate({
+						path: "not_students_id",
+						select: { project_alloted: 1, name: 1, roll_no: 1 },
+						model: Student,
+					})
+					.populate({
 						path: "students_id",
 						select: { name: 1, roll_no: 1, project_alloted: 1 },
 						model: Student,
@@ -1650,6 +1661,7 @@ router.get("/allocationStatus/:id", (req, res) => {
 									numberOfPreferences: project.students_id.length,
 									student_alloted: student_alloted,
 									students_id: project.students_id,
+									not_students_id:project.not_students_id,
 									isIncluded: project.isIncluded,
 								};
 								result.push(newProj);
@@ -1809,6 +1821,7 @@ router.post("/updatePublish/:id", (req, res) => {
 																				student_alloted:
 																					project.student_alloted,
 																				students_id: project.students_id,
+																				not_students_id:project.not_students_id,
 																				isIncluded: project.isIncluded,
 																			};
 																			arr.push(newProj);
@@ -1965,24 +1978,41 @@ router.post("/getPublish/:id", (req, res) => {
 
 router.post("/updateLists/:id",(req,res) => {
 	const id = req.params.id;
-	const idToken = req.body.authorization;
-	Admin.findOne({google_id:{id:id,idToken:idToken}}).then(admin => {
-		var stream = admin.stream;
-		Student.find({stream:stream}).lean().select("_id").then(allStudents => {
+	const idToken = req.headers.authorization;
+	Faculty.findOne({google_id:{id:id,idToken:idToken}}).then(faculty => {
+		var stream = faculty.adminProgram;
+		Student.find({stream:stream}).lean().select("_id gpa").then(allStudents => {
+			allStudents.sort((a,b) => {
+				return b.gpa - a.gpa
+			})
 			allStudents = allStudents.map(val => val._id);
 			var aggregation = [
-				{ $match : { stream:stream } },
 				{ $addFields : { 
 						not_students_id : { $setDifference : [ allStudents,"$students_id" ] }
 					} 
 				}
 			]
-			Project.aggregate(aggregation).then(projects => {
+			Project.updateMany({stream:stream},aggregation).then(projects => {
+				res.send(projects)
+			})
+			.catch(err=>{
 				res.json({
-					message:"success",
+					message:"fail",
 					result:null
 				})
 			})
+		})
+		.catch(err=>{
+			res.json({
+				message:"fail",
+				result:null
+			})
+		})
+	})
+	.catch(err=>{
+		res.json({
+			message:"fail",
+			result:null
 		})
 	})
 })

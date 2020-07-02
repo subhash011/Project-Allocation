@@ -39,6 +39,10 @@ const UserSchema = new mongoose.Schema({
 		type: [mongoose.SchemaTypes.ObjectId],
 		ref: Student,
 	},
+	reorder:{
+		type:Number,
+		default: 0
+	},
 	isIncluded: {
 		type: Boolean,
 		default: true,

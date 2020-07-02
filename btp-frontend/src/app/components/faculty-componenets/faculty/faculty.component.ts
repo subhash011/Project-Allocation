@@ -29,6 +29,10 @@ export class FacultyComponent implements OnInit {
     public stageHomeDetails;
     public publishStudents;
     public publishFaculty;
+    public non_student_list;
+    public nonStudentData;
+    public reorder;
+    
 
     public studentData;
 
@@ -38,8 +42,8 @@ export class FacultyComponent implements OnInit {
         this.activatedRoute.paramMap.subscribe((params : ParamMap) => {
             this.id = params.get("id");
         });
-        // localStorage.setItem("student_project",JSON.stringify({}));
         this.studentData = {}
+        this.nonStudentData = {}
 
         var dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: "Please wait ...",
@@ -157,7 +161,6 @@ export class FacultyComponent implements OnInit {
 
     displayProject(project) {
 
-
         if (!this.studentData[project._id]) {
           var dialogRef = this.dialog.open(LoaderComponent, {
             data: "Please wait ....",
@@ -165,22 +168,34 @@ export class FacultyComponent implements OnInit {
             hasBackdrop: true
         });
             this.projectService.getStudentsApplied(project._id).subscribe((data) => {
+                dialogRef.close();
                 if (data["status"] == "success") {
-                    dialogRef.close();
                     this.student_list = data["students"];
-                    if (this.adminStage < 2) {
-                        localStorage.setItem(project._id, "false");
+                    this.non_student_list = data["non_students"];
+                    this.reorder = data["reorder"];
+  
+                    if(this.reorder == 0){
                         this.student_list.sort((a, b) => {
                             return b.gpa - a.gpa;
                         });
-                    } else if (this.adminStage == 2) {
-                        if (localStorage.getItem(project._id) == "false") {
-                            this.student_list.sort((a, b) => {
-                                return b.gpa - a.gpa;
-                            });
-                        }
+                        this.non_student_list.sort((a,b)=>{
+                            return b.gpa - a.gpa;
+                        })
                     }
+                    else if(this.reorder == -1){
+                        this.non_student_list.sort((a,b)=>{
+                            return b.gpa - a.gpa;
+                        })
+                    }
+                    else if(this.reorder == 1){
+                        this.student_list.sort((a, b) => {
+                            return b.gpa - a.gpa;
+                        });
+                    }
+
                     this.studentData[project._id] = this.student_list;
+                    this.nonStudentData[project._id] = this.non_student_list;
+
                 } else {
                     this.navbar.role = "none";
                     this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {duration: 3000});
@@ -195,6 +210,7 @@ export class FacultyComponent implements OnInit {
         }
         else{
             this.student_list = this.studentData[project._id];
+            this.non_student_list = this.nonStudentData[project._id];
         }
 
       

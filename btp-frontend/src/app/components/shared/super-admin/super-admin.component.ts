@@ -98,6 +98,7 @@ export class SuperAdminComponent implements OnInit {
     "Branch",
     "Short",
     "Map",
+    "Stage",
     "FacCount",
     "StudCount",
     "ProjCount",
@@ -115,6 +116,7 @@ export class SuperAdminComponent implements OnInit {
   branches: any = new MatTableDataSource([]);
   programs: any = new MatTableDataSource([]);
   hasAdmins = {};
+  stages = {};
   @HostListener("window:resize", ["$event"])
   onResize(event) {
     if (event.target.innerWidth <= 1400) {
@@ -214,6 +216,25 @@ export class SuperAdminComponent implements OnInit {
         );
 
         this.getAllProjects();
+
+        this.userService.getAllAdminDetails().subscribe(admins => {
+          if(admins["message"] == "success") {
+            admins = admins["result"];
+            for (const program in admins) {
+              if (admins.hasOwnProperty(program) && program != "UGCSE") {
+                const element = admins[program];
+                this.stages[program] = element.stage = element.stage + (element.stage == 4?0:1);
+              }
+            }
+          } else {
+            this.dialogRefLoad.close();
+            this.navbar.role = "none";
+            this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
+              duration: 3000,
+            });
+            this.login.signOut();
+          }
+        })
 
         this.userService.getAllFaculties().subscribe(
           (result) => {

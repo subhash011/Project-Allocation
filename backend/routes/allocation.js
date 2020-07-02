@@ -11,14 +11,12 @@ function combineProjects(projects, students) {
 	projects = projects;
 	studentIDS = students.map((val) => val._id);
 	projectIDS = projects.map((val) => val._id);
-	for (const project of projects) {
-		const setA = new Set(project.students_id.map((val) => val.toString()));
-		const setB = new Set(studentIDS.map((val) => val.toString()));
-		const union = new Set([...setA, ...setB]);
-		project.students_id = [...union];
-		project.students_id = project.students_id.map((val) =>
-			mongoose.Types.ObjectId(val)
-		);
+	var studentsPreferred = {};
+	var studentsNotPreferred = {};
+	for (var project of projects) {
+		studentsPreferred[project._id.toString()] = project.students_id;
+		studentsNotPreferred[project._id.toString()] = project.not_students_id;
+		project.students_id = [...studentsPreferred[project._id.toString()],...studentsNotPreferred[project._id.toString()]];
 	}
 	return projects;
 }
@@ -52,6 +50,7 @@ router.post("/start/:id", (req, res) => {
 	var allocationStatus = {};
 	var promises = [];
 	var projects = req.body.projects;
+	var tempStudentsIDs = [],tempNotStudentsIDs = [];
 	var pids = [];
 	var stream;
 	pids = projects.map((val) => val._id);
@@ -74,6 +73,10 @@ router.post("/start/:id", (req, res) => {
 					promises.push(
 						Project.find(projectsCondition).then((projectList) => {
 							projects = projectList;
+							projects.forEach(project => {
+								project.tempStudentsIDs = project.students_id;
+								project.tempNotStudentsIDs = project.not_students_id;
+							})
 							projects.sort((a, b) => {
 								return a.students_id.length - b.students_id.length;
 							});
@@ -225,6 +228,7 @@ router.post("/start/:id", (req, res) => {
 										numberOfPreferences: project.students_id.length,
 										student_alloted: studentsAlloted,
 										students_id: project.students_id,
+										not_students_id:project.not_students_id,
 										isIncluded: project.isIncluded,
 									};
 									arr.push(newProj);

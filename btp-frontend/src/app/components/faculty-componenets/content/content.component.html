@@ -161,15 +161,31 @@
     </form>
   </div>
   <ng-template #savePref_editProj>
-    <mat-tab-group color="accent" animationDuration="0" dynamicHeight="true">
-      <mat-tab label="Students">
+    <mat-tab-group color="accent" [(selectedIndex)]="index" animationDuration="0" dynamicHeight="true">
+      <mat-tab label="Students who opted">
         <app-student-table
-          *ngIf="student_list && !programs_mode"
+          *ngIf="student_list"
           [project]="project"
           [adminStage]="adminStage"
           [student_list]="student_list"
+          [index]="index"
+          [reorder]="reorder"
         >
         </app-student-table>
+      </mat-tab>
+
+      <mat-tab *ngIf="adminStage >= 2" label="Students who did not opt">
+
+        <app-student-table
+          *ngIf="non_student_list"
+          [student_list]="non_student_list"
+          [adminStage]="adminStage"
+          [project]="project"
+          [index]="index"
+          [reorder]="reorder"
+        >
+        </app-student-table>
+        
       </mat-tab>
 
       <mat-tab class="editPage" label="Edit">
@@ -287,6 +303,9 @@
           </form>
         </div>
       </mat-tab>
+      
+      
+
     </mat-tab-group>
   </ng-template>
 </ng-template>
