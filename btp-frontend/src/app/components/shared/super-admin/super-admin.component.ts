@@ -221,11 +221,13 @@ export class SuperAdminComponent implements OnInit {
           if(admins["message"] == "success") {
             admins = admins["result"];
             for (const program in admins) {
-              if (admins.hasOwnProperty(program) && program != "UGCSE") {
+              if (admins.hasOwnProperty(program)) {
                 const element = admins[program];
-                this.stages[program] = element.stage = element.stage + (element.stage == 4?0:1);
+                this.stages[program] = element.stage + (element.stage == 4?0:1);
+                
               }
             }
+            console.log(this.stages)
           } else {
             this.dialogRefLoad.close();
             this.navbar.role = "none";
