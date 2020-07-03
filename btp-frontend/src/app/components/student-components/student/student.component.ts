@@ -1,15 +1,12 @@
-import { HttpClient } from "@angular/common/http";
-import { MailService } from "./../../../services/mailing/mail.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { LoginComponent } from "./../../shared/login/login.component";
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { UserService } from "src/app/services/user/user.service";
-import { Subject } from "rxjs";
-import { takeUntil, flatMap } from "rxjs/operators";
-import { identifierModuleUrl } from "@angular/compiler";
-import { LoaderComponent } from "../../shared/loader/loader.component";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { UserService } from "src/app/services/user/user.service";
+import { LoaderComponent } from "../../shared/loader/loader.component";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
+import { LoginComponent } from "./../../shared/login/login.component";
 
 @Component({
   selector: "app-student",

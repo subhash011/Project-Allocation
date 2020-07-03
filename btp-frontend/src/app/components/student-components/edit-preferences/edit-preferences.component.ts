@@ -1,28 +1,25 @@
 import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from "@angular/animations";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import {
   Component,
-  OnInit,
+  HostListener,
   Input,
   OnDestroy,
-  HostListener,
+  OnInit,
 } from "@angular/core";
 import { MatDialog, MatSnackBar, MatTableDataSource } from "@angular/material";
-import { ProjectsService } from "src/app/services/projects/projects.service";
-import { LoginComponent } from "../../shared/login/login.component";
-import { UserService } from "src/app/services/user/user.service";
-import { LoadingBarService } from "@ngx-loading-bar/core";
-import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
-import { takeUntil } from "rxjs/operators";
-import {
-  trigger,
-  style,
-  state,
-  transition,
-  animate,
-} from "@angular/animations";
-import { ShowAvailableProjectsComponent } from "../show-available-projects/show-available-projects.component";
-import { LoaderComponent } from "../../shared/loader/loader.component";
 import { Subject } from "rxjs";
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { takeUntil } from "rxjs/operators";
+import { ProjectsService } from "src/app/services/projects/projects.service";
+import { LoaderComponent } from "../../shared/loader/loader.component";
+import { LoginComponent } from "../../shared/login/login.component";
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
 @Component({
   selector: "app-edit-preferences",
@@ -57,7 +54,7 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     private loginObject: LoginComponent,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private navbar:NavbarComponent
+    private navbar: NavbarComponent
   ) {}
   tableStyle;
   height: number = window.innerHeight;
@@ -83,12 +80,6 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
   ];
 
   onSubmit() {
-    if (this.stage >= 2) {
-      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
-        duration: 3000,
-      });
-      return;
-    }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Saving preferences, Please wait ...",
       disableClose: true,
@@ -115,6 +106,12 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
           } else if (result["message"] == "stage-ended") {
             this.snackBar.open(
               "Stage has ended! You cannot edit preferences anymore",
+              "Ok",
+              { duration: 3000 }
+            );
+          } else if (result["message"] == "stage-not-started") {
+            this.snackBar.open(
+              "You cannot edit preferences till the next stage",
               "Ok",
               { duration: 3000 }
             );
@@ -159,12 +156,6 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
   }
 
   removePreference(preference) {
-    if (this.stage >= 2) {
-      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
-        duration: 3000,
-      });
-      return;
-    }
     var dialogRef = this.dialog.open(LoaderComponent, {
       data: "Please wait ....",
       disableClose: true,
@@ -185,6 +176,12 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
           } else if (result["message"] == "stage-ended") {
             this.snackBar.open(
               "Stage has ended! You cannot edit preferences anymore",
+              "Ok",
+              { duration: 3000 }
+            );
+          } else if (result["message"] == "stage-not-started") {
+            this.snackBar.open(
+              "You cannot edit preferences till the next stage",
               "Ok",
               { duration: 3000 }
             );

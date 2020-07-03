@@ -1,13 +1,13 @@
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { LoginComponent } from "./../../shared/login/login.component";
-import { ProjectsService } from "src/app/services/projects/projects.service";
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import {
-  transferArrayItem,
   CdkDragDrop,
   moveItemInArray,
+  transferArrayItem,
 } from "@angular/cdk/drag-drop";
+import { Component, Inject, OnInit } from "@angular/core";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ProjectsService } from "src/app/services/projects/projects.service";
+import { LoginComponent } from "./../../shared/login/login.component";
 
 @Component({
   selector: "app-show-preferences",

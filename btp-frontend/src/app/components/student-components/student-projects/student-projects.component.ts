@@ -1,11 +1,10 @@
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { LoginComponent } from "./../../shared/login/login.component";
-import { UserService } from "./../../../services/user/user.service";
-import { ProjectsService } from "src/app/services/projects/projects.service";
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { Subject } from "rxjs";
+import { ProjectsService } from "src/app/services/projects/projects.service";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
+import { LoginComponent } from "./../../shared/login/login.component";
 
 @Component({
   selector: "app-student-projects",

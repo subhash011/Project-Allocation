@@ -1,34 +1,34 @@
 import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from "@angular/animations";
+import { SelectionModel } from "@angular/cdk/collections";
+import {
   Component,
-  OnInit,
-  ViewChild,
-  OnDestroy,
   HostListener,
+  OnDestroy,
+  OnInit,
   Pipe,
   PipeTransform,
+  ViewChild,
 } from "@angular/core";
 import {
   MatDialog,
   MatSnackBar,
-  MatTableDataSource,
   MatTable,
+  MatTableDataSource,
 } from "@angular/material";
-import { ProjectsService } from "src/app/services/projects/projects.service";
-import { LoginComponent } from "../../shared/login/login.component";
-import { UserService } from "src/app/services/user/user.service";
-import { LoadingBarService } from "@ngx-loading-bar/core";
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-} from "@angular/animations";
-import { SelectionModel } from "@angular/cdk/collections";
 import { Router } from "@angular/router";
-import { LoaderComponent } from "../../shared/loader/loader.component";
+import { LoadingBarService } from "@ngx-loading-bar/core";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { ProjectsService } from "src/app/services/projects/projects.service";
+import { UserService } from "src/app/services/user/user.service";
+import { LoaderComponent } from "../../shared/loader/loader.component";
+import { LoginComponent } from "../../shared/login/login.component";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
 @Pipe({
@@ -97,12 +97,12 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
       this.showToggleOnSidenav = true;
       this.sidenavWidth = 100;
       this.openedDrawerWidth = 100;
-    }else {
+    } else {
       this.openedDrawerWidth = this.sidenavMaxWith;
       this.showToggleOnSidenav = false;
       this.sidenavWidth = this.sidenavMaxWith;
     }
-    if(event.target.innerHeight <= 600) {
+    if (event.target.innerHeight <= 600) {
       this.tableHeight = event.target.innerHeight * 0.5;
     }
   }
@@ -224,7 +224,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                   !filter ||
                   data.faculty_name.toLowerCase().includes(filter) ||
                   data.title.toLowerCase().includes(filter) ||
-                  data.description.toLowerCase().includes(filter) || 
+                  data.description.toLowerCase().includes(filter) ||
                   data.faculty_email.toLowerCase().includes(filter);
                 this.loadingBar.stop();
               });
@@ -251,19 +251,23 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   }
 
   changeSelection() {
-    let unfilteredData = this.projects.data.filter(val => !this.projects.filteredData.includes(val)).map(val => val._id);
-    this.projects.data.forEach(val => {
-      if(unfilteredData.includes(val._id)) {
+    let unfilteredData = this.projects.data
+      .filter((val) => !this.projects.filteredData.includes(val))
+      .map((val) => val._id);
+    this.projects.data.forEach((val) => {
+      if (unfilteredData.includes(val._id)) {
         this.deselectProject(val);
       }
-    })
+    });
   }
 
   isAllSelected() {
     const numSelected = this.selection.selected
       ? this.selection.selected.length
       : 0;
-    const numRows = this.projects.filteredData ? this.projects.filteredData.length : 0;
+    const numRows = this.projects.filteredData
+      ? this.projects.filteredData.length
+      : 0;
     return numSelected === numRows;
   }
 
@@ -297,12 +301,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   }
 
   addOnePreference(project) {
-    if (this.stage >= 2) {
-      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
-        duration: 3000,
-      });
-      return;
-    }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Adding Preference, Please wait ...",
       disableClose: true,
@@ -335,6 +333,12 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                 duration: 3000,
               }
             );
+          } else if (result["message"] == "stage-not-started") {
+            this.snackBar.open(
+              "You cannot edit preferences till the next stage",
+              "Ok",
+              { duration: 3000 }
+            );
           }
         },
         () => {
@@ -353,12 +357,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(event) {
-    if (this.stage >= 2) {
-      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
-        duration: 3000,
-      });
-      return;
-    }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Adding to preferences, Please wait ...",
       disableClose: true,
@@ -395,6 +393,12 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
               "Ok",
               { duration: 3000 }
             );
+          } else if (result["message"] == "stage-not-started") {
+            this.snackBar.open(
+              "You cannot edit preferences till the next stage",
+              "Ok",
+              { duration: 3000 }
+            );
           } else {
             this.snackBar.open("Some Error Occured! Try again later.", "OK", {
               duration: 3000,
@@ -426,9 +430,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   }
 
   openedSidenav(event) {
-    if(event) {
+    if (event) {
       this.openedDrawerWidth = this.sidenavMaxWith;
-      if(window.innerWidth <= 1300) {
+      if (window.innerWidth <= 1300) {
         this.openedDrawerWidth = 100;
       }
     } else {

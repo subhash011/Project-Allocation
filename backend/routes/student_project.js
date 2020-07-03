@@ -143,7 +143,11 @@ router.post("/preference/:id", (req, res) => {
 					.lean()
 					.select("stage")
 					.then((admin) => {
-						if (admin.stage >= 2) {
+						if(admin.stage < 1) {
+							res.json({
+								message: "stage-not-started",
+							});
+						} else if (admin.stage >= 2) {
 							res.json({
 								message: "stage-ended",
 							});
@@ -263,7 +267,12 @@ router.post("/append/preference/:id", (req, res) => {
 					.lean()
 					.select("stage")
 					.then((admin) => {
-						if (admin.stage >= 2) {
+						if(admin.stage < 1) {
+							res.json({
+								message: "stage-not-started",
+							});
+						}
+						else if (admin.stage >= 2) {
 							res.json({
 								message: "stage-ended",
 							});
@@ -324,7 +333,12 @@ router.post("/remove/preference/:id", (req, res) => {
 					.lean()
 					.select("stage")
 					.then((admin) => {
-						if (admin.stage >= 2) {
+						if(admin.stage < 1) {
+							res.json({
+								message: "stage-not-started",
+							});
+						}
+						else if (admin.stage >= 2) {
 							res.json({
 								message: "stage-ended",
 							});
@@ -380,7 +394,12 @@ router.post("/add/preference/:id", (req, res) => {
 					.lean()
 					.select("stage")
 					.then((admin) => {
-						if (admin.stage >= 2) {
+						if(admin.stage < 1) {
+							res.json({
+								message: "stage-not-started",
+							});
+						}
+						else if (admin.stage >= 2) {
 							res.json({
 								message: "stage-ended",
 							});

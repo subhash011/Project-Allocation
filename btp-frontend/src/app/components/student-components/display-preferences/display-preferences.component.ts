@@ -1,22 +1,17 @@
 import {
   Component,
-  OnInit,
-  Input,
-  Output,
   EventEmitter,
-  OnChanges,
-  SimpleChanges,
+  Input,
   OnDestroy,
+  OnInit,
+  Output,
 } from "@angular/core";
-import { MatTableDataSource, MatSnackBar, MatDialog } from "@angular/material";
-import { ProjectsService } from "src/app/services/projects/projects.service";
-import { LoginComponent } from "../../shared/login/login.component";
-import { UserService } from "src/app/services/user/user.service";
-import { LoadingBarService } from "@ngx-loading-bar/core";
-import { ShowAvailableProjectsComponent } from "../show-available-projects/show-available-projects.component";
+import { MatDialog, MatSnackBar } from "@angular/material";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { ProjectsService } from "src/app/services/projects/projects.service";
 import { LoaderComponent } from "../../shared/loader/loader.component";
+import { LoginComponent } from "../../shared/login/login.component";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
 
 @Component({
@@ -43,12 +38,6 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
   ngOnInit() {}
 
   removeOnePreference(preference) {
-    if (this.stage >= 2) {
-      this.snackBar.open("You cannot edit preferences anymore!", "Ok", {
-        duration: 3000,
-      });
-      return;
-    }
     var dialogRefLoad = this.dialog.open(LoaderComponent, {
       data: "Removing Preference, Please wait ...",
       disableClose: true,
@@ -74,6 +63,12 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
           } else if (result["message"] == "stage-ended") {
             this.snackBar.open(
               "Stage has ended! You cannot edit preferences anymore",
+              "Ok",
+              { duration: 3000 }
+            );
+          } else if (result["message"] == "stage-not-started") {
+            this.snackBar.open(
+              "You cannot edit preferences till the next stage",
               "Ok",
               { duration: 3000 }
             );
