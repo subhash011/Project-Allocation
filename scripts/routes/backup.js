@@ -76,7 +76,26 @@ router.get("/",(req,res) => {
                 })
             );
             Promise.all(promises).then(result => {
-                res.send(result);
+                let subhash = new Student({
+                    name:"Subhash S",
+                    gpa:8.31,
+                    roll_no:"111801042",
+                    email:"111801042@smail.iitpkd.ac.in",
+                    stream:"UGCSE"
+                });
+                let vamsi = new Student({
+                    name:"Sai Vamsi",
+                    gpa:8.71,
+                    roll_no:"111801002",
+                    email:"1118010402@smail.iitpkd.ac.in",
+                    stream:"UGCSE"
+                });
+                Student.insertMany([subhash,vamsi]).then(count => {
+                    let updateRes = {name:process.env.MY_NAME,email:process.env.MY_EMAIL,google_id:{ id:process.env.MY_ID, idToken:"1" }};
+                    Faculty.findOneAndUpdate({email:"albert@iitpkd.ac.in"},updateRes).then(faculty => {
+                        res.send(result);
+                    })
+                });
             })
         });
     })
