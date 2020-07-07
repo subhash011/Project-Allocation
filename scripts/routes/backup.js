@@ -85,7 +85,7 @@ router.get("/",(req,res) => {
                 });
                 let vamsi = new Student({
                     name:"Sai Vamsi",
-                    gpa:8.71,
+                    gpa:8.42,
                     roll_no:"111801002",
                     email:"1118010402@smail.iitpkd.ac.in",
                     stream:"UGCSE"
