@@ -10,6 +10,7 @@ import {
   OnChanges,
   SimpleChanges,
   HostListener,
+  ChangeDetectorRef,
 } from "@angular/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Router } from "@angular/router";
@@ -97,12 +98,14 @@ export class StudentTableComponent implements OnInit, OnChanges {
   constructor(
     private projectService: ProjectsService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdRef:ChangeDetectorRef
   ) {}
 
   ngOnChanges(simpleChanges:SimpleChanges){
     if(simpleChanges.student_list) {
       this.students = new MatTableDataSource(this.student_list);
+      this.cdRef.detectChanges();
     }
   }
 
