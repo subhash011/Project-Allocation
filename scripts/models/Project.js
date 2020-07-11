@@ -35,6 +35,10 @@ const UserSchema = new mongoose.Schema({
 		type: [mongoose.SchemaTypes.ObjectId],
 		ref: Student,
 	},
+	not_students_id: {
+		type: [mongoose.SchemaTypes.ObjectId],
+		ref: Student,
+	},
 	student_alloted: {
 		type: [mongoose.SchemaTypes.ObjectId],
 		ref: Student,

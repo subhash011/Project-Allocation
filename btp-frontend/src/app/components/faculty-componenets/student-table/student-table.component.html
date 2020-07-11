@@ -30,6 +30,7 @@
       [cdkDropListData]="students.data"
       (cdkDropListDropped)="drop($event)"
       matSort
+      #table
     >
       <ng-container matColumnDef="Name">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>

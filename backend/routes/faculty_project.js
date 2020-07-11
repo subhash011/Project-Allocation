@@ -282,6 +282,7 @@ router.post("/save_preference/:id", (req, res) => {
 									res.json({
 										status: "success",
 										msg: "Your preferences are saved",
+										reorder:project.reorder
 									});
 								})
 								.catch((err) => {
@@ -313,6 +314,7 @@ router.post("/save_preference/:id", (req, res) => {
 									res.json({
 										status: "success",
 										msg: "Your preferences are saved",
+										reorder:project.reorder
 									});
 								})
 								.catch((err) => {

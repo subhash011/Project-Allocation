@@ -159,6 +159,27 @@ export class FacultyComponent implements OnInit {
         });
     }
 
+    sortWithReorder() {
+        if(this.reorder == 0){
+            this.student_list.sort((a, b) => {
+                return b.gpa - a.gpa;
+            });
+            this.non_student_list.sort((a,b)=>{
+                return b.gpa - a.gpa;
+            })
+        }
+        else if(this.reorder == -1){
+            this.non_student_list.sort((a,b)=>{
+                return b.gpa - a.gpa;
+            })
+        }
+        else if(this.reorder == 1){
+            this.student_list.sort((a, b) => {
+                return b.gpa - a.gpa;
+            });
+        }
+    }
+
     displayProject(project) {
 
         if (!this.studentData[project._id]) {
@@ -173,26 +194,7 @@ export class FacultyComponent implements OnInit {
                     this.student_list = data["students"];
                     this.non_student_list = data["non_students"];
                     this.reorder = data["reorder"];
-  
-                    if(this.reorder == 0){
-                        this.student_list.sort((a, b) => {
-                            return b.gpa - a.gpa;
-                        });
-                        this.non_student_list.sort((a,b)=>{
-                            return b.gpa - a.gpa;
-                        })
-                    }
-                    else if(this.reorder == -1){
-                        this.non_student_list.sort((a,b)=>{
-                            return b.gpa - a.gpa;
-                        })
-                    }
-                    else if(this.reorder == 1){
-                        this.student_list.sort((a, b) => {
-                            return b.gpa - a.gpa;
-                        });
-                    }
-
+                    this.sortWithReorder();
                     this.studentData[project._id] = this.student_list;
                     this.nonStudentData[project._id] = this.non_student_list;
 
@@ -208,9 +210,11 @@ export class FacultyComponent implements OnInit {
                 this.loginService.signOut();
             });
         }
-        else{
+        else {
             this.student_list = this.studentData[project._id];
             this.non_student_list = this.nonStudentData[project._id];
+            this.reorder = project["reorder"];
+            this.sortWithReorder();
         }
 
       

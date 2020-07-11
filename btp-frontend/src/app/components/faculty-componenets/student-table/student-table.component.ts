@@ -16,7 +16,7 @@ import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDialog } from "@angular/material/dialog";
 import { LoaderComponent } from "../../shared/loader/loader.component";
-import { MatTableDataSource, MatTab } from '@angular/material';
+import { MatTableDataSource, MatTab, MatTable } from '@angular/material';
 import {
   trigger,
   style,
@@ -80,6 +80,9 @@ export class GetDisplayedColumns implements PipeTransform {
   ],
 })
 export class StudentTableComponent implements OnInit, OnChanges {
+
+  @ViewChild("table",{static:false}) table: MatTable<any>;
+
   @Input() public student_list;
   @Input() public project;
   @Input() public adminStage;
@@ -126,12 +129,12 @@ export class StudentTableComponent implements OnInit, OnChanges {
         hasBackdrop: true,
       });
 
-
         this.projectService
           .savePreference(this.students.data, this.project._id, this.project.stream, this.index, this.reorder)
           .subscribe((data) => {
             dialogRef.close();
             if (data["status"] == "success") {
+              this.reorder = data["reorder"];
               localStorage.setItem(this.project._id,"true");
               this.snackBar.open(data["msg"], "Ok", {
                 duration: 3000,
