@@ -249,7 +249,6 @@ router.post("/save_preference/:id", (req, res) => {
 	const index = req.body.index;
 	let reorder = req.body.reorder;
 
-	console.log("Incoming " + reorder)
 
 	Admin.findOne({stream:stream})
 		.lean()
@@ -277,7 +276,6 @@ router.post("/save_preference/:id", (req, res) => {
 									reorder = 2;
 								}
 								
-								console.log("Index 1 " + reorder)
 
 								Project.findByIdAndUpdate(project_id,{students_id:student_ids, reorder:reorder})
 								.then((project) => {
@@ -309,8 +307,7 @@ router.post("/save_preference/:id", (req, res) => {
 								else if(reorder == -1){
 									reorder = 2;
 								}
-								
-								console.log("Index 2 " + reorder)
+							
 
 								Project.findByIdAndUpdate(project_id,{not_students_id:student_ids, reorder:reorder})
 								.then((project) => {
