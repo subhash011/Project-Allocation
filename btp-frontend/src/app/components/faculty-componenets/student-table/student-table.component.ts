@@ -142,7 +142,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
             if (data["status"] == "success") {
               this.reorder = data["reorder"];
               this.newReorder.emit(this.reorder);
-              // localStorage.setItem(this.project._id,"true"); is this required?
+            
               this.snackBar.open(data["msg"], "Ok", {
                 duration: 3000,
               });

@@ -249,6 +249,8 @@ router.post("/save_preference/:id", (req, res) => {
 	const index = req.body.index;
 	let reorder = req.body.reorder;
 
+	console.log("Incoming " + reorder)
+
 	Admin.findOne({stream:stream})
 		.lean()
 		.select("stage")
@@ -275,14 +277,14 @@ router.post("/save_preference/:id", (req, res) => {
 									reorder = 2;
 								}
 								
+								console.log("Index 1 " + reorder)
 
-
-								Project.findByIdAndUpdate(project_id,{students_id:student_ids, reorder:reorder},{new:true})
+								Project.findByIdAndUpdate(project_id,{students_id:student_ids, reorder:reorder})
 								.then((project) => {
 									res.json({
 										status: "success",
 										msg: "Your preferences are saved",
-										reorder:project.reorder
+										reorder: reorder
 									});
 								})
 								.catch((err) => {
@@ -308,13 +310,14 @@ router.post("/save_preference/:id", (req, res) => {
 									reorder = 2;
 								}
 								
+								console.log("Index 2 " + reorder)
 
-								Project.findByIdAndUpdate(project_id,{not_students_id:student_ids, reorder:reorder},{new:true})
+								Project.findByIdAndUpdate(project_id,{not_students_id:student_ids, reorder:reorder})
 								.then((project) => {
 									res.json({
 										status: "success",
 										msg: "Your preferences are saved",
-										reorder:project.reorder
+										reorder: reorder
 									});
 								})
 								.catch((err) => {
