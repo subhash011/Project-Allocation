@@ -181,7 +181,12 @@ export class FacultyComponent implements OnInit {
     }
 
     changeReorder(event) {
-        this.reorder = event
+        this.reorder = event[0];
+        for (const project of this.projects) {
+            if(project._id == event[1]) {
+                project.reorder = event[0];
+            }
+        }
     }
 
     displayProject(project) {
