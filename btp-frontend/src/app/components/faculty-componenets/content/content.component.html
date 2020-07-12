@@ -170,6 +170,7 @@
           [student_list]="student_list"
           [index]="index"
           [reorder]="reorder"
+          (newReorder)="changeReorder($event)"
         >
         </app-student-table>
       </mat-tab>
@@ -183,6 +184,7 @@
           [project]="project"
           [index]="index"
           [reorder]="reorder"
+          (newReorder)="changeReorder($event)"
         >
         </app-student-table>
         

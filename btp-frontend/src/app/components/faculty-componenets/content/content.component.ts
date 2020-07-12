@@ -6,7 +6,7 @@ import { ProjectsService } from "./../../../services/projects/projects.service";
 import { Validators } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Component, OnInit, Input, DoCheck, PipeTransform, Pipe } from "@angular/core";
+import { Component, OnInit, Input, DoCheck, PipeTransform, Pipe, EventEmitter, Output } from "@angular/core";
 import { SubmitPopUpComponent } from "../submit-pop-up/submit-pop-up.component";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
@@ -47,6 +47,7 @@ export class ContentComponent implements OnInit, DoCheck {
   @Input() public publishStudents;
   @Input() public non_student_list;
   @Input() public reorder;
+  @Output() newReorder = new EventEmitter<any>();
   public id;
   public index = 0;
 
@@ -98,6 +99,10 @@ export class ContentComponent implements OnInit, DoCheck {
         description: this.project.description,
       });
     }
+  }
+
+  changeReorder(event) {
+    this.newReorder.emit(event);
   }
 
   displayHome() {

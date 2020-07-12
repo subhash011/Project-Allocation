@@ -11,6 +11,8 @@ import {
   SimpleChanges,
   HostListener,
   ChangeDetectorRef,
+  Output,
+  EventEmitter,
 } from "@angular/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Router } from "@angular/router";
@@ -89,6 +91,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
   @Input() public adminStage;
   @Input() public index;
   @Input() public reorder;
+  @Output() newReorder = new EventEmitter<any>();
   
   public fields = ["Name", "CGPA", "Roll","Index", "Actions"];
   students:MatTableDataSource<any>;
@@ -138,7 +141,8 @@ export class StudentTableComponent implements OnInit, OnChanges {
             dialogRef.close();
             if (data["status"] == "success") {
               this.reorder = data["reorder"];
-              localStorage.setItem(this.project._id,"true");
+              this.newReorder.emit(this.reorder);
+              // localStorage.setItem(this.project._id,"true"); is this required?
               this.snackBar.open(data["msg"], "Ok", {
                 duration: 3000,
               });

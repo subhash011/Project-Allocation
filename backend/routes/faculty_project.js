@@ -277,7 +277,7 @@ router.post("/save_preference/:id", (req, res) => {
 								
 
 
-								Project.findByIdAndUpdate(project_id,{students_id:student_ids, reorder:reorder})
+								Project.findByIdAndUpdate(project_id,{students_id:student_ids, reorder:reorder},{new:true})
 								.then((project) => {
 									res.json({
 										status: "success",
@@ -309,7 +309,7 @@ router.post("/save_preference/:id", (req, res) => {
 								}
 								
 
-								Project.findByIdAndUpdate(project_id,{not_students_id:student_ids, reorder:reorder})
+								Project.findByIdAndUpdate(project_id,{not_students_id:student_ids, reorder:reorder},{new:true})
 								.then((project) => {
 									res.json({
 										status: "success",

@@ -180,6 +180,10 @@ export class FacultyComponent implements OnInit {
         }
     }
 
+    changeReorder(event) {
+        this.reorder = event
+    }
+
     displayProject(project) {
 
         if (!this.studentData[project._id]) {
