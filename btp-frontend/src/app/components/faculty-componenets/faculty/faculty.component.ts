@@ -187,6 +187,15 @@ export class FacultyComponent implements OnInit {
                 project.reorder = event[0];
             }
         }
+
+        
+        if(event[3] == 0){
+            this.studentData[event[1]] = event[2]
+        }
+        else{
+            this.nonStudentData[event[1]]  = event[2]
+        }
+
     }
 
     displayProject(project) {

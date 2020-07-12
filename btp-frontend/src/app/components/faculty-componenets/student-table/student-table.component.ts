@@ -141,7 +141,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
             dialogRef.close();
             if (data["status"] == "success") {
               this.reorder = data["reorder"];
-              this.newReorder.emit([this.reorder, this.project._id]);
+              this.newReorder.emit([this.reorder, this.project._id, this.students.data, this.index]);
             
               this.snackBar.open(data["msg"], "Ok", {
                 duration: 3000,
