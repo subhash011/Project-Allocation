@@ -441,6 +441,7 @@ router.get("/projects/:id", (req, res) => {
 										duration: project.duration,
 										faculty: project.faculty_id.name,
 										numberOfPreferences: project.students_id.length,
+										description:project.description,
 										faculty_id: project.faculty_id._id,
 									};
 									arr.push(newProj);

@@ -15,6 +15,7 @@ import {
 import { LoaderComponent } from "../loader/loader.component";
 import { MatTable, MatTableDataSource, MatSort } from "@angular/material";
 import { NavbarComponent } from '../navbar/navbar.component';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Pipe({
   name: "getRegisteredCount",
@@ -56,6 +57,14 @@ export class FacultyTooltipSuper implements PipeTransform {
   selector: "app-super-admin",
   templateUrl: "./super-admin.component.html",
   styleUrls: ["./super-admin.component.scss"],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed, void', style({ height: '0px', minHeight: '0', display: 'flex' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      transition('expanded <=> void', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+    ])
+  ],
   providers: [LoginComponent],
 })
 export class SuperAdminComponent implements OnInit {
@@ -117,6 +126,9 @@ export class SuperAdminComponent implements OnInit {
   programs: any = new MatTableDataSource([]);
   hasAdmins = {};
   stages = {};
+  expandedElement;
+  isActive;
+  indexHover;
   @HostListener("window:resize", ["$event"])
   onResize(event) {
     if (event.target.innerWidth <= 1400) {
@@ -227,7 +239,6 @@ export class SuperAdminComponent implements OnInit {
                 
               }
             }
-            console.log(this.stages)
           } else {
             this.dialogRefLoad.close();
             this.navbar.role = "none";
@@ -326,7 +337,8 @@ export class SuperAdminComponent implements OnInit {
             ) =>
               !filter ||
               data.faculty.toLowerCase().includes(filter) ||
-              data.title.toLowerCase().includes(filter);
+              data.title.toLowerCase().includes(filter) ||
+              data.description.toLowerCase().includes(filter);
           }
         } else {
           this.dialogRefLoad.close();
