@@ -87,7 +87,7 @@ export class TotalIntake implements PipeTransform{
   name:"proceedPipe"
 })
 export class ProceedPipe implements PipeTransform {
-  transform(value,studentCount,proceedButton,total_intake,emailButton) {
+  transform(value,studentCount,proceedButton,total_intake,emailButton,student_flag) {
 
 
     if(studentCount > total_intake){
@@ -109,7 +109,10 @@ export class ProceedPipe implements PipeTransform {
           }
           
         case "2":
-          if(proceedButton){
+          if(student_flag){
+            return "Please check that all the students are registered before proceeding to the next stage."
+          }
+          else if(proceedButton){
             return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations."
           }
           else{
@@ -254,6 +257,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   projects: any = [];
   background = "primary";
   //Buttons
+  student_flag = 0;
   proceedButton1 = true;
   proceedButton2 = true;
   proceedButton3 = true;
@@ -436,8 +440,14 @@ export class AdminComponent implements OnInit, OnDestroy {
                     break;
                   }
                 }
+                this.student_flag = 0;
+                for(let student of this.students.data){
+                  if(student.isRegistered == false){
+                    this.student_flag = 1;
+                  }
+                }
 
-                this.getAllocationValidation(flag);
+                this.getAllocationValidation(flag,this.student_flag);
               } else {
                 this.navbar.role = "none";
                 this.snackBar.open(
@@ -537,6 +547,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.proceedButton3 = true;
         this.userService.updateStage(this.stage_no).subscribe(
           (data) => {
+            console.log(data)
             if (data["status"] == "success") {
               let snackBarRef = this.snackBar.open(
                 "Successfully moved to the next stage!",
@@ -1306,7 +1317,15 @@ export class AdminComponent implements OnInit, OnDestroy {
               break;
             }
           }
-          this.getAllocationValidation(flag);
+          this.student_flag = 0
+          for(let student of this.students.data){
+            if(student.isRegistered == false){
+              flag = true;
+              this.student_flag = 1
+            }
+          }
+
+          this.getAllocationValidation(flag,this.student_flag);
         } else {
           this.navbar.role = "none";
           this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok", {
@@ -1325,7 +1344,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     );
   }
 
-  getAllocationValidation(flag) {
+  getAllocationValidation(flag,student_flag) {
     const length = this.students.data.filter((val) => val.isRegistered).length;
 
     this.userService
@@ -1351,7 +1370,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           if (this.dateSet.length == 2) {
             if (this.secondFormGroup.controls["secondCtrl"]) {
               this.proceedButton2 = false;
-              if (!flag) this.proceedButton2_ = false;
+              if (!flag && student_flag == 0) this.proceedButton2_ = false;
             }
           }
           if (this.dateSet.length == 3) {
