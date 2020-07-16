@@ -62,6 +62,18 @@ export class GetViolations implements PipeTransform {
   }
 }
 
+@Pipe({
+  name:"getExportDisabled"
+})
+export class GetExportDisabled implements PipeTransform {
+  transform(value) {
+    if(value) {
+      return "You cannot export preferences till the results are either published to the faculties or to the students."
+    }
+    return "Export allocation";
+  }
+}
+
 
 @Pipe({
   name:"getTotalIntake"
@@ -110,7 +122,7 @@ export class ProceedPipe implements PipeTransform {
 
         case "2":
           if(student_flag){
-            return "Please check that all the students are registered before proceeding to the next stage."
+            return "Please ensure that all the students are registered or remove unregistered students to proceed further."
           }
           else if(proceedButton){
             return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations."
@@ -591,15 +603,6 @@ export class AdminComponent implements OnInit, OnDestroy {
                 });
               }
               dialogRefLoad.close();
-            } else if(data["status"] == "not-allowed") {
-              dialogRefLoad.close();
-              this.snackBar.open(
-                data["message"],
-                "Ok",
-                {
-                  duration: 3000,
-                }
-              );
             } else {
               dialogRefLoad.close();
               this.navbar.role = "none";

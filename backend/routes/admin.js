@@ -374,27 +374,19 @@ router.post("/update_stage/:id", (req, res) => {
 					.lean()
 					.select("isRegistered")
 					.then(students => {
-						let registeredStudents = students.filter(val => val.isRegistered);
-						if(students.length != registeredStudents.length) {
-							res.json({
-								status:"not-allowed",
-								message:"Please ensure that all the students have registered or remove the students who have not registered before proceeding."
-							});
-						} else {
-							Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
-								.then((admin) => {
-									res.json({
-										status: "success",
-										msg: "Successfully moved to the next stage",
-									});
-								})
-								.catch((err) => {
-									res.json({
-										status: "fail",
-										result: null,
-									});
+						Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
+							.then((admin) => {
+								res.json({
+									status: "success",
+									msg: "Successfully moved to the next stage",
 								});
-						}
+							})
+							.catch((err) => {
+								res.json({
+									status: "fail",
+									result: null,
+								});
+							});
 					})
 				} else {
 					Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })

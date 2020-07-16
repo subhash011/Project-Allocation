@@ -49,6 +49,7 @@ import {
   GetViolations,
   ProceedPipe,
   TotalIntake,
+  GetExportDisabled,
 } from "./components/faculty-componenets/admin/admin.component";
 import {
   TimelineComponent,
@@ -157,7 +158,8 @@ export function provideConfig() {
     ProceedPipe,
     TotalIntake,
     FacultyHomeComponent,
-    GetDisplayedColumns
+    GetDisplayedColumns,
+    GetExportDisabled
   ],
   entryComponents: [
     SubmitPopUpComponent,
