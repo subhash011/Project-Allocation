@@ -107,7 +107,7 @@ export class ProceedPipe implements PipeTransform {
           else{
             return "Proceed"
           }
-          
+
         case "2":
           if(student_flag){
             return "Please check that all the students are registered before proceeding to the next stage."
@@ -118,7 +118,7 @@ export class ProceedPipe implements PipeTransform {
           else{
             return "Proceed"
           }
-  
+
         case "3":
           if(proceedButton){
             return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations."
@@ -129,7 +129,7 @@ export class ProceedPipe implements PipeTransform {
       }
 
     }
-    
+
   }
 }
 
@@ -542,7 +542,6 @@ export class AdminComponent implements OnInit, OnDestroy {
 
         this.userService.updateStage(this.stage_no + 1).subscribe(
           (data) => {
-            console.log(data)
             if (data["status"] == "success") {
               this.stage_no++;
               this.stepper.next();
