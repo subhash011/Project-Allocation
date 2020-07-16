@@ -530,14 +530,14 @@ export class AdminComponent implements OnInit, OnDestroy {
           hasBackdrop: true,
         });
 
-        this.stage_no++;
-        this.stepper.next();
-        this.proceedButton1 = true;
-        this.proceedButton2 = true;
-        this.proceedButton3 = true;
-        this.userService.updateStage(this.stage_no).subscribe(
+        this.userService.updateStage(this.stage_no + 1).subscribe(
           (data) => {
             if (data["status"] == "success") {
+              this.stage_no++;
+              this.stepper.next();
+              this.proceedButton1 = true;
+              this.proceedButton2 = true;
+              this.proceedButton3 = true;
               let snackBarRef = this.snackBar.open(
                 "Successfully moved to the next stage!",
                 "Ok",
@@ -581,6 +581,15 @@ export class AdminComponent implements OnInit, OnDestroy {
                 });
               }
               dialogRefLoad.close();
+            } else if(data["status"] == "not-allowed") {
+              dialogRefLoad.close();
+              this.snackBar.open(
+                data["message"],
+                "Ok",
+                {
+                  duration: 3000,
+                }
+              );
             } else {
               dialogRefLoad.close();
               this.navbar.role = "none";
@@ -1731,8 +1740,8 @@ export class AdminComponent implements OnInit, OnDestroy {
               this.exportDisabled = false;
               if(localStorage.getItem("allocationMap")) {
                 this.discardAllocation();
+                this.dataSource = new MatTableDataSource(data["result"]);
               }
-              this.dataSource = new MatTableDataSource(data["result"]);
               this.selectIncluded();
               this.userService.uploadAllocationFile().subscribe(() => {});
               this.publishFaculty = true;
@@ -1779,7 +1788,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   publishToStudents() {
     const dialogRef = this.dialog.open(DeletePopUpComponent, {
       width: "400px",
-      height: "200px",
+      height: "250px",
       data: {
         heading: "Confirm Publish",
         message: `Are you sure that you want to publish this allocation to students? Please ensure that the results are published to faculties before it is published to the students. Do note that mails will be sent automatically.`,
@@ -1798,22 +1807,10 @@ export class AdminComponent implements OnInit, OnDestroy {
             this.exportDisabled = false;
             if(localStorage.getItem("allocationMap")) {
               this.discardAllocation();
+              this.dataSource = new MatTableDataSource(data["result"]);
             }
-            this.dataSource = new MatTableDataSource(data["result"]);
             this.selectIncluded();
-            this.userService.uploadAllocationFile().subscribe(
-              () => {},
-              () => {
-                dialogRefLoad.close();
-                this.snackBar.open(
-                  "Some Error Occured! Try again later.",
-                  "OK",
-                  {
-                    duration: 3000,
-                  }
-                );
-              }
-            );
+            this.userService.uploadAllocationFile().subscribe(() => {});
             this.publishStudents = true;
             localStorage.setItem("ps", "true");
             this.userService.getStudentStreamEmails().subscribe(

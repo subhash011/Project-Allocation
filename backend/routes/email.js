@@ -24,31 +24,32 @@ sendEmail = (mailOptions, transporter) =>
 const text = "start over again";
 
 router.post("/send", (req, res) => {
-	const to = req.body.to;
-	const subject = req.body.subject;
-	const mailBody = req.body.mailBody;
-	const options = {
-		bcc: to,
-		subject: subject,
-		text: mailBody,
-		replyTo: "Do not reply to this email pap@smail.iitpkd.ac.in"
-	};
-	const transport = nodemailer.createTransport({
-		host: "smtp.gmail.com",
-		port: 465,
-		secure: true,
-		auth: {
-			user: process.env.PAP_MAIL,
-			pass: process.env.PAP_PASS,
-		},
-	});
-	sendEmail(options, transport)
-		.then((result) => {
-			res.json({ message: "success" });
-		})
-		.catch((err) => {
-			res.json({ message: "error", result: err });
-		});
+	res.json({ message: "success" });
+	// const to = req.body.to;
+	// const subject = req.body.subject;
+	// const mailBody = req.body.mailBody;
+	// const options = {
+	// 	bcc: to,
+	// 	subject: subject,
+	// 	text: mailBody,
+	// 	replyTo: "Do not reply to this email pap@smail.iitpkd.ac.in"
+	// };
+	// const transport = nodemailer.createTransport({
+	// 	host: "smtp.gmail.com",
+	// 	port: 465,
+	// 	secure: true,
+	// 	auth: {
+	// 		user: process.env.PAP_MAIL,
+	// 		pass: process.env.PAP_PASS,
+	// 	},
+	// });
+	// sendEmail(options, transport)
+	// 	.then((result) => {
+	// 		res.json({ message: "success" });
+	// 	})
+	// 	.catch((err) => {
+	// 		res.json({ message: "error", result: err });
+	// 	});
 });
 
 module.exports = router;

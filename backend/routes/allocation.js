@@ -27,12 +27,15 @@ function combineStudents(projects, students) {
 	studentIDS = students.map((val) => val._id);
 	projectIDS = projects.map((val) => val._id);
 	for (const student of students) {
-		const setA = new Set(
-			student.projects_preference.map((val) => val.toString())
-		);
-		const setB = new Set(projectIDS.map((val) => val.toString()));
-		const union = new Set([...setA, ...setB]);
-		student.projects_preference = [...union];
+		let preferredProjects = student.projects_preference.map(val => val.toString());
+		let projectsNotPreferred = projects.filter(val => {
+			return !preferredProjects.includes(val._id.toString());
+		});
+		let sortedPreferences = projectsNotPreferred.sort((a,b) => {
+			return (a.not_students_id.indexOf(student._id) + a.students_id.length) - (b.not_students_id.indexOf(student._id) + b.students_id.length);
+		});
+		sortedPreferences = sortedPreferences.map(val => val._id.toString());
+		student.projects_preference = [...student.projects_preference, ...sortedPreferences];
 		student.projects_preference = student.projects_preference.map((val) =>
 			mongoose.Types.ObjectId(val)
 		);
@@ -50,7 +53,6 @@ router.post("/start/:id", (req, res) => {
 	var allocationStatus = {};
 	var promises = [];
 	var projects = req.body.projects;
-	var tempStudentsIDs = [],tempNotStudentsIDs = [];
 	var pids = [];
 	var stream;
 	pids = projects.map((val) => val._id);

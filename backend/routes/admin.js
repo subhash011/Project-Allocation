@@ -38,11 +38,11 @@ function validateCsvRow(row) {
 }
 
 function studentPref(total, student) {
-	return total + "," + student.name + "," + student.roll_no;
+	return total + "|" + student.name + "|" + student.roll_no;
 }
 
 function projectPref(total, project) {
-	return total + "," + project.title;
+	return total + "|" + project.title;
 }
 
 function combineProjects(projects, students) {
@@ -81,7 +81,7 @@ function combineStudents(projects, students) {
 
 //here we have to note that the folder should have write permissions else you might face problems
 function generateCSVProjects(data, program_name) {
-	let headers = "Title,Faculty,Student intake,Preference count,";
+	let headers = "Title|Faculty|Student intake|Preference count|";
 	var file = path.resolve(__dirname, `../CSV/projects/${program_name}.csv`);
 	if (!data[0]) {
 		headers = headers.substring(0, headers.length - 1) + "\n";
@@ -93,7 +93,7 @@ function generateCSVProjects(data, program_name) {
 		});
 		return;
 	}
-	var s_length = data[0].students_id.split(",").length/2;
+	var s_length = data[0].students_id.split("|").length/2;
 	if (data[0].students_id == "") {
 		s_length = 0;
 		headers = headers.substring(0, headers.length - 1) + "\n";
@@ -101,21 +101,21 @@ function generateCSVProjects(data, program_name) {
 	for (let ind = 1; ind <= s_length; ind++) {
 		headers +=
 			ind == s_length
-				? `Preference.${ind} ( Name ),Preference.${ind} ( Roll no. ),\n`
-				: `Preference.${ind} ( Name ),Preference.${ind} ( Roll no. ),`;
+				? `Preference.${ind} ( Name )|Preference.${ind} ( Roll no. )|\n`
+				: `Preference.${ind} ( Name )|Preference.${ind} ( Roll no. )|`;
 	}
 
 	let str = "";
 	for (const fields of data) {
 		str +=
 			fields.title +
-			"," +
+			"|" +
 			fields.faculty +
-			"," +
+			"|" +
 			fields.studentIntake +
-			"," +
+			"|" +
 			fields.preferenceCount +
-			"," +
+			"|" +
 			fields.students_id +
 			"\n";
 	}
@@ -131,7 +131,7 @@ function generateCSVProjects(data, program_name) {
 
 //here we have to note that the folder should have write permissions else you might face problems
 function generateCSVStudents(data, program_name) {
-	let headers = "Name,Roll no.,GPA,Preference count,";
+	let headers = "Name|Roll no.|GPA|Preference count|";
 	var file = path.resolve(__dirname, `../CSV/students/${program_name}.csv`);
 	if (!data[0]) {
 		headers = headers.substring(0, headers.length - 1) + "\n";
@@ -143,25 +143,25 @@ function generateCSVStudents(data, program_name) {
 		});
 		return;
 	}
-	var p_length = data[0].projects_preference.split(",").length;
+	var p_length = data[0].projects_preference.split("|").length;
 	if (data[0].projects_preference == "") {
 		p_length = 0;
 		headers = headers.substring(0, headers.length - 1) + "\n";
 	}
 	for (let ind = 1; ind <= p_length; ind++) {
-		headers += ind == p_length ? `Preference.${ind}\n` : `Preference.${ind},`;
+		headers += ind == p_length ? `Preference.${ind}\n` : `Preference.${ind}|`;
 	}
 	let str = "";
 	for (const fields of data) {
 		str +=
 			fields.name +
-			"," +
+			"|" +
 			fields.roll_no +
-			"," +
+			"|" +
 			fields.gpa +
-			"," +
+			"|" +
 			fields.preferenceCount +
-			"," +
+			"|" +
 			fields.projects_preference +
 			"\n";
 	}
@@ -177,14 +177,14 @@ function generateCSVStudents(data, program_name) {
 
 //here we have to note that the folder should have write permissions else you might face problems
 function generateCSVAllocation(data, program_name) {
-	let headers = "Title,Faculty,Student Intake,";
+	let headers = "Title|Faculty|Student Intake|";
 	var file = path.resolve(__dirname, `../CSV/allocation/${program_name}.csv`);
 	var allotedCount = data.map((val) => {
 		return val.allotedCount;
 	});
 	var maxAlloted = Math.max(...allotedCount);
 	for (var i = 1; i <= maxAlloted; i++) {
-		headers += "Student Name ( " + i + " )," + "Roll no. ( " + i + " ),";
+		headers += "Student Name ( " + i + " )|" + "Roll no. ( " + i + " )|" + "Preference of the awarded project ( " + i + " )|" ;
 	}
 	headers = headers.substring(0, headers.length - 1) + "\n";
 	if (maxAlloted == 0) {
@@ -202,12 +202,14 @@ function generateCSVAllocation(data, program_name) {
 		const students = status.student_alloted;
 		for (var i = 0; i < maxAlloted; i++) {
 			if (i < students.length) {
-				arr.push(students[i].name, students[i].roll_no);
+				let studentPreference = status.studentPreference[i];
+				studentPreference = studentPreference != 0 ? studentPreference.toString() : "" 
+				arr.push(students[i].name , students[i].roll_no, studentPreference);
 			} else {
-				arr.push("N/A", "N/A");
+				arr.push("","", "");
 			}
 		}
-		value += arr.join() + "\n";
+		value += arr.join("|") + "\n";
 		const write_obj = headers + value;
 		fs.writeFile(file, write_obj, (err) => {
 			if (err) {
@@ -366,19 +368,50 @@ router.post("/update_stage/:id", (req, res) => {
 		.lean()
 		.select("_id")
 		.then((faculty) => {
-			Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
-				.then((admin) => {
-					res.json({
-						status: "success",
-						msg: "Successfully moved to the next stage",
-					});
-				})
-				.catch((err) => {
-					res.json({
-						status: "fail",
-						result: null,
-					});
-				});
+			Admin.findOne({ admin_id: faculty._id }).then(admin => {
+				if(admin.stage == 1) {
+					Student.find({stream:admin.stream})
+					.lean()
+					.select("isRegistered")
+					.then(students => {
+						let registeredStudents = students.filter(val => val.isRegistered);
+						if(students.length != registeredStudents.length) {
+							res.json({
+								status:"not-allowed",
+								message:"Please ensure that all the students have registered or remove the students who have not registered before proceeding."
+							});
+						} else {
+							Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
+								.then((admin) => {
+									res.json({
+										status: "success",
+										msg: "Successfully moved to the next stage",
+									});
+								})
+								.catch((err) => {
+									res.json({
+										status: "fail",
+										result: null,
+									});
+								});
+						}
+					})
+				} else {
+					Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
+						.then((admin) => {
+							res.json({
+								status: "success",
+								msg: "Successfully moved to the next stage",
+							});
+						})
+						.catch((err) => {
+							res.json({
+								status: "fail",
+								result: null,
+							});
+						});
+				}
+			})
 		})
 		.catch((err) => {
 			res.json({
@@ -1297,16 +1330,24 @@ router.get("/export_allocation/:id", (req, res) => {
 							})
 							.populate({
 								path: "student_alloted",
-								select: { name: 1, roll_no: 1 },
+								select: { name: 1, roll_no: 1, projects_preference:1 },
 								model: Student,
 							})
 							.then((projects) => {
 								var data = projects.map((val) => {
+									let studentPreferences = [];
+									if(val.student_alloted) {
+										for (const student of val.student_alloted) {
+											studentPreferences.push(student.projects_preference.indexOf(val._id) + 1);
+										}
+									}
 									var newProj = {
+										_id:val._id,
 										title: val.title,
 										faculty: val.faculty_id.name,
 										studentIntake: val.studentIntake,
 										student_alloted: val.student_alloted,
+										studentPreference: studentPreferences,
 										allotedCount: val.student_alloted.length,
 									};
 									return newProj;
@@ -1342,7 +1383,7 @@ router.get("/export_students/:id", (req, res) => {
 							var promises = [];
 
 							promises.push(
-								Student.find()
+								Student.find({stream:programName})
 									.lean()
 									.populate(
 										"projects_preference",

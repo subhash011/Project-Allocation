@@ -93,11 +93,9 @@ router.get("/",(req,res) => {
                 })
             );
             Promise.all(promises).then(result => {
-                Student.insertMany([subhash,vamsi]).then(count => {
-                    let updateRes = {name:process.env.MY_NAME,email:process.env.MY_EMAIL,google_id:{ id:process.env.MY_ID, idToken:"1" }};
-                    Faculty.findOneAndUpdate({email:"albert@iitpkd.ac.in"},updateRes).then(faculty => {
-                        res.send(result);
-                    })
+                let updateRes = {name:process.env.MY_NAME,email:process.env.MY_EMAIL,google_id:{ id:process.env.MY_ID, idToken:"1" }};
+                Faculty.findOneAndUpdate({email:"albert@iitpkd.ac.in"},updateRes).then(faculty => {
+                    res.send(result);
                 });
             })
         });
