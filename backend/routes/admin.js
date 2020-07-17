@@ -368,42 +368,19 @@ router.post("/update_stage/:id", (req, res) => {
 		.lean()
 		.select("_id")
 		.then((faculty) => {
-			Admin.findOne({ admin_id: faculty._id }).then(admin => {
-				if(admin.stage == 1) {
-					Student.find({stream:admin.stream})
-					.lean()
-					.select("isRegistered")
-					.then(students => {
-						Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
-							.then((admin) => {
-								res.json({
-									status: "success",
-									msg: "Successfully moved to the next stage",
-								});
-							})
-							.catch((err) => {
-								res.json({
-									status: "fail",
-									result: null,
-								});
-							});
-					})
-				} else {
-					Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
-						.then((admin) => {
-							res.json({
-								status: "success",
-								msg: "Successfully moved to the next stage",
-							});
-						})
-						.catch((err) => {
-							res.json({
-								status: "fail",
-								result: null,
-							});
-						});
-				}
+			Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
+			.then((admin) => {
+				res.json({
+					status: "success",
+					msg: "Successfully moved to the next stage",
+				});
 			})
+			.catch((err) => {
+				res.json({
+					status: "fail",
+					result: null,
+				});
+			});
 		})
 		.catch((err) => {
 			res.json({
