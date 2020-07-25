@@ -9,6 +9,8 @@ import {
   ViewChild,
   PipeTransform,
   Pipe,
+  SimpleChanges,
+  OnChanges,
 } from "@angular/core";
 import {
   MatListOption,
@@ -25,7 +27,7 @@ import { LoginComponent } from "../../shared/login/login.component";
   templateUrl: "./sidenav.component.html",
   styleUrls: ["./sidenav.component.scss"],
 })
-export class SidenavComponent implements OnInit {
+export class SidenavComponent implements OnInit, OnChanges {
   @Input() public projects;
   @Input() public empty: boolean;
   @Input() public programs;
@@ -33,9 +35,9 @@ export class SidenavComponent implements OnInit {
   @Input() public adminStage;
   @Output() projectClicked = new EventEmitter<Event>();
   @Output() addButton = new EventEmitter<Event>();
-  @ViewChild("included", { static: false }) includedProjects: MatSelectionList;
 
   public selectedRow;
+  selectedProjects:string[] = [];
 
   constructor(
     private router: Router,
@@ -46,7 +48,19 @@ export class SidenavComponent implements OnInit {
     private loginObject: LoginComponent
   ) {}
 
-  ngOnInit() {}
+  ngOnChanges(simpleChanges:SimpleChanges) {
+      if(simpleChanges.projects && simpleChanges.projects.currentValue) {
+          simpleChanges.projects.currentValue.forEach(val => {
+              if(val.isIncluded) {
+                  this.selectedProjects.push(val._id);
+              }
+          });
+      }
+  }
+
+  ngOnInit() {
+      
+  }
 
   displayAdd(event) {
     this.addButton.emit(event);
@@ -54,27 +68,35 @@ export class SidenavComponent implements OnInit {
     this.selectedRow = null;
   }
 
-  includeProjects() {
-    var toInclude = [];
-    for (const project of this.includedProjects.selectedOptions.selected.values()) {
-      toInclude.push(project.value);
-    }
-    for (const project of this.projects) {
-      if (toInclude.indexOf(project._id) == -1) {
-        project.isIncluded = false;
+  addToList(event) {
+      if(event.checked) {
+          this.selectedProjects.push(event.source.id);
       } else {
-        project.isIncluded = true;
+          this.selectedProjects = this.selectedProjects.filter(val => val != event.source.id);
       }
-    }
+  }
+
+  includeProjects() {
+    // var toInclude = [];
+    // for (const project of this.includedProjects.selectedOptions.selected.values()) {
+    //   toInclude.push(project.value);
+    // }
     var dialogRef = this.dialog.open(LoaderComponent, {
       data: "Please wait ....",
       disableClose: true,
       hasBackdrop: true,
     });
-    this.projectService.includeProjects(toInclude).subscribe(
+    this.projectService.includeProjects(this.selectedProjects).subscribe(
       (result) => {
         dialogRef.close();
         if (result["message"] == "success") {
+          for (const project of this.projects) {
+            if (this.selectedProjects.indexOf(project._id) == -1) {
+                project.isIncluded = false;
+            } else {
+                project.isIncluded = true;
+            }
+          }
           this.snackbar.open("Updated Project Preferences", "Ok", {
             duration: 3000,
           });

@@ -1,6 +1,18 @@
 <div>
   <mat-selection-list #included *ngIf="adminStage == 2; else normalList">
-    <mat-list-option
+      <mat-nav-list>
+      <mat-list-item
+        *ngFor="let project of projects; let i = index"
+        (click)="onClick(project, i)"
+        [class.active]="i == selectedRow"
+      >
+        {{ project.title }}
+        <mat-icon *ngIf="project.isIncluded">check</mat-icon>
+        <div class="align-row-end"></div>
+        <mat-checkbox (change)="addToList($event)" [id]="project._id" [checked]="project.isIncluded" (click)="$event.stopPropagation()"></mat-checkbox>
+      </mat-list-item>
+    </mat-nav-list>
+    <!-- <mat-list-option
       *ngFor="let project of projects; let i = index"
       (click)="onClick(project, i)"
       [class.active]="i == selectedRow"
@@ -11,7 +23,7 @@
         {{ project.title }}
         <mat-icon *ngIf="project.isIncluded">check</mat-icon>
       </div>
-    </mat-list-option>
+    </mat-list-option> -->
   </mat-selection-list>
 
   <ng-template #normalList>
