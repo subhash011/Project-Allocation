@@ -16,7 +16,7 @@ app.use(cors());
 app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
-var mongoConnect = process.env.MONGO_URL_LOCAL;
+var mongoConnect = process.env.MONGO_URL_BACKUP;
 
 mongoose
 	.connect(mongoConnect, {
@@ -46,7 +46,7 @@ app.use("/allocation", allocation);
 const backup = require("./routes/backup");
 app.use("/backup",backup);
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
