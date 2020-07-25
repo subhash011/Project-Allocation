@@ -250,11 +250,19 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     this.changeSelection();
   }
 
+  isAnyOneSelected() {
+    let filteredProjects = this.projects.filteredData.map(val => val._id);
+    const numSelected = this.selection.selected
+      ? this.selection.selected.filter(val => filteredProjects.includes(val._id)).length
+      : 0;
+    return numSelected != 0;
+  }
+
   changeSelection() {
     let unfilteredData = this.projects.data
       .filter((val) => !this.projects.filteredData.includes(val))
       .map((val) => val._id);
-    this.projects.data.forEach((val) => {
+    this.projects.filteredData.forEach((val) => {
       if (unfilteredData.includes(val._id)) {
         this.deselectProject(val);
       }
@@ -262,8 +270,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   }
 
   isAllSelected() {
+    let filteredProjects = this.projects.filteredData.map(val => val._id);
     const numSelected = this.selection.selected
-      ? this.selection.selected.length
+      ? this.selection.selected.filter(val => filteredProjects.includes(val._id)).length
       : 0;
     const numRows = this.projects.filteredData
       ? this.projects.filteredData.length
