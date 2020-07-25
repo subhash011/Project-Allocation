@@ -6,67 +6,62 @@ const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
 const Mapping = require("../models/Mapping");
 const Admin = require("../models/Admin_Info");
-const oauth = require("../config/oauth");
 
 //fetch project details of the student's stream
 router.get("/:id", (req, res) => {
 	var student_projects = [];
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
-	oauth(idToken)
-		.then((user) => {
-			Student.findOne({ google_id: { id: id, idToken: idToken } })
-				.lean()
-				.select("stream")
-				.then((student) => {
-					if (student) {
-						return student["stream"];
-					} else {
-						res.json({
-							message: "token-expired",
-						});
-						return null;
-					}
-				})
-				.then((stream) => {
-					if (stream) {
-						Project.find({ stream: stream })
-							.lean()
-							.select("-students_id -student_alloted -isIncluded -__v")
-							.populate({
-								path: "faculty_id",
-								select: "name email",
-								model: Faculty,
-							})
-							.then((projects) => {
-								for (const project of projects) {
-									var details = {
-										_id: project["_id"],
-										title: project["title"],
-										description: project["description"],
-										duration: project["duration"],
-										studentIntake: project["studentIntake"],
-										faculty_name: project["faculty_id"]["name"],
-										faculty_email: project["faculty_id"]["email"],
-									};
-									student_projects.push(details);
-								}
-								res.json({
-									message: "success",
-									result: student_projects,
-								});
-							});
-					}
-				});
-		})
+    Student.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("stream")
+        .then((student) => {
+            if (student) {
+                return student["stream"];
+            } else {
+                res.json({
+                    message: "token-expired",
+                });
+                return null;
+            }
+        })
+        .then((stream) => {
+            if (stream) {
+                Project.find({ stream: stream })
+                    .lean()
+                    .select("-students_id -student_alloted -isIncluded -__v")
+                    .populate({
+                        path: "faculty_id",
+                        select: "name email",
+                        model: Faculty,
+                    })
+                    .then((projects) => {
+                        for (const project of projects) {
+                            var details = {
+                                _id: project["_id"],
+                                title: project["title"],
+                                description: project["description"],
+                                duration: project["duration"],
+                                studentIntake: project["studentIntake"],
+                                faculty_name: project["faculty_id"]["name"],
+                                faculty_email: project["faculty_id"]["email"],
+                            };
+                            student_projects.push(details);
+                        }
+                        res.json({
+                            message: "success",
+                            result: student_projects,
+                        });
+                    });
+            }
+        })
 		.catch(() => {
 			res.json({
 				message: "invalid-client",
 				result: null,
 			});
-		});
-});
-
+		});;
+})
 //fetch student preferences
 router.get("/preference/:id", (req, res) => {
 	const id = req.params.id;
