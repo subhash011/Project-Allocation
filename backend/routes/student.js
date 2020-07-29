@@ -47,47 +47,38 @@ router.post("/register/:id", (req, res) => {
 router.get("/details/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
-	oauth(idToken)
-		.then((user) => {
-			Student.findOne({ google_id: { id: id, idToken: idToken } })
-				.lean()
-				.select("-google_id -__v -date -projects_preference")
-				.populate({
-					path: "project_alloted",
-					select: "title faculty_id description studentIntake duration",
-					model: Project,
-					populate: {
-						path: "faculty_id",
-						selct: "name email",
-						model: Faculty,
-					},
-				})
-				.then((user) => {
-					if (user) {
-						res.json({
-							status: "success",
-							user_details: user,
-						});
-					} else {
-						res.json({
-							status: "invalid-token",
-							user_details: "",
-						});
-					}
-				})
-				.catch((err) => {
-					res.json({
-						status: "fail",
-						user_details: err,
-					});
-				});
-		})
-		.catch(() => {
-			res.json({
-				message: "invalid-client",
-				result: null,
-			});
-		});
+    Student.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("-google_id -__v -date -projects_preference")
+        .populate({
+            path: "project_alloted",
+            select: "title faculty_id description studentIntake duration",
+            model: Project,
+            populate: {
+                path: "faculty_id",
+                selct: "name email",
+                model: Faculty,
+            },
+        })
+        .then((user) => {
+            if (user) {
+                res.json({
+                    status: "success",
+                    user_details: user,
+                });
+            } else {
+                res.json({
+                    status: "invalid-token",
+                    user_details: "",
+                });
+            }
+        })
+        .catch((err) => {
+            res.json({
+                status: "fail",
+                user_details: err,
+            });
+        });
 });
 
 router.get("/stage/:id", (req, res) => {

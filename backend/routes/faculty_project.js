@@ -5,7 +5,6 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
 const Admin = require("../models/Admin_Info");
-oauth = require("../config/oauth");
 
 router.post("/:id", (req, res) => {
 	const id = req.params.id;
