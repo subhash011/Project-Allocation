@@ -106,7 +106,6 @@ export class SuperAdminComponent implements OnInit {
   displayedColumnsMaps: string[] = [
     "Branch",
     "Short",
-    "Map",
     "Stage",
     "FacCount",
     "StudCount",
@@ -179,8 +178,7 @@ export class SuperAdminComponent implements OnInit {
         this.programs.data = this.maps.map((val) => {
           var newMap = {
             name: val.full,
-            short: val.short,
-            map: val.map,
+            short: val.short
           };
           return newMap;
         });
@@ -235,8 +233,11 @@ export class SuperAdminComponent implements OnInit {
             for (const program in admins) {
               if (admins.hasOwnProperty(program)) {
                 const element = admins[program];
-                this.stages[program] = element.stage + (element.stage == 4?0:1);
-                
+                if(element) {
+                  this.stages[program] = element.stage + (element.stage == 4?0:1);
+                } else {
+                  this.stages[program] = null;
+                }
               }
             }
           } else {
@@ -295,7 +296,7 @@ export class SuperAdminComponent implements OnInit {
                 this.snackBar.open("Session Expired! Please Sign In Again", "Ok", {
                   duration: 3000,
                 });
-                this.login.signOut();           
+                this.login.signOut();
             }
           },
           () => {
@@ -371,8 +372,7 @@ export class SuperAdminComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((data) => {
       if (data && data["message"] == "submit") {
-        if(this.checkIfPresent("programFull",data.map.full) || this.checkIfPresent("programShort",data.map.short) 
-            || this.checkIfPresent("programMap",data.map.map)) {
+        if(this.checkIfPresent("programFull",data.map.full) || this.checkIfPresent("programShort",data.map.short)) {
           this.snackBar.open("Duplicate entries are not allowed! Enter a unique name for every field.","Ok",{
             duration:3000,
             panelClass:"custom-snack-bar-container"
@@ -390,11 +390,12 @@ export class SuperAdminComponent implements OnInit {
             var val = data["result"];
             var newMap = {
               name: val.full,
-              short: val.short,
-              map: val.map,
+              short: val.short
             };
             this.programs.data.push(newMap);
             this.programs.data = [...this.programs.data];
+            this.faculties[val.short] = new MatTableDataSource([]);
+            this.students[val.short] = new MatTableDataSource([]);
             const snackBarRef = this.snackBar.open(
               "Added Program Successfully",
               "Ok",
@@ -893,52 +894,6 @@ export class SuperAdminComponent implements OnInit {
     }
   }
 
-  updateProgramMap(el:any,comment:any) {
-    if(!comment || comment["message"] == "close") {
-      return;
-    }
-    else if(comment["message"] == "submit") {
-      if(this.checkIfPresent("programMap",comment["value"])) {
-        this.snackBar.open("Duplicate entries are not allowed! Enter a unique name for this field.","Ok",{
-          duration:3000,
-          panelClass:"custom-snack-bar-container"
-        });
-        return;
-      }
-      let str = comment["value"];
-      let regexp = new RegExp("\\d+\\|\\w+");
-      if(!regexp.exec(str)) {
-        this.snackBar.open("Allowed pattern : number|pattern","Ok",{
-          duration:3000,
-          panelClass:"custom-snack-bar-container"
-        });
-        return;
-      }
-      let currentMap = el["map"];
-      this.userService.superAdminEditFields("programMap",currentMap,comment["value"]).subscribe(result => {
-        if(result["message"] == "invalid-token") {
-          this.snackBar.open("Session Timed Out! Please Sign-In Again.","Ok",{
-            duration:3000
-          })
-          this.navbar.role = "none";
-          this.login.signOut();
-        } else if(result["message"] == "success") {
-          for (const program of this.programs.data) {
-            if(program.map == currentMap) {
-              program.map = comment["value"];
-            }
-          }
-          this.programs.data = [...this.programs.data];
-          this.snackBar.open("Successfully updated the field","Ok",{duration:3000});
-        } else {
-          this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
-        }
-      },() => {
-        this.snackBar.open("Some error occured! Try again.","Ok",{duration:3000})
-      })
-    }
-  }
-
   updateStreamName(el:any,comment:any) {
     if(!comment || comment["message"] == "close") {
       return;
@@ -1044,14 +999,6 @@ export class SuperAdminComponent implements OnInit {
       case "programShort":
         for (const program of this.programs.data) {
           if(program.short == newValue) {
-            isPresent = true;
-            break;
-          }
-        }
-        return isPresent;
-      case "programMap":
-        for (const program of this.programs.data) {
-          if(program.map == newValue) {
             isPresent = true;
             break;
           }

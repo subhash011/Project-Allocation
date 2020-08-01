@@ -8,15 +8,7 @@ const Schema = new mongoose.Schema({
     full: {
         type: String,
         required: true,
-    },
-    map: {
-        type: String,
-        required: true,
-    },
-    length: {
-        type: Number,
-        default: 0,
-    },
+    }
 });
 
 module.exports = mongoose.model("Mapping", Schema);

@@ -18,12 +18,7 @@ export class AddMapComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  ngOnInit() {
-    if (this.data.add == "branch") {
-      this.addForm.controls["map"].clearValidators();
-      this.addForm.updateValueAndValidity();
-    }
-  }
+  ngOnInit() {}
 
   addForm = this.fb.group({
     full: [null, Validators.required],
@@ -33,14 +28,7 @@ export class AddMapComponent implements OnInit {
         Validators.required,
         Validators.pattern("[a-zA-Z-_]*"),
       ]),
-    ],
-    map: [
-      null,
-      Validators.compose([
-        Validators.required,
-        Validators.pattern("\\d+\\|\\w+"),
-      ]),
-    ],
+    ]
   });
 
   onNoClick() {
@@ -51,8 +39,7 @@ export class AddMapComponent implements OnInit {
     if (this.addForm.valid) {
       const map = {
         full: this.addForm.get("full").value,
-        short: this.addForm.get("short").value.toUpperCase(),
-        map: this.addForm.get("map").value,
+        short: this.addForm.get("short").value.toUpperCase()
       };
       this.dialogRef.close({ map: map, message: "submit" });
     }
