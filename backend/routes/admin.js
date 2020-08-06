@@ -783,11 +783,11 @@ router.delete("/student/:id", (req, res) => {
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
 		(faculty) => {
 			if (faculty && faculty.isAdmin) {
-				Student.findByIdAndDelete(mid).then(() => {
+				Student.findByIdAndDelete(mid).then((student) => {
 					var updateCondition = {
-						$pullAll: { students_id: [mid], student_alloted: [mid] },
+						$pullAll: { students_id: [mid], not_students_id:[mid], student_alloted: [mid] },
 					};
-					Project.updateMany({}, updateCondition).then(() => {
+					Project.updateMany({stream: student.stream }, updateCondition).then(() => {
 						res.json({
 							message: "success",
 							result: null,

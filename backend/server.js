@@ -2,7 +2,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
-// const compression = require("compression");
 require("dotenv/config");
 
 // start the server
@@ -20,7 +19,7 @@ app.use(
 		saveUninitialized: false,
 	})
 );
-// app.use(compression());
+
 app.use(cors());
 
 //use body-parser
@@ -78,8 +77,6 @@ app.use("/api/email", mail);
 const backup = require("./routes/backup");
 app.use("/api/backup",backup);
 
-// const updateServer = require("./routes/updateServer");
-// app.use("/api/updateServer", updateServer);
 
 const PORT = process.env.PORT || 8080;
 

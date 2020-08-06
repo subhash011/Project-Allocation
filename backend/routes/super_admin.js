@@ -212,11 +212,11 @@ router.delete("/student/:id", (req, res) => {
         .select("_id")
         .then((user) => {
             if (user) {
-                Student.findByIdAndDelete(id).then(() => {
+                Student.findByIdAndDelete(id).then((student) => {
                     var updateCondition = {
-                        $pullAll: { students_id: [id], student_alloted: [id] },
+                        $pullAll: { students_id: [id], not_students_id:[id], student_alloted: [id] },
                     };
-                    Project.updateMany({}, updateCondition).then(() => {
+                    Project.updateMany({stream: student.stream}, updateCondition).then(() => {
                         res.json({
                             message: "success",
                             result: null,
