@@ -8,6 +8,7 @@ const Mapping = require("../models/Mapping");
 const fs = require("fs");
 const path = require("path");
 const csv = require("fast-csv");
+const Project = require("../models/Project");
 oauth = require("../config/oauth");
 
 //add your email here if you want to be a super admin
@@ -114,11 +115,36 @@ router.post("/user_check", (req, res) => {
 							user
 								.save()
 								.then((result) => {
-									res.json({
-										isRegistered: true,
-										position: "student",
-										user_details: userDetails,
-									});
+                                    let updateResult = {
+                                        $addToSet: { not_students_id: result._id }
+                                    }
+									Project.updateMany({stream: result.stream}, updateResult).then(() => {
+                                        let populator = {
+                                            path:"not_students_id",
+                                            select:"_id gpa",
+                                            model:Student
+                                        }
+                                        Project.find({stream: result.stream}).populate(populator).then(projects => {
+                                            var promises = []
+                                            for (const project of projects) {
+                                                project.not_students_id.sort((a,b) => b.gpa - a.gpa);
+                                                promises.push(project.save());
+                                            }
+                                            Promise.all(promises).then(() => {
+                                                res.json({
+                                                    isRegistered: true,
+                                                    position: "student",
+                                                    user_details: userDetails,
+                                                });
+                                            })
+                                        })
+                                    }).catch((err) => {
+                                        res.json({
+                                            isRegistered: true,
+                                            position: "error",
+                                            user_details: "Student Not Saved - DB Error",
+                                        });
+                                    });
 								})
 								.catch((err) => {
 									res.json({
