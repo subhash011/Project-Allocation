@@ -14,6 +14,52 @@ oauth = require("../config/oauth");
 //add your email here if you want to be a super admin
 const superAdmins = process.env.SUPER_ADMINS.split(",");
 
+async function addStudentToNotOpted(result) {
+	let updateResult = {
+	    $addToSet: { not_students_id: result._id }
+	}
+	let populator = {
+		path:"not_students_id",
+		select:"_id gpa",
+		model:Student
+	}
+	try {
+		await Project.updateMany({stream: result.stream}, updateResult);
+		let projects = await Project.find({stream: result.stream}).populate(populator);
+		let promises = []
+		for (const project of projects) {
+			project.not_students_id.sort((a,b) => b.gpa - a.gpa);
+			promises.push(project.save());
+		}
+		await Promise.all(promises);
+		return true;
+	} catch(err) {
+		return false;
+	}
+
+
+	// Project.updateMany({stream: result.stream}, updateResult).then(() => {
+	//
+	//     Project.find({stream: result.stream}).populate(populator).then(projects => {
+	//         var promises = []
+	//         for (const project of projects) {
+	//             project.not_students_id.sort((a,b) => b.gpa - a.gpa);
+	//             promises.push(project.save());
+	//         }
+	//         Promise.all(promises).then(() => {
+	//
+	//         })
+	//     })
+	//
+	// }).catch((err) => {
+	//     res.json({
+	//         isRegistered: true,
+	//         position: "error",
+	//         user_details: "Student Not Saved - DB Error",
+	//     });
+	// });
+}
+
 router.post("/user_check", (req, res) => {
 	const userDetails = req.body;
 
@@ -101,6 +147,7 @@ router.post("/user_check", (req, res) => {
 					});
 			} else {
 				const rollno = email[0];
+				let studentRegistered = true;
 				Student.findOne({ email: userDetails.email })
 					.then((user) => {
 						if (user) {
@@ -108,6 +155,7 @@ router.post("/user_check", (req, res) => {
 								user.google_id.idToken = userDetails.idToken;
 								user.google_id.id = id;
 								user.isRegistered = true;
+								studentRegistered = false;
 							} else {
 								user.google_id.idToken = userDetails.idToken;
 							}
@@ -115,36 +163,29 @@ router.post("/user_check", (req, res) => {
 							user
 								.save()
 								.then((result) => {
-                                    let updateResult = {
-                                        $addToSet: { not_students_id: result._id }
-                                    }
-									Project.updateMany({stream: result.stream}, updateResult).then(() => {
-                                        let populator = {
-                                            path:"not_students_id",
-                                            select:"_id gpa",
-                                            model:Student
-                                        }
-                                        Project.find({stream: result.stream}).populate(populator).then(projects => {
-                                            var promises = []
-                                            for (const project of projects) {
-                                                project.not_students_id.sort((a,b) => b.gpa - a.gpa);
-                                                promises.push(project.save());
-                                            }
-                                            Promise.all(promises).then(() => {
-                                                res.json({
-                                                    isRegistered: true,
-                                                    position: "student",
-                                                    user_details: userDetails,
-                                                });
-                                            })
-                                        })
-                                    }).catch((err) => {
-                                        res.json({
-                                            isRegistered: true,
-                                            position: "error",
-                                            user_details: "Student Not Saved - DB Error",
-                                        });
-                                    });
+									if(!studentRegistered) {
+										addStudentToNotOpted(result).then(result => {
+											if(result) {
+												res.json({
+													isRegistered: true,
+													position: "student",
+													user_details: userDetails,
+												});
+											} else {
+												res.json({
+													isRegistered: true,
+													position: "error",
+													user_details: "Student Not Saved - DB Error",
+												});
+											}
+										})
+									} else {
+										res.json({
+											isRegistered: true,
+											position: "student",
+											user_details: userDetails,
+										});
+									}
 								})
 								.catch((err) => {
 									res.json({

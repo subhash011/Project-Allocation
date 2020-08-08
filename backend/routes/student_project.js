@@ -287,8 +287,8 @@ router.post("/add/preference/:id", async(req, res) => {
 })
 
 router.get("/assert/order", async(req, res) => {
-    let students = await Student.find({stream:"UGCFE", isRegistered:true}).lean().select("_id name gpa roll_no").sort([["gpa", -1]]);
-    let projects = await Project.find({stream: "UGCFE"}).lean().populate({
+    let students = await Student.find({stream:"UGCSE", isRegistered:true}).lean().select("_id name gpa roll_no").sort([["gpa", -1]]);
+    let projects = await Project.find({stream: "UGCSE"}).lean().populate({
         path:"students_id",
         select:"_id name gpa roll_no",
         model:Student
@@ -298,23 +298,23 @@ router.get("/assert/order", async(req, res) => {
         model:Student
     });
     let a = students.map(val => val._id.toString());
-    ans = {}
-    overall = true;
+    let ans = {}
+    let overall = true;
     for (let project of projects) {
         ans[project._id] = [true, true, true]
-        let so = project.students_id.sort((a,b) => b.gpa - a.gpa);
-        let sno = project.not_students_id.sort((a,b) => b.gpa - a.gpa);
+        let so = project.students_id.sort((a, b) => b.gpa - a.gpa);
+        let sno = project.not_students_id.sort((a, b) => b.gpa - a.gpa);
         so = so.map(value => value._id.toString());
         sno = sno.map(value => value._id.toString());
-        if(so.length + sno.length !== a.length) {
+        if (so.length + sno.length !== a.length) {
             ans[project._id][2] = false;
             overall = false;
         }
-        if(!isSubsequence(a, so)) {
+        if (!isSubsequence(a, so)) {
             ans[project._id][0] = false;
             overall = false;
         }
-        if(!isSubsequence(a, sno)) {
+        if (!isSubsequence(a, sno)) {
             ans[project._id][1] = false;
             overall = false;
         }
