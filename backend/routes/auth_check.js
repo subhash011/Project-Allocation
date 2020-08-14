@@ -1,13 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
 const Student = require("../models/Student");
 const Faculty = require("../models/Faculty");
 const SuperAdmin = require("../models/SuperAdmin");
-const Mapping = require("../models/Mapping");
-const fs = require("fs");
-const path = require("path");
-const csv = require("fast-csv");
 const Project = require("../models/Project");
 oauth = require("../config/oauth");
 
@@ -36,28 +31,6 @@ async function addStudentToNotOpted(result) {
 	} catch(err) {
 		return false;
 	}
-
-
-	// Project.updateMany({stream: result.stream}, updateResult).then(() => {
-	//
-	//     Project.find({stream: result.stream}).populate(populator).then(projects => {
-	//         var promises = []
-	//         for (const project of projects) {
-	//             project.not_students_id.sort((a,b) => b.gpa - a.gpa);
-	//             promises.push(project.save());
-	//         }
-	//         Promise.all(promises).then(() => {
-	//
-	//         })
-	//     })
-	//
-	// }).catch((err) => {
-	//     res.json({
-	//         isRegistered: true,
-	//         position: "error",
-	//         user_details: "Student Not Saved - DB Error",
-	//     });
-	// });
 }
 
 router.post("/user_check", (req, res) => {
@@ -71,30 +44,31 @@ router.post("/user_check", (req, res) => {
 
 			if (superAdmins.includes(userDetails.email)) {
 				SuperAdmin.findOne({ email: userDetails.email }).then((user) => {
+					let role;
 					if (user) {
 						user.google_id.idToken = userDetails.idToken;
 						role = "super_admin";
 						user
 							.save()
-							.then((result) => {
+							.then(() => {
 								res.json({
 									isRegistered: true,
 									position: role,
-									user_details: userDetails,
+									user_details: userDetails
 								});
 							})
-							.catch((err) => {
+							.catch(() => {
 								res.json({
 									isRegistered: true,
 									position: "error",
-									user_details: "SuperAdmin Not Saved - DB Error",
+									user_details: "SuperAdmin Not Saved - DB Error"
 								});
 							});
 					} else {
 						res.json({
 							isRegistered: false,
 							position: "super_admin",
-							user_details: userDetails,
+							user_details: userDetails
 						});
 					}
 				});
@@ -107,7 +81,7 @@ router.post("/user_check", (req, res) => {
 						if (user) {
 							user.google_id.idToken = userDetails.idToken;
 
-							var role = "";
+							let role = "";
 							if (user.isAdmin) {
 								role = "admin";
 							} else {
@@ -116,14 +90,14 @@ router.post("/user_check", (req, res) => {
 
 							user
 								.save()
-								.then((result) => {
+								.then(() => {
 									res.json({
 										isRegistered: true,
 										position: role,
 										user_details: userDetails,
 									});
 								})
-								.catch((err) => {
+								.catch(() => {
 									res.json({
 										isRegistered: true,
 										position: "error",
@@ -138,7 +112,7 @@ router.post("/user_check", (req, res) => {
 							});
 						}
 					})
-					.catch((err) => {
+					.catch(() => {
 						res.json({
 							isRegistered: false,
 							position: "error",
@@ -146,7 +120,6 @@ router.post("/user_check", (req, res) => {
 						});
 					});
 			} else {
-				const rollno = email[0];
 				let studentRegistered = true;
 				Student.findOne({ email: userDetails.email })
 					.then((user) => {
@@ -187,7 +160,7 @@ router.post("/user_check", (req, res) => {
 										});
 									}
 								})
-								.catch((err) => {
+								.catch(() => {
 									res.json({
 										isRegistered: true,
 										position: "error",
@@ -204,7 +177,7 @@ router.post("/user_check", (req, res) => {
 							});
 						}
 					})
-					.catch((err) => {
+					.catch(() => {
 						res.json({
 							isRegistered: false,
 							position: "error",
@@ -214,8 +187,7 @@ router.post("/user_check", (req, res) => {
 					});
 			}
 		})
-		.catch((err) => {
-			console.log(err);
+		.catch(() => {
 			res.json({
 				isRegistered: false,
 				position: "login-error",
@@ -225,7 +197,6 @@ router.post("/user_check", (req, res) => {
 });
 
 router.get("/details/:id", (req, res) => {
-	const id = req.params.id;
 	const idToken = req.headers.authorization;
 
 	oauth(idToken)

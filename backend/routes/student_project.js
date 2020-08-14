@@ -16,7 +16,7 @@ async function canUpdateProject(res, idToken, id) {
     }
     let admin = await Admin.findOne({ stream: student.stream })
         .lean()
-        .select("stage");
+        .select("stage reachedStage2");
 
     if(admin.stage < 1) {
         res.json({message: "stage-not-started"});
@@ -25,7 +25,10 @@ async function canUpdateProject(res, idToken, id) {
         res.json({message: "stage-ended"});
         return false;
     }
-    return student;
+    return {
+        student: student,
+        toSort: !admin.reachedStage2
+    };
 }
 
 
@@ -149,11 +152,13 @@ router.post("/preference/:id", async (req, res) => {
 	);
 	const idToken = req.headers.authorization;
 
-    let student = await canUpdateProject(res, idToken, id);
+    let obj = await canUpdateProject(res, idToken, id);
 
-    if(!student) {
+    if(!obj) {
         return;
     }
+
+    let student = obj.student;
     let studentID = student._id;
 
     let populator = {
@@ -197,11 +202,13 @@ router.post("/append/preference/:id", async(req, res) => {
 	let projects = req.body;
 	const project_idArr = projects;
 	const idToken = req.headers.authorization;
-    let student = await canUpdateProject(res, idToken, id);
+    let obj = await canUpdateProject(res, idToken, id);
 
-    if(!student) {
+    if(!obj) {
         return;
     }
+
+    let student = obj.student;
     let updateResult = {
         $push: {projects_preference: {$each: project_idArr}},
     };
@@ -218,12 +225,14 @@ router.post("/append/preference/:id", async(req, res) => {
     };
     await Project.updateMany(updateCondition, updateResult);
     projects = await Project.find(updateCondition).populate({path: "students_id", select:"_id gpa", model:Student});
-    let promises = []
-    for (let project of projects) {
-        project.students_id.sort((a,b) => b.gpa - a.gpa);
-        promises.push(project.save());
+    if(obj.toSort) {
+        let promises = []
+        for (let project of projects) {
+            project.students_id.sort((a,b) => b.gpa - a.gpa);
+            promises.push(project.save());
+        }
+        await Promise.all(promises);
     }
-    await Promise.all(promises);
     res.json({message:"success"})
 });
 
@@ -234,11 +243,14 @@ router.post("/remove/preference/:id", async(req, res) => {
     let updateResult = {
         $pull: {projects_preference: project},
     };
-    let student = await canUpdateProject(res, idToken, id);
-    let studentID = student._id;
-    if(!student) {
+    let obj = await canUpdateProject(res, idToken, id);
+
+    if(!obj) {
         return;
     }
+
+    let student = obj.student;
+    let studentID = student._id;
     let _id = mongoose.Types.ObjectId(project);
     await Student.findByIdAndUpdate(student._id, updateResult);
     updateResult = {
@@ -247,12 +259,15 @@ router.post("/remove/preference/:id", async(req, res) => {
     }
     await Project.findByIdAndUpdate(_id, updateResult);
     let projects = await Project.findById(_id).populate({path: "not_students_id", select: "_id gpa", model: Student});
-    let promises = []
-    for (let project of [projects]) {
-        project.not_students_id.sort((a,b) => b.gpa - a.gpa);
-        promises.push(project.save());
+
+    if(obj.toSort) {
+        let promises = []
+        for (let project of [projects]) {
+            project.not_students_id.sort((a,b) => b.gpa - a.gpa);
+            promises.push(project.save());
+        }
+        await Promise.all(promises);
     }
-    await Promise.all(promises);
     res.json({message:"success"})
 })
 
@@ -264,11 +279,13 @@ router.post("/add/preference/:id", async(req, res) => {
     let updateResult = {
         $push: {projects_preference: project},
     };
-    let student = await canUpdateProject(res, idToken, id);
+    let obj = await canUpdateProject(res, idToken, id);
 
-    if(!student) {
+    if(!obj) {
         return;
     }
+
+    let student = obj.student;
     await Student.findByIdAndUpdate(student._id, updateResult);
     let _id = mongoose.Types.ObjectId(project);
     updateResult = {
@@ -277,12 +294,14 @@ router.post("/add/preference/:id", async(req, res) => {
     }
     await Project.findByIdAndUpdate(_id, updateResult);
     let projects = await Project.findById(_id).populate({path: "students_id", select:"_id gpa", model:Student});
-    let promises = []
-    for (let project of [projects]) {
-        project.students_id.sort((a,b) => b.gpa - a.gpa);
-        promises.push(project.save());
+    if(obj.toSort) {
+        let promises = []
+        for (let project of [projects]) {
+            project.students_id.sort((a,b) => b.gpa - a.gpa);
+            promises.push(project.save());
+        }
+        await Promise.all(promises);
     }
-    await Project.findByIdAndUpdate(_id, updateResult);
     res.json({message:"success"});
 })
 
@@ -326,9 +345,9 @@ router.get("/assert/order", async(req, res) => {
 function isSubsequence(arrayA, arrayB) {
     let b = 0;
     for (let i = 0; i < arrayA.length; i++) {
-        if(arrayA[i] == arrayB[b]) {
+        if(arrayA[i] === arrayB[b]) {
             b++;
-            if(b == arrayB.length) {
+            if(b === arrayB.length) {
                 break;
             }
         }
