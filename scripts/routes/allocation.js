@@ -3,13 +3,10 @@ const mongoose = require("mongoose");
 const router = express();
 const Student = require("../models/Student");
 const Project = require("../models/Project");
-const Faculty = require("../models/Faculty");
 
 function combineProjects(projects, students) {
-    students = students;
-    projects = projects;
-    studentIDS = students.map((val) => val._id);
-    projectIDS = projects.map((val) => val._id);
+    let studentIDS = students.map((val) => val._id);
+    projects.map((val) => val._id);
     for (const project of projects) {
         const setA = new Set(project.students_id.map((val) => val.toString()));
         const setB = new Set(studentIDS.map((val) => val.toString()));
@@ -23,10 +20,8 @@ function combineProjects(projects, students) {
 }
 
 function combineStudents(projects, students) {
-    students = students;
-    projects = projects;
-    studentIDS = students.map((val) => val._id);
-    projectIDS = projects.map((val) => val._id);
+    students.map((val) => val._id);
+    let projectIDS = projects.map((val) => val._id);
     for (const student of students) {
         const setA = new Set(
             student.projects_preference.map((val) => val.toString())
@@ -42,12 +37,12 @@ function combineStudents(projects, students) {
 }
 
 router.post("/start", (req, res) => {
-    var projects = [];
-    var students = [];
-    var alloted = [];
-    var free = [];
-    var allocationStatus = {};
-    var promises = [];
+    let projects = [];
+    let students = [];
+    let alloted = [];
+    let free = [];
+    const allocationStatus = {};
+    let promises = [];
     promises.push(
         Project.find().then((projectList) => {
             projects = projectList;
@@ -70,7 +65,7 @@ router.post("/start", (req, res) => {
         combineStudents(projects, students);
         combineProjects(projects, students);
         free = [...students];
-        var curStudent, firstPreference, firstProject;
+        let curStudent, firstPreference, firstProject;
         while (free.length > 0) {
             curStudent = free[0];
             firstPreference = curStudent.projects_preference[0];
@@ -104,14 +99,14 @@ router.post("/start", (req, res) => {
                     });
                     alloted.push(curStudent);
                 } else {
-                    var studentCurrentlyAlloted =
+                    const studentCurrentlyAlloted =
                         allocationStatus[firstPreference._id][
-                            allocationStatus[firstPreference._id].length - 1
-                        ];
-                    var currentlyAllotedIndex = firstProject.students_id.indexOf(
+                        allocationStatus[firstPreference._id].length - 1
+                            ];
+                    const currentlyAllotedIndex = firstProject.students_id.indexOf(
                         studentCurrentlyAlloted._id
                     );
-                    var curStudentIndex = firstProject.students_id.indexOf(
+                    const curStudentIndex = firstProject.students_id.indexOf(
                         curStudent._id
                     );
                     if (curStudentIndex < currentlyAllotedIndex) {
@@ -157,7 +152,7 @@ router.post("/start", (req, res) => {
                 }
             }
         }
-        Promise.all(promises).then((result) => {
+        Promise.all(promises).then(() => {
             promises = [];
             for (const key in allocationStatus) {
                 if (allocationStatus.hasOwnProperty(key)) {
@@ -173,7 +168,7 @@ router.post("/start", (req, res) => {
                     );
                 }
             }
-            Promise.all(promises).then((result) => {
+            Promise.all(promises).then(() => {
                 Object.keys(allocationStatus).map(function(key, value) {
                     allocationStatus[key] = allocationStatus[key].map((val) => val.name);
                 });

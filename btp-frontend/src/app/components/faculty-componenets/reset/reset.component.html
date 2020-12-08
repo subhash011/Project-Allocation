@@ -16,8 +16,8 @@
                 </div>
             </mat-card-content>
             <mat-card-actions>
-                <button color="accent" mat-raised-button (click)="onNoClick()">No</button>
-                <button color="warn" mat-raised-button (click)="onSubmit()">Yes</button>
+                <button (click)="onNoClick()" color="accent" mat-raised-button>No</button>
+                <button (click)="onSubmit()" color="warn" mat-raised-button>Yes</button>
             </mat-card-actions>
         </mat-card>
     </div>

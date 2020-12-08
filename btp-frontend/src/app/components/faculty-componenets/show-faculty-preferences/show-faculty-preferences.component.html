@@ -1,62 +1,64 @@
 <mat-dialog-content *ngIf="preferences.students_id.length != 0; else elseBlock">
-  <mat-toolbar class="toolbar">
-    <mat-icon color="primary" matTooltip="close pop-up" matTooltipPosition="above" color="accent" (click)="close()">close</mat-icon>
-    <div class="fill-space"></div>
-    <div #container class="copy">
-      <button
-        mat-raised-button
-        color="primary"
-        ngxClipboard
-        [cbContent]="value"
-        [container]="container"
-        (cbOnSuccess)="copied($event)"
-      >
-        Copy to Clipboard
-      </button>
-    </div>
-  </mat-toolbar>
-  <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
-    <div>
-      <div
-        class="list-item"
-        *cdkVirtualFor="let preference of preferences.students_id"
-      >
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Student : {{ preference["name"] }}
-              </mat-panel-title>
-              <mat-panel-description>
+    <mat-toolbar class="toolbar">
+        <mat-icon (click)="close()" color="accent" color="primary" matTooltip="close pop-up" matTooltipPosition="above">
+            close
+        </mat-icon>
+        <div class="fill-space"></div>
+        <div #container class="copy">
+            <button
+                (cbOnSuccess)="copied($event)"
+                [cbContent]="value"
+                [container]="container"
+                color="primary"
+                mat-raised-button
+                ngxClipboard
+            >
+                Copy to Clipboard
+            </button>
+        </div>
+    </mat-toolbar>
+    <cdk-virtual-scroll-viewport class="example-viewport" itemSize="50">
+        <div>
+            <div
+                *cdkVirtualFor="let preference of preferences.students_id"
+                class="list-item"
+            >
+                <mat-accordion>
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Student : {{ preference["name"] }}
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <div class="flex-space"></div>
+                                Roll number : {{ preference["roll_no"] }}
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="faculty">
+                            Faculty:
+                            {{
+                            preference["project_alloted"]
+                                ? preference["project_alloted"]["faculty_id"]["name"]
+                                : "N/A"
+                            }}
+                        </div>
+                        <div class="project">
+                            Project Alloted:
+                            {{
+                            preference["project_alloted"]
+                                ? preference["project_alloted"]["title"]
+                                : "N/A"
+                            }}
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
                 <div class="flex-space"></div>
-                Roll number : {{ preference["roll_no"] }}
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-            <div class="faculty">
-              Faculty:
-              {{
-                preference["project_alloted"]
-                  ? preference["project_alloted"]["faculty_id"]["name"]
-                  : "N/A"
-              }}
             </div>
-            <div class="project">
-              Project Alloted:
-              {{
-                preference["project_alloted"]
-                  ? preference["project_alloted"]["title"]
-                  : "N/A"
-              }}
-            </div>
-          </mat-expansion-panel>
-        </mat-accordion>
-        <div class="flex-space"></div>
-      </div>
-    </div>
-  </cdk-virtual-scroll-viewport>
+        </div>
+    </cdk-virtual-scroll-viewport>
 </mat-dialog-content>
 <ng-template #elseBlock>
-  <div class="text">
-    No preferences to display
-  </div>
+    <div class="text">
+        No preferences to display
+    </div>
 </ng-template>

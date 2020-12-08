@@ -1,45 +1,46 @@
-  <div class="list" *ngIf="preferences && preferences.length != 0; else empty">
+<div *ngIf="preferences && preferences.length != 0; else empty" class="list">
     <mat-accordion class="accordion">
-      <div
-        class="list-item"
-        *ngFor="let preference of preferences; let i = index"
-      >
-        <div class="expansion-panel">
-          <mat-expansion-panel
-            [class.mat-elevation-z24]="isActive && indexHover == i"
-            #panel
-            (mouseenter)="isActive = true; indexHover = i"
-            (mouseleave)="isActive = false; indexHover = -1"
-          >
-            <mat-expansion-panel-header class="disable_ripple">
-              <mat-panel-title class="ep">
-                {{ preference["title"] }}
-              </mat-panel-title>
-              <mat-panel-description>
-                <div class="fill-space"></div>
-                <mat-icon
-                  matTooltip="Remove {{ preference.title }} from preferences"
-                  [matTooltipPosition]="'above'"
-                  (click)="
+        <div
+            *ngFor="let preference of preferences; let i = index"
+            class="list-item"
+        >
+            <div class="expansion-panel">
+                <mat-expansion-panel
+                    #panel
+                    (mouseenter)="isActive = true; indexHover = i"
+                    (mouseleave)="isActive = false; indexHover = -1"
+                    [class.mat-elevation-z24]="isActive && indexHover == i"
+                >
+                    <mat-expansion-panel-header class="disable_ripple">
+                        <mat-panel-title class="ep">
+                            {{ preference["title"] }}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <div class="fill-space"></div>
+                            <mat-icon
+                                (click)="
                     removeOnePreference(preference); $event.stopPropagation()
                   "
-                  >delete</mat-icon
-                >
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-            <p><b>Faculty Name :</b> {{ preference["faculty_name"] }}</p>
-            <p><b>Faculty Email :</b> {{ preference["faculty_email"] }}</p>
-            <p><b>Student Intake :</b> {{ preference["studentIntake"] }}</p>
-            <p><b>Duration (in months) :</b> {{ preference["duration"] }}</p>
-            <p><b>Description :</b> {{ preference["description"] }}</p>
-          </mat-expansion-panel>
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Remove {{ preference.title }} from preferences"
+                            >delete
+                            </mat-icon
+                            >
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <p><b>Faculty Name :</b> {{ preference["faculty_name"] }}</p>
+                    <p><b>Faculty Email :</b> {{ preference["faculty_email"] }}</p>
+                    <p><b>Student Intake :</b> {{ preference["studentIntake"] }}</p>
+                    <p><b>Duration (in months) :</b> {{ preference["duration"] }}</p>
+                    <p><b>Description :</b> {{ preference["description"] }}</p>
+                </mat-expansion-panel>
+            </div>
         </div>
-      </div>
     </mat-accordion>
-  </div>
+</div>
 
 <ng-template #empty>
-  <div class="emptyBlock" style="padding-top: 10%;">
-    No Preferences To Display. Start adding preferences.
-  </div>
+    <div class="emptyBlock" style="padding-top: 10%;">
+        No Preferences To Display. Start adding preferences.
+    </div>
 </ng-template>

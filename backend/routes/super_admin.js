@@ -10,201 +10,199 @@ const Mapping = require("../models/Mapping");
 const Streams = require("../models/Streams");
 const oauth = require("../config/oauth");
 Array.prototype.contains = function (v) {
-	for (var i = 0; i < this.length; i++) {
-		if (this[i] === v) return true;
-	}
-	return false;
+    for (let i = 0; i < this.length; i++) {
+        if (this[i] === v) return true;
+    }
+    return false;
 };
 
 Array.prototype.unique = function () {
-	var arr = [];
-	for (var i = 0; i < this.length; i++) {
-		if (!arr.contains(this[i]) && this[i] != "") {
-			arr.push(this[i]);
-		}
-	}
-	return arr;
+    const arr = [];
+    for (let i = 0; i < this.length; i++) {
+        if (!arr.contains(this[i]) && this[i] !== "") {
+            arr.push(this[i]);
+        }
+    }
+    return arr;
 };
 
 router.post("/register/:id", (req, res) => {
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
-	const user = req.body;
-	oauth(idToken).then((response) => {
-		const newUser = new SuperAdmin({
-			name: user.name,
-			google_id: {
-				id: id,
-				idToken: idToken,
-			},
-			email: user.email,
-		});
-		newUser
-			.save()
-			.then((result) => {
-				res.json({
-					registration: "success",
-				});
-			})
-			.catch((err) => {
-				res.json({
-					registration: "fail",
-				});
-			});
-	});
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const user = req.body;
+    oauth(idToken).then(() => {
+        const newUser = new SuperAdmin({
+            name: user.name,
+            google_id: {
+                id: id,
+                idToken: idToken,
+            },
+            email: user.email,
+        });
+        newUser
+            .save()
+            .then(() => {
+                res.json({
+                    registration: "success",
+                });
+            })
+            .catch(() => {
+                res.json({
+                    registration: "fail",
+                });
+            });
+    });
 });
 
 router.get("/student/details/:id", (req, res) => {
-	var student = {};
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
-	var branches = [];
-	Mapping.find()
-		.lean()
-		.then((maps) => {
-			branches = maps.map((val) => val.short);
-			for (const branch of branches) {
-				student[branch] = [];
-			}
-		})
-		.then((user) => {
-			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
-				.lean()
-				.select("_id")
-				.then((user) => {
-					if (user) {
-						Student.find()
-							.lean()
-							.select(
-								"-google_id -date -__v -projects_preference -project_alloted"
-							)
-							.then((students) => {
-								if (students) {
-									for (const branch of branches) {
-										var temp = students.filter((student) => {
-											return student.stream == branch;
-										});
-										temp = temp.map((val) => {
-											var newStud = {
-												_id: val._id,
-												name: val.name,
-												gpa: val.gpa,
-												stream: val.stream,
-												email: val.email,
-												roll_no: val.roll_no,
-												isRegistered: val.isRegistered,
-											};
-											return newStud;
-										});
-										student[branch] = temp;
-									}
-									res.json({
-										message: "success",
-										result: student,
-									});
-								} else {
-									res.json({
-										message: "success",
-										result: "no-students",
-									});
-								}
-							})
-							.catch((err) => {
-								res.status(500);
-							});
-					} else {
-						res.json({
-							message: "invalid-token",
-							result: null,
-						});
-					}
-				});
-		})
-		.catch(() => {
-			res.json({
-				message: "invalid-client",
-				result: null,
-			});
-		});
+    const student = {};
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    let branches = [];
+    Mapping.find()
+        .lean()
+        .then((maps) => {
+            branches = maps.map((val) => val.short);
+            for (const branch of branches) {
+                student[branch] = [];
+            }
+        })
+        .then(() => {
+            SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+                .lean()
+                .select("_id")
+                .then((user) => {
+                    if (user) {
+                        Student.find()
+                            .lean()
+                            .select(
+                                "-google_id -date -__v -projects_preference -project_alloted"
+                            )
+                            .then((students) => {
+                                if (students) {
+                                    for (const branch of branches) {
+                                        let temp = students.filter((student) => {
+                                            return student.stream === branch;
+                                        });
+                                        temp = temp.map((val) => {
+                                            return {
+                                                _id: val._id,
+                                                name: val.name,
+                                                gpa: val.gpa,
+                                                stream: val.stream,
+                                                email: val.email,
+                                                roll_no: val.roll_no,
+                                                isRegistered: val.isRegistered,
+                                            };
+                                        });
+                                        student[branch] = temp;
+                                    }
+                                    res.json({
+                                        message: "success",
+                                        result: student,
+                                    });
+                                } else {
+                                    res.json({
+                                        message: "success",
+                                        result: "no-students",
+                                    });
+                                }
+                            })
+                            .catch(() => {
+                                res.status(500);
+                            });
+                    } else {
+                        res.json({
+                            message: "invalid-token",
+                            result: null,
+                        });
+                    }
+                });
+        })
+        .catch(() => {
+            res.json({
+                message: "invalid-client",
+                result: null,
+            });
+        });
 });
 
 router.get("/faculty/details/:id", (req, res) => {
-	var streamwise = [];
-	const id = req.params.id;
-	var faculty = {};
-	var branches = [];
-	const idToken = req.headers.authorization;
-	Mapping.find()
-		.lean()
-		.then((maps) => {
-			branches = maps.map((val) => val.short);
-			for (const branch of branches) {
-				faculty[branch] = [];
-			}
-		})
-		.then((user) => {
-			SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
-				.lean()
-				.select("_id")
-				.then((user) => {
-					if (user) {
-						Faculty.find()
-							.lean()
-							.select("-google_id -date -__v -project_list")
-							.then((faculties) => {
-								if (faculties) {
-									for (const branch of branches) {
-										var temp = faculties.filter((faculty) => {
-											arr = faculty.programs.map((x) => x.short);
-											return arr.contains(branch);
-										});
-										temp = temp.map((val) => {
-											var newFac = {
-												_id: val._id,
-												name: val.name,
-												email: val.email,
-												stream: val.stream,
-												isAdmin: val.isAdmin,
-												adminProgram: val.adminProgram,
-											};
-											return newFac;
-										});
-										faculty[branch] = temp;
-									}
-									res.json({
-										message: "success",
-										result: faculty,
-									});
-								} else {
-									res.json({
-										message: "success",
-										result: "no-faculties",
-									});
-								}
-							})
-							.catch((err) => {
-								res.status(500);
-							});
-					} else {
-						res.json({
-							message: "invalid-token",
-							result: null,
-						});
-					}
-				});
-		})
-		.catch(() => {
-			res.json({
-				message: "invalid-client",
-				result: null,
-			});
-		});
+
+    const id = req.params.id;
+    const faculty = {};
+    let branches = [];
+    const idToken = req.headers.authorization;
+    Mapping.find()
+        .lean()
+        .then((maps) => {
+            branches = maps.map((val) => val.short);
+            for (const branch of branches) {
+                faculty[branch] = [];
+            }
+        })
+        .then(() => {
+            SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+                .lean()
+                .select("_id")
+                .then((user) => {
+                    if (user) {
+                        Faculty.find()
+                            .lean()
+                            .select("-google_id -date -__v -project_list")
+                            .then((faculties) => {
+                                if (faculties) {
+                                    for (const branch of branches) {
+                                        let temp = faculties.filter((faculty) => {
+                                            let arr = faculty.programs.map((x) => x.short);
+                                            return arr.contains(branch);
+                                        });
+                                        temp = temp.map((val) => {
+                                            return {
+                                                _id: val._id,
+                                                name: val.name,
+                                                email: val.email,
+                                                stream: val.stream,
+                                                isAdmin: val.isAdmin,
+                                                adminProgram: val.adminProgram,
+                                            };
+                                        });
+                                        faculty[branch] = temp;
+                                    }
+                                    res.json({
+                                        message: "success",
+                                        result: faculty,
+                                    });
+                                } else {
+                                    res.json({
+                                        message: "success",
+                                        result: "no-faculties",
+                                    });
+                                }
+                            })
+                            .catch(() => {
+                                res.status(500);
+                            });
+                    } else {
+                        res.json({
+                            message: "invalid-token",
+                            result: null,
+                        });
+                    }
+                });
+        })
+        .catch(() => {
+            res.json({
+                message: "invalid-client",
+                result: null,
+            });
+        });
 });
 
 router.delete("/student/:id", (req, res) => {
-	const id = mongoose.Types.ObjectId(req.headers.body);
-	const google_user_id = req.params.id;
-	const idToken = req.headers.authorization;
+    const id = mongoose.Types.ObjectId(req.headers.body);
+    const google_user_id = req.params.id;
+    const idToken = req.headers.authorization;
     SuperAdmin.findOne({
         google_id: { id: google_user_id, idToken: idToken },
     })
@@ -213,8 +211,8 @@ router.delete("/student/:id", (req, res) => {
         .then((user) => {
             if (user) {
                 Student.findByIdAndDelete(id).then((student) => {
-                    var updateCondition = {
-                        $pullAll: { students_id: [id], not_students_id:[id], student_alloted: [id] },
+                    const updateCondition = {
+                        $pullAll: {students_id: [id], not_students_id: [id], student_alloted: [id]},
                     };
                     Project.updateMany({stream: student.stream}, updateCondition).then(() => {
                         res.json({
@@ -233,9 +231,9 @@ router.delete("/student/:id", (req, res) => {
 })
 
 router.delete("/faculty/:id", (req, res) => {
-	const id = mongoose.Types.ObjectId(req.headers.body);
-	const google_user_id = req.params.id;
-	const idToken = req.headers.authorization;
+    const id = mongoose.Types.ObjectId(req.headers.body);
+    const google_user_id = req.params.id;
+    const idToken = req.headers.authorization;
     SuperAdmin.findOne({
         google_id: { id: google_user_id, idToken: idToken },
     })
@@ -244,16 +242,16 @@ router.delete("/faculty/:id", (req, res) => {
         .then((user) => {
             if (user) {
                 Faculty.findByIdAndDelete(id).then((faculty) => {
-                    var projectList = faculty.project_list;
+                    const projectList = faculty.project_list;
                     Project.deleteMany({ _id: { $in: projectList } }).then(() => {
-                        var updateResult = {
+                        let updateResult = {
                             $pullAll: {
                                 projects_preference: projectList,
                             },
                         };
                         Student.updateMany({}, updateResult).then(() => {
-                            var updateCondition = {
-                                project_alloted: { $in: projectList },
+                            const updateCondition = {
+                                project_alloted: {$in: projectList},
                             };
                             updateResult = { $unset: { project_alloted: "" } };
                             Student.updateMany(updateCondition, updateResult).then(() => {
@@ -275,10 +273,10 @@ router.delete("/faculty/:id", (req, res) => {
 });
 
 router.post("/addAdmin/:id", (req, res) => {
-	const id = req.body.id;
-	const branch = req.body.branch;
-	const google_user_id = req.params.id;
-	const idToken = req.headers.authorization;
+    const id = req.body.id;
+    const branch = req.body.branch;
+    const google_user_id = req.params.id;
+    const idToken = req.headers.authorization;
     SuperAdmin.findOne({
         google_id: { id: google_user_id, idToken: idToken },
     })
@@ -292,20 +290,20 @@ router.post("/addAdmin/:id", (req, res) => {
                 })
                     .then((faculty) => {
                         if (faculty) {
-                            var admin = new Admin({
+                            const admin = new Admin({
                                 admin_id: faculty._id,
                                 stream: branch,
                                 deadlines: [],
                             });
                             admin
                                 .save()
-                                .then((admin) => {
+                                .then(() => {
                                     res.json({
                                         message: "success",
                                         result: faculty.isAdmin,
                                     });
                                 })
-                                .catch((err) => {
+                                .catch(() => {
                                     res.json({
                                         message: "error",
                                         result: null,
@@ -331,9 +329,9 @@ router.post("/addAdmin/:id", (req, res) => {
 });
 
 router.post("/removeAdmin/:id", (req, res) => {
-	const id = req.body.id;
-	const google_user_id = req.params.id;
-	const idToken = req.headers.authorization;
+    const id = req.body.id;
+    const google_user_id = req.params.id;
+    const idToken = req.headers.authorization;
     SuperAdmin.findOne({
         google_id: { id: google_user_id, idToken: idToken },
     })
@@ -349,7 +347,7 @@ router.post("/removeAdmin/:id", (req, res) => {
                         if (faculty) {
                             Admin.findOneAndDelete({
                                 admin_id: faculty._id,
-                            }).then((admin) => {
+                            }).then(() => {
                                 res.json({
                                     message: "success",
                                     result: faculty.adminProgram,
@@ -375,8 +373,8 @@ router.post("/removeAdmin/:id", (req, res) => {
 })
 
 router.get("/projects/:id", (req, res) => {
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
     SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
         .lean()
         .select("_id")
@@ -395,7 +393,7 @@ router.get("/projects/:id", (req, res) => {
                         model: Student,
                     })
                     .then((projects) => {
-                        var arr = [];
+                        const arr = [];
                         for (const project of projects) {
                             const newProj = {
                                 title: project.title,
@@ -426,8 +424,8 @@ router.get("/projects/:id", (req, res) => {
 });
 
 router.post("/create/:id", (req, res) => {
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
     SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
         (user) => {
             if (user) {
@@ -463,146 +461,147 @@ router.post("/create/:id", (req, res) => {
 });
 
 router.post("/edit/:field/:id",(req,res) => {
-	var field = req.params.field;
-	var id = req.params.id;
-	var idToken = req.headers.authorization;
-	var curVal = req.body.curVal;
-	var newVal = req.body.newVal;
-	SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(user => {
-		if(user) {
-			switch (field) {
-				case "programShort":
-					Mapping.findOneAndUpdate({short:curVal},{short:newVal}).then(map => {
-						var newMap = {
-							full:map.full,
-							short:newVal
-						};
-						var curMap = {
-							full:map.full,
-							short:map.short
-						}
-						var findCondition = {
-							programs : { $elemMatch : curMap }
-						};
-						var updateCondition = {
-							$set: { "programs.$[filter]": newMap }
-						};
-						var filterCondition = {
-							arrayFilters: [ { "filter": curMap } ] 
-						}
-						var promises = [];
-						promises.push(
-							Faculty.updateMany(findCondition, updateCondition,filterCondition).then(faculties => {
-								return faculties;
-							})
-						);
-						promises.push(
-							Faculty.updateMany({adminProgram:curVal},{adminProgram:newVal}).then(faculties => {
-								return faculties;
-							})
-						)
-						promises.push(
-							Student.updateMany({stream:curVal},{stream:newVal}).then(students => {
-								return students;
-							})
-						);
-						promises.push(
-							Project.updateMany({stream:curVal},{stream:newVal}).then(projects => {
-								return projects;
-							})
-						);
-						promises.push(
-							Admin.updateMany({stream:curVal},{stream:newVal}).then(admin => {
-								return admin;
-							})
-						)
-						Promise.all(promises).then(() => {
-							res.json({
-								message:"success"
-							})
-						}).catch(() => {
-							res.json({
-								message:"error"
-							})
-						})
-					}).catch(() => {
-						res.json({
-							message:"error"
-						})
-					});
-					break;
-				case "programFull":
-					Mapping.findOneAndUpdate({full:curVal},{full:newVal},{upsert:false,new:false}).then(map => {
-						var newMap = {
-							full:newVal,
-							short:map.short
-						};
-						var curMap = {
-							full:map.full,
-							short:map.short
-						}
-						var findCondition = {
-							programs : { $elemMatch : curMap  }
-						};
-						var updateCondition = {
-							$set: { "programs.$[filter]": newMap }
-						};
-						var filterCondition = {
-							arrayFilters: [ { "filter": curMap } ] 
-						}
-						Faculty.updateMany(findCondition,updateCondition,filterCondition).then(result => {
-							res.json({
-								message:"success",
-								result:null
-							})
-						}).catch(err => {
-							res.json({
-								message:"error"
-							})
-						})
-					}).catch((err) => {
-						res.json({
-							message:"error"
-						})
-					});
-					break;
-				case "streamShort":
-					Streams.findOneAndUpdate({short:curVal},{short:newVal}).then(streams => {
-						Faculty.updateMany({stream:curVal},{stream:newVal}).then(() => {
-							res.json({
-								message:"success"
-							})
-						}).catch(() => {
-							res.json({
-								message:"error"
-							})
-						})
-					}).catch(() => {
-						res.json({
-							message:"error"
-						})
-					});
-					break;
-				case "streamFull":
-					Streams.findOneAndUpdate({full:curVal},{full:newVal}).then(() => {
-						res.json({
-							message:"success"
-						})
-					}).catch(() => {
-						res.json({
-							message:"error"
-						})
-					});
-				default:
-					break;
-			}
-		} else {
-			res.json({
-				message:"invalid-token",
-				result:null
-			})
-		}
-	})
+    const field = req.params.field;
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const curVal = req.body.curVal;
+    const newVal = req.body.newVal;
+    SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(user => {
+        if(user) {
+            switch (field) {
+                case "programShort":
+                    Mapping.findOneAndUpdate({short:curVal},{short:newVal}).then(map => {
+                        const newMap = {
+                            full: map.full,
+                            short: newVal
+                        };
+                        const curMap = {
+                            full: map.full,
+                            short: map.short
+                        };
+                        const findCondition = {
+                            programs: {$elemMatch: curMap}
+                        };
+                        const updateCondition = {
+                            $set: {"programs.$[filter]": newMap}
+                        };
+                        const filterCondition = {
+                            arrayFilters: [{"filter": curMap}]
+                        };
+                        const promises = [];
+                        promises.push(
+                            Faculty.updateMany(findCondition, updateCondition,filterCondition).then(faculties => {
+                                return faculties;
+                            })
+                        );
+                        promises.push(
+                            Faculty.updateMany({adminProgram:curVal},{adminProgram:newVal}).then(faculties => {
+                                return faculties;
+                            })
+                        )
+                        promises.push(
+                            Student.updateMany({stream:curVal},{stream:newVal}).then(students => {
+                                return students;
+                            })
+                        );
+                        promises.push(
+                            Project.updateMany({stream:curVal},{stream:newVal}).then(projects => {
+                                return projects;
+                            })
+                        );
+                        promises.push(
+                            Admin.updateMany({stream:curVal},{stream:newVal}).then(admin => {
+                                return admin;
+                            })
+                        )
+                        Promise.all(promises).then(() => {
+                            res.json({
+                                message:"success"
+                            })
+                        }).catch(() => {
+                            res.json({
+                                message:"error"
+                            })
+                        })
+                    }).catch(() => {
+                        res.json({
+                            message:"error"
+                        })
+                    });
+                    break;
+                case "programFull":
+                    Mapping.findOneAndUpdate({full:curVal},{full:newVal},{upsert:false,new:false}).then(map => {
+                        const newMap = {
+                            full: newVal,
+                            short: map.short
+                        };
+                        const curMap = {
+                            full: map.full,
+                            short: map.short
+                        };
+                        const findCondition = {
+                            programs: {$elemMatch: curMap}
+                        };
+                        const updateCondition = {
+                            $set: {"programs.$[filter]": newMap}
+                        };
+                        const filterCondition = {
+                            arrayFilters: [{"filter": curMap}]
+                        };
+                        Faculty.updateMany(findCondition,updateCondition,filterCondition).then(() => {
+                            res.json({
+                                message:"success",
+                                result:null
+                            })
+                        }).catch(() => {
+                            res.json({
+                                message:"error"
+                            })
+                        })
+                    }).catch(() => {
+                        res.json({
+                            message:"error"
+                        })
+                    });
+                    break;
+                case "streamShort":
+                    Streams.findOneAndUpdate({short:curVal},{short:newVal}).then(() => {
+                        Faculty.updateMany({stream:curVal},{stream:newVal}).then(() => {
+                            res.json({
+                                message:"success"
+                            })
+                        }).catch(() => {
+                            res.json({
+                                message:"error"
+                            })
+                        })
+                    }).catch(() => {
+                        res.json({
+                            message:"error"
+                        })
+                    });
+                    break;
+                case "streamFull":
+                    Streams.findOneAndUpdate({full:curVal},{full:newVal}).then(() => {
+                        res.json({
+                            message:"success"
+                        })
+                    }).catch(() => {
+                        res.json({
+                            message:"error"
+                        })
+                    });
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            res.json({
+                message:"invalid-token",
+                result:null
+            })
+        }
+    })
 })
 
 module.exports = router;

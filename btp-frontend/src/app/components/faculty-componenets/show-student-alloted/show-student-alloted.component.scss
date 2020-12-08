@@ -3,45 +3,45 @@
     border-radius: 4px;
     display: block;
     overflow: hidden;
-  }
-  
-  mat-dialog-content {
+}
+
+mat-dialog-content {
     height: 100%;
     overflow: auto;
-  }
- 
-  .project {
+}
+
+.project {
     float: left;
-  }
-  
-  .faculty {
+}
+
+.faculty {
     float: right;
-  }
-  
-  .example-viewport {
+}
+
+.example-viewport {
     height: 500px;
     width: 800px;
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
+
     &::-webkit-scrollbar {
-      display: none;
+        display: none;
     }
-  }
-  
-  .text {
+}
+
+.text {
     text-align: center;
-  }
-  
-  .list-item {
+}
+
+.list-item {
     padding: 20px 10px;
     box-sizing: border-box;
     cursor: move;
     color: black;
     font-size: 14px;
-  }
-  
-  .list-item:last-child {
+}
+
+.list-item:last-child {
     border: none;
-  }
-  
+}

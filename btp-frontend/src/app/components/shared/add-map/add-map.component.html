@@ -3,30 +3,30 @@
 <mat-dialog-content [formGroup]="addForm" novalidate>
     <div class="row">
         <mat-form-field class="full-width">
-            <input matInput placeholder="Stream/Program name" formControlName="full" />
+            <input formControlName="full" matInput placeholder="{{data.heading}} name"/>
             <mat-error *ngIf="addForm.controls['full'].hasError('required')">
-                Stream/Program name is <strong>required</strong>
+                {{data.heading}} name is <strong>required</strong>
             </mat-error>
         </mat-form-field>
     </div>
     <div class="row">
         <mat-form-field class="full-width">
-            <input matInput placeholder="Stream/Program Abbrevation" formControlName="short" />
+            <input formControlName="short" matInput placeholder="{{data.heading}} Abbrevation"/>
             <mat-error *ngIf="addForm.controls['short'].hasError('required')">
-                Stream/Program Abbrevation is <strong>required</strong>
+                {{data.heading}} Abbrevation is <strong>required</strong>
             </mat-error>
             <mat-error *ngIf="addForm.controls['short'].errors?.pattern">
-                Stream/Program Abbrevation can only consist of <strong>letters</strong>
+                {{data.heading}} Abbrevation can only consist of <strong>letters</strong>
             </mat-error>
         </mat-form-field>
     </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button mat-raised-button class="submit_button" color="primary" (click)="onSubmit()" [disabled]="!addForm.valid">
-    Submit
-  </button>
-    <button mat-raised-button class="close_button" (click)="onNoClick()" color="warn" type="submit">
-    Close
-  </button>
+    <button (click)="onSubmit()" [disabled]="!addForm.valid" class="submit_button" color="primary" mat-raised-button>
+        Submit
+    </button>
+    <button (click)="onNoClick()" class="close_button" color="warn" mat-raised-button type="submit">
+        Close
+    </button>
 </mat-dialog-actions>

@@ -1,203 +1,204 @@
 <div *ngIf="!(router.url | isPreferenceEdit); else elseBlock">
-  <mat-sidenav-container class="example-container">
-    <!-- TODO Try to convert this as angular animations -->
-    <mat-sidenav
-      [style.width.%]="sidenavWidth"
-      class="drawer"
-      #side
-      mode="side"
-      closed
-    >
-      <mat-toolbar [@openClose]="side.opened? (sidenavWidth == 100 ? 'fullOpen': 'open'):'close'" color="accent" class="toolbar">
-        <div class="fill-space"></div>
-        <h1 class="heading">
-          Current Preferences
-        </h1>
-        <div class="fill-space"></div>
-        <button
-          *ngIf="showToggleOnSidenav"
-          [matTooltip]="side.opened ? 'close preferences' : 'view preferences'"
-          matTooltipPosition="above"
-          mat-button
-          class="show-preferences"
-          (click)="side.toggle()"
+    <mat-sidenav-container class="example-container">
+        <mat-sidenav
+            #side
+            [style.width.%]="sidenavWidth"
+            class="drawer"
+            closed
+            mode="side"
         >
-          <mat-icon>list</mat-icon>
-        </button>
-      </mat-toolbar>
-      <div class="display-preferences">
-        <app-display-preferences
-          [preferences]="preferences.data"
-          [stage]="stage"
-          (updateProjects)="updateProjects($event)"
-        ></app-display-preferences>
-      </div>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <mat-toolbar color="accent">
-        <button
-          [matTooltip]="side.opened ? 'close preferences' : 'view preferences'"
-          matTooltipPosition="above"
-          mat-button
-          class="show-preferences"
-          (click)="side.toggle()"
-        >
-          <mat-icon>list</mat-icon>
-        </button>
-        <div class="fill-space"></div>
-        <h1 class="heading">
-          Available Projects
-        </h1>
-        <div class="fill-space"></div>
-      </mat-toolbar>
-      <mat-form-field>
-        <mat-label>Filter by any...</mat-label>
-        <input
-          autocomplete="off"
-          matInput
-          type="search"
-          (keyup)="applyFilter($event)"
-          placeholder="Search...."
-        />
-      </mat-form-field>
-      <button
-        mat-raised-button
-        class="add-preferences"
-        color="primary"
-        [disabled]="stage >= 2"
-        (click)="onSubmit($event)"
-      >
-        Add to Preferences
-      </button>
+            <mat-toolbar [@openClose]="side.opened? (sidenavWidth == 100 ? 'fullOpen': 'open'):'close'" class="toolbar"
+                         color="accent">
+                <div class="fill-space"></div>
+                <h1 class="heading">
+                    Current Preferences
+                </h1>
+                <div class="fill-space"></div>
+                <button
+                    (click)="side.toggle()"
+                    *ngIf="showToggleOnSidenav"
+                    [matTooltip]="side.opened ? 'close preferences' : 'view preferences'"
+                    class="show-preferences"
+                    mat-button
+                    matTooltipPosition="above"
+                >
+                    <mat-icon>list</mat-icon>
+                </button>
+            </mat-toolbar>
+            <div class="display-preferences">
+                <app-display-preferences
+                    (updateProjects)="updateProjects($event)"
+                    [preferences]="preferences.data"
+                    [stage]="stage"
+                ></app-display-preferences>
+            </div>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <mat-toolbar color="accent">
+                <button
+                    (click)="side.toggle()"
+                    [matTooltip]="side.opened ? 'close preferences' : 'view preferences'"
+                    class="show-preferences"
+                    mat-button
+                    matTooltipPosition="above"
+                >
+                    <mat-icon>list</mat-icon>
+                </button>
+                <div class="fill-space"></div>
+                <h1 class="heading">
+                    Available Projects
+                </h1>
+                <div class="fill-space"></div>
+            </mat-toolbar>
+            <mat-form-field>
+                <mat-label>Filter by any...</mat-label>
+                <input
+                    (keyup)="applyFilter($event)"
+                    autocomplete="off"
+                    matInput
+                    placeholder="Search...."
+                    type="search"
+                />
+            </mat-form-field>
+            <button
+                (click)="onSubmit($event)"
+                [disabled]="stage >= 2"
+                class="add-preferences"
+                color="primary"
+                mat-raised-button
+            >
+                Add to Preferences
+            </button>
 
-      <div class="display">
-        <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
-          <table
-            #table
-            mat-table
-            [dataSource]="projects"
-            multiTemplateDataRows
-            class="mat-elevation-z8"
-          >
-            <ng-container matColumnDef="select">
-              <th mat-header-cell *matHeaderCellDef>
-                <mat-checkbox
-                  color="primary"
-                  (change)="$event ? masterToggle() : null"
-                  [checked]="selection.hasValue() && isAllSelected()"
-                  [indeterminate]="isAnyOneSelected() && !isAllSelected()"
-                  [aria-label]="checkboxLabel(null)"
-                >
-                </mat-checkbox>
-              </th>
-              <td mat-cell *matCellDef="let row">
-                <mat-checkbox
-                  color="primary"
-                  (click)="$event.stopPropagation()"
-                  (change)="$event ? selection.toggle(row) : null"
-                  [checked]="selection.isSelected(row)"
-                  [aria-label]="checkboxLabel(row)"
-                >
-                </mat-checkbox>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="Title">
-              <th mat-header-cell *matHeaderCellDef>Title</th>
-              <td mat-cell *matCellDef="let project">{{ project.title }}</td>
-            </ng-container>
-            <ng-container matColumnDef="Faculty">
-              <th mat-header-cell *matHeaderCellDef>Faculty</th>
-              <td mat-cell *matCellDef="let project">
-                {{ project.faculty_name }}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="Duration">
-              <th mat-header-cell *matHeaderCellDef>Duration(in months)</th>
-              <td class="align-head" mat-cell *matCellDef="let project">
-                {{ project.duration }}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="Email">
-              <th class="align-head" mat-header-cell *matHeaderCellDef>Email-ID</th>
-              <td class="align-head" mat-cell *matCellDef="let project">
-                {{ project.faculty_email }}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="Intake">
-              <th class="align-head" mat-header-cell *matHeaderCellDef>Student Intake</th>
-              <td class="align-data" mat-cell *matCellDef="let project">
-                {{ project.studentIntake }}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="Actions">
-              <th mat-header-cell *matHeaderCellDef>Add Preference</th>
-              <td
-                mat-cell
-                (click)="$event.stopPropagation()"
-                *matCellDef="let project"
-              >
-                <mat-icon
-                  matTooltip="Add {{ project.title }} to preferences"
-                  [matTooltipPosition]="'above'"
-                  (click)="addOnePreference(project)"
-                  >add</mat-icon
-                >
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="expandedDetail">
-              <td
-                mat-cell
-                *matCellDef="let project"
-                [attr.colspan]="displayedColumns.length"
-              >
-                <div
-                  class="example-element-detail"
-                  [@detailExpand]="
+            <div class="display">
+                <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
+                    <table
+                        #table
+                        [dataSource]="projects"
+                        class="mat-elevation-z8"
+                        mat-table
+                        multiTemplateDataRows
+                    >
+                        <ng-container matColumnDef="select">
+                            <th *matHeaderCellDef mat-header-cell>
+                                <mat-checkbox
+                                    (change)="$event ? masterToggle() : null"
+                                    [aria-label]="checkboxLabel(null)"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="isAnyOneSelected() && !isAllSelected()"
+                                    color="primary"
+                                >
+                                </mat-checkbox>
+                            </th>
+                            <td *matCellDef="let row" mat-cell>
+                                <mat-checkbox
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    (click)="$event.stopPropagation()"
+                                    [aria-label]="checkboxLabel(row)"
+                                    [checked]="selection.isSelected(row)"
+                                    color="primary"
+                                >
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Title">
+                            <th *matHeaderCellDef mat-header-cell>Title</th>
+                            <td *matCellDef="let project" mat-cell>{{ project.title }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Faculty">
+                            <th *matHeaderCellDef mat-header-cell>Faculty</th>
+                            <td *matCellDef="let project" mat-cell>
+                                {{ project.faculty_name }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Duration">
+                            <th *matHeaderCellDef mat-header-cell>Duration(in months)</th>
+                            <td *matCellDef="let project" class="align-head" mat-cell>
+                                {{ project.duration }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Email">
+                            <th *matHeaderCellDef class="align-head" mat-header-cell>Email-ID</th>
+                            <td *matCellDef="let project" class="align-head" mat-cell>
+                                {{ project.faculty_email }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Intake">
+                            <th *matHeaderCellDef class="align-head" mat-header-cell>Student Intake</th>
+                            <td *matCellDef="let project" class="align-data" mat-cell>
+                                {{ project.studentIntake }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Actions">
+                            <th *matHeaderCellDef mat-header-cell>Add Preference</th>
+                            <td
+                                (click)="$event.stopPropagation()"
+                                *matCellDef="let project"
+                                mat-cell
+                            >
+                                <mat-icon
+                                    (click)="addOnePreference(project)"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Add {{ project.title }} to preferences"
+                                >add
+                                </mat-icon
+                                >
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="expandedDetail">
+                            <td
+                                *matCellDef="let project"
+                                [attr.colspan]="displayedColumns.length"
+                                mat-cell
+                            >
+                                <div
+                                    [@detailExpand]="
                     project == expandedElement ? 'expanded' : 'collapsed'
                   "
-                >
-                  <div class="example-element-description">
-                    Description : {{ project.description }}
-                  </div>
-                </div>
-              </td>
-            </ng-container>
+                                    class="example-element-detail"
+                                >
+                                    <div class="example-element-description">
+                                        Description : {{ project.description }}
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
 
-            <tr
-              mat-header-row
-              *matHeaderRowDef="displayedColumns; sticky: true"
-            ></tr>
-            <tr
-              mat-row
-              *matRowDef="
+                        <tr
+                            *matHeaderRowDef="displayedColumns; sticky: true"
+                            mat-header-row
+                        ></tr>
+                        <tr
+                            (click)="
+                expandedElement = expandedElement === element ? null : element
+              "
+                            (mouseenter)="isActive = true; indexHover = i"
+                            (mouseleave)="isActive = false; indexHover = -1"
+                            *matRowDef="
                 let element;
                 let i = dataIndex;
                 columns: displayedColumns
               "
-              class="example-element-row remove-background"
-              [class.example-expanded-row]="expandedElement === element"
-              (mouseenter)="isActive = true; indexHover = i"
-              (mouseleave)="isActive = false; indexHover = -1"
-              [class.mat-elevation-z8]="isActive && indexHover == i"
-              (click)="
-                expandedElement = expandedElement === element ? null : element
-              "
-            ></tr>
-            <tr
-              mat-row
-              *matRowDef="let row; columns: ['expandedDetail']"
-              class="example-detail-row"
-            ></tr>
-          </table>
-        </div>
-      </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+                            [class.example-expanded-row]="expandedElement === element"
+                            [class.mat-elevation-z8]="isActive && indexHover == i"
+                            class="example-element-row remove-background"
+                            mat-row
+                        ></tr>
+                        <tr
+                            *matRowDef="let row; columns: ['expandedDetail']"
+                            class="example-detail-row"
+                            mat-row
+                        ></tr>
+                    </table>
+                </div>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 </div>
 
 <ng-template #elseBlock>
-  <app-edit-preferences
-    [preferences]="preferences"
-    [stage]="stage"
-  ></app-edit-preferences>
+    <app-edit-preferences
+        [preferences]="preferences"
+        [stage]="stage"
+    ></app-edit-preferences>
 </ng-template>

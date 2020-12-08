@@ -1,20 +1,21 @@
 <div #sigInDiv>
-  <a (click)="userActivity()">
-    <div
-      matRipple
-      matRippleCentered="true"
-      class="google-btn"
-      *ngIf="!(isLoggedIn|checkLogIn);else elseBlock"
-    >
-      <img src="../../../../assets/btn_google_signin_light_focus_web.png" />
-    </div>
-    <ng-template #elseBlock>
-      <mat-icon
-      class="sign-out"
-      matTooltip="Sign Out"
-      matTooltipPosition="below"
-      >exit_to_app</mat-icon
-    >
-    </ng-template>
-  </a>
+    <a (click)="userActivity()">
+        <div
+            *ngIf="!(isLoggedIn|checkLogIn);else elseBlock"
+            class="google-btn"
+            matRipple
+            matRippleCentered="true"
+        >
+            <img src="../../../../assets/btn_google_signin_light_focus_web.png"/>
+        </div>
+        <ng-template #elseBlock>
+            <mat-icon
+                class="sign-out"
+                matTooltip="Sign Out"
+                matTooltipPosition="below"
+            >exit_to_app
+            </mat-icon
+            >
+        </ng-template>
+    </a>
 </div>

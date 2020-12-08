@@ -7,525 +7,525 @@ const Student = require("../models/Student");
 const Admin = require("../models/Admin_Info");
 
 router.post("/:id", (req, res) => {
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
-	const stream = req.body.stream;
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const stream = req.body.stream;
 
-	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-		.lean()
-		.select("_id")
-		.then((faculty) => {
-			if (faculty) {
-				Project.find({ faculty_id: faculty._id, stream : stream })
-					.lean()
-					.then((projects) => {
-						if (projects) {
-							res.json({
-								status: "success",
-								project_details: projects,
-							});
-						} else {
-							res.json({
-								stauts: "fail",
-								project_details: "Error",
-								students: "Error",
-							});
-						}
-					})
-					.catch((err) => {
-						res.json({
-							stauts: "fail",
-							project_details: "Project Not Found",
-							students: "Error",
-						});
-					});
-			} else {
-				res.json({
-					status: "fail",
-					project_details: "Not valid faculty id",
-					students: "Error",
-				});
-			}
-		})
-		.catch((err) => {
-			res.json({
-				stauts: "fail",
-				project_details: "Faculty Not Found",
-				students: "Error",
-			});
-		});
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+            if (faculty) {
+                Project.find({ faculty_id: faculty._id, stream : stream })
+                    .lean()
+                    .then((projects) => {
+                        if (projects) {
+                            res.json({
+                                status: "success",
+                                project_details: projects,
+                            });
+                        } else {
+                            res.json({
+                                stauts: "fail",
+                                project_details: "Error",
+                                students: "Error",
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        res.json({
+                            stauts: "fail",
+                            project_details: "Project Not Found",
+                            students: "Error",
+                        });
+                    });
+            } else {
+                res.json({
+                    status: "fail",
+                    project_details: "Not valid faculty id",
+                    students: "Error",
+                });
+            }
+        })
+        .catch(() => {
+            res.json({
+                stauts: "fail",
+                project_details: "Faculty Not Found",
+                students: "Error",
+            });
+        });
 });
 
 router.post("/add/:id", (req, res) => {
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
-	const project_details = req.body;
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const project_details = req.body;
 
-	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-		.then((user) => {
-			const stream = project_details.stream;
-			if (user) {
-				var project = new Project({
-					title: project_details.title,
-					duration: project_details.duration,
-					studentIntake: project_details.studentIntake,
-					description: project_details.description,
-					stream: project_details.stream,
-					faculty_id: user._id,
-				});
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .then((user) => {
+            const stream = project_details.stream;
+            if (user) {
+                const project = new Project({
+                    title: project_details.title,
+                    duration: project_details.duration,
+                    studentIntake: project_details.studentIntake,
+                    description: project_details.description,
+                    stream: project_details.stream,
+                    faculty_id: user._id,
+                });
 
-				Admin.findOne({ stream: stream })
-				.lean()
-				.select("project_cap student_cap studentsPerFaculty")
-				.then((admin) => {
-					if (admin) {
-						Project.find({ faculty_id: user._id, stream: stream })
-							.then((projects) => {
-								const count = projects.length;
-								var student_count = 0;
+                Admin.findOne({ stream: stream })
+                    .lean()
+                    .select("project_cap student_cap studentsPerFaculty")
+                    .then((admin) => {
+                        if (admin) {
+                            Project.find({ faculty_id: user._id, stream: stream })
+                                .then((projects) => {
+                                    const count = projects.length;
+                                    let student_count = 0;
 
-								for (const proj of projects) {
-									student_count += proj.studentIntake;
-								}
+                                    for (const proj of projects) {
+                                        student_count += proj.studentIntake;
+                                    }
 
-								if (admin.project_cap == null) {
-									res.json({
-										save: "projectCap",
-										msg: "Please contact the admin to set the project cap",
-									});
-								} else if (count >= admin.project_cap) {
-									res.json({
-										save: "projectCap",
-										msg: `Max number of projects that can be added are ${admin.project_cap}`,
-									});
-								} else {
-									if (project_details.studentIntake > admin.student_cap) {
-										res.json({
-											save: "studentCap",
-											msg: `Max number of students that can be taken per project are ${admin.student_cap}`,
-										});
-									}
+                                    if (admin.project_cap == null) {
+                                        res.json({
+                                            save: "projectCap",
+                                            msg: "Please contact the admin to set the project cap",
+                                        });
+                                    } else if (count >= admin.project_cap) {
+                                        res.json({
+                                            save: "projectCap",
+                                            msg: `Max number of projects that can be added are ${admin.project_cap}`,
+                                        });
+                                    } else {
+                                        if (project_details.studentIntake > admin.student_cap) {
+                                            res.json({
+                                                save: "studentCap",
+                                                msg: `Max number of students that can be taken per project are ${admin.student_cap}`,
+                                            });
+                                        }
 
-									else if (
-										student_count + Number(project_details.studentIntake) >
-										admin.studentsPerFaculty
-									) {
-										res.json({
-											save: "studentsPerFaculty",
-											msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`,
-										});
-									} else {
-										Student.find({stream:stream}).sort([['gpa', -1]]).lean().select("_id")
-                                            .then(students => {
-                                                project.not_students_id = students.map(val => val._id);
-                                                project
-                                                    .save()
-                                                    .then((result) => {
-                                                        user.project_list.push(project._id);
-                                                        user.save().then((ans) => {
+                                        else if (
+                                            student_count + Number(project_details.studentIntake) >
+                                            admin.studentsPerFaculty
+                                        ) {
+                                            res.json({
+                                                save: "studentsPerFaculty",
+                                                msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`,
+                                            });
+                                        } else {
+                                            Student.find({stream:stream}).sort([['gpa', -1]]).lean().select("_id")
+                                                .then(students => {
+                                                    project.not_students_id = students.map(val => val._id);
+                                                    project
+                                                        .save()
+                                                        .then(() => {
+                                                            user.project_list.push(project._id);
+                                                            user.save().then(() => {
+                                                                res.json({
+                                                                    save: "success",
+                                                                    msg: "Your project has been successfully added",
+                                                                });
+                                                            });
+                                                        })
+                                                        .catch(() => {
                                                             res.json({
-                                                                save: "success",
-                                                                msg: "Your project has been successfully added",
+                                                                save: "fail",
+                                                                msg: " There was an error, Please try again!", //Display the messages in flash messages
                                                             });
                                                         });
-                                                    })
-                                                    .catch((err) => {
-                                                        res.json({
-                                                            save: "fail",
-                                                            msg: " There was an error, Please try again!", //Display the messages in flash messages
-                                                        });
-                                                    });
-                                            })
-									}
-								}
-							})
-							.catch((err) => {
-								console.log(err)
-								res.json({
-									save: "fail",
-									msg: " There was an error, Please try again!", //Display the messages in flash messages
-								});
-							});
-					} else {
-						res.json({
-							status: "fail",
-							result: null,
-						});
-					}
-				});
-			} else {
-				res.json({
-					save: "fail",
-					msg: "User not found",
-				});
-			}
-		})
-		.catch((err) => {
-			res.json({
-				save: "fail",
-				msg: "Error in finding user",
-			});
-		});
+                                                })
+                                        }
+                                    }
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                    res.json({
+                                        save: "fail",
+                                        msg: " There was an error, Please try again!", //Display the messages in flash messages
+                                    });
+                                });
+                        } else {
+                            res.json({
+                                status: "fail",
+                                result: null,
+                            });
+                        }
+                    });
+            } else {
+                res.json({
+                    save: "fail",
+                    msg: "User not found",
+                });
+            }
+        })
+        .catch(() => {
+            res.json({
+                save: "fail",
+                msg: "Error in finding user",
+            });
+        });
 });
 
 router.post("/applied/:id", (req, res) => {
-	const id = req.params.id;
-	const project_id = req.body.project;
-	const idToken = req.headers.authorization;
-	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-		.lean()
-		.select("_id")
-		.then((faculty) => {
-			if (faculty) {
-				Project.findById(mongoose.Types.ObjectId(project_id))
-					.populate({path:"students_id", select:"-google_id -stream -date -email -isRegistered",model:Student})
-					.populate({path:"not_students_id",select:"-google_id -stream -date -email -isRegistered",model:Student})
-					.then((project) => {
-						res.json({
-							status: "success",
-							students: project["students_id"],
-							reorder:project["reorder"],
-							non_students:project["not_students_id"]
-						});
-					})
-					.catch((err) => {
-						console.log(err);
-					});
-			} else {
-				res.json({
-					status: "fail",
-					students: "Server Error",
-				});
-			}
-		})
-		.catch((err) => {
-			console.log(err)
-			res.json({
-				status: "fail",
-				students: "Authentication Error",
-			});
-		});
+    const id = req.params.id;
+    const project_id = req.body.project;
+    const idToken = req.headers.authorization;
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+            if (faculty) {
+                Project.findById(mongoose.Types.ObjectId(project_id))
+                    .populate({path:"students_id", select:"-google_id -stream -date -email -isRegistered",model:Student})
+                    .populate({path:"not_students_id",select:"-google_id -stream -date -email -isRegistered",model:Student})
+                    .then((project) => {
+                        res.json({
+                            status: "success",
+                            students: project["students_id"],
+                            reorder:project["reorder"],
+                            non_students:project["not_students_id"]
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            } else {
+                res.json({
+                    status: "fail",
+                    students: "Server Error",
+                });
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.json({
+                status: "fail",
+                students: "Authentication Error",
+            });
+        });
 });
 
 router.post("/include_projects/:id", (req, res) => {
-	const id = req.params.id;
-	var projects = req.body.projects;
-	projects = projects.map((val) => mongoose.Types.ObjectId(val));
-	const idToken = req.headers.authorization;
-	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-	.lean()
-	.select("_id")
-	.then((faculty) => {
-			if (faculty) {
-				const faculty_id = faculty._id;
-				var conditions = {
-					faculty_id: faculty_id,
-				};
-				Project.updateMany(conditions, { isIncluded: false }).then(() => {
-					conditions = {
-						_id: { $in: projects },
-						faculty_id: faculty_id,
-					};
-					Project.updateMany(conditions, { isIncluded: true }).then(() => {
-						res.json({
-							message: "success",
-							result: null,
-						});
-					});
-				});
-			} else {
-				res.json({
-					message: "invalid-token",
-					result: null,
-				});
-			}
-		}
-	);
+    const id = req.params.id;
+    let projects = req.body.projects;
+    projects = projects.map((val) => mongoose.Types.ObjectId(val));
+    const idToken = req.headers.authorization;
+    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+                if (faculty) {
+                    const faculty_id = faculty._id;
+                    let conditions = {
+                        faculty_id: faculty_id,
+                    };
+                    Project.updateMany(conditions, { isIncluded: false }).then(() => {
+                        conditions = {
+                            _id: { $in: projects },
+                            faculty_id: faculty_id,
+                        };
+                        Project.updateMany(conditions, { isIncluded: true }).then(() => {
+                            res.json({
+                                message: "success",
+                                result: null,
+                            });
+                        });
+                    });
+                } else {
+                    res.json({
+                        message: "invalid-token",
+                        result: null,
+                    });
+                }
+            }
+        );
 });
 
 router.post("/save_preference/:id", (req, res) => {
-	const id = req.params.id;
-	const student_ids = req.body.student;
-	const project_id = req.body.project_id;
-	const idToken = req.headers.authorization;
-	const stream = req.body.stream;
-	const index = req.body.index;
-	let reorder = req.body.reorder;
+    const id = req.params.id;
+    const student_ids = req.body.student;
+    const project_id = req.body.project_id;
+    const idToken = req.headers.authorization;
+    const stream = req.body.stream;
+    const index = req.body.index;
+    let reorder = req.body.reorder;
 
 
-	Admin.findOne({stream:stream})
-		.lean()
-		.select("stage")
-		.then(admin=>{
-			if(admin.stage == 2){
-				Faculty.findOne({ google_id: { id: id, idToken: idToken } })
-					.lean()
-					.select("_id")
-					.then((faculty) => {
-						if (faculty) {
+    Admin.findOne({stream:stream})
+        .lean()
+        .select("stage")
+        .then(admin=>{
+            if(admin.stage === 2){
+                Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+                    .lean()
+                    .select("_id")
+                    .then((faculty) => {
+                        if (faculty) {
 
-							if(index == 0){
+                            if(index === 0){
 
-								if(reorder == 2){
-									reorder = 2;
-								}
-								else if(reorder == 0){
-									reorder = -1;
-								}
-								else if(reorder == -1){
-									reorder = -1;
-								}
-								else if(reorder == 1){
-									reorder = 2;
-								}
-								
+                                if(reorder === 2){
+                                    reorder = 2;
+                                }
+                                else if(reorder === 0){
+                                    reorder = -1;
+                                }
+                                else if(reorder === -1){
+                                    reorder = -1;
+                                }
+                                else if(reorder === 1){
+                                    reorder = 2;
+                                }
 
-								Project.findByIdAndUpdate(project_id,{students_id:student_ids, reorder:reorder})
-								.then((project) => {
-									res.json({
-										status: "success",
-										msg: "Your preferences are saved",
-										reorder: reorder
-									});
-								})
-								.catch((err) => {
-									res.json({
-										status: "fail",
-										msg: "Project Not Found!!! Please Reload",
-									});
-								});					
 
-							}
-							else if(index == 1){
+                                Project.findByIdAndUpdate(project_id,{students_id:student_ids, reorder:reorder})
+                                    .then(() => {
+                                        res.json({
+                                            status: "success",
+                                            msg: "Your preferences are saved",
+                                            reorder: reorder
+                                        });
+                                    })
+                                    .catch(() => {
+                                        res.json({
+                                            status: "fail",
+                                            msg: "Project Not Found!!! Please Reload",
+                                        });
+                                    });
 
-								if(reorder == 2){
-									reorder = 2;
-								}
-								else if(reorder == 0){
-									reorder = 1;
-								}
-								else if(reorder == 1){
-									reorder = 1;
-								}
-								else if(reorder == -1){
-									reorder = 2;
-								}
-							
+                            }
+                            else if(index === 1){
 
-								Project.findByIdAndUpdate(project_id,{not_students_id:student_ids, reorder:reorder})
-								.then((project) => {
-									res.json({
-										status: "success",
-										msg: "Your preferences are saved",
-										reorder: reorder
-									});
-								})
-								.catch((err) => {
-									res.json({
-										status: "fail",
-										msg: "Project Not Found!!! Please Reload",
-									});
-								});			
-							}
+                                if(reorder === 2){
+                                    reorder = 2;
+                                }
+                                else if(reorder === 0){
+                                    reorder = 1;
+                                }
+                                else if(reorder === 1){
+                                    reorder = 1;
+                                }
+                                else if(reorder === -1){
+                                    reorder = 2;
+                                }
 
-						} else {
-							res.json({
-								status: "fail",
-								msg: "Invalid Login",
-							});
-						}
-					})
-					.catch((err) => {
-						res.json({
-							status: "fail",
-							msg: "Authentication Error",
-						});
-					});
-			}
-			else{
-				res.json({
-					status: "fail",
-					msg: "You cannot edit preferences anymore.",
-				});
-			}
-		})
 
-	
+                                Project.findByIdAndUpdate(project_id,{not_students_id:student_ids, reorder:reorder})
+                                    .then(() => {
+                                        res.json({
+                                            status: "success",
+                                            msg: "Your preferences are saved",
+                                            reorder: reorder
+                                        });
+                                    })
+                                    .catch(() => {
+                                        res.json({
+                                            status: "fail",
+                                            msg: "Project Not Found!!! Please Reload",
+                                        });
+                                    });
+                            }
+
+                        } else {
+                            res.json({
+                                status: "fail",
+                                msg: "Invalid Login",
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        res.json({
+                            status: "fail",
+                            msg: "Authentication Error",
+                        });
+                    });
+            }
+            else{
+                res.json({
+                    status: "fail",
+                    msg: "You cannot edit preferences anymore.",
+                });
+            }
+        })
+
+
 });
 
 router.post("/update/:id", (req, res) => {
-	const project_id = mongoose.Types.ObjectId(req.params.id);
-	const title = req.body.title;
-	const duration = Number(req.body.duration);
-	const studentIntake = Number(req.body.studentIntake);
-	const description = req.body.description;
+    const project_id = mongoose.Types.ObjectId(req.params.id);
+    const title = req.body.title;
+    const duration = Number(req.body.duration);
+    const studentIntake = Number(req.body.studentIntake);
+    const description = req.body.description;
 
-	Project.findById({ _id: project_id })
-		.then((project) => {
-			project.title = title;
-			project.duration = duration;
-			project.studentIntake = studentIntake;
-			project.description = description;
+    Project.findById({ _id: project_id })
+        .then((project) => {
+            project.title = title;
+            project.duration = duration;
+            project.studentIntake = studentIntake;
+            project.description = description;
 
-			const stream = project.stream;
+            const stream = project.stream;
 
-			Admin.findOne({ stream: stream })
-			.select({
-				student_cap:1,
-				studentsPerFaculty:1
-			})
-			.then((admin) => {
-				if (admin) {
-					Project.find({ faculty_id: project.faculty_id, stream: stream }).then(
-						(projects) => {
-							const count = projects.length;
-							var student_count = 0;
+            Admin.findOne({ stream: stream })
+                .select({
+                    student_cap:1,
+                    studentsPerFaculty:1
+                })
+                .then((admin) => {
+                    if (admin) {
+                        Project.find({ faculty_id: project.faculty_id, stream: stream }).then(
+                            (projects) => {
 
-							for (const proj of projects) {
-								if (proj._id.toString() == project_id.toString()) {
-									student_count += studentIntake;
-								} else student_count += proj.studentIntake;
-							}
+                                let student_count = 0;
 
-							if (project.studentIntake > admin.student_cap) {
-								res.json({
-									status: "fail1",
-									msg: `Max number of students that can be taken per project are ${admin.student_cap}`,
-								});
-							}
+                                for (const proj of projects) {
+                                    if (proj._id.toString() === project_id.toString()) {
+                                        student_count += studentIntake;
+                                    } else student_count += proj.studentIntake;
+                                }
 
-							if (student_count > admin.studentsPerFaculty) {
-								res.json({
-									status: "fail2",
-									msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`,
-								});
-							} else {
-								project
-									.save()
-									.then((result) => {
-										res.json({
-											status: "success",
-											msg: "Your Project was successfully updated",
-										});
-									})
-									.catch((err) => {
-										res.json({
-											status: "fail",
-											msg: "Project Not Saved. Please reload and try again!!!",
-										});
-									});
-							}
-						}
-					);
-				}
-			});
-		})
-		.catch((err) => {
-			res.json({
-				status: "fail",
-				msg: "Project Not Found",
-			});
-		});
+                                if (project.studentIntake > admin.student_cap) {
+                                    res.json({
+                                        status: "fail1",
+                                        msg: `Max number of students that can be taken per project are ${admin.student_cap}`,
+                                    });
+                                }
+
+                                if (student_count > admin.studentsPerFaculty) {
+                                    res.json({
+                                        status: "fail2",
+                                        msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`,
+                                    });
+                                } else {
+                                    project
+                                        .save()
+                                        .then(() => {
+                                            res.json({
+                                                status: "success",
+                                                msg: "Your Project was successfully updated",
+                                            });
+                                        })
+                                        .catch(() => {
+                                            res.json({
+                                                status: "fail",
+                                                msg: "Project Not Saved. Please reload and try again!!!",
+                                            });
+                                        });
+                                }
+                            }
+                        );
+                    }
+                });
+        })
+        .catch(() => {
+            res.json({
+                status: "fail",
+                msg: "Project Not Found",
+            });
+        });
 });
 
 router.delete("/delete/:id", (req, res) => {
-	const id = req.params.id;
+    const id = req.params.id;
 
-	Project.findByIdAndRemove({ _id: id })
-		.then((result) => {
-			let students_id = result.students_id;
-			let faculty_id = result.faculty_id;
+    Project.findByIdAndRemove({ _id: id })
+        .then((result) => {
+            let students_id = result.students_id;
+            let faculty_id = result.faculty_id;
 
-			var updateConfig = {
-				$pull : { project_list : id } 
-			}
+            let updateConfig = {
+                $pull: {project_list: id}
+            };
 
-			Faculty.findByIdAndUpdate(faculty_id,updateConfig)
-				.then(result=>{
+            Faculty.findByIdAndUpdate(faculty_id,updateConfig)
+                .then(()=>{
 
-					updateConfig = {
-						$pull : {projects_preference : id}
-					}
+                    updateConfig = {
+                        $pull : {projects_preference : id}
+                    }
 
-					Student.updateMany({_id: { $in: students_id }},updateConfig)
-						.then(result =>{
-							res.json({
-								status: "success",
-								msg: "The project has been successfully deleted",
-							});
+                    Student.updateMany({_id: { $in: students_id }},updateConfig)
+                        .then(() =>{
+                            res.json({
+                                status: "success",
+                                msg: "The project has been successfully deleted",
+                            });
 
-						})
-						.catch((err) => {
-							res.json({
-								status: "fail",
-								msg: "Unable to update student preferences",
-							});
-						});
+                        })
+                        .catch(() => {
+                            res.json({
+                                status: "fail",
+                                msg: "Unable to update student preferences",
+                            });
+                        });
 
-				})
-				.catch((err) => {
-					res.json({
-						status: "fail",
-						msg: "Please reload and try again!!!",
-					});
-				});
-			
-		})
-		.catch((err) => {
-			res.json({
-				status: "fail",
-				msg: "Please reload and try again!!!",
-			});
-		});
+                })
+                .catch(() => {
+                    res.json({
+                        status: "fail",
+                        msg: "Please reload and try again!!!",
+                    });
+                });
+
+        })
+        .catch(() => {
+            res.json({
+                status: "fail",
+                msg: "Please reload and try again!!!",
+            });
+        });
 });
 
 router.post("/notApplied/:id",(req,res)=>{
 
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
-	const project_id = req.body.project;
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const project_id = req.body.project;
 
-	console.log(project_id)
+    console.log(project_id)
 
-	Faculty.findOne({google_id:{id:id,idToken:idToken}})
-		.lean()
-		.select("_id")
-		.then(faculty=>{
+    Faculty.findOne({google_id:{id:id,idToken:idToken}})
+        .lean()
+        .select("_id")
+        .then(faculty=>{
 
-			if(faculty){
+            if(faculty){
 
-				Project.findById(mongoose.Types.ObjectId(project_id))
-					.lean()
-					.populate({path:"not_students_id",select:"-google_id -email -isRegistered -date",model:Student})
-					.then(project=>{
+                Project.findById(mongoose.Types.ObjectId(project_id))
+                    .lean()
+                    .populate({path:"not_students_id",select:"-google_id -email -isRegistered -date",model:Student})
+                    .then(project=>{
 
-						if(project){
-							
-							res.json({
-								status:"success",
-								non_students:project["not_students_id"]
-							})
+                        if(project){
 
-						}	
-						else{
-							res.json({
-								status:"fail",
-								result:null
-							})
-						}
-					})
+                            res.json({
+                                status:"success",
+                                non_students:project["not_students_id"]
+                            })
 
-
-			}
-			else{
-				res.json({
-					status:"fail",
-					result:null
-				})
-			}
+                        }
+                        else{
+                            res.json({
+                                status:"fail",
+                                result:null
+                            })
+                        }
+                    })
 
 
-		})
+            }
+            else{
+                res.json({
+                    status:"fail",
+                    result:null
+                })
+            }
+
+
+        })
 
 
 })

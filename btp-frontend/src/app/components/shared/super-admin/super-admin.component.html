@@ -1,502 +1,525 @@
 <mat-tab-group
-  [(selectedIndex)]="index"
-  animationDuration="0"
-  [backgroundColor]="background"
-  dynamicHeight="true"
-  mat-align-tabs="center"
+    [(selectedIndex)]="index"
+    [backgroundColor]="background"
+    animationDuration="0"
+    dynamicHeight="true"
+    mat-align-tabs="center"
 >
-  <mat-tab label="Faculty">
-    <mat-tab-group *ngIf="index == 0" animationDuration="0" [selectedIndex]="0">
-      <mat-tab *ngFor="let branch of programs.data" [label]="branch.name">
-        <div class="searchBox">
-          <input
-            class="searchInput"
-            autocomplete="off"
-            type="search"
-            mat-input
-            placeholder="Search by any ... "
-            name="search"
-            (keyup)="applyFilter($event, branch, 'faculty')"
-          />
-          <button class="searchButton" href="#">
-            <i class="material-icons">search</i>
-          </button>
-        </div>
-        <div class="display">
-          <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
-            <table
-              mat-table
-              #table
-              matSort
-              (matSortChange) = "sortFaculties($event,branch)"
-              [dataSource]="faculties[branch.short]"
-              class="mat-elevation-z8"
-            >
-              <ng-container matColumnDef="Name">
-                <th
-                  mat-header-cell
-                  mat-sort-header
-                  *matHeaderCellDef
-                  [style.color]="background"
-                >
-                  Name
-                </th>
-                <td mat-cell *matCellDef="let faculty">{{ faculty.name }}</td>
-                <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{faculties[branch.short].filteredData.length}} </td>
-              </ng-container>
-              <ng-container matColumnDef="Stream">
-                <th mat-header-cell *matHeaderCellDef>Stream</th>
-                <td mat-cell *matCellDef="let faculty">{{ faculty.stream }}</td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="Email-ID">
-                <th mat-header-cell *matHeaderCellDef>Email-ID</th>
-                <td mat-cell *matCellDef="let faculty">{{ faculty.email }}</td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="isAdmin">
-                <th mat-header-cell *matHeaderCellDef>Co-ordinator</th>
-                <td mat-cell *matCellDef="let faculty">
-                  {{ faculty.isAdmin ? faculty.adminProgram : "NO" }}
-                </td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="Actions">
-                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                <td mat-cell *matCellDef="let faculty">
+    <mat-tab label="Faculty">
+        <mat-tab-group *ngIf="index == 0" [selectedIndex]="0" animationDuration="0">
+            <mat-tab *ngFor="let branch of programs.data" [label]="branch.name">
+                <div class="searchBox">
+                    <input
+                        (keyup)="applyFilter($event, branch, 'faculty')"
+                        autocomplete="off"
+                        class="searchInput"
+                        mat-input
+                        name="search"
+                        placeholder="Search by any ... "
+                        type="search"
+                    />
+                    <button class="searchButton" href="#">
+                        <i class="material-icons">search</i>
+                    </button>
+                </div>
+                <div class="display">
+                    <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
+                        <table
+                            #table
+                            (matSortChange)="sortFaculties($event,branch)"
+                            [dataSource]="faculties[branch.short]"
+                            class="mat-elevation-z8"
+                            mat-table
+                            matSort
+                        >
+                            <ng-container matColumnDef="Name">
+                                <th
+                                    *matHeaderCellDef
+                                    [style.color]="background"
+                                    mat-header-cell
+                                    mat-sort-header
+                                >
+                                    Name
+                                </th>
+                                <td *matCellDef="let faculty" mat-cell>{{ faculty.name }}</td>
+                                <td *matFooterCellDef mat-footer-cell><b>Total
+                                    : </b> {{faculties[branch.short].filteredData.length}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Stream">
+                                <th *matHeaderCellDef mat-header-cell>Stream</th>
+                                <td *matCellDef="let faculty" mat-cell>{{ faculty.stream }}</td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <ng-container matColumnDef="Email-ID">
+                                <th *matHeaderCellDef mat-header-cell>Email-ID</th>
+                                <td *matCellDef="let faculty" mat-cell>{{ faculty.email }}</td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <ng-container matColumnDef="isAdmin">
+                                <th *matHeaderCellDef mat-header-cell>Co-ordinator</th>
+                                <td *matCellDef="let faculty" mat-cell>
+                                    {{ faculty.isAdmin ? faculty.adminProgram : "NO" }}
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <ng-container matColumnDef="Actions">
+                                <th *matHeaderCellDef mat-header-cell>Actions</th>
+                                <td *matCellDef="let faculty" mat-cell>
                   <span
-                    [matTooltip]="
+                      [matTooltip]="
                       faculty.isAdmin
                         | getToolTipToRemoveFaculty
                           : faculty.adminProgram
                           : branch.short
                     "
-                    matTooltipPosition="above"
-                    ><button
+                      matTooltipPosition="above"
+                  ><button
+                      (click)="deleteFaculty(faculty)"
+                      [disabled]="faculty.isAdmin"
                       color="warn"
                       mat-raised-button
-                      [disabled]="faculty.isAdmin"
-                      (click)="deleteFaculty(faculty)"
-                    >
+                  >
                       Remove
                     </button></span
                   >
-                  <button
-                    class="admin-button"
-                    color="primary"
-                    *ngIf="!faculty.isAdmin && !hasAdmins[branch.short]"
-                    mat-raised-button
-                    (click)="addAdmin(faculty, branch.short)"
-                  >
-                    Make Co-ordinator
-                  </button>
-                  <button
-                    class="remove-admin-button"
-                    color="primary"
-                    *ngIf="
+                                    <button
+                                        (click)="addAdmin(faculty, branch.short)"
+                                        *ngIf="!faculty.isAdmin && !hasAdmins[branch.short]"
+                                        class="admin-button"
+                                        color="primary"
+                                        mat-raised-button
+                                    >
+                                        Make Co-ordinator
+                                    </button>
+                                    <button
+                                        (click)="removeAdmin(faculty, branch.short)"
+                                        *ngIf="
                       faculty.isAdmin && faculty.adminProgram == branch.short
                     "
-                    mat-raised-button
-                    (click)="removeAdmin(faculty, branch.short)"
-                  >
-                    Remove Co-ordinator Status
-                  </button>
-                </td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <tr
-                mat-header-row
-                *matHeaderRowDef="displayedColumnsFaculty; sticky: true"
-              ></tr>
-              <tr
-                mat-row
-                *matRowDef="let row; columns: displayedColumnsFaculty"
-              ></tr>
-              <tr mat-footer-row *matFooterRowDef="displayedColumnsFaculty; sticky: true"></tr>
-            </table>
-          </div>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-tab>
-  <mat-tab label="Student">
-    <mat-tab-group *ngIf="index == 1" animationDuration="0" [selectedIndex]="0">
-      <mat-tab *ngFor="let branch of programs.data" [label]="branch.name">
-        <div class="searchBox">
-          <input
-            class="searchInput"
-            autocomplete="off"
-            type="search"
-            placeholder="Search by any ... "
-            name="search"
-            (keyup)="applyFilter($event, branch, 'student')"
-          />
-          <button class="searchButton" href="#">
-            <i class="material-icons">search</i>
-          </button>
-        </div>
-        <div class="display">
-          <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
-            <table
-              mat-table
-              matSort
-              (matSortChange)="sortStudents($event,branch)"
-              [dataSource]="students[branch.short]"
-              class="mat-elevation-z8"
-            >
-              <ng-container matColumnDef="Name">
-                <th
-                  mat-header-cell
-                  *matHeaderCellDef
-                  mat-sort-header
-                  [style.color]="background"
-                >
-                  Name
-                </th>
-                <td mat-cell *matCellDef="let student">{{ student.name }}</td>
-                <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{students[branch.short].filteredData.length}} </td>
-              </ng-container>
-              <ng-container matColumnDef="Stream">
-                <th class="common-padding" mat-header-cell *matHeaderCellDef>Program</th>
-                <td class="common-padding" mat-cell *matCellDef="let student">{{ branch.short }}</td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="Email-ID">
-                <th mat-header-cell *matHeaderCellDef>Email-ID</th>
-                <td mat-cell *matCellDef="let student">{{ student.email }}</td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="CGPA">
-                <th class="common-padding" mat-header-cell mat-sort-header *matHeaderCellDef>CGPA</th>
-                <td class="common-padding" mat-cell *matCellDef="let student">{{ student.gpa }}</td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="isRegistered">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>Registered</th>
-                <td mat-cell *matCellDef="let student">
-                  {{ student.isRegistered ? "Yes" : "No" }}
-                </td>
-                <td mat-footer-cell *matFooterCellDef> <b>Registered : </b> {{students[branch.short].filteredData | getRegisteredCount}} </td>
-              </ng-container>
-              <ng-container matColumnDef="Actions">
-                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                <td mat-cell *matCellDef="let student">
-                  <button
-                    color="warn"
-                    mat-raised-button
-                    (click)="deleteStudent(student)"
-                  >
-                    Remove
-                  </button>
-                </td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <tr
-                mat-header-row
-                *matHeaderRowDef="displayedColumnsStudent; sticky: true"
-              ></tr>
-              <tr
-                mat-row
-                *matRowDef="let row; columns: displayedColumnsStudent"
-              ></tr>
-              <tr mat-footer-row *matFooterRowDef="displayedColumnsStudent; sticky: true"></tr>
-            </table>
-          </div>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-tab>
-  <mat-tab label="Projects">
-    <mat-tab-group *ngIf="index == 2" animationDuration="0" [selectedIndex]="0">
-      <mat-tab *ngFor="let branch of programs.data" [label]="branch.name">
-        <div class="searchBox">
-          <input
-            class="searchInput"
-            autocomplete="off"
-            type="search"
-            placeholder="Search by any ... "
-            name="search"
-            (keyup)="applyFilter($event, branch, 'project')"
-          />
-          <button class="searchButton" href="#">
-            <i class="material-icons">search</i>
-          </button>
-        </div>
-        <div class="display">
-          <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
-            <table
-              mat-table
-              matSort
-              multiTemplateDataRows
-              (matSortChange)="sortProjects($event,branch);"
-              [dataSource]="projects[branch.short]"
-              class="mat-elevation-z8"
-            >
-              <ng-container matColumnDef="Title">
-                <th
-                  mat-header-cell
-                  mat-sort-header
-                  *matHeaderCellDef
-                  [style.color]="background"
-                >
-                  Title
-                </th>
-                <td mat-cell *matCellDef="let project">{{ project.title }}</td>
-                <td mat-footer-cell *matFooterCellDef> <b>Total : </b> {{projects[branch.short].filteredData.length}} </td>
-              </ng-container>
-              <ng-container matColumnDef="Faculty">
-                <th
-                  mat-header-cell
-                  class="common-padding"
-                  mat-sort-header
-                  *matHeaderCellDef
-                  [style.color]="background"
-                >
-                  Faculty
-                </th>
-                <td class="common-padding"  mat-cell *matCellDef="let project">
-                  {{ project.faculty }}
-                </td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="Stream">
-                <th mat-header-cell *matHeaderCellDef>Program</th>
-                <td mat-cell *matCellDef="let project">{{ branch.short }}</td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="NoOfStudents">
-                <th mat-sort-header mat-header-cell *matHeaderCellDef>
-                  Number Of Students Applied
-                </th>
-                <td mat-cell *matCellDef="let project">
-                  {{ project.numberOfPreferences }}
-                </td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <ng-container matColumnDef="expandedDetail">
-              <td
-                mat-cell
-                *matCellDef="let project"
-                [attr.colspan]="displayedColumnsProjects.length"
-              >
-                <div
-                  class="example-element-detail"
-                  [@detailExpand]="
+                                        class="remove-admin-button"
+                                        color="primary"
+                                        mat-raised-button
+                                    >
+                                        Remove Co-ordinator Status
+                                    </button>
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <tr
+                                *matHeaderRowDef="displayedColumnsFaculty; sticky: true"
+                                mat-header-row
+                            ></tr>
+                            <tr
+                                *matRowDef="let row; columns: displayedColumnsFaculty"
+                                mat-row
+                            ></tr>
+                            <tr *matFooterRowDef="displayedColumnsFaculty; sticky: true" mat-footer-row></tr>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-tab>
+    <mat-tab label="Student">
+        <mat-tab-group *ngIf="index == 1" [selectedIndex]="0" animationDuration="0">
+            <mat-tab *ngFor="let branch of programs.data" [label]="branch.name">
+                <div class="searchBox">
+                    <input
+                        (keyup)="applyFilter($event, branch, 'student')"
+                        autocomplete="off"
+                        class="searchInput"
+                        name="search"
+                        placeholder="Search by any ... "
+                        type="search"
+                    />
+                    <button class="searchButton" href="#">
+                        <i class="material-icons">search</i>
+                    </button>
+                </div>
+                <div class="display">
+                    <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
+                        <table
+                            (matSortChange)="sortStudents($event,branch)"
+                            [dataSource]="students[branch.short]"
+                            class="mat-elevation-z8"
+                            mat-table
+                            matSort
+                        >
+                            <ng-container matColumnDef="Name">
+                                <th
+                                    *matHeaderCellDef
+                                    [style.color]="background"
+                                    mat-header-cell
+                                    mat-sort-header
+                                >
+                                    Name
+                                </th>
+                                <td *matCellDef="let student" mat-cell>{{ student.name }}</td>
+                                <td *matFooterCellDef mat-footer-cell><b>Total
+                                    : </b> {{students[branch.short].filteredData.length}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Stream">
+                                <th *matHeaderCellDef class="common-padding" mat-header-cell>Program</th>
+                                <td *matCellDef="let student" class="common-padding" mat-cell>{{ branch.short }}</td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <ng-container matColumnDef="Email-ID">
+                                <th *matHeaderCellDef mat-header-cell>Email-ID</th>
+                                <td *matCellDef="let student" mat-cell>{{ student.email }}</td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <ng-container matColumnDef="CGPA">
+                                <th *matHeaderCellDef class="common-padding" mat-header-cell mat-sort-header>CGPA</th>
+                                <td *matCellDef="let student" class="common-padding" mat-cell>{{ student.gpa }}</td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <ng-container matColumnDef="isRegistered">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header>Registered</th>
+                                <td *matCellDef="let student" mat-cell>
+                                    {{ student.isRegistered ? "Yes" : "No" }}
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell><b>Registered
+                                    : </b> {{students[branch.short].filteredData | getRegisteredCount}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Actions">
+                                <th *matHeaderCellDef mat-header-cell>Actions</th>
+                                <td *matCellDef="let student" mat-cell>
+                                    <button
+                                        (click)="deleteStudent(student)"
+                                        color="warn"
+                                        mat-raised-button
+                                    >
+                                        Remove
+                                    </button>
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <tr
+                                *matHeaderRowDef="displayedColumnsStudent; sticky: true"
+                                mat-header-row
+                            ></tr>
+                            <tr
+                                *matRowDef="let row; columns: displayedColumnsStudent"
+                                mat-row
+                            ></tr>
+                            <tr *matFooterRowDef="displayedColumnsStudent; sticky: true" mat-footer-row></tr>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-tab>
+    <mat-tab label="Projects">
+        <mat-tab-group *ngIf="index == 2" [selectedIndex]="0" animationDuration="0">
+            <mat-tab *ngFor="let branch of programs.data" [label]="branch.name">
+                <div class="searchBox">
+                    <input
+                        (keyup)="applyFilter($event, branch, 'project')"
+                        autocomplete="off"
+                        class="searchInput"
+                        name="search"
+                        placeholder="Search by any ... "
+                        type="search"
+                    />
+                    <button class="searchButton" href="#">
+                        <i class="material-icons">search</i>
+                    </button>
+                </div>
+                <div class="display">
+                    <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
+                        <table
+                            (matSortChange)="sortProjects($event,branch);"
+                            [dataSource]="projects[branch.short]"
+                            class="mat-elevation-z8"
+                            mat-table
+                            matSort
+                            multiTemplateDataRows
+                        >
+                            <ng-container matColumnDef="Title">
+                                <th
+                                    *matHeaderCellDef
+                                    [style.color]="background"
+                                    mat-header-cell
+                                    mat-sort-header
+                                >
+                                    Title
+                                </th>
+                                <td *matCellDef="let project" mat-cell>{{ project.title }}</td>
+                                <td *matFooterCellDef mat-footer-cell><b>Total
+                                    : </b> {{projects[branch.short].filteredData.length}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Faculty">
+                                <th
+                                    *matHeaderCellDef
+                                    [style.color]="background"
+                                    class="common-padding"
+                                    mat-header-cell
+                                    mat-sort-header
+                                >
+                                    Faculty
+                                </th>
+                                <td *matCellDef="let project" class="common-padding" mat-cell>
+                                    {{ project.faculty }}
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <ng-container matColumnDef="Stream">
+                                <th *matHeaderCellDef mat-header-cell>Program</th>
+                                <td *matCellDef="let project" mat-cell>{{ branch.short }}</td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <ng-container matColumnDef="NoOfStudents">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                                    Number Of Students Applied
+                                </th>
+                                <td *matCellDef="let project" mat-cell>
+                                    {{ project.numberOfPreferences }}
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <ng-container matColumnDef="expandedDetail">
+                                <td
+                                    *matCellDef="let project"
+                                    [attr.colspan]="displayedColumnsProjects.length"
+                                    mat-cell
+                                >
+                                    <div
+                                        [@detailExpand]="
                     project == expandedElement ? 'expanded' : 'collapsed'
                   "
-                >
-                  <div class="example-element-description">
-                    Description : {{ project.description }}
-                  </div>
-                </div>
-              </td>
-            </ng-container>
-              <ng-container matColumnDef="Duration">
-                <th mat-sort-header mat-header-cell *matHeaderCellDef>Duration (in months)</th>
-                <td mat-cell *matCellDef="let project">
-                  {{ project.duration }}
-                </td>
-                <td mat-footer-cell *matFooterCellDef></td>
-              </ng-container>
-              <tr
-                mat-header-row
-                *matHeaderRowDef="displayedColumnsProjects; sticky: true"
-              ></tr>
-              <tr
-              mat-row
-              *matRowDef="
+                                        class="example-element-detail"
+                                    >
+                                        <div class="example-element-description">
+                                            Description : {{ project.description }}
+                                        </div>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Duration">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header>Duration (in months)</th>
+                                <td *matCellDef="let project" mat-cell>
+                                    {{ project.duration }}
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell></td>
+                            </ng-container>
+                            <tr
+                                *matHeaderRowDef="displayedColumnsProjects; sticky: true"
+                                mat-header-row
+                            ></tr>
+                            <tr
+                                (click)="
+                expandedElement = expandedElement === element ? null : element
+              "
+                                (mouseenter)="isActive = true; indexHover = i"
+                                (mouseleave)="isActive = false; indexHover = -1"
+                                *matRowDef="
                 let element;
                 let i = dataIndex;
                 columns: displayedColumnsProjects
               "
-              class="example-element-row remove-background"
-              [class.example-expanded-row]="expandedElement === element"
-              (mouseenter)="isActive = true; indexHover = i"
-              (mouseleave)="isActive = false; indexHover = -1"
-              [class.mat-elevation-z8]="isActive && indexHover == i"
-              (click)="
-                expandedElement = expandedElement === element ? null : element
-              "
-            ></tr>
-              <tr
-              mat-row
-              *matRowDef="let row; columns: ['expandedDetail']"
-              class="example-detail-row"
-            ></tr>
-              <tr mat-footer-row *matFooterRowDef="displayedColumnsProjects; sticky: true"></tr>
-            </table>
-          </div>
+                                [class.example-expanded-row]="expandedElement === element"
+                                [class.mat-elevation-z8]="isActive && indexHover == i"
+                                class="example-element-row remove-background"
+                                mat-row
+                            ></tr>
+                            <tr
+                                *matRowDef="let row; columns: ['expandedDetail']"
+                                class="example-detail-row"
+                                mat-row
+                            ></tr>
+                            <tr *matFooterRowDef="displayedColumnsProjects; sticky: true" mat-footer-row></tr>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-tab>
+    <mat-tab label="Streams">
+        <div class="display">
+            <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
+                <div class="add-icon">
+                    <mat-icon
+                        (click)="addBranches()"
+                        matTooltip="Click to add stream"
+                        matTooltipPosition="above"
+                    >add
+                    </mat-icon
+                    >
+                </div>
+                <table [dataSource]="branches" class="mat-elevation-z8" mat-table>
+                    <ng-container matColumnDef="Stream">
+                        <th *matHeaderCellDef [style.color]="background" mat-header-cell>
+                            Stream Name
+                        </th>
+                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>
+                            <ng-container *ngIf="map.name">
+                                {{map.name}}<span [matTooltipPosition]="'above'" class="edit-row"
+                                                  matTooltip="Edit Field"><i
+                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>
+                            </ng-container>
+                            <sat-popover #p
+                                         (closed)="updateStreamName(map, $event)"
+                                         hasBackdrop
+                                         xAlign="start"
+                                         yAlign="start">
+                                <app-inline-edit [head]="'Edit name'" [placeholder]="'New name'"
+                                                 [value]="map.name"></app-inline-edit>
+                            </sat-popover>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Short">
+                        <th *matHeaderCellDef [style.color]="background" mat-header-cell>
+                            Stream Abbrevation
+                        </th>
+                        <td *matCellDef="let map" mat-cell>
+                            <ng-container *ngIf="map.short">
+                                {{map.short}}<span [matTooltipPosition]="'above'" class="edit-row"
+                                                   matTooltip="Edit Field"><i
+                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>
+                            </ng-container>
+                            <sat-popover #p
+                                         (closed)="updateStreamShort(map, $event)"
+                                         hasBackdrop
+                                         xAlign="start"
+                                         yAlign="start">
+                                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'"
+                                                 [value]="map.short"></app-inline-edit>
+                            </sat-popover>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Actions">
+                        <th *matHeaderCellDef mat-header-cell>Delete Stream</th>
+                        <td *matCellDef="let map" mat-cell>
+                            <mat-icon
+                                (click)="deleteBranch(map.short)"
+                                matTooltip="Delete Stream"
+                                matTooltipPosition="right"
+                            >
+                                delete_outline
+                            </mat-icon
+                            >
+                        </td>
+                    </ng-container>
+                    <tr
+                        *matHeaderRowDef="displayedColumnsStreams; sticky: true"
+                        mat-header-row
+                    ></tr>
+                    <tr
+                        *matRowDef="let row; columns: displayedColumnsStreams"
+                        mat-row
+                    ></tr>
+                </table>
+            </div>
         </div>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-tab>
-  <mat-tab label="Streams">
-    <div class="display">
-      <div  [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
-        <div class="add-icon">
-          <mat-icon
-            matTooltip="Click to add stream"
-            matTooltipPosition="above"
-            (click)="addBranches()"
-            >add</mat-icon
-          >
-        </div>
-        <table mat-table [dataSource]="branches" class="mat-elevation-z8">
-          <ng-container matColumnDef="Stream">
-            <th mat-header-cell *matHeaderCellDef [style.color]="background">
-              Stream Name
-            </th>
-            <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
-              <ng-container  *ngIf="map.name">
-                {{map.name}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
-              </ng-container>
-              <sat-popover #p
-                  hasBackdrop
-                  xAlign="start"
-                  yAlign="start"
-                  (closed)="updateStreamName(map, $event)">
-                <app-inline-edit [head]="'Edit name'" [placeholder]="'New name'" [value]="map.name"></app-inline-edit>
-              </sat-popover>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="Short">
-            <th mat-header-cell *matHeaderCellDef [style.color]="background">
-              Stream Abbrevation
-            </th>
-            <td mat-cell *matCellDef="let map">
-              <ng-container  *ngIf="map.short">
-                {{map.short}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
-              </ng-container>
-              <sat-popover #p
-                  hasBackdrop
-                  xAlign="start"
-                  yAlign="start"
-                  (closed)="updateStreamShort(map, $event)">
-                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'" [value]="map.short"></app-inline-edit>
-              </sat-popover>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="Actions">
-            <th mat-header-cell *matHeaderCellDef>Delete Stream</th>
-            <td mat-cell *matCellDef="let map">
-              <mat-icon
-                matTooltip="Delete Stream"
-                matTooltipPosition="right"
-                (click)="deleteBranch(map.short)"
-              >
-                delete_outline</mat-icon
-              >
-            </td>
-          </ng-container>
-          <tr
-            mat-header-row
-            *matHeaderRowDef="displayedColumnsStreams; sticky: true"
-          ></tr>
-          <tr
-            mat-row
-            *matRowDef="let row; columns: displayedColumnsStreams"
-          ></tr>
-        </table>
-      </div>
-    </div>
-  </mat-tab>
-  <mat-tab label="Programs">
-    <div class="display">
-      <div  [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
-        <div class="add-icon">
-          <mat-icon
-            matTooltip="Click to add program"
-            matTooltipPosition="above"
-            (click)="addPrograms()"
-            >add</mat-icon
-          >
-        </div>
-        <table mat-table [dataSource]="programs" class="mat-elevation-z8">
-          <ng-container matColumnDef="Branch">
-            <th mat-header-cell *matHeaderCellDef [style.color]="background">
-              Program
-            </th>
-            <td mat-cell  [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
-              <ng-container *ngIf="map.name">
-                {{map.name}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
-              </ng-container>
-              <sat-popover #p
-                  hasBackdrop
-                  xAlign="start"
-                  yAlign="start"
-                  (closed)="updateProgramFull(map, $event)">
-                <app-inline-edit [head]="'Edit full name'" [placeholder]="'New full name'" [value]="map.name"></app-inline-edit>
-              </sat-popover>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="Short">
-            <th mat-header-cell *matHeaderCellDef [style.color]="background">
-              Abbrevation
-            </th>
-            <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
-              <ng-container *ngIf="map.short">
-                {{map.short}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
-              </ng-container>
-              <sat-popover #p
-                  hasBackdrop
-                  xAlign="start"
-                  yAlign="start"
-                  (closed)="updateShortProgram(map, $event)">
-                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'" [value]="map.short"></app-inline-edit>
-              </sat-popover>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="Stage">
-            <th mat-header-cell *matHeaderCellDef [style.color]="background">
-              Stage(out of 4)
-            </th>
-            <td mat-cell *matCellDef="let map">
-              <ng-container>
-                <span style="padding-left:20px" *ngIf="stages[map.short]; else stageElse">
+    </mat-tab>
+    <mat-tab label="Programs">
+        <div class="display">
+            <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
+                <div class="add-icon">
+                    <mat-icon
+                        (click)="addPrograms()"
+                        matTooltip="Click to add program"
+                        matTooltipPosition="above"
+                    >add
+                    </mat-icon
+                    >
+                </div>
+                <table [dataSource]="programs" class="mat-elevation-z8" mat-table>
+                    <ng-container matColumnDef="Branch">
+                        <th *matHeaderCellDef [style.color]="background" mat-header-cell>
+                            Program
+                        </th>
+                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>
+                            <ng-container *ngIf="map.name">
+                                {{map.name}}<span [matTooltipPosition]="'above'" class="edit-row"
+                                                  matTooltip="Edit Field"><i
+                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>
+                            </ng-container>
+                            <sat-popover #p
+                                         (closed)="updateProgramFull(map, $event)"
+                                         hasBackdrop
+                                         xAlign="start"
+                                         yAlign="start">
+                                <app-inline-edit [head]="'Edit full name'" [placeholder]="'New full name'"
+                                                 [value]="map.name"></app-inline-edit>
+                            </sat-popover>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Short">
+                        <th *matHeaderCellDef [style.color]="background" mat-header-cell>
+                            Abbrevation
+                        </th>
+                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>
+                            <ng-container *ngIf="map.short">
+                                {{map.short}}<span [matTooltipPosition]="'above'" class="edit-row"
+                                                   matTooltip="Edit Field"><i
+                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>
+                            </ng-container>
+                            <sat-popover #p
+                                         (closed)="updateShortProgram(map, $event)"
+                                         hasBackdrop
+                                         xAlign="start"
+                                         yAlign="start">
+                                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'"
+                                                 [value]="map.short"></app-inline-edit>
+                            </sat-popover>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Stage">
+                        <th *matHeaderCellDef [style.color]="background" mat-header-cell>
+                            Stage(out of 4)
+                        </th>
+                        <td *matCellDef="let map" mat-cell>
+                            <ng-container>
+                <span *ngIf="stages[map.short]; else stageElse" style="padding-left:20px">
                   {{stages[map.short]}}
                 </span>
-                <ng-template #stageElse>
-                  <span style="padding-left:15px">N/A</span>
-                </ng-template>
-              </ng-container>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="FacCount">
-            <th mat-header-cell *matHeaderCellDef>No. Of Faculties</th>
-            <td mat-cell *matCellDef="let map">
-              {{ faculties[map.short] ? faculties[map.short].data.length : 0 }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="StudCount">
-            <th mat-header-cell *matHeaderCellDef>Students ( Registered/Total )</th>
-            <td mat-cell *matCellDef="let map">
-              {{ students[map.short] ? (students[map.short].data | getRegisteredCount) + " / " + students[map.short].data.length : 0 }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="ProjCount">
-            <th mat-header-cell *matHeaderCellDef>No. Of Projects</th>
-            <td mat-cell *matCellDef="let map">
-              {{ projects[map.short] ? projects[map.short].data.length : 0 }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="Actions">
-            <th mat-header-cell *matHeaderCellDef>Delete Program</th>
-            <td mat-cell *matCellDef="let map">
-              <mat-icon
-                matTooltip="Delete Program"
-                matTooltipPosition="right"
-                (click)="deleteProgram(map.short)"
-                >delete_outline</mat-icon
-              >
-            </td>
-          </ng-container>
-          <tr
-            mat-header-row
-            *matHeaderRowDef="displayedColumnsMaps; sticky: true"
-          ></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsMaps"></tr>
-        </table>
-      </div>
-    </div>
-  </mat-tab>
+                                <ng-template #stageElse>
+                                    <span style="padding-left:15px">N/A</span>
+                                </ng-template>
+                            </ng-container>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="FacCount">
+                        <th *matHeaderCellDef mat-header-cell>No. Of Faculties</th>
+                        <td *matCellDef="let map" mat-cell>
+                            {{ faculties[map.short] ? faculties[map.short].data.length : 0 }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="StudCount">
+                        <th *matHeaderCellDef mat-header-cell>Students ( Registered/Total )</th>
+                        <td *matCellDef="let map" mat-cell>
+                            {{ students[map.short] ? (students[map.short].data | getRegisteredCount) + " / " + students[map.short].data.length : 0 }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ProjCount">
+                        <th *matHeaderCellDef mat-header-cell>No. Of Projects</th>
+                        <td *matCellDef="let map" mat-cell>
+                            {{ projects[map.short] ? projects[map.short].data.length : 0 }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Actions">
+                        <th *matHeaderCellDef mat-header-cell>Delete Program</th>
+                        <td *matCellDef="let map" mat-cell>
+                            <mat-icon
+                                (click)="deleteProgram(map.short)"
+                                matTooltip="Delete Program"
+                                matTooltipPosition="right"
+                            >delete_outline
+                            </mat-icon
+                            >
+                        </td>
+                    </ng-container>
+                    <tr
+                        *matHeaderRowDef="displayedColumnsMaps; sticky: true"
+                        mat-header-row
+                    ></tr>
+                    <tr *matRowDef="let row; columns: displayedColumnsMaps" mat-row></tr>
+                </table>
+            </div>
+        </div>
+    </mat-tab>
 </mat-tab-group>

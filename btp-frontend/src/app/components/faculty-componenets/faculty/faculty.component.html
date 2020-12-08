@@ -1,34 +1,45 @@
 <mat-sidenav-container *ngIf="!faculty_home; else FacultyHomePage">
-    <mat-sidenav #sidenav mode="side" opened position="end" role="navigation" [disableClose]="true">
+    <mat-sidenav #sidenav [disableClose]="true" mode="side" opened position="end" role="navigation">
         <mat-toolbar class="mat-elevation-z6" color="accent">
             <span class="fill-remaining-space"></span>
 
-            <h1 class="fill-remaining-space" >My Projects</h1>
-           
+            <h1 class="fill-remaining-space">My Projects</h1>
+
             <div class="mobile">
                 <span class="example-spacer"></span>
-                <button mat-button (click)="sidenav.toggle()">
-                <mat-icon>list</mat-icon>
-              </button>
+                <button (click)="sidenav.toggle()" mat-button>
+                    <mat-icon>list</mat-icon>
+                </button>
             </div>
         </mat-toolbar>
-        <app-sidenav [projects]="projects" [adminStage]="adminStage" [routeParams]="routeParams" [programs]="programs" [empty]="empty" (projectClicked)="displayProject($event)" (addButton)="addProject($event)" ></app-sidenav>
+        <app-sidenav (addButton)="addProject($event)" (projectClicked)="displayProject($event)"
+                     [adminStage]="adminStage" [empty]="empty"
+                     [programs]="programs" [projects]="projects"
+                     [routeParams]="routeParams"></app-sidenav>
     </mat-sidenav>
 
     <mat-sidenav-content>
-        <mat-toolbar class="mat-elevation-z6" color="accent" *ngIf="curr_program">
+        <mat-toolbar *ngIf="curr_program" class="mat-elevation-z6" color="accent">
             <span class="example-spacer"></span>
             <h1>{{ curr_program.full }}</h1>
             <span class="example-spacer"></span>
-            <button mat-button (click)="sidenav.toggle()"><mat-icon>list</mat-icon></button>
+            <button (click)="sidenav.toggle()" mat-button>
+                <mat-icon>list</mat-icon>
+            </button>
         </mat-toolbar>
-        <app-content [student_list]="student_list" [non_student_list]="non_student_list" [adminStage]="adminStage" [publishFaculty]="publishFaculty" [publishStudents]="publishStudents" [routeParams]="routeParams" [add]="add" [empty]="empty" [programs_mode]="faculty_home" [program_details]="program_details" [project]="project" [stream]="stream" [reorder]="reorder" (newReorder)="changeReorder($event)"></app-content>
+        <app-content (newReorder)="changeReorder($event)" [add]="add" [adminStage]="adminStage"
+                     [empty]="empty" [non_student_list]="non_student_list" [program_details]="program_details"
+                     [programs_mode]="faculty_home" [project]="project" [publishFaculty]="publishFaculty"
+                     [publishStudents]="publishStudents"
+                     [reorder]="reorder" [routeParams]="routeParams" [stream]="stream"
+                     [student_list]="student_list"></app-content>
     </mat-sidenav-content>
 </mat-sidenav-container>
 
 
 <ng-template #FacultyHomePage>
-    <app-faculty-home [stageDetails]="stageHomeDetails" [projectDetails]="projectHomeDetails" [publishFaculty]="publishFaculty" [publishStudents]="publishStudents"></app-faculty-home>
+    <app-faculty-home [projectDetails]="projectHomeDetails" [publishFaculty]="publishFaculty"
+                      [publishStudents]="publishStudents" [stageDetails]="stageHomeDetails"></app-faculty-home>
 </ng-template>
 
 

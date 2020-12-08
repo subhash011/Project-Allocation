@@ -1,144 +1,145 @@
 .searchBox {
-  position: absolute;
-  left: 70%;
-  transform: translate(-50%, 50%);
-  background: #2f3640;
-  height: 40px;
-  border-radius: 40px;
-  padding: 0px;
+    position: absolute;
+    left: 70%;
+    transform: translate(-50%, 50%);
+    background: #2f3640;
+    height: 40px;
+    border-radius: 40px;
+    padding: 0px;
 }
 
 .searchBox:hover > .searchInput {
-  width: 240px;
-  padding: 0 6px;
+    width: 240px;
+    padding: 0 6px;
 }
 
 .searchBox:hover > .searchButton {
-  background: white;
-  color: #2f3640;
+    background: white;
+    color: #2f3640;
 }
 
 .searchButton {
-  color: white;
-  float: right;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #2f3640;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.4s;
+    color: white;
+    float: right;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2f3640;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s;
 }
 
 .searchInput {
-  border: none;
-  background: none;
-  outline: none;
-  float: left;
-  padding: 0;
-  color: white;
-  font-size: 16px;
-  transition: 0.4s;
-  line-height: 40px;
-  width: 0px;
+    border: none;
+    background: none;
+    outline: none;
+    float: left;
+    padding: 0;
+    color: white;
+    font-size: 16px;
+    transition: 0.4s;
+    line-height: 40px;
+    width: 0px;
 }
 
 tr {
-  :hover {
-    cursor: pointer;
-  }
+    :hover {
+        cursor: pointer;
+    }
 }
 
 tr.example-detail-row {
-  height: 0;
-  :hover {
-    cursor: default;
-  }
+    height: 0;
+
+    :hover {
+        cursor: default;
+    }
 }
 
 tr.example-element-row:not(.example-expanded-row):hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 tr.example-element-row:not(.example-expanded-row):active {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .example-element-row td {
-  border-bottom-width: 0;
+    border-bottom-width: 0;
 }
 
 [mat-row].remove-background {
-  background: none;
+    background: none;
 }
 
 .example-element-symbol {
-  font-weight: bold;
-  font-size: 40px;
-  line-height: normal;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
 }
 
 .example-element-description {
-  padding: 16px;
+    padding: 16px;
 }
 
 .example-element-description-attribution {
-  opacity: 0.5;
+    opacity: 0.5;
 }
 
 .example-element-detail {
-  overflow: hidden;
-  display: flex;
+    overflow: hidden;
+    display: flex;
 }
 
 mat-icon:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .add-icon {
-  float: right;
+    float: right;
 }
 
 .display {
-  padding-top: 100px;
-  padding-bottom: 2%;
-  padding-right: 1%;
+    padding-top: 100px;
+    padding-bottom: 2%;
+    padding-right: 1%;
 }
 
 .edit-row {
-  cursor: pointer;
-  padding-left: 10px;
+    cursor: pointer;
+    padding-left: 10px;
 }
 
 .table {
-  overflow: auto;
-  width: 80%;
-  margin-left: 10%;
+    overflow: auto;
+    width: 80%;
+    margin-left: 10%;
 }
 
 .common-padding {
-  padding-left: 10px;
+    padding-left: 10px;
 }
 
 table {
-  width: 100%;
+    width: 100%;
 }
 
 th,
 td {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;     
-  word-wrap: break-word;     
-  max-width: 200px;
-  min-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 200px;
+    min-width: 100px;
 }
 
 .admin-button {
-  margin-left: 5px;
+    margin-left: 5px;
 }
 
 .remove-admin-button {
-  margin-left: 5px;
+    margin-left: 5px;
 }

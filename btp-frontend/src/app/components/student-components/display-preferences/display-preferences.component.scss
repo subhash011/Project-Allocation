@@ -1,76 +1,77 @@
 .emptyBlock {
-  text-align: center;
+    text-align: center;
 }
 
 .flex-space {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 mat-toolbar {
-  text-align: center;
+    text-align: center;
 }
 
 .fill-space {
-  flex: 1 1 auto;
+    flex: 1 1 auto;
 }
 
 p {
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .icon {
-  float: right;
+    float: right;
 }
 
 .expansion-panel {
-  float: left;
-  min-width: 100%;
-  max-width: 100%;
+    float: left;
+    min-width: 100%;
+    max-width: 100%;
 }
 
 mat-icon:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .example-viewport::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .example-viewport {
-  -ms-overflow-style: none;
+    -ms-overflow-style: none;
 }
 
 .example-viewport {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .list {
-  min-height: 60px;
-  border-radius: 4px;
-  display: block;
+    min-height: 60px;
+    border-radius: 4px;
+    display: block;
 }
 
 .emptyBlock {
-  font-size: large;
+    font-size: large;
 }
 
 .expansion-panel {
-  padding: 5px 2px;
+    padding: 5px 2px;
 }
 
 .list-item {
-  padding: 20px 10px;
-  width: 100%;
-  box-sizing: border-box;
-  cursor: move;
-  font-size: 14px;
+    padding: 20px 10px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: move;
+    font-size: 14px;
 }
 
 .list-item:last-child {
-  border: none;
+    border: none;
 }
+
 .disable_ripple:hover {
-  z-index: 555555 !important;
+    z-index: 555555 !important;
 }

@@ -1,84 +1,89 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 @Component({
-  selector: "app-help",
-  templateUrl: "./help.component.html",
-  styleUrls: ["./help.component.scss"],
+    selector: 'app-help',
+    templateUrl: './help.component.html',
+    styleUrls: ['./help.component.scss'],
 })
 export class HelpComponent implements OnInit {
-  @ViewChild("helpvid", { static: false }) help: ElementRef;
-  @ViewChild("helpvidsa", { static: false }) helpsa: ElementRef;
-  @ViewChild("helpvidad", { static: false }) helpad: ElementRef;
-  constructor() {}
-  background = "primary";
-  index;
-  role: string = localStorage.getItem("role");
-  ngOnInit() {
-    this.role = localStorage.getItem("role");
-  }
-  gotost(i) {
-    const video = this.help.nativeElement;
-    if (i == 1) {
-      video.currentTime = 0;
-    } else if (i == 2) {
-      video.currentTime = 25;
-    } else {
-      video.currentTime = 53;
+    @ViewChild('helpvid', {static: false}) help: ElementRef;
+    @ViewChild('helpvidsa', {static: false}) helpsa: ElementRef;
+    @ViewChild('helpvidad', {static: false}) helpad: ElementRef;
+    background = 'primary';
+    index;
+    role: string = localStorage.getItem('role');
+
+    constructor() {
     }
-  }
-  gotosa(i) {
-    const video = this.helpsa.nativeElement;
-    if (i == 1) {
-      video.currentTime = 0;
-    } else if (i == 2) {
-      video.currentTime = 31;
-    } else if (i == 3) {
-      video.currentTime = 56;
-    } else {
-      video.currentTime = 67;
+
+    ngOnInit() {
+        this.role = localStorage.getItem('role');
     }
-  }
 
-  gotofa(i) {
-    const video = this.helpsa.nativeElement;
-    if (i == 1) {
-      video.currentTime = 0;
-    } else if (i == 2) {
-      video.currentTime = 31;
-    } else if (i == 3) {
-      video.currentTime = 55;
-    } else if (i == 4) {
-      video.currentTime = 109;
-    } else {
-      video.currentTime = 147;
+    gotost(i) {
+        const video = this.help.nativeElement;
+        if (i == 1) {
+            video.currentTime = 0;
+        } else if (i == 2) {
+            video.currentTime = 25;
+        } else {
+            video.currentTime = 53;
+        }
     }
-  }
 
-  gotoad(i) {
-    const video = this.helpad.nativeElement;
-    if (i == 1) {
-      video.currentTime = 0;
-    } else if (i == 2) {
-      video.currentTime = 113;
-    } else if (i == 3) {
-      video.currentTime = 211;
-    } else {
-      video.currentTime = 194;
+    gotosa(i) {
+        const video = this.helpsa.nativeElement;
+        if (i == 1) {
+            video.currentTime = 0;
+        } else if (i == 2) {
+            video.currentTime = 31;
+        } else if (i == 3) {
+            video.currentTime = 56;
+        } else {
+            video.currentTime = 67;
+        }
     }
-  }
 
-  isStudent() {
-    return localStorage.getItem("role") == "student" ? true : false;
-  }
+    gotofa(i) {
+        const video = this.helpsa.nativeElement;
+        if (i == 1) {
+            video.currentTime = 0;
+        } else if (i == 2) {
+            video.currentTime = 31;
+        } else if (i == 3) {
+            video.currentTime = 55;
+        } else if (i == 4) {
+            video.currentTime = 109;
+        } else {
+            video.currentTime = 147;
+        }
+    }
 
-  isFaculty() {
-    return localStorage.getItem("role") == "faculty" ||
-      localStorage.getItem("role") == "admin"
-      ? true
-      : false;
-  }
+    gotoad(i) {
+        const video = this.helpad.nativeElement;
+        if (i == 1) {
+            video.currentTime = 0;
+        } else if (i == 2) {
+            video.currentTime = 113;
+        } else if (i == 3) {
+            video.currentTime = 211;
+        } else {
+            video.currentTime = 194;
+        }
+    }
 
-  isSuperAdmin() {
-    return localStorage.getItem("role") == "super_admin" ? true : false;
-  }
+    isStudent() {
+        return localStorage.getItem('role') == 'student' ? true : false;
+    }
+
+    isFaculty() {
+        return localStorage.getItem('role') == 'faculty' ||
+        localStorage.getItem('role') == 'admin'
+            ? true
+            : false;
+    }
+
+    isSuperAdmin() {
+        return localStorage.getItem('role') == 'super_admin' ? true : false;
+    }
 }

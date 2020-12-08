@@ -1,25 +1,24 @@
 <mat-dialog-content *ngIf="project">
-      <div>
+    <div>
         <div
-          class="list-item"
-          *ngFor="let student of project.student_alloted"
+            *ngFor="let student of project.student_alloted"
+            class="list-item"
         >
-          <mat-accordion>
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Student : {{ student["name"] }}
-                </mat-panel-title>
-                <mat-panel-description>
-                  <div class="flex-space"></div>
-                  Roll number : {{ student["roll_no"] }}
-                </mat-panel-description>
-              </mat-expansion-panel-header>
-            </mat-expansion-panel>
-          </mat-accordion>
-          <div class="flex-space"></div>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Student : {{ student["name"] }}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <div class="flex-space"></div>
+                            Roll number : {{ student["roll_no"] }}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <div class="flex-space"></div>
         </div>
-      </div>
-    <button mat-raised-button color="accent" (click)="close()">Close</button>
+    </div>
+    <button (click)="close()" color="accent" mat-raised-button>Close</button>
 </mat-dialog-content>
-  

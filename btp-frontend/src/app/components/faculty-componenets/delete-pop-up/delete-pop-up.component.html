@@ -3,10 +3,10 @@
     <div mat-dialog-content>
         <p>{{ data.message }}</p>
     </div>
-    <button mat-raised-button class="mat-btn-1" color="warn" (click)="onNoClick()">
-    No
-  </button>
-    <button mat-raised-button class="mat-btn-2" color="primary" (click)="onSubmit()">
-    Yes
-  </button>
+    <button (click)="onNoClick()" class="mat-btn-1" color="warn" mat-raised-button>
+        No
+    </button>
+    <button (click)="onSubmit()" class="mat-btn-2" color="primary" mat-raised-button>
+        Yes
+    </button>
 </div>

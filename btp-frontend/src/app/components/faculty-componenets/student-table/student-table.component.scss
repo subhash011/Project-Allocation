@@ -1,129 +1,130 @@
 .example-list {
-  width: 100%;
-  max-width: 100%;
-  min-height: 60px;
-  display: block;
-  overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    min-height: 60px;
+    display: block;
+    overflow: hidden;
 }
 
 .example-box {
-  padding: 20px 10px;
-  border-bottom: solid 1px #ccc;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  cursor: move;
-  font-size: 14px;
+    padding: 20px 10px;
+    border-bottom: solid 1px #ccc;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    cursor: move;
+    font-size: 14px;
 }
+
 .cdk-drag-preview {
-  box-sizing: border-box;
-  border-radius: 4px;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
     0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .align-right {
-  padding-left: 45px;
+    padding-left: 45px;
 }
 
 .cdk-drag-placeholder {
-  background: #ccc;
-  border: dotted 3px #999;
-  min-height: 60px;
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    background: #ccc;
+    border: dotted 3px #999;
+    min-height: 60px;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 mat-icon:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .table {
-  overflow-y: scroll;
+    overflow-y: scroll;
 }
 
 .mat-column-CGPA {
-  padding-left: 10px;
+    padding-left: 10px;
 }
 
 .common-padding {
-  padding-left: 10px;
+    padding-left: 10px;
 }
 
 .cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .example-box:last-child {
-  border: none;
+    border: none;
 }
 
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .row {
-  display: flex;
-  justify-content: space-around;
-  margin-right: 2%;
+    display: flex;
+    justify-content: space-around;
+    margin-right: 2%;
 }
 
 .header {
-  margin-bottom: 2%;
-  // margin-top: 2%;
+    margin-bottom: 2%;
+    // margin-top: 2%;
 }
 
 mat-list-item {
-  width: 100%;
+    width: 100%;
 }
 
 .flex-space {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 .list-item {
-  padding: 20px 10px;
-  /* border-bottom: solid 1px #ccc; */
-  box-sizing: border-box;
-  cursor: move;
-  /* background: white; */
-  color: black;
-  font-size: 14px;
+    padding: 20px 10px;
+    /* border-bottom: solid 1px #ccc; */
+    box-sizing: border-box;
+    cursor: move;
+    /* background: white; */
+    color: black;
+    font-size: 14px;
 }
 
 .heading {
-  margin-left: 2%;
+    margin-left: 2%;
 }
 
 .heading_pref {
-  margin-left: 2%;
-  margin-top: 3%;
+    margin-left: 2%;
+    margin-top: 3%;
 }
 
 .flex-grow {
-  float: left;
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
+    float: left;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
 }
 
 .render {
-  width: 33.33%;
-  float: right;
-  margin-top:7px;
+    width: 33.33%;
+    float: right;
+    margin-top: 7px;
 }
 
 .data {
-  margin-left: 30px;
+    margin-left: 30px;
 }
 
 .gpa-field {
-  padding-left: 20px;
+    padding-left: 20px;
 }
 
-.saveButton{
-  width: 33.33%;
-  float: right;
-  bottom: 10px;
+.saveButton {
+    width: 33.33%;
+    float: right;
+    bottom: 10px;
 }

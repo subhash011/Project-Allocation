@@ -1,24 +1,19 @@
-import { UserService } from "./services/user/user.service";
-import { Component, OnInit } from "@angular/core";
-import { MatIconRegistry } from "@angular/material/icon";
-import { DomSanitizer } from "@angular/platform-browser";
+import { Component, OnInit } from '@angular/core';
+
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = "btp-frontend";
-  login = true;
-  maps: any = [];
-  branches: any = [];
-  constructor() {}
-  ngOnInit() {}
-  getCondition() {
-    if (localStorage.getItem("isLoggedIn") == "true") {
-      return true;
-    } else {
-      return false;
+    title = 'btp-frontend';
+    login = true;
+    maps: any = [];
+    branches: any = [];
+
+    constructor() {
     }
-  }
+
+    ngOnInit() {
+    }
 }

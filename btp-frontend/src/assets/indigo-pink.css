@@ -672,16 +672,16 @@
     background-color: black;
 }
 
-.mat-button-toggle-group-appearance-standard .mat-button-toggle+.mat-button-toggle {
+.mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
     border-left: solid 1px rgba(0, 0, 0, 0.12);
 }
 
-[dir="rtl"] .mat-button-toggle-group-appearance-standard .mat-button-toggle+.mat-button-toggle {
+[dir="rtl"] .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
     border-left: none;
     border-right: solid 1px rgba(0, 0, 0, 0.12);
 }
 
-.mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical .mat-button-toggle+.mat-button-toggle {
+.mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical .mat-button-toggle + .mat-button-toggle {
     border-left: none;
     border-right: none;
     border-top: solid 1px rgba(0, 0, 0, 0.12);
@@ -942,13 +942,13 @@ td.mat-footer-cell {
     border-color: transparent;
 }
 
-.mat-calendar-body-disabled>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+.mat-calendar-body-disabled > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
     color: rgba(0, 0, 0, 0.38);
 }
 
-.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected),
-.cdk-keyboard-focused .mat-calendar-body-active>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected),
-.cdk-program-focused .mat-calendar-body-active>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected),
+.cdk-keyboard-focused .mat-calendar-body-active > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected),
+.cdk-program-focused .mat-calendar-body-active > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
     background-color: rgba(0, 0, 0, 0.04);
 }
 
@@ -956,7 +956,7 @@ td.mat-footer-cell {
     border-color: rgba(0, 0, 0, 0.38);
 }
 
-.mat-calendar-body-disabled>.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+.mat-calendar-body-disabled > .mat-calendar-body-today:not(.mat-calendar-body-selected) {
     border-color: rgba(0, 0, 0, 0.18);
 }
 
@@ -965,7 +965,7 @@ td.mat-footer-cell {
     color: white;
 }
 
-.mat-calendar-body-disabled>.mat-calendar-body-selected {
+.mat-calendar-body-disabled > .mat-calendar-body-selected {
     background-color: rgba(63, 81, 181, 0.4);
 }
 
@@ -984,7 +984,7 @@ td.mat-footer-cell {
     color: white;
 }
 
-.mat-datepicker-content.mat-accent .mat-calendar-body-disabled>.mat-calendar-body-selected {
+.mat-datepicker-content.mat-accent .mat-calendar-body-disabled > .mat-calendar-body-selected {
     background-color: rgba(255, 64, 129, 0.4);
 }
 
@@ -997,7 +997,7 @@ td.mat-footer-cell {
     color: white;
 }
 
-.mat-datepicker-content.mat-warn .mat-calendar-body-disabled>.mat-calendar-body-selected {
+.mat-datepicker-content.mat-warn .mat-calendar-body-disabled > .mat-calendar-body-selected {
     background-color: rgba(244, 67, 54, 0.4);
 }
 
@@ -1161,7 +1161,7 @@ td.mat-footer-cell {
 }
 
 .mat-form-field-appearance-legacy.mat-form-field-disabled .mat-form-field-underline {
-    background-image: linear-gradient( to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%);
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%);
     background-size: 4px 100%;
     background-repeat: repeat-x;
 }
@@ -1171,7 +1171,7 @@ td.mat-footer-cell {
 }
 
 .mat-form-field-appearance-standard.mat-form-field-disabled .mat-form-field-underline {
-    background-image: linear-gradient( to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%);
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%);
     background-size: 4px 100%;
     background-repeat: repeat-x;
 }
@@ -1695,12 +1695,12 @@ td.mat-footer-cell {
 }
 
 .mat-slider-horizontal .mat-slider-ticks {
-    background-image: repeating-linear-gradient( to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) 2px, transparent 0, transparent);
-    background-image: -moz-repeating-linear-gradient( 0.0001deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) 2px, transparent 0, transparent);
+    background-image: repeating-linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) 2px, transparent 0, transparent);
+    background-image: -moz-repeating-linear-gradient(0.0001deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) 2px, transparent 0, transparent);
 }
 
 .mat-slider-vertical .mat-slider-ticks {
-    background-image: repeating-linear-gradient( to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) 2px, transparent 0, transparent);
+    background-image: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) 2px, transparent 0, transparent);
 }
 
 .mat-step-header.cdk-keyboard-focused,
@@ -2075,4 +2075,5 @@ app-home .container {
 }
 
 .mat-subheading-2 {
-    color: #3f51b5;}
+    color: #3f51b5;
+}

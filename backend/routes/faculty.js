@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
-const bodyparser = require("body-parser");
 const Faculty = require("../models/Faculty");
 const Project = require("../models/Project");
 const Mapping = require("../models/Mapping");
@@ -12,7 +10,7 @@ router.post("/register/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const user = req.body;
-    oauth(idToken).then((user_partial) => {
+    oauth(idToken).then(() => {
         const newUser = new Faculty({
             name: user.name,
             google_id: {
@@ -26,12 +24,12 @@ router.post("/register/:id", (req, res) => {
         //Saves user in the database
         newUser
             .save()
-            .then((result) => {
+            .then(() => {
                 res.json({
                     registration: "success",
                 });
             })
-            .catch((err) => {
+            .catch(() => {
                 res.json({
                     registration: "fail",
                 });
@@ -78,8 +76,7 @@ router.post("/set_programs/:id", (req, res) => {
 
                 const ex_programs = faculty.programs;
 
-                if (ex_programs.length == 0 || ex_programs == null) {
-                    var new_programs = programs;
+                if (ex_programs.length === 0 || ex_programs == null) {
                 } else {
                     for (const program of ex_programs) {
                         if (streamMap.has(program.short)) {
@@ -98,13 +95,13 @@ router.post("/set_programs/:id", (req, res) => {
 
                 faculty
                     .save()
-                    .then((result) => {
+                    .then(() => {
                         res.json({
                             status: "success",
                             msg: "Successfully added the programs",
                         });
                     })
-                    .catch((err) => {
+                    .catch(() => {
                         res.json({
                             status: "fail",
                             result: null,
@@ -117,7 +114,7 @@ router.post("/set_programs/:id", (req, res) => {
                 });
             }
         })
-        .catch((err) => {
+        .catch(() => {
             res.json({
                 status: "fail",
                 result: null,
@@ -137,13 +134,13 @@ router.post("/updateProfile/:id", (req, res) => {
 
                 faculty
                     .save()
-                    .then((result) => {
+                    .then(() => {
                         res.json({
                             status: "success",
                             msg: "Successfully updated the profile!!",
                         });
                     })
-                    .catch((err) => {
+                    .catch(() => {
                         res.json({
                             status: "fail",
                             result: null,
@@ -156,7 +153,7 @@ router.post("/updateProfile/:id", (req, res) => {
                 });
             }
         })
-        .catch((err) => {
+        .catch(() => {
             res.json({
                 status: "fail",
                 result: null,
@@ -188,7 +185,7 @@ router.get("/getAllPrograms/:id", (req, res) => {
                             });
                         }
                     })
-                    .catch((err) => {
+                    .catch(() => {
                         res.json({
                             status: "fail",
                             result: null,
@@ -201,7 +198,7 @@ router.get("/getAllPrograms/:id", (req, res) => {
                 });
             }
         })
-        .catch((err) => {
+        .catch(() => {
             res.json({
                 status: "fail",
                 result: null,
@@ -229,13 +226,13 @@ router.post("/deleteProgram/:id", (req, res) => {
                         const project_ids = projects.map(project => project._id);
                         
                         Project.deleteMany({faculty_id : faculty._id, stream : curr_program.short})
-                            .then(result=>{
+                            .then(()=>{
                                 
                                 updateConfig = {
                                     $pullAll : {projects_preference: project_ids}
                                 }
                                 Student.updateMany({stream:curr_program.short},updateConfig)
-                                    .then(result=>{
+                                    .then(()=>{
                                         res.json({
                                             status: "success",
                                             msg: "Successfully removed the program.",
@@ -251,7 +248,7 @@ router.post("/deleteProgram/:id", (req, res) => {
                 });
             }
         })
-        .catch((err) => {
+        .catch(() => {
             res.json({
                 status: "fail",
                 result: null,
@@ -280,7 +277,7 @@ router.get("/getFacultyPrograms/:id", (req, res) => {
                 });
             }
         })
-        .catch((err) => {
+        .catch(() => {
             res.json({
                 status: "fail",
                 result: null,
@@ -292,7 +289,6 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const program = req.body.program;
-    var facultyDetails = {};
     Faculty.findOne({ google_id: { id: id, idToken: idToken } })
         .lean()
         .select("_id")
@@ -300,11 +296,14 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
             Admin.findOne({ stream: program.short })
                 .lean()
                 .then((admin) => {
+                    let deadline;
                     if (admin) {
-                        var stage = admin.stage;
-                        if (admin.deadlines.length)
-                            var deadline = admin.deadlines[admin.deadlines.length - 1];
-                        else var deadline = null;
+                        if (admin.deadlines.length) {
+                            deadline = admin.deadlines[admin.deadlines.length - 1];
+                        }
+                        else {
+                            deadline = null;
+                        }
 
                         Project.find({ faculty_id: faculty._id, stream: program.short })
                             .populate({path:"student_alloted", select:"-google_id -date", model:Student})
@@ -321,7 +320,7 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                                     program_details: obj,
                                 });
                             })
-                            .catch((err) => {
+                            .catch(() => {
                                 res.json({
                                     status: "fail-student",
                                     result: null,
@@ -349,14 +348,14 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
                         }
                     }
                 })
-                .catch((err) => {
+                .catch(() => {
                     res.json({
                         status: "Admin find error",
                         result: null,
                     });
                 });
         })
-        .catch((err) => {
+        .catch(() => {
             res.json({
                 status: "Faculty not found",
                 result: null,
@@ -365,8 +364,6 @@ router.post("/getFacultyProgramDetails/:id", (req, res) => {
 });
 
 router.post("/getAdminInfo_program/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
     const program = req.body.program;
 
     Admin.findOne({ stream: program })
@@ -384,7 +381,7 @@ router.post("/getAdminInfo_program/:id", (req, res) => {
                 });
             }
         })
-        .catch((err) => {
+        .catch(() => {
             res.json({
                 status: "fail",
                 result: null,
@@ -412,17 +409,16 @@ router.get("/home/:id",(req,res) => {
             if(!faculty) {
                 return null;
             }
-            var facultyPrograms = faculty.programs.map(val => val.short);
+            const facultyPrograms = faculty.programs.map(val => val.short);
             let facultyProjects = faculty.project_list;
             facultyProjects = facultyProjects.map(val => {
-                var newProj = {
-                    title:val.title,
-                    studentIntake:val.studentIntake,
-                    noOfPreferences:val.students_id.length,
-                    student_alloted:val.student_alloted,
-                    stream:val.stream,
-                }
-                return newProj;
+                return {
+                    title: val.title,
+                    studentIntake: val.studentIntake,
+                    noOfPreferences: val.students_id.length,
+                    student_alloted: val.student_alloted,
+                    stream: val.stream,
+                };
             })
             facultyProjects.sort((a,b) => {
                 return a.stream.localeCompare(b.stream)
@@ -445,12 +441,11 @@ router.get("/home/:id",(req,res) => {
                 .select("deadlines stream stage")
                 .then(admins => {
                     let stageDetails = admins.map(val => {
-                        var newDetail = {
-                            deadlines:val.deadlines,
-                            stream:val.stream,
-                            stage:val.stage
-                        }
-                        return newDetail;
+                        return {
+                            deadlines: val.deadlines,
+                            stream: val.stream,
+                            stage: val.stage
+                        };
                     });
                     res.json({
                         message:"success",

@@ -7,46 +7,46 @@ const Faculty = require("../models/Faculty");
 const oauth = require("../config/oauth");
 
 router.post("/register/:id", (req, res) => {
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
-	const user = req.body;
-	oauth(idToken)
-		.then(() => {
-			const newUser = new Student({
-				name: user.name,
-				roll_no: user.roll_no,
-				google_id: {
-					id: id,
-					idToken: idToken,
-				},
-				email: user.email,
-				gpa: user.gpa,
-				stream: user.stream,
-			});
-			newUser
-				.save()
-				.then((result) => {
-					res.json({
-						registration: "success",
-					});
-				})
-				.catch((err) => {
-					res.json({
-						registration: "fail",
-					});
-				});
-		})
-		.catch(() => {
-			res.json({
-				message: "invalid-client",
-				result: null,
-			});
-		});
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const user = req.body;
+    oauth(idToken)
+        .then(() => {
+            const newUser = new Student({
+                name: user.name,
+                roll_no: user.roll_no,
+                google_id: {
+                    id: id,
+                    idToken: idToken,
+                },
+                email: user.email,
+                gpa: user.gpa,
+                stream: user.stream,
+            });
+            newUser
+                .save()
+                .then(() => {
+                    res.json({
+                        registration: "success",
+                    });
+                })
+                .catch(() => {
+                    res.json({
+                        registration: "fail",
+                    });
+                });
+        })
+        .catch(() => {
+            res.json({
+                message: "invalid-client",
+                result: null,
+            });
+        });
 });
 
 router.get("/details/:id", (req, res) => {
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
     Student.findOne({ google_id: { id: id, idToken: idToken } })
         .lean()
         .select("-google_id -__v -date -projects_preference")
@@ -82,68 +82,68 @@ router.get("/details/:id", (req, res) => {
 });
 
 router.get("/stage/:id", (req, res) => {
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
-	Student.findOne({ google_id: { id: id, idToken: idToken } })
-		.lean()
-		.select("stream")
-		.then((student) => {
-			if (student) {
-				const stream = student.stream;
-				Admin.find({ stream: stream }).then((admin) => {
-					if (admin[0]) {
-						res.json({
-							message: "success",
-							result: admin[0].stage,
-						});
-					} else {
-						res.json({
-							message: "error",
-							result: "no-admin",
-						});
-					}
-				});
-			} else {
-				res.json({
-					message: "invalid-token",
-					result: null,
-				});
-			}
-		});
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    Student.findOne({ google_id: { id: id, idToken: idToken } })
+        .lean()
+        .select("stream")
+        .then((student) => {
+            if (student) {
+                const stream = student.stream;
+                Admin.find({ stream: stream }).then((admin) => {
+                    if (admin[0]) {
+                        res.json({
+                            message: "success",
+                            result: admin[0].stage,
+                        });
+                    } else {
+                        res.json({
+                            message: "error",
+                            result: "no-admin",
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    message: "invalid-token",
+                    result: null,
+                });
+            }
+        });
 });
 
 //this method is for updating student profile
 router.post("/update/:id", (req, res) => {
-	const id = req.params.id;
-	const idToken = req.headers.authorization;
-	const document = req.body;
-	var updateResult = {
-		name: document.name,
-		gpa: document.gpa,
-	};
-	Student.findOneAndUpdate(
-		{ google_id: { id: id, idToken: idToken } },
-		updateResult
-	)
-		.then((student) => {
-			if (student) {
-				res.json({
-					message: "success",
-					result: student,
-				});
-			} else {
-				res.json({
-					message: "invalid-token",
-					result: null,
-				});
-			}
-		})
-		.catch(() => {
-			res.json({
-				message: "invalid-client",
-				result: null,
-			});
-		});
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const document = req.body;
+    const updateResult = {
+        name: document.name,
+        gpa: document.gpa,
+    };
+    Student.findOneAndUpdate(
+        { google_id: { id: id, idToken: idToken } },
+        updateResult
+    )
+        .then((student) => {
+            if (student) {
+                res.json({
+                    message: "success",
+                    result: student,
+                });
+            } else {
+                res.json({
+                    message: "invalid-token",
+                    result: null,
+                });
+            }
+        })
+        .catch(() => {
+            res.json({
+                message: "invalid-client",
+                result: null,
+            });
+        });
 });
 
 module.exports = router;

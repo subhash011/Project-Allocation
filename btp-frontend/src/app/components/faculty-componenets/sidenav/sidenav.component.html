@@ -1,68 +1,70 @@
 <div>
-  <mat-selection-list #included *ngIf="adminStage == 2; else normalList">
-      <mat-nav-list>
-      <mat-list-item
-        *ngFor="let project of projects; let i = index"
-        (click)="onClick(project, i)"
-        [class.active]="i == selectedRow"
-      >
-        {{ project.title }}
-        <mat-icon *ngIf="project.isIncluded">check</mat-icon>
-        <div class="align-row-end"></div>
-        <mat-checkbox (change)="addToList($event)" [id]="project._id" [checked]="project.isIncluded" (click)="$event.stopPropagation()"></mat-checkbox>
-      </mat-list-item>
-    </mat-nav-list>
-    <!-- <mat-list-option
-      *ngFor="let project of projects; let i = index"
-      (click)="onClick(project, i)"
-      [class.active]="i == selectedRow"
-      [selected]="project.isIncluded"
-      [value]="project._id"
+    <mat-selection-list #included *ngIf="adminStage == 2; else normalList">
+        <mat-nav-list>
+            <mat-list-item
+                (click)="onClick(project, i)"
+                *ngFor="let project of projects; let i = index"
+                [class.active]="i == selectedRow"
+            >
+                {{ project.title }}
+                <mat-icon *ngIf="project.isIncluded">check</mat-icon>
+                <div class="align-row-end"></div>
+                <mat-checkbox (change)="addToList($event)" (click)="$event.stopPropagation()"
+                              [checked]="project.isIncluded"
+                              [id]="project._id"></mat-checkbox>
+            </mat-list-item>
+        </mat-nav-list>
+        <!-- <mat-list-option
+          *ngFor="let project of projects; let i = index"
+          (click)="onClick(project, i)"
+          [class.active]="i == selectedRow"
+          [selected]="project.isIncluded"
+          [value]="project._id"
+        >
+          <div class="text">
+            {{ project.title }}
+            <mat-icon *ngIf="project.isIncluded">check</mat-icon>
+          </div>
+        </mat-list-option> -->
+    </mat-selection-list>
+
+    <ng-template #normalList>
+        <mat-nav-list>
+            <mat-list-item
+                (click)="onClick(project, i)"
+                *ngFor="let project of projects; let i = index"
+                [class.active]="i == selectedRow"
+            >
+                {{ project.title }}
+                <mat-icon *ngIf="project.isIncluded">check</mat-icon>
+            </mat-list-item>
+        </mat-nav-list>
+    </ng-template>
+
+    <button
+        (click)="displayAdd(true)"
+        class="add-button"
+        color="warn"
+        mat-raised-button
     >
-      <div class="text">
-        {{ project.title }}
-        <mat-icon *ngIf="project.isIncluded">check</mat-icon>
-      </div>
-    </mat-list-option> -->
-  </mat-selection-list>
+        Add Project
+    </button>
 
-  <ng-template #normalList>
-    <mat-nav-list>
-      <mat-list-item
-        *ngFor="let project of projects; let i = index"
-        (click)="onClick(project, i)"
-        [class.active]="i == selectedRow"
-      >
-        {{ project.title }}
-        <mat-icon *ngIf="project.isIncluded">check</mat-icon>
-      </mat-list-item>
-    </mat-nav-list>
-  </ng-template>
-
-  <button
-    color="warn"
-    mat-raised-button
-    class="add-button"
-    (click)="displayAdd(true)"
-  >
-    Add Project
-  </button>
-
-  <button
-    color="warn"
-    mat-raised-button
-    class="add-button"
-    (click)="displayHome()"
-  >
-    Overview / Program Home
-  </button>
-  <button
-    *ngIf="adminStage == 2"
-    color="warn"
-    mat-raised-button
-    class="add-button"
-    (click)="includeProjects()"
-  >
-    Include Checked Projects
-  </button>
+    <button
+        (click)="displayHome()"
+        class="add-button"
+        color="warn"
+        mat-raised-button
+    >
+        Overview / Program Home
+    </button>
+    <button
+        (click)="includeProjects()"
+        *ngIf="adminStage == 2"
+        class="add-button"
+        color="warn"
+        mat-raised-button
+    >
+        Include Checked Projects
+    </button>
 </div>

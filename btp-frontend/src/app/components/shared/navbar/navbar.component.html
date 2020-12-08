@@ -1,110 +1,111 @@
 <mat-toolbar class="mat-elevation-z8" color="primary">
-  <mat-toolbar-row>
-    <div>
-      <button *ngIf="!(role | isFaculty) && !(role | isAdmin); else elseBlock" mat-button [routerLink]="'home' | links:role">
-        <span class="navhead">IIT Palakkad</span>
-      </button>
-      <ng-template #elseBlock>
-        <button mat-button (click)="goToHome()">
-          <span class="navhead">IIT Palakkad</span>
-        </button>
-      </ng-template>
-    </div>
-    <div
-      *ngIf="((role | isFaculty) || (role | isAdmin)) && ('' | checkRegister)"
-    >
-      <div class="flex-grow-left"></div>
-      <button mat-button (click)="goToHome()" class="nav-text">
-        Home
-      </button>
-      <button
-        *ngIf="programsVisible"
-        mat-button
-        [matMenuTriggerFor]="menu"
-        class="nav-text"
-      >
-        Programs
-        <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
-
-      <mat-menu #menu="matMenu">
-        <button
-          *ngFor="let program of programs"
-          mat-menu-item
-          (click)="goToProgram(program)"
+    <mat-toolbar-row>
+        <div>
+            <button *ngIf="!(role | isFaculty) && !(role | isAdmin); else elseBlock" [routerLink]="'home' | links:role"
+                    mat-button>
+                <span class="navhead">IIT Palakkad</span>
+            </button>
+            <ng-template #elseBlock>
+                <button (click)="goToHome()" mat-button>
+                    <span class="navhead">IIT Palakkad</span>
+                </button>
+            </ng-template>
+        </div>
+        <div
+            *ngIf="((role | isFaculty) || (role | isAdmin)) && ('' | checkRegister)"
         >
-          {{ program.full }}
-        </button>
-      </mat-menu>
-    </div>
-    <div *ngIf="role | isStudent">
-      <div class="flex-grow-left"></div>
-      <button
-        mat-button
-        [routerLink]="'studentProjects' | links:role"
-        class="nav-text"
-      >
-        Add Preferences
-      </button>
-    </div>
-    <div *ngIf="role | isStudent">
-      <div class="flex-grow-left"></div>
-      <button
-        mat-button
-        class="nav-text"
-        [routerLink]="'studentPreferences' | links:role"
-      >
-        Reorder Preferences
-      </button>
-    </div>
-    <div class="flex-space"></div>
-    <div class="flex-grow-right"></div>
-    <div>
-      <div
-        *ngIf="
+            <div class="flex-grow-left"></div>
+            <button (click)="goToHome()" class="nav-text" mat-button>
+                Home
+            </button>
+            <button
+                *ngIf="programsVisible"
+                [matMenuTriggerFor]="menu"
+                class="nav-text"
+                mat-button
+            >
+                Programs
+                <mat-icon>keyboard_arrow_down</mat-icon>
+            </button>
+
+            <mat-menu #menu="matMenu">
+                <button
+                    (click)="goToProgram(program)"
+                    *ngFor="let program of programs"
+                    mat-menu-item
+                >
+                    {{ program.full }}
+                </button>
+            </mat-menu>
+        </div>
+        <div *ngIf="role | isStudent">
+            <div class="flex-grow-left"></div>
+            <button
+                [routerLink]="'studentProjects' | links:role"
+                class="nav-text"
+                mat-button
+            >
+                Add Preferences
+            </button>
+        </div>
+        <div *ngIf="role | isStudent">
+            <div class="flex-grow-left"></div>
+            <button
+                [routerLink]="'studentPreferences' | links:role"
+                class="nav-text"
+                mat-button
+            >
+                Reorder Preferences
+            </button>
+        </div>
+        <div class="flex-space"></div>
+        <div class="flex-grow-right"></div>
+        <div>
+            <div
+                *ngIf="
           ((role | isFaculty) || (role | isAdmin) || (role | isStudent)) &&
           ('' | checkRegister)
         "
-      >
+            >
+                <div class="flex-grow-right"></div>
+                <button mat-button routerLink="/help">
+                    <span class="nav-text">Help</span>
+                </button>
+                <button [matMenuTriggerFor]="beforeMenu" mat-button>
+                    <span class="nav-text">Options</span>
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+                <mat-menu #beforeMenu="matMenu" xPosition="before">
+                    <button [routerLink]="'profile' | links:role" mat-menu-item>
+                        Profile
+                    </button>
+                    <button (click)="getAdmin()" *ngIf="role | isAdmin" mat-menu-item>
+                        Co-ordinator
+                    </button>
+                </mat-menu>
+            </div>
+            <div *ngIf="role | isSuper">
+                <button mat-button routerLink="/help">
+                    Help
+                </button>
+            </div>
+        </div>
         <div class="flex-grow-right"></div>
-        <button mat-button routerLink="/help">
-          <span class="nav-text">Help</span>
-        </button>
-        <button mat-button [matMenuTriggerFor]="beforeMenu">
-          <span class="nav-text">Options</span>
-          <mat-icon>keyboard_arrow_down</mat-icon>
-        </button>
-        <mat-menu #beforeMenu="matMenu" xPosition="before">
-          <button mat-menu-item [routerLink]="'profile' | links:role">
-            Profile
-          </button>
-          <button mat-menu-item (click)="getAdmin()" *ngIf="role | isAdmin">
-            Co-ordinator
-          </button>
-        </mat-menu>
-      </div>
-      <div *ngIf="role | isSuper">
-        <button mat-button routerLink="/help">
-          Help
-        </button>
-      </div>
-    </div>
-    <div class="flex-grow-right"></div>
-    <app-theme-picker class="primary-toolbar"></app-theme-picker>
-    <div class="flex-grow-right primary-toolbar"></div>
-    <app-login
-      [role]="role"
-      (isSignedIn)="changeRole()"
-      class="primary-toolbar"
-    ></app-login>
-  </mat-toolbar-row>
-  <mat-toolbar-row class="mobile">
-    <app-login
-      (isSignedIn)="changeRole()"
-      class="login-mobile"
-    ></app-login>
-    <app-theme-picker class="theme-mobile"></app-theme-picker>
-  </mat-toolbar-row>
+        <app-theme-picker class="primary-toolbar"></app-theme-picker>
+        <div class="flex-grow-right primary-toolbar"></div>
+        <app-login
+            (isSignedIn)="changeRole()"
+            [role]="role"
+            class="primary-toolbar"
+        ></app-login>
+    </mat-toolbar-row>
+    <mat-toolbar-row class="mobile">
+        <app-login
+            (isSignedIn)="changeRole()"
+            class="login-mobile"
+        ></app-login>
+        <app-theme-picker class="theme-mobile"></app-theme-picker>
+    </mat-toolbar-row>
 </mat-toolbar>
 
 <router-outlet></router-outlet>

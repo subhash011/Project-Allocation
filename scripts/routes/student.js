@@ -1,12 +1,10 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const router = express();
 const Student = require("../models/Student");
 const Project = require("../models/Project");
-const Faculty = require("../models/Faculty");
 
 function shuffle(array) {
-	var currentIndex = array.length,
+	let currentIndex = array.length,
 		temporaryValue,
 		randomIndex;
 
@@ -26,13 +24,13 @@ function shuffle(array) {
 }
 
 function getRandom(arr, n) {
-	var result = new Array(n),
-		len = arr.length,
-		taken = new Array(len);
+	const result = new Array(n);
+	let len = arr.length;
+	const taken = new Array(len);
 	if (n > len)
 		throw new RangeError("getRandom: more elements taken than available");
 	while (n--) {
-		var x = Math.floor(Math.random() * len);
+		const x = Math.floor(Math.random() * len);
 		result[n] = arr[x in taken ? taken[x] : x];
 		taken[x] = --len in taken ? taken[len] : len;
 	}
@@ -41,10 +39,10 @@ function getRandom(arr, n) {
 
 router.post("/add/:n", (req, res) => {
 	const count = req.params.n;
-	var gpas = [];
-	var names = [];
-	var roll = [];
-	var promises = [];
+	const gpas = [];
+	const names = [];
+	const roll = [];
+	const promises = [];
 	for (let index = 0; index < count; index++) {
 		names.push("s" + (index + 1));
 		roll.push("1118010" + (index + 1 < 9 ? "0" + (index + 1) : index + 1));
@@ -54,7 +52,7 @@ router.post("/add/:n", (req, res) => {
 			gpa: gpas[index],
 			roll_no: roll[index],
 			email:
-				index == 1 || index == 41
+				index === 1 || index === 41
 					? roll[index] + "@smail.iitpkd.ac.in"
 					: roll[index] + "@abc.com",
 			stream: "UGEE",
@@ -73,7 +71,7 @@ router.post("/add/:n", (req, res) => {
 
 router.post("/projects/single", (req, res) => {
 	Student.find().then((students) => {
-		var student_list = students.map((student) => {
+		const student_list = students.map((student) => {
 			return student._id;
 		});
 
@@ -88,7 +86,7 @@ router.post("/projects/single", (req, res) => {
 });
 
 router.post("/projects/add", (req, res) => {
-	var promises = [];
+	let promises = [];
 	promises.push(
 		Student.find().then((students) => {
 			return students;
@@ -100,8 +98,7 @@ router.post("/projects/add", (req, res) => {
 		})
 	);
 	Promise.all(promises).then((result) => {
-		var promises = [];
-		var inner = [];
+		let promises = [];
 		const students = result[0];
 		const projects = result[1];
 		for (const student of students) {
@@ -120,7 +117,7 @@ router.post("/projects/add", (req, res) => {
 			Project.find().then((projects) => {
 				for (const project of projects) {
 					const arr = result.filter((val) => {
-						return val.projects_preference.indexOf(project._id) != -1;
+						return val.projects_preference.indexOf(project._id) !== -1;
 					});
 					shuffle(arr);
 					project.students_id = arr;

@@ -1,37 +1,37 @@
-import { Pipe, PipeTransform } from "@angular/core";
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: "isFaculty",
+    name: 'isFaculty',
 })
 export class FacultyCheck implements PipeTransform {
-  transform(value) {
-    return value == "faculty";
-  }
+    transform(value) {
+        return value == 'faculty';
+    }
 }
 
 @Pipe({
-  name: "isAdmin",
+    name: 'isAdmin',
 })
 export class AdminCheck implements PipeTransform {
-  transform(value) {
-    return value == "admin";
-  }
+    transform(value) {
+        return value == 'admin';
+    }
 }
 
 @Pipe({
-  name: "isStudent",
+    name: 'isStudent',
 })
 export class StudentCheck implements PipeTransform {
-  transform(value) {
-    return value == "student";
-  }
+    transform(value) {
+        return value == 'student';
+    }
 }
 
 @Pipe({
-  name: "isSuper",
+    name: 'isSuper',
 })
 export class SuperAdminCheck implements PipeTransform {
-  transform(value) {
-    return value == "super_admin";
-  }
+    transform(value) {
+        return value == 'super_admin';
+    }
 }

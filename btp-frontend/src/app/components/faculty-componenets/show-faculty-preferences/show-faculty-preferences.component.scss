@@ -1,63 +1,64 @@
 .list {
-  min-height: 60px;
-  border-radius: 4px;
-  display: block;
-  overflow: hidden;
+    min-height: 60px;
+    border-radius: 4px;
+    display: block;
+    overflow: hidden;
 }
 
 mat-dialog-content {
-  height: 100%;
-  overflow: auto;
+    height: 100%;
+    overflow: auto;
 }
 
 .copy {
-  float: right;
+    float: right;
 }
 
 .project {
-  float: left;
+    float: left;
 }
 
 .faculty {
-  float: right;
+    float: right;
 }
 
 .example-viewport {
-  height: 500px;
-  width: 800px;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+    height: 500px;
+    width: 800px;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 mat-icon:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .fill-space {
-  flex: 1 1 auto;
+    flex: 1 1 auto;
 }
 
 .text {
-  text-align: center;
+    text-align: center;
 }
 
 .toolbar {
-  position: sticky;
+    position: sticky;
 }
 
 
 .list-item {
-  padding: 10px 10px;
-  box-sizing: border-box;
-  cursor: move;
-  color: black;
-  font-size: 14px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    cursor: move;
+    color: black;
+    font-size: 14px;
 }
 
 .list-item:last-child {
-  border: none;
+    border: none;
 }

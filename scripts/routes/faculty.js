@@ -16,10 +16,10 @@ router.post("/done", (req, res) => {
 router.delete("/:id", (req, res) => {
 	const id = req.params.id;
 	Faculty.findById(id).then((faculty) => {
-		var projectList = faculty.project_list;
+		const projectList = faculty.project_list;
 		Project.find({ _id: { $in: projectList } })
 			.then(() => {
-				var updateResult = [
+				const updateResult = [
 					{
 						$project: {
 							_id: 1,
@@ -31,7 +31,7 @@ router.delete("/:id", (req, res) => {
 							__v: 1,
 							project_alloted: {
 								$cond: [
-									{ $in: ["$project_alloted", projectList] },
+									{$in: ["$project_alloted", projectList]},
 									undefined,
 									"$project_alloted",
 								],
@@ -58,7 +58,7 @@ router.delete("/:id", (req, res) => {
 
 router.post("/add/:num", (req, res) => {
 	const num = req.params.num;
-	var promises = [];
+	const promises = [];
 
 	for (let index = 0; index < num; index++) {
 		let names = "f" + (index + 1);
