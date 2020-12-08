@@ -52,18 +52,12 @@ export class LocalAuthService {
       } else if (data.position === "error") {
         return {
           route: "/error",
-          error: {
-            msg: "Invalid Email",
-            status: 401,
-          },
+          error: "Invalid Email"
         };
       } else if (data.position === "login-error") {
         return {
           route: "/error",
-          error: {
-            msg: "Please Login Again",
-            status: 400,
-          },
+          error: "Some error occured! Try again later."
         };
       }
     }

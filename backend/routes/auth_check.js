@@ -1,17 +1,37 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
 const Student = require("../models/Student");
 const Faculty = require("../models/Faculty");
 const SuperAdmin = require("../models/SuperAdmin");
-const Mapping = require("../models/Mapping");
-const fs = require("fs");
-const path = require("path");
-const csv = require("fast-csv");
+const Project = require("../models/Project");
 oauth = require("../config/oauth");
 
 //add your email here if you want to be a super admin
 const superAdmins = process.env.SUPER_ADMINS.split(",");
+
+async function addStudentToNotOpted(result) {
+	let updateResult = {
+	    $addToSet: { not_students_id: result._id }
+	}
+	let populator = {
+		path:"not_students_id",
+		select:"_id gpa",
+		model:Student
+	}
+	try {
+		await Project.updateMany({stream: result.stream}, updateResult);
+		let projects = await Project.find({stream: result.stream}).populate(populator);
+		let promises = []
+		for (const project of projects) {
+			project.not_students_id.sort((a,b) => b.gpa - a.gpa);
+			promises.push(project.save());
+		}
+		await Promise.all(promises);
+		return true;
+	} catch(err) {
+		return false;
+	}
+}
 
 router.post("/user_check", (req, res) => {
 	const userDetails = req.body;
@@ -24,30 +44,31 @@ router.post("/user_check", (req, res) => {
 
 			if (superAdmins.includes(userDetails.email)) {
 				SuperAdmin.findOne({ email: userDetails.email }).then((user) => {
+					let role;
 					if (user) {
 						user.google_id.idToken = userDetails.idToken;
 						role = "super_admin";
 						user
 							.save()
-							.then((result) => {
+							.then(() => {
 								res.json({
 									isRegistered: true,
 									position: role,
-									user_details: userDetails,
+									user_details: userDetails
 								});
 							})
-							.catch((err) => {
+							.catch(() => {
 								res.json({
 									isRegistered: true,
 									position: "error",
-									user_details: "SuperAdmin Not Saved - DB Error",
+									user_details: "SuperAdmin Not Saved - DB Error"
 								});
 							});
 					} else {
 						res.json({
 							isRegistered: false,
 							position: "super_admin",
-							user_details: userDetails,
+							user_details: userDetails
 						});
 					}
 				});
@@ -60,7 +81,7 @@ router.post("/user_check", (req, res) => {
 						if (user) {
 							user.google_id.idToken = userDetails.idToken;
 
-							var role = "";
+							let role = "";
 							if (user.isAdmin) {
 								role = "admin";
 							} else {
@@ -69,14 +90,14 @@ router.post("/user_check", (req, res) => {
 
 							user
 								.save()
-								.then((result) => {
+								.then(() => {
 									res.json({
 										isRegistered: true,
 										position: role,
 										user_details: userDetails,
 									});
 								})
-								.catch((err) => {
+								.catch(() => {
 									res.json({
 										isRegistered: true,
 										position: "error",
@@ -91,7 +112,7 @@ router.post("/user_check", (req, res) => {
 							});
 						}
 					})
-					.catch((err) => {
+					.catch(() => {
 						res.json({
 							isRegistered: false,
 							position: "error",
@@ -99,7 +120,7 @@ router.post("/user_check", (req, res) => {
 						});
 					});
 			} else {
-				const rollno = email[0];
+				let studentRegistered = true;
 				Student.findOne({ email: userDetails.email })
 					.then((user) => {
 						if (user) {
@@ -107,6 +128,7 @@ router.post("/user_check", (req, res) => {
 								user.google_id.idToken = userDetails.idToken;
 								user.google_id.id = id;
 								user.isRegistered = true;
+								studentRegistered = false;
 							} else {
 								user.google_id.idToken = userDetails.idToken;
 							}
@@ -114,13 +136,31 @@ router.post("/user_check", (req, res) => {
 							user
 								.save()
 								.then((result) => {
-									res.json({
-										isRegistered: true,
-										position: "student",
-										user_details: userDetails,
-									});
+									if(!studentRegistered) {
+										addStudentToNotOpted(result).then(result => {
+											if(result) {
+												res.json({
+													isRegistered: true,
+													position: "student",
+													user_details: userDetails,
+												});
+											} else {
+												res.json({
+													isRegistered: true,
+													position: "error",
+													user_details: "Student Not Saved - DB Error",
+												});
+											}
+										})
+									} else {
+										res.json({
+											isRegistered: true,
+											position: "student",
+											user_details: userDetails,
+										});
+									}
 								})
-								.catch((err) => {
+								.catch(() => {
 									res.json({
 										isRegistered: true,
 										position: "error",
@@ -137,7 +177,7 @@ router.post("/user_check", (req, res) => {
 							});
 						}
 					})
-					.catch((err) => {
+					.catch(() => {
 						res.json({
 							isRegistered: false,
 							position: "error",
@@ -147,8 +187,7 @@ router.post("/user_check", (req, res) => {
 					});
 			}
 		})
-		.catch((err) => {
-			console.log(err);
+		.catch(() => {
 			res.json({
 				isRegistered: false,
 				position: "login-error",
@@ -158,7 +197,6 @@ router.post("/user_check", (req, res) => {
 });
 
 router.get("/details/:id", (req, res) => {
-	const id = req.params.id;
 	const idToken = req.headers.authorization;
 
 	oauth(idToken)

@@ -7,13 +7,9 @@ const Faculty = require("../models/Faculty");
 const Admin = require("../models/Admin_Info");
 
 function combineProjects(projects, students) {
-	students = students;
-	projects = projects;
-	studentIDS = students.map((val) => val._id);
-	projectIDS = projects.map((val) => val._id);
-	var studentsPreferred = {};
-	var studentsNotPreferred = {};
-	for (var project of projects) {
+	let studentsPreferred = {};
+	let studentsNotPreferred = {};
+	for (let project of projects) {
 		studentsPreferred[project._id.toString()] = project.students_id;
 		studentsNotPreferred[project._id.toString()] = project.not_students_id;
 		project.students_id = [...studentsPreferred[project._id.toString()],...studentsNotPreferred[project._id.toString()]];
@@ -22,10 +18,6 @@ function combineProjects(projects, students) {
 }
 
 function combineStudents(projects, students) {
-	students = students;
-	projects = projects;
-	studentIDS = students.map((val) => val._id);
-	projectIDS = projects.map((val) => val._id);
 	for (const student of students) {
 		let preferredProjects = student.projects_preference.map(val => val.toString());
 		let projectsNotPreferred = projects.filter(val => {
@@ -46,15 +38,14 @@ function combineStudents(projects, students) {
 router.post("/start/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
-	var projects = [];
-	var students = [];
-	var alloted = [];
-	var free = [];
-	var allocationStatus = {};
-	var promises = [];
-	var projects = req.body.projects;
-	var pids = [];
-	var stream;
+	let students = [];
+	let alloted = [];
+	let free = [];
+	const allocationStatus = {};
+	let promises = [];
+	let projects = req.body.projects;
+	let pids = [];
+	let stream;
 	pids = projects.map((val) => val._id);
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.lean()
@@ -67,9 +58,9 @@ router.post("/start/:id", (req, res) => {
 				if (faculty.isAdmin) {
 					stream = faculty.adminProgram;
 
-					var projectsCondition = {
+					const projectsCondition = {
 						stream: stream,
-						_id: { $in: pids },
+						_id: {$in: pids},
 					};
 
 					promises.push(
@@ -99,7 +90,7 @@ router.post("/start/:id", (req, res) => {
 						combineStudents(projects, students);
 						combineProjects(projects, students);
 						free = [...students];
-						var curStudent, firstPreference, firstProject;
+						let curStudent, firstPreference, firstProject;
 						while (free.length > 0) {
 							curStudent = free[0];
 							firstPreference = curStudent.projects_preference[0];
@@ -138,14 +129,14 @@ router.post("/start/:id", (req, res) => {
 									});
 									alloted.push(curStudent);
 								} else {
-									var studentCurrentlyAlloted =
+									const studentCurrentlyAlloted =
 										allocationStatus[firstPreference._id][
 											allocationStatus[firstPreference._id].length - 1
 										];
-									var currentlyAllotedIndex = firstProject.students_id.indexOf(
+									const currentlyAllotedIndex = firstProject.students_id.indexOf(
 										studentCurrentlyAlloted._id
 									);
-									var curStudentIndex = firstProject.students_id.indexOf(
+									const curStudentIndex = firstProject.students_id.indexOf(
 										curStudent._id
 									);
 									if (curStudentIndex < currentlyAllotedIndex) {
@@ -173,8 +164,6 @@ router.post("/start/:id", (req, res) => {
 							}
 						}
 						//send the allocation status here.
-						var student_alloted = [];
-						var promises = [];
 						Project.find({ stream: stream })
 							.populate({
 								path: "faculty_id",
@@ -202,18 +191,17 @@ router.post("/start/:id", (req, res) => {
 								model: Student,
 							})
 							.then((projects) => {
-								var arr = [];
+								let arr = [];
 								for (const project of projects) {
-									var studentsAlloted = [];
+									let studentsAlloted = [];
 									const allocation = allocationStatus[project._id.toString()];
 									if (allocation) {
 										studentsAlloted = allocation.map((val) => {
-											var newStud = {
+											return {
 												name: val.name,
 												roll_no: val.roll_no,
 												gpa: val.gpa,
 											};
-											return newStud;
 										});
 									} else {
 										studentsAlloted = [];
@@ -235,13 +223,12 @@ router.post("/start/:id", (req, res) => {
 									};
 									arr.push(newProj);
 								}
-								var resultMap = {};
+								let resultMap = {};
 								for (const key in allocationStatus) {
 									if (allocationStatus.hasOwnProperty(key)) {
-										const studentsList = allocationStatus[key].map(
+										resultMap[key] = allocationStatus[key].map(
 											(val) => val._id
 										);
-										resultMap[key] = studentsList;
 									}
 								}
 								res.json({

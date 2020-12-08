@@ -115,23 +115,27 @@ router.post("/add/:id", (req, res) => {
 											msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`,
 										});
 									} else {
-										project
-											.save()
-											.then((result) => {
-												user.project_list.push(project._id);
-												user.save().then((ans) => {
-													res.json({
-														save: "success",
-														msg: "Your project has been successfully added",
-													});
-												});
-											})
-											.catch((err) => {
-												res.json({
-													save: "fail",
-													msg: " There was an error, Please try again!", //Display the messages in flash messages
-												});
-											});
+										Student.find({stream:stream}).sort([['gpa', -1]]).lean().select("_id")
+                                            .then(students => {
+                                                project.not_students_id = students.map(val => val._id);
+                                                project
+                                                    .save()
+                                                    .then((result) => {
+                                                        user.project_list.push(project._id);
+                                                        user.save().then((ans) => {
+                                                            res.json({
+                                                                save: "success",
+                                                                msg: "Your project has been successfully added",
+                                                            });
+                                                        });
+                                                    })
+                                                    .catch((err) => {
+                                                        res.json({
+                                                            save: "fail",
+                                                            msg: " There was an error, Please try again!", //Display the messages in flash messages
+                                                        });
+                                                    });
+                                            })
 									}
 								}
 							})

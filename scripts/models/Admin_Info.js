@@ -46,6 +46,10 @@ const UserSchema = new mongoose.Schema({
     startDate: {
         type: Date,
     },
+    reachedStage2: {
+        type: Boolean,
+        default: false
+    }
 });
 
 module.exports = mongoose.model("Admin_Info", UserSchema);
