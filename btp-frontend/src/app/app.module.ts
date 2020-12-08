@@ -69,6 +69,7 @@ import { SatPopoverModule } from '@ncstate/sat-popover';
 import { CdkDropListActualContainer } from 'src/app/components/student-components/edit-preferences/edit-preferences.directive';
 import { InlineEditComponent } from 'src/app/components/shared/inline-edit/inline-edit.component';
 import { FacultyHomeComponent } from 'src/app/components/faculty-componenets/faculty-home/faculty-home.component';
+import { EditFormComponent } from 'src/app/components/shared/super-admin/edit-form/edit-form.component';
 
 const googleLoginOption: LoginOpt = {
     prompt: 'select_account',
@@ -145,7 +146,8 @@ export function provideConfig() {
         TotalIntake,
         FacultyHomeComponent,
         GetDisplayedColumns,
-        GetExportDisabled
+        GetExportDisabled,
+        EditFormComponent
     ],
     entryComponents: [
         SubmitPopUpComponent,

@@ -354,21 +354,27 @@
                         <th *matHeaderCellDef [style.color]="background" mat-header-cell>
                             Stream Name
                         </th>
-                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>
+                        <td *matCellDef="let map" mat-cell>
                             <ng-container *ngIf="map.name">
-                                {{map.name}}<span [matTooltipPosition]="'above'" class="edit-row"
-                                                  matTooltip="Edit Field"><i
-                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>
+                                {{map.name}}
                             </ng-container>
-                            <sat-popover #p
-                                         (closed)="updateStreamName(map, $event)"
-                                         hasBackdrop
-                                         xAlign="start"
-                                         yAlign="start">
-                                <app-inline-edit [head]="'Edit name'" [placeholder]="'New name'"
-                                                 [value]="map.name"></app-inline-edit>
-                            </sat-popover>
                         </td>
+<!--                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>-->
+<!--                            <ng-container *ngIf="map.name">-->
+<!--                                {{map.name}}-->
+<!--                                <span [matTooltipPosition]="'above'" class="edit-row"-->
+<!--                                                  matTooltip="Edit Field"><i-->
+<!--                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>-->
+<!--                            </ng-container>-->
+<!--                            <sat-popover #p-->
+<!--                                         (closed)="updateStreamName(map, $event)"-->
+<!--                                         hasBackdrop-->
+<!--                                         xAlign="start"-->
+<!--                                         yAlign="start">-->
+<!--                                <app-inline-edit [head]="'Edit name'" [placeholder]="'New name'"-->
+<!--                                                 [value]="map.name"></app-inline-edit>-->
+<!--                            </sat-popover>-->
+<!--                        </td>-->
                     </ng-container>
                     <ng-container matColumnDef="Short">
                         <th *matHeaderCellDef [style.color]="background" mat-header-cell>
@@ -376,19 +382,24 @@
                         </th>
                         <td *matCellDef="let map" mat-cell>
                             <ng-container *ngIf="map.short">
-                                {{map.short}}<span [matTooltipPosition]="'above'" class="edit-row"
-                                                   matTooltip="Edit Field"><i
-                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>
+                                {{map.short}}
                             </ng-container>
-                            <sat-popover #p
-                                         (closed)="updateStreamShort(map, $event)"
-                                         hasBackdrop
-                                         xAlign="start"
-                                         yAlign="start">
-                                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'"
-                                                 [value]="map.short"></app-inline-edit>
-                            </sat-popover>
                         </td>
+<!--                        <td *matCellDef="let map" mat-cell>-->
+<!--                            <ng-container *ngIf="map.short">-->
+<!--                                {{map.short}}<span [matTooltipPosition]="'above'" class="edit-row"-->
+<!--                                                   matTooltip="Edit Field"><i-->
+<!--                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>-->
+<!--                            </ng-container>-->
+<!--                            <sat-popover #p-->
+<!--                                         (closed)="updateStreamShort(map, $event)"-->
+<!--                                         hasBackdrop-->
+<!--                                         xAlign="start"-->
+<!--                                         yAlign="start">-->
+<!--                                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'"-->
+<!--                                                 [value]="map.short"></app-inline-edit>-->
+<!--                            </sat-popover>-->
+<!--                        </td>-->
                     </ng-container>
                     <ng-container matColumnDef="Actions">
                         <th *matHeaderCellDef mat-header-cell>Delete Stream</th>
@@ -399,8 +410,23 @@
                                 matTooltipPosition="right"
                             >
                                 delete_outline
-                            </mat-icon
-                            >
+                            </mat-icon>
+                            <ng-container *ngIf="map.short">
+                                <mat-icon
+                                    class="edit-icon"
+                                    (click)="p.open()" [satPopoverAnchor]="p"
+                                    matTooltip="Edit Stream {{map.name}}"
+                                >
+                                    edit
+                                </mat-icon>
+                            </ng-container>
+                            <sat-popover #p
+                                         (closed)="updateStreamShort(map, $event)"
+                                         hasBackdrop
+                                         xAlign="before"
+                                         yAlign="start">
+                                <edit-form [which]="'Stream'" [full]="map.name" [short]="map.short" (update)="updateStream($event, map)"></edit-form>
+                            </sat-popover>
                         </td>
                     </ng-container>
                     <tr
@@ -432,41 +458,36 @@
                         <th *matHeaderCellDef [style.color]="background" mat-header-cell>
                             Program
                         </th>
-                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>
+                        <td *matCellDef="let map" mat-cell>
                             <ng-container *ngIf="map.name">
-                                {{map.name}}<span [matTooltipPosition]="'above'" class="edit-row"
-                                                  matTooltip="Edit Field"><i
-                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>
+                                {{map.name}}
                             </ng-container>
-                            <sat-popover #p
-                                         (closed)="updateProgramFull(map, $event)"
-                                         hasBackdrop
-                                         xAlign="start"
-                                         yAlign="start">
-                                <app-inline-edit [head]="'Edit full name'" [placeholder]="'New full name'"
-                                                 [value]="map.name"></app-inline-edit>
-                            </sat-popover>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="Short">
                         <th *matHeaderCellDef [style.color]="background" mat-header-cell>
                             Abbrevation
                         </th>
-                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>
+                        <td *matCellDef="let map" mat-cell>
                             <ng-container *ngIf="map.short">
-                                {{map.short}}<span [matTooltipPosition]="'above'" class="edit-row"
-                                                   matTooltip="Edit Field"><i
-                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>
+                                {{map.short}}
                             </ng-container>
-                            <sat-popover #p
-                                         (closed)="updateShortProgram(map, $event)"
-                                         hasBackdrop
-                                         xAlign="start"
-                                         yAlign="start">
-                                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'"
-                                                 [value]="map.short"></app-inline-edit>
-                            </sat-popover>
                         </td>
+<!--                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>-->
+<!--                            <ng-container *ngIf="map.short">-->
+<!--                                {{map.short}}<span [matTooltipPosition]="'above'" class="edit-row"-->
+<!--                                                   matTooltip="Edit Field"><i-->
+<!--                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>-->
+<!--                            </ng-container>-->
+<!--                            <sat-popover #p-->
+<!--                                         (closed)="updateProgramShort(map, $event)"-->
+<!--                                         hasBackdrop-->
+<!--                                         xAlign="start"-->
+<!--                                         yAlign="start">-->
+<!--                                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'"-->
+<!--                                                 [value]="map.short"></app-inline-edit>-->
+<!--                            </sat-popover>-->
+<!--                        </td>-->
                     </ng-container>
                     <ng-container matColumnDef="Stage">
                         <th *matHeaderCellDef [style.color]="background" mat-header-cell>
@@ -509,8 +530,23 @@
                                 matTooltip="Delete Program"
                                 matTooltipPosition="right"
                             >delete_outline
-                            </mat-icon
-                            >
+                            </mat-icon>
+                            <ng-container *ngIf="map.short">
+                                <mat-icon
+                                    class="edit-icon"
+                                    (click)="p.open()" [satPopoverAnchor]="p"
+                                    matTooltip="Edit Program {{map.name}}"
+                                >
+                                    edit
+                                </mat-icon>
+                            </ng-container>
+                            <sat-popover #p
+                                         (closed)="updateStreamShort(map, $event)"
+                                         hasBackdrop
+                                         xAlign="before"
+                                         yAlign="start">
+                                <edit-form  [which]="'Program'" [full]="map.name" [short]="map.short" (update)="updateProgram($event, map)"></edit-form>
+                            </sat-popover>
                         </td>
                     </ng-container>
                     <tr

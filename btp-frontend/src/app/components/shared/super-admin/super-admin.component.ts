@@ -784,25 +784,16 @@ export class SuperAdminComponent implements OnInit {
         return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     }
 
-    updateShortProgram(el: any, comment: any) {
+    updateProgramShort(el: any, comment: any) {
         if (!comment || comment['message'] == 'close') {
-            return;
+            return "closed";
         } else if (comment['message'] == 'submit') {
             if (this.checkIfPresent('programShort', comment['value'])) {
-                this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this field.', 'Ok', {
+                this.snackBar.open('Duplicate entries are not allowed! Enter a unique short name for this program.', 'Ok', {
                     duration: 3000,
                     panelClass: 'custom-snack-bar-container'
                 });
-                return;
-            }
-            let str = comment['value'];
-            let regexp = new RegExp('^[a-zA-Z-_]*$');
-            if (!regexp.exec(str)) {
-                this.snackBar.open('Only letter, hyphens and underscores are allowd for short name.', 'Ok', {
-                    duration: 3000,
-                    panelClass: 'custom-snack-bar-container'
-                });
-                return;
+                return "duplicate";
             }
             let currentShort = el['short'];
             this.userService.superAdminEditFields('programShort', currentShort, comment['value']).subscribe(result => {
@@ -845,18 +836,19 @@ export class SuperAdminComponent implements OnInit {
                 this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
             });
         }
+        return "success";
     }
 
     updateProgramFull(el: any, comment: any) {
         if (!comment || comment['message'] == 'close') {
-            return;
+            return "closed";
         } else if (comment['message'] == 'submit') {
             if (this.checkIfPresent('programFull', comment['value'])) {
-                this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this field.', 'Ok', {
+                this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this program.', 'Ok', {
                     duration: 3000,
                     panelClass: 'custom-snack-bar-container'
                 });
-                return;
+                return "duplicate";
             }
             let currentFull = el['name'];
             this.userService.superAdminEditFields('programFull', currentFull, comment['value']).subscribe(result => {
@@ -881,18 +873,19 @@ export class SuperAdminComponent implements OnInit {
                 this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
             });
         }
+        return "success";
     }
 
     updateStreamName(el: any, comment: any) {
         if (!comment || comment['message'] == 'close') {
-            return;
+            return "closed";
         } else if (comment['message'] == 'submit') {
             if (this.checkIfPresent('streamFull', comment['value'])) {
-                this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this field.', 'Ok', {
+                this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this stream.', 'Ok', {
                     duration: 3000,
                     panelClass: 'custom-snack-bar-container'
                 });
-                return;
+                return "duplicate";
             }
             let currentName = el['name'];
             this.userService.superAdminEditFields('streamFull', currentName, comment['value']).subscribe(result => {
@@ -908,7 +901,7 @@ export class SuperAdminComponent implements OnInit {
                             stream.name = comment['value'];
                         }
                     }
-                    this.programs.data = [...this.programs.data];
+                    this.branches.data = [...this.branches.data];
                     this.snackBar.open('Successfully updated the field', 'Ok', {duration: 3000});
                 } else {
                     this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
@@ -917,27 +910,19 @@ export class SuperAdminComponent implements OnInit {
                 this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
             });
         }
+        return "success";
     }
 
     updateStreamShort(el: any, comment: any) {
         if (!comment || comment['message'] == 'close') {
-            return;
+            return "closed";
         } else if (comment['message'] == 'submit') {
             if (this.checkIfPresent('streamShort', comment['value'])) {
-                this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this field.', 'Ok', {
+                this.snackBar.open('Duplicate entries are not allowed! Enter a unique short name for this stream.', 'Ok', {
                     duration: 3000,
                     panelClass: 'custom-snack-bar-container'
                 });
-                return;
-            }
-            let str = comment['value'];
-            let regexp = new RegExp('^[a-zA-Z-_]*$');
-            if (!regexp.exec(str)) {
-                this.snackBar.open('Only letter, hyphens and underscores are allowd for short name.', 'Ok', {
-                    duration: 3000,
-                    panelClass: 'custom-snack-bar-container'
-                });
-                return;
+                return "duplicate";
             }
             let currentShort = el['short'];
             this.userService.superAdminEditFields('streamShort', currentShort, comment['value']).subscribe(result => {
@@ -961,7 +946,7 @@ export class SuperAdminComponent implements OnInit {
                             this.faculties[program.short].data = [...this.faculties[program.short].data];
                         }
                     }
-                    this.programs.data = [...this.programs.data];
+                    this.branches.data = [...this.branches.data];
                     this.snackBar.open('Successfully updated the field', 'Ok', {duration: 3000});
                 } else {
                     this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
@@ -970,6 +955,7 @@ export class SuperAdminComponent implements OnInit {
                 this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
             });
         }
+        return "success";
     }
 
     checkIfPresent(field, newValue) {
@@ -1011,4 +997,32 @@ export class SuperAdminComponent implements OnInit {
                 return !isPresent;
         }
     }
+
+    updateStream(event, map) {
+        let full = event.full;
+        let short = event.short;
+
+        if(full != map.name && short != map.short) {
+            this.updateStreamName({short: map.short, name: map.name}, {message:"submit", value: full});
+            this.updateStreamShort({short: map.short, name: map.name}, {message:"submit", value: short});
+        } else if(full !== map.name) {
+            this.updateStreamName({short: map.short, name: map.name}, {message:"submit", value: full});
+        } else if (short !== map.short) {
+            this.updateStreamShort({short: map.short, name: map.name}, {message:"submit", value: short});
+        }
+    }
+
+    updateProgram(event, map) {
+        let full = event.full;
+        let short = event.short;
+        if(full != map.name && short != map.short) {
+            this.updateProgramFull({short: map.short, name: map.name}, {message:"submit", value: full});
+            this.updateProgramShort({short: map.short, name: map.name}, {message:"submit", value: short});
+        } else if(full !== map.name) {
+            this.updateProgramFull({short: map.short, name: map.name}, {message:"submit", value: full});
+        } else if (short !== map.short) {
+            this.updateProgramShort({short: map.short, name: map.name}, {message:"submit", value: short});
+        }
+    }
+
 }

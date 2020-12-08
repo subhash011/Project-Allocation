@@ -604,4 +604,12 @@ router.post("/edit/:field/:id",(req,res) => {
     })
 })
 
+router.post("/update/:field/:id", (req, res) => {
+    const field = req.params.field;
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const curMap = req.body.curMap;
+    const newVal = req.body.newMap;
+})
+
 module.exports = router;
