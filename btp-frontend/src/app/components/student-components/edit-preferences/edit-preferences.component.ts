@@ -49,6 +49,7 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
         private navbar: NavbarComponent
     ) {
     }
+
     ngOnInit() {
         this.tableStyle = {
             'max-height.px': this.height - 64,

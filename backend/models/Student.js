@@ -35,9 +35,9 @@ const UserSchema = new mongoose.Schema({
     project_alloted: {
         type: mongoose.SchemaTypes.ObjectId,
     },
-    isRegistered:{
-        type:Boolean,
-        default:false
+    isRegistered: {
+        type: Boolean,
+        default: false
     },
     date: {
         type: Date,

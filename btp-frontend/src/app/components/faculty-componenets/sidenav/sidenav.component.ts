@@ -115,7 +115,8 @@ export class SidenavComponent implements OnInit, OnChanges {
                         abbr: this.routeParams.abbr,
                         mode: 'programMode',
                     },
-                }).then(() => {});
+                }).then(() => {
+                });
             });
     }
 }

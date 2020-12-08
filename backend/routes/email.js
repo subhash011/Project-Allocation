@@ -36,10 +36,10 @@ router.post("/send", (req, res) => {
     });
     sendEmail(options, transport)
         .then(() => {
-            res.json({ message: "success" });
+            res.json({message: "success"});
         })
         .catch((err) => {
-            res.json({ message: "error", result: err });
+            res.json({message: "error", result: err});
         });
 });
 

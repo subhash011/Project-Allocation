@@ -111,10 +111,11 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
                 if (this.admins.startDate) {
                     this.stage = this.admins.stage;
                     this.startDate = new Date(this.admins.startDate);
-                    if(this.admins.deadlines.length - 1 < this.stage)
+                    if (this.admins.deadlines.length - 1 < this.stage) {
                         this.curDeadline = null;
-                    else
+                    } else {
                         this.curDeadline = new Date(this.admins.deadlines[this.admins.deadlines.length - 1]);
+                    }
                     this.dates = this.admins.deadlines.map(val => new Date(val));
                     switch (this.stage) {
                         case 0:
@@ -144,7 +145,7 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
             } else {
                 this.displayTimeline = false;
             }
-        })
+        });
         // if (localStorage.getItem('role') == 'student') {
         //     this.icon = {
         //         float: 'left',
@@ -410,6 +411,7 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
         //     });
         // }
     }
+
     refresh(program) {
         this.program = program.short;
         this.ngOnInit();

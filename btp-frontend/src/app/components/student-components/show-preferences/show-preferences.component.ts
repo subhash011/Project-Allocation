@@ -1,8 +1,6 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { LoginComponent } from 'src/app/components/shared/login/login.component';
 
 @Component({

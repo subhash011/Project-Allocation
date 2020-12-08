@@ -21,9 +21,11 @@ export class FacultyHomeComponent implements OnInit {
     @Input() publishStudents;
     currentTime: Date = new Date();
 
-    constructor() {}
+    constructor() {
+    }
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
     sortStages(event) {
         const isAsc = event.direction == 'asc';

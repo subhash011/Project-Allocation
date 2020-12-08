@@ -11,7 +11,7 @@ function combineProjects(projects) {
     for (let project of projects) {
         studentsPreferred[project._id.toString()] = project.students_id;
         studentsNotPreferred[project._id.toString()] = project.not_students_id;
-        project.students_id = [...studentsPreferred[project._id.toString()],...studentsNotPreferred[project._id.toString()]];
+        project.students_id = [...studentsPreferred[project._id.toString()], ...studentsNotPreferred[project._id.toString()]];
     }
     return projects;
 }
@@ -22,7 +22,7 @@ function combineStudents(projects, students) {
         let projectsNotPreferred = projects.filter(val => {
             return !preferredProjects.includes(val._id.toString());
         });
-        let sortedPreferences = projectsNotPreferred.sort((a,b) => {
+        let sortedPreferences = projectsNotPreferred.sort((a, b) => {
             return (a.not_students_id.indexOf(student._id) + a.students_id.length) - (b.not_students_id.indexOf(student._id) + b.students_id.length);
         });
         sortedPreferences = sortedPreferences.map(val => val._id.toString());
@@ -46,7 +46,7 @@ router.post("/start/:id", (req, res) => {
     let pids = [];
     let stream;
     pids = projects.map((val) => val._id);
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select({
             isAdmin: 1,
@@ -76,7 +76,7 @@ router.post("/start/:id", (req, res) => {
                         })
                     );
                     promises.push(
-                        Student.find({ stream: stream }).then((studentList) => {
+                        Student.find({stream: stream}).then((studentList) => {
                             students = studentList;
                             students.sort((a, b) => {
                                 return b.gpa - a.gpa;
@@ -163,7 +163,7 @@ router.post("/start/:id", (req, res) => {
                             }
                         }
                         //send the allocation status here.
-                        Project.find({ stream: stream })
+                        Project.find({stream: stream})
                             .populate({
                                 path: "faculty_id",
                                 select: "_id name",
@@ -171,15 +171,15 @@ router.post("/start/:id", (req, res) => {
                             })
                             .populate({
                                 path: "students_id",
-                                select: { name: 1, roll_no: 1, project_alloted: 1 },
+                                select: {name: 1, roll_no: 1, project_alloted: 1},
                                 model: Student,
                                 populate: {
                                     path: "project_alloted",
-                                    select: { title: 1, faculty_id: 1 },
+                                    select: {title: 1, faculty_id: 1},
                                     model: Project,
                                     populate: {
                                         path: "faculty_id",
-                                        select: { name: 1 },
+                                        select: {name: 1},
                                         model: Faculty,
                                     },
                                 },
@@ -217,7 +217,7 @@ router.post("/start/:id", (req, res) => {
                                         numberOfPreferences: project.students_id.length,
                                         student_alloted: studentsAlloted,
                                         students_id: project.students_id,
-                                        not_students_id:project.not_students_id,
+                                        not_students_id: project.not_students_id,
                                         isIncluded: project.isIncluded,
                                     };
                                     arr.push(newProj);

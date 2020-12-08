@@ -47,7 +47,7 @@ router.post("/register/:id", (req, res) => {
 router.get("/details/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    Student.findOne({ google_id: { id: id, idToken: idToken } })
+    Student.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("-google_id -__v -date -projects_preference")
         .populate({
@@ -84,13 +84,13 @@ router.get("/details/:id", (req, res) => {
 router.get("/stage/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    Student.findOne({ google_id: { id: id, idToken: idToken } })
+    Student.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("stream")
         .then((student) => {
             if (student) {
                 const stream = student.stream;
-                Admin.find({ stream: stream }).then((admin) => {
+                Admin.find({stream: stream}).then((admin) => {
                     if (admin[0]) {
                         res.json({
                             message: "success",
@@ -122,7 +122,7 @@ router.post("/update/:id", (req, res) => {
         gpa: document.gpa,
     };
     Student.findOneAndUpdate(
-        { google_id: { id: id, idToken: idToken } },
+        {google_id: {id: id, idToken: idToken}},
         updateResult
     )
         .then((student) => {

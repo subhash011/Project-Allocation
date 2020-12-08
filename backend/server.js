@@ -12,36 +12,36 @@ const app = express();
 
 //express session
 app.use(
-	session({
-		cookie: { maxAge: 60000, secure: true, sameSite: "none" },
-		secret: "woot",
-		resave: false,
-		saveUninitialized: false,
-	})
+    session({
+        cookie: {maxAge: 60000, secure: true, sameSite: "none"},
+        secret: "woot",
+        resave: false,
+        saveUninitialized: false,
+    })
 );
 
 app.use(cors());
 
 //use body-parser
-app.use(bodyparser.json({ limit: "50mb", extended: true }));
+app.use(bodyparser.json({limit: "50mb", extended: true}));
 mongoose.set("useFindAndModify", false);
 
 //uncomment during production
 // app.use(express.static(__dirname + "/btp-frontend"));
 
-var mongoConnect = process.env.MONGO_URL;
+const mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
 mongoose
-	.connect(mongoConnect, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
-	.then(() => {
-		console.log("connected to mongodb");
-	})
-	.catch((err) => {
-		console.log(err);
-	});
+    .connect(mongoConnect, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => {
+        console.log("connected to mongodb");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 //define all routes below this
 const home = require("./routes/home");
@@ -75,16 +75,16 @@ const mail = require("./routes/email");
 app.use("/api/email", mail);
 
 const backup = require("./routes/backup");
-app.use("/api/backup",backup);
+app.use("/api/backup", backup);
 
 
 const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
+    res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
 });
 
 //start server
 app.listen(PORT, () => {
-	console.log("Server connected to port " + PORT);
+    console.log("Server connected to port " + PORT);
 });

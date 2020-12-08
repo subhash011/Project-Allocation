@@ -19,16 +19,16 @@ mongoose.set("useFindAndModify", false);
 var mongoConnect = process.env.MONGO_URL_LOCAL;
 
 mongoose
-	.connect(mongoConnect, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
-	.then(() => {
-		console.log("connected to mongodb");
-	})
-	.catch((err) => {
-		console.log(err);
-	});
+    .connect(mongoConnect, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => {
+        console.log("connected to mongodb");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 //define all routes below this
 const student = require("./routes/student");
@@ -44,15 +44,15 @@ const allocation = require("./routes/allocation");
 app.use("/allocation", allocation);
 
 const backup = require("./routes/backup");
-app.use("/backup",backup);
+app.use("/backup", backup);
 
 const PORT = process.env.PORT || 8000;
 
 app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
+    res.sendFile(path.join(__dirname + "/btp-frontend/index.html"));
 });
 
 //start server
 app.listen(PORT, () => {
-	console.log("Server connected to port " + PORT);
+    console.log("Server connected to port " + PORT);
 });

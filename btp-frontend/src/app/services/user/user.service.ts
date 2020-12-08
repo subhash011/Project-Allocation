@@ -101,6 +101,7 @@ export class UserService {
         };
         return this.http.get(this.url, httpOptions);
     }
+
     getFacultyDetails(id: String) {
         const user = JSON.parse(localStorage.getItem('user'));
         this.url = this.base_url + 'faculty/details/' + id;
@@ -306,6 +307,7 @@ export class UserService {
 
         return this.http.post(this.url, obj, httpOptions);
     }
+
     setPrograms(programs) {
         let id = localStorage.getItem('id');
         let idToken = JSON.parse(localStorage.getItem('user')).idToken;
@@ -379,6 +381,7 @@ export class UserService {
 
         return this.http.get(this.url, httpOptions);
     }
+
     getAdminInfo_program(program) {
         const prog = {
             program: program,
@@ -520,6 +523,7 @@ export class UserService {
         };
         return this.http.get(this.url, httpOptions);
     }
+
     validateAllocation(projects, studentsEnrolled) {
         const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;

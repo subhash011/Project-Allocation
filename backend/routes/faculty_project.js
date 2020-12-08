@@ -11,12 +11,12 @@ router.post("/:id", (req, res) => {
     const idToken = req.headers.authorization;
     const stream = req.body.stream;
 
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("_id")
         .then((faculty) => {
             if (faculty) {
-                Project.find({ faculty_id: faculty._id, stream : stream })
+                Project.find({faculty_id: faculty._id, stream: stream})
                     .lean()
                     .then((projects) => {
                         if (projects) {
@@ -61,7 +61,7 @@ router.post("/add/:id", (req, res) => {
     const idToken = req.headers.authorization;
     const project_details = req.body;
 
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
         .then((user) => {
             const stream = project_details.stream;
             if (user) {
@@ -74,12 +74,12 @@ router.post("/add/:id", (req, res) => {
                     faculty_id: user._id,
                 });
 
-                Admin.findOne({ stream: stream })
+                Admin.findOne({stream: stream})
                     .lean()
                     .select("project_cap student_cap studentsPerFaculty")
                     .then((admin) => {
                         if (admin) {
-                            Project.find({ faculty_id: user._id, stream: stream })
+                            Project.find({faculty_id: user._id, stream: stream})
                                 .then((projects) => {
                                     const count = projects.length;
                                     let student_count = 0;
@@ -104,9 +104,7 @@ router.post("/add/:id", (req, res) => {
                                                 save: "studentCap",
                                                 msg: `Max number of students that can be taken per project are ${admin.student_cap}`,
                                             });
-                                        }
-
-                                        else if (
+                                        } else if (
                                             student_count + Number(project_details.studentIntake) >
                                             admin.studentsPerFaculty
                                         ) {
@@ -115,7 +113,7 @@ router.post("/add/:id", (req, res) => {
                                                 msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`,
                                             });
                                         } else {
-                                            Student.find({stream:stream}).sort([['gpa', -1]]).lean().select("_id")
+                                            Student.find({stream: stream}).sort([['gpa', -1]]).lean().select("_id")
                                                 .then(students => {
                                                     project.not_students_id = students.map(val => val._id);
                                                     project
@@ -172,20 +170,28 @@ router.post("/applied/:id", (req, res) => {
     const id = req.params.id;
     const project_id = req.body.project;
     const idToken = req.headers.authorization;
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("_id")
         .then((faculty) => {
             if (faculty) {
                 Project.findById(mongoose.Types.ObjectId(project_id))
-                    .populate({path:"students_id", select:"-google_id -stream -date -email -isRegistered",model:Student})
-                    .populate({path:"not_students_id",select:"-google_id -stream -date -email -isRegistered",model:Student})
+                    .populate({
+                        path: "students_id",
+                        select: "-google_id -stream -date -email -isRegistered",
+                        model: Student
+                    })
+                    .populate({
+                        path: "not_students_id",
+                        select: "-google_id -stream -date -email -isRegistered",
+                        model: Student
+                    })
                     .then((project) => {
                         res.json({
                             status: "success",
                             students: project["students_id"],
-                            reorder:project["reorder"],
-                            non_students:project["not_students_id"]
+                            reorder: project["reorder"],
+                            non_students: project["not_students_id"]
                         });
                     })
                     .catch((err) => {
@@ -212,7 +218,7 @@ router.post("/include_projects/:id", (req, res) => {
     let projects = req.body.projects;
     projects = projects.map((val) => mongoose.Types.ObjectId(val));
     const idToken = req.headers.authorization;
-    Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("_id")
         .then((faculty) => {
@@ -221,12 +227,12 @@ router.post("/include_projects/:id", (req, res) => {
                     let conditions = {
                         faculty_id: faculty_id,
                     };
-                    Project.updateMany(conditions, { isIncluded: false }).then(() => {
+                    Project.updateMany(conditions, {isIncluded: false}).then(() => {
                         conditions = {
-                            _id: { $in: projects },
+                            _id: {$in: projects},
                             faculty_id: faculty_id,
                         };
-                        Project.updateMany(conditions, { isIncluded: true }).then(() => {
+                        Project.updateMany(conditions, {isIncluded: true}).then(() => {
                             res.json({
                                 message: "success",
                                 result: null,
@@ -253,34 +259,31 @@ router.post("/save_preference/:id", (req, res) => {
     let reorder = req.body.reorder;
 
 
-    Admin.findOne({stream:stream})
+    Admin.findOne({stream: stream})
         .lean()
         .select("stage")
-        .then(admin=>{
-            if(admin.stage === 2){
-                Faculty.findOne({ google_id: { id: id, idToken: idToken } })
+        .then(admin => {
+            if (admin.stage === 2) {
+                Faculty.findOne({google_id: {id: id, idToken: idToken}})
                     .lean()
                     .select("_id")
                     .then((faculty) => {
                         if (faculty) {
 
-                            if(index === 0){
+                            if (index === 0) {
 
-                                if(reorder === 2){
+                                if (reorder === 2) {
                                     reorder = 2;
-                                }
-                                else if(reorder === 0){
+                                } else if (reorder === 0) {
                                     reorder = -1;
-                                }
-                                else if(reorder === -1){
+                                } else if (reorder === -1) {
                                     reorder = -1;
-                                }
-                                else if(reorder === 1){
+                                } else if (reorder === 1) {
                                     reorder = 2;
                                 }
 
 
-                                Project.findByIdAndUpdate(project_id,{students_id:student_ids, reorder:reorder})
+                                Project.findByIdAndUpdate(project_id, {students_id: student_ids, reorder: reorder})
                                     .then(() => {
                                         res.json({
                                             status: "success",
@@ -295,24 +298,20 @@ router.post("/save_preference/:id", (req, res) => {
                                         });
                                     });
 
-                            }
-                            else if(index === 1){
+                            } else if (index === 1) {
 
-                                if(reorder === 2){
+                                if (reorder === 2) {
                                     reorder = 2;
-                                }
-                                else if(reorder === 0){
+                                } else if (reorder === 0) {
                                     reorder = 1;
-                                }
-                                else if(reorder === 1){
+                                } else if (reorder === 1) {
                                     reorder = 1;
-                                }
-                                else if(reorder === -1){
+                                } else if (reorder === -1) {
                                     reorder = 2;
                                 }
 
 
-                                Project.findByIdAndUpdate(project_id,{not_students_id:student_ids, reorder:reorder})
+                                Project.findByIdAndUpdate(project_id, {not_students_id: student_ids, reorder: reorder})
                                     .then(() => {
                                         res.json({
                                             status: "success",
@@ -341,8 +340,7 @@ router.post("/save_preference/:id", (req, res) => {
                             msg: "Authentication Error",
                         });
                     });
-            }
-            else{
+            } else {
                 res.json({
                     status: "fail",
                     msg: "You cannot edit preferences anymore.",
@@ -360,7 +358,7 @@ router.post("/update/:id", (req, res) => {
     const studentIntake = Number(req.body.studentIntake);
     const description = req.body.description;
 
-    Project.findById({ _id: project_id })
+    Project.findById({_id: project_id})
         .then((project) => {
             project.title = title;
             project.duration = duration;
@@ -369,14 +367,14 @@ router.post("/update/:id", (req, res) => {
 
             const stream = project.stream;
 
-            Admin.findOne({ stream: stream })
+            Admin.findOne({stream: stream})
                 .select({
-                    student_cap:1,
-                    studentsPerFaculty:1
+                    student_cap: 1,
+                    studentsPerFaculty: 1
                 })
                 .then((admin) => {
                     if (admin) {
-                        Project.find({ faculty_id: project.faculty_id, stream: stream }).then(
+                        Project.find({faculty_id: project.faculty_id, stream: stream}).then(
                             (projects) => {
 
                                 let student_count = 0;
@@ -431,7 +429,7 @@ router.post("/update/:id", (req, res) => {
 router.delete("/delete/:id", (req, res) => {
     const id = req.params.id;
 
-    Project.findByIdAndRemove({ _id: id })
+    Project.findByIdAndRemove({_id: id})
         .then((result) => {
             let students_id = result.students_id;
             let faculty_id = result.faculty_id;
@@ -440,15 +438,15 @@ router.delete("/delete/:id", (req, res) => {
                 $pull: {project_list: id}
             };
 
-            Faculty.findByIdAndUpdate(faculty_id,updateConfig)
-                .then(()=>{
+            Faculty.findByIdAndUpdate(faculty_id, updateConfig)
+                .then(() => {
 
                     updateConfig = {
-                        $pull : {projects_preference : id}
+                        $pull: {projects_preference: id}
                     }
 
-                    Student.updateMany({_id: { $in: students_id }},updateConfig)
-                        .then(() =>{
+                    Student.updateMany({_id: {$in: students_id}}, updateConfig)
+                        .then(() => {
                             res.json({
                                 status: "success",
                                 msg: "The project has been successfully deleted",
@@ -479,7 +477,7 @@ router.delete("/delete/:id", (req, res) => {
         });
 });
 
-router.post("/notApplied/:id",(req,res)=>{
+router.post("/notApplied/:id", (req, res) => {
 
     const id = req.params.id;
     const idToken = req.headers.authorization;
@@ -487,40 +485,42 @@ router.post("/notApplied/:id",(req,res)=>{
 
     console.log(project_id)
 
-    Faculty.findOne({google_id:{id:id,idToken:idToken}})
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("_id")
-        .then(faculty=>{
+        .then(faculty => {
 
-            if(faculty){
+            if (faculty) {
 
                 Project.findById(mongoose.Types.ObjectId(project_id))
                     .lean()
-                    .populate({path:"not_students_id",select:"-google_id -email -isRegistered -date",model:Student})
-                    .then(project=>{
+                    .populate({
+                        path: "not_students_id",
+                        select: "-google_id -email -isRegistered -date",
+                        model: Student
+                    })
+                    .then(project => {
 
-                        if(project){
+                        if (project) {
 
                             res.json({
-                                status:"success",
-                                non_students:project["not_students_id"]
+                                status: "success",
+                                non_students: project["not_students_id"]
                             })
 
-                        }
-                        else{
+                        } else {
                             res.json({
-                                status:"fail",
-                                result:null
+                                status: "fail",
+                                result: null
                             })
                         }
                     })
 
 
-            }
-            else{
+            } else {
                 res.json({
-                    status:"fail",
-                    result:null
+                    status: "fail",
+                    result: null
                 })
             }
 

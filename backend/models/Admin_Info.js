@@ -31,13 +31,13 @@ const UserSchema = new mongoose.Schema({
     studentCount: {
         type: Number,
     },
-    publishStudents:{
+    publishStudents: {
         type: Boolean,
-        default:false
+        default: false
     },
-    publishFaculty:{
+    publishFaculty: {
         type: Boolean,
-        default:false
+        default: false
     },
     startDate: {
         type: Date,

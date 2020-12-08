@@ -68,7 +68,7 @@ router.get("/student/details/:id", (req, res) => {
             }
         })
         .then(() => {
-            SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+            SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
                 .lean()
                 .select("_id")
                 .then((user) => {
@@ -142,7 +142,7 @@ router.get("/faculty/details/:id", (req, res) => {
             }
         })
         .then(() => {
-            SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+            SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
                 .lean()
                 .select("_id")
                 .then((user) => {
@@ -204,7 +204,7 @@ router.delete("/student/:id", (req, res) => {
     const google_user_id = req.params.id;
     const idToken = req.headers.authorization;
     SuperAdmin.findOne({
-        google_id: { id: google_user_id, idToken: idToken },
+        google_id: {id: google_user_id, idToken: idToken},
     })
         .lean()
         .select("_id")
@@ -235,7 +235,7 @@ router.delete("/faculty/:id", (req, res) => {
     const google_user_id = req.params.id;
     const idToken = req.headers.authorization;
     SuperAdmin.findOne({
-        google_id: { id: google_user_id, idToken: idToken },
+        google_id: {id: google_user_id, idToken: idToken},
     })
         .lean()
         .select("_id")
@@ -243,7 +243,7 @@ router.delete("/faculty/:id", (req, res) => {
             if (user) {
                 Faculty.findByIdAndDelete(id).then((faculty) => {
                     const projectList = faculty.project_list;
-                    Project.deleteMany({ _id: { $in: projectList } }).then(() => {
+                    Project.deleteMany({_id: {$in: projectList}}).then(() => {
                         let updateResult = {
                             $pullAll: {
                                 projects_preference: projectList,
@@ -253,7 +253,7 @@ router.delete("/faculty/:id", (req, res) => {
                             const updateCondition = {
                                 project_alloted: {$in: projectList},
                             };
-                            updateResult = { $unset: { project_alloted: "" } };
+                            updateResult = {$unset: {project_alloted: ""}};
                             Student.updateMany(updateCondition, updateResult).then(() => {
                                 res.json({
                                     message: "success",
@@ -278,7 +278,7 @@ router.post("/addAdmin/:id", (req, res) => {
     const google_user_id = req.params.id;
     const idToken = req.headers.authorization;
     SuperAdmin.findOne({
-        google_id: { id: google_user_id, idToken: idToken },
+        google_id: {id: google_user_id, idToken: idToken},
     })
         .lean()
         .select("_id")
@@ -333,7 +333,7 @@ router.post("/removeAdmin/:id", (req, res) => {
     const google_user_id = req.params.id;
     const idToken = req.headers.authorization;
     SuperAdmin.findOne({
-        google_id: { id: google_user_id, idToken: idToken },
+        google_id: {id: google_user_id, idToken: idToken},
     })
         .lean()
         .select("_id")
@@ -341,7 +341,7 @@ router.post("/removeAdmin/:id", (req, res) => {
             if (user) {
                 Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
                     isAdmin: false,
-                    $unset: { adminProgram: 1 },
+                    $unset: {adminProgram: 1},
                 })
                     .then((faculty) => {
                         if (faculty) {
@@ -375,7 +375,7 @@ router.post("/removeAdmin/:id", (req, res) => {
 router.get("/projects/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("_id")
         .then((user) => {
@@ -384,12 +384,12 @@ router.get("/projects/:id", (req, res) => {
                     .lean()
                     .populate({
                         path: "faculty_id",
-                        select: { name: 1, _id: 1 },
+                        select: {name: 1, _id: 1},
                         model: Faculty,
                     })
                     .populate({
                         path: "student_alloted",
-                        select: { name: 1, roll_no: 1 },
+                        select: {name: 1, roll_no: 1},
                         model: Student,
                     })
                     .then((projects) => {
@@ -401,7 +401,7 @@ router.get("/projects/:id", (req, res) => {
                                 duration: project.duration,
                                 faculty: project.faculty_id.name,
                                 numberOfPreferences: project.students_id.length,
-                                description:project.description,
+                                description: project.description,
                                 faculty_id: project.faculty_id._id,
                             };
                             arr.push(newProj);
@@ -426,7 +426,7 @@ router.get("/projects/:id", (req, res) => {
 router.post("/create/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(
+    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).then(
         (user) => {
             if (user) {
                 const newElement = new Mapping(req.body);
@@ -460,17 +460,17 @@ router.post("/create/:id", (req, res) => {
         })
 });
 
-router.post("/edit/:field/:id",(req,res) => {
+router.post("/edit/:field/:id", (req, res) => {
     const field = req.params.field;
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const curVal = req.body.curVal;
     const newVal = req.body.newVal;
-    SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } }).then(user => {
-        if(user) {
+    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).then(user => {
+        if (user) {
             switch (field) {
                 case "programShort":
-                    Mapping.findOneAndUpdate({short:curVal},{short:newVal}).then(map => {
+                    Mapping.findOneAndUpdate({short: curVal}, {short: newVal}).then(map => {
                         const newMap = {
                             full: map.full,
                             short: newVal
@@ -490,47 +490,47 @@ router.post("/edit/:field/:id",(req,res) => {
                         };
                         const promises = [];
                         promises.push(
-                            Faculty.updateMany(findCondition, updateCondition,filterCondition).then(faculties => {
+                            Faculty.updateMany(findCondition, updateCondition, filterCondition).then(faculties => {
                                 return faculties;
                             })
                         );
                         promises.push(
-                            Faculty.updateMany({adminProgram:curVal},{adminProgram:newVal}).then(faculties => {
+                            Faculty.updateMany({adminProgram: curVal}, {adminProgram: newVal}).then(faculties => {
                                 return faculties;
                             })
                         )
                         promises.push(
-                            Student.updateMany({stream:curVal},{stream:newVal}).then(students => {
+                            Student.updateMany({stream: curVal}, {stream: newVal}).then(students => {
                                 return students;
                             })
                         );
                         promises.push(
-                            Project.updateMany({stream:curVal},{stream:newVal}).then(projects => {
+                            Project.updateMany({stream: curVal}, {stream: newVal}).then(projects => {
                                 return projects;
                             })
                         );
                         promises.push(
-                            Admin.updateMany({stream:curVal},{stream:newVal}).then(admin => {
+                            Admin.updateMany({stream: curVal}, {stream: newVal}).then(admin => {
                                 return admin;
                             })
                         )
                         Promise.all(promises).then(() => {
                             res.json({
-                                message:"success"
+                                message: "success"
                             })
                         }).catch(() => {
                             res.json({
-                                message:"error"
+                                message: "error"
                             })
                         })
                     }).catch(() => {
                         res.json({
-                            message:"error"
+                            message: "error"
                         })
                     });
                     break;
                 case "programFull":
-                    Mapping.findOneAndUpdate({full:curVal},{full:newVal},{upsert:false,new:false}).then(map => {
+                    Mapping.findOneAndUpdate({full: curVal}, {full: newVal}, {upsert: false, new: false}).then(map => {
                         const newMap = {
                             full: newVal,
                             short: map.short
@@ -548,47 +548,47 @@ router.post("/edit/:field/:id",(req,res) => {
                         const filterCondition = {
                             arrayFilters: [{"filter": curMap}]
                         };
-                        Faculty.updateMany(findCondition,updateCondition,filterCondition).then(() => {
+                        Faculty.updateMany(findCondition, updateCondition, filterCondition).then(() => {
                             res.json({
-                                message:"success",
-                                result:null
+                                message: "success",
+                                result: null
                             })
                         }).catch(() => {
                             res.json({
-                                message:"error"
+                                message: "error"
                             })
                         })
                     }).catch(() => {
                         res.json({
-                            message:"error"
+                            message: "error"
                         })
                     });
                     break;
                 case "streamShort":
-                    Streams.findOneAndUpdate({short:curVal},{short:newVal}).then(() => {
-                        Faculty.updateMany({stream:curVal},{stream:newVal}).then(() => {
+                    Streams.findOneAndUpdate({short: curVal}, {short: newVal}).then(() => {
+                        Faculty.updateMany({stream: curVal}, {stream: newVal}).then(() => {
                             res.json({
-                                message:"success"
+                                message: "success"
                             })
                         }).catch(() => {
                             res.json({
-                                message:"error"
+                                message: "error"
                             })
                         })
                     }).catch(() => {
                         res.json({
-                            message:"error"
+                            message: "error"
                         })
                     });
                     break;
                 case "streamFull":
-                    Streams.findOneAndUpdate({full:curVal},{full:newVal}).then(() => {
+                    Streams.findOneAndUpdate({full: curVal}, {full: newVal}).then(() => {
                         res.json({
-                            message:"success"
+                            message: "success"
                         })
                     }).catch(() => {
                         res.json({
-                            message:"error"
+                            message: "error"
                         })
                     });
                     break;
@@ -597,19 +597,11 @@ router.post("/edit/:field/:id",(req,res) => {
             }
         } else {
             res.json({
-                message:"invalid-token",
-                result:null
+                message: "invalid-token",
+                result: null
             })
         }
     })
-})
-
-router.post("/update/:field/:id", (req, res) => {
-    const field = req.params.field;
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const curMap = req.body.curMap;
-    const newVal = req.body.newMap;
-})
+});
 
 module.exports = router;

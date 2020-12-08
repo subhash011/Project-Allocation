@@ -1,9 +1,7 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LocalAuthService } from 'src/app/services/local-auth/local-auth.service';
 import {
-    ApplicationRef,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
@@ -67,6 +65,7 @@ export class LoginComponent implements OnInit {
             this.signInWithGoogle();
         }
     }
+
     signInWithGoogle(): void {
         this.authService
             .signIn(GoogleLoginProvider.PROVIDER_ID)

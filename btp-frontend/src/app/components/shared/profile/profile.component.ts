@@ -129,6 +129,7 @@ export class ProfileComponent implements OnInit {
             );
         }
     }
+
     getStudentDiv() {
         if (this.role == 'student' && this.user_info != null) {
             return true;

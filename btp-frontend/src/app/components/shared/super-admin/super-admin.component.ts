@@ -144,7 +144,7 @@ export class SuperAdminComponent implements OnInit {
                     this.maps = maps['result'];
                     this.branches.data = this.maps.map((val) => {
                         return {
-                            name: val.full,
+                            full: val.full,
                             short: val.short,
                         };
                     });
@@ -172,7 +172,7 @@ export class SuperAdminComponent implements OnInit {
                 this.maps = maps['result'];
                 this.programs.data = this.maps.map((val) => {
                     return {
-                        name: val.full,
+                        full: val.full,
                         short: val.short
                     };
                 });
@@ -376,13 +376,14 @@ export class SuperAdminComponent implements OnInit {
                     if (data['message'] == 'success') {
                         const val = data['result'];
                         const newMap = {
-                            name: val.full,
+                            full: val.full,
                             short: val.short
                         };
                         this.programs.data.push(newMap);
                         this.programs.data = [...this.programs.data];
                         this.faculties[val.short] = new MatTableDataSource([]);
                         this.students[val.short] = new MatTableDataSource([]);
+                        this.projects[val.short] = new MatTableDataSource([]);
                         this.snackBar.open(
                             'Added Program Successfully',
                             'Ok',
@@ -479,7 +480,7 @@ export class SuperAdminComponent implements OnInit {
                     if (data['message'] == 'success') {
                         const val = data['result'];
                         const newMap = {
-                            name: val.full,
+                            full: val.full,
                             short: val.short,
                         };
                         this.branches.data.push(newMap);
@@ -786,14 +787,14 @@ export class SuperAdminComponent implements OnInit {
 
     updateProgramShort(el: any, comment: any) {
         if (!comment || comment['message'] == 'close') {
-            return "closed";
+            return 'closed';
         } else if (comment['message'] == 'submit') {
             if (this.checkIfPresent('programShort', comment['value'])) {
                 this.snackBar.open('Duplicate entries are not allowed! Enter a unique short name for this program.', 'Ok', {
                     duration: 3000,
                     panelClass: 'custom-snack-bar-container'
                 });
-                return "duplicate";
+                return 'duplicate';
             }
             let currentShort = el['short'];
             this.userService.superAdminEditFields('programShort', currentShort, comment['value']).subscribe(result => {
@@ -836,21 +837,21 @@ export class SuperAdminComponent implements OnInit {
                 this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
             });
         }
-        return "success";
+        return 'success';
     }
 
     updateProgramFull(el: any, comment: any) {
         if (!comment || comment['message'] == 'close') {
-            return "closed";
+            return 'closed';
         } else if (comment['message'] == 'submit') {
             if (this.checkIfPresent('programFull', comment['value'])) {
                 this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this program.', 'Ok', {
                     duration: 3000,
                     panelClass: 'custom-snack-bar-container'
                 });
-                return "duplicate";
+                return 'duplicate';
             }
-            let currentFull = el['name'];
+            let currentFull = el['full'];
             this.userService.superAdminEditFields('programFull', currentFull, comment['value']).subscribe(result => {
                 if (result['message'] == 'invalid-token') {
                     this.snackBar.open('Session Timed Out! Please Sign-In Again.', 'Ok', {
@@ -860,8 +861,8 @@ export class SuperAdminComponent implements OnInit {
                     this.login.signOut();
                 } else if (result['message'] == 'success') {
                     for (const program of this.programs.data) {
-                        if (program.name == currentFull) {
-                            program.name = comment['value'];
+                        if (program.full == currentFull) {
+                            program.full = comment['value'];
                         }
                     }
                     this.programs.data = [...this.programs.data];
@@ -873,21 +874,21 @@ export class SuperAdminComponent implements OnInit {
                 this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
             });
         }
-        return "success";
+        return 'success';
     }
 
     updateStreamName(el: any, comment: any) {
         if (!comment || comment['message'] == 'close') {
-            return "closed";
+            return 'closed';
         } else if (comment['message'] == 'submit') {
             if (this.checkIfPresent('streamFull', comment['value'])) {
                 this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this stream.', 'Ok', {
                     duration: 3000,
                     panelClass: 'custom-snack-bar-container'
                 });
-                return "duplicate";
+                return 'duplicate';
             }
-            let currentName = el['name'];
+            let currentName = el['full'];
             this.userService.superAdminEditFields('streamFull', currentName, comment['value']).subscribe(result => {
                 if (result['message'] == 'invalid-token') {
                     this.snackBar.open('Session Timed Out! Please Sign-In Again.', 'Ok', {
@@ -897,8 +898,8 @@ export class SuperAdminComponent implements OnInit {
                     this.login.signOut();
                 } else if (result['message'] == 'success') {
                     for (const stream of this.branches.data) {
-                        if (stream.name == currentName) {
-                            stream.name = comment['value'];
+                        if (stream.full == currentName) {
+                            stream.full = comment['value'];
                         }
                     }
                     this.branches.data = [...this.branches.data];
@@ -910,19 +911,19 @@ export class SuperAdminComponent implements OnInit {
                 this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
             });
         }
-        return "success";
+        return 'success';
     }
 
     updateStreamShort(el: any, comment: any) {
         if (!comment || comment['message'] == 'close') {
-            return "closed";
+            return 'closed';
         } else if (comment['message'] == 'submit') {
             if (this.checkIfPresent('streamShort', comment['value'])) {
                 this.snackBar.open('Duplicate entries are not allowed! Enter a unique short name for this stream.', 'Ok', {
                     duration: 3000,
                     panelClass: 'custom-snack-bar-container'
                 });
-                return "duplicate";
+                return 'duplicate';
             }
             let currentShort = el['short'];
             this.userService.superAdminEditFields('streamShort', currentShort, comment['value']).subscribe(result => {
@@ -955,7 +956,7 @@ export class SuperAdminComponent implements OnInit {
                 this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
             });
         }
-        return "success";
+        return 'success';
     }
 
     checkIfPresent(field, newValue) {
@@ -963,7 +964,7 @@ export class SuperAdminComponent implements OnInit {
         switch (field) {
             case 'programFull':
                 for (const program of this.programs.data) {
-                    if (program.name == newValue) {
+                    if (program.full == newValue) {
                         isPresent = true;
                         break;
                     }
@@ -979,7 +980,7 @@ export class SuperAdminComponent implements OnInit {
                 return isPresent;
             case 'streamFull':
                 for (const stream of this.branches.data) {
-                    if (stream.name == newValue) {
+                    if (stream.full == newValue) {
                         isPresent = true;
                         break;
                     }
@@ -1002,26 +1003,26 @@ export class SuperAdminComponent implements OnInit {
         let full = event.full;
         let short = event.short;
 
-        if(full != map.name && short != map.short) {
-            this.updateStreamName({short: map.short, name: map.name}, {message:"submit", value: full});
-            this.updateStreamShort({short: map.short, name: map.name}, {message:"submit", value: short});
-        } else if(full !== map.name) {
-            this.updateStreamName({short: map.short, name: map.name}, {message:"submit", value: full});
+        if (full != map.full && short != map.short) {
+            this.updateStreamName({short: map.short, full: map.full}, {message: 'submit', value: full});
+            this.updateStreamShort({short: map.short, full: map.full}, {message: 'submit', value: short});
+        } else if (full !== map.full) {
+            this.updateStreamName({short: map.short, full: map.full}, {message: 'submit', value: full});
         } else if (short !== map.short) {
-            this.updateStreamShort({short: map.short, name: map.name}, {message:"submit", value: short});
+            this.updateStreamShort({short: map.short, full: map.full}, {message: 'submit', value: short});
         }
     }
 
     updateProgram(event, map) {
         let full = event.full;
         let short = event.short;
-        if(full != map.name && short != map.short) {
-            this.updateProgramFull({short: map.short, name: map.name}, {message:"submit", value: full});
-            this.updateProgramShort({short: map.short, name: map.name}, {message:"submit", value: short});
-        } else if(full !== map.name) {
-            this.updateProgramFull({short: map.short, name: map.name}, {message:"submit", value: full});
+        if (full != map.full && short != map.short) {
+            this.updateProgramFull({short: map.short, full: map.full}, {message: 'submit', value: full});
+            this.updateProgramShort({short: map.short, full: map.full}, {message: 'submit', value: short});
+        } else if (full !== map.full) {
+            this.updateProgramFull({short: map.short, full: map.full}, {message: 'submit', value: full});
         } else if (short !== map.short) {
-            this.updateProgramShort({short: map.short, name: map.name}, {message:"submit", value: short});
+            this.updateProgramShort({short: map.short, full: map.full}, {message: 'submit', value: short});
         }
     }
 

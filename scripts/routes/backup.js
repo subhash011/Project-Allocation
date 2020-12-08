@@ -29,25 +29,25 @@ function getRequests() {
     return requests
 }
 
-router.get("/",(req,res) => {
+router.get("/", (req, res) => {
     axios.all(getRequests()).then(result => {
         let subhash = new Student({
-            name:"Subhash S",
-            gpa:8.31,
-            roll_no:"111801042",
-            email:"111801042@smail.iitpkd.ac.in",
-            stream:"UGCSE"
+            name: "Subhash S",
+            gpa: 8.31,
+            roll_no: "111801042",
+            email: "111801042@smail.iitpkd.ac.in",
+            stream: "UGCSE"
         });
         let vamsi = new Student({
-            name:"Sai Vamsi",
-            gpa:8.42,
-            roll_no:"111801002",
-            email:"1118010402@smail.iitpkd.ac.in",
-            stream:"UGCSE"
+            name: "Sai Vamsi",
+            gpa: 8.42,
+            roll_no: "111801002",
+            email: "1118010402@smail.iitpkd.ac.in",
+            stream: "UGCSE"
         });
         let streams = result[0].data;
         let students = result[1].data;
-        students = [...students,...[subhash,vamsi]];
+        students = [...students, ...[subhash, vamsi]];
         let faculties = result[2].data;
         let mappings = result[3].data;
         let superAdmins = result[4].data;
@@ -77,7 +77,12 @@ router.get("/",(req,res) => {
             );
             promises.push(
                 SuperAdmin.insertMany(superAdmins).then(result => {
-                    SuperAdmin.findOneAndUpdate({email:"pap@smail.iitpkd.ac.in"},{google_id:{id:process.env.PAP_ID,idToken:1}}).then(() => {
+                    SuperAdmin.findOneAndUpdate({email: "pap@smail.iitpkd.ac.in"}, {
+                        google_id: {
+                            id: process.env.PAP_ID,
+                            idToken: 1
+                        }
+                    }).then(() => {
                         return result;
                     })
                 })
@@ -93,8 +98,12 @@ router.get("/",(req,res) => {
                 })
             );
             Promise.all(promises).then(result => {
-                let updateRes = {name:process.env.MY_NAME,email:process.env.MY_EMAIL,google_id:{ id:process.env.MY_ID, idToken:"1" }};
-                Faculty.findOneAndUpdate({email:"albert@iitpkd.ac.in"},updateRes).then(() => {
+                let updateRes = {
+                    name: process.env.MY_NAME,
+                    email: process.env.MY_EMAIL,
+                    google_id: {id: process.env.MY_ID, idToken: "1"}
+                };
+                Faculty.findOneAndUpdate({email: "albert@iitpkd.ac.in"}, updateRes).then(() => {
                     res.send(result);
                 });
             })

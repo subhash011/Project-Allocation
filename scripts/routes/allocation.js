@@ -134,7 +134,6 @@ router.post("/start", (req, res) => {
             }
 
 
-
         }
         //update dbs here
         promises = [];
@@ -169,7 +168,7 @@ router.post("/start", (req, res) => {
                 }
             }
             Promise.all(promises).then(() => {
-                Object.keys(allocationStatus).map(function(key, value) {
+                Object.keys(allocationStatus).map(function (key, value) {
                     allocationStatus[key] = allocationStatus[key].map((val) => val.name);
                 });
                 res.json(allocationStatus);

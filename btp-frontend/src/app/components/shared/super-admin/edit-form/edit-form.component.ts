@@ -1,4 +1,4 @@
-import { EventEmitter, Component, Input, Output, Optional, Host, OnInit } from '@angular/core';
+import { Component, EventEmitter, Host, Input, OnInit, Optional, Output } from '@angular/core';
 import { SatPopover } from '@ncstate/sat-popover';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -28,12 +28,13 @@ export class EditFormComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         @Optional() @Host() public popover: SatPopover
-    ) { }
+    ) {
+    }
 
     ngOnInit() {
         for (const key of Object.keys(this.addForm.controls)) {
             const control = this.addForm.controls[key];
-            control.setValue(key == "full" ? this.full : this.short);
+            control.setValue(key == 'full' ? this.full : this.short);
         }
     }
 

@@ -741,6 +741,7 @@ export class AdminComponent implements OnInit, OnDestroy {
             }
         });
     }
+
     setDeadline() {
         let date;
         this.curr_deadline = this.dateSet[this.dateSet.length - 1];
@@ -811,6 +812,7 @@ export class AdminComponent implements OnInit, OnDestroy {
             });
         }
     }
+
     startAllocation() {
         let selectedProjects = this.selection.selected;
         const dialogRef = this.dialog.open(LoaderComponent, {
@@ -1379,6 +1381,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                 : this.selection.deselect(row);
         });
     }
+
     /** The label for the checkbox on the passed row */
     checkboxLabel(row): string {
         if (!row) {

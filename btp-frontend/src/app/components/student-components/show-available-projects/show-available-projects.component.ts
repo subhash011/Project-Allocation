@@ -282,6 +282,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             ? this.selection.clear()
             : this.projects.filteredData.forEach((row) => this.selection.select(row));
     }
+
     deselectAll() {
         this.selection.clear();
     }

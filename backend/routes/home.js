@@ -33,7 +33,7 @@ router.post("/maps/:id", (req, res) => {
     const map = req.body;
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("_id")
         .then((user) => {
@@ -67,12 +67,12 @@ router.delete("/maps/remove/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const short = req.headers.body;
-    SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("_id")
         .then((user) => {
             if (user) {
-                Mapping.findOneAndDelete({ short: short })
+                Mapping.findOneAndDelete({short: short})
                     .then((map) => {
                         res.json({
                             message: "success",
@@ -122,7 +122,7 @@ router.post("/branches/:id", (req, res) => {
     const map = req.body;
     const id = req.params.id;
     const idToken = req.headers.authorization;
-    SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("_id")
         .then((user) => {
@@ -156,12 +156,12 @@ router.delete("/branches/remove/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     const short = req.headers.body;
-    SuperAdmin.findOne({ google_id: { id: id, idToken: idToken } })
+    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
         .lean()
         .select("_id")
         .then((user) => {
             if (user) {
-                Streams.findOneAndDelete({ short: short })
+                Streams.findOneAndDelete({short: short})
                     .then((map) => {
                         res.json({
                             message: "success",

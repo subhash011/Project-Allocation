@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Faculty = require("../models/Faculty");
 const UserSchema = new mongoose.Schema({
     _id: {
-        type:mongoose.Types.ObjectId,
-        required:true
+        type: mongoose.Types.ObjectId,
+        required: true
     },
     stream: {
         type: String,
@@ -35,13 +35,13 @@ const UserSchema = new mongoose.Schema({
     studentCount: {
         type: Number,
     },
-    publishStudents:{
+    publishStudents: {
         type: Boolean,
-        default:false
+        default: false
     },
-    publishFaculty:{
+    publishFaculty: {
         type: Boolean,
-        default:false
+        default: false
     },
     startDate: {
         type: Date,
