@@ -5,6 +5,7 @@ const Student = require("../models/Student");
 const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 
+// combine opted and non opted students for each project to get final csv (preference of faculty)
 function combineProjects(projects) {
     let studentsPreferred = {};
     let studentsNotPreferred = {};
@@ -16,6 +17,7 @@ function combineProjects(projects) {
     return projects;
 }
 
+// combine selected and not selected projects for each student to get final csv (preference of student)
 function combineStudents(projects, students) {
     for (const student of students) {
         let preferredProjects = student.projects_preference.map(val => val.toString());
@@ -34,6 +36,7 @@ function combineStudents(projects, students) {
     return students;
 }
 
+// start allocation
 router.post("/start/:id", (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
@@ -129,9 +132,7 @@ router.post("/start/:id", (req, res) => {
                                     alloted.push(curStudent);
                                 } else {
                                     const studentCurrentlyAlloted =
-                                        allocationStatus[firstPreference._id][
-                                        allocationStatus[firstPreference._id].length - 1
-                                            ];
+                                        allocationStatus[firstPreference._id][allocationStatus[firstPreference._id].length - 1];
                                     const currentlyAllotedIndex = firstProject.students_id.indexOf(
                                         studentCurrentlyAlloted._id
                                     );

@@ -31,69 +31,71 @@ async function canUpdateProject(res, idToken, id) {
     };
 }
 
+function isSubsequence(arrayA, arrayB) {
+    let b = 0;
+    for (let i = 0; i < arrayA.length; i++) {
+        if (arrayA[i] === arrayB[b]) {
+            b++;
+            if (b === arrayB.length) {
+                break;
+            }
+        }
+    }
+    return b === arrayB.length;
+}
 
-//fetch project details of the student's stream
-router.get("/:id", (req, res) => {
-    const student_projects = [];
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    Student.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("stream")
-        .then((student) => {
-            if (student) {
-                return student["stream"];
-            } else {
-                res.json({
-                    message: "token-expired",
-                });
-                return null;
-            }
-        })
-        .then((stream) => {
-            if (stream) {
-                Project.find({stream: stream})
-                    .lean()
-                    .select("-students_id -student_alloted -isIncluded -__v")
-                    .populate({
-                        path: "faculty_id",
-                        select: "name email",
-                        model: Faculty,
-                    })
-                    .then((projects) => {
-                        for (const project of projects) {
-                            const details = {
-                                _id: project["_id"],
-                                title: project["title"],
-                                description: project["description"],
-                                duration: project["duration"],
-                                studentIntake: project["studentIntake"],
-                                faculty_name: project["faculty_id"]["name"],
-                                faculty_email: project["faculty_id"]["email"],
-                            };
-                            student_projects.push(details);
-                        }
-                        res.json({
-                            message: "success",
-                            result: student_projects,
-                        });
-                    });
-            }
-        })
-        .catch(() => {
+// fetch project details of the student's stream
+router.get("/:id", async (req, res) => {
+    try {
+        const student_projects = [];
+        const id = req.params.id;
+        const idToken = req.headers.authorization;
+        let stream;
+        let student = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean().select("stream");
+        if (student) {
+            stream = student["stream"];
+        } else {
             res.json({
-                message: "invalid-client",
-                result: null,
+                message: "token-expired",
             });
+            return;
+        }
+        let projectPop = {
+            path: "faculty_id",
+            select: "name email",
+            model: Faculty,
+        };
+        let projects = await Project.find({stream: stream}).lean().select("-students_id -student_alloted -isIncluded -__v").populate(projectPop);
+        for (const project of projects) {
+            const details = {
+                _id: project["_id"],
+                title: project["title"],
+                description: project["description"],
+                duration: project["duration"],
+                studentIntake: project["studentIntake"],
+                faculty_name: project["faculty_id"]["name"],
+                faculty_email: project["faculty_id"]["email"],
+            };
+            student_projects.push(details);
+        }
+        res.json({
+            message: "success",
+            result: student_projects,
         });
-})
-//fetch student preferences
-router.get("/preference/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    Student.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .populate({
+    } catch (e) {
+        res.json({
+            message: "invalid-client",
+            result: null,
+        });
+    }
+});
+
+// fetch student preferences
+router.get("/preference/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const idToken = req.headers.authorization;
+        let populator = {
             path: "projects_preference",
             select: {
                 _id: 1,
@@ -111,39 +113,39 @@ router.get("/preference/:id", (req, res) => {
                 },
                 model: Faculty,
             },
-        })
-        .then((student) => {
-            if (student) {
-                const answer = student.projects_preference.map((val) => {
-                    return {
-                        _id: val._id,
-                        title: val.title,
-                        description: val.description,
-                        duration: val.duration,
-                        studentIntake: val.studentIntake,
-                        faculty_name: val.faculty_id.name,
-                        faculty_email: val.faculty_id.email,
-                    };
-                });
-                res.json({
-                    message: "success",
-                    result: answer,
-                });
-            } else {
-                res.json({
-                    message: "invalid-token",
-                    result: null,
-                });
-            }
-        })
-        .catch(() => {
+        };
+        let student = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean().populate(populator);
+        if (student) {
+            const studPrefs = student.projects_preference.map((val) => {
+                return {
+                    _id: val._id,
+                    title: val.title,
+                    description: val.description,
+                    duration: val.duration,
+                    studentIntake: val.studentIntake,
+                    faculty_name: val.faculty_id.name,
+                    faculty_email: val.faculty_id.email,
+                };
+            });
+            res.json({
+                message: "success",
+                result: studPrefs,
+            });
+        } else {
             res.json({
                 message: "invalid-token",
                 result: null,
             });
+        }
+    } catch (e) {
+        res.json({
+            message: "invalid-token",
+            result: null,
         });
+    }
 });
 
+// add projects to preferences
 router.post("/preference/:id", async (req, res) => {
     const id = req.params.id;
     let projects = req.body;
@@ -194,9 +196,9 @@ router.post("/preference/:id", async (req, res) => {
         }
     );
     res.json({message: "success", result: answer})
-})
+});
 
-
+// append multiple projects to existing preferences
 router.post("/append/preference/:id", async (req, res) => {
     const id = req.params.id;
     let projects = req.body;
@@ -236,6 +238,7 @@ router.post("/append/preference/:id", async (req, res) => {
     res.json({message: "success"})
 });
 
+// remove a project from preferences
 router.post("/remove/preference/:id", async (req, res) => {
     const id = req.params.id;
     const project = req.body.preference;
@@ -269,9 +272,9 @@ router.post("/remove/preference/:id", async (req, res) => {
         await Promise.all(promises);
     }
     res.json({message: "success"})
-})
+});
 
-
+// add a project to exising preferencces
 router.post("/add/preference/:id", async (req, res) => {
     const id = req.params.id;
     let project = req.body.preference;
@@ -303,8 +306,9 @@ router.post("/add/preference/:id", async (req, res) => {
         await Promise.all(promises);
     }
     res.json({message: "success"});
-})
+});
 
+// test if the projects and students collections tally.
 router.get("/assert/order", async (req, res) => {
     let students = await Student.find({
         stream: "UGCSE",
@@ -342,20 +346,6 @@ router.get("/assert/order", async (req, res) => {
         }
     }
     res.json({overall, ans})
-})
-
-
-function isSubsequence(arrayA, arrayB) {
-    let b = 0;
-    for (let i = 0; i < arrayA.length; i++) {
-        if (arrayA[i] === arrayB[b]) {
-            b++;
-            if (b === arrayB.length) {
-                break;
-            }
-        }
-    }
-    return b === arrayB.length;
-}
+});
 
 module.exports = router;

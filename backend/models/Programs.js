@@ -11,4 +11,4 @@ const Schema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Mapping", Schema);
+module.exports = mongoose.model("Programs", Schema);

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Faculty = require("../models/Faculty");
 const Project = require("../models/Project");
-const Mapping = require("../models/Mapping");
+const Programs = require("../models/Programs");
 const Admin = require("../models/Admin_Info");
 const Student = require("../models/Student");
 
@@ -170,7 +170,7 @@ router.get("/getAllPrograms/:id", (req, res) => {
         .select("_id")
         .then((faculty) => {
             if (faculty) {
-                Mapping.find()
+                Programs.find()
                     .lean()
                     .then((result) => {
                         if (result) {

@@ -106,7 +106,7 @@ export class SuperAdminComponent implements OnInit {
     map;
     student;
     maps: any = [];
-    branches: any = new MatTableDataSource([]);
+    streams: any = new MatTableDataSource([]);
     programs: any = new MatTableDataSource([]);
     hasAdmins = {};
     stages = {};
@@ -142,7 +142,7 @@ export class SuperAdminComponent implements OnInit {
             (maps) => {
                 if (maps['message'] == 'success') {
                     this.maps = maps['result'];
-                    this.branches.data = this.maps.map((val) => {
+                    this.streams.data = this.maps.map((val) => {
                         return {
                             full: val.full,
                             short: val.short,
@@ -347,6 +347,110 @@ export class SuperAdminComponent implements OnInit {
         );
     }
 
+    addAdmin(faculty, branch) {
+        const dialogRef = this.dialog.open(LoaderComponent, {
+            data: 'Adding admin. Please wait ...',
+            disableClose: true,
+            hasBackdrop: true,
+        });
+        this.userService.addAdmin(faculty._id, branch).subscribe((result) => {
+            dialogRef.close();
+            if (result['message'] == 'success') {
+                this.hasAdmins[branch] = true;
+                for (const program of this.programs.data) {
+                    this.faculties[program.short].data = this.faculties[
+                        program.short
+                        ].data.map((val) => {
+                        if (val._id == faculty._id) {
+                            val.isAdmin = true;
+                            val.adminProgram = branch;
+                        }
+                        return val;
+                    });
+                }
+            } else if (result['message'] == 'invalid-token') {
+                this.dialogRefLoad.close();
+                this.navbar.role = 'none';
+                this.snackBar.open('Session Expired! Please Sign In Again', 'Ok', {
+                    duration: 3000,
+                });
+                this.login.signOut();
+            }
+        });
+    }
+
+    removeAdmin(faculty, branch) {
+        const dialogRef = this.dialog.open(LoaderComponent, {
+            data: 'Adding admin. Please wait ...',
+            disableClose: true,
+            hasBackdrop: true,
+        });
+        this.userService.removeAdmin(faculty._id).subscribe((result) => {
+            dialogRef.close();
+            if (result['message'] == 'success') {
+                this.hasAdmins[branch] = false;
+                for (const program of this.programs.data) {
+                    this.faculties[program.short].data = this.faculties[
+                        program.short
+                        ].data.map((val) => {
+                        if (val._id == faculty._id) {
+                            val.isAdmin = false;
+                            val.adminProgram = result['result'];
+                        }
+                        return val;
+                    });
+                }
+            } else if (result['message'] == 'invalid-token') {
+                this.dialogRefLoad.close();
+                this.navbar.role = 'none';
+                this.snackBar.open('Session Expired! Please Sign In Again', 'Ok', {
+                    duration: 3000,
+                });
+                this.login.signOut();
+            }
+        });
+    }
+
+    checkIfPresent(field, newValue) {
+        let isPresent: boolean = false;
+        switch (field) {
+            case 'programFull':
+                for (const program of this.programs.data) {
+                    if (program.full == newValue) {
+                        isPresent = true;
+                        break;
+                    }
+                }
+                return isPresent;
+            case 'programShort':
+                for (const program of this.programs.data) {
+                    if (program.short == newValue) {
+                        isPresent = true;
+                        break;
+                    }
+                }
+                return isPresent;
+            case 'streamFull':
+                for (const stream of this.streams.data) {
+                    if (stream.full == newValue) {
+                        isPresent = true;
+                        break;
+                    }
+                }
+                return isPresent;
+            case 'streamShort':
+                for (const stream of this.streams.data) {
+                    if (stream.short == newValue) {
+                        isPresent = true;
+                        break;
+                    }
+                }
+                return isPresent;
+            default:
+                return !isPresent;
+        }
+    }
+
     addPrograms() {
         let dialogRef = this.dialog.open(AddMapComponent, {
             width: '40%',
@@ -371,7 +475,7 @@ export class SuperAdminComponent implements OnInit {
                     disableClose: true,
                     hasBackdrop: true,
                 });
-                this.userService.setProgram(data['map']).subscribe((data) => {
+                this.userService.addProgram(data['map']).subscribe((data) => {
                     dialogRef.close();
                     if (data['message'] == 'success') {
                         const val = data['result'];
@@ -412,6 +516,93 @@ export class SuperAdminComponent implements OnInit {
         });
     }
 
+    addBranches() {
+        let dialogRef = this.dialog.open(AddMapComponent, {
+            width: '40%',
+            data: {
+                heading: 'Stream',
+                message: 'Are you sure you want to proceed to add stream',
+                add: 'branch',
+            },
+            hasBackdrop: true,
+        });
+        dialogRef.afterClosed().subscribe((data) => {
+            if (data && data['message'] == 'submit') {
+                if (this.checkIfPresent('streamFull', data.map.full) || this.checkIfPresent('streamShort', data.map.short)) {
+                    this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for every field.', 'Ok', {
+                        duration: 3000,
+                        panelClass: 'custom-snack-bar-container'
+                    });
+                    return;
+                }
+                const dialogRef = this.dialog.open(LoaderComponent, {
+                    data: 'Please wait ...',
+                    disableClose: true,
+                    hasBackdrop: true,
+                });
+
+                this.userService.addStream(data['map']).subscribe((data) => {
+                    dialogRef.close();
+                    if (data['message'] == 'success') {
+                        const val = data['result'];
+                        const newMap = {
+                            full: val.full,
+                            short: val.short,
+                        };
+                        this.streams.data.push(newMap);
+                        //the below line is necessary to render the table
+                        this.streams.data = [...this.streams.data];
+                        this.snackBar.open(
+                            'Added Stream Successfully',
+                            'Ok',
+                            {
+                                duration: 3000,
+                            }
+                        );
+                    }
+                });
+            }
+        });
+    }
+
+    deleteBranch(short) {
+        let dialogRef = this.dialog.open(DeletePopUpComponent, {
+            height: '200px',
+            data: {
+                heading: 'Confirm Deletion',
+                message: 'Are you sure you want to remove the stream',
+            },
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result['message'] == 'submit') {
+                const dialogRef = this.dialog.open(LoaderComponent, {
+                    data: 'Removing stream. Please wait ...',
+                    disableClose: true,
+                    hasBackdrop: true,
+                });
+
+                this.userService.removeStream(short).subscribe((result) => {
+                    dialogRef.close();
+                    if (result['message'] == 'invalid-token') {
+                        this.dialogRefLoad.close();
+                        this.navbar.role = 'none';
+                        this.snackBar.open('Session Expired! Please Sign In Again', 'Ok', {
+                            duration: 3000,
+                        });
+                        this.login.signOut();
+                    } else {
+                        this.streams.data = this.streams.data.filter(
+                            (val) => val.short != short
+                        );
+                        this.snackBar.open('Removed Stream', 'Ok', {
+                            duration: 3000,
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     deleteProgram(short) {
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
             height: '200px',
@@ -442,93 +633,6 @@ export class SuperAdminComponent implements OnInit {
                             (val) => val.short != short
                         );
                         this.snackBar.open('Removed Program', 'Ok', {
-                            duration: 3000,
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    addBranches() {
-        let dialogRef = this.dialog.open(AddMapComponent, {
-            width: '40%',
-            data: {
-                heading: 'Stream',
-                message: 'Are you sure you want to proceed to add stream',
-                add: 'branch',
-            },
-            hasBackdrop: true,
-        });
-        dialogRef.afterClosed().subscribe((data) => {
-            if (data && data['message'] == 'submit') {
-                if (this.checkIfPresent('streamFull', data.map.full) || this.checkIfPresent('streamShort', data.map.short)) {
-                    this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for every field.', 'Ok', {
-                        duration: 3000,
-                        panelClass: 'custom-snack-bar-container'
-                    });
-                    return;
-                }
-                const dialogRef = this.dialog.open(LoaderComponent, {
-                    data: 'Please wait ...',
-                    disableClose: true,
-                    hasBackdrop: true,
-                });
-
-                this.userService.setBranch(data['map']).subscribe((data) => {
-                    dialogRef.close();
-                    if (data['message'] == 'success') {
-                        const val = data['result'];
-                        const newMap = {
-                            full: val.full,
-                            short: val.short,
-                        };
-                        this.branches.data.push(newMap);
-                        //the below line is necessary to render the table
-                        this.branches.data = [...this.branches.data];
-                        this.snackBar.open(
-                            'Added Stream Successfully',
-                            'Ok',
-                            {
-                                duration: 3000,
-                            }
-                        );
-                    }
-                });
-            }
-        });
-    }
-
-    deleteBranch(short) {
-        let dialogRef = this.dialog.open(DeletePopUpComponent, {
-            height: '200px',
-            data: {
-                heading: 'Confirm Deletion',
-                message: 'Are you sure you want to remove the stream',
-            },
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result['message'] == 'submit') {
-                const dialogRef = this.dialog.open(LoaderComponent, {
-                    data: 'Removing stream. Please wait ...',
-                    disableClose: true,
-                    hasBackdrop: true,
-                });
-
-                this.userService.removeBranch(short).subscribe((result) => {
-                    dialogRef.close();
-                    if (result['message'] == 'invalid-token') {
-                        this.dialogRefLoad.close();
-                        this.navbar.role = 'none';
-                        this.snackBar.open('Session Expired! Please Sign In Again', 'Ok', {
-                            duration: 3000,
-                        });
-                        this.login.signOut();
-                    } else {
-                        this.branches.data = this.branches.data.filter(
-                            (val) => val.short != short
-                        );
-                        this.snackBar.open('Removed Stream', 'Ok', {
                             duration: 3000,
                         });
                     }
@@ -591,70 +695,6 @@ export class SuperAdminComponent implements OnInit {
                         this.login.signOut();
                     }
                 );
-            }
-        });
-    }
-
-    addAdmin(faculty, branch) {
-        const dialogRef = this.dialog.open(LoaderComponent, {
-            data: 'Adding admin. Please wait ...',
-            disableClose: true,
-            hasBackdrop: true,
-        });
-        this.userService.addAdmin(faculty._id, branch).subscribe((result) => {
-            dialogRef.close();
-            if (result['message'] == 'success') {
-                this.hasAdmins[branch] = true;
-                for (const program of this.programs.data) {
-                    this.faculties[program.short].data = this.faculties[
-                        program.short
-                        ].data.map((val) => {
-                        if (val._id == faculty._id) {
-                            val.isAdmin = true;
-                            val.adminProgram = branch;
-                        }
-                        return val;
-                    });
-                }
-            } else if (result['message'] == 'invalid-token') {
-                this.dialogRefLoad.close();
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Expired! Please Sign In Again', 'Ok', {
-                    duration: 3000,
-                });
-                this.login.signOut();
-            }
-        });
-    }
-
-    removeAdmin(faculty, branch) {
-        const dialogRef = this.dialog.open(LoaderComponent, {
-            data: 'Adding admin. Please wait ...',
-            disableClose: true,
-            hasBackdrop: true,
-        });
-        this.userService.removeAdmin(faculty._id).subscribe((result) => {
-            dialogRef.close();
-            if (result['message'] == 'success') {
-                this.hasAdmins[branch] = false;
-                for (const program of this.programs.data) {
-                    this.faculties[program.short].data = this.faculties[
-                        program.short
-                        ].data.map((val) => {
-                        if (val._id == faculty._id) {
-                            val.isAdmin = false;
-                            val.adminProgram = result['result'];
-                        }
-                        return val;
-                    });
-                }
-            } else if (result['message'] == 'invalid-token') {
-                this.dialogRefLoad.close();
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Expired! Please Sign In Again', 'Ok', {
-                    duration: 3000,
-                });
-                this.login.signOut();
             }
         });
     }
@@ -725,6 +765,10 @@ export class SuperAdminComponent implements OnInit {
         }
     }
 
+    compare(a: number | string, b: number | string, isAsc: boolean) {
+        return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+    }
+
     sortFaculties(event, branch) {
         const isAsc = event.direction == 'asc';
         this.faculties[branch.short].data = this.faculties[branch.short].data.sort(
@@ -781,248 +825,137 @@ export class SuperAdminComponent implements OnInit {
         );
     }
 
-    compare(a: number | string, b: number | string, isAsc: boolean) {
-        return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-    }
-
-    updateProgramShort(el: any, comment: any) {
-        if (!comment || comment['message'] == 'close') {
-            return 'closed';
-        } else if (comment['message'] == 'submit') {
-            if (this.checkIfPresent('programShort', comment['value'])) {
-                this.snackBar.open('Duplicate entries are not allowed! Enter a unique short name for this program.', 'Ok', {
-                    duration: 3000,
-                    panelClass: 'custom-snack-bar-container'
-                });
-                return 'duplicate';
+    checkStreamDuplicates(curMap, newMap) {
+        const streams = this.streams.data;
+        let presence = {full: 0, short: 0};
+        for (const stream of streams) {
+            if (stream.short == curMap.short) {
+                continue;
             }
-            let currentShort = el['short'];
-            this.userService.superAdminEditFields('programShort', currentShort, comment['value']).subscribe(result => {
-                if (result['message'] == 'invalid-token') {
-                    this.snackBar.open('Session Timed Out! Please Sign-In Again.', 'Ok', {
-                        duration: 3000
-                    });
-                    this.navbar.role = 'none';
-                    this.login.signOut();
-                } else if (result['message'] == 'success') {
-                    for (const program of this.programs.data) {
-                        if (program.short == currentShort) {
-                            program.short = comment['value'];
-                        }
-                    }
-                    this.programs.data = [...this.programs.data];
-                    this.students[comment['value']] = this.students[currentShort];
-                    this.projects[comment['value']] = this.projects[currentShort];
-                    this.faculties[comment['value']] = this.faculties[currentShort];
-                    for (const program of this.programs.data) {
-                        for (const faculty of this.faculties[program.short].data) {
-                            if (faculty.isAdmin && faculty.adminProgram == currentShort) {
-                                faculty.adminProgram = comment['value'];
-                            }
-                            this.faculties[program.short].data = [...this.faculties[program.short].data];
-                        }
-                    }
-                    for (const program of this.programs.data) {
-                        this.hasAdmins[program.short] = this.faculties[program.short].data.filter(faculty => {
-                            if (faculty.isAdmin && faculty.adminProgram == program.short) {
-                                return faculty;
-                            }
-                        }).length > 0;
-                    }
-                    this.snackBar.open('Successfully updated the field', 'Ok', {duration: 3000});
-                } else {
-                    this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
-                }
-            }, () => {
-                this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
-            });
+            presence.full += stream.full === newMap.full ? 1 : 0;
+            presence.short += stream.short === newMap.short ? 1 : 0;
         }
-        return 'success';
-    }
-
-    updateProgramFull(el: any, comment: any) {
-        if (!comment || comment['message'] == 'close') {
-            return 'closed';
-        } else if (comment['message'] == 'submit') {
-            if (this.checkIfPresent('programFull', comment['value'])) {
-                this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this program.', 'Ok', {
-                    duration: 3000,
-                    panelClass: 'custom-snack-bar-container'
-                });
-                return 'duplicate';
-            }
-            let currentFull = el['full'];
-            this.userService.superAdminEditFields('programFull', currentFull, comment['value']).subscribe(result => {
-                if (result['message'] == 'invalid-token') {
-                    this.snackBar.open('Session Timed Out! Please Sign-In Again.', 'Ok', {
-                        duration: 3000
-                    });
-                    this.navbar.role = 'none';
-                    this.login.signOut();
-                } else if (result['message'] == 'success') {
-                    for (const program of this.programs.data) {
-                        if (program.full == currentFull) {
-                            program.full = comment['value'];
-                        }
-                    }
-                    this.programs.data = [...this.programs.data];
-                    this.snackBar.open('Successfully updated the field', 'Ok', {duration: 3000});
-                } else {
-                    this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
-                }
-            }, () => {
-                this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
-            });
+        if (presence.full >= 1) {
+            return 1;
         }
-        return 'success';
-    }
-
-    updateStreamName(el: any, comment: any) {
-        if (!comment || comment['message'] == 'close') {
-            return 'closed';
-        } else if (comment['message'] == 'submit') {
-            if (this.checkIfPresent('streamFull', comment['value'])) {
-                this.snackBar.open('Duplicate entries are not allowed! Enter a unique name for this stream.', 'Ok', {
-                    duration: 3000,
-                    panelClass: 'custom-snack-bar-container'
-                });
-                return 'duplicate';
-            }
-            let currentName = el['full'];
-            this.userService.superAdminEditFields('streamFull', currentName, comment['value']).subscribe(result => {
-                if (result['message'] == 'invalid-token') {
-                    this.snackBar.open('Session Timed Out! Please Sign-In Again.', 'Ok', {
-                        duration: 3000
-                    });
-                    this.navbar.role = 'none';
-                    this.login.signOut();
-                } else if (result['message'] == 'success') {
-                    for (const stream of this.branches.data) {
-                        if (stream.full == currentName) {
-                            stream.full = comment['value'];
-                        }
-                    }
-                    this.branches.data = [...this.branches.data];
-                    this.snackBar.open('Successfully updated the field', 'Ok', {duration: 3000});
-                } else {
-                    this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
-                }
-            }, () => {
-                this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
-            });
+        if (presence.short >= 1) {
+            return 2;
         }
-        return 'success';
-    }
-
-    updateStreamShort(el: any, comment: any) {
-        if (!comment || comment['message'] == 'close') {
-            return 'closed';
-        } else if (comment['message'] == 'submit') {
-            if (this.checkIfPresent('streamShort', comment['value'])) {
-                this.snackBar.open('Duplicate entries are not allowed! Enter a unique short name for this stream.', 'Ok', {
-                    duration: 3000,
-                    panelClass: 'custom-snack-bar-container'
-                });
-                return 'duplicate';
-            }
-            let currentShort = el['short'];
-            this.userService.superAdminEditFields('streamShort', currentShort, comment['value']).subscribe(result => {
-                if (result['message'] == 'invalid-token') {
-                    this.snackBar.open('Session Timed Out! Please Sign-In Again.', 'Ok', {
-                        duration: 3000
-                    });
-                    this.navbar.role = 'none';
-                    this.login.signOut();
-                } else if (result['message'] == 'success') {
-                    for (const stream of this.branches.data) {
-                        if (stream.short == currentShort) {
-                            stream.short = comment['value'];
-                        }
-                    }
-                    for (const program of this.programs.data) {
-                        for (const faculty of this.faculties[program.short].data) {
-                            if (faculty.stream == currentShort) {
-                                faculty.stream = comment['value'];
-                            }
-                            this.faculties[program.short].data = [...this.faculties[program.short].data];
-                        }
-                    }
-                    this.branches.data = [...this.branches.data];
-                    this.snackBar.open('Successfully updated the field', 'Ok', {duration: 3000});
-                } else {
-                    this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
-                }
-            }, () => {
-                this.snackBar.open('Some error occured! Try again.', 'Ok', {duration: 3000});
-            });
-        }
-        return 'success';
-    }
-
-    checkIfPresent(field, newValue) {
-        let isPresent: boolean = false;
-        switch (field) {
-            case 'programFull':
-                for (const program of this.programs.data) {
-                    if (program.full == newValue) {
-                        isPresent = true;
-                        break;
-                    }
-                }
-                return isPresent;
-            case 'programShort':
-                for (const program of this.programs.data) {
-                    if (program.short == newValue) {
-                        isPresent = true;
-                        break;
-                    }
-                }
-                return isPresent;
-            case 'streamFull':
-                for (const stream of this.branches.data) {
-                    if (stream.full == newValue) {
-                        isPresent = true;
-                        break;
-                    }
-                }
-                return isPresent;
-            case 'streamShort':
-                for (const stream of this.branches.data) {
-                    if (stream.short == newValue) {
-                        isPresent = true;
-                        break;
-                    }
-                }
-                return isPresent;
-            default:
-                return !isPresent;
-        }
+        return 0;
     }
 
     updateStream(event, map) {
         let full = event.full;
         let short = event.short;
-
-        if (full != map.full && short != map.short) {
-            this.updateStreamName({short: map.short, full: map.full}, {message: 'submit', value: full});
-            this.updateStreamShort({short: map.short, full: map.full}, {message: 'submit', value: short});
-        } else if (full !== map.full) {
-            this.updateStreamName({short: map.short, full: map.full}, {message: 'submit', value: full});
-        } else if (short !== map.short) {
-            this.updateStreamShort({short: map.short, full: map.full}, {message: 'submit', value: short});
+        let curMap = JSON.parse(JSON.stringify(map));
+        if (full != map.full || short != map.short) {
+            let status = this.checkStreamDuplicates(map, {full, short});
+            if (status != 0) {
+                this.snackBar.open('No changes made. Please check for duplicate entries!', 'Ok', {duration: 3000});
+            } else {
+                this.userService.updateStream(map, {full, short}).subscribe(result => {
+                    if (result['message'] == 'success') {
+                        for (const stream of this.streams.data) {
+                            if (stream.short == curMap.short) {
+                                stream.short = short;
+                                stream.full = full;
+                            }
+                        }
+                        for (const program of this.programs.data) {
+                            for (const faculty of this.faculties[program.short].data) {
+                                if (faculty.stream == curMap.short) {
+                                    faculty.stream = short;
+                                }
+                                this.faculties[program.short].data = [...this.faculties[program.short].data];
+                            }
+                        }
+                        this.streams.data = [...this.streams.data];
+                        this.snackBar.open('Updated stream details successfully!', 'Ok', {duration: 3000});
+                    } else if (result['message'] == 'invalid-token') {
+                        this.snackBar.open('Session Timed Out! Please Sign-In Again.', 'Ok', {
+                            duration: 3000
+                        });
+                        this.navbar.role = 'none';
+                        this.login.signOut();
+                    } else {
+                        this.snackBar.open('Some error occured! No changes made!', 'Ok', {duration: 3000});
+                    }
+                });
+            }
+        } else {
+            this.snackBar.open('No changes made!', 'Ok', {duration: 3000});
         }
+    }
+
+    checkProgramDuplicates(curMap, newMap) {
+        const programs = this.programs.data;
+        let presence = {full: 0, short: 0};
+        for (const program of programs) {
+            if (program.short == curMap.short) {
+                continue;
+            }
+            presence.full += program.full == newMap.full ? 1 : 0;
+            presence.short += program.short == newMap.short ? 1 : 0;
+        }
+        if (presence.full >= 1) {
+            return 1;
+        }
+        if (presence.short >= 1) {
+            return 2;
+        }
+        return 0;
     }
 
     updateProgram(event, map) {
         let full = event.full;
         let short = event.short;
-        if (full != map.full && short != map.short) {
-            this.updateProgramFull({short: map.short, full: map.full}, {message: 'submit', value: full});
-            this.updateProgramShort({short: map.short, full: map.full}, {message: 'submit', value: short});
-        } else if (full !== map.full) {
-            this.updateProgramFull({short: map.short, full: map.full}, {message: 'submit', value: full});
-        } else if (short !== map.short) {
-            this.updateProgramShort({short: map.short, full: map.full}, {message: 'submit', value: short});
+        let curMap = JSON.parse(JSON.stringify(map));
+        if (full != curMap.full || short != curMap.short) {
+            let status = this.checkProgramDuplicates(curMap, {full, short});
+            if (status != 0) {
+                this.snackBar.open('No changes made. Please check for duplicate entries!', 'Ok', {duration: 3000});
+            } else {
+                this.userService.updateProgram(curMap, {full, short}).subscribe(result => {
+                    if (result['message'] == 'success') {
+                        this.snackBar.open('Updated program details successfully!', 'Ok', {duration: 3000});
+                        for (const program of this.programs.data) {
+                            if (program.short == curMap.short) {
+                                program.short = short;
+                                program.full = full;
+                            }
+                        }
+                        this.programs.data = [...this.programs.data];
+                        this.students[short] = this.students[curMap.short];
+                        this.projects[short] = this.projects[curMap.short];
+                        this.faculties[short] = this.faculties[curMap.short];
+                        for (const program of this.programs.data) {
+                            for (const faculty of this.faculties[program.short].data) {
+                                if (faculty.isAdmin && faculty.adminProgram == curMap.short) {
+                                    faculty.adminProgram = short;
+                                }
+                                this.faculties[program.short].data = [...this.faculties[program.short].data];
+                            }
+                        }
+                        for (const program of this.programs.data) {
+                            this.hasAdmins[program.short] = this.faculties[program.short].data.filter(faculty => {
+                                if (faculty.isAdmin && faculty.adminProgram == program.short) {
+                                    return faculty;
+                                }
+                            }).length > 0;
+                        }
+                    } else if (result['message'] == 'invalid-token') {
+                        this.snackBar.open('Session Timed Out! Please Sign-In Again.', 'Ok', {
+                            duration: 3000
+                        });
+                        this.navbar.role = 'none';
+                        this.login.signOut();
+                    } else {
+                        this.snackBar.open('Some error occured! No changes made!', 'Ok', {duration: 3000});
+                    }
+                });
+            }
+        } else {
+            this.snackBar.open("No changes made!", "Ok", {duration: 3000});
         }
     }
 

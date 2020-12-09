@@ -404,7 +404,7 @@ export class UserService {
         return this.http.get(this.base_url + 'maps');
     }
 
-    setBranch(details) {
+    addStream(details) {
         this.url = this.base_url + 'branches/' + localStorage.getItem('id');
         let idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
@@ -416,7 +416,7 @@ export class UserService {
         return this.http.post(this.url, details, httpOptions);
     }
 
-    removeBranch(map) {
+    removeStream(map) {
         this.url = this.base_url + 'branches/remove/' + localStorage.getItem('id');
         let idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
@@ -429,7 +429,7 @@ export class UserService {
         return this.http.delete(this.url, httpOptions);
     }
 
-    setProgram(map) {
+    addProgram(map) {
         this.url = this.base_url + 'maps/' + localStorage.getItem('id');
         let idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
@@ -605,26 +605,7 @@ export class UserService {
         };
         return this.http.post(this.url, {mode: key}, httpOptions);
     }
-
-    superAdminEditFields(field, curVal, newVal) {
-        let value = {
-            curVal: curVal,
-            newVal: newVal
-        };
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
-        this.url = `${ this.base_url }super/edit/${ field }/${ id }`;
-
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
-        };
-        return this.http.post(this.url, value, httpOptions);
-    }
-
+    
     facultyHomeDetails() {
         const user = JSON.parse(localStorage.getItem('user'));
         this.url = this.base_url + 'faculty/home/' + user.id;
@@ -635,6 +616,30 @@ export class UserService {
             }),
         };
         return this.http.get(this.url, httpOptions);
+    }
+
+    updateProgram(curMap, newMap) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.base_url + 'super/update/program/' + user.id;
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                Authorization: user.idToken
+            }),
+        };
+        return this.http.post(this.url, {curMap, newMap}, httpOptions);
+    }
+
+    updateStream(curMap, newMap) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.base_url + 'super/update/stream/' + user.id;
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                Authorization: user.idToken
+            }),
+        };
+        return this.http.post(this.url, {curMap, newMap}, httpOptions);
     }
 
     // updateList(stream) {

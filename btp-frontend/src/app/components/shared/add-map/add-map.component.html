@@ -3,7 +3,7 @@
 <mat-dialog-content [formGroup]="addForm" novalidate>
     <div class="row">
         <mat-form-field class="full-width">
-            <input formControlName="full" matInput placeholder="{{data.heading}} name"/>
+            <input formControlName="full" matInput placeholder="{{data.heading}} name" autocomplete="off"/>
             <mat-error *ngIf="addForm.controls['full'].hasError('required')">
                 {{data.heading}} name is <strong>required</strong>
             </mat-error>
@@ -11,7 +11,7 @@
     </div>
     <div class="row">
         <mat-form-field class="full-width">
-            <input formControlName="short" matInput placeholder="{{data.heading}} Abbrevation"/>
+            <input formControlName="short" matInput placeholder="{{data.heading}} Abbrevation" autocomplete="off"/>
             <mat-error *ngIf="addForm.controls['short'].hasError('required')">
                 {{data.heading}} Abbrevation is <strong>required</strong>
             </mat-error>

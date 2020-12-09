@@ -5,7 +5,7 @@ const Faculty = require("../models/Faculty");
 const Project = require("../models/Project");
 const SuperAdmin = require("../models/SuperAdmin");
 const Admin = require("../models/Admin_Info");
-const Mapping = require("../models/Mapping");
+const Programs = require("../models/Programs");
 const Streams = require("../models/Streams");
 
 
@@ -46,7 +46,7 @@ router.get(`/${process.env.SECRET_KEY}/admin`, (req, res) => {
 })
 
 router.get(`/${process.env.SECRET_KEY}/mappings`, (req, res) => {
-    Mapping.find().lean().select("-__v").then(streams => {
+    Programs.find().lean().select("-__v").then(streams => {
         res.send(streams);
     })
 })

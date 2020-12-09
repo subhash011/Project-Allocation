@@ -9,6 +9,7 @@ oauth = require("../config/oauth");
 //add your email here if you want to be a super admin
 const superAdmins = process.env.SUPER_ADMINS.split(",");
 
+// add this student to non-opted list in all projects
 async function addStudentToNotOpted(result) {
     let updateResult = {
         $addToSet: {not_students_id: result._id}
@@ -35,13 +36,11 @@ async function addStudentToNotOpted(result) {
 
 router.post("/user_check", (req, res) => {
     const userDetails = req.body;
-
     oauth(userDetails.idToken)
         .then((user) => {
             const id = user["sub"];
             const email = userDetails.email.split("@");
             const email_check = email[1];
-
             if (superAdmins.includes(userDetails.email)) {
                 SuperAdmin.findOne({email: userDetails.email}).then((user) => {
                     let role;

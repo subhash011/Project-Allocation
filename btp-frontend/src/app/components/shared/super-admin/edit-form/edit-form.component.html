@@ -7,7 +7,7 @@
     <mat-card-content [formGroup]="addForm" novalidate>
         <div class="row">
             <mat-form-field class="full-width">
-                <input [value]="full" formControlName="full" matInput placeholder="{{which}} name"/>
+                <input [value]="full" formControlName="full" matInput placeholder="{{which}} name" autocomplete="off"/>
                 <mat-error *ngIf="addForm.controls['full'].hasError('required')">
                     {{which}} name is <strong>required</strong>
                 </mat-error>
@@ -15,7 +15,7 @@
         </div>
         <div class="row">
             <mat-form-field class="full-width">
-                <input [value]="short" formControlName="short" matInput placeholder="{{which}} Abbrevation"/>
+                <input [value]="short" formControlName="short" matInput placeholder="{{which}} Abbrevation" autocomplete="off"/>
                 <mat-error *ngIf="addForm.controls['short'].hasError('required')">
                     {{which}} Abbrevation is <strong>required</strong>
                 </mat-error>

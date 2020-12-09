@@ -1,4 +1,4 @@
-const Mapping = require("../models/Mapping");
+const Mapping = require("../models/Programs");
 
 branches = [];
 programs = [];

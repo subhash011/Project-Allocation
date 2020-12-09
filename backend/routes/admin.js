@@ -5,12 +5,13 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Admin = require("../models/Admin_Info");
 const Student = require("../models/Student");
-const Mapping = require("../models/Mapping");
+const Programs = require("../models/Programs");
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const csv = require("fast-csv");
 
+// check if the admin has uploaded the CSV of student list in the right format
 function validateCsvData(rows) {
     if (rows[0].length >= 4) {
         return "Only three columns(Name, Roll no., Gpa) are allowed. More than 3 columns detected.";
@@ -26,6 +27,7 @@ function validateCsvData(rows) {
 
 }
 
+// validate rows of the csv of student list uploaded by admin
 function validateCsvRow(row) {
     if (!row[0]) {
         return "invalid name";
@@ -37,14 +39,17 @@ function validateCsvRow(row) {
 
 }
 
+// get one row student details to generate CSV
 function studentPref(total, student) {
     return total + "|" + student.name + "|" + student.roll_no;
 }
 
+// get one row project details to generate CSV
 function projectPref(total, project) {
     return total + "|" + project.title;
 }
 
+// combine opted and non opted students for each project to get final csv (preference of faculty)
 function combineProjects(projects) {
     for (const project of projects) {
         const setA = new Set(project.students_id.map((val) => JSON.stringify(val)));
@@ -59,6 +64,7 @@ function combineProjects(projects) {
     return projects;
 }
 
+// combine selected and not selected projects for each student to get final csv (preference of student)
 function combineStudents(projects, students) {
     projects = projects.map((val) => JSON.stringify(val));
     for (const student of students) {
@@ -79,6 +85,7 @@ function combineStudents(projects, students) {
 }
 
 //here we have to note that the folder should have write permissions else you might face problems
+// TODO try using fs.chmod to give write permissions
 function generateCSVProjects(data, program_name) {
     let headers = "Title|Faculty|Student intake|Preference count|";
     const file = path.resolve(__dirname, `../CSV/projects/${program_name}.csv`);
@@ -130,6 +137,7 @@ function generateCSVProjects(data, program_name) {
 }
 
 //here we have to note that the folder should have write permissions else you might face problems
+// TODO try using fs.chmod to give write permissions
 function generateCSVStudents(data, program_name) {
     let headers = "Name|Roll no.|GPA|Preference count|";
     const file = path.resolve(__dirname, `../CSV/students/${program_name}.csv`);
@@ -176,6 +184,7 @@ function generateCSVStudents(data, program_name) {
 }
 
 //here we have to note that the folder should have write permissions else you might face problems
+// TODO try using fs.chmod to give write permissions
 function generateCSVAllocation(data, program_name) {
     let headers = "Title|Faculty|Student Intake|";
     const file = path.resolve(__dirname, `../CSV/allocation/${program_name}.csv`);
@@ -220,6 +229,61 @@ function generateCSVAllocation(data, program_name) {
         });
     }
 }
+
+router.get("/info/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+            if (faculty) {
+                Admin.findOne({admin_id: faculty._id})
+                    .lean()
+                    .then((admin) => {
+                        if (admin) {
+                            let startDate;
+                            if (admin.deadlines.length) {
+                                startDate = admin.startDate;
+                            }
+
+                            res.json({
+                                status: "success",
+                                stage: admin.stage,
+                                deadlines: admin.deadlines,
+                                startDate: startDate,
+                                projectCap: admin.project_cap,
+                                studentCap: admin.student_cap,
+                                stream: admin.stream,
+                                email: faculty.email,
+                                studentsPerFaculty: admin.studentsPerFaculty,
+                                studentCount: admin.studentCount,
+                            });
+                        } else {
+                            res.json({
+                                status: "fail",
+                                stage: 0,
+                                deadlines: "",
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        res.json({
+                            status: "fail",
+                            stage: 0,
+                            deadlines: "",
+                        });
+                    });
+            } else {
+                res.json({
+                    status: "fail",
+                    stage: 0,
+                    deadlines: "",
+                });
+            }
+        });
+});
 
 router.get("/project/:id", (req, res) => {
     const id = req.params.id;
@@ -302,155 +366,6 @@ router.get("/project/:id", (req, res) => {
                     result: null,
                 });
             }
-        });
-});
-
-router.get("/info/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((faculty) => {
-            if (faculty) {
-                Admin.findOne({admin_id: faculty._id})
-                    .lean()
-                    .then((admin) => {
-                        if (admin) {
-                            let startDate;
-                            if (admin.deadlines.length) {
-                                startDate = admin.startDate;
-                            }
-
-                            res.json({
-                                status: "success",
-                                stage: admin.stage,
-                                deadlines: admin.deadlines,
-                                startDate: startDate,
-                                projectCap: admin.project_cap,
-                                studentCap: admin.student_cap,
-                                stream: admin.stream,
-                                email: faculty.email,
-                                studentsPerFaculty: admin.studentsPerFaculty,
-                                studentCount: admin.studentCount,
-                            });
-                        } else {
-                            res.json({
-                                status: "fail",
-                                stage: 0,
-                                deadlines: "",
-                            });
-                        }
-                    })
-                    .catch(() => {
-                        res.json({
-                            status: "fail",
-                            stage: 0,
-                            deadlines: "",
-                        });
-                    });
-            } else {
-                res.json({
-                    status: "fail",
-                    stage: 0,
-                    deadlines: "",
-                });
-            }
-        });
-});
-
-router.post("/update_stage/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const stage = req.body.stage;
-
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((faculty) => {
-            Admin.findOneAndUpdate({admin_id: faculty._id}, {stage: stage}, {new: true})
-                .then((admin) => {
-                    if (admin.stage === 2) {
-                        Admin.findByIdAndUpdate(admin._id, {reachedStage2: true}).then(() => {
-                            res.json({
-                                status: "success",
-                                msg: "Successfully moved to the next stage",
-                            });
-                        })
-                    } else {
-                        res.json({
-                            status: "success",
-                            msg: "Successfully moved to the next stage",
-                        });
-                    }
-                })
-                .catch(() => {
-                    res.json({
-                        status: "fail",
-                        result: null,
-                    });
-                });
-        })
-        .catch(() => {
-            res.json({
-                status: "fail",
-                result: null,
-            });
-        });
-});
-
-router.post("/setDeadline/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const date = req.body.deadline;
-    const format_date = new Date(date);
-    format_date.setHours(23, 59);
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((faculty) => {
-            Admin.findOne({admin_id: faculty._id})
-                .then((admin) => {
-                    if (admin.deadlines.length === admin.stage + 1) {
-                        admin.deadlines.pop();
-                        admin.deadlines.push(format_date);
-                    }
-
-                    if (admin.stage === 0) {
-                        admin.startDate = new Date();
-                    }
-
-                    if (admin.stage === admin.deadlines.length)
-                        admin.deadlines.push(format_date);
-
-                    admin
-                        .save()
-                        .then(() => {
-                            res.json({
-                                status: "success",
-                                msg: "Successfully set the deadline",
-                            });
-                        })
-                        .catch(() => {
-                            res.json({
-                                status: "fail",
-                                result: null,
-                            });
-                        });
-                })
-                .catch(() => {
-                    res.json({
-                        status: "fail",
-                        result: null,
-                    });
-                });
-        })
-        .catch(() => {
-            res.json({
-                status: "fail",
-                result: null,
-            });
         });
 });
 
@@ -547,11 +462,12 @@ router.get("/stream_email/student/:id", (req, res) => {
         });
 });
 
+// TODO check where this route is used
 router.get("/all/info", (req, res) => {
     const result = {};
     const promises = [];
     let branches = [];
-    Mapping.find()
+    Programs.find()
         .lean()
         .then((maps) => {
             branches = maps.map((val) => val.short);
@@ -719,479 +635,6 @@ router.get("/members/:id", (req, res) => {
                                 });
                         }
                     });
-            } else {
-                res.json({
-                    message: "invalid-token",
-                    result: null,
-                });
-            }
-        });
-});
-
-router.delete("/faculty/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const mid = req.headers.body;
-    let programAdmin = {};
-
-    Faculty.findOne({google_id: {id: id, idToken: idToken}}).then(
-        (faculty) => {
-            if (faculty && faculty.isAdmin) {
-                for (const program of faculty.programs) {
-                    if (program.short === faculty.adminProgram) {
-                        programAdmin = program;
-                    }
-                }
-                Project.find({
-                    stream: programAdmin.short,
-                    faculty_id: mid,
-                }).then((projects) => {
-                    const projectIDs = projects.map((val) => val._id);
-                    Project.deleteMany({
-                        stream: programAdmin.short,
-                        faculty_id: mid,
-                    }).then(() => {
-                        let updateResult = {
-                            $pullAll: {projects_preference: projectIDs}
-                        };
-                        Student.updateMany(
-                            {stream: programAdmin.short},
-                            updateResult
-                        ).then(() => {
-                            const updateCondition = {
-                                project_alloted: {$in: projectIDs}
-                            };
-                            updateResult = {
-                                $unset: {project_alloted: ""},
-                            };
-                            Student.updateMany(updateCondition, updateResult).then(() => {
-                                updateResult = {
-                                    $pullAll: {project_list: projectIDs},
-                                    $pull: {programs: programAdmin},
-                                };
-                                Faculty.findByIdAndUpdate(mid, updateResult).then(() => {
-                                    res.json({
-                                        message: "success",
-                                        result: null,
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            }
-        }
-    );
-});
-
-router.delete("/student/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const mid = req.headers.body;
-    Faculty.findOne({google_id: {id: id, idToken: idToken}}).then(
-        (faculty) => {
-            if (faculty && faculty.isAdmin) {
-                Student.findByIdAndDelete(mid).then((student) => {
-                    const updateCondition = {
-                        $pullAll: {students_id: [mid], not_students_id: [mid], student_alloted: [mid]}
-                    };
-                    Project.updateMany({stream: student.stream}, updateCondition).then(() => {
-                        res.json({
-                            message: "success",
-                            result: null,
-                        });
-                    });
-                });
-            } else {
-                res.json({
-                    message: "invalid-token",
-                    result: null,
-                });
-            }
-        }
-    );
-});
-
-router.post("/set_projectCap/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const cap = req.body.cap;
-
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((faculty) => {
-            Admin.findOneAndUpdate({admin_id: faculty._id}, {project_cap: cap})
-                .then(() => {
-                    res.json({
-                        status: "success",
-                        msg: "Successfully updated the project cap",
-                    });
-                })
-                .catch(() => {
-                    res.json({
-                        status: "fail",
-                        result: "admin error",
-                    });
-                });
-        })
-        .catch(() => {
-            res.json({
-                status: "fail",
-                result: "faculty error",
-            });
-        });
-});
-
-router.post("/set_studentCap/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const studentCap = req.body.cap;
-
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((faculty) => {
-            Admin.findOneAndUpdate(
-                {admin_id: faculty._id},
-                {student_cap: studentCap}
-            )
-                .then(() => {
-                    res.json({
-                        status: "success",
-                        msg: "Successfully updated the student cap",
-                    });
-                })
-                .catch(() => {
-                    res.json({
-                        status: "fail",
-                        result: null,
-                    });
-                });
-        })
-        .catch(() => {
-            res.json({
-                status: "fail",
-                result: null,
-            });
-        });
-});
-
-router.post("/set_studentsPerFacuty/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const cap = req.body.cap;
-
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((faculty) => {
-            if (faculty) {
-                Admin.findOneAndUpdate(
-                    {admin_id: faculty._id},
-                    {studentsPerFaculty: cap}
-                )
-                    .then(() => {
-                        res.json({
-                            status: "success",
-                            msg: "Successfully set the number of students per faculty!!",
-                        });
-                    })
-                    .catch(() => {
-                        res.json({
-                            status: "fail",
-                            result: "Admin error",
-                        });
-                    });
-            } else {
-                res.json({
-                    status: "fail",
-                    result: "Faculty not found",
-                });
-            }
-        })
-        .catch(() => {
-            res.json({
-                status: "fail",
-                result: "Authentication error",
-            });
-        });
-});
-
-router.get("/fetchAllMails/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    let programAdmin = {};
-    let stream;
-    let faculties;
-    const promises = [];
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id programs")
-        .then((faculty) => {
-            if (faculty) {
-                Admin.findOne({admin_id: faculty._id}).then((admin) => {
-                    if (admin) {
-                        for (const program of faculty.programs) {
-                            if (program.short === admin.stream) {
-                                programAdmin = program;
-                                stream = program.short;
-                            }
-                        }
-                        promises.push(
-                            Faculty.find({programs: {$elemMatch: programAdmin}})
-                                .lean()
-                                .select("email")
-                                .then((faculty) => {
-                                    faculties = faculty.map((val) => {
-                                        return val.email;
-                                    });
-                                    return faculties;
-                                })
-                        );
-                        promises.push(
-                            Student.find({stream: stream, isRegistered: true})
-                                .lean()
-                                .select("email")
-                                .then((student) => {
-                                    students = student.map((val) => val.email);
-                                    return students;
-                                })
-                        );
-                        Promise.all(promises).then((result) => {
-                            const answer = [...result[0], ...result[1]];
-                            res.json({
-                                message: "success",
-                                result: answer,
-                                streamFull: programAdmin.full,
-                            });
-                        });
-                    } else {
-                        res.json({
-                            message: "invalid-token",
-                            result: null,
-                        });
-                    }
-                });
-            }
-        });
-});
-
-router.post("/validateAllocation/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const selectedProjects = req.body.projects;
-    const students = req.body.students;
-
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((faculty) => {
-            if (faculty) {
-                Admin.findOne({admin_id: faculty._id})
-                    .lean()
-                    .then((admin) => {
-                        if (admin) {
-                            if (admin.stage >= 3) {
-                                let count_sum = 0;
-
-                                for (const project of selectedProjects) {
-                                    count_sum += Number(project.studentIntake);
-                                }
-
-                                if (count_sum >= Math.min(students, admin.studentCount)) {
-                                    res.json({
-                                        status: "success",
-                                    });
-                                } else {
-                                    res.json({
-                                        status: "fail",
-                                    });
-                                }
-                            } else {
-                                Project.find({stream: admin.stream})
-                                    .lean()
-                                    .select("studentIntake")
-                                    .then((projects) => {
-                                        let count = 0;
-
-                                        for (const project of projects) {
-                                            count += project.studentIntake;
-                                        }
-                                        if (count >= Math.min(students, admin.studentCount)) {
-                                            res.json({
-                                                status: "success",
-                                                msg: "Allocation can start",
-                                            });
-                                        } else {
-                                            res.json({
-                                                status: "fail",
-                                                result: null,
-                                            });
-                                        }
-                                    });
-                            }
-                        } else {
-                            res.json({
-                                status: "fail",
-                                result: null,
-                            });
-                        }
-                    })
-                    .catch(() => {
-                        res.json({
-                            status: "fail",
-                            result: null,
-                        });
-                    });
-            } else {
-                res.json({
-                    status: "fail",
-                    result: null,
-                });
-            }
-        })
-        .catch(() => {
-            res.json({
-                status: "fail",
-                result: null,
-            });
-        });
-});
-
-router.post("/revertStage/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const stage = req.body.stage;
-
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .then((faculty) => {
-            if (faculty) {
-                Admin.findOne({admin_id: faculty._id})
-                    .then((admin) => {
-                        admin.deadlines.pop();
-                        if (stage >= 3) {
-                            admin.stage = 2;
-                        } else {
-                            if (admin.stage === 1) {
-                                admin.startDate = undefined;
-                                admin.deadlines = [];
-                            }
-                            admin.stage = stage - 1;
-                        }
-                        admin.publishFaculty = false;
-                        admin.publishStudents = false;
-
-
-                        if (stage >= 3) {
-                            Project.updateMany(
-                                {stream: admin.stream},
-                                {student_alloted: []}
-                            )
-                                .then(() => {
-                                    Student.updateMany(
-                                        {stream: admin.stream},
-                                        {$unset: {project_alloted: ""}}
-                                    )
-                                        .then(() => {
-                                            admin
-                                                .save()
-                                                .then(() => {
-                                                    res.json({
-                                                        status: "success",
-                                                        msg:
-                                                            "Successfully reverted back to the previous stage",
-                                                    });
-                                                })
-                                                .catch(() => {
-                                                    res.json({
-                                                        status: "fail",
-                                                        result: null,
-                                                    });
-                                                });
-                                        })
-                                        .catch(() => {
-                                            res.json({
-                                                status: "fail",
-                                                result: null,
-                                            });
-                                        });
-                                })
-                                .catch(() => {
-                                    res.json({
-                                        status: "fail",
-                                        result: null,
-                                    });
-                                });
-                        } else {
-                            admin.save().then(() => {
-                                res.json({
-                                    status: "success",
-                                    msg: "Successfully reverted back to the previous stage",
-                                });
-                            });
-                        }
-                    })
-                    .catch(() => {
-                        res.json({
-                            status: "fail",
-                            result: null,
-                        });
-                    });
-            } else {
-                res.json({
-                    status: "fail",
-                    result: null,
-                });
-            }
-        })
-        .catch(() => {
-            res.json({
-                status: "fail",
-                result: null,
-            });
-        });
-});
-
-router.post("/reset/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("isAdmin _id")
-        .then((user) => {
-            if (user && user.isAdmin) {
-                let updateResult = {
-                    $unset: {
-                        startDate: ""
-                    },
-                    deadlines: [],
-                    publishFaculty: false,
-                    publishStudents: false,
-                    stage: 0,
-                    studentCount: 0,
-                    reachedStage2: false
-                };
-                Admin.findOneAndUpdate({admin_id: user._id}, updateResult).then(
-                    (admin) => {
-                        const stream = admin.stream;
-                        Student.deleteMany({stream: stream}).then(() => {
-                            updateResult = {
-                                project_alloted: [],
-                                students_id: [],
-                                not_students_id: [],
-                                isIncluded: true,
-                                reorder: 0
-                            };
-                            Project.updateMany({stream: stream}, updateResult).then(() => {
-                                res.json({
-                                    message: "success",
-                                    result: null,
-                                });
-                            });
-                        });
-                    }
-                );
             } else {
                 res.json({
                     message: "invalid-token",
@@ -1440,7 +883,7 @@ router.get("/download_csv/:id/:role", (req, res) => {
                             } else if (role === "format") {
                                 file = path.resolve(__dirname, `../CSV/format.csv`);
                                 if (!fs.existsSync(file)) {
-                                    fs.writeFileSync(file, "Name, Roll no., CGPA\n");
+                                    fs.writeFileSync(file, "Name, Roll no., Gpa\n");
                                 }
                             } else file = null;
 
@@ -1470,6 +913,577 @@ router.get("/download_csv/:id/:role", (req, res) => {
                 status: "fail",
                 result: null,
             });
+        });
+});
+
+router.get("/allocationStatus/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const allocationStatus = req.body.allocationMap;
+    const result = [];
+    Faculty.findOne({google_id: {id: id, idToken: idToken}}).then(
+        (faculty) => {
+            Admin.findOne({admin_id: faculty._id}).then((admin) => {
+                Project.find({stream: admin.stream})
+                    .populate({
+                        path: "faculty_id",
+                        select: "name",
+                        model: Faculty,
+                    })
+                    .populate({
+                        path: "not_students_id",
+                        select: {project_alloted: 1, name: 1, roll_no: 1},
+                        model: Student,
+                    })
+                    .populate({
+                        path: "students_id",
+                        select: {name: 1, roll_no: 1, project_alloted: 1},
+                        model: Student,
+                        populate: {
+                            path: "project_alloted",
+                            select: {title: 1, faculty_id: 1},
+                            model: Project,
+                            populate: {
+                                path: "faculty_id",
+                                select: {_id: 1, name: 1},
+                                model: Faculty,
+                            },
+                        },
+                    })
+                    .populate({
+                        path: "student_alloted",
+                        select: "name roll_no gpa",
+                        model: Student,
+                    })
+                    .then((projects) => {
+
+                        Student.find().then((students) => {
+                            let student_alloted;
+                            students = students.map((val) => {
+                                return {
+                                    _id: val._id,
+                                    name: val.name,
+                                    roll_no: val.roll_no
+                                };
+                            });
+                            for (const project of projects) {
+                                const pid = project._id.toString();
+                                const studentList = allocationStatus[pid];
+                                if (!allocationStatus[pid]) {
+                                    student_alloted = [];
+                                } else {
+                                    student_alloted = students.filter((val) => {
+                                        return studentList.indexOf(val._id.toString()) !== -1;
+                                    });
+                                }
+                                const newProj = {
+                                    _id: project._id,
+                                    title: project.title,
+                                    faculty_id: project.faculty_id._id,
+                                    description: project.description,
+                                    stream: project.stream,
+                                    duration: project.duration,
+                                    faculty: project.faculty_id.name,
+                                    studentIntake: project.studentIntake,
+                                    numberOfPreferences: project.students_id.length,
+                                    student_alloted: student_alloted,
+                                    students_id: project.students_id,
+                                    not_students_id: project.not_students_id,
+                                    isIncluded: project.isIncluded
+                                };
+                                result.push(newProj);
+                            }
+                            res.json({
+                                message: "success",
+                                result: result,
+                            });
+                        });
+                    });
+            });
+        }
+    );
+});
+
+router.get("/fetchAllMails/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    let programAdmin = {};
+    let stream;
+    let faculties;
+    const promises = [];
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .lean()
+        .select("_id programs")
+        .then((faculty) => {
+            if (faculty) {
+                Admin.findOne({admin_id: faculty._id}).then((admin) => {
+                    if (admin) {
+                        for (const program of faculty.programs) {
+                            if (program.short === admin.stream) {
+                                programAdmin = program;
+                                stream = program.short;
+                            }
+                        }
+                        promises.push(
+                            Faculty.find({programs: {$elemMatch: programAdmin}})
+                                .lean()
+                                .select("email")
+                                .then((faculty) => {
+                                    faculties = faculty.map((val) => {
+                                        return val.email;
+                                    });
+                                    return faculties;
+                                })
+                        );
+                        promises.push(
+                            Student.find({stream: stream, isRegistered: true})
+                                .lean()
+                                .select("email")
+                                .then((student) => {
+                                    students = student.map((val) => val.email);
+                                    return students;
+                                })
+                        );
+                        Promise.all(promises).then((result) => {
+                            const answer = [...result[0], ...result[1]];
+                            res.json({
+                                message: "success",
+                                result: answer,
+                                streamFull: programAdmin.full,
+                            });
+                        });
+                    } else {
+                        res.json({
+                            message: "invalid-token",
+                            result: null,
+                        });
+                    }
+                });
+            }
+        });
+});
+
+router.post("/update_stage/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const stage = req.body.stage;
+
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+            Admin.findOneAndUpdate({admin_id: faculty._id}, {stage: stage}, {new: true})
+                .then((admin) => {
+                    if (admin.stage === 2) {
+                        Admin.findByIdAndUpdate(admin._id, {reachedStage2: true}).then(() => {
+                            res.json({
+                                status: "success",
+                                msg: "Successfully moved to the next stage",
+                            });
+                        })
+                    } else {
+                        res.json({
+                            status: "success",
+                            msg: "Successfully moved to the next stage",
+                        });
+                    }
+                })
+                .catch(() => {
+                    res.json({
+                        status: "fail",
+                        result: null,
+                    });
+                });
+        })
+        .catch(() => {
+            res.json({
+                status: "fail",
+                result: null,
+            });
+        });
+});
+
+router.post("/setDeadline/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const date = req.body.deadline;
+    const format_date = new Date(date);
+    format_date.setHours(23, 59);
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+            Admin.findOne({admin_id: faculty._id})
+                .then((admin) => {
+                    if (admin.deadlines.length === admin.stage + 1) {
+                        admin.deadlines.pop();
+                        admin.deadlines.push(format_date);
+                    }
+
+                    if (admin.stage === 0) {
+                        admin.startDate = new Date();
+                    }
+
+                    if (admin.stage === admin.deadlines.length)
+                        admin.deadlines.push(format_date);
+
+                    admin
+                        .save()
+                        .then(() => {
+                            res.json({
+                                status: "success",
+                                msg: "Successfully set the deadline",
+                            });
+                        })
+                        .catch(() => {
+                            res.json({
+                                status: "fail",
+                                result: null,
+                            });
+                        });
+                })
+                .catch(() => {
+                    res.json({
+                        status: "fail",
+                        result: null,
+                    });
+                });
+        })
+        .catch(() => {
+            res.json({
+                status: "fail",
+                result: null,
+            });
+        });
+});
+
+router.post("/set_projectCap/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const cap = req.body.cap;
+
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+            Admin.findOneAndUpdate({admin_id: faculty._id}, {project_cap: cap})
+                .then(() => {
+                    res.json({
+                        status: "success",
+                        msg: "Successfully updated the project cap",
+                    });
+                })
+                .catch(() => {
+                    res.json({
+                        status: "fail",
+                        result: "admin error",
+                    });
+                });
+        })
+        .catch(() => {
+            res.json({
+                status: "fail",
+                result: "faculty error",
+            });
+        });
+});
+
+router.post("/set_studentCap/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const studentCap = req.body.cap;
+
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+            Admin.findOneAndUpdate(
+                {admin_id: faculty._id},
+                {student_cap: studentCap}
+            )
+                .then(() => {
+                    res.json({
+                        status: "success",
+                        msg: "Successfully updated the student cap",
+                    });
+                })
+                .catch(() => {
+                    res.json({
+                        status: "fail",
+                        result: null,
+                    });
+                });
+        })
+        .catch(() => {
+            res.json({
+                status: "fail",
+                result: null,
+            });
+        });
+});
+
+router.post("/set_studentsPerFacuty/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const cap = req.body.cap;
+
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+            if (faculty) {
+                Admin.findOneAndUpdate(
+                    {admin_id: faculty._id},
+                    {studentsPerFaculty: cap}
+                )
+                    .then(() => {
+                        res.json({
+                            status: "success",
+                            msg: "Successfully set the number of students per faculty!!",
+                        });
+                    })
+                    .catch(() => {
+                        res.json({
+                            status: "fail",
+                            result: "Admin error",
+                        });
+                    });
+            } else {
+                res.json({
+                    status: "fail",
+                    result: "Faculty not found",
+                });
+            }
+        })
+        .catch(() => {
+            res.json({
+                status: "fail",
+                result: "Authentication error",
+            });
+        });
+});
+
+router.post("/validateAllocation/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const selectedProjects = req.body.projects;
+    const students = req.body.students;
+
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .lean()
+        .select("_id")
+        .then((faculty) => {
+            if (faculty) {
+                Admin.findOne({admin_id: faculty._id})
+                    .lean()
+                    .then((admin) => {
+                        if (admin) {
+                            if (admin.stage >= 3) {
+                                let count_sum = 0;
+
+                                for (const project of selectedProjects) {
+                                    count_sum += Number(project.studentIntake);
+                                }
+
+                                if (count_sum >= Math.min(students, admin.studentCount)) {
+                                    res.json({
+                                        status: "success",
+                                    });
+                                } else {
+                                    res.json({
+                                        status: "fail",
+                                    });
+                                }
+                            } else {
+                                Project.find({stream: admin.stream})
+                                    .lean()
+                                    .select("studentIntake")
+                                    .then((projects) => {
+                                        let count = 0;
+
+                                        for (const project of projects) {
+                                            count += project.studentIntake;
+                                        }
+                                        if (count >= Math.min(students, admin.studentCount)) {
+                                            res.json({
+                                                status: "success",
+                                                msg: "Allocation can start",
+                                            });
+                                        } else {
+                                            res.json({
+                                                status: "fail",
+                                                result: null,
+                                            });
+                                        }
+                                    });
+                            }
+                        } else {
+                            res.json({
+                                status: "fail",
+                                result: null,
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        res.json({
+                            status: "fail",
+                            result: null,
+                        });
+                    });
+            } else {
+                res.json({
+                    status: "fail",
+                    result: null,
+                });
+            }
+        })
+        .catch(() => {
+            res.json({
+                status: "fail",
+                result: null,
+            });
+        });
+});
+
+router.post("/revertStage/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const stage = req.body.stage;
+
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .then((faculty) => {
+            if (faculty) {
+                Admin.findOne({admin_id: faculty._id})
+                    .then((admin) => {
+                        admin.deadlines.pop();
+                        if (stage >= 3) {
+                            admin.stage = 2;
+                        } else {
+                            if (admin.stage === 1) {
+                                admin.startDate = undefined;
+                                admin.deadlines = [];
+                            }
+                            admin.stage = stage - 1;
+                        }
+                        admin.publishFaculty = false;
+                        admin.publishStudents = false;
+
+
+                        if (stage >= 3) {
+                            Project.updateMany(
+                                {stream: admin.stream},
+                                {student_alloted: []}
+                            )
+                                .then(() => {
+                                    Student.updateMany(
+                                        {stream: admin.stream},
+                                        {$unset: {project_alloted: ""}}
+                                    )
+                                        .then(() => {
+                                            admin
+                                                .save()
+                                                .then(() => {
+                                                    res.json({
+                                                        status: "success",
+                                                        msg:
+                                                            "Successfully reverted back to the previous stage",
+                                                    });
+                                                })
+                                                .catch(() => {
+                                                    res.json({
+                                                        status: "fail",
+                                                        result: null,
+                                                    });
+                                                });
+                                        })
+                                        .catch(() => {
+                                            res.json({
+                                                status: "fail",
+                                                result: null,
+                                            });
+                                        });
+                                })
+                                .catch(() => {
+                                    res.json({
+                                        status: "fail",
+                                        result: null,
+                                    });
+                                });
+                        } else {
+                            admin.save().then(() => {
+                                res.json({
+                                    status: "success",
+                                    msg: "Successfully reverted back to the previous stage",
+                                });
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        res.json({
+                            status: "fail",
+                            result: null,
+                        });
+                    });
+            } else {
+                res.json({
+                    status: "fail",
+                    result: null,
+                });
+            }
+        })
+        .catch(() => {
+            res.json({
+                status: "fail",
+                result: null,
+            });
+        });
+});
+
+router.post("/reset/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    Faculty.findOne({google_id: {id: id, idToken: idToken}})
+        .lean()
+        .select("isAdmin _id")
+        .then((user) => {
+            if (user && user.isAdmin) {
+                let updateResult = {
+                    $unset: {
+                        startDate: ""
+                    },
+                    deadlines: [],
+                    publishFaculty: false,
+                    publishStudents: false,
+                    stage: 0,
+                    studentCount: 0,
+                    reachedStage2: false
+                };
+                Admin.findOneAndUpdate({admin_id: user._id}, updateResult).then(
+                    (admin) => {
+                        const stream = admin.stream;
+                        Student.deleteMany({stream: stream}).then(() => {
+                            updateResult = {
+                                project_alloted: [],
+                                students_id: [],
+                                not_students_id: [],
+                                isIncluded: true,
+                                reorder: 0
+                            };
+                            Project.updateMany({stream: stream}, updateResult).then(() => {
+                                res.json({
+                                    message: "success",
+                                    result: null,
+                                });
+                            });
+                        });
+                    }
+                );
+            } else {
+                res.json({
+                    message: "invalid-token",
+                    result: null,
+                });
+            }
         });
 });
 
@@ -1597,94 +1611,6 @@ router.post("/uploadStudentList/:id", (req, res) => {
                 result: null,
             });
         });
-});
-
-router.get("/allocationStatus/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const allocationStatus = req.body.allocationMap;
-    const result = [];
-    Faculty.findOne({google_id: {id: id, idToken: idToken}}).then(
-        (faculty) => {
-            Admin.findOne({admin_id: faculty._id}).then((admin) => {
-                Project.find({stream: admin.stream})
-                    .populate({
-                        path: "faculty_id",
-                        select: "name",
-                        model: Faculty,
-                    })
-                    .populate({
-                        path: "not_students_id",
-                        select: {project_alloted: 1, name: 1, roll_no: 1},
-                        model: Student,
-                    })
-                    .populate({
-                        path: "students_id",
-                        select: {name: 1, roll_no: 1, project_alloted: 1},
-                        model: Student,
-                        populate: {
-                            path: "project_alloted",
-                            select: {title: 1, faculty_id: 1},
-                            model: Project,
-                            populate: {
-                                path: "faculty_id",
-                                select: {_id: 1, name: 1},
-                                model: Faculty,
-                            },
-                        },
-                    })
-                    .populate({
-                        path: "student_alloted",
-                        select: "name roll_no gpa",
-                        model: Student,
-                    })
-                    .then((projects) => {
-
-                        Student.find().then((students) => {
-                            let student_alloted;
-                            students = students.map((val) => {
-                                return {
-                                    _id: val._id,
-                                    name: val.name,
-                                    roll_no: val.roll_no
-                                };
-                            });
-                            for (const project of projects) {
-                                const pid = project._id.toString();
-                                const studentList = allocationStatus[pid];
-                                if (!allocationStatus[pid]) {
-                                    student_alloted = [];
-                                } else {
-                                    student_alloted = students.filter((val) => {
-                                        return studentList.indexOf(val._id.toString()) !== -1;
-                                    });
-                                }
-                                const newProj = {
-                                    _id: project._id,
-                                    title: project.title,
-                                    faculty_id: project.faculty_id._id,
-                                    description: project.description,
-                                    stream: project.stream,
-                                    duration: project.duration,
-                                    faculty: project.faculty_id.name,
-                                    studentIntake: project.studentIntake,
-                                    numberOfPreferences: project.students_id.length,
-                                    student_alloted: student_alloted,
-                                    students_id: project.students_id,
-                                    not_students_id: project.not_students_id,
-                                    isIncluded: project.isIncluded
-                                };
-                                result.push(newProj);
-                            }
-                            res.json({
-                                message: "success",
-                                result: result,
-                            });
-                        });
-                    });
-            });
-        }
-    );
 });
 
 router.post("/updatePublish/:id", (req, res) => {
@@ -2026,5 +1952,89 @@ router.post("/updateLists/:id", (req, res) => {
             })
         })
 })
+
+router.delete("/faculty/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const mid = req.headers.body;
+    let programAdmin = {};
+
+    Faculty.findOne({google_id: {id: id, idToken: idToken}}).then(
+        (faculty) => {
+            if (faculty && faculty.isAdmin) {
+                for (const program of faculty.programs) {
+                    if (program.short === faculty.adminProgram) {
+                        programAdmin = program;
+                    }
+                }
+                Project.find({
+                    stream: programAdmin.short,
+                    faculty_id: mid,
+                }).then((projects) => {
+                    const projectIDs = projects.map((val) => val._id);
+                    Project.deleteMany({
+                        stream: programAdmin.short,
+                        faculty_id: mid,
+                    }).then(() => {
+                        let updateResult = {
+                            $pullAll: {projects_preference: projectIDs}
+                        };
+                        Student.updateMany(
+                            {stream: programAdmin.short},
+                            updateResult
+                        ).then(() => {
+                            const updateCondition = {
+                                project_alloted: {$in: projectIDs}
+                            };
+                            updateResult = {
+                                $unset: {project_alloted: ""},
+                            };
+                            Student.updateMany(updateCondition, updateResult).then(() => {
+                                updateResult = {
+                                    $pullAll: {project_list: projectIDs},
+                                    $pull: {programs: programAdmin},
+                                };
+                                Faculty.findByIdAndUpdate(mid, updateResult).then(() => {
+                                    res.json({
+                                        message: "success",
+                                        result: null,
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            }
+        }
+    );
+});
+
+router.delete("/student/:id", (req, res) => {
+    const id = req.params.id;
+    const idToken = req.headers.authorization;
+    const mid = req.headers.body;
+    Faculty.findOne({google_id: {id: id, idToken: idToken}}).then(
+        (faculty) => {
+            if (faculty && faculty.isAdmin) {
+                Student.findByIdAndDelete(mid).then((student) => {
+                    const updateCondition = {
+                        $pullAll: {students_id: [mid], not_students_id: [mid], student_alloted: [mid]}
+                    };
+                    Project.updateMany({stream: student.stream}, updateCondition).then(() => {
+                        res.json({
+                            message: "success",
+                            result: null,
+                        });
+                    });
+                });
+            } else {
+                res.json({
+                    message: "invalid-token",
+                    result: null,
+                });
+            }
+        }
+    );
+});
 
 module.exports = router;

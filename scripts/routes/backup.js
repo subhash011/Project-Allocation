@@ -6,12 +6,12 @@ const Faculty = require("../models/Faculty");
 const Project = require("../models/Project");
 const SuperAdmin = require("../models/SuperAdmins");
 const Admin = require("../models/Admin_Info");
-const Mapping = require("../models/Mapping");
+const Programs = require("../models/Programs");
 const Streams = require("../models/Streams");
 const axios = require("axios").default;
 
-var base_url = `https://pal.iitpkd.ac.in:10443/api/backup/${process.env.SECRET_KEY}/`;
-var urls = [
+const base_url = `https://pal.iitpkd.ac.in:10443/api/backup/${process.env.SECRET_KEY}/`;
+const urls = [
     `${base_url}streams`,
     `${base_url}students`,
     `${base_url}faculty`,
@@ -19,7 +19,7 @@ var urls = [
     `${base_url}super`,
     `${base_url}admin`,
     `${base_url}projects`,
-]
+];
 
 function getRequests() {
     let requests = [];
@@ -71,7 +71,7 @@ router.get("/", (req, res) => {
                 })
             );
             promises.push(
-                Mapping.insertMany(mappings).then(result => {
+                Programs.insertMany(mappings).then(result => {
                     return result;
                 })
             );

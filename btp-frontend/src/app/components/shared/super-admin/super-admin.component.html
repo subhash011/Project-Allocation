@@ -7,10 +7,10 @@
 >
     <mat-tab label="Faculty">
         <mat-tab-group *ngIf="index == 0" [selectedIndex]="0" animationDuration="0">
-            <mat-tab *ngFor="let branch of programs.data" [label]="branch.full">
+            <mat-tab *ngFor="let program of programs.data" [label]="program.full">
                 <div class="searchBox">
                     <input
-                        (keyup)="applyFilter($event, branch, 'faculty')"
+                        (keyup)="applyFilter($event, program, 'faculty')"
                         autocomplete="off"
                         class="searchInput"
                         matInput
@@ -26,8 +26,8 @@
                     <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
                         <table
                             #table
-                            (matSortChange)="sortFaculties($event,branch)"
-                            [dataSource]="faculties[branch.short]"
+                            (matSortChange)="sortFaculties($event,program)"
+                            [dataSource]="faculties[program.short]"
                             class="mat-elevation-z8"
                             mat-table
                             matSort
@@ -43,7 +43,7 @@
                                 </th>
                                 <td *matCellDef="let faculty" mat-cell>{{ faculty.name }}</td>
                                 <td *matFooterCellDef mat-footer-cell><b>Total
-                                    : </b> {{faculties[branch.short].filteredData.length}}
+                                    : </b> {{faculties[program.short].filteredData.length}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Stream">
@@ -71,7 +71,7 @@
                       faculty.isAdmin
                         | getToolTipToRemoveFaculty
                           : faculty.adminProgram
-                          : branch.short
+                          : program.short
                     "
                       matTooltipPosition="above"
                   ><button
@@ -84,8 +84,8 @@
                     </button></span
                   >
                                     <button
-                                        (click)="addAdmin(faculty, branch.short)"
-                                        *ngIf="!faculty.isAdmin && !hasAdmins[branch.short]"
+                                        (click)="addAdmin(faculty, program.short)"
+                                        *ngIf="!faculty.isAdmin && !hasAdmins[program.short]"
                                         class="admin-button"
                                         color="primary"
                                         mat-raised-button
@@ -93,9 +93,9 @@
                                         Make Co-ordinator
                                     </button>
                                     <button
-                                        (click)="removeAdmin(faculty, branch.short)"
+                                        (click)="removeAdmin(faculty, program.short)"
                                         *ngIf="
-                      faculty.isAdmin && faculty.adminProgram == branch.short
+                      faculty.isAdmin && faculty.adminProgram == program.short
                     "
                                         class="remove-admin-button"
                                         color="primary"
@@ -123,10 +123,10 @@
     </mat-tab>
     <mat-tab label="Student">
         <mat-tab-group *ngIf="index == 1" [selectedIndex]="0" animationDuration="0">
-            <mat-tab *ngFor="let branch of programs.data" [label]="branch.full">
+            <mat-tab *ngFor="let program of programs.data" [label]="program.full">
                 <div class="searchBox">
                     <input
-                        (keyup)="applyFilter($event, branch, 'student')"
+                        (keyup)="applyFilter($event, program, 'student')"
                         autocomplete="off"
                         class="searchInput"
                         name="search"
@@ -140,8 +140,8 @@
                 <div class="display">
                     <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
                         <table
-                            (matSortChange)="sortStudents($event,branch)"
-                            [dataSource]="students[branch.short]"
+                            (matSortChange)="sortStudents($event,program)"
+                            [dataSource]="students[program.short]"
                             class="mat-elevation-z8"
                             mat-table
                             matSort
@@ -157,12 +157,12 @@
                                 </th>
                                 <td *matCellDef="let student" mat-cell>{{ student.name }}</td>
                                 <td *matFooterCellDef mat-footer-cell><b>Total
-                                    : </b> {{students[branch.short].filteredData.length}}
+                                    : </b> {{students[program.short].filteredData.length}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Stream">
                                 <th *matHeaderCellDef class="common-padding" mat-header-cell>Program</th>
-                                <td *matCellDef="let student" class="common-padding" mat-cell>{{ branch.short }}</td>
+                                <td *matCellDef="let student" class="common-padding" mat-cell>{{ program.short }}</td>
                                 <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
                             <ng-container matColumnDef="Email-ID">
@@ -181,7 +181,7 @@
                                     {{ student.isRegistered ? "Yes" : "No" }}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell><b>Registered
-                                    : </b> {{students[branch.short].filteredData | getRegisteredCount}} </td>
+                                    : </b> {{students[program.short].filteredData | getRegisteredCount}} </td>
                             </ng-container>
                             <ng-container matColumnDef="Actions">
                                 <th *matHeaderCellDef mat-header-cell>Actions</th>
@@ -213,10 +213,10 @@
     </mat-tab>
     <mat-tab label="Projects">
         <mat-tab-group *ngIf="index == 2" [selectedIndex]="0" animationDuration="0">
-            <mat-tab *ngFor="let branch of programs.data" [label]="branch.full">
+            <mat-tab *ngFor="let program of programs.data" [label]="program.full">
                 <div class="searchBox">
                     <input
-                        (keyup)="applyFilter($event, branch, 'project')"
+                        (keyup)="applyFilter($event, program, 'project')"
                         autocomplete="off"
                         class="searchInput"
                         name="search"
@@ -230,8 +230,8 @@
                 <div class="display">
                     <div [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
                         <table
-                            (matSortChange)="sortProjects($event,branch);"
-                            [dataSource]="projects[branch.short]"
+                            (matSortChange)="sortProjects($event,program);"
+                            [dataSource]="projects[program.short]"
                             class="mat-elevation-z8"
                             mat-table
                             matSort
@@ -248,7 +248,7 @@
                                 </th>
                                 <td *matCellDef="let project" mat-cell>{{ project.title }}</td>
                                 <td *matFooterCellDef mat-footer-cell><b>Total
-                                    : </b> {{projects[branch.short].filteredData.length}}
+                                    : </b> {{projects[program.short].filteredData.length}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Faculty">
@@ -268,7 +268,7 @@
                             </ng-container>
                             <ng-container matColumnDef="Stream">
                                 <th *matHeaderCellDef mat-header-cell>Program</th>
-                                <td *matCellDef="let project" mat-cell>{{ branch.short }}</td>
+                                <td *matCellDef="let project" mat-cell>{{ program.short }}</td>
                                 <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
                             <ng-container matColumnDef="NoOfStudents">
@@ -349,7 +349,7 @@
                     </mat-icon
                     >
                 </div>
-                <table [dataSource]="branches" class="mat-elevation-z8" mat-table>
+                <table [dataSource]="streams" class="mat-elevation-z8" mat-table>
                     <ng-container matColumnDef="Stream">
                         <th *matHeaderCellDef [style.color]="background" mat-header-cell>
                             Stream Name
@@ -359,22 +359,6 @@
                                 {{map.full}}
                             </ng-container>
                         </td>
-                        <!--                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>-->
-                        <!--                            <ng-container *ngIf="map.name">-->
-                        <!--                                {{map.name}}-->
-                        <!--                                <span [matTooltipPosition]="'above'" class="edit-row"-->
-                        <!--                                                  matTooltip="Edit Field"><i-->
-                        <!--                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>-->
-                        <!--                            </ng-container>-->
-                        <!--                            <sat-popover #p-->
-                        <!--                                         (closed)="updateStreamName(map, $event)"-->
-                        <!--                                         hasBackdrop-->
-                        <!--                                         xAlign="start"-->
-                        <!--                                         yAlign="start">-->
-                        <!--                                <app-inline-edit [head]="'Edit name'" [placeholder]="'New name'"-->
-                        <!--                                                 [value]="map.name"></app-inline-edit>-->
-                        <!--                            </sat-popover>-->
-                        <!--                        </td>-->
                     </ng-container>
                     <ng-container matColumnDef="Short">
                         <th *matHeaderCellDef [style.color]="background" mat-header-cell>
@@ -385,21 +369,6 @@
                                 {{map.short}}
                             </ng-container>
                         </td>
-                        <!--                        <td *matCellDef="let map" mat-cell>-->
-                        <!--                            <ng-container *ngIf="map.short">-->
-                        <!--                                {{map.short}}<span [matTooltipPosition]="'above'" class="edit-row"-->
-                        <!--                                                   matTooltip="Edit Field"><i-->
-                        <!--                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>-->
-                        <!--                            </ng-container>-->
-                        <!--                            <sat-popover #p-->
-                        <!--                                         (closed)="updateStreamShort(map, $event)"-->
-                        <!--                                         hasBackdrop-->
-                        <!--                                         xAlign="start"-->
-                        <!--                                         yAlign="start">-->
-                        <!--                                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'"-->
-                        <!--                                                 [value]="map.short"></app-inline-edit>-->
-                        <!--                            </sat-popover>-->
-                        <!--                        </td>-->
                     </ng-container>
                     <ng-container matColumnDef="Actions">
                         <th *matHeaderCellDef mat-header-cell>Delete Stream</th>
@@ -421,7 +390,6 @@
                                 </mat-icon>
                             </ng-container>
                             <sat-popover #p
-                                         (closed)="updateStreamShort(map, $event)"
                                          hasBackdrop
                                          xAlign="before"
                                          yAlign="start">
@@ -474,21 +442,6 @@
                                 {{map.short}}
                             </ng-container>
                         </td>
-                        <!--                        <td (click)="p.open()" *matCellDef="let map" [satPopoverAnchor]="p" mat-cell>-->
-                        <!--                            <ng-container *ngIf="map.short">-->
-                        <!--                                {{map.short}}<span [matTooltipPosition]="'above'" class="edit-row"-->
-                        <!--                                                   matTooltip="Edit Field"><i-->
-                        <!--                                (click)="p.open()" [satPopoverAnchor]="p" class="fa fa-edit"></i></span>-->
-                        <!--                            </ng-container>-->
-                        <!--                            <sat-popover #p-->
-                        <!--                                         (closed)="updateProgramShort(map, $event)"-->
-                        <!--                                         hasBackdrop-->
-                        <!--                                         xAlign="start"-->
-                        <!--                                         yAlign="start">-->
-                        <!--                                <app-inline-edit [head]="'Edit short name'" [placeholder]="'New short name'"-->
-                        <!--                                                 [value]="map.short"></app-inline-edit>-->
-                        <!--                            </sat-popover>-->
-                        <!--                        </td>-->
                     </ng-container>
                     <ng-container matColumnDef="Stage">
                         <th *matHeaderCellDef [style.color]="background" mat-header-cell>
@@ -542,7 +495,6 @@
                                 </mat-icon>
                             </ng-container>
                             <sat-popover #p
-                                         (closed)="updateStreamShort(map, $event)"
                                          hasBackdrop
                                          xAlign="before"
                                          yAlign="start">

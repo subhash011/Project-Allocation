@@ -1,186 +1,170 @@
 const express = require("express");
 const router = express.Router();
 const SuperAdmin = require("../models/SuperAdmin");
-const Mapping = require("../models/Mapping");
+const Programs = require("../models/Programs");
 const Streams = require("../models/Streams");
 
 
-router.get("/maps", (req, res) => {
-    Mapping.find()
-        .lean()
-        .then((maps) => {
-            if (maps) {
-                res.json({
-                    message: "success",
-                    result: maps,
-                });
-            } else {
-                res.json({
-                    message: "success",
-                    result: [],
-                });
-            }
-        })
-        .catch(() => {
+// get all maps/programs
+router.get("/maps", async (req, res) => {
+    try {
+        let programs = await Programs.find().lean();
+        if (programs) {
             res.json({
-                message: "error",
+                message: "success",
+                result: programs,
+            });
+        } else {
+            res.json({
+                message: "success",
+                result: [],
+            });
+        }
+    } catch (e) {
+        res.json({
+            message: "error",
+            result: null,
+        });
+    }
+});
+
+// get all branches/streams
+router.get("/branches", async (req, res) => {
+    try {
+        let streams = await Streams.find().lean();
+        if (streams) {
+            res.json({
+                message: "success",
+                result: streams,
+            });
+        } else {
+            res.json({
+                message: "success",
+                result: [],
+            });
+        }
+    } catch (e) {
+        res.json({
+            message: "error",
+            result: null,
+        });
+    }
+});
+
+// add a branch/stream
+router.post("/branches/:id", async (req, res) => {
+    try {
+        let inStream = req.body;
+        const id = req.params.id;
+        const idToken = req.headers.authorization;
+        let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        if (user) {
+            const newMap = new Streams({
+                short: inStream.short,
+                full: inStream.full,
+            });
+            let stream = await newMap.save();
+            res.json({
+                message: "success",
+                result: stream,
+            });
+        } else {
+            res.json({
+                message: "invalid-token",
                 result: null,
             });
+        }
+    } catch (e) {
+        res.json({
+            message: "invalid-client",
+            result: null,
         });
+    }
 });
 
-router.post("/maps/:id", (req, res) => {
-    const map = req.body;
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((user) => {
-            if (user) {
-                const newMap = new Mapping({
-                    short: map.short,
-                    full: map.full,
-                });
-                newMap.save().then((map) => {
-                    res.json({
-                        message: "success",
-                        result: map,
-                    });
-                });
-            } else {
-                res.json({
-                    message: "invalid-token",
-                    result: null,
-                });
-            }
-        })
-        .catch(() => {
+// add a map/program
+router.post("/maps/:id", async (req, res) => {
+    try {
+        const inProgram = req.body;
+        const id = req.params.id;
+        const idToken = req.headers.authorization;
+        let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        if (user) {
+            const newMap = new Programs({
+                short: inProgram.short,
+                full: inProgram.full,
+            });
+            let program = await newMap.save();
             res.json({
-                message: "invalid-client",
+                message: "success",
+                result: program,
+            });
+        } else {
+            res.json({
+                message: "invalid-token",
                 result: null,
             });
+        }
+    } catch (e) {
+        res.json({
+            message: "invalid-client",
+            result: null,
         });
+    }
 });
 
-router.delete("/maps/remove/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const short = req.headers.body;
-    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((user) => {
-            if (user) {
-                Mapping.findOneAndDelete({short: short})
-                    .then((map) => {
-                        res.json({
-                            message: "success",
-                            result: map,
-                        });
-                    })
-                    .catch(() => {
-                        res.json({
-                            message: "invalid-token",
-                            result: null,
-                        });
-                    });
-            } else {
-                res.json({
-                    message: "invalid-token",
-                    result: null,
-                });
-            }
-        });
-});
-
-router.get("/branches", (req, res) => {
-    Streams.find()
-        .lean()
-        .then((maps) => {
-            if (maps) {
-                res.json({
-                    message: "success",
-                    result: maps,
-                });
-            } else {
-                res.json({
-                    message: "success",
-                    result: [],
-                });
-            }
-        })
-        .catch(() => {
+// remove a branch/stream
+router.delete("/branches/remove/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const idToken = req.headers.authorization;
+        const short = req.headers.body;
+        let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        if (user) {
+            let stream = await Streams.findOneAndDelete({short: short});
             res.json({
-                message: "error",
+                message: "success",
+                result: stream,
+            });
+        } else {
+            res.json({
+                message: "invalid-token",
                 result: null,
             });
+        }
+    } catch (e) {
+        res.json({
+            message: "invalid-token",
+            result: null,
         });
+    }
 });
 
-router.post("/branches/:id", (req, res) => {
-    const map = req.body;
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((user) => {
-            if (user) {
-                const newMap = new Streams({
-                    short: map.short,
-                    full: map.full,
-                });
-                newMap.save().then((map) => {
-                    res.json({
-                        message: "success",
-                        result: map,
-                    });
-                });
-            } else {
-                res.json({
-                    message: "invalid-token",
-                    result: null,
-                });
-            }
-        })
-        .catch(() => {
+// remove a map/program
+router.delete("/maps/remove/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const idToken = req.headers.authorization;
+        const short = req.headers.body;
+        let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        if (user) {
+            let program = await Programs.findOneAndDelete({short: short})
             res.json({
-                message: "invalid-client",
+                message: "success",
+                result: program,
+            });
+        } else {
+            res.json({
+                message: "invalid-token",
                 result: null,
             });
+        }
+    } catch (e) {
+        res.json({
+            message: "invalid-token",
+            result: null,
         });
-});
-
-router.delete("/branches/remove/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const short = req.headers.body;
-    SuperAdmin.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((user) => {
-            if (user) {
-                Streams.findOneAndDelete({short: short})
-                    .then((map) => {
-                        res.json({
-                            message: "success",
-                            result: map,
-                        });
-                    })
-                    .catch(() => {
-                        res.json({
-                            message: "invalid-token",
-                            result: null,
-                        });
-                    });
-            } else {
-                res.json({
-                    message: "invalid-token",
-                    result: null,
-                });
-            }
-        });
+    }
 });
 
 module.exports = router;
