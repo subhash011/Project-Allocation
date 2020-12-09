@@ -75,7 +75,7 @@ https://computingforgeeks.com/how-to-install-nodejs-on-centos-fedora/
 Execute the following command on the command line :
 
 ```
-npm install -g @angular/cli
+npm install -g @angular/cli@8.3.25
 ```
 
 ##### Linux
@@ -83,7 +83,7 @@ npm install -g @angular/cli
 Execute the following command on the command line :
 
 ```
-$ npm install -g @angular/cli
+$ npm install -g @angular/cli@8.3.25
 ```
 
 #### 3. MongoDB & MongoDB Compass
