@@ -10,7 +10,7 @@
         "e2e": "ng e2e",
         "build-css": "node-sass --include-path scss src/assets/custom-themes/purple-green.scss   src/assets/purple-green.css",
         "watch-css": "nodemon -e scss -x \"npm run build-css\"",
-        "update": "ng update @angular/material"
+        "update": "ng update"
     },
     "private": true,
     "dependencies": {
