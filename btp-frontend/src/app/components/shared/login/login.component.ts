@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { LoaderComponent } from '../loader/loader.component';
 
 @Pipe({

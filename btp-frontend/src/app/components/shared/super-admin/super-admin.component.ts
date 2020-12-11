@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user/user.service';
 import { Component, HostListener, OnInit, Pipe, PipeTransform, ViewChild, } from '@angular/core';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { MatTable, MatTableDataSource } from '@angular/material';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 

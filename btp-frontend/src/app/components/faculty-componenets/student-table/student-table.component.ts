@@ -17,7 +17,7 @@ import {
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { MatTable, MatTableDataSource } from '@angular/material';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger, } from '@angular/animations';
 
 @Pipe({

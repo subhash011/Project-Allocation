@@ -6,9 +6,8 @@
         <div class="fill-space"></div>
         <div #container class="copy">
             <button
-                (cbOnSuccess)="copied($event)"
-                [cbContent]="value"
-                [container]="container"
+                (copied)="copied($event)"
+                [cdkCopyToClipboard]="value"
                 color="primary"
                 mat-raised-button
                 ngxClipboard

@@ -1,7 +1,7 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, } from '@angular/core';
-import { MatSnackBar, } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
 import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.component';

@@ -52,7 +52,6 @@ import { HelpComponent } from 'src/app/components/shared/help/help.component';
 import { ResetComponent } from 'src/app/components/faculty-componenets/reset/reset.component';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
 import { ShowStudentPreferencesComponent } from 'src/app/components/faculty-componenets/show-student-preferences/show-student-preferences.component';
-import { ClipboardModule } from 'ngx-clipboard';
 import { ShowFacultyPreferencesComponent } from 'src/app/components/faculty-componenets/show-faculty-preferences/show-faculty-preferences.component';
 import {
     IsPreferenceEdit,
@@ -64,7 +63,7 @@ import { ShowPreferencesComponent } from 'src/app/components/student-components/
 import { MatSortModule } from '@angular/material/sort';
 import { AdminCheck, FacultyCheck, StudentCheck, SuperAdminCheck, } from 'src/app/components/shared/Pipes/rolePipes';
 import { ShowStudentAllotedComponent } from 'src/app/components/faculty-componenets/show-student-alloted/show-student-alloted.component';
-import { MatTableModule } from '@angular/material';
+import { MatTableModule } from '@angular/material/table';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 import { CdkDropListActualContainer } from 'src/app/components/student-components/edit-preferences/edit-preferences.directive';
 import { InlineEditComponent } from 'src/app/components/shared/inline-edit/inline-edit.component';
@@ -149,16 +148,6 @@ export function provideConfig() {
         GetExportDisabled,
         EditFormComponent
     ],
-    entryComponents: [
-        SubmitPopUpComponent,
-        DeletePopUpComponent,
-        AddMapComponent,
-        ResetComponent,
-        LoaderComponent,
-        ShowStudentPreferencesComponent,
-        ShowFacultyPreferencesComponent,
-        ShowStudentAllotedComponent,
-    ],
     imports: [
         BrowserModule,
         AppRoutingModule,
@@ -171,13 +160,12 @@ export function provideConfig() {
         ReactiveFormsModule,
         LoadingBarModule,
         TypingAnimationModule,
-        ClipboardModule,
         MatSortModule,
         MatTableModule,
         MatSortModule,
         SatPopoverModule
     ],
-    exports: [ClipboardModule],
+    exports: [],
     providers: [
         {
             provide: AuthServiceConfig,

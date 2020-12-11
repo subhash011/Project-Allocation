@@ -1,7 +1,9 @@
 import { animate, state, style, transition, trigger, } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, HostListener, OnDestroy, OnInit, Pipe, PipeTransform, ViewChild, } from '@angular/core';
-import { MatDialog, MatSnackBar, MatTable, MatTableDataSource, } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { Subject } from 'rxjs';
