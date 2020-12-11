@@ -282,7 +282,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     dataSource: any = new MatTableDataSource([]);
     selection = new SelectionModel(true, []);
 
-    @ViewChild('stepper', {static: false}) stepper: MatStepper;
+    @ViewChild('stepper') stepper: MatStepper;
     timer;
     currentTime: Date = new Date();
 

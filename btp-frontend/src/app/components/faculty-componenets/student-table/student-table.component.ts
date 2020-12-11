@@ -76,7 +76,7 @@ export class GetDisplayedColumns implements PipeTransform {
 })
 export class StudentTableComponent implements OnInit, OnChanges {
 
-    @ViewChild('table', {static: false}) table: MatTable<any>;
+    @ViewChild('table') table: MatTable<any>;
 
     @Input() public student_list;
     @Input() public project;

@@ -48,7 +48,7 @@ export class IsPreferenceEdit implements PipeTransform {
     ],
 })
 export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
-    @ViewChild('table', {static: false}) table: MatTable<any>;
+    @ViewChild('table') table: MatTable<any>;
     preferences: any = new MatTableDataSource([]);
     projects = new MatTableDataSource([]);
     expandedElement;

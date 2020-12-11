@@ -6,9 +6,9 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
     styleUrls: ['./help.component.scss'],
 })
 export class HelpComponent implements OnInit {
-    @ViewChild('helpvid', {static: false}) help: ElementRef;
-    @ViewChild('helpvidsa', {static: false}) helpsa: ElementRef;
-    @ViewChild('helpvidad', {static: false}) helpad: ElementRef;
+    @ViewChild('helpvid') help: ElementRef;
+    @ViewChild('helpvidsa') helpsa: ElementRef;
+    @ViewChild('helpvidad') helpad: ElementRef;
     background = 'primary';
     index;
     role: string = localStorage.getItem('role');

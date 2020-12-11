@@ -61,7 +61,7 @@ export class FacultyTooltipSuper implements PipeTransform {
     providers: [LoginComponent],
 })
 export class SuperAdminComponent implements OnInit {
-    @ViewChild('table', {static: false}) table: MatTable<any>;
+    @ViewChild('table') table: MatTable<any>;
     dialogRefLoad: any;
     index = 0;
     background = 'primary';
