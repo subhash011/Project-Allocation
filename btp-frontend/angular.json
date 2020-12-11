@@ -29,23 +29,28 @@
                         ],
                         "styles": [
                             "src/styles.scss",
-                            {"inject":false,
+                            {
+                                "inject": true,
                                 "input": "src/assets/pink-grey.css",
                                 "bundleName": "pink-grey"
                             },
-                            {"inject":false,
+                            {
+                                "inject": true,
                                 "input": "src/assets/purple-green.css",
                                 "bundleName": "purple-green"
                             },
-                            {"inject":false,
+                            {
+                                "inject": true,
                                 "input": "src/assets/indigo-pink.css",
                                 "bundleName": "indigo-pink"
                             },
-                            {"inject":false,
+                            {
+                                "inject": true,
                                 "input": "src/assets/deeppurple-amber.css",
                                 "bundleName": "deeppurple-amber"
                             },
-                            {"inject":false,
+                            {
+                                "inject": true,
                                 "input": "src/assets/iitpkd-light.css",
                                 "bundleName": "iitpkd-light"
                             }
@@ -63,7 +68,6 @@
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
-                            "extractCss": true,
                             "namedChunks": false,
                             "extractLicenses": true,
                             "vendorChunk": false,
@@ -111,7 +115,6 @@
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
-                            "extractCss": true,
                             "namedChunks": false,
                             "extractLicenses": true,
                             "vendorChunk": false,
