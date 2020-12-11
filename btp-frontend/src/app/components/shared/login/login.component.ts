@@ -12,7 +12,7 @@ import {
     PipeTransform,
     ViewChild,
 } from '@angular/core';
-import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
+import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { LoaderComponent } from '../loader/loader.component';
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
     isLoggedIn = localStorage.getItem('isLoggedIn') == 'true';
 
     constructor(
-        private authService: AuthService,
+        private authService: SocialAuthService,
         private router: Router,
         private dialog: MatDialog,
         private localAuth: LocalAuthService,
@@ -70,6 +70,7 @@ export class LoginComponent implements OnInit {
         this.authService
             .signIn(GoogleLoginProvider.PROVIDER_ID)
             .then((user) => {
+                console.log(user);
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
                     data: 'Loading. Please wait! ...',
                     disableClose: true,
@@ -146,13 +147,13 @@ export class LoginComponent implements OnInit {
                 );
             })
             .catch((err) => {
-                if (err == 'User cancelled login or did not fully authorize.') {
+                if (err.error == 'popup_closed_byuser') {
                     this.snackBar.open('Cancelled Sign-In!', 'Ok', {
                         duration: 3000,
                     });
                 } else {
                     this.snackBar.open(
-                        'Some error occured. Check your network connection and try again!',
+                        'Some error occurred. Check your network connection or enable third party cookies if you are in incognito',
                         'Ok',
                         {
                             duration: 3000,

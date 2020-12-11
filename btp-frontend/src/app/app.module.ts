@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppComponent } from 'src/app/app.component';
-import { AuthServiceConfig, GoogleLoginProvider, LoginOpt, SocialLoginModule } from 'angularx-social-login';
+import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
 import { CheckLogIn, LoginComponent } from 'src/app/components/shared/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CheckRegister, GetLinksForNavBar, NavbarComponent, } from 'src/app/components/shared/navbar/navbar.component';
@@ -46,7 +46,6 @@ import {
 import { CountDown, TimelineComponent, } from 'src/app/components/shared/timeline/timeline.component';
 import { environment } from '../environments/environment';
 import { AddMapComponent } from 'src/app/components/shared/add-map/add-map.component';
-import { TypingAnimationModule } from 'angular-typing-animation';
 import { HelpComponent } from 'src/app/components/shared/help/help.component';
 import { ResetComponent } from 'src/app/components/faculty-componenets/reset/reset.component';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
@@ -69,22 +68,9 @@ import { InlineEditComponent } from 'src/app/components/shared/inline-edit/inlin
 import { FacultyHomeComponent } from 'src/app/components/faculty-componenets/faculty-home/faculty-home.component';
 import { EditFormComponent } from 'src/app/components/shared/super-admin/edit-form/edit-form.component';
 
-const googleLoginOption: LoginOpt = {
-    prompt: 'select_account',
+const googleLoginOption = {
+    prompt: 'select_account'
 };
-const config = new AuthServiceConfig([
-    {
-        id: GoogleLoginProvider.PROVIDER_ID,
-        provider: new GoogleLoginProvider(
-            environment.GOOGLE_CLIENT_ID,
-            googleLoginOption
-        ),
-    },
-]);
-
-export function provideConfig() {
-    return config;
-}
 
 @NgModule({
     declarations: [
@@ -157,7 +143,6 @@ export function provideConfig() {
         DragDropModule,
         FormsModule,
         ReactiveFormsModule,
-        TypingAnimationModule,
         MatSortModule,
         MatTableModule,
         MatSortModule,
@@ -166,8 +151,16 @@ export function provideConfig() {
     exports: [],
     providers: [
         {
-            provide: AuthServiceConfig,
-            useFactory: provideConfig,
+            provide: 'SocialAuthServiceConfig',
+            useValue: {
+                autoLogin: false,
+                providers: [
+                    {
+                        id: GoogleLoginProvider.PROVIDER_ID,
+                        provider: new GoogleLoginProvider(environment.GOOGLE_CLIENT_ID, googleLoginOption)
+                    }
+                ]
+            } as SocialAuthServiceConfig,
         },
         {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
         UserService,

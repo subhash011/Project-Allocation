@@ -1,18 +1,45 @@
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { LoginComponent } from 'src/app/components/shared/login/login.component';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import Typewriter from 't-writer.js';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
     message = '';
     toType: boolean = false;
 
-    constructor(private httpClient: HttpClient, private router: Router, private login: LoginComponent) {
+    @ViewChild('head', {static: false}) head;
+    @ViewChild('subhead', {static: false}) subhead;
+
+    constructor(private httpClient: HttpClient, private router: Router) {
+    }
+
+    ngAfterViewInit() {
+        const headTarget = this.head.nativeElement;
+        const subheadTarget = this.subhead.nativeElement;
+
+        const headWriter = new Typewriter(headTarget, {
+            loop: false,
+            typeSpeed: 80,
+            typeColor: 'white',
+            cursorColor: 'white',
+            animateCursor: false
+        });
+
+        const subheadWriter = new Typewriter(subheadTarget, {
+            loop: false,
+            typeSpeed: 80,
+            typeColor: 'white',
+            cursorColor: 'white',
+            animateCursor: false
+        });
+
+        headWriter.type('Project Allocation Portal').removeCursor().then(subheadWriter.start.bind(subheadWriter)).start();
+        subheadWriter.type('Project allocation made easy.').removeCursor();
     }
 
     ngOnInit() {
