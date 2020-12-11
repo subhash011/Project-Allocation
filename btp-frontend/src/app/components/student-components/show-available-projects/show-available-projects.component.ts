@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
@@ -79,7 +78,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         private projectService: ProjectsService,
         private loginObject: LoginComponent,
         private snackBar: MatSnackBar,
-        private loadingBar: LoadingBarService,
         public router: Router,
         private userService: UserService,
         private navbar: NavbarComponent
@@ -223,7 +221,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                                     data.title.toLowerCase().includes(filter) ||
                                     data.description.toLowerCase().includes(filter) ||
                                     data.faculty_email.toLowerCase().includes(filter);
-                                this.loadingBar.stop();
                             });
                     }
                 },

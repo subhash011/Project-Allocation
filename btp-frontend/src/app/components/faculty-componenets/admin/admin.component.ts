@@ -10,7 +10,6 @@ import { UserService } from 'src/app/services/user/user.service';
 import { Component, HostListener, OnDestroy, OnInit, Pipe, PipeTransform, ViewChild, } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ResetComponent } from 'src/app/components/faculty-componenets/reset/reset.component';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
@@ -295,7 +294,6 @@ export class AdminComponent implements OnInit, OnDestroy {
         private mailer: MailService,
         private projectService: ProjectsService,
         private loginService: LoginComponent,
-        private loadingBar: LoadingBarService,
         private exportService: ExporttocsvService,
         private navbar: NavbarComponent
     ) {
@@ -1055,7 +1053,6 @@ export class AdminComponent implements OnInit, OnDestroy {
                                     .subscribe((result) => {
                                         dialogRefLoad.close();
                                         if (result['message'] == 'success') {
-                                            this.loadingBar.stop();
                                             this.snackBar.open(
                                                 'Mails have been sent successfully.',
                                                 'Ok',
@@ -1065,7 +1062,6 @@ export class AdminComponent implements OnInit, OnDestroy {
                                             );
                                         } else {
                                             dialogRefLoad.close();
-                                            this.loadingBar.stop();
                                             this.snackBar.open(
                                                 'Mails not sent! Please try again.',
                                                 'Ok',
@@ -1077,7 +1073,6 @@ export class AdminComponent implements OnInit, OnDestroy {
                                     });
                             } else {
                                 dialogRefLoad.close();
-                                this.loadingBar.stop();
                                 this.snackBar.open(
                                     'Unable to fetch mails! If the error persists re-authenticate.',
                                     'Ok',
@@ -1490,11 +1485,9 @@ export class AdminComponent implements OnInit, OnDestroy {
                     disableClose: true,
                     hasBackdrop: true,
                 });
-                this.loadingBar.start();
                 this.userService.resetUsers().subscribe(
                     (result) => {
                         dialogRefLoad.close();
-                        this.loadingBar.stop();
                         if (result['message'] == 'success') {
                             this.snackBar.open(
                                 'The alllocation process has been reinitialised',

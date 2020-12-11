@@ -46,7 +46,6 @@ import {
 import { CountDown, TimelineComponent, } from 'src/app/components/shared/timeline/timeline.component';
 import { environment } from '../environments/environment';
 import { AddMapComponent } from 'src/app/components/shared/add-map/add-map.component';
-import { LoadingBarModule } from '@ngx-loading-bar/core';
 import { TypingAnimationModule } from 'angular-typing-animation';
 import { HelpComponent } from 'src/app/components/shared/help/help.component';
 import { ResetComponent } from 'src/app/components/faculty-componenets/reset/reset.component';
@@ -158,7 +157,6 @@ export function provideConfig() {
         DragDropModule,
         FormsModule,
         ReactiveFormsModule,
-        LoadingBarModule,
         TypingAnimationModule,
         MatSortModule,
         MatTableModule,

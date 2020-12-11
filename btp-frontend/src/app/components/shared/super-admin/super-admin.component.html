@@ -6,7 +6,7 @@
     mat-align-tabs="center"
 >
     <mat-tab label="Faculty">
-        <mat-tab-group *ngIf="index == 0" [selectedIndex]="0" animationDuration="0">
+        <mat-tab-group *ngIf="index == 0" [selectedIndex]="0" animationDuration="0" mat-align-tabs="center">
             <mat-tab *ngFor="let program of programs.data" [label]="program.full">
                 <div class="searchBox">
                     <input
@@ -122,7 +122,7 @@
         </mat-tab-group>
     </mat-tab>
     <mat-tab label="Student">
-        <mat-tab-group *ngIf="index == 1" [selectedIndex]="0" animationDuration="0">
+        <mat-tab-group *ngIf="index == 1" [selectedIndex]="0" animationDuration="0" mat-align-tabs="center">
             <mat-tab *ngFor="let program of programs.data" [label]="program.full">
                 <div class="searchBox">
                     <input
@@ -212,7 +212,7 @@
         </mat-tab-group>
     </mat-tab>
     <mat-tab label="Projects">
-        <mat-tab-group *ngIf="index == 2" [selectedIndex]="0" animationDuration="0">
+        <mat-tab-group *ngIf="index == 2" [selectedIndex]="0" animationDuration="0" mat-align-tabs="center">
             <mat-tab *ngFor="let program of programs.data" [label]="program.full">
                 <div class="searchBox">
                     <input

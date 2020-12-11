@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~@angular/material/theming";
-@import "./app-theme";
+@import "src/custom-theme";
 
 @include mat-core();
 $primary: mat-palette($mat-indigo);
@@ -17,9 +17,9 @@ app-root {
     overflow-x: hidden;
 }
 
-body::-webkit-scrollbar {
-    display: none;
-}
+//body::-webkit-scrollbar {
+//    display: none;
+//}
 
 body {
     -ms-overflow-style: none;

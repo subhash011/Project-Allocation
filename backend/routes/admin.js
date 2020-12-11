@@ -1393,132 +1393,6 @@ router.post("/uploadStudentList/:id", (req, res) => {
         });
 });
 
-router.post("/uploadStudentList/:id", (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    Faculty.findOne({google_id: {id: id, idToken: idToken}})
-        .lean()
-        .select("_id")
-        .then((faculty) => {
-            if (faculty) {
-                Admin.findOne({admin_id: faculty._id})
-                    .then((admin) => {
-                        if (admin) {
-                            const file_path = path.resolve(__dirname, "../CSV/StudentList/");
-                            if (!fs.existsSync(file_path)) {
-                                fs.mkdirSync(file_path, {recursive: true});
-                            }
-                            const storage = multer.diskStorage({
-                                destination: function (req, file, cb) {
-                                    cb(null, file_path);
-                                },
-
-                                filename: function (req, file, cb) {
-                                    cb(null, admin.stream + ".csv");
-                                }
-                            });
-                            let upload = multer({storage: storage}).single("student_list");
-                            upload(req, res, function (err) {
-                                if (!req.file) {
-                                    return res.send("Please select a file to upload");
-                                } else if (err instanceof multer.MulterError) {
-                                    return res.send(err);
-                                } else if (err) {
-                                    return res.send(err);
-                                }
-                                let fileRows = [];
-                                csv
-                                    .parseFile(req.file.path)
-                                    .on("data", (data) => {
-                                        fileRows.push([
-                                            data[0].trim(),
-                                            data[1].trim(),
-                                            data[2].trim()
-                                        ]);
-                                    })
-                                    .on("end", () => {
-                                        const validationError = validateCsvData(fileRows);
-                                        if (validationError) {
-                                            fs.unlinkSync(req.file.path);
-                                            return res.json({
-                                                status: "fail_parse",
-                                                msg: validationError
-                                            });
-                                        }
-
-                                        const promises = [];
-
-                                        for (let i = 1; i < fileRows.length; i++) {
-                                            let data = fileRows[i];
-
-                                            promises.push(
-                                                Student.findOne({roll_no: data[1]}).then(
-                                                    (student) => {
-                                                        if (student) {
-                                                            student.name = data[0];
-                                                            student.gpa = data[2];
-
-                                                            return student.save().then((result) => {
-                                                                return result;
-                                                            });
-                                                        } else {
-                                                            const newStudent = new Student({
-                                                                name: data[0],
-                                                                roll_no: data[1],
-                                                                gpa: data[2],
-                                                                stream: admin.stream,
-                                                                email: data[1] + "@smail.iitpkd.ac.in"
-                                                            });
-                                                            return newStudent.save().then((result) => {
-                                                                return result;
-                                                            });
-                                                        }
-                                                    }
-                                                )
-                                            );
-                                        }
-
-                                        Promise.all(promises).then(() => {
-                                            Student.find({stream: admin.stream}).select("_id").then(students => {
-                                                admin.studentCount = students.length;
-                                                admin.save().then(() => {
-                                                    return res.json({
-                                                        status: "success",
-                                                        msg: "Successfully uploaded the student list."
-                                                    });
-                                                });
-                                            });
-                                        });
-                                    });
-                            });
-                        } else {
-                            res.json({
-                                status: "fail",
-                                result: null
-                            });
-                        }
-                    })
-                    .catch(() => {
-                        res.json({
-                            status: "fail",
-                            result: null
-                        });
-                    });
-            } else {
-                res.json({
-                    status: "fail",
-                    result: null
-                });
-            }
-        })
-        .catch(() => {
-            res.json({
-                status: "fail",
-                result: null
-            });
-        });
-});
-
 router.post("/updatePublish/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -1654,18 +1528,53 @@ router.post("/updatePublish/:id", async (req, res) => {
 });
 
 router.post("/getPublish/:id", async (req, res) => {
-    const id = req.params.id;
-    const idToken = req.headers.authorization;
-    const mode = req.body.mode;
-    if (mode === "student") {
-        let student = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean().select("stream");
-        if (student) {
-            let admin = await Admin.findOne({stream: student.stream}).lean();
-            if (admin) {
+    try {
+        const id = req.params.id;
+        const idToken = req.headers.authorization;
+        const mode = req.body.mode;
+        if (mode === "student") {
+            let student = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean().select("stream");
+            if (student) {
+                let admin = await Admin.findOne({stream: student.stream}).lean();
+                if (admin) {
+                    res.json({
+                        status: "success",
+                        studentPublish: admin.publishStudents,
+                        facultyPublish: admin.publishFaculty
+                    });
+                } else {
+                    res.json({
+                        status: "fail",
+                        result: null
+                    });
+                }
+            } else {
+                res.json({
+                    status: "fail",
+                    result: null
+                });
+            }
+        } else if (mode === "faculty") {
+            let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
+            if (faculty) {
+                let programs = faculty.programs.map(val => val.short);
+                let promises = [];
+                let studentPublish = {};
+                let facultyPublish = {};
+                for (const program of programs) {
+                    promises.push(
+                        Admin.findOne({stream: program}).then(admin => {
+                            studentPublish[program] = admin.publishStudents;
+                            facultyPublish[program] = admin.publishFaculty;
+                            return admin;
+                        })
+                    );
+                }
+                await Promise.all(promises);
                 res.json({
                     status: "success",
-                    studentPublish: admin.publishStudents,
-                    facultyPublish: admin.publishFaculty
+                    studentPublish: studentPublish,
+                    facultyPublish: facultyPublish
                 });
             } else {
                 res.json({
@@ -1679,39 +1588,7 @@ router.post("/getPublish/:id", async (req, res) => {
                 result: null
             });
         }
-        res.json({
-            status: "fail",
-            result: null
-        });
-    } else if (mode === "faculty") {
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
-        if (faculty) {
-            let programs = faculty.programs.map(val => val.short);
-            let promises = [];
-            let studentPublish = {};
-            let facultyPublish = {};
-            for (const program of programs) {
-                promises.push(
-                    Admin.findOne({stream: program}).then(admin => {
-                        studentPublish[program] = admin.publishStudents;
-                        facultyPublish[program] = admin.publishFaculty;
-                        return admin;
-                    })
-                );
-            }
-            await Promise.all(promises);
-            res.json({
-                status: "success",
-                studentPublish: studentPublish,
-                facultyPublish: facultyPublish
-            });
-        } else {
-            res.json({
-                status: "fail",
-                result: null
-            });
-        }
-    } else {
+    } catch (e) {
         res.json({
             status: "fail",
             result: null

@@ -34,27 +34,27 @@
                             "src/styles.scss",
                             {
                                 "inject": true,
-                                "input": "src/assets/pink-grey.css",
+                                "input": "src/assets/out-themes/pink-grey.css",
                                 "bundleName": "pink-grey"
                             },
                             {
                                 "inject": true,
-                                "input": "src/assets/purple-green.css",
+                                "input": "src/assets/out-themes/purple-green.css",
                                 "bundleName": "purple-green"
                             },
                             {
                                 "inject": true,
-                                "input": "src/assets/indigo-pink.css",
+                                "input": "src/assets/out-themes/indigo-pink.css",
                                 "bundleName": "indigo-pink"
                             },
                             {
                                 "inject": true,
-                                "input": "src/assets/deeppurple-amber.css",
+                                "input": "src/assets/out-themes/deeppurple-amber.css",
                                 "bundleName": "deeppurple-amber"
                             },
                             {
                                 "inject": true,
-                                "input": "src/assets/iitpkd-light.css",
+                                "input": "src/assets/out-themes/iitpkd-light.css",
                                 "bundleName": "iitpkd-light"
                             }
                         ],

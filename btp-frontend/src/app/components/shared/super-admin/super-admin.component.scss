@@ -147,3 +147,7 @@ td {
 .remove-admin-button {
     margin-left: 5px;
 }
+
+::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-weight: lighter;
+}

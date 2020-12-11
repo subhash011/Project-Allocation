@@ -73,7 +73,7 @@ export class ThemePickerComponent implements OnInit {
         } else {
             localStorage.setItem('current-theme', theme.name);
             this.currentTheme = theme;
-            this.styleManager.setStyle('theme', `/assets/${ theme.name }.css`);
+            this.styleManager.setStyle('theme', `/assets/out-themes/${ theme.name }.css`);
         }
     }
 }

@@ -1,5 +1,5 @@
-@import "../../app-theme";
-// Define the light theme.
+@import "src/custom-theme";
+
 $primary: mat-palette($mat-red, 700);
 $accent: mat-palette($mat-blue, 400, A100, A400);
 $theme: mat-light-theme($primary, $accent);
