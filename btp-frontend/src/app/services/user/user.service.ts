@@ -605,7 +605,7 @@ export class UserService {
         };
         return this.http.post(this.url, {mode: key}, httpOptions);
     }
-    
+
     facultyHomeDetails() {
         const user = JSON.parse(localStorage.getItem('user'));
         this.url = this.base_url + 'faculty/home/' + user.id;

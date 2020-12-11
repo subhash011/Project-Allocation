@@ -13,32 +13,32 @@ router.post("/register/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         const user = req.body;
-        await oauth(idToken)
+        await oauth(idToken);
         const newUser = new Student({
             name: user.name,
             roll_no: user.roll_no,
             google_id: {
                 id: id,
-                idToken: idToken,
+                idToken: idToken
             },
             email: user.email,
             gpa: user.gpa,
-            stream: user.stream,
+            stream: user.stream
         });
         try {
             await newUser.save();
             res.json({
-                registration: "success",
+                registration: "success"
             });
         } catch (e) {
             res.json({
-                registration: "fail",
+                registration: "fail"
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-client",
-            result: null,
+            result: null
         });
     }
 });
@@ -54,8 +54,8 @@ router.get("/details/:id", async (req, res) => {
             model: Project,
             populate: {
                 path: "faculty_id",
-                selct: "name email",
-                model: Faculty,
+                select: "name email",
+                model: Faculty
             }
         };
         let user = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean()
@@ -63,18 +63,18 @@ router.get("/details/:id", async (req, res) => {
         if (user) {
             res.json({
                 status: "success",
-                user_details: user,
+                user_details: user
             });
         } else {
             res.json({
                 status: "invalid-token",
-                user_details: "",
+                user_details: ""
             });
         }
     } catch (e) {
         res.json({
             status: "fail",
-            user_details: err,
+            user_details: err
         });
     }
 });
@@ -84,31 +84,31 @@ router.get("/stage/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        let student = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean().select("stream")
+        let student = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean().select("stream");
         if (student) {
             const stream = student.stream;
             let admin = await Admin.findOne({stream: stream});
             if (admin) {
                 res.json({
                     message: "success",
-                    result: admin.stage,
+                    result: admin.stage
                 });
             } else {
                 res.json({
                     message: "error",
-                    result: "no-admin",
+                    result: "no-admin"
                 });
             }
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });
@@ -122,24 +122,24 @@ router.post("/update/:id", async (req, res) => {
         const document = req.body;
         const updateResult = {
             name: document.name,
-            gpa: document.gpa,
+            gpa: document.gpa
         };
         let student = await Student.findOneAndUpdate({google_id: {id: id, idToken: idToken}}, updateResult);
         if (student) {
             res.json({
                 message: "success",
-                result: student,
+                result: student
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-client",
-            result: null,
+            result: null
         });
     }
 });

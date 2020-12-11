@@ -9,7 +9,7 @@ const client = new OAuth2Client(
 module.exports = async (token) => {
     const ticket = await client.verifyIdToken({
         idToken: token,
-        audience: [process.env.GOOGLE_CLIENT_ID],
+        audience: [process.env.GOOGLE_CLIENT_ID]
     });
     return ticket.getPayload();
     // If request specified a G Suite domain:

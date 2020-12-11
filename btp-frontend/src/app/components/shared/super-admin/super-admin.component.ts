@@ -955,7 +955,7 @@ export class SuperAdminComponent implements OnInit {
                 });
             }
         } else {
-            this.snackBar.open("No changes made!", "Ok", {duration: 3000});
+            this.snackBar.open('No changes made!', 'Ok', {duration: 3000});
         }
     }
 

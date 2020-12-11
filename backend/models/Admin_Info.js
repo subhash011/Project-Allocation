@@ -3,33 +3,33 @@ const Faculty = require("../models/Faculty");
 const UserSchema = new mongoose.Schema({
     stream: {
         type: String,
-        required: true,
+        required: true
     },
     deadlines: {
         type: [Date],
-        default: [],
+        default: []
     },
     admin_id: {
         type: mongoose.Types.ObjectId,
         required: true,
-        ref: Faculty,
+        ref: Faculty
     },
     stage: {
         type: Number,
-        default: 0,
+        default: 0
     },
     project_cap: {
-        type: Number,
+        type: Number
     },
     student_cap: {
         type: Number,
-        default: 1,
+        default: 1
     },
     studentsPerFaculty: {
-        type: Number,
+        type: Number
     },
     studentCount: {
-        type: Number,
+        type: Number
     },
     publishStudents: {
         type: Boolean,
@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema({
         default: false
     },
     startDate: {
-        type: Date,
+        type: Date
     },
     reachedStage2: {
         type: Boolean,

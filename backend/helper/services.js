@@ -10,7 +10,7 @@ Mapping.find().then((maps) => {
     for (const map of maps) {
         const newpr = {
             short: map.short,
-            full: map.full,
+            full: map.full
         };
         programs.push(newpr);
     }
@@ -18,5 +18,5 @@ Mapping.find().then((maps) => {
 
 module.exports = {
     branches: branches,
-    programs: programs,
+    programs: programs
 };

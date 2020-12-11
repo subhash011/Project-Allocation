@@ -56,14 +56,14 @@ router.get("/:id", async (req, res) => {
             stream = student["stream"];
         } else {
             res.json({
-                message: "token-expired",
+                message: "token-expired"
             });
             return;
         }
         let projectPop = {
             path: "faculty_id",
             select: "name email",
-            model: Faculty,
+            model: Faculty
         };
         let projects = await Project.find({stream: stream}).lean().select("-students_id -student_alloted -isIncluded -__v").populate(projectPop);
         for (const project of projects) {
@@ -74,18 +74,18 @@ router.get("/:id", async (req, res) => {
                 duration: project["duration"],
                 studentIntake: project["studentIntake"],
                 faculty_name: project["faculty_id"]["name"],
-                faculty_email: project["faculty_id"]["email"],
+                faculty_email: project["faculty_id"]["email"]
             };
             student_projects.push(details);
         }
         res.json({
             message: "success",
-            result: student_projects,
+            result: student_projects
         });
     } catch (e) {
         res.json({
             message: "invalid-client",
-            result: null,
+            result: null
         });
     }
 });
@@ -102,17 +102,17 @@ router.get("/preference/:id", async (req, res) => {
                 title: 1,
                 description: 1,
                 duration: 1,
-                studentIntake: 1,
+                studentIntake: 1
             },
             model: Project,
             populate: {
                 path: "faculty_id",
                 select: {
                     name: 1,
-                    email: 1,
+                    email: 1
                 },
-                model: Faculty,
-            },
+                model: Faculty
+            }
         };
         let student = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean().populate(populator);
         if (student) {
@@ -124,23 +124,23 @@ router.get("/preference/:id", async (req, res) => {
                     duration: val.duration,
                     studentIntake: val.studentIntake,
                     faculty_name: val.faculty_id.name,
-                    faculty_email: val.faculty_id.email,
+                    faculty_email: val.faculty_id.email
                 };
             });
             res.json({
                 message: "success",
-                result: studPrefs,
+                result: studPrefs
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });
@@ -170,18 +170,18 @@ router.post("/preference/:id", async (req, res) => {
             title: 1,
             description: 1,
             duration: 1,
-            studentIntake: 1,
+            studentIntake: 1
         },
         model: Project,
         populate: {
             path: "faculty_id",
             select: {
                 name: 1,
-                email: 1,
+                email: 1
             },
-            model: Faculty,
-        },
-    }
+            model: Faculty
+        }
+    };
     student = await Student.findByIdAndUpdate(studentID, {projects_preference: project_idArr}, {new: true}).select("-google_id -date -__v").populate(populator);
     const answer = student.projects_preference.map((val) => {
             return {
@@ -191,11 +191,11 @@ router.post("/preference/:id", async (req, res) => {
                 duration: val.duration,
                 studentIntake: val.studentIntake,
                 faculty_name: val.faculty_id.name,
-                faculty_email: val.faculty_id.email,
+                faculty_email: val.faculty_id.email
             };
         }
     );
-    res.json({message: "success", result: answer})
+    res.json({message: "success", result: answer});
 });
 
 // append multiple projects to existing preferences
@@ -212,14 +212,14 @@ router.post("/append/preference/:id", async (req, res) => {
 
     let student = obj.student;
     let updateResult = {
-        $push: {projects_preference: {$each: project_idArr}},
+        $push: {projects_preference: {$each: project_idArr}}
     };
     await Student.findByIdAndUpdate(student._id, updateResult);
     const studentStream = student.stream;
     const studentID = student._id;
     const updateCondition = {
         stream: studentStream,
-        _id: {$in: project_idArr},
+        _id: {$in: project_idArr}
     };
     updateResult = {
         $addToSet: {students_id: studentID},
@@ -228,14 +228,14 @@ router.post("/append/preference/:id", async (req, res) => {
     await Project.updateMany(updateCondition, updateResult);
     projects = await Project.find(updateCondition).populate({path: "students_id", select: "_id gpa", model: Student});
     if (obj.toSort) {
-        let promises = []
+        let promises = [];
         for (let project of projects) {
             project.students_id.sort((a, b) => b.gpa - a.gpa);
             promises.push(project.save());
         }
         await Promise.all(promises);
     }
-    res.json({message: "success"})
+    res.json({message: "success"});
 });
 
 // remove a project from preferences
@@ -244,7 +244,7 @@ router.post("/remove/preference/:id", async (req, res) => {
     const project = req.body.preference;
     const idToken = req.headers.authorization;
     let updateResult = {
-        $pull: {projects_preference: project},
+        $pull: {projects_preference: project}
     };
     let obj = await canUpdateProject(res, idToken, id);
 
@@ -259,19 +259,19 @@ router.post("/remove/preference/:id", async (req, res) => {
     updateResult = {
         $pull: {students_id: studentID},
         $addToSet: {not_students_id: studentID}
-    }
+    };
     await Project.findByIdAndUpdate(_id, updateResult);
     let projects = await Project.findById(_id).populate({path: "not_students_id", select: "_id gpa", model: Student});
 
     if (obj.toSort) {
-        let promises = []
+        let promises = [];
         for (let project of [projects]) {
             project.not_students_id.sort((a, b) => b.gpa - a.gpa);
             promises.push(project.save());
         }
         await Promise.all(promises);
     }
-    res.json({message: "success"})
+    res.json({message: "success"});
 });
 
 // add a project to exising preferencces
@@ -280,7 +280,7 @@ router.post("/add/preference/:id", async (req, res) => {
     let project = req.body.preference;
     const idToken = req.headers.authorization;
     let updateResult = {
-        $push: {projects_preference: project},
+        $push: {projects_preference: project}
     };
     let obj = await canUpdateProject(res, idToken, id);
 
@@ -294,11 +294,11 @@ router.post("/add/preference/:id", async (req, res) => {
     updateResult = {
         $pull: {not_students_id: student._id},
         $addToSet: {students_id: student._id}
-    }
+    };
     await Project.findByIdAndUpdate(_id, updateResult);
     let projects = await Project.findById(_id).populate({path: "students_id", select: "_id gpa", model: Student});
     if (obj.toSort) {
-        let promises = []
+        let promises = [];
         for (let project of [projects]) {
             project.students_id.sort((a, b) => b.gpa - a.gpa);
             promises.push(project.save());
@@ -324,10 +324,10 @@ router.get("/assert/order", async (req, res) => {
         model: Student
     });
     let a = students.map(val => val._id.toString());
-    let ans = {}
+    let ans = {};
     let overall = true;
     for (let project of projects) {
-        ans[project._id] = [true, true, true]
+        ans[project._id] = [true, true, true];
         let so = project.students_id.sort((a, b) => b.gpa - a.gpa);
         let sno = project.not_students_id.sort((a, b) => b.gpa - a.gpa);
         so = so.map(value => value._id.toString());
@@ -345,7 +345,7 @@ router.get("/assert/order", async (req, res) => {
             overall = false;
         }
     }
-    res.json({overall, ans})
+    res.json({overall, ans});
 });
 
 module.exports = router;

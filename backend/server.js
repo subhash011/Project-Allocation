@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
+const fs = require("fs");
 require("dotenv/config");
 
 // start the server
@@ -16,7 +17,7 @@ app.use(
         cookie: {maxAge: 60000, secure: true, sameSite: "none"},
         secret: "woot",
         resave: false,
-        saveUninitialized: false,
+        saveUninitialized: false
     })
 );
 
@@ -34,7 +35,7 @@ const mongoConnect = process.env.MONGO_URL_BACK;
 mongoose
     .connect(mongoConnect, {
         useNewUrlParser: true,
-        useUnifiedTopology: true,
+        useUnifiedTopology: true
     })
     .then(() => {
         console.log("connected to mongodb");

@@ -53,25 +53,25 @@ router.get("/student/details/:id", async (req, res) => {
                             stream: val.stream,
                             email: val.email,
                             roll_no: val.roll_no,
-                            isRegistered: val.isRegistered,
+                            isRegistered: val.isRegistered
                         };
                     });
                 }
                 res.json({
                     message: "success",
-                    result: allStudents,
+                    result: allStudents
                 });
             } else {
                 res.json({
                     message: "success",
-                    result: "no-students",
+                    result: "no-students"
                 });
             }
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });
@@ -87,7 +87,7 @@ router.get("/faculty/details/:id", async (req, res) => {
             allFaculties[program] = [];
         }
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
-        if(user) {
+        if (user) {
             let faculties = await Faculty.find().lean().select("-google_id -date -__v -project_list");
             if (faculties) {
                 for (const program of programs) {
@@ -101,30 +101,30 @@ router.get("/faculty/details/:id", async (req, res) => {
                             email: val.email,
                             stream: val.stream,
                             isAdmin: val.isAdmin,
-                            adminProgram: val.adminProgram,
+                            adminProgram: val.adminProgram
                         };
                     });
                 }
                 res.json({
                     message: "success",
-                    result: allFaculties,
+                    result: allFaculties
                 });
             } else {
                 res.json({
                     message: "success",
-                    result: "no-faculties",
+                    result: "no-faculties"
                 });
             }
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });
@@ -133,18 +133,18 @@ router.get("/projects/:id", async (req, res) => {
     const id = req.params.id;
     const idToken = req.headers.authorization;
     try {
-        let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id")
+        let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (user) {
             let popFac = {
                 path: "faculty_id",
                 select: {name: 1, _id: 1},
-                model: Faculty,
+                model: Faculty
             };
             let popStud = {
                 path: "student_alloted",
                 select: {name: 1, roll_no: 1},
-                model: Student,
-            }
+                model: Student
+            };
             let projects = await Project.find().lean().populate(popFac).populate(popStud);
             const arr = [];
             for (const project of projects) {
@@ -155,24 +155,24 @@ router.get("/projects/:id", async (req, res) => {
                     faculty: project.faculty_id.name,
                     numberOfPreferences: project.students_id.length,
                     description: project.description,
-                    faculty_id: project.faculty_id._id,
+                    faculty_id: project.faculty_id._id
                 };
                 arr.push(newProj);
             }
             res.json({
                 message: "success",
-                result: arr,
+                result: arr
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });
@@ -187,17 +187,17 @@ router.post("/register/:id", async (req, res) => {
             name: user.name,
             google_id: {
                 id: id,
-                idToken: idToken,
+                idToken: idToken
             },
-            email: user.email,
+            email: user.email
         });
-        await newUser.save()
+        await newUser.save();
         res.json({
-            registration: "success",
+            registration: "success"
         });
     } catch (e) {
         res.json({
-            registration: "fail",
+            registration: "fail"
         });
     }
 });
@@ -208,37 +208,39 @@ router.post("/addAdmin/:id", async (req, res) => {
         const program = req.body.branch;
         const google_user_id = req.params.id;
         const idToken = req.headers.authorization;
-        let user = await SuperAdmin.findOne({google_id: {id: google_user_id, idToken: idToken}}).lean().select("_id")
+        let user = await SuperAdmin.findOne({google_id: {id: google_user_id, idToken: idToken}}).lean().select("_id");
         if (user) {
-            let faculty = await Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {isAdmin: true, adminProgram: program});
+            let faculty = await Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
+                isAdmin: true,
+                adminProgram: program
+            });
             if (faculty) {
                 const admin = new Admin({
                     admin_id: faculty._id,
                     stream: program,
-                    deadlines: [],
+                    deadlines: []
                 });
                 await admin.save();
                 res.json({
                     message: "success",
-                    result: faculty.isAdmin,
+                    result: faculty.isAdmin
                 });
             } else {
                 res.json({
                     message: "success",
-                    result: "no-faculty",
+                    result: "no-faculty"
                 });
             }
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
-        console.log(e);
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });
@@ -248,33 +250,36 @@ router.post("/removeAdmin/:id", async (req, res) => {
         const adminId = req.body.id;
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id")
+        let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (user) {
-            let faculty = Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(adminId), {isAdmin: false, $unset: {adminProgram: 1}});
+            let faculty = await Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(adminId), {
+                isAdmin: false,
+                $unset: {adminProgram: 1}
+            });
             if (faculty) {
                 await Admin.findOneAndDelete({
-                    admin_id: faculty._id,
+                    admin_id: faculty._id
                 });
                 res.json({
                     message: "success",
-                    result: faculty.adminProgram,
+                    result: faculty.adminProgram
                 });
             } else {
                 res.json({
                     message: "success",
-                    result: "no-faculty",
+                    result: "no-faculty"
                 });
             }
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });
@@ -299,26 +304,26 @@ router.post("/update/program/:id", async (req, res) => {
             };
             const promises = [];
             promises.push(Faculty.updateMany(findCondition, updateCondition, filterCondition));
-            promises.push(Faculty.updateMany({adminProgram: curMap.short}, {adminProgram: newMap.short}))
+            promises.push(Faculty.updateMany({adminProgram: curMap.short}, {adminProgram: newMap.short}));
             promises.push(Student.updateMany({stream: curMap.short}, {stream: newMap.short}));
             promises.push(Project.updateMany({stream: curMap.short}, {stream: newMap.short}));
             promises.push(Admin.updateMany({stream: curMap.short}, {stream: newMap.short}));
             await Promise.all(promises);
             res.json({
                 message: "success"
-            })
+            });
         } else {
             res.json({
                 message: "invalid-token",
                 result: null
-            })
+            });
         }
     } catch (e) {
         res.json({
             message: "error"
-        })
+        });
     }
-})
+});
 
 router.post("/update/stream/:id", async (req, res) => {
     const id = req.params.id;
@@ -339,14 +344,14 @@ router.post("/update/stream/:id", async (req, res) => {
             res.json({
                 message: "invalid-token",
                 result: null
-            })
+            });
         }
     } catch (e) {
         res.json({
             message: "error"
-        })
+        });
     }
-})
+});
 
 router.delete("/student/:id", async (req, res) => {
     try {
@@ -357,23 +362,23 @@ router.delete("/student/:id", async (req, res) => {
         if (user) {
             let student = await Student.findByIdAndDelete(id);
             const updateCondition = {
-                $pullAll: {students_id: [id], not_students_id: [id], student_alloted: [id]},
+                $pullAll: {students_id: [id], not_students_id: [id], student_alloted: [id]}
             };
             await Project.updateMany({stream: student.stream}, updateCondition);
             res.json({
                 message: "success",
-                result: null,
+                result: null
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });
@@ -387,32 +392,32 @@ router.delete("/faculty/:id", async (req, res) => {
         if (user) {
             let faculty = await Faculty.findByIdAndDelete(id);
             const projectList = faculty.project_list;
-            await Project.deleteMany({_id: {$in: projectList}})
+            await Project.deleteMany({_id: {$in: projectList}});
             let updateResult = {
                 $pullAll: {
-                    projects_preference: projectList,
-                },
+                    projects_preference: projectList
+                }
             };
             await Student.updateMany({}, updateResult);
             const updateCondition = {
-                project_alloted: {$in: projectList},
+                project_alloted: {$in: projectList}
             };
             updateResult = {$unset: {project_alloted: ""}};
             await Student.updateMany(updateCondition, updateResult);
             res.json({
                 message: "success",
-                result: null,
+                result: null
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });

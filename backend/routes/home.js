@@ -12,18 +12,18 @@ router.get("/maps", async (req, res) => {
         if (programs) {
             res.json({
                 message: "success",
-                result: programs,
+                result: programs
             });
         } else {
             res.json({
                 message: "success",
-                result: [],
+                result: []
             });
         }
     } catch (e) {
         res.json({
             message: "error",
-            result: null,
+            result: null
         });
     }
 });
@@ -35,18 +35,18 @@ router.get("/branches", async (req, res) => {
         if (streams) {
             res.json({
                 message: "success",
-                result: streams,
+                result: streams
             });
         } else {
             res.json({
                 message: "success",
-                result: [],
+                result: []
             });
         }
     } catch (e) {
         res.json({
             message: "error",
-            result: null,
+            result: null
         });
     }
 });
@@ -59,25 +59,25 @@ router.post("/branches/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (user) {
-            const newMap = new Streams({
+            const newStream = new Streams({
                 short: inStream.short,
-                full: inStream.full,
+                full: inStream.full
             });
-            let stream = await newMap.save();
+            let stream = await newStream.save();
             res.json({
                 message: "success",
-                result: stream,
+                result: stream
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-client",
-            result: null,
+            result: null
         });
     }
 });
@@ -90,25 +90,25 @@ router.post("/maps/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (user) {
-            const newMap = new Programs({
+            const newProgram = new Programs({
                 short: inProgram.short,
-                full: inProgram.full,
+                full: inProgram.full
             });
-            let program = await newMap.save();
+            let program = await newProgram.save();
             res.json({
                 message: "success",
-                result: program,
+                result: program
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-client",
-            result: null,
+            result: null
         });
     }
 });
@@ -124,18 +124,18 @@ router.delete("/branches/remove/:id", async (req, res) => {
             let stream = await Streams.findOneAndDelete({short: short});
             res.json({
                 message: "success",
-                result: stream,
+                result: stream
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });
@@ -148,21 +148,21 @@ router.delete("/maps/remove/:id", async (req, res) => {
         const short = req.headers.body;
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (user) {
-            let program = await Programs.findOneAndDelete({short: short})
+            let program = await Programs.findOneAndDelete({short: short});
             res.json({
                 message: "success",
-                result: program,
+                result: program
             });
         } else {
             res.json({
                 message: "invalid-token",
-                result: null,
+                result: null
             });
         }
     } catch (e) {
         res.json({
             message: "invalid-token",
-            result: null,
+            result: null
         });
     }
 });

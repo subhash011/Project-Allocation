@@ -33,8 +33,8 @@ router.post("/send", async (req, res) => {
     //         secure: true,
     //         auth: {
     //             user: process.env.PAP_MAIL,
-    //             pass: process.env.PAP_PASS,
-    //         },
+    //             pass: process.env.PAP_PASS
+    //         }
     //     });
     //     await sendEmail(options, transport);
     //     res.json({message: "success"});
