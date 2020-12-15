@@ -1,12 +1,23 @@
-<form (ngSubmit)="onSubmit()" autocomplete="off">
+<form (ngSubmit)="onSubmit()"
+      autocomplete="off">
     <h4 class="mat-subheading-2">{{head}}</h4>
     <mat-form-field>
-        <input [(ngModel)]="comment" matInput name="comment" placeholder="{{placeholder}}"
+        <input [(ngModel)]="comment"
+               matInput
+               name="comment"
+               placeholder="{{placeholder}}"
                style="color:rgb(113, 0, 128);">
     </mat-form-field>
 
     <div class="actions">
-        <button (click)="onCancel()" color="primary" mat-button type="button">CANCEL</button>
-        <button color="primary" mat-button type="submit">SAVE</button>
+        <button (click)="onCancel()"
+                color="primary"
+                mat-button
+                type="button">CANCEL
+        </button>
+        <button color="primary"
+                mat-button
+                type="submit">SAVE
+        </button>
     </div>
 </form>

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 export class MailService {
     private root = environment.apiUrl;
@@ -19,8 +19,8 @@ export class MailService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         const body = {
             mailBody: `Dear Students and Faculty Members,
@@ -36,7 +36,7 @@ ${ user.name },
 Project Coordinator (${ program })
  `,
             to: mails,
-            subject: `${ program }: Project Allocation Completed`,
+            subject: `${ program }: Project Allocation Completed`
         };
         return this.http.post(url, body, httpOptions);
     }
@@ -45,7 +45,7 @@ Project Coordinator (${ program })
         let fmt1 = new Intl.DateTimeFormat('en-GB', {
             year: '2-digit',
             month: 'numeric',
-            day: 'numeric',
+            day: 'numeric'
         });
 
         const user = JSON.parse(localStorage.getItem('user'));
@@ -53,8 +53,8 @@ Project Coordinator (${ program })
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         let body: { mailBody: string; subject: string; to: any };
         if (stage == 0) {
@@ -73,7 +73,7 @@ ${ user.name },
 Project Coordinator (${ stream })
 `,
                 to: emails,
-                subject: `${ stream }: Project Allocation Phase 1`,
+                subject: `${ stream }: Project Allocation Phase 1`
             };
         } else if (stage == 2) {
             body = {
@@ -92,7 +92,7 @@ Project Coordinator (${ stream })
 `,
 
                 to: emails,
-                subject: `${ stream }: Project Allocation Phase 3`,
+                subject: `${ stream }: Project Allocation Phase 3`
             };
         }
 
@@ -103,7 +103,7 @@ Project Coordinator (${ stream })
         let fmt1 = new Intl.DateTimeFormat('en-GB', {
             year: '2-digit',
             month: 'numeric',
-            day: 'numeric',
+            day: 'numeric'
         });
 
         const user = JSON.parse(localStorage.getItem('user'));
@@ -111,8 +111,8 @@ Project Coordinator (${ stream })
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
 
         const body = {
@@ -130,7 +130,7 @@ ${ user.name },
 Project Coordinator (${ stream })
     `,
             to: emails,
-            subject: `${ stream }: Project Allocation Phase 2`,
+            subject: `${ stream }: Project Allocation Phase 2`
         };
 
         return this.http.post(url, body, httpOptions);
@@ -142,8 +142,8 @@ Project Coordinator (${ stream })
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         let body: { mailBody: string; subject: string; to: any };
         if (role == 'student') {
@@ -161,7 +161,7 @@ ${ user.name },
 Project Coordinator (${ program })
          `,
                 to: emails,
-                subject: `${ program }: Project Allocation Completed`,
+                subject: `${ program }: Project Allocation Completed`
             };
         } else if (role == 'faculty') {
             body = {
@@ -178,7 +178,7 @@ ${ user.name },
 Project Coordinator (${ program })
          `,
                 to: emails,
-                subject: `${ program }: Project Allocation Completed`,
+                subject: `${ program }: Project Allocation Completed`
             };
         }
 

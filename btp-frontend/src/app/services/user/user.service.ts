@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as moment from 'moment';
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 export class UserService {
     private url: string;
@@ -22,8 +22,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         return this.http.post(this.url, {id: id, branch: branch}, httpOptions);
     }
@@ -35,8 +35,8 @@ export class UserService {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: user.idToken,
-                body: id,
-            }),
+                body: id
+            })
         };
         return this.http.delete(this.url, httpOptions);
     }
@@ -48,8 +48,8 @@ export class UserService {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: user.idToken,
-                body: id,
-            }),
+                body: id
+            })
         };
         return this.http.delete(this.url, httpOptions);
     }
@@ -60,8 +60,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         return this.http.post(this.url, {id: id}, httpOptions);
     }
@@ -72,8 +72,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -84,8 +84,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -96,8 +96,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -108,8 +108,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
 
         return this.http.get(this.url, httpOptions);
@@ -134,8 +134,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.get(this.url, httpOptions);
@@ -143,7 +143,7 @@ export class UserService {
 
     updateStage(stage) {
         const obj = {
-            stage: stage,
+            stage: stage
         };
 
         let id = localStorage.getItem('id');
@@ -153,8 +153,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(this.url, obj, httpOptions);
@@ -162,7 +162,7 @@ export class UserService {
 
     setDeadline(date) {
         const obj = {
-            deadline: moment(date).format('YYYY-MM-DD'),
+            deadline: moment(date).format('YYYY-MM-DD')
         };
         let id = localStorage.getItem('id');
         let idToken = JSON.parse(localStorage.getItem('user')).idToken;
@@ -171,8 +171,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(this.url, obj, httpOptions);
@@ -185,8 +185,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -199,8 +199,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.get(this.url, httpOptions);
@@ -214,8 +214,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken, //change it later
-            }),
+                Authorization: idToken //change it later
+            })
         };
 
         return this.http.get(this.url, httpOptions);
@@ -232,8 +232,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -245,15 +245,15 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
 
     setProjectCap(cap) {
         const obj = {
-            cap: cap,
+            cap: cap
         };
 
         let id = localStorage.getItem('id');
@@ -263,8 +263,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(this.url, obj, httpOptions);
@@ -272,7 +272,7 @@ export class UserService {
 
     setStudentCap(cap) {
         const obj = {
-            cap: cap,
+            cap: cap
         };
 
         let id = localStorage.getItem('id');
@@ -282,8 +282,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(this.url, obj, httpOptions);
@@ -291,7 +291,7 @@ export class UserService {
 
     setStudentsPerFaculty(cap) {
         const obj = {
-            cap: cap,
+            cap: cap
         };
 
         let id = localStorage.getItem('id');
@@ -301,8 +301,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(this.url, obj, httpOptions);
@@ -316,8 +316,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(this.url, programs, httpOptions);
@@ -331,8 +331,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(this.url, faculty, httpOptions);
@@ -346,8 +346,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.get(this.url, httpOptions);
@@ -361,8 +361,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(this.url, program, httpOptions);
@@ -375,8 +375,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.get(this.url, httpOptions);
@@ -384,7 +384,7 @@ export class UserService {
 
     getAdminInfo_program(program) {
         const prog = {
-            program: program,
+            program: program
         };
 
         let id = localStorage.getItem('id');
@@ -393,8 +393,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(this.url, prog, httpOptions);
@@ -410,8 +410,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.post(this.url, details, httpOptions);
     }
@@ -423,8 +423,8 @@ export class UserService {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: idToken,
-                body: map,
-            }),
+                body: map
+            })
         };
         return this.http.delete(this.url, httpOptions);
     }
@@ -435,8 +435,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.post(this.url, map, httpOptions);
     }
@@ -448,8 +448,8 @@ export class UserService {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: idToken,
-                body: map,
-            }),
+                body: map
+            })
         };
         return this.http.delete(this.url, httpOptions);
     }
@@ -460,8 +460,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -473,8 +473,8 @@ export class UserService {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: idToken,
-                body: id,
-            }),
+                body: id
+            })
         };
         return this.http.delete(this.url, httpOptions);
     }
@@ -486,24 +486,10 @@ export class UserService {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: idToken,
-                body: id,
-            }),
+                body: id
+            })
         };
         return this.http.delete(this.url, httpOptions);
-    }
-
-    updateStudentProfile(document) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
-        this.url = this.base_url + 'student/update/' + id;
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
-        };
-        return this.http.post(this.url, document, httpOptions);
     }
 
     getAllBranches() {
@@ -518,8 +504,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -532,8 +518,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         return this.http.post(
@@ -551,8 +537,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.post(this.url, {stage: stage_no}, httpOptions);
     }
@@ -566,8 +552,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.post(this.url, {message: 'hi'}, httpOptions);
     }
@@ -581,8 +567,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.post(
             this.url,
@@ -600,8 +586,8 @@ export class UserService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.post(this.url, {mode: key}, httpOptions);
     }
@@ -613,7 +599,7 @@ export class UserService {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: user.idToken
-            }),
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -625,7 +611,7 @@ export class UserService {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: user.idToken
-            }),
+            })
         };
         return this.http.post(this.url, {curMap, newMap}, httpOptions);
     }
@@ -637,7 +623,7 @@ export class UserService {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: user.idToken
-            }),
+            })
         };
         return this.http.post(this.url, {curMap, newMap}, httpOptions);
     }

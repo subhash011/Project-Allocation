@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
     },
     admin_id: {
         type: mongoose.Types.ObjectId,
-        required: true,
+        default: null,
         ref: Faculty
     },
     stage: {
@@ -19,17 +19,20 @@ const UserSchema = new mongoose.Schema({
         default: 0
     },
     project_cap: {
-        type: Number
+        type: Number,
+        default: 0
     },
     student_cap: {
         type: Number,
-        default: 1
+        default: 0
     },
     studentsPerFaculty: {
-        type: Number
+        type: Number,
+        default: 0
     },
     studentCount: {
-        type: Number
+        type: Number,
+        default: 0
     },
     publishStudents: {
         type: Boolean,

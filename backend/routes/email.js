@@ -2,9 +2,7 @@ const nodemailer = require("nodemailer");
 const express = require("express");
 const router = express.Router();
 require("dotenv/config");
-//this function sends the mail
-//inputs are the mailing object and the transporter object
-//we can pass these two from the post request
+
 
 sendEmail = (mailOptions, transporter) =>
     new Promise((resolve, reject) => {

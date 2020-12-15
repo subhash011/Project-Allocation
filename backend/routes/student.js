@@ -4,44 +4,6 @@ const Student = require("../models/Student");
 const Admin = require("../models/Admin_Info");
 const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
-const oauth = require("../config/oauth");
-
-// TODO check if this is used anywhere
-// register the student
-router.post("/register/:id", async (req, res) => {
-    try {
-        const id = req.params.id;
-        const idToken = req.headers.authorization;
-        const user = req.body;
-        await oauth(idToken);
-        const newUser = new Student({
-            name: user.name,
-            roll_no: user.roll_no,
-            google_id: {
-                id: id,
-                idToken: idToken
-            },
-            email: user.email,
-            gpa: user.gpa,
-            stream: user.stream
-        });
-        try {
-            await newUser.save();
-            res.json({
-                registration: "success"
-            });
-        } catch (e) {
-            res.json({
-                registration: "fail"
-            });
-        }
-    } catch (e) {
-        res.json({
-            message: "invalid-client",
-            result: null
-        });
-    }
-});
 
 // get all details of the student
 router.get("/details/:id", async (req, res) => {
@@ -60,21 +22,29 @@ router.get("/details/:id", async (req, res) => {
         };
         let user = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean()
             .select("-google_id -__v -date -projects_preference").populate(populator);
-        if (user) {
-            res.json({
-                status: "success",
-                user_details: user
+        if (!user) {
+            res.status(401).json({
+                success: false,
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
             });
-        } else {
-            res.json({
-                status: "invalid-token",
-                user_details: ""
-            });
+            return;
         }
+        res.status(200).json({
+            success: true,
+            statusCode: 200,
+            message: "success",
+            result: {
+                student: user
+            }
+        });
     } catch (e) {
-        res.json({
-            status: "fail",
-            user_details: err
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: "Internal Server Error! Please try-again.",
+            result: null
         });
     }
 });
@@ -88,57 +58,39 @@ router.get("/stage/:id", async (req, res) => {
         if (student) {
             const stream = student.stream;
             let admin = await Admin.findOne({stream: stream});
-            if (admin) {
-                res.json({
+            if (!admin || !admin.admin_id) {
+                res.status(200).json({
+                    success: true,
+                    statusCode: 200,
                     message: "success",
-                    result: admin.stage
+                    result: {
+                        adminPresent: false
+                    }
                 });
-            } else {
-                res.json({
-                    message: "error",
-                    result: "no-admin"
-                });
+                return;
             }
-        } else {
-            res.json({
-                message: "invalid-token",
-                result: null
-            });
-        }
-    } catch (e) {
-        res.json({
-            message: "invalid-token",
-            result: null
-        });
-    }
-});
-
-// TODO check if this route is used
-// update student profile
-router.post("/update/:id", async (req, res) => {
-    try {
-        const id = req.params.id;
-        const idToken = req.headers.authorization;
-        const document = req.body;
-        const updateResult = {
-            name: document.name,
-            gpa: document.gpa
-        };
-        let student = await Student.findOneAndUpdate({google_id: {id: id, idToken: idToken}}, updateResult);
-        if (student) {
-            res.json({
+            res.status(200).json({
+                success: true,
+                statusCode: 200,
                 message: "success",
-                result: student
+                result: {
+                    adminPresent: true,
+                    stage: admin.stage
+                }
             });
         } else {
-            res.json({
-                message: "invalid-token",
+            res.status(401).json({
+                success: false,
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
         }
     } catch (e) {
-        res.json({
-            message: "invalid-client",
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: "Internal Server Error! Please try-again.",
             result: null
         });
     }

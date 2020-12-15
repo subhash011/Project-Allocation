@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 export class ExporttocsvService {
     private url: string;
@@ -22,8 +22,8 @@ export class ExporttocsvService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -37,8 +37,8 @@ export class ExporttocsvService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -50,7 +50,7 @@ export class ExporttocsvService {
 
         this.url = this.base_url + 'admin/download_csv/' + id + '/' + role;
         const headers = new HttpHeaders({
-            Authorization: idToken,
+            Authorization: idToken
         });
         return this.http.get(this.url, {headers, responseType: 'blob'});
     }
@@ -63,8 +63,8 @@ export class ExporttocsvService {
         const httpOptions = {
             headers: new HttpHeaders({
                 enctype: 'multipart/form-data',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         this.url = this.base_url + 'admin/uploadStudentList/' + id;
         const formData: FormData = new FormData();

@@ -1,9 +1,7 @@
 <mat-dialog-content *ngIf="project">
     <div>
-        <div
-            *ngFor="let student of project.student_alloted"
-            class="list-item"
-        >
+        <div *ngFor="let student of project.student_alloted"
+             class="list-item">
             <mat-accordion>
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
@@ -20,5 +18,8 @@
             <div class="flex-space"></div>
         </div>
     </div>
-    <button (click)="close()" color="accent" mat-raised-button>Close</button>
+    <button (click)="close()"
+            color="accent"
+            mat-raised-button>Close
+    </button>
 </mat-dialog-content>

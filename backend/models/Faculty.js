@@ -20,7 +20,8 @@ const UserSchema = new mongoose.Schema({
         }
     },
     isAdmin: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     stream: {
         type: String,

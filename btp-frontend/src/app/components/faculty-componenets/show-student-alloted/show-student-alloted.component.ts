@@ -10,7 +10,7 @@ export class ShowStudentAllotedComponent implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<ShowStudentAllotedComponent>,
-        @Inject(MAT_DIALOG_DATA) public project: any,
+        @Inject(MAT_DIALOG_DATA) public project: any
     ) {
     }
 

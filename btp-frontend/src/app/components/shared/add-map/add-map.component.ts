@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Component({
     selector: 'app-add-map',
     templateUrl: './add-map.component.html',
-    styleUrls: ['./add-map.component.scss'],
+    styleUrls: ['./add-map.component.scss']
 })
 export class AddMapComponent implements OnInit {
     addForm = this.fb.group({
@@ -14,8 +14,8 @@ export class AddMapComponent implements OnInit {
             null,
             Validators.compose([
                 Validators.required,
-                Validators.pattern('[a-zA-Z-_]*'),
-            ]),
+                Validators.pattern('[a-zA-Z-_]*')
+            ])
         ]
     });
 

@@ -1,25 +1,34 @@
-<div *ngIf="preferences && preferences.length != 0; else empty" class="list">
-    <div *ngFor="let preference of preferences" class="list-item">
-        <mat-accordion>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title class="ep">
-                        {{ preference["faculty_name"] }}
-                    </mat-panel-title>
-                    <mat-panel-description class="ep">
-                        {{ preference["title"] }}
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-                <p>Faculty Email : {{ preference["faculty_email"] }}</p>
-                <p>Maximum Intake: {{ preference["studentIntake"] }}</p>
-                <p>Description : {{ preference["description"] }}</p>
-            </mat-expansion-panel>
-        </mat-accordion>
+<div *ngIf="loaded">
+    <div *ngIf="preferences && preferences.length != 0; else empty"
+         class="list">
+        <mat-toolbar>
+            <mat-toolbar-row>
+                <h4 class="title-center">My Preferences</h4>
+            </mat-toolbar-row>
+        </mat-toolbar>
+        <div *ngFor="let preference of preferences"
+             class="list-item">
+            <mat-accordion class="example-headers-align">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="ep">
+                            {{ preference["faculty_name"] }}
+                        </mat-panel-title>
+                        <mat-panel-description class="ep right-aligned-header">
+                            {{ preference["title"] }}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <p>Faculty Email : {{ preference["faculty_email"] }}</p>
+                    <p>Maximum Intake: {{ preference["studentIntake"] }}</p>
+                    <p>Description : {{ preference["description"] }}</p>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
     </div>
+    <ng-template #empty>
+        <div class="emptyBlock"
+             style="padding-top: 10%;">
+            No Preferences To Display. Go to the 'Edit Preferences' tab to add Preferences
+        </div>
+    </ng-template>
 </div>
-<ng-template #empty>
-    <div class="emptyBlock" style="padding-top: 10%;">
-        No Preferences To Display. Go to the 'Edit Preferences' tab to add
-        Preferences
-    </div>
-</ng-template>

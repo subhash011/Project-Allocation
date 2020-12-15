@@ -5,7 +5,7 @@
     background: #2f3640;
     height: 40px;
     border-radius: 40px;
-    padding: 0px;
+    padding: 0;
 }
 
 .edit-icon {
@@ -45,7 +45,7 @@
     font-size: 16px;
     transition: 0.4s;
     line-height: 40px;
-    width: 0px;
+    width: 0;
 }
 
 tr {
@@ -109,6 +109,10 @@ mat-icon:hover {
     padding-top: 100px;
     padding-bottom: 2%;
     padding-right: 1%;
+}
+
+.mat-column-Short {
+    padding-left: 30px;
 }
 
 .edit-row {

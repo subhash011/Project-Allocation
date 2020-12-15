@@ -1,24 +1,20 @@
-<div class="student-home">
-    <app-timeline
-        *ngIf="details && loaded && !publishStudents && !reviewContition"
-        [program]="details.stream"
-    ></app-timeline>
-    <div *ngIf="reviewContition" class="display-review">
+<div *ngIf="loaded"
+     class="student-home">
+    <app-timeline *ngIf="details && !publishStudents && !reviewContition"
+                  [program]="details.stream"></app-timeline>
+    <div *ngIf="reviewContition"
+         class="display-review">
         <mat-card class="card-review">
             <div class="review">
                 <h1>
-                    <b
-                    >The allocation status has been published to faculties. You will be
-                        getting the allocation results shortly.</b
-                    >
+                    <b>The allocation status has been published to faculties. You will be getting the allocation results
+                       shortly.</b>
                 </h1>
             </div>
         </mat-card>
     </div>
-    <div
-        *ngIf="details && details.project_alloted && publishStudents"
-        class="display"
-    >
+    <div *ngIf="details && details.project_alloted && publishStudents"
+         class="display">
         <div class="allocationStatus">
             <h1><b>Project Alloted : &emsp;&emsp;&emsp;</b></h1>
         </div>
@@ -41,11 +37,6 @@
         </div>
     </div>
     <div class="preferences">
-        <mat-toolbar *ngIf="loaded">
-            <mat-toolbar-row>
-                <h4>My Preferences</h4>
-            </mat-toolbar-row>
-        </mat-toolbar>
-        <app-student-projects *ngIf="loaded"></app-student-projects>
+        <app-student-projects></app-student-projects>
     </div>
 </div>

@@ -6,7 +6,7 @@ import { LoaderComponent } from 'src/app/components/shared/loader/loader.compone
 @Component({
     selector: 'app-submit-pop-up',
     templateUrl: './submit-pop-up.component.html',
-    styleUrls: ['./submit-pop-up.component.scss'],
+    styleUrls: ['./submit-pop-up.component.scss']
 })
 export class SubmitPopUpComponent implements OnInit {
     constructor(
@@ -25,10 +25,10 @@ export class SubmitPopUpComponent implements OnInit {
     }
 
     onSubmit() {
-        var dialogRef = this.dialog.open(LoaderComponent, {
-            data: 'Loading Please Wait ....',
+        const dialogRef = this.dialog.open(LoaderComponent, {
+            data: 'Updating, Please wait ...',
             disableClose: true,
-            hasBackdrop: true,
+            panelClass: 'transparent'
         });
         this.projectService.updateProject(this.data).subscribe((data) => {
             dialogRef.close();
@@ -39,7 +39,7 @@ export class SubmitPopUpComponent implements OnInit {
             } else if (data['status'] == 'fail2') {
                 this.dialogRef.close({
                     message: 'studentsPerFaculty',
-                    msg: data['msg'],
+                    msg: data['msg']
                 });
             } else {
                 this.dialogRef.close({message: 'fail'});

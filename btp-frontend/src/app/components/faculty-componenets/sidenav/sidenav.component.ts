@@ -1,6 +1,6 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
@@ -10,7 +10,7 @@ import { LoginComponent } from 'src/app/components/shared/login/login.component'
 @Component({
     selector: 'app-sidenav',
     templateUrl: './sidenav.component.html',
-    styleUrls: ['./sidenav.component.scss'],
+    styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit, OnChanges {
     @Input() public projects;
@@ -63,14 +63,10 @@ export class SidenavComponent implements OnInit, OnChanges {
     }
 
     includeProjects() {
-        // var toInclude = [];
-        // for (const project of this.includedProjects.selectedOptions.selected.values()) {
-        //   toInclude.push(project.value);
-        // }
         const dialogRef = this.dialog.open(LoaderComponent, {
-            data: 'Please wait ....',
+            data: 'Updating, Please wait ...',
             disableClose: true,
-            hasBackdrop: true,
+            panelClass: 'transparent'
         });
         this.projectService.includeProjects(this.selectedProjects).subscribe(
             (result) => {
@@ -79,18 +75,13 @@ export class SidenavComponent implements OnInit, OnChanges {
                     for (const project of this.projects) {
                         project.isIncluded = this.selectedProjects.indexOf(project._id) != -1;
                     }
-                    this.snackbar.open('Updated Project Preferences', 'Ok', {
-                        duration: 3000,
-                    });
+                    this.snackbar.open('Updated Project Preferences', 'Ok');
                 }
             },
             () => {
                 this.snackbar.open(
                     'Some Error Occured! Please re-authenticate.',
-                    'OK',
-                    {
-                        duration: 3000,
-                    }
+                    'OK'
                 );
                 this.navbar.role = 'none';
                 this.loginObject.signOut();
@@ -113,8 +104,8 @@ export class SidenavComponent implements OnInit, OnChanges {
                     queryParams: {
                         name: this.routeParams.name,
                         abbr: this.routeParams.abbr,
-                        mode: 'programMode',
-                    },
+                        mode: 'programMode'
+                    }
                 }).then(() => {
                 });
             });

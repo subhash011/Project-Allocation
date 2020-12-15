@@ -1,17 +1,18 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { LoginComponent } from 'src/app/components/shared/login/login.component';
-import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.component';
+import { HttpResponseAPI } from 'src/app/models/HttpResponseAPI';
+import { LocalAuthService } from 'src/app/services/local-auth/local-auth.service';
+
 
 @Component({
     selector: 'app-display-preferences',
     templateUrl: './display-preferences.component.html',
-    styleUrls: ['./display-preferences.component.scss'],
+    styleUrls: ['./display-preferences.component.scss']
 })
 export class DisplayPreferencesComponent implements OnInit, OnDestroy {
     @Input() preferences: any = [];
@@ -19,14 +20,14 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
     @Input() stage: number = 0;
     isActive: boolean = false;
     indexHover: number = -1;
+    dialogRefLoad: MatDialogRef<any>;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private projectService: ProjectsService,
-        private loginObject: LoginComponent,
+        private localAuthService: LocalAuthService,
         private snackBar: MatSnackBar,
-        private dialog: MatDialog,
-        private navbar: NavbarComponent
+        private dialog: MatDialog
     ) {
     }
 
@@ -34,53 +35,27 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
     }
 
     removeOnePreference(preference) {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Removing Preference, Please wait ...',
             disableClose: true,
-            hasBackdrop: true,
+            panelClass: 'transparent'
         });
         this.projectService
             .removeOneStudentPreference(preference)
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(
-                (result) => {
-                    dialogRefLoad.close();
-                    if (result['message'] == 'invalid-token') {
-                        this.navbar.role = 'none';
-                        this.snackBar.open('Session Expired! Please Sign In Again', 'OK', {
-                            duration: 3000,
-                        });
-                        this.loginObject.signOut();
-                    } else if (result['message'] == 'success') {
+            .subscribe((responseAPI: HttpResponseAPI) => {
+                    this.dialogRefLoad.close();
+                    if (responseAPI.result.updated) {
                         this.preferences = this.preferences.filter((val) => {
                             return val._id != preference._id;
                         });
                         this.updateProjects.emit(preference);
-                    } else if (result['message'] == 'stage-ended') {
-                        this.snackBar.open(
-                            'Stage has ended! You cannot edit preferences anymore',
-                            'Ok',
-                            {duration: 3000}
-                        );
-                    } else if (result['message'] == 'stage-not-started') {
-                        this.snackBar.open(
-                            'You cannot edit preferences till the next stage',
-                            'Ok',
-                            {duration: 3000}
-                        );
+                    } else {
+                        this.snackBar.open(responseAPI.message, 'Ok');
                     }
                 },
                 () => {
-                    dialogRefLoad.close();
-                    this.snackBar.open(
-                        'Some Error Occured! Please re-authenticate.',
-                        'OK',
-                        {
-                            duration: 3000,
-                        }
-                    );
-                    this.navbar.role = 'none';
-                    this.loginObject.signOut();
+                    this.dialogRefLoad.close();
                 }
             );
     }

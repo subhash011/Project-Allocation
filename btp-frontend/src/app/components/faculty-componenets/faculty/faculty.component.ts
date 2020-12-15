@@ -7,6 +7,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.component';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
+import { HttpResponseAPI } from 'src/app/models/HttpResponseAPI';
 
 @Component({
     selector: 'app-faculty',
@@ -48,10 +49,10 @@ export class FacultyComponent implements OnInit {
         this.studentData = {};
         this.nonStudentData = {};
 
-        var dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Please wait ...',
+        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: 'Loading, Please wait ...',
             disableClose: true,
-            hasBackdrop: true
+            panelClass: 'transparent'
         });
 
         this.userDetails.getFacultyDetails(this.id).subscribe((data) => {
@@ -79,7 +80,7 @@ export class FacultyComponent implements OnInit {
                     }, () => {
                         dialogRefLoad.close();
                         this.navbar.role = 'none';
-                        this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok', {duration: 3000});
+                        this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
                         this.loginService.signOut();
                     });
 
@@ -111,7 +112,7 @@ export class FacultyComponent implements OnInit {
                             }, () => {
                                 dialogRefLoad.close();
                                 this.navbar.role = 'none';
-                                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok', {duration: 3000});
+                                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
                                 this.loginService.signOut();
                             });
 
@@ -119,7 +120,7 @@ export class FacultyComponent implements OnInit {
                     }, () => {
                         dialogRefLoad.close();
                         this.navbar.role = 'none';
-                        this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok', {duration: 3000});
+                        this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
                         this.loginService.signOut();
                     });
 
@@ -132,33 +133,33 @@ export class FacultyComponent implements OnInit {
                     }, () => {
                         dialogRefLoad.close();
                         this.navbar.role = 'none';
-                        this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok', {duration: 3000});
+                        this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
                         this.loginService.signOut();
                     });
 
-                    this.userService.getPublishMode('faculty').subscribe((data) => {
-                        if (data['status'] == 'success') {
-                            this.publishFaculty = data['facultyPublish'];
-                            this.publishStudents = data['studentPublish'];
-                        }
+                    this.userService.getPublishMode('faculty').subscribe((responseAPI: HttpResponseAPI) => {
+                        this.publishFaculty = responseAPI.result.publishFaculty;
+                        this.publishStudents = responseAPI.result.publishStudents;
+                    }, () => {
+                        dialogRefLoad.close();
                     });
 
                 }, () => {
                     dialogRefLoad.close();
-                    this.snackBar.open('Some Error Occured! Please re-authenticate.', 'OK', {duration: 3000});
+                    this.snackBar.open('Some Error Occured! Please re-authenticate.', 'OK');
                     this.navbar.role = 'none';
                     this.loginService.signOut();
                 });
             } else {
                 dialogRefLoad.close();
                 this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok', {duration: 3000});
+                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
                 this.loginService.signOut();
             }
         }, () => {
             dialogRefLoad.close();
             this.navbar.role = 'none';
-            this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok', {duration: 3000});
+            this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
             this.loginService.signOut();
         });
     }
@@ -202,10 +203,10 @@ export class FacultyComponent implements OnInit {
     displayProject(project) {
 
         if (!this.studentData[project._id]) {
-            var dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Please wait ....',
+            const dialogRef = this.dialog.open(LoaderComponent, {
+                data: 'Loading, Please wait ...',
                 disableClose: true,
-                hasBackdrop: true
+                panelClass: 'transparent'
             });
             this.projectService.getStudentsApplied(project._id).subscribe((data) => {
                 dialogRef.close();
@@ -219,13 +220,13 @@ export class FacultyComponent implements OnInit {
 
                 } else {
                     this.navbar.role = 'none';
-                    this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok', {duration: 3000});
+                    this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
                     this.loginService.signOut();
                 }
             }, () => {
                 dialogRef.close();
                 this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok', {duration: 3000});
+                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
                 this.loginService.signOut();
             });
         } else {
@@ -244,13 +245,13 @@ export class FacultyComponent implements OnInit {
     addProject(state) {
         if (this.adminStage == undefined || this.adminStage == null) {
             this.add = !state;
-            this.snackBar.open('You can\'t add projects till the admin sets the first deadline', 'Ok', {duration: 3000});
+            this.snackBar.open('You can\'t add projects till the admin sets the first deadline', 'Ok');
         } else if (this.adminStage == 0) {
             this.add = state;
             this.empty = false;
         } else {
             this.add = !state;
-            this.snackBar.open('Stage Deadline reached!! You can\'t add more projects!!', 'Ok', {duration: 3000});
+            this.snackBar.open('Stage Deadline reached!! You can\'t add more projects!!', 'Ok');
         }
     }
 

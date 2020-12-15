@@ -1,133 +1,77 @@
-<div *ngIf="userForm.controls['branch'].hasError('required')" class="message">
+<div *ngIf="userForm.controls['stream'].hasError('required')"
+     class="message">
     <div class="text">
         <h3>
-            If you do not see your program listed here contact the super-admin or the
-            co-ordinator of your program.
-        </h3>
+            If you do not see your stream listed here contact the super-admin</h3>
     </div>
 </div>
 <div class="register-wrapper">
     <div class="register-page">
-        <form
-            (ngSubmit)="onSubmit()"
-            [formGroup]="userForm"
-            class="register"
-            novalidate
-        >
+        <form (ngSubmit)="onSubmit()"
+              [formGroup]="userForm"
+              class="register"
+              novalidate>
             <mat-card class="shipping-card">
                 <mat-card-header>
-                    <mat-card-title
-                    ><strong>
+                    <mat-card-title><strong>
                         <h4>Register</h4>
-                    </strong></mat-card-title
-                    >
+                    </strong></mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <!-- <div class="row"> -->
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input
-                                formControlName="firstName"
-                                matInput
-                                placeholder="First name"
-                            />
-                            <mat-error
-                                *ngIf="userForm.controls['firstName'].hasError('required')"
-                            >
+                            <input formControlName="firstName"
+                                   matInput
+                                   placeholder="First name" />
+                            <mat-error *ngIf="userForm.controls['firstName'].hasError('required')">
                                 First name is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input
-                                formControlName="lastName"
-                                matInput
-                                placeholder="Last name"
-                            />
-                            <mat-error
-                                *ngIf="userForm.controls['lastName'].hasError('required')"
-                            >
+                            <input formControlName="lastName"
+                                   matInput
+                                   placeholder="Last name" />
+                            <mat-error *ngIf="userForm.controls['lastName'].hasError('required')">
                                 Last name is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <!-- </div> -->
-                    <div *ngIf="hasUnitNumber" class="row"></div>
-                    <!-- <div class="row"> -->
+                    <div *ngIf="hasUnitNumber"
+                         class="row"></div>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input formControlName="email" matInput placeholder="Email-ID"/>
-                            <mat-error
-                                *ngIf="userForm.controls['email'].hasError('required')"
-                            >
+                            <input formControlName="email"
+                                   matInput
+                                   placeholder="Email-ID" />
+                            <mat-error *ngIf="userForm.controls['email'].hasError('required')">
                                 Email-ID is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <div *ngIf="role | isStudent" class="row">
+                    <div *ngIf="role | isFaculty"
+                         class="row">
                         <mat-form-field class="full-width">
-                            <mat-select formControlName="branch" placeholder="Program">
-                                <mat-option
-                                    *ngFor="let program of programs"
-                                    [value]="program.short"
-                                >
-                                    {{ program.name }}
+                            <mat-select [placeholder]="head"
+                                        formControlName="stream">
+                                <mat-option *ngFor="let stream of streams"
+                                            [value]="stream.short">
+                                    {{ stream.full }}
                                 </mat-option>
                             </mat-select>
-                            <mat-error
-                                *ngIf="userForm.controls['branch'].hasError('required')"
-                            >
-                                Program is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="role | isFaculty" class="row">
-                        <mat-form-field class="full-width">
-                            <mat-select [placeholder]="head" formControlName="branch">
-                                <mat-option
-                                    *ngFor="let branch of branches"
-                                    [value]="branch.short"
-                                >
-                                    {{ branch.name }}
-                                </mat-option>
-                            </mat-select>
-                            <mat-error
-                                *ngIf="userForm.controls['branch'].hasError('required')"
-                            >
+                            <mat-error *ngIf="userForm.controls['stream'].hasError('required')">
                                 {{ head }} is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <!-- </div> -->
-                    <div *ngIf="role | isStudent" class="row">
-                        <mat-form-field class="full-width">
-                            <input
-                                formControlName="CGPA"
-                                matInput
-                                placeholder="CGPA"
-                                type="number"
-                            />
-                            <mat-error *ngIf="userForm.controls['CGPA'].hasError('required')">
-                                CGPA is <strong>required</strong>
-                            </mat-error>
-                            <mat-error *ngIf="userForm.controls['CGPA'].errors?.max">
-                                CGPA must be less than or equal to <strong>10</strong>
                             </mat-error>
                         </mat-form-field>
                     </div>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button
-                        [disabled]="
-              !userForm.valid ||
-              userForm.controls['branch'].hasError('required')
-            "
-                        class="submit_button"
-                        color="primary"
-                        mat-raised-button
-                        type="submit"
-                    >
+                    <button [disabled]="!userForm.valid || userForm.controls['stream'].hasError('required')"
+                            class="submit_button"
+                            color="primary"
+                            mat-raised-button
+                            type="submit">
                         Submit
                     </button>
                 </mat-card-actions>

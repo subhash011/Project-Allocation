@@ -1,27 +1,27 @@
 <mat-dialog-content *ngIf="preferences.students_id.length != 0; else elseBlock">
     <mat-toolbar class="toolbar">
-        <mat-icon (click)="close()" color="accent" color="primary" matTooltip="close pop-up" matTooltipPosition="above">
+        <mat-icon (click)="close()"
+                  color="accent"
+                  color="primary"
+                  matTooltip="close pop-up"
+                  matTooltipPosition="above">
             close
         </mat-icon>
         <div class="fill-space"></div>
-        <div #container class="copy">
-            <button
-                (copied)="copied($event)"
-                [cdkCopyToClipboard]="value"
-                color="primary"
-                mat-raised-button
-                ngxClipboard
-            >
+        <div #container
+             class="copy">
+            <button [cdkCopyToClipboard]="value"
+                    color="primary"
+                    mat-raised-button>
                 Copy to Clipboard
             </button>
         </div>
     </mat-toolbar>
-    <cdk-virtual-scroll-viewport class="example-viewport" itemSize="50">
+    <cdk-virtual-scroll-viewport class="example-viewport"
+                                 itemSize="50">
         <div>
-            <div
-                *cdkVirtualFor="let preference of preferences.students_id"
-                class="list-item"
-            >
+            <div *cdkVirtualFor="let preference of preferences.students_id"
+                 class="list-item">
                 <mat-accordion>
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
@@ -34,20 +34,14 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="faculty">
-                            Faculty:
-                            {{
-                            preference["project_alloted"]
-                                ? preference["project_alloted"]["faculty_id"]["name"]
-                                : "N/A"
-                            }}
+                            Faculty:{{preference["project_alloted"]
+                            ? preference["project_alloted"]["faculty_id"]["name"]
+                            : "N/A"}}
                         </div>
                         <div class="project">
-                            Project Alloted:
-                            {{
-                            preference["project_alloted"]
-                                ? preference["project_alloted"]["title"]
-                                : "N/A"
-                            }}
+                            Project Alloted:{{preference["project_alloted"]
+                            ? preference["project_alloted"]["title"]
+                            : "N/A"}}
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>

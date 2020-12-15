@@ -3,9 +3,10 @@ import { LoginComponent } from 'src/app/components/shared/login/login.component'
 import { UserService } from 'src/app/services/user/user.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { StorageService } from 'src/app/services/helpers/storage.service';
 
 @Pipe({
-    name: 'checkRegister',
+    name: 'checkRegister'
 })
 export class CheckRegister implements PipeTransform {
     transform(value) {
@@ -20,7 +21,7 @@ export class CheckRegister implements PipeTransform {
 }
 
 @Pipe({
-    name: 'links',
+    name: 'links'
 })
 export class GetLinksForNavBar implements PipeTransform {
     transform(value, role) {
@@ -47,7 +48,7 @@ export class GetLinksForNavBar implements PipeTransform {
     selector: 'app-navbar',
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.scss'],
-    providers: [LoginComponent],
+    providers: [LoginComponent]
 })
 export class NavbarComponent implements OnInit {
     programsVisible: boolean = false;
@@ -61,11 +62,17 @@ export class NavbarComponent implements OnInit {
         private router: Router,
         private userService: UserService,
         private login: LoginComponent,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private storageService: StorageService
     ) {
     }
 
     ngOnInit() {
+        this.storageService.watchStorage().subscribe((data: string) => {
+            if (data == 'isLoggedIn') {
+                this.role = localStorage.getItem('role');
+            }
+        });
         if (localStorage.getItem('isLoggedIn') == 'true') {
             this.role = localStorage.getItem('role');
         }
@@ -82,10 +89,7 @@ export class NavbarComponent implements OnInit {
                 } else {
                     this.snackBar.open(
                         'Session Timed Out! Please Sign in Again!',
-                        'Ok',
-                        {
-                            duration: 3000,
-                        }
+                        'Ok'
                     );
                     this.login.signOut();
                 }
@@ -94,13 +98,6 @@ export class NavbarComponent implements OnInit {
     }
 
 
-    // isAdmin() {
-    //     if (localStorage.getItem('isLoggedIn') == 'true') {
-    //         return localStorage.getItem('role') == 'admin';
-    //     } else {
-    //         return false;
-    //     }
-    // }
     getAdmin() {
         // return "admin/" +
         let id = localStorage.getItem('id');
@@ -111,7 +108,7 @@ export class NavbarComponent implements OnInit {
         let id = localStorage.getItem('id');
         this.router
             .navigateByUrl('/refresh', {
-                skipLocationChange: true,
+                skipLocationChange: true
             })
             .then(() => {
                 this.ngOnInit();
@@ -127,8 +124,8 @@ export class NavbarComponent implements OnInit {
                 this.router.navigate(['/faculty', id], {
                     queryParams: {
                         abbr: program.short,
-                        mode: 'programMode',
-                    },
+                        mode: 'programMode'
+                    }
                 });
             });
     }

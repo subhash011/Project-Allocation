@@ -4,10 +4,15 @@
             Edit {{which}} details
         </div>
     </mat-card-header>
-    <mat-card-content [formGroup]="addForm" novalidate>
+    <mat-card-content [formGroup]="addForm"
+                      novalidate>
         <div class="row">
             <mat-form-field class="full-width">
-                <input [value]="full" autocomplete="off" formControlName="full" matInput placeholder="{{which}} name"/>
+                <input [value]="full"
+                       autocomplete="off"
+                       formControlName="full"
+                       matInput
+                       placeholder="{{which}} name" />
                 <mat-error *ngIf="addForm.controls['full'].hasError('required')">
                     {{which}} name is <strong>required</strong>
                 </mat-error>
@@ -15,8 +20,11 @@
         </div>
         <div class="row">
             <mat-form-field class="full-width">
-                <input [value]="short" autocomplete="off" formControlName="short" matInput
-                       placeholder="{{which}} Abbrevation"/>
+                <input [value]="short"
+                       autocomplete="off"
+                       formControlName="short"
+                       matInput
+                       placeholder="{{which}} Abbrevation" />
                 <mat-error *ngIf="addForm.controls['short'].hasError('required')">
                     {{which}} Abbrevation is <strong>required</strong>
                 </mat-error>
@@ -27,11 +35,18 @@
         </div>
     </mat-card-content>
     <mat-card-actions>
-        <button (click)="onSubmit()" [disabled]="!addForm.valid" class="submit_button" color="primary"
+        <button (click)="onSubmit()"
+                [disabled]="!addForm.valid"
+                class="submit_button"
+                color="primary"
                 mat-raised-button>
             Submit
         </button>
-        <button (click)="onNoClick()" class="close_button" color="warn" mat-raised-button type="submit">
+        <button (click)="onNoClick()"
+                class="close_button"
+                color="warn"
+                mat-raised-button
+                type="submit">
             Close
         </button>
     </mat-card-actions>

@@ -1,22 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user/user.service';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.component';
 import { LoginComponent } from 'src/app/components/shared/login/login.component';
+import { HttpResponseAPI } from 'src/app/models/HttpResponseAPI';
+import { LocalAuthService } from 'src/app/services/local-auth/local-auth.service';
 
 @Component({
     selector: 'app-student',
     templateUrl: './student.component.html',
     styleUrls: ['./student.component.scss'],
-    providers: [LoginComponent],
+    providers: [LoginComponent]
 })
 export class StudentComponent implements OnInit, OnDestroy {
     dialogRefLoad: any;
-    user: any;
     details: any;
     loaded: boolean = false;
     publishStudents: boolean;
@@ -26,75 +26,37 @@ export class StudentComponent implements OnInit, OnDestroy {
 
     constructor(
         private userService: UserService,
-        private loginObject: LoginComponent,
+        private localAuthService: LocalAuthService,
         private snackBar: MatSnackBar,
-        private dialog: MatDialog,
-        private navbar: NavbarComponent
+        private dialog: MatDialog
     ) {
     }
 
     ngOnInit() {
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Loading. Please wait! ...',
+            data: 'Loading, Please wait! ...',
             disableClose: true,
-            hasBackdrop: true,
+            panelClass: 'transparent'
         });
-        this.user = JSON.parse(localStorage.getItem('user'));
-        this.user = this.userService
-            .getStudentDetails(this.user.id)
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe((data) => {
-                if (data['status'] == 'invalid-token') {
-                    this.dialogRefLoad.close();
-                    this.navbar.role = 'none';
-                    this.snackBar.open('Session Expired! Please Sign In Again', 'OK', {
-                        duration: 3000,
-                    });
-                    this.loginObject.signOut();
-                } else if (data['status'] == 'success') {
-                    this.details = data['user_details'];
-                    this.loaded = true;
-
-                    this.userService.getPublishMode('student').subscribe(
-                        (data) => {
-                            this.dialogRefLoad.close();
-                            if (data['status'] == 'success') {
-                                this.publishStudents = data['studentPublish'];
-                                this.publishFaculty = data['facultyPublish'];
-                                if (
-                                    this.publishStudents == false &&
-                                    this.publishFaculty == true
-                                ) {
-                                    this.reviewContition = true;
-                                }
-                            }
-                        },
-                        () => {
-                            this.dialogRefLoad.close();
-                            this.snackBar.open(
-                                'Some Error Occured! Please re-authenticate.',
-                                'OK',
-                                {
-                                    duration: 3000,
-                                }
-                            );
-                            this.navbar.role = 'none';
-                            this.loginObject.signOut();
-                        }
-                    );
-                } else {
-                    this.dialogRefLoad.close();
-                    this.snackBar.open(
-                        'Some Error Occured! Please re-authenticate.',
-                        'OK',
-                        {
-                            duration: 3000,
-                        }
-                    );
-                    this.navbar.role = 'none';
-                    this.loginObject.signOut();
-                }
-            });
+        const user = JSON.parse(localStorage.getItem('user'));
+        const requests = [
+            this.userService.getStudentDetails(user.id).pipe(takeUntil(this.ngUnsubscribe)),
+            this.userService.getPublishMode('student').pipe(takeUntil(this.ngUnsubscribe))
+        ];
+        forkJoin(requests).subscribe((response: Array<HttpResponseAPI>) => {
+            let studentResponse = response[0];
+            let publishResponse = response[1];
+            this.dialogRefLoad.close();
+            this.details = studentResponse.result.student;
+            this.publishFaculty = publishResponse.result.publishFaculty;
+            this.publishStudents = publishResponse.result.publishStudents;
+            if (!this.publishStudents && this.publishFaculty) {
+                this.reviewContition = true;
+            }
+            this.loaded = true;
+        }, () => {
+            this.dialogRefLoad.close();
+        });
     }
 
     ngOnDestroy() {

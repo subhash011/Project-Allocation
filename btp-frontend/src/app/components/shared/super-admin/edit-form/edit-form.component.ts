@@ -20,8 +20,8 @@ export class EditFormComponent implements OnInit {
             this.short,
             Validators.compose([
                 Validators.required,
-                Validators.pattern('[a-zA-Z-_]*'),
-            ]),
+                Validators.pattern('[a-zA-Z-_]*')
+            ])
         ]
     });
 

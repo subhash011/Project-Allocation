@@ -17,103 +17,100 @@
 </mat-accordion>
 <div class="flex-space"></div>
 
-<h4 *ngIf="index == 0" class="heading_pref">Preferences: <strong>Preferences among students who did not opt will be
-    appended to this table.</strong></h4>
-<h4 *ngIf="index == 1" class="heading_pref">Preferences: <strong>These preferences will be appended to preferences among
-    students who opted.</strong></h4>
-<div [style.max-height.px]="studentTableHeight" class="table mat-elevation-z8">
-    <mat-table
-        #table
-        (cdkDropListDropped)="drop($event)"
-        (matSortChange)="sortStudentTable($event)"
-        [cdkDropListData]="students.data"
-        [dataSource]="students"
-        cdkDropList
-        cdkDropListOrientation="vertical"
-        class="mat-elevation-z8"
-        matSort
-        multiTemplateDataRows
-    >
+<h4 *ngIf="index == 0"
+    class="heading_pref">Preferences:
+    <strong>
+        Preferences among students who did not opt will be appended to this table.
+    </strong></h4><h4 *ngIf="index == 1"
+                      class="heading_pref">
+    Preferences: <strong>These preferences will be appended to preferences among students who opted.</strong>
+</h4>
+<div [style.max-height.px]="studentTableHeight"
+     class="table mat-elevation-z8">
+    <mat-table #table
+               (cdkDropListDropped)="drop($event)"
+               (matSortChange)="sortStudentTable($event)"
+               [cdkDropListData]="students.data"
+               [dataSource]="students"
+               cdkDropList
+               cdkDropListOrientation="vertical"
+               class="mat-elevation-z8"
+               matSort
+               multiTemplateDataRows>
         <ng-container matColumnDef="Name">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Name</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef
+                             mat-sort-header> Name
+            </mat-header-cell>
             <mat-cell *matCellDef="let preference">
                 {{preference.name}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="CGPA">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> CGPA</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef
+                             mat-sort-header> CGPA
+            </mat-header-cell>
             <mat-cell *matCellDef="let preference">
                 {{ preference.gpa }}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Roll">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Roll no.</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef
+                             mat-sort-header> Roll no.
+            </mat-header-cell>
             <mat-cell *matCellDef="let preference">
                 {{ preference.roll_no }}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Index">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Preference</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef
+                             mat-sort-header> Preference
+            </mat-header-cell>
             <mat-cell *matCellDef="let preference">
                 {{ "" | preference:project._id:preference._id:students.data}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Actions">
-            <mat-header-cell *matHeaderCellDef [attr.rowSpan]="2">
-                <button (click)="onSubmit()" [disabled]="this.adminStage != 2" [matBadge]="students.data.length"
+            <mat-header-cell *matHeaderCellDef
+                             [attr.rowSpan]="2">
+                <button (click)="onSubmit()"
+                        [disabled]="this.adminStage != 2"
+                        [matBadge]="students.data.length"
                         color="primary"
-                        mat-raised-button matBadgeColor="accent">
+                        mat-raised-button
+                        matBadgeColor="accent">
                     Save Preferences
                 </button>
             </mat-header-cell>
-            <mat-cell
-                (click)="$event.stopPropagation()"
-                *matCellDef="let preference; let i = dataIndex"
-            >
-                <mat-icon
-                    (click)="moveToTop(preference)"
-                    *ngIf="i != 0"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Push {{ preference.name }} to top"
-                >vertical_align_top
-                </mat-icon
-                >
-                <mat-icon
-                    (click)="moveToBottom(preference)"
-                    *ngIf="i != students.data.length - 1"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Push {{ preference.name }} to bottom"
-                >vertical_align_bottom
-                </mat-icon
-                >
-                <mat-icon
-                    (click)="moveOneUp(i)"
-                    *ngIf="i != 0"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Move {{ preference.name }} up"
-                >arrow_upward
-                </mat-icon
-                >
-                <mat-icon
-                    (click)="moveOneDown(i)"
-                    *ngIf="i != students.data.length - 1"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Move {{ preference.name }} down"
-                >arrow_downward
-                </mat-icon
-                >
+            <mat-cell (click)="$event.stopPropagation()"
+                      *matCellDef="let preference; let i = dataIndex">
+                <mat-icon (click)="moveToTop(preference)"
+                          *ngIf="i != 0"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Push {{ preference.name }} to top">vertical_align_top
+                </mat-icon>
+                <mat-icon (click)="moveToBottom(preference)"
+                          *ngIf="i != students.data.length - 1"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Push {{ preference.name }} to bottom">vertical_align_bottom
+                </mat-icon>
+                <mat-icon (click)="moveOneUp(i)"
+                          *ngIf="i != 0"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Move {{ preference.name }} up">arrow_upward
+                </mat-icon>
+                <mat-icon (click)="moveOneDown(i)"
+                          *ngIf="i != students.data.length - 1"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Move {{ preference.name }} down">arrow_downward
+                </mat-icon>
             </mat-cell>
         </ng-container>
-        <mat-header-row
-            *matHeaderRowDef="index | getDisplayedColumns; sticky: true"
-        ></mat-header-row>
-        <mat-row
-            *matRowDef="let row; columns: index | getDisplayedColumns; let i = dataIndex"
-            [cdkDragData]="row"
-            [cdkDragDisabled]="this.adminStage != 2"
-            actualContainer="div.table"
-            cdkDrag
-            class="example-element-row"
-        ></mat-row>
+        <mat-header-row *matHeaderRowDef="index | getDisplayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: index | getDisplayedColumns; let i = dataIndex"
+                 [cdkDragData]="row"
+                 [cdkDragDisabled]="this.adminStage != 2"
+                 actualContainer="div.table"
+                 cdkDrag
+                 class="example-element-row"></mat-row>
     </mat-table>
 </div>

@@ -9,20 +9,13 @@ $accent: mat-palette($mat-pink, A200, A100, A400);
 $theme: mat-light-theme($primary, $accent);
 @include angular-material-theme($theme);
 @include material-custom-theme($theme);
+
 html,
 body,
 app-root {
     height: 100%;
     margin: 0;
-    overflow-x: hidden;
-}
-
-//body::-webkit-scrollbar {
-//    display: none;
-//}
-
-body {
-    -ms-overflow-style: none;
+    overflow: auto;
 }
 
 .mat-drawer-inner-container {
@@ -53,10 +46,6 @@ body {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-.custom-snack-bar-container {
-    max-width: 100% !important;
 }
 
 ::ng-deep .mat-horizontal-stepper-header {

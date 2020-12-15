@@ -3,26 +3,28 @@ import { ThemePalette } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.component';
 import { LoginComponent } from 'src/app/components/shared/login/login.component';
+import { HttpResponseAPI } from 'src/app/models/HttpResponseAPI';
+import { takeUntil } from 'rxjs/operators';
+import { LocalAuthService } from 'src/app/services/local-auth/local-auth.service';
 
 @Component({
     selector: 'app-student-projects',
     templateUrl: './student-projects.component.html',
     styleUrls: ['./student-projects.component.scss'],
-    providers: [LoginComponent],
+    providers: [LoginComponent]
 })
 export class StudentProjectsComponent implements OnInit, OnDestroy {
     projects: any;
     preferences: any = [];
     background: ThemePalette = 'primary';
+    loaded: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private projectService: ProjectsService,
-        private loginObject: LoginComponent,
-        private snackBar: MatSnackBar,
-        private navbar: NavbarComponent
+        private localAuthService: LocalAuthService,
+        private snackBar: MatSnackBar
     ) {
     }
 
@@ -31,30 +33,11 @@ export class StudentProjectsComponent implements OnInit, OnDestroy {
     }
 
     getStudentPreferences() {
-        this.projectService.getStudentPreference().subscribe(
-            (details) => {
-                if (details['message'] == 'token-expired') {
-                    this.navbar.role = 'none';
-                    this.snackBar.open('Session Expired! Please Sign In Again', 'OK', {
-                        duration: 3000,
-                    });
-                    this.loginObject.signOut();
-                } else {
-                    this.preferences = details['result'];
-                }
-            },
-            () => {
-                this.snackBar.open(
-                    'Some Error Occured! Please re-authenticate.',
-                    'OK',
-                    {
-                        duration: 3000,
-                    }
-                );
-                this.navbar.role = 'none';
-                this.loginObject.signOut();
-            }
-        );
+        this.projectService.getStudentPreference().pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe((responseAPI: HttpResponseAPI) => {
+                this.loaded = true;
+                this.preferences = responseAPI.result.preferences;
+            }, () => {});
     }
 
     ngOnDestroy() {

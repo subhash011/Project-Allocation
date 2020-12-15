@@ -83,7 +83,7 @@ router.post("/start/:id", async (req, res) => {
             );
             [projects, students] = await Promise.all(promises);
 
-            // Start Gale shepley
+            // Start Gale shapely
             combineStudents(projects, students);
             combineProjects(projects);
             let allotted = [];
@@ -160,7 +160,7 @@ router.post("/start/:id", async (req, res) => {
                     }
                 }
             }
-            // end Gale shepley
+            // end Gale shapely
 
             let populateFac = {
                 path: "faculty_id",

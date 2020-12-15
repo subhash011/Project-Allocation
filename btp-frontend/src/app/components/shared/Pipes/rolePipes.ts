@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'isFaculty',
+    name: 'isFaculty'
 })
 export class FacultyCheck implements PipeTransform {
     transform(value) {
@@ -10,7 +10,7 @@ export class FacultyCheck implements PipeTransform {
 }
 
 @Pipe({
-    name: 'isAdmin',
+    name: 'isAdmin'
 })
 export class AdminCheck implements PipeTransform {
     transform(value) {
@@ -19,7 +19,7 @@ export class AdminCheck implements PipeTransform {
 }
 
 @Pipe({
-    name: 'isStudent',
+    name: 'isStudent'
 })
 export class StudentCheck implements PipeTransform {
     transform(value) {
@@ -28,7 +28,7 @@ export class StudentCheck implements PipeTransform {
 }
 
 @Pipe({
-    name: 'isSuper',
+    name: 'isSuper'
 })
 export class SuperAdminCheck implements PipeTransform {
     transform(value) {

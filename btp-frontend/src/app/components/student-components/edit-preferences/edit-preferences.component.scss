@@ -22,30 +22,13 @@ mat-table {
     min-width: 25%;
 }
 
-.mat-column-Duration {
-    max-width: 200px;
-    padding-left: 20px;
-}
-
 .mat-column-Intake {
-    max-width: 100px;
+    padding-left: 30px;
+    max-width: 200px;
 }
 
 .mat-column-Faculty {
-    padding-left: 20px;
-}
-
-.mat-column-Email {
-    padding-left: 20px;
-}
-
-
-.align-right {
-    padding-left: 45px;
-}
-
-.align-center {
-    padding-left: 20px;
+    padding-left: 30px;
 }
 
 .cdk-drag-placeholder {

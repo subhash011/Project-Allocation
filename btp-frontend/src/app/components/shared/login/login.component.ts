@@ -10,7 +10,7 @@ import {
     Output,
     Pipe,
     PipeTransform,
-    ViewChild,
+    ViewChild
 } from '@angular/core';
 import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 import { Router } from '@angular/router';
@@ -19,7 +19,7 @@ import { LoaderComponent } from '../loader/loader.component';
 
 @Pipe({
     name: 'checkLogIn',
-    pure: false,
+    pure: false
 })
 export class CheckLogIn implements PipeTransform {
     transform(value) {
@@ -31,7 +31,7 @@ export class CheckLogIn implements PipeTransform {
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
     @Output() isSignedIn = new EventEmitter<any>();
@@ -58,9 +58,9 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    userActivity() {
+    async userActivity() {
         if (localStorage.getItem('isLoggedIn') == 'true') {
-            this.signOut(true);
+            await this.signOut(true);
         } else {
             this.signInWithGoogle();
         }
@@ -70,11 +70,10 @@ export class LoginComponent implements OnInit {
         this.authService
             .signIn(GoogleLoginProvider.PROVIDER_ID)
             .then((user) => {
-                console.log(user);
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Loading. Please wait! ...',
+                    data: 'Loading, Please wait ...',
                     disableClose: true,
-                    hasBackdrop: true,
+                    panelClass: 'transparent'
                 });
                 const userModified = {
                     id: user.id,
@@ -108,7 +107,7 @@ export class LoginComponent implements OnInit {
                         } else {
                             this.signOut();
                             this.snackBar.open(navObj.error, 'Ok', {
-                                duration: 10000,
+                                duration: 10000
                             });
                             localStorage.setItem('isLoggedIn', 'false');
                             this.isLoggedIn = false;
@@ -121,10 +120,7 @@ export class LoginComponent implements OnInit {
                             this.signOut();
                             this.snackBar.open(
                                 'Use the institute mail-id to access the portal',
-                                'Ok',
-                                {
-                                    duration: 3000,
-                                }
+                                'Ok'
                             );
                             localStorage.setItem('isLoggedIn', 'false');
                             this.isLoggedIn = false;
@@ -138,51 +134,24 @@ export class LoginComponent implements OnInit {
                         this.dialogRefLoad.close();
                         this.snackBar.open(
                             'Some error occured. Check your network connection and try again!',
-                            'Ok',
-                            {
-                                duration: 3000,
-                            }
+                            'Ok'
                         );
                     }
                 );
             })
             .catch((err) => {
-                if (err.error == 'popup_closed_byuser') {
-                    this.snackBar.open('Cancelled Sign-In!', 'Ok', {
-                        duration: 3000,
-                    });
+                if (err.error == 'popup_closed_by_user') {
+                    this.snackBar.open('Cancelled Sign-In!', 'Ok');
                 } else {
                     this.snackBar.open(
                         'Some error occurred. Check your network connection or enable third party cookies if you are in incognito',
-                        'Ok',
-                        {
-                            duration: 3000,
-                        }
+                        'Ok'
                     );
                 }
             });
     }
 
-    signOut(userClick?: boolean): void {
-        this.authService
-            .signOut()
-            .then(() => {
-                if (userClick) {
-                    this.snackBar.open('Signed Out', 'Ok', {
-                        duration: 3000,
-                    });
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        localStorage.setItem('isLoggedIn', 'false');
-        this.isLoggedIn = false;
-        localStorage.setItem('role', 'none');
-        localStorage.removeItem('id');
-        let user = {};
-        localStorage.setItem('user', JSON.stringify(user));
-        this.isSignedIn.emit([false, 'none']);
-        this.router.navigate(['']);
+    async signOut(userClick?: boolean) {
+        await this.localAuth.signOut(userClick);
     }
 }

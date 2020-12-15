@@ -18,30 +18,30 @@ const routes: Routes = [
     {
         path: 'faculty/:id',
         component: FacultyComponent,
-        runGuardsAndResolvers: 'always',
+        runGuardsAndResolvers: 'always'
     },
     {
         path: 'refresh',
-        component: RefreshComponent,
+        component: RefreshComponent
     },
     {
         path: 'student/projects/:id',
-        component: ShowAvailableProjectsComponent,
+        component: ShowAvailableProjectsComponent
     },
     {
         path: 'student/preferences/:id',
-        component: ShowAvailableProjectsComponent,
+        component: ShowAvailableProjectsComponent
     },
     {path: 'profile/:id', component: ProfileComponent},
     {path: 'super', component: SuperAdminComponent},
     {path: 'admin/:id', component: AdminComponent},
     {path: 'super_admin/:id', component: SuperAdminComponent},
-    {path: 'help', component: HelpComponent},
+    {path: 'help', component: HelpComponent}
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' })],
-    exports: [RouterModule],
+    imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy'})],
+    exports: [RouterModule]
 })
 export class AppRoutingModule {
 }

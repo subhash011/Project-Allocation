@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 export class ProjectsService {
     private url: string;
@@ -18,19 +18,6 @@ export class ProjectsService {
     constructor(private http: HttpClient) {
     }
 
-    getAllStudentProjects() {
-        const id = localStorage.getItem('id');
-        this.url = this.studentBaseURL + id;
-        const user = JSON.parse(localStorage.getItem('user'));
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
-        };
-        return this.http.get(this.url, httpOptions);
-    }
-
     getStudentPreference() {
         const id = localStorage.getItem('id');
         this.url_pref = this.studentBaseURL + 'preference/' + id;
@@ -38,8 +25,21 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
+        };
+        return this.http.get(this.url_pref, httpOptions);
+    }
+
+    getNotStudentPreferences() {
+        const id = localStorage.getItem('id');
+        this.url_pref = this.studentBaseURL + 'not_preference/' + id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                Authorization: user.idToken
+            })
         };
         return this.http.get(this.url_pref, httpOptions);
     }
@@ -47,7 +47,7 @@ export class ProjectsService {
     storeStudentPreferences(preferences) {
         preferences = preferences.map((val) => {
             return {
-                _id: val._id,
+                _id: val._id
             };
         });
         const id = localStorage.getItem('id');
@@ -56,8 +56,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         return this.http.post(this.url_post, preferences, httpOptions);
     }
@@ -70,8 +70,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         return this.http.post(this.url_post, preferences, httpOptions);
     }
@@ -84,8 +84,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         return this.http.post(this.url_post, {preference}, httpOptions);
     }
@@ -98,15 +98,15 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-            }),
+                Authorization: user.idToken
+            })
         };
         return this.http.post(this.url_post, {preference}, httpOptions);
     }
 
     getFacultyProjects(stream) {
         const obj = {
-            stream: stream,
+            stream: stream
         };
 
         let id = localStorage.getItem('id');
@@ -114,8 +114,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         this.url = this.facultyBaseURL + id;
@@ -128,8 +128,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         this.url = this.facultyBaseURL + 'add/' + id;
@@ -143,8 +143,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         this.url = this.facultyBaseURL + 'applied/' + id;
@@ -171,8 +171,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         this.url = this.facultyBaseURL + 'save_preference/' + id;
@@ -186,8 +186,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
 
         this.url = this.facultyBaseURL + 'include_projects/' + id;
@@ -212,8 +212,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.get(this.url, httpOptions);
     }
@@ -224,8 +224,8 @@ export class ProjectsService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: idToken,
-            }),
+                Authorization: idToken
+            })
         };
         return this.http.post(this.url, {projects: projects}, httpOptions);
 

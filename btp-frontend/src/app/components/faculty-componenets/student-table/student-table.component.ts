@@ -4,7 +4,6 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
-    HostListener,
     Input,
     OnChanges,
     OnInit,
@@ -12,16 +11,16 @@ import {
     Pipe,
     PipeTransform,
     SimpleChanges,
-    ViewChild,
+    ViewChild
 } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { animate, state, style, transition, trigger, } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Pipe({
-    name: 'preference',
+    name: 'preference'
 })
 export class PreferencePipe implements PipeTransform {
     transform(value: any, ...args: any[]): any {
@@ -70,9 +69,9 @@ export class GetDisplayedColumns implements PipeTransform {
             transition(
                 'expanded <=> collapsed',
                 animate('0ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-            ),
-        ]),
-    ],
+            )
+        ])
+    ]
 })
 export class StudentTableComponent implements OnInit, OnChanges {
 
@@ -89,7 +88,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
     students: MatTableDataSource<any>;
     non_students: MatTableDataSource<any>;
     expandedElement: any;
-    studentTableHeight: number = window.innerHeight >= 1400 ? 600 : 400;
+    studentTableHeight: number = 48 * 11;
 
     constructor(
         private projectService: ProjectsService,
@@ -106,26 +105,18 @@ export class StudentTableComponent implements OnInit, OnChanges {
         }
     }
 
-    @HostListener('window:resize', ['$event'])
-    onResize(event) {
-        if (event.target.innerHeight <= 1400) {
-            this.studentTableHeight = 400;
-        } else {
-            this.studentTableHeight = 600;
-        }
-    }
-
     ngOnInit() {
         this.students = new MatTableDataSource(this.student_list);
     }
 
     onSubmit() {
 
+        let dialogRef;
         if (this.adminStage == 2) {
-            var dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Please wait ....',
+            dialogRef = this.dialog.open(LoaderComponent, {
+                data: 'Updating, Please wait ...',
                 disableClose: true,
-                hasBackdrop: true,
+                panelClass: 'transparent'
             });
 
             this.projectService
@@ -136,28 +127,22 @@ export class StudentTableComponent implements OnInit, OnChanges {
                         this.reorder = data['reorder'];
                         this.newReorder.emit([this.reorder, this.project._id, this.students.data, this.index]);
 
-                        this.snackBar.open(data['msg'], 'Ok', {
-                            duration: 3000,
-                        });
+                        this.snackBar.open(data['msg'], 'Ok');
                     } else {
-                        this.snackBar.open(data['msg'], 'Ok', {
-                            duration: 3000,
-                        });
+                        this.snackBar.open(data['msg'], 'Ok');
                     }
                 }, () => {
                     dialogRef.close();
                     this.ngOnInit();
-                    this.snackBar.open('Some Error Occured! Try again later.', 'OK', {
-                        duration: 3000,
-                    });
+                    this.snackBar.open('Some Error Occured! Try again later.', 'OK');
                 });
 
 
         } else {
-            var dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Please wait ....',
+            dialogRef = this.dialog.open(LoaderComponent, {
+                data: 'Updating, Please wait ...',
                 disableClose: true,
-                hasBackdrop: true,
+                panelClass: 'transparent'
             });
             if (this.adminStage < 2) {
                 this.student_list.sort((a, b) => {
@@ -166,16 +151,11 @@ export class StudentTableComponent implements OnInit, OnChanges {
                 dialogRef.close();
                 this.snackBar.open(
                     'Preferences can be edited only in the further stages.',
-                    'Ok',
-                    {
-                        duration: 3000,
-                    }
+                    'Ok'
                 );
             } else {
                 dialogRef.close();
-                this.snackBar.open('You cannot edit preferences anymore', 'Ok', {
-                    duration: 3000,
-                });
+                this.snackBar.open('You cannot edit preferences anymore', 'Ok');
             }
         }
     }

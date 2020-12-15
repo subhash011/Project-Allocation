@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
     selector: 'app-faculty-home',
     templateUrl: './faculty-home.component.html',
-    styleUrls: ['./faculty-home.component.scss'],
+    styleUrls: ['./faculty-home.component.scss']
 })
 export class FacultyHomeComponent implements OnInit {
     public stageTableCols = ['Program', 'Abbreviation', 'Stage', 'Time'];
@@ -13,7 +13,7 @@ export class FacultyHomeComponent implements OnInit {
         'Project',
         'StudentsApplied',
         'StudentIntake',
-        'StudentsAlloted',
+        'StudentsAlloted'
     ];
     @Input() projectDetails: any = new MatTableDataSource([]);
     @Input() stageDetails: any = new MatTableDataSource([]);

@@ -64,38 +64,38 @@ router.post("/set_programs/:id", async (req, res) => {
         const programs = req.body.programs;
 
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
-        if (faculty) {
-            const streamMap = new Map(programs);
-
-            const curPrograms = faculty.programs;
-
-            if (curPrograms && curPrograms.length > 0) {
-                for (const program of curPrograms) {
-                    if (streamMap.has(program.short)) {
-                        streamMap.delete(program.short);
-                    }
-                }
-            }
-
-            streamMap.forEach(function (value, key) {
-                const obj = {
-                    full: value,
-                    short: key
-                };
-                faculty.programs.push(obj);
-            });
-
-            await faculty.save();
-            res.json({
-                status: "success",
-                msg: "Successfully added the programs"
-            });
-        } else {
+        if (!faculty) {
             res.json({
                 status: "fail",
                 result: null
             });
+            return;
         }
+        const streamMap = new Map(programs);
+
+        const curPrograms = faculty.programs;
+
+        if (curPrograms && curPrograms.length > 0) {
+            for (const program of curPrograms) {
+                if (streamMap.has(program.short)) {
+                    streamMap.delete(program.short);
+                }
+            }
+        }
+
+        streamMap.forEach(function (value, key) {
+            const obj = {
+                full: value,
+                short: key
+            };
+            faculty.programs.push(obj);
+        });
+
+        await faculty.save();
+        res.json({
+            status: "success",
+            msg: "Successfully added the programs"
+        });
     } catch (e) {
         res.json({
             status: "fail",
@@ -137,19 +137,19 @@ router.get("/getAllPrograms/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
-        if (faculty) {
-            let programs = await Programs.find().lean();
-            if (programs) {
-                res.json({
-                    status: "success",
-                    programs: programs
-                });
-            } else {
-                res.json({
-                    status: "fail",
-                    result: null
-                });
-            }
+        if (!faculty) {
+            res.json({
+                status: "fail",
+                result: null
+            });
+            return;
+        }
+        let programs = await Programs.find().lean();
+        if (programs) {
+            res.json({
+                status: "success",
+                programs: programs
+            });
         } else {
             res.json({
                 status: "fail",
@@ -176,24 +176,24 @@ router.post("/deleteProgram/:id", async (req, res) => {
 
 
         let faculty = await Faculty.findOneAndUpdate({google_id: {id: id, idToken: idToken}}, updateConfig);
-        if (faculty) {
-            let projects = await Project.find({faculty_id: faculty._id, stream: curr_program.short});
-            const project_ids = projects.map(project => project._id);
-            await Project.deleteMany({faculty_id: faculty._id, stream: curr_program.short});
-            updateConfig = {
-                $pullAll: {projects_preference: project_ids}
-            };
-            await Student.updateMany({stream: curr_program.short}, updateConfig);
-            res.json({
-                status: "success",
-                msg: "Successfully removed the program."
-            });
-        } else {
+        if (!faculty) {
             res.json({
                 status: "fail",
                 result: null
             });
+            return;
         }
+        let projects = await Project.find({faculty_id: faculty._id, stream: curr_program.short});
+        const project_ids = projects.map(project => project._id);
+        await Project.deleteMany({faculty_id: faculty._id, stream: curr_program.short});
+        updateConfig = {
+            $pullAll: {projects_preference: project_ids}
+        };
+        await Student.updateMany({stream: curr_program.short}, updateConfig);
+        res.json({
+            status: "success",
+            msg: "Successfully removed the program."
+        });
     } catch (e) {
         res.json({
             status: "fail",
@@ -207,18 +207,18 @@ router.get("/getFacultyPrograms/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("programs");
-        if (faculty) {
-            const programs = faculty.programs;
-            res.json({
-                status: "success",
-                programs: programs
-            });
-        } else {
+        if (!faculty) {
             res.json({
                 status: "fail",
                 result: null
             });
+            return;
         }
+        const programs = faculty.programs;
+        res.json({
+            status: "success",
+            programs: programs
+        });
     } catch (e) {
         res.json({
             status: "fail",
@@ -285,7 +285,7 @@ router.post("/getAdminInfo_program/:id", async (req, res) => {
     try {
         const program = req.body.program;
         let admin = await Admin.findOne({stream: program}).lean();
-        if (admin) {
+        if (admin && admin.admin_id) {
             res.json({
                 status: "success",
                 admin: admin

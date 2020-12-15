@@ -43,11 +43,55 @@ router.post("/user_check", async (req, res) => {
         const email_check = email[1];
         if (superAdmins.includes(userDetails.email)) {
             let superAdmin = await SuperAdmin.findOne({email: userDetails.email});
-            if (superAdmin) {
-                superAdmin.google_id.idToken = userDetails.idToken;
-                let role = "super_admin";
+            if (!superAdmin) {
+                res.json({
+                    isRegistered: false,
+                    position: "super_admin",
+                    user_details: userDetails
+                });
+                return;
+            }
+            superAdmin.google_id.idToken = userDetails.idToken;
+            let role = "super_admin";
+            try {
+                await superAdmin.save();
+                res.json({
+                    isRegistered: true,
+                    position: role,
+                    user_details: userDetails
+                });
+            } catch (e) {
+                res.json({
+                    isRegistered: true,
+                    position: "error",
+                    user_details: "SuperAdmin Not Saved - DB Error"
+                });
+            }
+        } else if (
+            email_check === "iitpkd.ac.in" ||
+            email_check === "gmail.com"
+        ) {
+            try {
+                let faculty = await Faculty.findOne({email: userDetails.email});
+                if (!faculty) {
+                    res.json({
+                        isRegistered: false,
+                        position: "faculty",
+                        user_details: userDetails
+                    });
+                    return;
+                }
+                faculty.google_id.idToken = userDetails.idToken;
+
+                let role = "";
+                if (faculty.isAdmin) {
+                    role = "admin";
+                } else {
+                    role = "faculty";
+                }
+
                 try {
-                    await superAdmin.save();
+                    await faculty.save();
                     res.json({
                         isRegistered: true,
                         position: role,
@@ -57,51 +101,7 @@ router.post("/user_check", async (req, res) => {
                     res.json({
                         isRegistered: true,
                         position: "error",
-                        user_details: "SuperAdmin Not Saved - DB Error"
-                    });
-                }
-            } else {
-                res.json({
-                    isRegistered: false,
-                    position: "super_admin",
-                    user_details: userDetails
-                });
-            }
-        } else if (
-            email_check === "iitpkd.ac.in" ||
-            email_check === "gmail.com"
-        ) {
-            try {
-                let faculty = await Faculty.findOne({email: userDetails.email});
-                if (faculty) {
-                    faculty.google_id.idToken = userDetails.idToken;
-
-                    let role = "";
-                    if (faculty.isAdmin) {
-                        role = "admin";
-                    } else {
-                        role = "faculty";
-                    }
-
-                    try {
-                        await faculty.save();
-                        res.json({
-                            isRegistered: true,
-                            position: role,
-                            user_details: userDetails
-                        });
-                    } catch (e) {
-                        res.json({
-                            isRegistered: true,
-                            position: "error",
-                            user_details: "Faculty Not Saved - DB Error"
-                        });
-                    }
-                } else {
-                    res.json({
-                        isRegistered: false,
-                        position: "faculty",
-                        user_details: userDetails
+                        user_details: "Faculty Not Saved - DB Error"
                     });
                 }
             } catch (e) {
@@ -115,40 +115,34 @@ router.post("/user_check", async (req, res) => {
             try {
                 let studentRegistered = true;
                 let student = await Student.findOne({email: userDetails.email});
-                if (student) {
-                    try {
-                        if (!student.isRegistered) {
-                            student.google_id.idToken = userDetails.idToken;
-                            student.google_id.id = id;
-                            student.isRegistered = true;
-                            studentRegistered = false;
-                        } else {
-                            student.google_id.idToken = userDetails.idToken;
-                        }
-                        student = await student.save();
-                        if (!studentRegistered) {
-                            let result = await addStudentToNotOpted(student);
-                            if (result) {
-                                res.json({
-                                    isRegistered: true,
-                                    position: "student",
-                                    user_details: userDetails
-                                });
-                            } else {
-                                res.json({
-                                    isRegistered: true,
-                                    position: "error",
-                                    user_details: "Student Not Saved - DB Error"
-                                });
-                            }
-                        } else {
-                            res.json({
-                                isRegistered: true,
-                                position: "student",
-                                user_details: userDetails
-                            });
-                        }
-                    } catch (e) {
+                if (!student) {
+                    res.json({
+                        isRegistered: false,
+                        position: "student",
+                        user_details: userDetails,
+                        msg:
+                            "Your name was not in the list of students provided by the co-ordinator. Please contact your stream co-ordinator."
+                    });
+                    return;
+                }
+                if (!student.isRegistered) {
+                    student.google_id.idToken = userDetails.idToken;
+                    student.google_id.id = id;
+                    student.isRegistered = true;
+                    studentRegistered = false;
+                } else {
+                    student.google_id.idToken = userDetails.idToken;
+                }
+                student = await student.save();
+                if (!studentRegistered) {
+                    let result = await addStudentToNotOpted(student);
+                    if (result) {
+                        res.json({
+                            isRegistered: true,
+                            position: "student",
+                            user_details: userDetails
+                        });
+                    } else {
                         res.json({
                             isRegistered: true,
                             position: "error",
@@ -157,19 +151,16 @@ router.post("/user_check", async (req, res) => {
                     }
                 } else {
                     res.json({
-                        isRegistered: false,
+                        isRegistered: true,
                         position: "student",
-                        user_details: userDetails,
-                        msg:
-                            "Your name was not in the list of students provided by the co-ordinator. Please contact your stream co-ordinator."
+                        user_details: userDetails
                     });
                 }
             } catch (e) {
                 res.json({
-                    isRegistered: false,
+                    isRegistered: true,
                     position: "error",
-                    user_details: userDetails,
-                    msg: "Invalid google account"
+                    user_details: "Student Not Saved - DB Error"
                 });
             }
         }

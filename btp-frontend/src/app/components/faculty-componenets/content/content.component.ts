@@ -14,7 +14,7 @@ import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.compone
 
 
 @Pipe({
-    name: 'displayFacultyPublish',
+    name: 'displayFacultyPublish'
 })
 export class FacultyPublish implements PipeTransform {
     transform(student) {
@@ -27,7 +27,7 @@ export class FacultyPublish implements PipeTransform {
     selector: 'app-content',
     templateUrl: './content.component.html',
     styleUrls: ['./content.component.scss'],
-    providers: [LoginComponent, FacultyComponent],
+    providers: [LoginComponent, FacultyComponent]
 })
 export class ContentComponent implements OnInit, DoCheck {
     @Input() public project;
@@ -52,20 +52,20 @@ export class ContentComponent implements OnInit, DoCheck {
         'Project',
         'StudentsApplied',
         'StudentIntake',
-        'StudentsAlloted',
+        'StudentsAlloted'
     ];
     public ProjectForm = this.formBuilder.group({
         title: ['', Validators.required],
         duration: ['', Validators.required],
         studentIntake: ['', Validators.required],
-        description: ['', Validators.required],
+        description: ['', Validators.required]
     });
 
     public EditForm = this.formBuilder.group({
         title: ['', Validators.required],
         duration: ['', Validators.required],
         studentIntake: ['', Validators.required],
-        description: ['', Validators.required],
+        description: ['', Validators.required]
     });
 
     constructor(
@@ -90,7 +90,7 @@ export class ContentComponent implements OnInit, DoCheck {
                 title: this.project.title,
                 duration: this.project.duration,
                 studentIntake: this.project.studentIntake,
-                description: this.project.description,
+                description: this.project.description
             });
         }
     }
@@ -108,8 +108,8 @@ export class ContentComponent implements OnInit, DoCheck {
                     queryParams: {
                         name: this.routeParams.name,
                         abbr: this.routeParams.abbr,
-                        mode: 'programMode',
-                    },
+                        mode: 'programMode'
+                    }
                 });
             });
     }
@@ -121,20 +121,18 @@ export class ContentComponent implements OnInit, DoCheck {
                 duration: this.ProjectForm.get('duration').value,
                 studentIntake: this.ProjectForm.get('studentIntake').value,
                 description: this.ProjectForm.get('description').value.replace(/  +/g, ' '),
-                stream: this.stream,
+                stream: this.stream
             };
-            var dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Loading Please Wait ....',
+            const dialogRef = this.dialog.open(LoaderComponent, {
+                data: 'Updating, Please Wait ....',
                 disableClose: true,
-                hasBackdrop: true,
+                panelClass: 'transparent'
             });
             if (project.studentIntake > 0 && project.duration > 0) {
                 this.projectService.saveProject(project).subscribe((data) => {
                     dialogRef.close();
                     if (data['save'] == 'success') {
-                        let snackBarRef = this.snackBar.open(data['msg'], 'Ok', {
-                            duration: 3000,
-                        });
+                        let snackBarRef = this.snackBar.open(data['msg'], 'Ok');
 
                         snackBarRef.afterDismissed().subscribe(() => {
                             this.router
@@ -144,8 +142,8 @@ export class ContentComponent implements OnInit, DoCheck {
                                         queryParams: {
                                             name: this.routeParams.name,
                                             abbr: this.routeParams.abbr,
-                                            mode: 'programMode',
-                                        },
+                                            mode: 'programMode'
+                                        }
                                     });
                                 });
                         });
@@ -158,46 +156,33 @@ export class ContentComponent implements OnInit, DoCheck {
                                         queryParams: {
                                             name: this.routeParams.full,
                                             abbr: this.routeParams.short,
-                                            mode: 'programMode',
-                                        },
+                                            mode: 'programMode'
+                                        }
                                     });
                                 });
                         });
                     } else if (data['save'] == 'projectCap') {
                         //Go to the error page
-                        this.snackBar.open(data['msg'], 'Ok', {
-                            duration: 3000,
-                        });
+                        this.snackBar.open(data['msg'], 'Ok');
                     } else if (data['save'] == 'studentCap') {
-                        this.snackBar.open(data['msg'], 'Ok', {
-                            duration: 3000,
-                        });
+                        this.snackBar.open(data['msg'], 'Ok');
                     } else if (data['save'] == 'studentsPerFaculty') {
-                        this.snackBar.open(data['msg'], 'Ok', {
-                            duration: 3000,
-                        });
+                        this.snackBar.open(data['msg'], 'Ok');
                     } else {
                         this.navbar.role = 'none';
                         this.snackBar.open(
                             'Session Timed Out! Please Sign-In again',
-                            'Ok',
-                            {
-                                duration: 3000,
-                            }
+                            'Ok'
                         );
                         this.login.signOut();
                     }
                 }, () => {
                     dialogRef.close();
                     this.ngOnInit();
-                    this.snackBar.open('Some Error Occured! Try again later.', 'OK', {
-                        duration: 3000,
-                    });
+                    this.snackBar.open('Some Error Occured! Try again later.', 'OK');
                 });
             } else {
-                this.snackBar.open('Please Enter Valid Data', 'OK', {
-                    duration: 3000,
-                });
+                this.snackBar.open('Please Enter Valid Data', 'OK');
             }
         }
     }
@@ -209,7 +194,7 @@ export class ContentComponent implements OnInit, DoCheck {
                 duration: this.EditForm.get('duration').value,
                 studentIntake: this.EditForm.get('studentIntake').value,
                 description: this.EditForm.get('description').value.replace(/  +/g, ' '),
-                project_id: param._id,
+                project_id: param._id
             };
 
             if (project.studentIntake > 0 && project.duration > 0) {
@@ -217,17 +202,14 @@ export class ContentComponent implements OnInit, DoCheck {
                     let dialogRef = this.dialog.open(SubmitPopUpComponent, {
                         height: '20%',
                         width: '400px',
-                        data: project,
+                        data: project
                     });
                     dialogRef.afterClosed().subscribe((result) => {
                         if (result) {
                             if (result['message'] == 'submit') {
                                 let snackBarRef = this.snackBar.open(
                                     'Successfully Updated',
-                                    'Ok',
-                                    {
-                                        duration: 3000,
-                                    }
+                                    'Ok'
                                 );
                                 snackBarRef.afterDismissed().subscribe(() => {
                                     this.router
@@ -237,8 +219,8 @@ export class ContentComponent implements OnInit, DoCheck {
                                                 queryParams: {
                                                     name: this.routeParams.name,
                                                     abbr: this.routeParams.abbr,
-                                                    mode: 'programMode',
-                                                },
+                                                    mode: 'programMode'
+                                                }
                                             });
                                         });
                                 });
@@ -250,28 +232,21 @@ export class ContentComponent implements OnInit, DoCheck {
                                                 queryParams: {
                                                     name: this.routeParams.name,
                                                     abbr: this.routeParams.abbr,
-                                                    mode: 'programMode',
-                                                },
+                                                    mode: 'programMode'
+                                                }
                                             });
                                         });
                                 });
                             } else if (result['message'] == 'studentCap') {
-                                this.snackBar.open(result['msg'], 'Ok', {
-                                    duration: 3000,
-                                });
+                                this.snackBar.open(result['msg'], 'Ok');
                             } else if (result['message'] == 'studentsPerFaculty') {
-                                this.snackBar.open(result['msg'], 'Ok', {
-                                    duration: 3000,
-                                });
+                                this.snackBar.open(result['msg'], 'Ok');
                             } else if (result['message'] == 'closed') {
                             } else {
                                 this.navbar.role = 'none';
                                 this.snackBar.open(
                                     'Session Timed Out! Please Sign-In again',
-                                    'Ok',
-                                    {
-                                        duration: 3000,
-                                    }
+                                    'Ok'
                                 );
                                 this.login.signOut();
                             }
@@ -279,9 +254,7 @@ export class ContentComponent implements OnInit, DoCheck {
                     });
                 }
             } else {
-                this.snackBar.open('Please Enter Valid Data', 'OK', {
-                    duration: 3000,
-                });
+                this.snackBar.open('Please Enter Valid Data', 'OK');
             }
         }
     }
@@ -293,16 +266,16 @@ export class ContentComponent implements OnInit, DoCheck {
                 width: '400px',
                 data: {
                     message: 'Are you sure you want to delete the project',
-                    heading: 'Confirm Deletion',
-                },
+                    heading: 'Confirm Deletion'
+                }
             });
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
                     if (result['message'] == 'submit') {
-                        var dialogRef = this.dialog.open(LoaderComponent, {
-                            data: 'Please wait ....',
+                        const dialogRef = this.dialog.open(LoaderComponent, {
+                            data: 'Updating, Please wait ...',
                             disableClose: true,
-                            hasBackdrop: true,
+                            panelClass: 'transparent'
                         });
 
                         this.projectService
@@ -313,10 +286,7 @@ export class ContentComponent implements OnInit, DoCheck {
                                 if (result['status'] == 'success') {
                                     let snackBarRef = this.snackBar.open(
                                         'Successfully Deleted',
-                                        'Ok',
-                                        {
-                                            duration: 3000,
-                                        }
+                                        'Ok'
                                     );
                                     snackBarRef.afterDismissed().subscribe(() => {
                                         this.router
@@ -326,16 +296,14 @@ export class ContentComponent implements OnInit, DoCheck {
                                                     queryParams: {
                                                         name: this.routeParams.name,
                                                         abbr: this.routeParams.abbr,
-                                                        mode: 'programMode',
-                                                    },
+                                                        mode: 'programMode'
+                                                    }
                                                 });
                                             });
                                     }, () => {
                                         dialogRef.close();
                                         this.ngOnInit();
-                                        this.snackBar.open('Some Error Occured! Try again later.', 'OK', {
-                                            duration: 3000,
-                                        });
+                                        this.snackBar.open('Some Error Occured! Try again later.', 'OK');
                                     });
                                     snackBarRef.onAction().subscribe(() => {
                                         this.router
@@ -345,8 +313,8 @@ export class ContentComponent implements OnInit, DoCheck {
                                                     queryParams: {
                                                         name: this.routeParams.name,
                                                         abbr: this.routeParams.abbr,
-                                                        mode: 'programMode',
-                                                    },
+                                                        mode: 'programMode'
+                                                    }
                                                 });
                                             });
                                     });

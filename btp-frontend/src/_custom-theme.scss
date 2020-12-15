@@ -7,8 +7,7 @@
     $foreground: map-get($theme, foreground);
     app-home {
         .container {
-            height: 100vh;
-            background: linear-gradient(12deg, white 25%, mat-color($primary) 25%)
+            background: linear-gradient(125deg, white 25%, mat-color($primary) 25%)
         }
     }
 
@@ -20,6 +19,10 @@
         border: 4px solid transparent;
         border-radius: 7px;
         background-color: mat-color($primary);
+
+        &:hover {
+            background-color: mat-color($accent);
+        }
     }
     ::-webkit-scrollbar-button {
         width: 0;
@@ -28,6 +31,11 @@
     }
     ::-webkit-scrollbar-corner {
         background-color: transparent;
+    }
+
+    .transparent .mat-dialog-container {
+        box-shadow: none;
+        background: rgba(0, 0, 0, 0.0);
     }
 }
 

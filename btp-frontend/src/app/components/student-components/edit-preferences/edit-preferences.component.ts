@@ -1,15 +1,15 @@
-import { animate, state, style, transition, trigger, } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, HostListener, Input, OnDestroy, OnInit, } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { LoginComponent } from 'src/app/components/shared/login/login.component';
-import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.component';
+import { HttpResponseAPI } from 'src/app/models/HttpResponseAPI';
+import { LocalAuthService } from 'src/app/services/local-auth/local-auth.service';
 
 @Component({
     selector: 'app-edit-preferences',
@@ -22,7 +22,7 @@ import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.compone
             transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
             transition('expanded <=> void', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
         ])
-    ],
+    ]
 })
 export class EditPreferencesComponent implements OnInit, OnDestroy {
     @Input() preferences: any = new MatTableDataSource([]);
@@ -35,27 +35,22 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     displayedColumns = [
         'Title',
         'Faculty',
-        'Email',
         'Intake',
-        'Duration',
         'Actions',
-        'Submit',
+        'Submit'
     ];
+    dialogRefLoad: MatDialogRef<any>;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private projectService: ProjectsService,
-        private loginObject: LoginComponent,
+        private localAuthService: LocalAuthService,
         private snackBar: MatSnackBar,
-        private dialog: MatDialog,
-        private navbar: NavbarComponent
-    ) {
-    }
+        private dialog: MatDialog
+    ) {}
 
     ngOnInit() {
-        this.tableStyle = {
-            'max-height.px': this.height - 64,
-        };
+        this.tableStyle = {'max-height.px': this.height - 64};
     }
 
     @HostListener('window:resize', ['$event'])
@@ -64,61 +59,48 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Saving preferences, Please wait ...',
             disableClose: true,
-            hasBackdrop: true,
+            panelClass: 'transparent'
         });
         this.projectService
             .storeStudentPreferences(this.preferences.data)
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(
-                (result) => {
+            .subscribe((responseAPI: HttpResponseAPI) => {
+                    this.dialogRefLoad.close();
+                    if (responseAPI.result.updated) {
+                        this.preferences.data = responseAPI.result.preferences;
+                    }
+                    this.snackBar.open(responseAPI.message, 'OK');
+                },
+                () => {
+                    this.dialogRefLoad.close();
+                }
+            );
+    }
+
+    removeOnePreference(preference) {
+        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: 'Removing Preference, Please wait ...',
+            disableClose: true,
+            panelClass: 'transparent'
+        });
+        this.projectService
+            .removeOneStudentPreference(preference)
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe((responseAPI: HttpResponseAPI) => {
                     dialogRefLoad.close();
-                    if (result['message'] == 'success') {
-                        this.preferences.data = result['result'];
-                        this.snackBar.open('Preferences Saved Successfully', 'OK', {
-                            duration: 3000,
+                    if (responseAPI.result.updated) {
+                        this.preferences.data = this.preferences.data.filter((val) => {
+                            return val._id != preference._id;
                         });
-                    } else if (result['message'] == 'invalid-token') {
-                        this.disable = false;
-                        this.navbar.role = 'none';
-                        this.snackBar.open('Session Expired! Please Sign In Again', 'OK', {
-                            duration: 3000,
-                        });
-                        this.loginObject.signOut();
-                    } else if (result['message'] == 'stage-ended') {
-                        this.snackBar.open(
-                            'Stage has ended! You cannot edit preferences anymore',
-                            'Ok',
-                            {duration: 3000}
-                        );
-                    } else if (result['message'] == 'stage-not-started') {
-                        this.snackBar.open(
-                            'You cannot edit preferences till the next stage',
-                            'Ok',
-                            {duration: 3000}
-                        );
                     } else {
-                        this.disable = false;
-                        this.snackBar.open(
-                            'Some Error Occured! If the Error Persists Please re-authenticate',
-                            'OK',
-                            {
-                                duration: 3000,
-                            }
-                        );
+                        this.snackBar.open(responseAPI.message, 'Ok');
                     }
                 },
                 () => {
-                    dialogRefLoad.close();
-                    this.snackBar.open(
-                        'Some Error Occured! If the Error Persists Please re-authenticate',
-                        'OK',
-                        {
-                            duration: 3000,
-                        }
-                    );
+                    this.dialogRefLoad.close();
                 }
             );
     }
@@ -139,61 +121,6 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
         this.preferences.data = [...this.preferences.data];
     }
 
-    removePreference(preference) {
-        const dialogRef = this.dialog.open(LoaderComponent, {
-            data: 'Please wait ....',
-            disableClose: true,
-            hasBackdrop: true,
-        });
-        this.projectService
-            .removeOneStudentPreference(preference)
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(
-                (result) => {
-                    dialogRef.close();
-                    if (result['message'] == 'invalid-token') {
-                        this.navbar.role = 'none';
-                        this.snackBar.open('Session Expired! Please Sign In Again', 'OK', {
-                            duration: 3000,
-                        });
-                        this.loginObject.signOut();
-                    } else if (result['message'] == 'stage-ended') {
-                        this.snackBar.open(
-                            'Stage has ended! You cannot edit preferences anymore',
-                            'Ok',
-                            {duration: 3000}
-                        );
-                    } else if (result['message'] == 'stage-not-started') {
-                        this.snackBar.open(
-                            'You cannot edit preferences till the next stage',
-                            'Ok',
-                            {duration: 3000}
-                        );
-                    } else if (result['message'] == 'success') {
-                        this.preferences.data = this.preferences.data.filter((val) => {
-                            return val._id != preference._id;
-                        });
-                    }
-                },
-                () => {
-                    dialogRef.close();
-                    this.snackBar.open(
-                        'Some Error Occured! If the Error Persists Please re-authenticate',
-                        'OK',
-                        {
-                            duration: 3000,
-                        }
-                    );
-                }
-            );
-    }
-
-    drop(event: CdkDragDrop<any[]>) {
-        const previousIndex = this.preferences.data.indexOf(event.item.data);
-        moveItemInArray(event.container.data, previousIndex, event.currentIndex);
-        this.preferences = new MatTableDataSource(event.container.data);
-    }
-
     moveOneUp(project) {
         if (project == 0) {
             return;
@@ -208,6 +135,12 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
         }
         moveItemInArray(this.preferences.data, project, project + 1);
         this.preferences.data = [...this.preferences.data];
+    }
+
+    drop(event: CdkDragDrop<any[]>) {
+        const previousIndex = this.preferences.data.indexOf(event.item.data);
+        moveItemInArray(event.container.data, previousIndex, event.currentIndex);
+        this.preferences = new MatTableDataSource(event.container.data);
     }
 
     ngOnDestroy() {

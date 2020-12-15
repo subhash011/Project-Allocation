@@ -1,117 +1,10 @@
-<!--<div-->
-<!--    *ngIf="-->
-<!--    admins && admins.startDate && displayTimeline && loaded && clone != 'temp'-->
-<!--  "-->
-<!--    class="timer"-->
-<!--&gt;-->
-<!--  <span class="days_left"-->
-<!--  ><strong *ngIf="curDeadline"-->
-<!--  >Current stage ends in :-->
-<!--      {{ curDeadline | countdown: currentTime }}</strong-->
-<!--  >-->
-<!--    <span class="text"><b>About this stage :</b> {{ message }}</span>-->
-<!--  </span>-->
-<!--</div>-->
-<!--<div-->
-<!--    *ngIf="loaded && admins && admins.startDate && clone != 'temp'"-->
-<!--    class="group"-->
-<!--&gt;-->
-<!--    <a-->
-<!--        [ngStyle]="icon"-->
-<!--        class="stage-1-icon start icon"-->
-<!--        matTooltip="Faculties Start Project Allocation"-->
-<!--        matTooltipPosition="above"-->
-<!--    >-->
-<!--        <mat-icon *ngIf="!startCompleted">check_circle_outline</mat-icon>-->
-<!--        <mat-icon *ngIf="startCompleted">check_circle</mat-icon>-->
-<!--    </a>-->
-<!--    <mat-progress-bar-->
-<!--        [value]="stageOne"-->
-<!--        class="stage-1"-->
-<!--        mode="determinate"-->
-<!--    ></mat-progress-bar>-->
-<!--    <a-->
-<!--        [ngStyle]="icon"-->
-<!--        class="stage-1-icon icon"-->
-<!--        matTooltip="Projects are decided by the faculties"-->
-<!--        matTooltipPosition="above"-->
-<!--    >-->
-<!--        <mat-icon *ngIf="stageOneCompleted">check_circle</mat-icon>-->
-<!--        <mat-icon *ngIf="!stageOneCompleted">check_circle_outline</mat-icon>-->
-<!--    </a>-->
-<!--    <mat-progress-bar-->
-<!--        [value]="stageTwo"-->
-<!--        class="stage-1"-->
-<!--        mode="determinate"-->
-<!--    ></mat-progress-bar>-->
-<!--    <a-->
-<!--        [ngStyle]="icon"-->
-<!--        class="stage-1-icon icon"-->
-<!--        matTooltip="Students finish submitting their preferences"-->
-<!--        matTooltipPosition="above"-->
-<!--    >-->
-<!--        <mat-icon *ngIf="stageTwoCompleted">check_circle</mat-icon>-->
-<!--        <mat-icon *ngIf="!stageTwoCompleted">check_circle_outline</mat-icon>-->
-<!--    </a>-->
-<!--    <mat-progress-bar-->
-<!--        [value]="stageThree"-->
-<!--        class="stage-1"-->
-<!--        mode="determinate"-->
-<!--    ></mat-progress-bar>-->
-<!--    <a-->
-<!--        [ngStyle]="icon"-->
-<!--        class="stage-1-icon icon"-->
-<!--        matTooltip="Faculties finish submitting their preferences"-->
-<!--        matTooltipPosition="above"-->
-<!--    >-->
-<!--        <mat-icon *ngIf="stageThreeCompleted">check_circle</mat-icon>-->
-<!--        <mat-icon *ngIf="!stageThreeCompleted">check_circle_outline</mat-icon>-->
-<!--    </a>-->
-<!--    <mat-progress-bar-->
-<!--        [value]="stageFour"-->
-<!--        class="stage-1 mobile"-->
-<!--        mode="determinate"-->
-<!--    ></mat-progress-bar>-->
-<!--    <a-->
-<!--        [ngStyle]="icon"-->
-<!--        class="mobile"-->
-<!--        class="stage-1-icon icon"-->
-<!--        matTooltip="Projects are alloted"-->
-<!--        matTooltipPosition="above"-->
-<!--    >-->
-<!--        <mat-icon *ngIf="stageFourCompleted" class="mobile">check_circle</mat-icon>-->
-<!--        <mat-icon *ngIf="!stageFourCompleted" class="mobile"-->
-<!--        >check_circle_outline-->
-<!--        </mat-icon-->
-<!--        >-->
-<!--    </a>-->
-<!--</div>-->
-<!--<div-->
-<!--    *ngIf="-->
-<!--    admins &&-->
-<!--    admins.startDate &&-->
-<!--    displayTimeline &&-->
-<!--    loaded &&-->
-<!--    next &&-->
-<!--    clone != 'temp'-->
-<!--  "-->
-<!--    [ngStyle]="styles"-->
-<!--    class="timer-text"-->
-<!--&gt;-->
-<!--    <span class="below-text"><b>About next stage :</b> {{ next }}</span>-->
-<!--</div>-->
-
-<div
-    *ngIf="
+<div *ngIf="
     admins && admins.startDate && displayTimeline && loaded
   "
-    class="faculty-card"
->
+     class="faculty-card">
     <mat-card class="program-details">
-        <mat-card-title
-        ><u> Stage {{ admins.stage + 1 }} of 4 </u></mat-card-title
-        >
-        <br/>
+        <mat-card-title><u> Stage {{ admins.stage + 1 }} of 4 </u></mat-card-title>
+        <br />
         <mat-card-content class="card-content">
             <div class="content">
                 <p>
@@ -142,23 +35,16 @@
     </mat-card>
 </div>
 
-<div
-    *ngIf="loaded && (!admins || !(admins && admins.startDate))"
-    class="general"
->
+<div *ngIf="loaded && (!admins || !(admins && admins.startDate))"
+     class="general">
     <mat-card class="general-details">
-        <mat-card-title class="general-title"
-        ><u>Description of stages</u></mat-card-title
-        >
-        <br/>
-        <br/>
+        <mat-card-title class="general-title"><u>Description of stages</u></mat-card-title>
+        <br /> <br />
         <mat-card-content>
             <p>Stage 1 : Faculties add projects to the portal</p>
             <p>Stage 2 : Students give their preferences for the projects</p>
             <p>
-                Stage 3 : Faculties give prefernces among the students who have chosen
-                their projects
-            </p>
+                Stage 3 : Faculties give prefernces among the students who have chosen their projects </p>
             <p>Stage 4 : Projects will be alloted</p>
         </mat-card-content>
     </mat-card>

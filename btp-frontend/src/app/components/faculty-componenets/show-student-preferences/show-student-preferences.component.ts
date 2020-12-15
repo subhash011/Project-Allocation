@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
     selector: 'app-show-student-preferences',
     templateUrl: './show-student-preferences.component.html',
-    styleUrls: ['./show-student-preferences.component.scss'],
+    styleUrls: ['./show-student-preferences.component.scss']
 })
 export class ShowStudentPreferencesComponent implements OnInit {
     value: string = '';
@@ -38,8 +38,6 @@ export class ShowStudentPreferencesComponent implements OnInit {
     }
 
     copied(event) {
-        this.snackBar.open('Copied content to clipboard', 'Ok', {
-            duration: 3000,
-        });
+        this.snackBar.open('Copied content to clipboard', 'Ok');
     }
 }

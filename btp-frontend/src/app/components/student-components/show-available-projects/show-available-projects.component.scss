@@ -99,14 +99,6 @@ tr.example-element-row:not(.example-expanded-row):active {
     padding-top: 64px;
 }
 
-.table::-webkit-scrollbar {
-    display: none;
-}
-
-.table {
-    -ms-overflow-style: none;
-}
-
 .table {
     overflow: auto;
     width: 90%;

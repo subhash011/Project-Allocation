@@ -6,9 +6,10 @@ import { UserService } from 'src/app/services/user/user.service';
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { DeletePopUpComponent } from 'src/app/components/faculty-componenets/delete-pop-up/delete-pop-up.component';
 import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
+import { HttpResponseAPI } from 'src/app/models/HttpResponseAPI';
 
 @Pipe({
-    name: 'userPhoto',
+    name: 'userPhoto'
 })
 export class UserPhoto implements PipeTransform {
     transform(value) {
@@ -21,7 +22,7 @@ export class UserPhoto implements PipeTransform {
     selector: 'app-profile',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.scss'],
-    providers: [LoginComponent],
+    providers: [LoginComponent]
 })
 export class ProfileComponent implements OnInit {
     programHeader: string[] = ['Program Name', 'Delete'];
@@ -33,13 +34,13 @@ export class ProfileComponent implements OnInit {
     dialogRefLoad: any;
     studentFormGroup: FormGroup = this.formBuilder.group({
         name: [null, Validators.required],
-        gpa: [null, Validators.required],
+        gpa: [null, Validators.required]
     });
     facultyFormGroup: FormGroup = this.formBuilder.group({
-        name: ['', Validators.required],
+        name: ['', Validators.required]
     });
     programGroup: FormGroup = this.formBuilder.group({
-        programs: ['', Validators.required],
+        programs: ['', Validators.required]
     });
 
     constructor(
@@ -53,31 +54,29 @@ export class ProfileComponent implements OnInit {
 
     ngOnInit() {
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Loading. Please wait! ...',
+            data: 'Loading, Please wait! ...',
             disableClose: true,
-            hasBackdrop: true,
+            panelClass: 'transparent'
         });
         this.role = localStorage.getItem('role');
         if (this.role == 'student') {
             this.userService
                 .getStudentDetails(localStorage.getItem('id'))
-                .subscribe(
-                    (data) => {
+                .subscribe((responseAPI: HttpResponseAPI) => {
                         this.dialogRefLoad.close();
-                        this.user_info = data['user_details'];
-                        this.studentFormGroup.controls['name'].setValue(
-                            this.user_info.name
-                        );
-                        this.studentFormGroup.controls['gpa'].setValue(this.user_info.gpa);
+                        if (responseAPI.statusCode == 401) {
+                            this.snackBar.open(responseAPI.message, 'Ok');
+                        } else {
+                            this.user_info = responseAPI.result.student;
+                            this.studentFormGroup.controls['name'].setValue(this.user_info.name);
+                            this.studentFormGroup.controls['gpa'].setValue(this.user_info.gpa);
+                        }
                     },
                     () => {
                         this.dialogRefLoad.close();
                         this.snackBar.open(
-                            'Some error occured, if the error persists re-authenticate',
-                            'Ok',
-                            {
-                                duration: 3000,
-                            }
+                            'Some error occurred, if the error persists re-authenticate',
+                            'Ok'
                         );
                     }
                 );
@@ -97,10 +96,7 @@ export class ProfileComponent implements OnInit {
                             } else {
                                 this.snackBar.open(
                                     'Session Timed Out! Please Sign in Again!',
-                                    'Ok',
-                                    {
-                                        duration: 3000,
-                                    }
+                                    'Ok'
                                 );
                                 this.login.signOut();
                             }
@@ -108,10 +104,7 @@ export class ProfileComponent implements OnInit {
                     } else {
                         this.snackBar.open(
                             'Session Timed Out! Please Sign in Again!',
-                            'Ok',
-                            {
-                                duration: 3000,
-                            }
+                            'Ok'
                         );
                         this.login.signOut();
                     }
@@ -120,109 +113,35 @@ export class ProfileComponent implements OnInit {
                     this.dialogRefLoad.close();
                     this.snackBar.open(
                         'Some error occured, if the error persists re-authenticate',
-                        'Ok',
-                        {
-                            duration: 3000,
-                        }
+                        'Ok'
                     );
                 }
             );
         }
     }
 
-    getStudentDiv() {
-        if (this.role == 'student' && this.user_info != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    getSuperAdminDiv() {
-        if (localStorage.getItem('role') == 'super_admin') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    getFacultyDiv() {
-        if (
-            localStorage.getItem('role') == 'faculty' ||
-            localStorage.getItem('role') == 'admin'
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    updateStudentProfile() {
-        if (this.studentFormGroup.valid) {
-            const student = {
-                name: this.studentFormGroup.get('name').value,
-                gpa: this.studentFormGroup.get('gpa').value,
-            };
-            var dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Please wait ....',
-                disableClose: true,
-                hasBackdrop: true,
-            });
-            this.userService.updateStudentProfile(student).subscribe(
-                (result) => {
-                    if (result['message'] == 'success') {
-                        this.snackBar.open('Profile Updated Sucessfully', 'Ok', {
-                            duration: 3000,
-                        });
-                        this.ngOnInit();
-                    } else if (result['message'] == 'invalid-token') {
-                        this.login.signOut();
-                        this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again.',
-                            'Ok',
-                            {
-                                duration: 3000,
-                            }
-                        );
-                    }
-                },
-                () => {
-                    dialogRef.close();
-                    this.ngOnInit();
-                    this.snackBar.open('Some Error Occured! Try again later.', 'OK', {
-                        duration: 3000,
-                    });
-                }
-            );
-        }
-    }
 
     updateFacultyProfile() {
         if (this.facultyFormGroup.valid) {
             const faculty = {
-                name: this.facultyFormGroup.get('name').value,
+                name: this.facultyFormGroup.get('name').value
             };
 
-            var dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Please wait ....',
+            const dialogRef = this.dialog.open(LoaderComponent, {
+                data: 'Updating, Please wait ...',
                 disableClose: true,
-                hasBackdrop: true,
+                panelClass: 'transparent'
             });
 
             this.userService.updateFacultyProfile(faculty).subscribe(
                 (data) => {
                     dialogRef.close();
                     if (data['status'] == 'success') {
-                        this.snackBar.open(data['msg'], 'Ok', {
-                            duration: 3000,
-                        });
+                        this.snackBar.open(data['msg'], 'Ok');
                     } else {
                         this.snackBar.open(
                             'Session Timed Out! Please Sign in Again!',
-                            'Ok',
-                            {
-                                duration: 3000,
-                            }
+                            'Ok'
                         );
                         this.login.signOut();
                     }
@@ -230,9 +149,7 @@ export class ProfileComponent implements OnInit {
                 () => {
                     dialogRef.close();
                     this.ngOnInit();
-                    this.snackBar.open('Some Error Occured! Try again later.', 'OK', {
-                        duration: 3000,
-                    });
+                    this.snackBar.open('Some Error Occured! Try again later.', 'OK');
                 }
             );
         }
@@ -241,28 +158,23 @@ export class ProfileComponent implements OnInit {
     addProgram() {
         if (this.programGroup.valid) {
             const programs = {
-                programs: this.programGroup.get('programs').value,
+                programs: this.programGroup.get('programs').value
             };
-            var dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Please wait ....',
+            const dialogRef = this.dialog.open(LoaderComponent, {
+                data: 'Updating, please wait ...',
                 disableClose: true,
-                hasBackdrop: true,
+                panelClass: 'transparent'
             });
             this.userService.setPrograms(programs).subscribe(
                 (data) => {
                     dialogRef.close();
                     if (data['status'] == 'success') {
-                        this.snackBar.open(data['msg'], 'Ok', {
-                            duration: 3000,
-                        });
+                        this.snackBar.open(data['msg'], 'Ok');
                         this.ngOnInit();
                     } else {
                         this.snackBar.open(
                             'Session Timed Out! Please Sign in Again!',
-                            'Ok',
-                            {
-                                duration: 3000,
-                            }
+                            'Ok'
                         );
                         this.login.signOut();
                     }
@@ -270,9 +182,7 @@ export class ProfileComponent implements OnInit {
                 () => {
                     dialogRef.close();
                     this.ngOnInit();
-                    this.snackBar.open('Some Error Occured! Try again later.', 'OK', {
-                        duration: 3000,
-                    });
+                    this.snackBar.open('Some Error Occured! Try again later.', 'Ok');
                 }
             );
         }
@@ -280,39 +190,34 @@ export class ProfileComponent implements OnInit {
 
     deleteProgram(program) {
         const obj = {
-            program: program,
+            program: program
         };
 
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
             height: '200px',
             data: {
                 heading: 'Confirm Deletion',
-                message: 'Are you sure you want to remove the branch',
-            },
+                message: 'Are you sure you want to remove the branch'
+            }
         });
         dialogRef.afterClosed().subscribe(
             (result) => {
                 if (result['message'] == 'submit') {
-                    var dialogRef = this.dialog.open(LoaderComponent, {
-                        data: 'Loading Please Wait ....',
+                    const dialogRef = this.dialog.open(LoaderComponent, {
+                        data: 'Loading, Please Wait ....',
                         disableClose: true,
-                        hasBackdrop: true,
+                        panelClass: 'transparent'
                     });
 
                     this.userService.deleteFacultyProgram(obj).subscribe((data) => {
                         dialogRef.close();
                         if (data['status'] == 'success') {
-                            this.snackBar.open(data['msg'], 'Ok', {
-                                duration: 3000,
-                            });
+                            this.snackBar.open(data['msg'], 'Ok');
                             this.ngOnInit();
                         } else {
                             this.snackBar.open(
                                 'Session Timed Out! Please Sign in Again!',
-                                'Ok',
-                                {
-                                    duration: 3000,
-                                }
+                                'Ok'
                             );
                             this.login.signOut();
                         }
@@ -322,9 +227,7 @@ export class ProfileComponent implements OnInit {
             () => {
                 dialogRef.close();
                 this.ngOnInit();
-                this.snackBar.open('Some Error Occured! Try again later.', 'OK', {
-                    duration: 3000,
-                });
+                this.snackBar.open('Some Error Occured! Try again later.');
             }
         );
     }
