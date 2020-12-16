@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 @Injectable({
-    providedIn: "root",
+    providedIn: "root"
 })
 export class StyleManagerService {
     constructor() {}
@@ -29,9 +29,7 @@ function getLinkElementForKey(key: string) {
 }
 
 function getExistingLinkElementByKey(key: string) {
-    return document.head.querySelector(
-        `link[rel="stylesheet"].${getClassNameForKey(key)}`
-    );
+    return document.head.querySelector(`link[rel="stylesheet"].${ getClassNameForKey(key) }`);
 }
 
 function createLinkElementWithKey(key: string) {
@@ -44,5 +42,5 @@ function createLinkElementWithKey(key: string) {
 }
 
 function getClassNameForKey(key: string) {
-    return `style-manager-${key}`;
+    return `style-manager-${ key }`;
 }

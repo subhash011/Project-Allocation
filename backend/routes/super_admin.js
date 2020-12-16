@@ -41,7 +41,6 @@ router.get("/student/details/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -66,7 +65,6 @@ router.get("/student/details/:id", async (req, res) => {
             });
         }
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -75,7 +73,6 @@ router.get("/student/details/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -96,7 +93,6 @@ router.get("/faculty/details/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -121,7 +117,6 @@ router.get("/faculty/details/:id", async (req, res) => {
             });
         }
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -130,7 +125,6 @@ router.get("/faculty/details/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -145,7 +139,6 @@ router.get("/projects/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -177,7 +170,6 @@ router.get("/projects/:id", async (req, res) => {
             arr.push(newProj);
         }
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -186,7 +178,6 @@ router.get("/projects/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -228,7 +219,6 @@ router.post("/addAdmin/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: google_user_id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -241,7 +231,6 @@ router.post("/addAdmin/:id", async (req, res) => {
         });
         if (!faculty) {
             res.status(200).json({
-                success: true,
                 statusCode: 200,
                 message: "success",
                 result: {
@@ -252,7 +241,6 @@ router.post("/addAdmin/:id", async (req, res) => {
         }
         await Admin.findOneAndUpdate({stream: program}, {admin_id: faculty._id});
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -261,7 +249,6 @@ router.post("/addAdmin/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -277,7 +264,6 @@ router.post("/removeAdmin/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -290,7 +276,6 @@ router.post("/removeAdmin/:id", async (req, res) => {
         });
         if (!faculty) {
             res.status(200).json({
-                success: true,
                 statusCode: 200,
                 message: "success",
                 result: {
@@ -301,7 +286,6 @@ router.post("/removeAdmin/:id", async (req, res) => {
         }
         await Admin.findOneAndUpdate({admin_id: faculty._id}, {$unset: {admin_id: ""}});
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -310,7 +294,6 @@ router.post("/removeAdmin/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -327,7 +310,6 @@ router.post("/update/program/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}});
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -352,7 +334,6 @@ router.post("/update/program/:id", async (req, res) => {
         promises.push(Admin.updateMany({stream: curMap.short}, {stream: newMap.short}));
         await Promise.all(promises);
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Successfully updated the program.",
             result: {
@@ -361,7 +342,6 @@ router.post("/update/program/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -378,7 +358,6 @@ router.post("/update/stream/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}});
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -390,7 +369,6 @@ router.post("/update/stream/:id", async (req, res) => {
         promises.push(Faculty.updateMany({stream: curMap.short}, {stream: newMap.short}));
         await Promise.all(promises);
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Successfully updated the stream.",
             result: {
@@ -399,7 +377,6 @@ router.post("/update/stream/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -415,7 +392,6 @@ router.delete("/student/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: google_user_id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -428,7 +404,6 @@ router.delete("/student/:id", async (req, res) => {
         };
         await Project.updateMany({stream: student.stream}, updateCondition);
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Successfully removed the student.",
             result: {
@@ -437,7 +412,6 @@ router.delete("/student/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -453,7 +427,6 @@ router.delete("/faculty/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: google_user_id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -475,7 +448,6 @@ router.delete("/faculty/:id", async (req, res) => {
         updateResult = {$unset: {project_alloted: ""}};
         await Student.updateMany(updateCondition, updateResult);
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Successfully removed the faculty",
             result: {
@@ -484,7 +456,6 @@ router.delete("/faculty/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null

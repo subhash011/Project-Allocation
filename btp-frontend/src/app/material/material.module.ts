@@ -69,12 +69,10 @@ const MaterialComponents = [
     ScrollingModule,
     MatChipsModule,
     MatSortModule,
-    ClipboardModule,
+    ClipboardModule
 ];
 
 @NgModule({
-    declarations: [],
-    imports: MaterialComponents,
-    exports: MaterialComponents,
+    declarations: [], imports: MaterialComponents, exports: MaterialComponents
 })
 export class MaterialModule {}

@@ -7,19 +7,13 @@ import { Router } from "@angular/router";
 import { StorageService } from "../helpers/storage.service";
 
 @Injectable({
-    providedIn: "root",
+    providedIn: "root"
 })
 export class LocalAuthService {
     private root = environment.apiUrl;
     private user_url = this.root + "auth/user_check";
 
-    constructor(
-        private http: HttpClient,
-        private authService: SocialAuthService,
-        private router: Router,
-        private snackBar: MatSnackBar,
-        private storageService: StorageService
-    ) {}
+    constructor(private http: HttpClient, private authService: SocialAuthService, private router: Router, private snackBar: MatSnackBar, private storageService: StorageService) {}
 
     checkUser(user) {
         return this.http.post<any>(this.user_url, user);
@@ -29,45 +23,37 @@ export class LocalAuthService {
         if (data.isRegistered) {
             if (data.position === "student") {
                 return {
-                    route: "/student/" + data.user_details.id,
-                    error: "none",
+                    route: "/student/" + data.user_details.id, error: "none"
                 };
             } else if (data.position == "faculty" || data.position == "admin") {
                 return {
-                    route: "/faculty/" + data.user_details.id,
-                    error: "none",
+                    route: "/faculty/" + data.user_details.id, error: "none"
                 };
             } else if (data.position == "super_admin") {
                 return {
-                    route: "/super_admin/" + data.user_details.id,
-                    error: "none",
+                    route: "/super_admin/" + data.user_details.id, error: "none"
                 };
             }
         } else if (!data.isRegistered) {
             if (data.position === "student") {
                 return {
-                    route: "/register/" + data.user_details.id,
-                    error: data.msg,
+                    route: "/register/" + data.user_details.id, error: data.msg
                 };
             } else if (data.position === "faculty") {
                 return {
-                    route: "/register/" + data.user_details.id,
-                    error: "none",
+                    route: "/register/" + data.user_details.id, error: "none"
                 };
             } else if (data.position == "super_admin") {
                 return {
-                    route: "/register/" + data.user_details.id,
-                    error: "none",
+                    route: "/register/" + data.user_details.id, error: "none"
                 };
             } else if (data.position === "error") {
                 return {
-                    route: "/error",
-                    error: "Invalid Email",
+                    route: "/error", error: "Invalid Email"
                 };
             } else if (data.position === "login-error") {
                 return {
-                    route: "/error",
-                    error: "Some error occured! Try again later.",
+                    route: "/error", error: "Some error occured! Try again later."
                 };
             }
         }
@@ -86,7 +72,7 @@ export class LocalAuthService {
             this.storageService.setItem("role", "none");
             this.storageService.setItem("current-theme", theme);
             this.storageService.setItem("user", JSON.stringify(user));
-            await this.router.navigate([""]);
+            await this.router.navigate([ "" ]);
             if (userClick) {
                 this.snackBar.open("Signed out", "Ok");
             }

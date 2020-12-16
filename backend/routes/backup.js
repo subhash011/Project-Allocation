@@ -8,7 +8,6 @@ const Admin = require("../models/Admin_Info");
 const Programs = require("../models/Programs");
 const Streams = require("../models/Streams");
 
-
 router.get(`/${process.env.SECRET_KEY}/streams`, (req, res) => {
     Streams.find().lean().select("-__v").then(streams => {
         res.send(streams);

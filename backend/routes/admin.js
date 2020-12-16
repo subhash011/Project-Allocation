@@ -9,7 +9,7 @@ const Programs = require("../models/Programs");
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
-const parse = require('csv-parse');
+const parse = require("csv-parse");
 const util = require("util");
 
 // read CSV and return data row-wise
@@ -73,8 +73,8 @@ function combineProjects(projects) {
         project.students_id = [...union];
         project.students_id = project.students_id.map((val) => JSON.parse(val));
         project.students_id = project.students_id
-            .reduce(studentPref, "")
-            .substring(1);
+                                     .reduce(studentPref, "")
+                                     .substring(1);
     }
     return projects;
 }
@@ -93,8 +93,8 @@ function combineStudents(projects, students) {
             JSON.parse(val)
         );
         student.projects_preference = student.projects_preference
-            .reduce(projectPref, "")
-            .substring(1);
+                                             .reduce(projectPref, "")
+                                             .substring(1);
     }
     return students;
 }
@@ -123,10 +123,9 @@ function generateCSVProjects(data, program_name) {
     for (let ind = 1; ind <= s_length; ind++) {
         headers +=
             ind === s_length
-                ? `Preference.${ind} ( Name )|Preference.${ind} ( Roll no. )|\n`
-                : `Preference.${ind} ( Name )|Preference.${ind} ( Roll no. )|`;
+            ? `Preference.${ind} ( Name )|Preference.${ind} ( Roll no. )|\n`
+            : `Preference.${ind} ( Name )|Preference.${ind} ( Roll no. )|`;
     }
-
 
     let str = "";
     for (const fields of data) {
@@ -301,8 +300,8 @@ router.get("/project/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}})
-            .lean()
-            .select("_id isAdmin");
+                                   .lean()
+                                   .select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
             res.json({
                 message: "invalid-token",
@@ -311,36 +310,36 @@ router.get("/project/:id", async (req, res) => {
             return;
         }
         let admin = await Admin.findOne({admin_id: faculty._id})
-            .lean()
-            .select("stream");
+                               .lean()
+                               .select("stream");
         const stream = admin.stream;
         let projects = await Project.find({stream: stream})
-            .lean()
-            .populate({
-                path: "faculty_id",
-                select: "_id name",
-                model: Faculty
-            })
-            .populate({
-                path: "students_id",
-                select: {name: 1, roll_no: 1, project_alloted: 1},
-                model: Student,
-                populate: {
-                    path: "project_alloted",
-                    select: {title: 1, faculty_id: 1},
-                    model: Project,
-                    populate: {
-                        path: "faculty_id",
-                        select: {name: 1},
-                        model: Faculty
-                    }
-                }
-            })
-            .populate({
-                path: "student_alloted",
-                select: "name roll_no gpa",
-                model: Student
-            });
+                                    .lean()
+                                    .populate({
+                                        path: "faculty_id",
+                                        select: "_id name",
+                                        model: Faculty
+                                    })
+                                    .populate({
+                                        path: "students_id",
+                                        select: {name: 1, roll_no: 1, project_alloted: 1},
+                                        model: Student,
+                                        populate: {
+                                            path: "project_alloted",
+                                            select: {title: 1, faculty_id: 1},
+                                            model: Project,
+                                            populate: {
+                                                path: "faculty_id",
+                                                select: {name: 1},
+                                                model: Faculty
+                                            }
+                                        }
+                                    })
+                                    .populate({
+                                        path: "student_alloted",
+                                        select: "name roll_no gpa",
+                                        model: Student
+                                    });
         const arr = [];
         for (const project of projects) {
             const newProj = {
@@ -413,8 +412,8 @@ router.get("/stream_email/student/:id", async (req, res) => {
         let programAdmin;
 
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}})
-            .lean()
-            .select("adminProgram programs");
+                                   .lean()
+                                   .select("adminProgram programs");
         const stream = faculty.adminProgram;
         for (const program of faculty.programs) {
             if (program.short === stream) {
@@ -423,8 +422,8 @@ router.get("/stream_email/student/:id", async (req, res) => {
             }
         }
         let students = await Student.find({stream: stream})
-            .lean()
-            .select("email");
+                                    .lean()
+                                    .select("email");
         for (const student of students) {
             emails.push(student.email);
         }
@@ -452,7 +451,6 @@ router.get("/all/info", async (req, res) => {
         let admins = await Admin.find();
         if (!admins) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -461,7 +459,6 @@ router.get("/all/info", async (req, res) => {
         }
         for (const admin of admins) result[admin.stream] = admin.admin_id ? admin : null;
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -470,7 +467,6 @@ router.get("/all/info", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -506,105 +502,105 @@ router.get("/members/:id", async (req, res) => {
         }
         promises.push(
             Faculty.find({programs: {$elemMatch: programAdmin}})
-                .lean()
-                .populate({
-                    path: "project_list",
-                    select: {isIncluded: 1, studentIntake: 1, stream: 1},
-                    model: Project
-                })
-                .then((faculties) => {
-                    users.faculties = faculties.map((val) => {
-                        let projectCapErr = false;
-                        let studentCapErr = false;
-                        let studentsPerFacultyErr = false;
-                        let projects = val.project_list;
-                        let includedProjects = 0;
-                        let total_projects = 0;
-                        projects = projects.filter((project) => {
-                            if (project.stream === admin.stream) {
-                                includedProjects += project.isIncluded ? 1 : 0;
-                                total_projects += 1;
-                                return project;
-                            }
-                        });
-                        if (projects.length > admin.project_cap) {
-                            projectCapErr = true;
-                        }
+                   .lean()
+                   .populate({
+                       path: "project_list",
+                       select: {isIncluded: 1, studentIntake: 1, stream: 1},
+                       model: Project
+                   })
+                   .then((faculties) => {
+                       users.faculties = faculties.map((val) => {
+                           let projectCapErr = false;
+                           let studentCapErr = false;
+                           let studentsPerFacultyErr = false;
+                           let projects = val.project_list;
+                           let includedProjects = 0;
+                           let total_projects = 0;
+                           projects = projects.filter((project) => {
+                               if (project.stream === admin.stream) {
+                                   includedProjects += project.isIncluded ? 1 : 0;
+                                   total_projects += 1;
+                                   return project;
+                               }
+                           });
+                           if (projects.length > admin.project_cap) {
+                               projectCapErr = true;
+                           }
 
-                        let student_count = 0;
+                           let student_count = 0;
 
-                        let total = 0;
-                        let included = 0;
-                        let temp = 0;
-                        for (const project of projects) {
-                            student_count += project.studentIntake;
-                            if (project.studentIntake > admin.student_cap) {
-                                studentCapErr = true;
-                            }
+                           let total = 0;
+                           let included = 0;
+                           let temp = 0;
+                           for (const project of projects) {
+                               student_count += project.studentIntake;
+                               if (project.studentIntake > admin.student_cap) {
+                                   studentCapErr = true;
+                               }
 
-                            temp = project.studentIntake;
-                            if (project.isIncluded) {
-                                total += temp;
-                                included += temp;
-                            } else {
-                                total += temp;
-                            }
-                        }
+                               temp = project.studentIntake;
+                               if (project.isIncluded) {
+                                   total += temp;
+                                   included += temp;
+                               } else {
+                                   total += temp;
+                               }
+                           }
 
-                        if (student_count > admin.studentsPerFaculty) {
-                            studentsPerFacultyErr = true;
-                        }
+                           if (student_count > admin.studentsPerFaculty) {
+                               studentsPerFacultyErr = true;
+                           }
 
-                        return {
-                            _id: val._id,
-                            name: val.name,
-                            noOfProjects: total_projects,
-                            email: val.email,
-                            total_studentIntake: total,
-                            included_studentIntake: included,
-                            project_cap: projectCapErr,
-                            student_cap: studentCapErr,
-                            studentsPerFaculty: studentsPerFacultyErr,
-                            includedProjectsCount: includedProjects
-                        };
-                    });
-                    return users.faculties;
-                })
+                           return {
+                               _id: val._id,
+                               name: val.name,
+                               noOfProjects: total_projects,
+                               email: val.email,
+                               total_studentIntake: total,
+                               included_studentIntake: included,
+                               project_cap: projectCapErr,
+                               student_cap: studentCapErr,
+                               studentsPerFaculty: studentsPerFacultyErr,
+                               includedProjectsCount: includedProjects
+                           };
+                       });
+                       return users.faculties;
+                   })
         );
         promises.push(
             Student.find({stream: admin.stream})
-                .lean()
-                .populate({
-                    path: "projects_preference",
-                    model: Project,
-                    populate: {
-                        path: "faculty_id",
-                        model: Faculty
-                    }
-                })
-                .then((students) => {
-                    users.students = students.map((val) => {
-                        const project = val.projects_preference.map((val) => {
-                            return {
-                                faculty_name: val.faculty_id.name,
-                                title: val.title,
-                                description: val.description,
-                                faculty_email: val.faculty_id.email
-                            };
-                        });
+                   .lean()
+                   .populate({
+                       path: "projects_preference",
+                       model: Project,
+                       populate: {
+                           path: "faculty_id",
+                           model: Faculty
+                       }
+                   })
+                   .then((students) => {
+                       users.students = students.map((val) => {
+                           const project = val.projects_preference.map((val) => {
+                               return {
+                                   faculty_name: val.faculty_id.name,
+                                   title: val.title,
+                                   description: val.description,
+                                   faculty_email: val.faculty_id.email
+                               };
+                           });
 
-                        return {
-                            _id: val._id,
-                            name: val.name,
-                            projects_preference: project,
-                            email: val.email,
-                            gpa: val.gpa,
-                            project_alloted: val.project_alloted,
-                            isRegistered: val.isRegistered
-                        };
-                    });
-                    return users.students;
-                })
+                           return {
+                               _id: val._id,
+                               name: val.name,
+                               projects_preference: project,
+                               email: val.email,
+                               gpa: val.gpa,
+                               project_alloted: val.project_alloted,
+                               isRegistered: val.isRegistered
+                           };
+                       });
+                       return users.students;
+                   })
         );
         await Promise.all(promises);
         res.json({
@@ -652,30 +648,30 @@ router.get("/export_projects/:id", async (req, res) => {
 
         promises.push(
             Project.find({stream: programName})
-                .populate("faculty_id", {name: 1}, Faculty)
-                .populate({
-                    path: "students_id",
-                    select: {_id: 1, name: 1, roll_no: 1},
-                    model: Student
-                })
-                .populate({
-                    path: "not_students_id",
-                    select: {_id: 1, name: 1, roll_no: 1},
-                    model: Student
-                })
-                .populate("student_alloted", {name: 1, roll_no: 1}, Student)
-                .then((data) => {
-                    return data.map((val) => {
-                        return {
-                            title: val.title,
-                            faculty: val.faculty_id.name,
-                            studentIntake: val.studentIntake,
-                            preferenceCount: val.students_id.length,
-                            students_id: val.students_id,
-                            not_students_id: val.not_students_id
-                        };
-                    });
-                })
+                   .populate("faculty_id", {name: 1}, Faculty)
+                   .populate({
+                       path: "students_id",
+                       select: {_id: 1, name: 1, roll_no: 1},
+                       model: Student
+                   })
+                   .populate({
+                       path: "not_students_id",
+                       select: {_id: 1, name: 1, roll_no: 1},
+                       model: Student
+                   })
+                   .populate("student_alloted", {name: 1, roll_no: 1}, Student)
+                   .then((data) => {
+                       return data.map((val) => {
+                           return {
+                               title: val.title,
+                               faculty: val.faculty_id.name,
+                               studentIntake: val.studentIntake,
+                               preferenceCount: val.students_id.length,
+                               students_id: val.students_id,
+                               not_students_id: val.not_students_id
+                           };
+                       });
+                   })
         );
 
         let result = await Promise.all(promises);
@@ -707,16 +703,16 @@ router.get("/export_allocation/:id", async (req, res) => {
         let admin = await Admin.findOne({admin_id: faculty._id}).lean();
         const stream = admin.stream;
         let projects = await Project.find({stream: stream})
-            .populate({
-                path: "faculty_id",
-                select: {name: 1},
-                model: Faculty
-            })
-            .populate({
-                path: "student_alloted",
-                select: {name: 1, roll_no: 1, projects_preference: 1},
-                model: Student
-            });
+                                    .populate({
+                                        path: "faculty_id",
+                                        select: {name: 1},
+                                        model: Faculty
+                                    })
+                                    .populate({
+                                        path: "student_alloted",
+                                        select: {name: 1, roll_no: 1, projects_preference: 1},
+                                        model: Student
+                                    });
         const data = projects.map((val) => {
             let studentPreferences = [];
             if (val.student_alloted) {
@@ -763,40 +759,40 @@ router.get("/export_students/:id", async (req, res) => {
 
         promises.push(
             Student.find({stream: programName})
-                .lean()
-                .populate({
-                    path: "projects_preference",
-                    select: "_id title",
-                    model: Project
-                })
-                .then((students) => {
-                    return students.map((val) => {
-                        return {
-                            _id: val._id,
-                            name: val.name,
-                            roll_no: val.roll_no,
-                            gpa: val.gpa,
-                            preferenceCount: val.projects_preference.length,
-                            projects_preference: val.projects_preference
-                        };
-                    });
-                })
+                   .lean()
+                   .populate({
+                       path: "projects_preference",
+                       select: "_id title",
+                       model: Project
+                   })
+                   .then((students) => {
+                       return students.map((val) => {
+                           return {
+                               _id: val._id,
+                               name: val.name,
+                               roll_no: val.roll_no,
+                               gpa: val.gpa,
+                               preferenceCount: val.projects_preference.length,
+                               projects_preference: val.projects_preference
+                           };
+                       });
+                   })
         );
 
         promises.push(
             Project.find({stream: programName})
-                .lean()
-                .then((data) => {
-                    data.sort((a, b) => {
-                        return a.students_id.length - b.students_id.length;
-                    });
-                    return data.map((val) => {
-                        return {
-                            _id: val._id,
-                            title: val.title
-                        };
-                    });
-                })
+                   .lean()
+                   .then((data) => {
+                       data.sort((a, b) => {
+                           return a.students_id.length - b.students_id.length;
+                       });
+                       return data.map((val) => {
+                           return {
+                               _id: val._id,
+                               title: val.title
+                           };
+                       });
+                   })
         );
 
         let result = await Promise.all(promises);
@@ -868,36 +864,36 @@ router.get("/allocationStatus/:id", async (req, res) => {
         }
         let admin = await Admin.findOne({admin_id: faculty._id});
         let projects = await Project.find({stream: admin.stream})
-            .populate({
-                path: "faculty_id",
-                select: "name",
-                model: Faculty
-            })
-            .populate({
-                path: "not_students_id",
-                select: {project_alloted: 1, name: 1, roll_no: 1},
-                model: Student
-            })
-            .populate({
-                path: "students_id",
-                select: {name: 1, roll_no: 1, project_alloted: 1},
-                model: Student,
-                populate: {
-                    path: "project_alloted",
-                    select: {title: 1, faculty_id: 1},
-                    model: Project,
-                    populate: {
-                        path: "faculty_id",
-                        select: {_id: 1, name: 1},
-                        model: Faculty
-                    }
-                }
-            })
-            .populate({
-                path: "student_alloted",
-                select: "name roll_no gpa",
-                model: Student
-            });
+                                    .populate({
+                                        path: "faculty_id",
+                                        select: "name",
+                                        model: Faculty
+                                    })
+                                    .populate({
+                                        path: "not_students_id",
+                                        select: {project_alloted: 1, name: 1, roll_no: 1},
+                                        model: Student
+                                    })
+                                    .populate({
+                                        path: "students_id",
+                                        select: {name: 1, roll_no: 1, project_alloted: 1},
+                                        model: Student,
+                                        populate: {
+                                            path: "project_alloted",
+                                            select: {title: 1, faculty_id: 1},
+                                            model: Project,
+                                            populate: {
+                                                path: "faculty_id",
+                                                select: {_id: 1, name: 1},
+                                                model: Faculty
+                                            }
+                                        }
+                                    })
+                                    .populate({
+                                        path: "student_alloted",
+                                        select: "name roll_no gpa",
+                                        model: Student
+                                    });
         let students = await Student.find();
         let student_alloted;
         students = students.map((val) => {
@@ -954,8 +950,8 @@ router.get("/fetchAllMails/:id", async (req, res) => {
         let stream;
         const promises = [];
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}})
-            .lean()
-            .select("_id programs isAdmin");
+                                   .lean()
+                                   .select("_id programs isAdmin");
         if (!(faculty && faculty.isAdmin)) {
             res.json({
                 message: "invalid-token",
@@ -972,19 +968,19 @@ router.get("/fetchAllMails/:id", async (req, res) => {
         }
         promises.push(
             Faculty.find({programs: {$elemMatch: programAdmin}})
-                .lean()
-                .select("email")
-                .then((faculty) => {
-                    return faculty.map((val) => val.email);
-                })
+                   .lean()
+                   .select("email")
+                   .then((faculty) => {
+                       return faculty.map((val) => val.email);
+                   })
         );
         promises.push(
             Student.find({stream: stream, isRegistered: true})
-                .lean()
-                .select("email")
-                .then((student) => {
-                    return student.map((val) => val.email);
-                })
+                   .lean()
+                   .select("email")
+                   .then((student) => {
+                       return student.map((val) => val.email);
+                   })
         );
         let result = await Promise.all(promises);
         const answer = [...result[0], ...result[1]];
@@ -1136,8 +1132,8 @@ router.post("/validateAllocation/:id", async (req, res) => {
         const selectedProjects = req.body.projects;
         const students = req.body.students;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}})
-            .lean()
-            .select("_id isAdmin");
+                                   .lean()
+                                   .select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
             res.json({
                 status: "fail",
@@ -1450,36 +1446,36 @@ router.post("/updatePublish/:id", async (req, res) => {
                 allocationStatus[key] = allocationStatus[key].map((val) => val.name);
             });
             projects = await Project.find({stream: stream})
-                .populate("faculty_id", null, Faculty)
-                .populate({
-                    path: "students_id",
-                    select: {name: 1, roll_no: 1},
-                    model: Student
-                })
-                .populate({
-                    path: "students_id",
-                    select: {
-                        name: 1,
-                        roll_no: 1,
-                        project_alloted: 1
-                    },
-                    model: Student,
-                    populate: {
-                        path: "project_alloted",
-                        select: {title: 1, faculty_id: 1},
-                        model: Project,
-                        populate: {
-                            path: "faculty_id",
-                            select: {_id: 1, name: 1},
-                            model: Faculty
-                        }
-                    }
-                })
-                .populate({
-                    path: "student_alloted",
-                    select: "name roll_no gpa",
-                    model: Student
-                });
+                                    .populate("faculty_id", null, Faculty)
+                                    .populate({
+                                        path: "students_id",
+                                        select: {name: 1, roll_no: 1},
+                                        model: Student
+                                    })
+                                    .populate({
+                                        path: "students_id",
+                                        select: {
+                                            name: 1,
+                                            roll_no: 1,
+                                            project_alloted: 1
+                                        },
+                                        model: Student,
+                                        populate: {
+                                            path: "project_alloted",
+                                            select: {title: 1, faculty_id: 1},
+                                            model: Project,
+                                            populate: {
+                                                path: "faculty_id",
+                                                select: {_id: 1, name: 1},
+                                                model: Faculty
+                                            }
+                                        }
+                                    })
+                                    .populate({
+                                        path: "student_alloted",
+                                        select: "name roll_no gpa",
+                                        model: Student
+                                    });
             const arr = [];
             for (const project of projects) {
                 const newProj = {
@@ -1529,7 +1525,6 @@ router.post("/getPublish/:id", async (req, res) => {
                 let admin = await Admin.findOne({stream: student.stream}).lean();
                 if (admin) {
                     res.status(200).json({
-                        success: true,
                         statusCode: 200,
                         message: "success",
                         result: {
@@ -1539,7 +1534,6 @@ router.post("/getPublish/:id", async (req, res) => {
                     });
                 } else {
                     res.status(401).json({
-                        success: false,
                         statusCode: 401,
                         message: "Session timed out! Please Sign-In again.",
                         result: null
@@ -1547,7 +1541,6 @@ router.post("/getPublish/:id", async (req, res) => {
                 }
             } else {
                 res.status(401).json({
-                    success: false,
                     statusCode: 401,
                     message: "Session timed out! Please Sign-In again.",
                     result: null
@@ -1571,7 +1564,6 @@ router.post("/getPublish/:id", async (req, res) => {
                 }
                 await Promise.all(promises);
                 res.status(200).json({
-                    success: true,
                     statusCode: 200,
                     message: "success",
                     result: {
@@ -1581,7 +1573,6 @@ router.post("/getPublish/:id", async (req, res) => {
                 });
             } else {
                 res.status(401).json({
-                    success: false,
                     statusCode: 401,
                     message: "Session timed out! Please Sign-In again.",
                     result: null
@@ -1589,7 +1580,6 @@ router.post("/getPublish/:id", async (req, res) => {
             }
         } else {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -1598,7 +1588,6 @@ router.post("/getPublish/:id", async (req, res) => {
     } catch (e) {
         res.status(401).json({
             status: "fail",
-            success: false,
             statusCode: 401,
             message: "Session timed out! Please Sign-In again.",
             result: null

@@ -3,19 +3,12 @@
     [backgroundColor]="background"
     animationDuration="0"
     dynamicHeight="true"
-    mat-align-tabs="center"
->
+    mat-align-tabs="center">
     <mat-tab label="Faculty">
         <mat-tab-group
-            *ngIf="index == 0"
-            [selectedIndex]="0"
-            animationDuration="0"
-            mat-align-tabs="center"
-        >
+            *ngIf="index == 0" [selectedIndex]="0" animationDuration="0" mat-align-tabs="center">
             <mat-tab
-                *ngFor="let program of programs.data"
-                [label]="program.full"
-            >
+                *ngFor="let program of programs.data" [label]="program.full">
                 <div class="searchBox">
                     <input
                         (keyup)="applyFilter($event, program, 'faculty')"
@@ -24,32 +17,24 @@
                         matInput
                         name="search"
                         placeholder="Search by any ... "
-                        type="search"
-                    />
+                        type="search" />
                     <button class="searchButton" href="#">
                         <i class="material-icons">search</i>
                     </button>
                 </div>
                 <div class="display">
                     <div
-                        [style.max-height.px]="tableHeight"
-                        class="table mat-elevation-z8"
-                    >
+                        [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
                         <table
                             #table
                             (matSortChange)="sortFaculties($event, program)"
                             [dataSource]="faculties[program.short]"
                             class="mat-elevation-z8"
                             mat-table
-                            matSort
-                        >
+                            matSort>
                             <ng-container matColumnDef="Name">
                                 <th
-                                    *matHeaderCellDef
-                                    [style.color]="background"
-                                    mat-header-cell
-                                    mat-sort-header
-                                >
+                                    *matHeaderCellDef [style.color]="background" mat-header-cell mat-sort-header>
                                     Name
                                 </th>
                                 <td *matCellDef="let faculty" mat-cell>
@@ -58,8 +43,8 @@
                                 <td *matFooterCellDef mat-footer-cell>
                                     <b>Total : </b>
                                     {{
-                                        faculties[program.short]?.filteredData
-                                            .length
+                                    faculties[program.short]?.filteredData
+                                        .length
                                     }}
                                 </td>
                             </ng-container>
@@ -87,9 +72,9 @@
                                 </th>
                                 <td *matCellDef="let faculty" mat-cell>
                                     {{
-                                        faculty.isAdmin
-                                            ? faculty.adminProgram
-                                            : "NO"
+                                    faculty.isAdmin
+                                    ? faculty.adminProgram
+                                    : "NO"
                                     }}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell></td>
@@ -105,44 +90,30 @@
                                                 | getToolTipToRemoveFaculty
                                                     : faculty.adminProgram
                                                     : program.short
-                                        "
-                                        matTooltipPosition="above"
-                                        ><button
-                                            (click)="deleteFaculty(faculty)"
-                                            [disabled]="faculty.isAdmin"
-                                            color="warn"
-                                            mat-raised-button
-                                        >
+                                        " matTooltipPosition="above"><button
+                                        (click)="deleteFaculty(faculty)"
+                                        [disabled]="faculty.isAdmin"
+                                        color="warn"
+                                        mat-raised-button>
                                             Remove
-                                        </button></span
-                                    >
+                                        </button></span>
                                     <button
                                         (click)="
                                             addAdmin(faculty, program.short)
-                                        "
-                                        *ngIf="
+                                        " *ngIf="
                                             !faculty.isAdmin &&
                                             !hasAdmins[program.short]
-                                        "
-                                        class="admin-button"
-                                        color="primary"
-                                        mat-raised-button
-                                    >
+                                        " class="admin-button" color="primary" mat-raised-button>
                                         Make Co-ordinator
                                     </button>
                                     <button
                                         (click)="
                                             removeAdmin(faculty, program.short)
-                                        "
-                                        *ngIf="
+                                        " *ngIf="
                                             faculty.isAdmin &&
                                             faculty.adminProgram ==
                                                 program.short
-                                        "
-                                        class="remove-admin-button"
-                                        color="primary"
-                                        mat-raised-button
-                                    >
+                                        " class="remove-admin-button" color="primary" mat-raised-button>
                                         Remove Co-ordinator Status
                                     </button>
                                 </td>
@@ -152,23 +123,17 @@
                                 *matHeaderRowDef="
                                     displayedColumnsFaculty;
                                     sticky: true
-                                "
-                                mat-header-row
-                            ></tr>
+                                " mat-header-row></tr>
                             <tr
                                 *matRowDef="
                                     let row;
                                     columns: displayedColumnsFaculty
-                                "
-                                mat-row
-                            ></tr>
+                                " mat-row></tr>
                             <tr
                                 *matFooterRowDef="
                                     displayedColumnsFaculty;
                                     sticky: true
-                                "
-                                mat-footer-row
-                            ></tr>
+                                " mat-footer-row></tr>
                         </table>
                     </div>
                 </div>
@@ -177,15 +142,9 @@
     </mat-tab>
     <mat-tab label="Student">
         <mat-tab-group
-            *ngIf="index == 1"
-            [selectedIndex]="0"
-            animationDuration="0"
-            mat-align-tabs="center"
-        >
+            *ngIf="index == 1" [selectedIndex]="0" animationDuration="0" mat-align-tabs="center">
             <mat-tab
-                *ngFor="let program of programs.data"
-                [label]="program.full"
-            >
+                *ngFor="let program of programs.data" [label]="program.full">
                 <div class="searchBox">
                     <input
                         (keyup)="applyFilter($event, program, 'student')"
@@ -193,31 +152,23 @@
                         class="searchInput"
                         name="search"
                         placeholder="Search by any ... "
-                        type="search"
-                    />
+                        type="search" />
                     <button class="searchButton" href="#">
                         <i class="material-icons">search</i>
                     </button>
                 </div>
                 <div class="display">
                     <div
-                        [style.max-height.px]="tableHeight"
-                        class="table mat-elevation-z8"
-                    >
+                        [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
                         <table
                             (matSortChange)="sortStudents($event, program)"
                             [dataSource]="students[program.short]"
                             class="mat-elevation-z8"
                             mat-table
-                            matSort
-                        >
+                            matSort>
                             <ng-container matColumnDef="Name">
                                 <th
-                                    *matHeaderCellDef
-                                    [style.color]="background"
-                                    mat-header-cell
-                                    mat-sort-header
-                                >
+                                    *matHeaderCellDef [style.color]="background" mat-header-cell mat-sort-header>
                                     Name
                                 </th>
                                 <td *matCellDef="let student" mat-cell>
@@ -226,8 +177,8 @@
                                 <td *matFooterCellDef mat-footer-cell>
                                     <b>Total : </b>
                                     {{
-                                        students[program.short]?.filteredData
-                                            .length
+                                    students[program.short]?.filteredData
+                                        .length
                                     }}
                                 </td>
                             </ng-container>
@@ -242,28 +193,18 @@
                             </ng-container>
                             <ng-container matColumnDef="CGPA">
                                 <th
-                                    *matHeaderCellDef
-                                    class="common-padding"
-                                    mat-header-cell
-                                    mat-sort-header
-                                >
+                                    *matHeaderCellDef class="common-padding" mat-header-cell mat-sort-header>
                                     CGPA
                                 </th>
                                 <td
-                                    *matCellDef="let student"
-                                    class="common-padding"
-                                    mat-cell
-                                >
+                                    *matCellDef="let student" class="common-padding" mat-cell>
                                     {{ student.gpa }}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
                             <ng-container matColumnDef="isRegistered">
                                 <th
-                                    *matHeaderCellDef
-                                    mat-header-cell
-                                    mat-sort-header
-                                >
+                                    *matHeaderCellDef mat-header-cell mat-sort-header>
                                     Registered
                                 </th>
                                 <td *matCellDef="let student" mat-cell>
@@ -272,8 +213,8 @@
                                 <td *matFooterCellDef mat-footer-cell>
                                     <b>Registered : </b>
                                     {{
-                                        students[program.short].filteredData
-                                            | getRegisteredCount
+                                    students[program.short].filteredData
+                                        | getRegisteredCount
                                     }}
                                 </td>
                             </ng-container>
@@ -283,10 +224,7 @@
                                 </th>
                                 <td *matCellDef="let student" mat-cell>
                                     <button
-                                        (click)="deleteStudent(student)"
-                                        color="warn"
-                                        mat-raised-button
-                                    >
+                                        (click)="deleteStudent(student)" color="warn" mat-raised-button>
                                         Remove
                                     </button>
                                 </td>
@@ -296,23 +234,17 @@
                                 *matHeaderRowDef="
                                     displayedColumnsStudent;
                                     sticky: true
-                                "
-                                mat-header-row
-                            ></tr>
+                                " mat-header-row></tr>
                             <tr
                                 *matRowDef="
                                     let row;
                                     columns: displayedColumnsStudent
-                                "
-                                mat-row
-                            ></tr>
+                                " mat-row></tr>
                             <tr
                                 *matFooterRowDef="
                                     displayedColumnsStudent;
                                     sticky: true
-                                "
-                                mat-footer-row
-                            ></tr>
+                                " mat-footer-row></tr>
                         </table>
                     </div>
                 </div>
@@ -321,15 +253,9 @@
     </mat-tab>
     <mat-tab label="Projects">
         <mat-tab-group
-            *ngIf="index == 2"
-            [selectedIndex]="0"
-            animationDuration="0"
-            mat-align-tabs="center"
-        >
+            *ngIf="index == 2" [selectedIndex]="0" animationDuration="0" mat-align-tabs="center">
             <mat-tab
-                *ngFor="let program of programs.data"
-                [label]="program.full"
-            >
+                *ngFor="let program of programs.data" [label]="program.full">
                 <div class="searchBox">
                     <input
                         (keyup)="applyFilter($event, program, 'project')"
@@ -337,32 +263,24 @@
                         class="searchInput"
                         name="search"
                         placeholder="Search by any ... "
-                        type="search"
-                    />
+                        type="search" />
                     <button class="searchButton" href="#">
                         <i class="material-icons">search</i>
                     </button>
                 </div>
                 <div class="display">
                     <div
-                        [style.max-height.px]="tableHeight"
-                        class="table mat-elevation-z8"
-                    >
+                        [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
                         <table
                             (matSortChange)="sortProjects($event, program)"
                             [dataSource]="projects[program.short]"
                             class="mat-elevation-z8"
                             mat-table
                             matSort
-                            multiTemplateDataRows
-                        >
+                            multiTemplateDataRows>
                             <ng-container matColumnDef="Title">
                                 <th
-                                    *matHeaderCellDef
-                                    [style.color]="background"
-                                    mat-header-cell
-                                    mat-sort-header
-                                >
+                                    *matHeaderCellDef [style.color]="background" mat-header-cell mat-sort-header>
                                     Title
                                 </th>
                                 <td *matCellDef="let project" mat-cell>
@@ -371,8 +289,8 @@
                                 <td *matFooterCellDef mat-footer-cell>
                                     <b>Total : </b>
                                     {{
-                                        projects[program.short]?.filteredData
-                                            .length
+                                    projects[program.short]?.filteredData
+                                        .length
                                     }}
                                 </td>
                             </ng-container>
@@ -382,15 +300,11 @@
                                     [style.color]="background"
                                     class="common-padding"
                                     mat-header-cell
-                                    mat-sort-header
-                                >
+                                    mat-sort-header>
                                     Faculty
                                 </th>
                                 <td
-                                    *matCellDef="let project"
-                                    class="common-padding"
-                                    mat-cell
-                                >
+                                    *matCellDef="let project" class="common-padding" mat-cell>
                                     {{ project.faculty }}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell></td>
@@ -406,10 +320,7 @@
                             </ng-container>
                             <ng-container matColumnDef="NoOfStudents">
                                 <th
-                                    *matHeaderCellDef
-                                    mat-header-cell
-                                    mat-sort-header
-                                >
+                                    *matHeaderCellDef mat-header-cell mat-sort-header>
                                     Number Of Students Applied
                                 </th>
                                 <td *matCellDef="let project" mat-cell>
@@ -419,23 +330,17 @@
                             </ng-container>
                             <ng-container matColumnDef="expandedDetail">
                                 <td
-                                    *matCellDef="let project"
-                                    [attr.colspan]="
+                                    *matCellDef="let project" [attr.colspan]="
                                         displayedColumnsProjects.length
-                                    "
-                                    mat-cell
-                                >
+                                    " mat-cell>
                                     <div
                                         [@detailExpand]="
                                             project == expandedElement
                                                 ? 'expanded'
                                                 : 'collapsed'
-                                        "
-                                        class="example-element-detail"
-                                    >
+                                        " class="example-element-detail">
                                         <div
-                                            class="example-element-description"
-                                        >
+                                            class="example-element-description">
                                             Description :
                                             {{ project.description }}
                                         </div>
@@ -444,10 +349,7 @@
                             </ng-container>
                             <ng-container matColumnDef="Duration">
                                 <th
-                                    *matHeaderCellDef
-                                    mat-header-cell
-                                    mat-sort-header
-                                >
+                                    *matHeaderCellDef mat-header-cell mat-sort-header>
                                     Duration (in months)
                                 </th>
                                 <td *matCellDef="let project" mat-cell>
@@ -459,9 +361,7 @@
                                 *matHeaderRowDef="
                                     displayedColumnsProjects;
                                     sticky: true
-                                "
-                                mat-header-row
-                            ></tr>
+                                " mat-header-row></tr>
                             <tr
                                 (click)="
                                     expandedElement =
@@ -483,23 +383,17 @@
                                     isActive && indexHover == i
                                 "
                                 class="example-element-row remove-background"
-                                mat-row
-                            ></tr>
+                                mat-row></tr>
                             <tr
                                 *matRowDef="
                                     let row;
                                     columns: ['expandedDetail']
-                                "
-                                class="example-detail-row"
-                                mat-row
-                            ></tr>
+                                " class="example-detail-row" mat-row></tr>
                             <tr
                                 *matFooterRowDef="
                                     displayedColumnsProjects;
                                     sticky: true
-                                "
-                                mat-footer-row
-                            ></tr>
+                                " mat-footer-row></tr>
                         </table>
                     </div>
                 </div>
@@ -509,28 +403,17 @@
     <mat-tab label="Streams">
         <div class="display">
             <div
-                [style.max-height.px]="tableHeight"
-                class="table mat-elevation-z8"
-            >
+                [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
                 <div class="add-icon">
                     <mat-icon
-                        (click)="addBranches()"
-                        matTooltip="Click to add stream"
-                        matTooltipPosition="above"
-                        >add
+                        (click)="addBranches()" matTooltip="Click to add stream" matTooltipPosition="above">add
                     </mat-icon>
                 </div>
                 <table
-                    [dataSource]="streams"
-                    class="mat-elevation-z8"
-                    mat-table
-                >
+                    [dataSource]="streams" class="mat-elevation-z8" mat-table>
                     <ng-container matColumnDef="Stream">
                         <th
-                            *matHeaderCellDef
-                            [style.color]="background"
-                            mat-header-cell
-                        >
+                            *matHeaderCellDef [style.color]="background" mat-header-cell>
                             Stream Name
                         </th>
                         <td *matCellDef="let map" mat-cell>
@@ -541,10 +424,7 @@
                     </ng-container>
                     <ng-container matColumnDef="Short">
                         <th
-                            *matHeaderCellDef
-                            [style.color]="background"
-                            mat-header-cell
-                        >
+                            *matHeaderCellDef [style.color]="background" mat-header-cell>
                             Stream Abbrevation
                         </th>
                         <td *matCellDef="let map" mat-cell>
@@ -557,10 +437,7 @@
                         <th *matHeaderCellDef mat-header-cell>Delete Stream</th>
                         <td *matCellDef="let map" mat-cell>
                             <mat-icon
-                                (click)="deleteStream(map.short)"
-                                matTooltip="Delete Stream"
-                                matTooltipPosition="right"
-                            >
+                                (click)="deleteStream(map.short)" matTooltip="Delete Stream" matTooltipPosition="right">
                                 delete_outline
                             </mat-icon>
                             <ng-container *ngIf="map.short">
@@ -568,34 +445,24 @@
                                     (click)="p.open()"
                                     [satPopoverAnchor]="p"
                                     class="edit-icon"
-                                    matTooltip="Edit Stream {{ map.full }}"
-                                >
+                                    matTooltip="Edit Stream {{ map.full }}">
                                     edit
                                 </mat-icon>
                             </ng-container>
                             <sat-popover
-                                #p
-                                hasBackdrop
-                                xAlign="before"
-                                yAlign="start"
-                            >
+                                #p hasBackdrop xAlign="before" yAlign="start">
                                 <edit-form
                                     (update)="updateStream($event, map)"
                                     [full]="map.full"
                                     [short]="map.short"
-                                    [which]="'Stream'"
-                                ></edit-form>
+                                    [which]="'Stream'"></edit-form>
                             </sat-popover>
                         </td>
                     </ng-container>
                     <tr
-                        *matHeaderRowDef="displayedColumnsStreams; sticky: true"
-                        mat-header-row
-                    ></tr>
+                        *matHeaderRowDef="displayedColumnsStreams; sticky: true" mat-header-row></tr>
                     <tr
-                        *matRowDef="let row; columns: displayedColumnsStreams"
-                        mat-row
-                    ></tr>
+                        *matRowDef="let row; columns: displayedColumnsStreams" mat-row></tr>
                 </table>
             </div>
         </div>
@@ -603,28 +470,17 @@
     <mat-tab label="Programs">
         <div class="display">
             <div
-                [style.max-height.px]="tableHeight"
-                class="table mat-elevation-z8"
-            >
+                [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
                 <div class="add-icon">
                     <mat-icon
-                        (click)="addPrograms()"
-                        matTooltip="Click to add program"
-                        matTooltipPosition="above"
-                        >add
+                        (click)="addPrograms()" matTooltip="Click to add program" matTooltipPosition="above">add
                     </mat-icon>
                 </div>
                 <table
-                    [dataSource]="programs"
-                    class="mat-elevation-z8"
-                    mat-table
-                >
+                    [dataSource]="programs" class="mat-elevation-z8" mat-table>
                     <ng-container matColumnDef="Branch">
                         <th
-                            *matHeaderCellDef
-                            [style.color]="background"
-                            mat-header-cell
-                        >
+                            *matHeaderCellDef [style.color]="background" mat-header-cell>
                             Program
                         </th>
                         <td *matCellDef="let map" mat-cell>
@@ -635,10 +491,7 @@
                     </ng-container>
                     <ng-container matColumnDef="Short">
                         <th
-                            *matHeaderCellDef
-                            [style.color]="background"
-                            mat-header-cell
-                        >
+                            *matHeaderCellDef [style.color]="background" mat-header-cell>
                             Abbreviation
                         </th>
                         <td *matCellDef="let map" mat-cell>
@@ -649,18 +502,13 @@
                     </ng-container>
                     <ng-container matColumnDef="Stage">
                         <th
-                            *matHeaderCellDef
-                            [style.color]="background"
-                            mat-header-cell
-                        >
+                            *matHeaderCellDef [style.color]="background" mat-header-cell>
                             Stage(out of 4)
                         </th>
                         <td *matCellDef="let map" mat-cell>
                             <ng-container>
                                 <span
-                                    *ngIf="stages[map.short]; else stageElse"
-                                    style="padding-left: 20px"
-                                >
+                                    *ngIf="stages[map.short]; else stageElse" style="padding-left: 20px">
                                     {{ stages[map.short] }}
                                 </span>
                                 <ng-template #stageElse>
@@ -674,14 +522,11 @@
                             No. Of Faculties
                         </th>
                         <td
-                            *matCellDef="let map"
-                            mat-cell
-                            style="padding-left: 15px"
-                        >
+                            *matCellDef="let map" mat-cell style="padding-left: 15px">
                             {{
-                                faculties[map.short]
-                                    ? faculties[map.short].data.length
-                                    : 0
+                            faculties[map.short]
+                            ? faculties[map.short].data.length
+                            : 0
                             }}
                         </td>
                     </ng-container>
@@ -690,17 +535,14 @@
                             Students ( Registered/Total )
                         </th>
                         <td
-                            *matCellDef="let map"
-                            mat-cell
-                            style="padding-left: 20px"
-                        >
+                            *matCellDef="let map" mat-cell style="padding-left: 20px">
                             {{
-                                students[map.short]
-                                    ? (students[map.short].data
-                                          | getRegisteredCount) +
-                                      " / " +
-                                      students[map.short].data.length
-                                    : 0
+                            students[map.short]
+                            ? (students[map.short].data
+                                    | getRegisteredCount) +
+                                " / " +
+                                students[map.short].data.length
+                            : 0
                             }}
                         </td>
                     </ng-container>
@@ -709,14 +551,11 @@
                             No. Of Projects
                         </th>
                         <td
-                            *matCellDef="let map"
-                            mat-cell
-                            style="padding-left: 15px"
-                        >
+                            *matCellDef="let map" mat-cell style="padding-left: 15px">
                             {{
-                                projects[map.short]
-                                    ? projects[map.short].data.length
-                                    : 0
+                            projects[map.short]
+                            ? projects[map.short].data.length
+                            : 0
                             }}
                         </td>
                     </ng-container>
@@ -728,42 +567,31 @@
                             <mat-icon
                                 (click)="deleteProgram(map.short)"
                                 matTooltip="Delete Program"
-                                matTooltipPosition="right"
-                                >delete_outline
+                                matTooltipPosition="right">delete_outline
                             </mat-icon>
                             <ng-container *ngIf="map.short">
                                 <mat-icon
                                     (click)="p.open()"
                                     [satPopoverAnchor]="p"
                                     class="edit-icon"
-                                    matTooltip="Edit Program {{ map.full }}"
-                                >
+                                    matTooltip="Edit Program {{ map.full }}">
                                     edit
                                 </mat-icon>
                             </ng-container>
                             <sat-popover
-                                #p
-                                hasBackdrop
-                                xAlign="before"
-                                yAlign="start"
-                            >
+                                #p hasBackdrop xAlign="before" yAlign="start">
                                 <edit-form
                                     (update)="updateProgram($event, map)"
                                     [full]="map.full"
                                     [short]="map.short"
-                                    [which]="'Program'"
-                                ></edit-form>
+                                    [which]="'Program'"></edit-form>
                             </sat-popover>
                         </td>
                     </ng-container>
                     <tr
-                        *matHeaderRowDef="displayedColumnsMaps; sticky: true"
-                        mat-header-row
-                    ></tr>
+                        *matHeaderRowDef="displayedColumnsMaps; sticky: true" mat-header-row></tr>
                     <tr
-                        *matRowDef="let row; columns: displayedColumnsMaps"
-                        mat-row
-                    ></tr>
+                        *matRowDef="let row; columns: displayedColumnsMaps" mat-row></tr>
                 </table>
             </div>
         </div>

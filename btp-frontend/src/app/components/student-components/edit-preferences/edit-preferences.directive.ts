@@ -2,7 +2,7 @@ import { Directive, ElementRef, Input } from "@angular/core";
 import { CdkDrag } from "@angular/cdk/drag-drop";
 
 @Directive({
-    selector: "[cdkDrag][actualContainer]",
+    selector: "[cdkDrag][actualContainer]"
 })
 export class CdkDropListActualContainer {
     @Input("actualContainer") actualContainer: string;
@@ -14,16 +14,12 @@ export class CdkDropListActualContainer {
             if (!this.originalElement) {
                 this.originalElement = cdkDropList.element;
             }
-
             if (this.actualContainer) {
-                const element = this.originalElement.nativeElement.closest(
-                    this.actualContainer
-                ) as HTMLElement;
+                const element = this.originalElement.nativeElement.closest(this.actualContainer) as HTMLElement;
                 cdkDropList._dropListRef.element = element;
                 cdkDropList.element = new ElementRef<HTMLElement>(element);
             } else {
-                cdkDropList._dropListRef.element =
-                    cdkDropList.element.nativeElement;
+                cdkDropList._dropListRef.element = cdkDropList.element.nativeElement;
                 cdkDropList.element = this.originalElement;
             }
         });

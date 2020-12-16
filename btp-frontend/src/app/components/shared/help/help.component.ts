@@ -1,9 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 
 @Component({
-    selector: "app-help",
-    templateUrl: "./help.component.html",
-    styleUrls: ["./help.component.scss"],
+    selector: "app-help", templateUrl: "./help.component.html", styleUrls: [ "./help.component.scss" ]
 })
 export class HelpComponent implements OnInit {
     @ViewChild("helpvid") help: ElementRef;
@@ -76,10 +74,7 @@ export class HelpComponent implements OnInit {
     }
 
     isFaculty() {
-        return localStorage.getItem("role") == "faculty" ||
-            localStorage.getItem("role") == "admin"
-            ? true
-            : false;
+        return localStorage.getItem("role") == "faculty" || localStorage.getItem("role") == "admin" ? true : false;
     }
 
     isSuperAdmin() {

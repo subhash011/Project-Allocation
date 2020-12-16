@@ -128,17 +128,17 @@ router.post("/start/:id", async (req, res) => {
                         });
                         allotted.push(curStudent);
                     } else {
-                        const studentCurrentlyAlloted =
+                        const studentCurrentlyAllotted =
                             allocationStatus[firstPreference._id][allocationStatus[firstPreference._id].length - 1];
-                        const currentlyAllotedIndex = firstProject.students_id.indexOf(
-                            studentCurrentlyAlloted._id
+                        const currentlyAllottedIndex = firstProject.students_id.indexOf(
+                            studentCurrentlyAllotted._id
                         );
                         const curStudentIndex = firstProject.students_id.indexOf(
                             curStudent._id
                         );
-                        if (curStudentIndex < currentlyAllotedIndex) {
+                        if (curStudentIndex < currentlyAllottedIndex) {
                             allocationStatus[firstPreference].pop();
-                            studentCurrentlyAlloted.projects_preference.shift();
+                            studentCurrentlyAllotted.projects_preference.shift();
                             allocationStatus[firstPreference].push(curStudent);
                             allocationStatus[firstPreference].sort((a, b) => {
                                 return (
@@ -150,9 +150,9 @@ router.post("/start/:id", async (req, res) => {
                                 return !val.equals(curStudent);
                             });
                             allotted = allotted.filter((val) => {
-                                return !val.equals(studentCurrentlyAlloted);
+                                return !val.equals(studentCurrentlyAllotted);
                             });
-                            free.push(studentCurrentlyAlloted);
+                            free.push(studentCurrentlyAllotted);
                             allotted.push(curStudent);
                         } else {
                             curStudent.projects_preference.shift();
@@ -188,9 +188,9 @@ router.post("/start/:id", async (req, res) => {
                 model: Student
             };
             projects = await Project.find({stream: stream})
-                .populate(populateFac)
-                .populate(populateStud)
-                .populate(populateStudAlloted);
+                                    .populate(populateFac)
+                                    .populate(populateStud)
+                                    .populate(populateStudAlloted);
             let projectAllocation = [];
             for (const project of projects) {
                 let studentsAlloted = [];

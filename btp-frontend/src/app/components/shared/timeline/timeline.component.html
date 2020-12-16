@@ -1,18 +1,14 @@
 <div
-    *ngIf="admins && admins.startDate && displayTimeline && loaded"
-    class="faculty-card"
->
+    *ngIf="admins && admins.startDate && displayTimeline && loaded" class="faculty-card">
     <mat-card class="program-details">
-        <mat-card-title
-            ><u> Stage {{ admins.stage + 1 }} of 4 </u></mat-card-title
-        >
+        <mat-card-title><u> Stage {{ admins.stage + 1 }} of 4 </u></mat-card-title>
         <br />
         <mat-card-content class="card-content">
             <div class="content">
                 <p>
-                    <ng-template matStepLabel
-                        >Current Stage ends in</ng-template
-                    >
+                    <ng-template
+                        matStepLabel>Current Stage ends in
+                    </ng-template>
                     <span class="days_left">
                         <strong *ngIf="curDeadline; else no_deadline">
                             Current stage ends in :
@@ -29,9 +25,7 @@
                 </p>
                 <p>
                     <ng-template matStepLabel>About this stage</ng-template>
-                    <span
-                        ><strong>About this stage</strong> : {{ message }}</span
-                    >
+                    <span><strong>About this stage</strong> : {{ message }}</span>
                 </p>
                 <p *ngIf="next">
                     <ng-template matStepLabel>About next stage</ng-template>
@@ -43,13 +37,10 @@
 </div>
 
 <div
-    *ngIf="loaded && (!admins || !(admins && admins.startDate))"
-    class="general"
->
+    *ngIf="loaded && (!admins || !(admins && admins.startDate))" class="general">
     <mat-card class="general-details">
-        <mat-card-title class="general-title"
-            ><u>Description of stages</u></mat-card-title
-        >
+        <mat-card-title
+            class="general-title"><u>Description of stages</u></mat-card-title>
         <br />
         <br />
         <mat-card-content>
@@ -57,8 +48,7 @@
             <p>Stage 2 : Students give their preferences for the projects</p>
             <p>
                 Stage 3 : Faculties give prefernces among the students who have
-                chosen their projects
-            </p>
+                chosen their projects </p>
             <p>Stage 4 : Projects will be alloted</p>
         </mat-card-content>
     </mat-card>

@@ -9,10 +9,7 @@ import { takeUntil } from "rxjs/operators";
 import { LocalAuthService } from "src/app/services/local-auth/local-auth.service";
 
 @Component({
-    selector: "app-student-projects",
-    templateUrl: "./student-projects.component.html",
-    styleUrls: ["./student-projects.component.scss"],
-    providers: [LoginComponent],
+    selector: "app-student-projects", templateUrl: "./student-projects.component.html", styleUrls: [ "./student-projects.component.scss" ], providers: [ LoginComponent ]
 })
 export class StudentProjectsComponent implements OnInit, OnDestroy {
     projects: any;
@@ -21,11 +18,7 @@ export class StudentProjectsComponent implements OnInit, OnDestroy {
     loaded: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
 
-    constructor(
-        private projectService: ProjectsService,
-        private localAuthService: LocalAuthService,
-        private snackBar: MatSnackBar
-    ) {}
+    constructor(private projectService: ProjectsService, private localAuthService: LocalAuthService, private snackBar: MatSnackBar) {}
 
     ngOnInit() {
         this.getStudentPreferences();
@@ -35,13 +28,10 @@ export class StudentProjectsComponent implements OnInit, OnDestroy {
         this.projectService
             .getStudentPreference()
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(
-                (responseAPI: HttpResponseAPI) => {
-                    this.loaded = true;
-                    this.preferences = responseAPI.result.preferences;
-                },
-                () => {}
-            );
+            .subscribe((responseAPI: HttpResponseAPI) => {
+                this.loaded = true;
+                this.preferences = responseAPI.result.preferences;
+            }, () => {});
     }
 
     ngOnDestroy() {

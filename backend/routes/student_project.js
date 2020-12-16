@@ -6,14 +6,12 @@ const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
 const Admin = require("../models/Admin_Info");
 
-
 async function canUpdateProject(res, idToken, id) {
     try {
         let student = await Student.findOne({google_id: {id: id, idToken: idToken}})
-            .lean().select("_id stream");
+                                   .lean().select("_id stream");
         if (!student) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -21,10 +19,9 @@ async function canUpdateProject(res, idToken, id) {
             return false;
         }
         let admin = await Admin.findOne({stream: student.stream})
-            .lean().select("stage reachedStage2");
+                               .lean().select("stage reachedStage2");
         if (admin.stage < 1) {
             res.status(200).json({
-                success: true,
                 statusCode: 200,
                 message: "The stage has not yet started.",
                 result: {
@@ -34,7 +31,6 @@ async function canUpdateProject(res, idToken, id) {
             return false;
         } else if (admin.stage >= 2) {
             res.status(200).json({
-                success: true,
                 statusCode: 200,
                 message: "The stage has already ended.",
                 result: {
@@ -49,7 +45,6 @@ async function canUpdateProject(res, idToken, id) {
         };
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -84,10 +79,9 @@ router.get("/not_preference/:id", async (req, res) => {
             model: Faculty
         };
         let student = await Student.findOne({google_id: {id: id, idToken: idToken}})
-            .lean().select("projects_preference stream");
+                                   .lean().select("projects_preference stream");
         if (!student) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -111,7 +105,6 @@ router.get("/not_preference/:id", async (req, res) => {
             };
         });
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -120,7 +113,6 @@ router.get("/not_preference/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -155,7 +147,6 @@ router.get("/preference/:id", async (req, res) => {
         let student = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean().populate(populator);
         if (!student) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -174,7 +165,6 @@ router.get("/preference/:id", async (req, res) => {
             };
         });
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -183,7 +173,6 @@ router.get("/preference/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -229,7 +218,8 @@ router.post("/preference/:id", async (req, res) => {
                 model: Faculty
             }
         };
-        student = await Student.findByIdAndUpdate(studentID, {projects_preference: project_idArr}, {new: true}).select("-google_id -date -__v").populate(populator);
+        student =
+            await Student.findByIdAndUpdate(studentID, {projects_preference: project_idArr}, {new: true}).select("-google_id -date -__v").populate(populator);
         const preferences = student.projects_preference.map((val) => {
                 return {
                     _id: val._id,
@@ -243,7 +233,6 @@ router.post("/preference/:id", async (req, res) => {
             }
         );
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Successfully added projects to your preferences.",
             result: {
@@ -253,7 +242,6 @@ router.post("/preference/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -304,7 +292,6 @@ router.post("/append/preference/:id", async (req, res) => {
             await Promise.all(promises);
         }
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Added projects to your preferences.",
             result: {
@@ -313,7 +300,6 @@ router.post("/append/preference/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -360,14 +346,12 @@ router.post("/remove/preference/:id", async (req, res) => {
             await Promise.all(promises);
         }
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Removed the project from preferences.",
             result: {updated: true}
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -408,7 +392,6 @@ router.post("/add/preference/:id", async (req, res) => {
             await Promise.all(promises);
         }
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -417,7 +400,6 @@ router.post("/add/preference/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -464,7 +446,6 @@ router.get("/assert/order", async (req, res) => {
             }
         }
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -474,7 +455,6 @@ router.get("/assert/order", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null

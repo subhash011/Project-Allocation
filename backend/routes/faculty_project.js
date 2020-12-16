@@ -6,7 +6,6 @@ const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
 const Admin = require("../models/Admin_Info");
 
-
 router.post("/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -22,6 +21,7 @@ router.post("/:id", async (req, res) => {
             return;
         }
         try {
+            console.log(faculty, stream);
             let projects = await Project.find({faculty_id: faculty._id, stream: stream}).lean();
             if (projects) {
                 res.json({
@@ -114,7 +114,7 @@ router.post("/add/:id", async (req, res) => {
                     msg: `Total number of students per faculty cannot exceed ${admin.studentsPerFaculty}`
                 });
             } else {
-                let students = await Student.find({stream: stream}).sort([['gpa', -1]]).lean().select("_id");
+                let students = await Student.find({stream: stream}).sort([["gpa", -1]]).lean().select("_id");
                 project.not_students_id = students.map(val => val._id);
                 await project.save();
                 faculty.project_list.push(project._id);
@@ -278,10 +278,10 @@ router.post("/update/:id", async (req, res) => {
         project.description = description;
         const stream = project.stream;
         let admin = await Admin.findOne({stream: stream})
-            .select({
-                student_cap: 1,
-                studentsPerFaculty: 1
-            });
+                               .select({
+                                   student_cap: 1,
+                                   studentsPerFaculty: 1
+                               });
         if (!admin) {
             res.json({
                 status: "fail",
@@ -373,12 +373,12 @@ router.post("/notApplied/:id", async (req, res) => {
             return;
         }
         let project = await Project.findById(mongoose.Types.ObjectId(project_id))
-            .lean()
-            .populate({
-                path: "not_students_id",
-                select: "-google_id -email -isRegistered -date",
-                model: Student
-            });
+                                   .lean()
+                                   .populate({
+                                       path: "not_students_id",
+                                       select: "-google_id -email -isRegistered -date",
+                                       model: Student
+                                   });
         if (project) {
             res.json({
                 status: "success",

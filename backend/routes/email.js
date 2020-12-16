@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 require("dotenv/config");
 
-
 sendEmail = (mailOptions, transporter) =>
     new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, (error) => {

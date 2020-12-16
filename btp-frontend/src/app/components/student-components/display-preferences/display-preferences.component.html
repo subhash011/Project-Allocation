@@ -1,16 +1,13 @@
 <div *ngIf="preferences && preferences.length != 0; else empty" class="list">
     <mat-accordion class="accordion">
         <div
-            *ngFor="let preference of preferences; let i = index"
-            class="list-item"
-        >
+            *ngFor="let preference of preferences; let i = index" class="list-item">
             <div class="expansion-panel">
                 <mat-expansion-panel
                     #panel
                     (mouseenter)="isActive = true; indexHover = i"
                     (mouseleave)="isActive = false; indexHover = -1"
-                    [class.mat-elevation-z24]="isActive && indexHover == i"
-                >
+                    [class.mat-elevation-z24]="isActive && indexHover == i">
                     <mat-expansion-panel-header class="disable_ripple">
                         <mat-panel-title class="ep">
                             {{ preference["title"] }}
@@ -21,12 +18,9 @@
                                 (click)="
                                     removeOnePreference(preference);
                                     $event.stopPropagation()
-                                "
-                                [matTooltipPosition]="'above'"
-                                matTooltip="Remove {{
+                                " [matTooltipPosition]="'above'" matTooltip="Remove {{
                                     preference.title
-                                }} from preferences"
-                                >delete
+                                }} from preferences">delete
                             </mat-icon>
                         </mat-panel-description>
                     </mat-expansion-panel-header>

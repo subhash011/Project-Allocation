@@ -21,10 +21,9 @@ router.get("/details/:id", async (req, res) => {
             }
         };
         let user = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean()
-            .select("-google_id -__v -date -projects_preference").populate(populator);
+                                .select("-google_id -__v -date -projects_preference").populate(populator);
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -32,7 +31,6 @@ router.get("/details/:id", async (req, res) => {
             return;
         }
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -41,7 +39,6 @@ router.get("/details/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -60,7 +57,6 @@ router.get("/stage/:id", async (req, res) => {
             let admin = await Admin.findOne({stream: stream});
             if (!admin || !admin.admin_id) {
                 res.status(200).json({
-                    success: true,
                     statusCode: 200,
                     message: "success",
                     result: {
@@ -70,7 +66,6 @@ router.get("/stage/:id", async (req, res) => {
                 return;
             }
             res.status(200).json({
-                success: true,
                 statusCode: 200,
                 message: "success",
                 result: {
@@ -80,7 +75,6 @@ router.get("/stage/:id", async (req, res) => {
             });
         } else {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -88,7 +82,6 @@ router.get("/stage/:id", async (req, res) => {
         }
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null

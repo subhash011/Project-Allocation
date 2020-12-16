@@ -1,0 +1,43 @@
+<mat-dialog-content
+    *ngIf="preferences.projects_preference.length != 0; else elseBlock">
+    <mat-toolbar class="toolbar">
+        <mat-icon
+            (click)="close()" color="accent" matTooltip="close pop-up" matTooltipPosition="above">close
+        </mat-icon>
+        <div class="fill-space"></div>
+        <div #container class="copy">
+            <button
+                [cdkCopyToClipboard]="value" color="primary" mat-raised-button>
+                Copy to Clipboard
+            </button>
+        </div>
+    </mat-toolbar>
+    <cdk-virtual-scroll-viewport class="example-viewport" itemSize="50">
+        <div>
+            <div
+                *cdkVirtualFor="
+                    let preference of preferences.projects_preference
+                " class="list-item">
+                <mat-accordion>
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Faculty : {{ preference["faculty_name"] }}
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <div class="flex-space"></div>
+                                Project Title : {{ preference["title"] }}
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <p>Faculty Email : {{ preference["faculty_email"] }}</p>
+                        <p>Description : {{ preference["description"] }}</p>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <div class="flex-space"></div>
+            </div>
+        </div>
+    </cdk-virtual-scroll-viewport>
+</mat-dialog-content>
+<ng-template #elseBlock>
+    <div class="text">No preferences to display</div>
+</ng-template>

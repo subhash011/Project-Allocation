@@ -22,27 +22,18 @@
     </div>
     <div *ngIf="(role | isFaculty) || (role | isAdmin)">
         <mat-tab-group
-            [backgroundColor]="'primary'"
-            animationDuration="0"
-            dynamicHeight="true"
-            mat-align-tabs="center"
-        >
+            [backgroundColor]="'primary'" animationDuration="0" dynamicHeight="true" mat-align-tabs="center">
             <mat-tab label="About Me">
                 <mat-card class="example-card">
                     <img [src]="'' | userPhoto" class="image" mat-card-avatar />
                     <div *ngIf="user_info">
                         <form
-                            [formGroup]="facultyFormGroup"
-                            class="facultyForm"
-                        >
+                            [formGroup]="facultyFormGroup" class="facultyForm">
                             <mat-form-field class="example-full-width">
                                 <mat-label>Name</mat-label>
                                 <mat-card-title>
                                     <input
-                                        formControlName="name"
-                                        matInput
-                                        placeholder="name"
-                                    />
+                                        formControlName="name" matInput placeholder="name" />
                                 </mat-card-title>
                             </mat-form-field>
 
@@ -56,10 +47,7 @@
 
                             <mat-card-actions>
                                 <button
-                                    (click)="updateFacultyProfile()"
-                                    color="primary"
-                                    mat-raised-button
-                                >
+                                    (click)="updateFacultyProfile()" color="primary" mat-raised-button>
                                     Update Profile
                                 </button>
                             </mat-card-actions>
@@ -74,27 +62,20 @@
                         <mat-select formControlName="programs" multiple>
                             <mat-option
                                 *ngFor="let program of programs"
-                                [value]="[program.short, program.full]"
-                                >{{ program.full }}</mat-option
-                            >
+                                [value]="[program.short, program.full]">{{ program.full }}</mat-option>
                         </mat-select>
                         <mat-error
                             *ngIf="
                                 programGroup.controls['programs'].hasError(
                                     'required'
                                 )
-                            "
-                        >
+                            ">
                             Programs are <strong>required</strong>
                         </mat-error>
                     </mat-form-field>
                     <span>
                         <button
-                            (click)="addProgram()"
-                            class="submit"
-                            color="primary"
-                            mat-raised-button
-                        >
+                            (click)="addProgram()" class="submit" color="primary" mat-raised-button>
                             Submit
                         </button>
                     </span>
@@ -102,11 +83,7 @@
                 <div class="display">
                     <div class="table mat-elevation-z8">
                         <table
-                            #table
-                            [dataSource]="faculty_programs"
-                            class="mat-elevation-z8"
-                            mat-table
-                        >
+                            #table [dataSource]="faculty_programs" class="mat-elevation-z8" mat-table>
                             <ng-container matColumnDef="Program Name">
                                 <th *matHeaderCellDef mat-header-cell>
                                     Program Name
@@ -123,19 +100,14 @@
                                     <mat-icon
                                         (click)="deleteProgram(map)"
                                         matTooltip="Delete Program"
-                                        matTooltipPosition="right"
-                                        >delete_outline
+                                        matTooltipPosition="right">delete_outline
                                     </mat-icon>
                                 </td>
                             </ng-container>
                             <tr
-                                *matHeaderRowDef="programHeader"
-                                mat-header-row
-                            ></tr>
+                                *matHeaderRowDef="programHeader" mat-header-row></tr>
                             <tr
-                                *matRowDef="let row; columns: programHeader"
-                                mat-row
-                            ></tr>
+                                *matRowDef="let row; columns: programHeader" mat-row></tr>
                         </table>
                     </div>
                 </div>

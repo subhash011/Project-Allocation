@@ -14,7 +14,6 @@ router.get("/maps", async (req, res) => {
         let programs = await Programs.find().lean();
         if (!programs) programs = [];
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -23,7 +22,6 @@ router.get("/maps", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -37,7 +35,6 @@ router.get("/branches", async (req, res) => {
         let streams = await Streams.find().lean();
         if (!streams) streams = [];
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "success",
             result: {
@@ -46,7 +43,6 @@ router.get("/branches", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -63,7 +59,6 @@ router.post("/branches/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -76,7 +71,6 @@ router.post("/branches/:id", async (req, res) => {
         });
         let stream = await newStream.save();
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Successfully added the stream",
             result: {
@@ -86,7 +80,6 @@ router.post("/branches/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -103,7 +96,6 @@ router.post("/maps/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -120,7 +112,6 @@ router.post("/maps/:id", async (req, res) => {
         await newAdmin.save();
         let program = await newProgram.save();
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Successfully added the program.",
             result: {
@@ -130,7 +121,6 @@ router.post("/maps/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -147,7 +137,6 @@ router.delete("/branches/remove/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -156,7 +145,6 @@ router.delete("/branches/remove/:id", async (req, res) => {
         }
         let stream = await Streams.findOneAndDelete({short: short});
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Successfully removed the stream.",
             result: {
@@ -166,7 +154,6 @@ router.delete("/branches/remove/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null
@@ -183,7 +170,6 @@ router.delete("/maps/remove/:id", async (req, res) => {
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
-                success: false,
                 statusCode: 401,
                 message: "Session timed out! Please Sign-In again.",
                 result: null
@@ -205,11 +191,10 @@ router.delete("/maps/remove/:id", async (req, res) => {
             Admin.findOneAndDelete({stream: short}),
             Students.deleteMany({stream: short}),
             Projects.deleteMany({stream: short}),
-            Faculty.updateMany({'programs.short': short}, {$pull: {programs: program}})
+            Faculty.updateMany({"programs.short": short}, {$pull: {programs: program}})
         ];
         await Promise.all(promises);
         res.status(200).json({
-            success: true,
             statusCode: 200,
             message: "Successfully removed the program",
             result: {
@@ -219,7 +204,6 @@ router.delete("/maps/remove/:id", async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            success: false,
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
             result: null

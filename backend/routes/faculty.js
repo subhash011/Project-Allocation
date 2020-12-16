@@ -174,7 +174,6 @@ router.post("/deleteProgram/:id", async (req, res) => {
             $pull: {programs: curr_program}
         };
 
-
         let faculty = await Faculty.findOneAndUpdate({google_id: {id: id, idToken: idToken}}, updateConfig);
         if (!faculty) {
             res.json({
@@ -242,7 +241,7 @@ router.post("/getFacultyProgramDetails/:id", async (req, res) => {
                 deadline = null;
             }
             let projects = await Project.find({faculty_id: faculty._id, stream: program.short})
-                .populate({path: "student_alloted", select: "-google_id -date", model: Student});
+                                        .populate({path: "student_alloted", select: "-google_id -date", model: Student});
             const obj = {
                 program: program,
                 admin: admin,
@@ -257,7 +256,7 @@ router.post("/getFacultyProgramDetails/:id", async (req, res) => {
         } else {
             if (faculty) {
                 let projects = await Project.find({faculty_id: faculty._id, stream: program.short})
-                    .populate({path: "student_alloted", select: "-google_id -date", model: Student});
+                                            .populate({path: "student_alloted", select: "-google_id -date", model: Student});
                 const obj = {
                     program: program,
                     projects: projects
@@ -309,18 +308,18 @@ router.get("/home/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}})
-            .lean()
-            .select("-google_id")
-            .populate({
-                path: "project_list",
-                select: "students_id student_alloted title studentIntake description duration stream",
-                model: Project,
-                populate: {
-                    path: "student_alloted",
-                    select: "name roll_no",
-                    model: Student
-                }
-            });
+                                   .lean()
+                                   .select("-google_id")
+                                   .populate({
+                                       path: "project_list",
+                                       select: "students_id student_alloted title studentIntake description duration stream",
+                                       model: Project,
+                                       populate: {
+                                           path: "student_alloted",
+                                           select: "name roll_no",
+                                           model: Student
+                                       }
+                                   });
         let facultyPrograms = faculty.programs.map(val => val.short);
         let facultyProjects = faculty.project_list;
         facultyProjects = facultyProjects.map(val => {

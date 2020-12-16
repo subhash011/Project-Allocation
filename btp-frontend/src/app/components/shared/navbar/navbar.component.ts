@@ -6,22 +6,17 @@ import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
 import { StorageService } from "src/app/services/helpers/storage.service";
 
 @Pipe({
-    name: "checkRegister",
+    name: "checkRegister"
 })
 export class CheckRegister implements PipeTransform {
     transform(value) {
         const role = localStorage.getItem("role");
-        return (
-            role == "faculty" ||
-            role == "admin" ||
-            role == "student" ||
-            role == "super_admin"
-        );
+        return (role == "faculty" || role == "admin" || role == "student" || role == "super_admin");
     }
 }
 
 @Pipe({
-    name: "links",
+    name: "links"
 })
 export class GetLinksForNavBar implements PipeTransform {
     transform(value, role) {
@@ -43,10 +38,7 @@ export class GetLinksForNavBar implements PipeTransform {
 }
 
 @Component({
-    selector: "app-navbar",
-    templateUrl: "./navbar.component.html",
-    styleUrls: ["./navbar.component.scss"],
-    providers: [LoginComponent],
+    selector: "app-navbar", templateUrl: "./navbar.component.html", styleUrls: [ "./navbar.component.scss" ], providers: [ LoginComponent ]
 })
 export class NavbarComponent implements OnInit {
     programsVisible: boolean = false;
@@ -56,13 +48,7 @@ export class NavbarComponent implements OnInit {
     curRole;
     badge: number = 0;
 
-    constructor(
-        private router: Router,
-        private userService: UserService,
-        private login: LoginComponent,
-        private snackBar: MatSnackBar,
-        private storageService: StorageService
-    ) {}
+    constructor(private router: Router, private userService: UserService, private login: LoginComponent, private snackBar: MatSnackBar, private storageService: StorageService) {}
 
     ngOnInit() {
         this.storageService.watchStorage().subscribe((data: string) => {
@@ -73,10 +59,7 @@ export class NavbarComponent implements OnInit {
         if (localStorage.getItem("isLoggedIn") == "true") {
             this.role = localStorage.getItem("role");
         }
-        if (
-            (this.role == "faculty" || this.role == "admin") &&
-            localStorage.getItem("isLoggedIn") == "true"
-        ) {
+        if ((this.role == "faculty" || this.role == "admin") && localStorage.getItem("isLoggedIn") == "true") {
             this.userService.getFacultyPrograms().subscribe((data) => {
                 if (data["status"] == "success") {
                     this.programs = data["programs"];
@@ -84,10 +67,7 @@ export class NavbarComponent implements OnInit {
                         this.programsVisible = true;
                     }
                 } else {
-                    this.snackBar.open(
-                        "Session Timed Out! Please Sign in Again!",
-                        "Ok"
-                    );
+                    this.snackBar.open("Session Timed Out! Please Sign in Again!", "Ok");
                     this.login.signOut();
                 }
             });
@@ -96,31 +76,36 @@ export class NavbarComponent implements OnInit {
 
     getAdmin() {
         let id = localStorage.getItem("id");
-        this.router.navigate(["/admin", id]);
+        this.router.navigate([
+            "/admin",
+            id
+        ]);
     }
 
     goToHome() {
         let id = localStorage.getItem("id");
         this.router
             .navigateByUrl("/refresh", {
-                skipLocationChange: true,
+                skipLocationChange: true
             })
             .then(() => {
                 this.ngOnInit();
-                this.router.navigate([decodeURI("/faculty/" + id)]);
+                this.router.navigate([ decodeURI("/faculty/" + id) ]);
             });
     }
 
     goToProgram(program) {
         let id = localStorage.getItem("id");
         this.router
-            .navigateByUrl("/refresh", { skipLocationChange: true })
+            .navigateByUrl("/refresh", {skipLocationChange: true})
             .then(() => {
-                this.router.navigate(["/faculty", id], {
+                this.router.navigate([
+                    "/faculty",
+                    id
+                ], {
                     queryParams: {
-                        abbr: program.short,
-                        mode: "programMode",
-                    },
+                        abbr: program.short, mode: "programMode"
+                    }
                 });
             });
     }
