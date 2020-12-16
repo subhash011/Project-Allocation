@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { ShowAvailableProjectsComponent } from './show-available-projects.component';
+import { ShowAvailableProjectsComponent } from "./show-available-projects.component";
 
-describe('ShowAvailableProjectsComponent', () => {
+describe("ShowAvailableProjectsComponent", () => {
     let component: ShowAvailableProjectsComponent;
     let fixture: ComponentFixture<ShowAvailableProjectsComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [ShowAvailableProjectsComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [ShowAvailableProjectsComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ShowAvailableProjectsComponent);
@@ -19,7 +20,7 @@ describe('ShowAvailableProjectsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { TimelineComponent } from './timeline.component';
+import { TimelineComponent } from "./timeline.component";
 
-describe('TimelineComponent', () => {
+describe("TimelineComponent", () => {
     let component: TimelineComponent;
     let fixture: ComponentFixture<TimelineComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [TimelineComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [TimelineComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(TimelineComponent);
@@ -19,7 +20,7 @@ describe('TimelineComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

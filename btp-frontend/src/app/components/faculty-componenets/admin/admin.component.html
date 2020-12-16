@@ -1,8 +1,10 @@
-<mat-tab-group [(selectedIndex)]="index"
-               [backgroundColor]="'primary'"
-               animationDuration="0"
-               dynamicHeight="true"
-               mat-align-tabs="center">
+<mat-tab-group
+    [(selectedIndex)]="index"
+    [backgroundColor]="'primary'"
+    animationDuration="0"
+    dynamicHeight="true"
+    mat-align-tabs="center"
+>
     <mat-tab label="Co-ordinator">
         <div class="header">
             <h1>{{ programName }}</h1>
@@ -15,21 +17,29 @@
         <div class="progress-bar">
             <div class="projectCapForm">
                 <form [formGroup]="fifthFormGroup">
-                    <mat-form-field class="example-full-width"
-                                    style="width: 250px;">
-                        <mat-label>Max number of projects per faculty</mat-label>
-                        <input class="projectCapForm"
-                               formControlName="fifthCtrl"
-                               matInput
-                               placeholder="Project Cap"
-                               step="1"
-                               type="number" />
+                    <mat-form-field
+                        class="example-full-width"
+                        style="width: 250px"
+                    >
+                        <mat-label
+                            >Max number of projects per faculty</mat-label
+                        >
+                        <input
+                            class="projectCapForm"
+                            formControlName="fifthCtrl"
+                            matInput
+                            placeholder="Project Cap"
+                            step="1"
+                            type="number"
+                        />
                     </mat-form-field>
 
-                    <button (click)="setProjectCap()"
-                            class="setButton"
-                            color="primary"
-                            mat-raised-button>
+                    <button
+                        (click)="setProjectCap()"
+                        class="setButton"
+                        color="primary"
+                        mat-raised-button
+                    >
                         Set Project Cap
                     </button>
                 </form>
@@ -38,199 +48,269 @@
             <div class="studentCapForm">
                 <form [formGroup]="sixthFormGroup">
                     <mat-form-field class="example-full-width">
-                        <mat-label>Max number of students per project</mat-label>
-                        <input formControlName="sixthCtrl"
-                               matInput
-                               placeholder="Student Cap"
-                               step="1"
-                               type="number" />
+                        <mat-label
+                            >Max number of students per project</mat-label
+                        >
+                        <input
+                            formControlName="sixthCtrl"
+                            matInput
+                            placeholder="Student Cap"
+                            step="1"
+                            type="number"
+                        />
                     </mat-form-field>
 
-                    <button (click)="setStudentCap()"
-                            class="setButton"
-                            color="accent"
-                            mat-raised-button>
+                    <button
+                        (click)="setStudentCap()"
+                        class="setButton"
+                        color="accent"
+                        mat-raised-button
+                    >
                         Set Student Cap
                     </button>
                 </form>
             </div>
             <div>
                 <form [formGroup]="seventhFormGroup">
-                    <mat-form-field class="example-full-width"
-                                    style="width: 250px;">
+                    <mat-form-field
+                        class="example-full-width"
+                        style="width: 250px"
+                    >
                         <mat-label>Number of students per faculty</mat-label>
-                        <input formControlName="seventhCtrl"
-                               matInput
-                               placeholder="Number of students"
-                               step="1"
-                               type="number" />
+                        <input
+                            formControlName="seventhCtrl"
+                            matInput
+                            placeholder="Number of students"
+                            step="1"
+                            type="number"
+                        />
                     </mat-form-field>
 
-                    <button (click)="setStudentsPerFaculty()"
-                            class="setButton"
-                            color="primary"
-                            mat-raised-button>
+                    <button
+                        (click)="setStudentsPerFaculty()"
+                        class="setButton"
+                        color="primary"
+                        mat-raised-button
+                    >
                         Submit
                     </button>
                 </form>
             </div>
 
-            <span class="days_left"><strong *ngIf="curr_deadline">Time Left : {{ curr_deadline | countdown: currentTime }}</strong></span>
+            <span class="days_left"
+                ><strong *ngIf="curr_deadline"
+                    >Time Left :{{
+                        curr_deadline | countdown: currentTime
+                    }}</strong
+                ></span
+            >
         </div>
 
-        <mat-horizontal-stepper #stepper
-                                [labelPosition]="'bottom'"
-                                ngClass="{{ 'last-edited-step-' + stage_no }}">
-            <mat-step [editable]="'true'"
-                      [stepControl]="firstFormGroup">
+        <mat-horizontal-stepper
+            #stepper
+            [labelPosition]="'bottom'"
+            ngClass="{{ 'last-edited-step-' + stage_no }}"
+        >
+            <mat-step [editable]="'true'" [stepControl]="firstFormGroup">
                 <form [formGroup]="firstFormGroup">
                     <ng-template matStepLabel>
                         Creating Projects
-                        <div *ngIf="stage_no > 0"
-                             class="datelabel">
+                        <div *ngIf="stage_no > 0" class="datelabel">
                             {{ dateSet[0] | date: "fullDate" }}
                         </div>
                     </ng-template>
 
                     <mat-form-field class="example-full-width">
                         <mat-label>Choose Date1</mat-label>
-                        <input [matDatepicker]="picker1"
-                               [min]="minDate"
-                               formControlName="firstCtrl"
-                               matInput />
-                        <mat-datepicker-toggle [for]="picker1"
-                                               matSuffix></mat-datepicker-toggle>
+                        <input
+                            [matDatepicker]="picker1"
+                            [min]="minDate"
+                            formControlName="firstCtrl"
+                            matInput
+                        />
+                        <mat-datepicker-toggle
+                            [for]="picker1"
+                            matSuffix
+                        ></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
 
                     <div>
-                        <button (click)="setDeadline()"
-                                mat-button>
+                        <button (click)="setDeadline()" mat-button>
                             Set DeadLine
                         </button>
 
-                        <button (click)="sendEmails()"
-                                [disabled]="proceedButton1"
-                                mat-button>
+                        <button
+                            (click)="sendEmails()"
+                            [disabled]="proceedButton1"
+                            mat-button
+                        >
                             Send Emails
                         </button>
-                        <span [matTooltip]="('1'|proceedPipe:studentCount:proceedButton1_:total_intake:proceedButton1:student_flag)">
-              <button (click)="proceed()"
-                      [disabled]="proceedButton1_"
-                      mat-button>
-                Proceed
-              </button>
-            </span>
+                        <span
+                            [matTooltip]="
+                                '1'
+                                    | proceedPipe
+                                        : studentCount
+                                        : proceedButton1_
+                                        : total_intake
+                                        : proceedButton1
+                                        : student_flag
+                            "
+                        >
+                            <button
+                                (click)="proceed()"
+                                [disabled]="proceedButton1_"
+                                mat-button
+                            >
+                                Proceed
+                            </button>
+                        </span>
                         <div class="reset">
-                            <button (click)="resetProcess()"
-                                    color="primary"
-                                    mat-raised-button>
+                            <button
+                                (click)="resetProcess()"
+                                color="primary"
+                                mat-raised-button
+                            >
                                 Reset Allocation
                             </button>
                         </div>
                     </div>
                 </form>
             </mat-step>
-            <mat-step [editable]="'true'"
-                      [stepControl]="secondFormGroup">
+            <mat-step [editable]="true" [stepControl]="secondFormGroup">
                 <form [formGroup]="secondFormGroup">
                     <ng-template matStepLabel>
                         Student Preferences
-                        <div *ngIf="stage_no > 1"
-                             class="datelabel">
+                        <div *ngIf="stage_no > 1" class="datelabel">
                             {{ dateSet[1] | date: "fullDate" }}
                         </div>
                     </ng-template>
 
                     <mat-form-field class="example-full-width">
                         <mat-label>Choose a date 2</mat-label>
-                        <input [matDatepicker]="picker2"
-                               [min]="minDate"
-                               formControlName="secondCtrl"
-                               matInput />
-                        <mat-datepicker-toggle [for]="picker2"
-                                               matSuffix></mat-datepicker-toggle>
+                        <input
+                            [matDatepicker]="picker2"
+                            [min]="minDate"
+                            formControlName="secondCtrl"
+                            matInput
+                        />
+                        <mat-datepicker-toggle
+                            [for]="picker2"
+                            matSuffix
+                        ></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
                     </mat-form-field>
 
                     <div>
-                        <button (click)="setDeadline()"
-                                mat-button>
+                        <button (click)="setDeadline()" mat-button>
                             Set DeadLine
                         </button>
-                        <button (click)="sendEmails()"
-                                [disabled]="proceedButton2"
-                                mat-button>
+                        <button
+                            (click)="sendEmails()"
+                            [disabled]="proceedButton2"
+                            mat-button
+                        >
                             Send Emails
                         </button>
-                        <button (click)="stepDownStage()"
-                                mat-button>
+                        <button (click)="stepDownStage()" mat-button>
                             Go Back
                         </button>
-                        <span [matTooltip]="('2'|proceedPipe:studentCount:proceedButton2_:total_intake:proceedButton2:student_flag)">
-            <button (click)="proceed()"
-                    [disabled]="proceedButton2_"
-                    mat-button>
-              Proceed
-            </button>
-            </span>
+                        <span
+                            [matTooltip]="
+                                '2'
+                                    | proceedPipe
+                                        : studentCount
+                                        : proceedButton2_
+                                        : total_intake
+                                        : proceedButton2
+                                        : student_flag
+                            "
+                        >
+                            <button
+                                (click)="proceed()"
+                                [disabled]="proceedButton2_"
+                                mat-button
+                            >
+                                Proceed
+                            </button>
+                        </span>
                         <div class="reset">
-                            <button (click)="resetProcess()"
-                                    color="primary"
-                                    mat-raised-button>
+                            <button
+                                (click)="resetProcess()"
+                                color="primary"
+                                mat-raised-button
+                            >
                                 Reset Allocation
                             </button>
                         </div>
                     </div>
                 </form>
             </mat-step>
-            <mat-step [editable]="'true'"
-                      [stepControl]="thirdFormGroup">
+            <mat-step [editable]="'true'" [stepControl]="thirdFormGroup">
                 <form [formGroup]="thirdFormGroup">
-                    <ng-template matStepLabel>Faculty Preferences
+                    <ng-template matStepLabel
+                        >Faculty Preferences
 
-                        <div *ngIf="stage_no > 2"
-                             class="datelabel">
+                        <div *ngIf="stage_no > 2" class="datelabel">
                             {{ dateSet[2] | date: "fullDate" }}
                         </div>
                     </ng-template>
 
                     <mat-form-field class="example-full-width">
                         <mat-label>Choose a date 3</mat-label>
-                        <input [matDatepicker]="picker3"
-                               [min]="minDate"
-                               formControlName="thirdCtrl"
-                               matInput />
-                        <mat-datepicker-toggle [for]="picker3"
-                                               matSuffix></mat-datepicker-toggle>
+                        <input
+                            [matDatepicker]="picker3"
+                            [min]="minDate"
+                            formControlName="thirdCtrl"
+                            matInput
+                        />
+                        <mat-datepicker-toggle
+                            [for]="picker3"
+                            matSuffix
+                        ></mat-datepicker-toggle>
                         <mat-datepicker #picker3></mat-datepicker>
                     </mat-form-field>
 
                     <div>
-                        <button (click)="setDeadline()"
-                                mat-button>
+                        <button (click)="setDeadline()" mat-button>
                             Set DeadLine
                         </button>
-                        <button (click)="sendEmails()"
-                                [disabled]="proceedButton3"
-                                mat-button>
+                        <button
+                            (click)="sendEmails()"
+                            [disabled]="proceedButton3"
+                            mat-button
+                        >
                             Send Emails
                         </button>
-                        <button (click)="stepDownStage()"
-                                mat-button>
+                        <button (click)="stepDownStage()" mat-button>
                             Go Back
                         </button>
-                        <span [matTooltip]="('3'|proceedPipe:studentCount:proceedButton3_:total_intake:proceedButton3:student_flag)">
-            <button (click)="proceed()"
-                    [disabled]="proceedButton3_"
-                    mat-button>
-              Proceed
-            </button>
-            </span>
+                        <span
+                            [matTooltip]="
+                                '3'
+                                    | proceedPipe
+                                        : studentCount
+                                        : proceedButton3_
+                                        : total_intake
+                                        : proceedButton3
+                                        : student_flag
+                            "
+                        >
+                            <button
+                                (click)="proceed()"
+                                [disabled]="proceedButton3_"
+                                mat-button
+                            >
+                                Proceed
+                            </button>
+                        </span>
                         <div class="reset">
-                            <button (click)="resetProcess()"
-                                    color="primary"
-                                    mat-raised-button>
+                            <button
+                                (click)="resetProcess()"
+                                color="primary"
+                                mat-raised-button
+                            >
                                 Reset Allocation
                             </button>
                         </div>
@@ -238,20 +318,25 @@
                 </form>
             </mat-step>
 
-            <mat-step [editable]="'true'"
-                      [stepControl]="fourthFormGroup">
+            <mat-step [editable]="'true'" [stepControl]="fourthFormGroup">
                 <form [formGroup]="fourthFormGroup">
                     <ng-template matStepLabel>Project Allocation</ng-template>
                     <div>
-                        <h4><b>Please go to the Project tab to start the Allocation</b></h4>
-                        <button (click)="stepDownStage()"
-                                mat-button>
+                        <h4>
+                            <b
+                                >Please go to the Project tab to start the
+                                Allocation</b
+                            >
+                        </h4>
+                        <button (click)="stepDownStage()" mat-button>
                             Go Back
                         </button>
                         <div class="reset">
-                            <button (click)="resetProcess()"
-                                    color="primary"
-                                    mat-raised-button>
+                            <button
+                                (click)="resetProcess()"
+                                color="primary"
+                                mat-raised-button
+                            >
                                 Reset Allocation
                             </button>
                         </div>
@@ -262,493 +347,628 @@
     </mat-tab>
     <mat-tab label="Projects">
         <div class="searchBox">
-            <input (keyup)="applyFilter($event, 'project')"
-                   autocomplete="off"
-                   class="searchInput"
-                   mat-input
-                   name="search"
-                   placeholder="Search by any ... "
-                   type="search" />
-            <button class="searchButton"
-                    href="#">
+            <input
+                (keyup)="applyFilter($event, 'project')"
+                autocomplete="off"
+                class="searchInput"
+                matInput
+                name="search"
+                placeholder="Search by any ... "
+                type="search"
+            />
+            <button class="searchButton">
                 <i class="material-icons">search</i>
             </button>
         </div>
 
-        <div *ngIf="stage_no >= 3"
-             class="finalStageButtons">
+        <div *ngIf="stage_no >= 3" class="finalStageButtons">
             <div class="startAllocationButton">
-                <button (click)="startAllocation()"
-                        color="primary"
-                        mat-raised-button>
+                <button
+                    (click)="startAllocation()"
+                    color="primary"
+                    mat-raised-button
+                >
                     Start Allocation
                 </button>
             </div>
             <div class="startAllocationButton">
-                <button (click)="publishToFaculty()"
-                        [disabled]="publishFaculty"
-                        color="accent"
-                        mat-raised-button>
+                <button
+                    (click)="publishToFaculty()"
+                    [disabled]="publishFaculty"
+                    color="accent"
+                    mat-raised-button
+                >
                     Publish to Faculties
                 </button>
             </div>
             <div class="startAllocationButton">
-                <button (click)="publishToStudents()"
-                        [disabled]="publishStudents"
-                        color="primary"
-                        mat-raised-button>
+                <button
+                    (click)="publishToStudents()"
+                    [disabled]="publishStudents"
+                    color="primary"
+                    mat-raised-button
+                >
                     Publish to Students
                 </button>
             </div>
             <div class="startAllocationButton">
-                <button (click)="downloadFile_project()"
-                        color="accent"
-                        mat-raised-button>
+                <button
+                    (click)="downloadFile_project()"
+                    color="accent"
+                    mat-raised-button
+                >
                     Export Preferences
                 </button>
             </div>
 
-            <div class="startAllocationButton"
-                 matTooltip="{{ exportDisabled | getExportDisabled }}"
-                 matTooltipPosition="above">
-                <button (click)="downloadFile_allocation()"
-                        [disabled]="exportDisabled"
-                        color="primary"
-                        mat-raised-button>
+            <div
+                class="startAllocationButton"
+                matTooltip="{{ exportDisabled | getExportDisabled }}"
+                matTooltipPosition="above"
+            >
+                <button
+                    (click)="downloadFile_allocation()"
+                    [disabled]="exportDisabled"
+                    color="primary"
+                    mat-raised-button
+                >
                     Export Allocation
                 </button>
             </div>
         </div>
 
         <div class="display">
-            <div [style.max-height.px]="projectTableHeight"
-                 class="table mat-elevation-z8">
-                <table (matSortChange)="sortProjects($event)"
-                       [dataSource]="dataSource"
-                       class="mat-elevation-z8"
-                       mat-table
-                       matSort>
+            <div
+                [style.max-height.px]="projectTableHeight"
+                class="table mat-elevation-z8"
+            >
+                <table
+                    (matSortChange)="sortProjects($event)"
+                    [dataSource]="dataSource"
+                    class="mat-elevation-z8"
+                    mat-table
+                    matSort
+                >
                     <ng-container matColumnDef="select">
-                        <th *matHeaderCellDef
-                            mat-header-cell
-                            mat-sort-header>
-                            <mat-checkbox (change)="$event ? masterToggle() : null"
-                                          (click)="$event.stopPropagation()"
-                                          [aria-label]="checkboxLabel(null)"
-                                          [checked]="selection.hasValue() && isAllSelected()"
-                                          [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                            <mat-checkbox
+                                (change)="$event ? masterToggle() : null"
+                                (click)="$event.stopPropagation()"
+                                [aria-label]="checkboxLabel(null)"
+                                [checked]="
+                                    selection.hasValue() && isAllSelected()
+                                "
+                                [indeterminate]="
+                                    selection.hasValue() && !isAllSelected()
+                                "
+                            ></mat-checkbox>
                         </th>
-                        <td *matCellDef="let row"
-                            mat-cell>
-                            <mat-checkbox (change)="$event ? selection.toggle(row) : null"
-                                          (click)="$event.stopPropagation()"
-                                          [aria-label]="checkboxLabel(row)"
-                                          [checked]="selection.isSelected(row)"
-                                          [disabled]="!row.isIncluded"
-                                          [matTooltipPosition]="position"
-                                          [matTooltip]="getTooltipInculsion(row)"></mat-checkbox>
+                        <td *matCellDef="let row" mat-cell>
+                            <mat-checkbox
+                                (change)="$event ? selection.toggle(row) : null"
+                                (click)="$event.stopPropagation()"
+                                [aria-label]="checkboxLabel(row)"
+                                [checked]="selection.isSelected(row)"
+                                [disabled]="!row.isIncluded"
+                                [matTooltipPosition]="position"
+                                [matTooltip]="getTooltipInculsion(row)"
+                            ></mat-checkbox>
                         </td>
-                        <td *matFooterCellDef
+                        <td
+                            *matFooterCellDef
                             mat-footer-cell
-                            matTooltip="Selected projects"> {{this.selection.selected | selectedLength:dataSource.filteredData}} </td>
+                            matTooltip="Selected projects"
+                        >
+                            {{
+                                this.selection.selected
+                                    | selectedLength: dataSource.filteredData
+                            }}
+                        </td>
                     </ng-container>
 
                     <ng-container matColumnDef="Title">
-                        <th *matHeaderCellDef
+                        <th
+                            *matHeaderCellDef
                             [style.color]="background"
                             mat-header-cell
-                            mat-sort-header>
+                            mat-sort-header
+                        >
                             Title
                         </th>
-                        <td *matCellDef="let project"
-                            mat-cell>{{ project.title }}</td>
-                        <td *matFooterCellDef
-                            mat-footer-cell><b>Total : </b> {{dataSource.filteredData.length}} </td>
+                        <td *matCellDef="let project" mat-cell>
+                            {{ project.title }}
+                        </td>
+                        <td *matFooterCellDef mat-footer-cell>
+                            <b>Total : </b> {{ dataSource.filteredData.length }}
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="isIncluded">
-                        <th *matHeaderCellDef
+                        <th
+                            *matHeaderCellDef
                             [style.color]="background"
                             mat-header-cell
-                            mat-sort-header>
+                            mat-sort-header
+                        >
                             Project Excluded
                         </th>
-                        <td *matCellDef="let project"
+                        <td
+                            *matCellDef="let project"
                             class="align-center"
-                            mat-cell>
+                            mat-cell
+                        >
                             {{ project.isIncluded ? "No" : "Yes" }}
                         </td>
-                        <td *matFooterCellDef
-                            mat-footer-cell></td>
+                        <td *matFooterCellDef mat-footer-cell></td>
                     </ng-container>
                     <ng-container matColumnDef="Faculty">
-                        <th *matHeaderCellDef
-                            mat-header-cell
-                            mat-sort-header>Faculty
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                            Faculty
                         </th>
-                        <td *matCellDef="let project"
-                            mat-cell>{{ project.faculty }}</td>
-                        <td *matFooterCellDef
-                            mat-footer-cell><b>Active Projects : </b> {{dataSource.filteredData | getActiveProjects}}
+                        <td *matCellDef="let project" mat-cell>
+                            {{ project.faculty }}
+                        </td>
+                        <td *matFooterCellDef mat-footer-cell>
+                            <b>Active Projects : </b
+                            >{{ dataSource.filteredData | getActiveProjects }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="Duration">
-                        <th *matHeaderCellDef
-                            mat-header-cell
-                            mat-sort-header>Duration
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                            Duration
                         </th>
-                        <td *matCellDef="let project"
+                        <td
+                            *matCellDef="let project"
                             class="align-center"
-                            mat-cell>{{ project.duration }}</td>
-                        <td *matFooterCellDef
-                            mat-footer-cell></td>
+                            mat-cell
+                        >
+                            {{ project.duration }}
+                        </td>
+                        <td *matFooterCellDef mat-footer-cell></td>
                     </ng-container>
                     <ng-container matColumnDef="studentIntake">
-                        <th *matHeaderCellDef
-                            mat-header-cell
-                            mat-sort-header>
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>
                             Max Student Intake
                         </th>
-                        <td *matCellDef="let project"
+                        <td
+                            *matCellDef="let project"
                             class="align-right"
-                            mat-cell>
+                            mat-cell
+                        >
                             {{ project.studentIntake }}
                         </td>
-                        <td *matFooterCellDef
+                        <td
+                            *matFooterCellDef
                             class="align-center"
-                            mat-footer-cell><b>Total : </b> {{dataSource.filteredData | getStudentIntake}} </td>
+                            mat-footer-cell
+                        >
+                            <b>Total : </b
+                            >{{ dataSource.filteredData | getStudentIntake }}
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="NoOfStudents">
-                        <th *matHeaderCellDef
-                            mat-header-cell
-                            mat-sort-header>
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>
                             No.of preferences
                         </th>
-                        <td *matCellDef="let project"
+                        <td
+                            *matCellDef="let project"
                             class="align-right"
-                            mat-cell>
+                            mat-cell
+                        >
                             {{ project.numberOfPreferences }}
                         </td>
-                        <td *matFooterCellDef
-                            mat-footer-cell></td>
+                        <td *matFooterCellDef mat-footer-cell></td>
                     </ng-container>
                     <ng-container matColumnDef="Preferences">
-                        <th *matHeaderCellDef
-                            mat-header-cell>Preferences
-                        </th>
-                        <td *matCellDef="let project"
+                        <th *matHeaderCellDef mat-header-cell>Preferences</th>
+                        <td
+                            *matCellDef="let project"
                             class="align-center"
-                            mat-cell>
-                            <mat-icon (click)="showPreferencesProject(project)"
-                                      matTooltip="Prefences of {{ project.faculty }}"
-                                      matTooltipPosition="above">
+                            mat-cell
+                        >
+                            <mat-icon
+                                (click)="showPreferencesProject(project)"
+                                matTooltip="Prefences of {{ project.faculty }}"
+                                matTooltipPosition="above"
+                            >
                                 open_in_new
                             </mat-icon>
                         </td>
-                        <td *matFooterCellDef
-                            mat-footer-cell></td>
+                        <td *matFooterCellDef mat-footer-cell></td>
                     </ng-container>
                     <ng-container matColumnDef="Student">
-                        <th *matHeaderCellDef
-                            mat-header-cell>Alloted To
-                        </th>
-                        <td *matCellDef="let project"
-                            mat-cell>
-                            <div *ngIf="
-                  !project.student_alloted ||
-                  project.student_alloted.length <= 0
-                ">
+                        <th *matHeaderCellDef mat-header-cell>Alloted To</th>
+                        <td *matCellDef="let project" mat-cell>
+                            <div
+                                *ngIf="
+                                    !project.student_alloted ||
+                                    project.student_alloted.length <= 0
+                                "
+                            >
                                 N/A
                             </div>
-                            <div *ngIf="
-                  project.student_alloted && project.student_alloted.length > 0
-                ">
-                                {{ project.student_alloted | getAllotedStudents }}
+                            <div
+                                *ngIf="
+                                    project.student_alloted &&
+                                    project.student_alloted.length > 0
+                                "
+                            >
+                                {{
+                                    project.student_alloted | getAllotedStudents
+                                }}
                             </div>
                         </td>
-                        <td *matFooterCellDef
-                            mat-footer-cell></td>
+                        <td *matFooterCellDef mat-footer-cell></td>
                     </ng-container>
-                    <tr *matHeaderRowDef="columns; sticky: true"
-                        mat-header-row></tr>
-                    <tr (mouseenter)="isActive = true; indexHover = i"
+                    <tr
+                        *matHeaderRowDef="columns; sticky: true"
+                        mat-header-row
+                    ></tr>
+                    <tr
+                        (mouseenter)="isActive = true; indexHover = i"
                         (mouseleave)="isActive = false; indexHover = -1"
                         *matRowDef="let row; let i = index; columns: columns"
                         [class.mat-elevation-z8]="isActive && indexHover == i"
                         class="remove-background"
-                        mat-row></tr>
-                    <tr *matFooterRowDef="columns; sticky: true"
-                        mat-footer-row></tr>
+                        mat-row
+                    ></tr>
+                    <tr
+                        *matFooterRowDef="columns; sticky: true"
+                        mat-footer-row
+                    ></tr>
                 </table>
             </div>
         </div>
     </mat-tab>
     <mat-tab label="Manage">
-        <mat-tab-group *ngIf="index == 2"
-                       [selectedIndex]="0"
-                       animationDuration="0"
-                       dynamicHeight="true"
-                       mat-align-tabs="center">
+        <mat-tab-group
+            *ngIf="index == 2"
+            [selectedIndex]="0"
+            animationDuration="0"
+            dynamicHeight="true"
+            mat-align-tabs="center"
+        >
             <mat-tab label="Students">
                 <div class="searchBox">
-                    <input (keyup)="applyFilter($event, 'student')"
-                           autocomplete="off"
-                           class="searchInput"
-                           matInput
-                           name="search"
-                           placeholder="Search by any ... "
-                           type="search" />
+                    <input
+                        (keyup)="applyFilter($event, 'student')"
+                        autocomplete="off"
+                        class="searchInput"
+                        matInput
+                        name="search"
+                        placeholder="Search by any ... "
+                        type="search"
+                    />
                     <button class="searchButton">
                         <i class="material-icons">search</i>
                     </button>
                 </div>
                 <div class="flex-space">
                     <div class="buttons">
-                        <button (click)="downloadFile_student()"
-                                *ngIf="stage_no >= 3"
-                                class="student_download"
-                                color="accent"
-                                mat-raised-button>
+                        <button
+                            (click)="downloadFile_student()"
+                            *ngIf="stage_no >= 3"
+                            class="student_download"
+                            color="accent"
+                            mat-raised-button
+                        >
                             Export Preferences
                         </button>
 
-                        <button (click)="fileInput.click()"
-                                class="import_students"
-                                color="primary"
-                                mat-raised-button>
+                        <button
+                            (click)="fileInput.click()"
+                            class="import_students"
+                            color="primary"
+                            mat-raised-button
+                        >
                             Import Students
                         </button>
-                        <button (click)="downloadFile_format()"
-                                class="download-format"
-                                color="accent"
-                                mat-raised-button>
+                        <button
+                            (click)="downloadFile_format()"
+                            class="download-format"
+                            color="accent"
+                            mat-raised-button
+                        >
                             Download file format
                         </button>
                     </div>
                 </div>
 
-                <input #fileInput
-                       (change)="handleFileInput($event)"
-                       style="display: none;"
-                       type="file" />
+                <input
+                    #fileInput
+                    (change)="handleFileInput($event)"
+                    style="display: none"
+                    type="file"
+                />
 
                 <div class="display-student">
-                    <div [style.max-height.px]="studentTableHeight"
-                         class="table mat-elevation-z8">
-                        <table (matSortChange)="sortStudents($event)"
-                               [dataSource]="students"
-                               class="mat-elevation-z8"
-                               mat-table
-                               matSort>
+                    <div
+                        [style.max-height.px]="studentTableHeight"
+                        class="table mat-elevation-z8"
+                    >
+                        <table
+                            (matSortChange)="sortStudents($event)"
+                            [dataSource]="students"
+                            class="mat-elevation-z8"
+                            mat-table
+                            matSort
+                        >
                             <ng-container matColumnDef="Name">
-                                <th *matHeaderCellDef
+                                <th
+                                    *matHeaderCellDef
                                     [style.color]="background"
                                     mat-header-cell
-                                    mat-sort-header>
+                                    mat-sort-header
+                                >
                                     Name
                                 </th>
-                                <td *matCellDef="let student"
-                                    mat-cell>{{ student.name }}</td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell><b>Total : </b> {{students.filteredData.length}}
+                                <td *matCellDef="let student" mat-cell>
+                                    {{ student.name }}
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell>
+                                    <b>Total : </b
+                                    >{{ students.filteredData.length }}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Email">
-                                <th *matHeaderCellDef
+                                <th
+                                    *matHeaderCellDef
                                     mat-header-cell
-                                    mat-sort-header>Email-ID
+                                    mat-sort-header
+                                >
+                                    Email-ID
                                 </th>
-                                <td *matCellDef="let student"
-                                    mat-cell>
+                                <td *matCellDef="let student" mat-cell>
                                     {{ student.email }}
                                 </td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell></td>
+                                <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
                             <ng-container matColumnDef="GPA">
-                                <th *matHeaderCellDef
+                                <th
+                                    *matHeaderCellDef
                                     mat-header-cell
-                                    mat-sort-header>CGPA
+                                    mat-sort-header
+                                >
+                                    CGPA
                                 </th>
-                                <td *matCellDef="let student"
-                                    mat-cell>
+                                <td *matCellDef="let student" mat-cell>
                                     {{ student.gpa }}
                                 </td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell></td>
+                                <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
                             <ng-container matColumnDef="Registered">
-                                <th *matHeaderCellDef
+                                <th
+                                    *matHeaderCellDef
                                     mat-header-cell
-                                    mat-sort-header>
+                                    mat-sort-header
+                                >
                                     Registered
                                 </th>
-                                <td *matCellDef="let student"
-                                    mat-cell>
+                                <td *matCellDef="let student" mat-cell>
                                     {{ student.isRegistered ? "Yes" : "No" }}
                                 </td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell><b>Registered : </b>  {{students.filteredData | getRegisteredCount}}
+                                <td *matFooterCellDef mat-footer-cell>
+                                    <b>Registered : </b
+                                    >{{
+                                        students.filteredData
+                                            | getRegisteredCount
+                                    }}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Actions">
-                                <th *matHeaderCellDef
-                                    mat-header-cell>Actions
+                                <th *matHeaderCellDef mat-header-cell>
+                                    Actions
                                 </th>
-                                <td *matCellDef="let student"
-                                    mat-cell>
-                                    <mat-icon (click)="removeStudent(student)"
-                                              matTooltip="Remove {{ student.name }}"
-                                              matTooltipPosition="right">
+                                <td *matCellDef="let student" mat-cell>
+                                    <mat-icon
+                                        (click)="removeStudent(student)"
+                                        matTooltip="Remove {{ student.name }}"
+                                        matTooltipPosition="right"
+                                    >
                                         delete_outline
                                     </mat-icon>
                                 </td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell></td>
+                                <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
                             <ng-container matColumnDef="ViewPref">
-                                <th *matHeaderCellDef
-                                    mat-header-cell>
+                                <th *matHeaderCellDef mat-header-cell>
                                     Preferences
                                 </th>
-                                <td *matCellDef="let student"
-                                    mat-cell>
-                                    <mat-icon (click)="showPreferences(student)"
-                                              matTooltip="Prefences of {{ student.name }}"
-                                              matTooltipPosition="above">
+                                <td *matCellDef="let student" mat-cell>
+                                    <mat-icon
+                                        (click)="showPreferences(student)"
+                                        matTooltip="Prefences of {{
+                                            student.name
+                                        }}"
+                                        matTooltipPosition="above"
+                                    >
                                         open_in_new
                                     </mat-icon>
                                 </td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell></td>
+                                <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
-                            <tr *matHeaderRowDef="studentCols; sticky: true"
-                                mat-header-row></tr>
-                            <tr (mouseenter)="isActive = true; indexHover = i"
+                            <tr
+                                *matHeaderRowDef="studentCols; sticky: true"
+                                mat-header-row
+                            ></tr>
+                            <tr
+                                (mouseenter)="isActive = true; indexHover = i"
                                 (mouseleave)="isActive = false; indexHover = -1"
-                                *matRowDef="let row; let i = index; columns: studentCols"
-                                [class.mat-elevation-z8]="isActive && indexHover == i"
+                                *matRowDef="
+                                    let row;
+                                    let i = index;
+                                    columns: studentCols
+                                "
+                                [class.mat-elevation-z8]="
+                                    isActive && indexHover == i
+                                "
                                 class="remove-background"
-                                mat-row></tr>
-                            <tr *matFooterRowDef="studentCols; sticky: true"
-                                mat-footer-row></tr>
+                                mat-row
+                            ></tr>
+                            <tr
+                                *matFooterRowDef="studentCols; sticky: true"
+                                mat-footer-row
+                            ></tr>
                         </table>
                     </div>
                 </div>
             </mat-tab>
             <mat-tab label="Faculties">
                 <div class="searchBox">
-                    <input (keyup)="applyFilter($event, 'faculty')"
-                           autocomplete="off"
-                           class="searchInput"
-                           mat-input
-                           name="search"
-                           placeholder="Search by any ... "
-                           type="search" />
-                    <button class="searchButton"
-                            href="#">
+                    <input
+                        (keyup)="applyFilter($event, 'faculty')"
+                        autocomplete="off"
+                        class="searchInput"
+                        matInput
+                        name="search"
+                        placeholder="Search by any ... "
+                        type="search"
+                    />
+                    <button class="searchButton" href="#">
                         <i class="material-icons">search</i>
                     </button>
                 </div>
                 <div class="display_faculties">
                     <div class="messages">
                         <p class="manage-font">
-                            <strong>SPP</strong> : Students per project limit exceeded, <strong>PFE</strong> : Projects
-                                                 per faculty limit exceeded, <strong>SPF</strong> : Students per faculty
-                                                 limit exceeded </p>
+                            <strong>SPP</strong> : Students per project limit
+                            exceeded, <strong>PFE</strong> : Projects per
+                            faculty limit exceeded, <strong>SPF</strong> :
+                            Students per faculty limit exceeded
+                        </p>
                     </div>
-                    <div [style.max-height.px]="studentTableHeight"
-                         class="table mat-elevation-z8">
-                        <table (matSortChange)="sortFaculty($event)"
-                               [dataSource]="faculties"
-                               class="mat-elevation-z8"
-                               mat-table
-                               matSort>
+                    <div
+                        [style.max-height.px]="studentTableHeight"
+                        class="table mat-elevation-z8"
+                    >
+                        <table
+                            (matSortChange)="sortFaculty($event)"
+                            [dataSource]="faculties"
+                            class="mat-elevation-z8"
+                            mat-table
+                            matSort
+                        >
                             <ng-container matColumnDef="Name">
-                                <th *matHeaderCellDef
+                                <th
+                                    *matHeaderCellDef
                                     [style.color]="background"
                                     mat-header-cell
-                                    mat-sort-header>
+                                    mat-sort-header
+                                >
                                     Name
                                 </th>
-                                <td *matCellDef="let faculty"
-                                    mat-cell>{{ faculty.name }}</td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell><b> Total : </b> {{ faculties.filteredData.length }} </td>
+                                <td *matCellDef="let faculty" mat-cell>
+                                    {{ faculty.name }}
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell>
+                                    <b> Total : </b
+                                    >{{ faculties.filteredData.length }}
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="Violations">
-                                <th *matHeaderCellDef
+                                <th
+                                    *matHeaderCellDef
                                     [style.color]="background"
-                                    mat-header-cell>
+                                    mat-header-cell
+                                >
                                     Violations
                                 </th>
-                                <td *matCellDef="let faculty"
-                                    mat-cell>
-                                    {{faculty.student_cap | getViolations : faculty.project_cap : faculty.studentsPerFaculty : false}}
+                                <td *matCellDef="let faculty" mat-cell>
+                                    {{
+                                        faculty.student_cap
+                                            | getViolations
+                                                : faculty.project_cap
+                                                : faculty.studentsPerFaculty
+                                                : false
+                                    }}
                                 </td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell></td>
+                                <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
                             <ng-container matColumnDef="Email">
-                                <th *matHeaderCellDef
-                                    mat-header-cell>Email-ID
+                                <th *matHeaderCellDef mat-header-cell>
+                                    Email-ID
                                 </th>
-                                <td *matCellDef="let faculty"
-                                    mat-cell>{{ faculty.email }}</td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell></td>
+                                <td *matCellDef="let faculty" mat-cell>
+                                    {{ faculty.email }}
+                                </td>
+                                <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
                             <ng-container matColumnDef="NoOfProjects">
-                                <th *matHeaderCellDef
+                                <th
+                                    *matHeaderCellDef
                                     mat-header-cell
-                                    mat-sort-header>
+                                    mat-sort-header
+                                >
                                     Projects (Included/Total)
                                 </th>
-                                <td *matCellDef="let faculty"
-                                    mat-cell>
-                                    {{ faculty.includedProjectsCount }} /{{ faculty.noOfProjects }}
+                                <td *matCellDef="let faculty" mat-cell>
+                                    {{ faculty.includedProjectsCount }} /{{
+                                        faculty.noOfProjects
+                                    }}
                                 </td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell><b>Total Projects
-                                                       : </b> {{ faculties.filteredData | getIncludedOfTotal }} </td>
+                                <td *matFooterCellDef mat-footer-cell>
+                                    <b>Total Projects : </b
+                                    >{{
+                                        faculties.filteredData
+                                            | getIncludedOfTotal
+                                    }}
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="StudentIntake">
-                                <th *matHeaderCellDef
+                                <th
+                                    *matHeaderCellDef
                                     mat-header-cell
-                                    mat-sort-header>
+                                    mat-sort-header
+                                >
                                     Student Intake (Included/Total)
                                 </th>
-                                <td *matCellDef="let faculty"
-                                    mat-cell>
-                                    {{ faculty.included_studentIntake }} /{{ faculty.total_studentIntake }}
+                                <td *matCellDef="let faculty" mat-cell>
+                                    {{ faculty.included_studentIntake }} /{{
+                                        faculty.total_studentIntake
+                                    }}
                                 </td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell><b>Total Intake : </b> {{ faculties.filteredData | getTotalIntake}}
+                                <td *matFooterCellDef mat-footer-cell>
+                                    <b>Total Intake : </b
+                                    >{{
+                                        faculties.filteredData | getTotalIntake
+                                    }}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Actions">
-                                <th *matHeaderCellDef
-                                    mat-header-cell>Actions
+                                <th *matHeaderCellDef mat-header-cell>
+                                    Actions
                                 </th>
-                                <td *matCellDef="let faculty"
-                                    mat-cell>
-                                    <mat-icon (click)="removeFaculty(faculty._id)"
-                                              matTooltip="Remove {{ faculty.name }}"
-                                              matTooltipPosition="right">delete_outline
+                                <td *matCellDef="let faculty" mat-cell>
+                                    <mat-icon
+                                        (click)="removeFaculty(faculty._id)"
+                                        matTooltip="Remove {{ faculty.name }}"
+                                        matTooltipPosition="right"
+                                        >delete_outline
                                     </mat-icon>
                                 </td>
-                                <td *matFooterCellDef
-                                    mat-footer-cell></td>
+                                <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
-                            <tr *matHeaderRowDef="facultyCols; sticky: true"
-                                mat-header-row></tr>
-                            <tr (mouseenter)="isActive = true; indexHover = i"
+                            <tr
+                                *matHeaderRowDef="facultyCols; sticky: true"
+                                mat-header-row
+                            ></tr>
+                            <tr
+                                (mouseenter)="isActive = true; indexHover = i"
                                 (mouseleave)="isActive = false; indexHover = -1"
-                                *matRowDef="let row; let i = index; columns: facultyCols"
-                                [class.mat-elevation-z8]="isActive && indexHover == i"
+                                *matRowDef="
+                                    let row;
+                                    let i = index;
+                                    columns: facultyCols
+                                "
+                                [class.mat-elevation-z8]="
+                                    isActive && indexHover == i
+                                "
                                 class="remove-background"
-                                mat-row></tr>
-                            <tr *matFooterRowDef="facultyCols; sticky: true"
-                                mat-footer-row></tr>
+                                mat-row
+                            ></tr>
+                            <tr
+                                *matFooterRowDef="facultyCols; sticky: true"
+                                mat-footer-row
+                            ></tr>
                         </table>
                     </div>
                 </div>

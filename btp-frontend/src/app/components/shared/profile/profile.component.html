@@ -1,12 +1,9 @@
 <div class="profile">
     <div *ngIf="role | isStudent">
         <mat-card class="example-card">
-            <img [src]="'' | userPhoto"
-                 class="image"
-                 mat-card-avatar />
+            <img [src]="'' | userPhoto" class="image" mat-card-avatar />
             <div *ngIf="user_info">
-                <form [formGroup]="studentFormGroup"
-                      class="facultyForm">
+                <form [formGroup]="studentFormGroup" class="facultyForm">
                     <p class="example-full-width">
                         <strong>Name</strong> : {{ user_info.name }}
                     </p>
@@ -24,24 +21,28 @@
         </mat-card>
     </div>
     <div *ngIf="(role | isFaculty) || (role | isAdmin)">
-        <mat-tab-group [backgroundColor]="'primary'"
-                       animationDuration="0"
-                       dynamicHeight="true"
-                       mat-align-tabs="center">
+        <mat-tab-group
+            [backgroundColor]="'primary'"
+            animationDuration="0"
+            dynamicHeight="true"
+            mat-align-tabs="center"
+        >
             <mat-tab label="About Me">
                 <mat-card class="example-card">
-                    <img [src]="'' | userPhoto"
-                         class="image"
-                         mat-card-avatar />
+                    <img [src]="'' | userPhoto" class="image" mat-card-avatar />
                     <div *ngIf="user_info">
-                        <form [formGroup]="facultyFormGroup"
-                              class="facultyForm">
+                        <form
+                            [formGroup]="facultyFormGroup"
+                            class="facultyForm"
+                        >
                             <mat-form-field class="example-full-width">
                                 <mat-label>Name</mat-label>
                                 <mat-card-title>
-                                    <input formControlName="name"
-                                           matInput
-                                           placeholder="name" />
+                                    <input
+                                        formControlName="name"
+                                        matInput
+                                        placeholder="name"
+                                    />
                                 </mat-card-title>
                             </mat-form-field>
 
@@ -49,13 +50,16 @@
                                 <strong>Stream</strong> : {{ user_info.stream }}
                             </p>
                             <p class="example-full-width">
-                                <strong>Email-ID</strong> : {{ user_info.email }}
+                                <strong>Email-ID</strong> :
+                                {{ user_info.email }}
                             </p>
 
                             <mat-card-actions>
-                                <button (click)="updateFacultyProfile()"
-                                        color="primary"
-                                        mat-raised-button>
+                                <button
+                                    (click)="updateFacultyProfile()"
+                                    color="primary"
+                                    mat-raised-button
+                                >
                                     Update Profile
                                 </button>
                             </mat-card-actions>
@@ -65,57 +69,73 @@
             </mat-tab>
             <mat-tab label="My Programs">
                 <form [formGroup]="programGroup">
-                    <mat-form-field class="select"
-                                    style="width: 50%;">
+                    <mat-form-field class="select" style="width: 50%">
                         <mat-label>Programs</mat-label>
-                        <mat-select formControlName="programs"
-                                    multiple>
-                            <mat-option *ngFor="let program of programs"
-                                        [value]="[program.short, program.full]">{{ program.full }}</mat-option>
+                        <mat-select formControlName="programs" multiple>
+                            <mat-option
+                                *ngFor="let program of programs"
+                                [value]="[program.short, program.full]"
+                                >{{ program.full }}</mat-option
+                            >
                         </mat-select>
-                        <mat-error *ngIf="programGroup.controls['programs'].hasError('required')">
+                        <mat-error
+                            *ngIf="
+                                programGroup.controls['programs'].hasError(
+                                    'required'
+                                )
+                            "
+                        >
                             Programs are <strong>required</strong>
                         </mat-error>
                     </mat-form-field>
                     <span>
-            <button (click)="addProgram()"
-                    class="submit"
-                    color="primary"
-                    mat-raised-button>
-              Submit
-            </button>
-          </span>
+                        <button
+                            (click)="addProgram()"
+                            class="submit"
+                            color="primary"
+                            mat-raised-button
+                        >
+                            Submit
+                        </button>
+                    </span>
                 </form>
                 <div class="display">
                     <div class="table mat-elevation-z8">
-                        <table #table
-                               [dataSource]="faculty_programs"
-                               class="mat-elevation-z8"
-                               mat-table>
+                        <table
+                            #table
+                            [dataSource]="faculty_programs"
+                            class="mat-elevation-z8"
+                            mat-table
+                        >
                             <ng-container matColumnDef="Program Name">
-                                <th *matHeaderCellDef
-                                    mat-header-cell>
+                                <th *matHeaderCellDef mat-header-cell>
                                     Program Name
                                 </th>
-                                <td *matCellDef="let map"
-                                    mat-cell>{{ map.full }}</td>
+                                <td *matCellDef="let map" mat-cell>
+                                    {{ map.full }}
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="Delete">
-                                <th *matHeaderCellDef
-                                    mat-header-cell>Delete Program
+                                <th *matHeaderCellDef mat-header-cell>
+                                    Delete Program
                                 </th>
-                                <td *matCellDef="let map"
-                                    mat-cell>
-                                    <mat-icon (click)="deleteProgram(map)"
-                                              matTooltip="Delete Program"
-                                              matTooltipPosition="right">delete_outline
+                                <td *matCellDef="let map" mat-cell>
+                                    <mat-icon
+                                        (click)="deleteProgram(map)"
+                                        matTooltip="Delete Program"
+                                        matTooltipPosition="right"
+                                        >delete_outline
                                     </mat-icon>
                                 </td>
                             </ng-container>
-                            <tr *matHeaderRowDef="programHeader"
-                                mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: programHeader"
-                                mat-row></tr>
+                            <tr
+                                *matHeaderRowDef="programHeader"
+                                mat-header-row
+                            ></tr>
+                            <tr
+                                *matRowDef="let row; columns: programHeader"
+                                mat-row
+                            ></tr>
                         </table>
                     </div>
                 </div>

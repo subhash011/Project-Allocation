@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Observable, Subject } from "rxjs";
 
 @Injectable()
 export class StorageService {
-
     private storageSub = new Subject<String>();
 
     watchStorage(): Observable<any> {

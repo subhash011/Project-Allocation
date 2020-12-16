@@ -1,21 +1,20 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
-    selector: 'app-show-student-preferences',
-    templateUrl: './show-student-preferences.component.html',
-    styleUrls: ['./show-student-preferences.component.scss']
+    selector: "app-show-student-preferences",
+    templateUrl: "./show-student-preferences.component.html",
+    styleUrls: ["./show-student-preferences.component.scss"],
 })
 export class ShowStudentPreferencesComponent implements OnInit {
-    value: string = '';
+    value: string = "";
 
     constructor(
         public dialogRef: MatDialogRef<ShowStudentPreferencesComponent>,
         @Inject(MAT_DIALOG_DATA) public preferences: any,
         private snackBar: MatSnackBar
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         const projects = this.preferences.projects_preference;
@@ -24,12 +23,12 @@ export class ShowStudentPreferencesComponent implements OnInit {
             const project = projects[index];
             this.value +=
                 number +
-                '. Project: ' +
+                ". Project: " +
                 project.title +
-                ' | ' +
-                'Faculty name: ' +
+                " | " +
+                "Faculty name: " +
                 project.faculty_name +
-                '\n';
+                "\n";
         }
     }
 
@@ -38,6 +37,6 @@ export class ShowStudentPreferencesComponent implements OnInit {
     }
 
     copied(event) {
-        this.snackBar.open('Copied content to clipboard', 'Ok');
+        this.snackBar.open("Copied content to clipboard", "Ok");
     }
 }

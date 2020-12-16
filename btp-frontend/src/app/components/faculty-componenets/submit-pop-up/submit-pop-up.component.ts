@@ -1,12 +1,16 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
+import { Component, Inject, OnInit } from "@angular/core";
+import {
+    MAT_DIALOG_DATA,
+    MatDialog,
+    MatDialogRef,
+} from "@angular/material/dialog";
+import { ProjectsService } from "src/app/services/projects/projects.service";
+import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 
 @Component({
-    selector: 'app-submit-pop-up',
-    templateUrl: './submit-pop-up.component.html',
-    styleUrls: ['./submit-pop-up.component.scss']
+    selector: "app-submit-pop-up",
+    templateUrl: "./submit-pop-up.component.html",
+    styleUrls: ["./submit-pop-up.component.scss"],
 })
 export class SubmitPopUpComponent implements OnInit {
     constructor(
@@ -14,35 +18,36 @@ export class SubmitPopUpComponent implements OnInit {
         private projectService: ProjectsService,
         private dialogRef: MatDialogRef<SubmitPopUpComponent>,
         private dialog: MatDialog
-    ) {
-    }
+    ) {}
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     onNoClick(): void {
-        this.dialogRef.close({message: 'closed'});
+        this.dialogRef.close({ message: "closed" });
     }
 
     onSubmit() {
         const dialogRef = this.dialog.open(LoaderComponent, {
-            data: 'Updating, Please wait ...',
+            data: "Updating, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
         this.projectService.updateProject(this.data).subscribe((data) => {
             dialogRef.close();
-            if (data['status'] == 'success') {
-                this.dialogRef.close({message: 'submit'});
-            } else if (data['status'] == 'fail1') {
-                this.dialogRef.close({message: 'studentCap', msg: data['msg']});
-            } else if (data['status'] == 'fail2') {
+            if (data["status"] == "success") {
+                this.dialogRef.close({ message: "submit" });
+            } else if (data["status"] == "fail1") {
                 this.dialogRef.close({
-                    message: 'studentsPerFaculty',
-                    msg: data['msg']
+                    message: "studentCap",
+                    msg: data["msg"],
+                });
+            } else if (data["status"] == "fail2") {
+                this.dialogRef.close({
+                    message: "studentsPerFaculty",
+                    msg: data["msg"],
                 });
             } else {
-                this.dialogRef.close({message: 'fail'});
+                this.dialogRef.close({ message: "fail" });
             }
         });
     }

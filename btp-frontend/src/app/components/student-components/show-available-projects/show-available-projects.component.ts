@@ -1,55 +1,67 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { SelectionModel } from '@angular/cdk/collections';
-import { Component, HostListener, OnDestroy, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { forkJoin, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { UserService } from 'src/app/services/user/user.service';
-import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { HttpResponseAPI } from 'src/app/models/HttpResponseAPI';
-import { LocalAuthService } from 'src/app/services/local-auth/local-auth.service';
+import {
+    animate,
+    state,
+    style,
+    transition,
+    trigger,
+} from "@angular/animations";
+import { SelectionModel } from "@angular/cdk/collections";
+import {
+    Component,
+    HostListener,
+    OnDestroy,
+    OnInit,
+    Pipe,
+    PipeTransform,
+    ViewChild,
+} from "@angular/core";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { Router } from "@angular/router";
+import { forkJoin, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { ProjectsService } from "src/app/services/projects/projects.service";
+import { UserService } from "src/app/services/user/user.service";
+import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
+import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
+import { LocalAuthService } from "src/app/services/local-auth/local-auth.service";
 
 @Pipe({
-    name: 'isPreferenceEdit'
+    name: "isPreferenceEdit",
 })
 export class IsPreferenceEdit implements PipeTransform {
     transform(value: string) {
-        return value.includes('preferences');
+        return value.includes("preferences");
     }
 }
 
 @Component({
-    selector: 'app-show-available-projects',
-    templateUrl: './show-available-projects.component.html',
-    styleUrls: ['./show-available-projects.component.scss'],
+    selector: "app-show-available-projects",
+    templateUrl: "./show-available-projects.component.html",
+    styleUrls: ["./show-available-projects.component.scss"],
     animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({height: '0px', minHeight: '0'})),
-            state('expanded', style({height: '*'})),
+        trigger("detailExpand", [
+            state("collapsed", style({ height: "0px", minHeight: "0" })),
+            state("expanded", style({ height: "*" })),
             transition(
-                'expanded <=> collapsed',
-                animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-            )
+                "expanded <=> collapsed",
+                animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+            ),
         ]),
-        trigger('openClose', [
-            state('open', style({width: '40%'})),
-            state('close', style({width: '0px'})),
-            state('fullOpen', style({width: '100%'})),
-            transition('*<=>close', [
-                animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+        trigger("openClose", [
+            state("open", style({ width: "40%" })),
+            state("close", style({ width: "0px" })),
+            state("fullOpen", style({ width: "100%" })),
+            transition("*<=>close", [
+                animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
             ]),
-            transition('fullOpen=>open', [
-                animate('225ms ease-in')
-            ])
-        ])
-    ]
+            transition("fullOpen=>open", [animate("225ms ease-in")]),
+        ]),
+    ],
 })
 export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
-    @ViewChild('table') table: MatTable<any>;
+    @ViewChild("table") table: MatTable<any>;
     preferences: any = new MatTableDataSource([]);
     projects = new MatTableDataSource([]);
     expandedElement;
@@ -62,12 +74,12 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     showToggleOnSidenav: boolean = false;
     selection = new SelectionModel<any>(true, []);
     displayedColumns = [
-        'select',
-        'Title',
-        'Faculty',
-        'Intake',
-        'Email',
-        'Actions'
+        "select",
+        "Title",
+        "Faculty",
+        "Intake",
+        "Email",
+        "Actions",
     ];
     dialogRefLoad: MatDialogRef<any>;
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -79,10 +91,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         private snackBar: MatSnackBar,
         public router: Router,
         private userService: UserService
-    ) {
-    }
+    ) {}
 
-    @HostListener('window:resize', ['$event'])
+    @HostListener("window:resize", ["$event"])
     onResize(event) {
         this.tableHeight = event.target.innerHeight * 0.65;
         const width = event.target.innerWidth;
@@ -111,21 +122,30 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
 
     getAllDetailsStudent() {
         const requests = [
-            this.projectService.getStudentPreference().pipe(takeUntil(this.ngUnsubscribe)),
-            this.projectService.getNotStudentPreferences().pipe(takeUntil(this.ngUnsubscribe)),
-            this.userService.getStreamStage().pipe(takeUntil(this.ngUnsubscribe))
+            this.projectService
+                .getStudentPreference()
+                .pipe(takeUntil(this.ngUnsubscribe)),
+            this.projectService
+                .getNotStudentPreferences()
+                .pipe(takeUntil(this.ngUnsubscribe)),
+            this.userService
+                .getStreamStage()
+                .pipe(takeUntil(this.ngUnsubscribe)),
         ];
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Loading, Please wait! ...',
+            data: "Loading, Please wait! ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
-        forkJoin(requests).subscribe((response: Array<HttpResponseAPI>) => {
+        forkJoin(requests).subscribe(
+            (response: Array<HttpResponseAPI>) => {
                 let optedResponse: HttpResponseAPI = response[0];
                 let notOptedResponse: HttpResponseAPI = response[1];
                 let stageResponse: HttpResponseAPI = response[2];
                 this.dialogRefLoad.close();
-                this.stage = stageResponse.result.adminPresent ? stageResponse.result.stage : 0;
+                this.stage = stageResponse.result.adminPresent
+                    ? stageResponse.result.stage
+                    : 0;
                 this.preferences.data = optedResponse.result.preferences;
                 this.projects.data = notOptedResponse.result.not_preferences;
                 this.projects.filterPredicate = (data: any, filter: string) =>
@@ -137,7 +157,8 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             },
             () => {
                 this.dialogRefLoad.close();
-            });
+            }
+        );
     }
 
     applyFilter(event: Event) {
@@ -147,9 +168,11 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     }
 
     isAnyOneSelected() {
-        let filteredProjects = this.projects.filteredData.map(val => val._id);
+        let filteredProjects = this.projects.filteredData.map((val) => val._id);
         const numSelected = this.selection.selected
-            ? this.selection.selected.filter(val => filteredProjects.includes(val._id)).length
+            ? this.selection.selected.filter((val) =>
+                  filteredProjects.includes(val._id)
+              ).length
             : 0;
         return numSelected != 0;
     }
@@ -166,9 +189,11 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     }
 
     isAllSelected() {
-        let filteredProjects = this.projects.filteredData.map(val => val._id);
+        let filteredProjects = this.projects.filteredData.map((val) => val._id);
         const numSelected = this.selection.selected
-            ? this.selection.selected.filter(val => filteredProjects.includes(val._id)).length
+            ? this.selection.selected.filter((val) =>
+                  filteredProjects.includes(val._id)
+              ).length
             : 0;
         const numRows = this.projects.filteredData
             ? this.projects.filteredData.length
@@ -180,7 +205,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     masterToggle() {
         this.isAllSelected()
             ? this.selection.clear()
-            : this.projects.filteredData.forEach((row) => this.selection.select(row));
+            : this.projects.filteredData.forEach((row) =>
+                  this.selection.select(row)
+              );
     }
 
     deselectAll() {
@@ -194,18 +221,18 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     /** The label for the checkbox on the passed row */
     checkboxLabel(row): string {
         if (!row) {
-            return `${ this.isAllSelected() ? 'select' : 'deselect' } all`;
+            return `${this.isAllSelected() ? "select" : "deselect"} all`;
         }
-        return `${ this.selection.isSelected(row) ? 'deselect' : 'select' } row ${
+        return `${this.selection.isSelected(row) ? "deselect" : "select"} row ${
             row.position + 1
         }`;
     }
 
     addOnePreference(project) {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Adding Preference, Please wait ...',
+            data: "Adding Preference, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
         this.projectService
             .addOneStudentPreference(project)
@@ -214,14 +241,16 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                 (responseAPI: HttpResponseAPI) => {
                     dialogRefLoad.close();
                     if (responseAPI.result.updated) {
-                        this.projects.data = this.projects.data.filter((val) => {
-                            return val._id != project._id;
-                        });
+                        this.projects.data = this.projects.data.filter(
+                            (val) => {
+                                return val._id != project._id;
+                            }
+                        );
                         this.preferences.data.push(project);
                         this.preferences.data = [...this.preferences.data];
                         this.deselectProject(project);
                     } else {
-                        this.snackBar.open(responseAPI.message, 'OK');
+                        this.snackBar.open(responseAPI.message, "OK");
                     }
                 },
                 () => {
@@ -232,9 +261,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
 
     onSubmit(event) {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Adding to preferences, Please wait ...',
+            data: "Adding to preferences, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
         const preference = this.selection.selected;
         this.projectService
@@ -245,14 +274,19 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                     dialogRefLoad.close();
                     this.deselectAll();
                     if (responseAPI.result.updated) {
-                        this.preferences.data = [...this.preferences.data, ...preference];
+                        this.preferences.data = [
+                            ...this.preferences.data,
+                            ...preference,
+                        ];
                         const preferenceId = preference.map((val) => val._id);
-                        this.projects.data = this.projects.data.filter((val) => {
-                            return preferenceId.indexOf(val._id) == -1;
-                        });
-                        this.snackBar.open(responseAPI.message, 'OK');
+                        this.projects.data = this.projects.data.filter(
+                            (val) => {
+                                return preferenceId.indexOf(val._id) == -1;
+                            }
+                        );
+                        this.snackBar.open(responseAPI.message, "OK");
                     } else {
-                        this.snackBar.open(responseAPI.message, 'Ok');
+                        this.snackBar.open(responseAPI.message, "Ok");
                     }
                 },
                 () => {

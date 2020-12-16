@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { RefreshComponent } from './refresh.component';
+import { RefreshComponent } from "./refresh.component";
 
-describe('RefreshComponent', () => {
+describe("RefreshComponent", () => {
     let component: RefreshComponent;
     let fixture: ComponentFixture<RefreshComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [RefreshComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [RefreshComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(RefreshComponent);
@@ -19,7 +20,7 @@ describe('RefreshComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

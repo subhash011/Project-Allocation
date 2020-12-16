@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { ShowFacultyPreferencesComponent } from './show-faculty-preferences.component';
+import { ShowFacultyPreferencesComponent } from "./show-faculty-preferences.component";
 
-describe('ShowFacultyPreferencesComponent', () => {
+describe("ShowFacultyPreferencesComponent", () => {
     let component: ShowFacultyPreferencesComponent;
     let fixture: ComponentFixture<ShowFacultyPreferencesComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [ShowFacultyPreferencesComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [ShowFacultyPreferencesComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ShowFacultyPreferencesComponent);
@@ -19,7 +20,7 @@ describe('ShowFacultyPreferencesComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

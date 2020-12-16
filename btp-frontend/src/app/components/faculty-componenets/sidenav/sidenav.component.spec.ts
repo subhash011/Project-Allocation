@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SidenavComponent } from './sidenav.component';
+import { SidenavComponent } from "./sidenav.component";
 
-describe('SidenavComponent', () => {
+describe("SidenavComponent", () => {
     let component: SidenavComponent;
     let fixture: ComponentFixture<SidenavComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [SidenavComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [SidenavComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(SidenavComponent);
@@ -19,7 +20,7 @@ describe('SidenavComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

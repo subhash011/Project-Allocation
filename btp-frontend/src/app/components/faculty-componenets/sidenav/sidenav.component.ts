@@ -1,16 +1,24 @@
-import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.component';
-import { LoginComponent } from 'src/app/components/shared/login/login.component';
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChanges,
+} from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ProjectsService } from "src/app/services/projects/projects.service";
+import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
+import { NavbarComponent } from "src/app/components/shared/navbar/navbar.component";
+import { LoginComponent } from "src/app/components/shared/login/login.component";
 
 @Component({
-    selector: 'app-sidenav',
-    templateUrl: './sidenav.component.html',
-    styleUrls: ['./sidenav.component.scss']
+    selector: "app-sidenav",
+    templateUrl: "./sidenav.component.html",
+    styleUrls: ["./sidenav.component.scss"],
 })
 export class SidenavComponent implements OnInit, OnChanges {
     @Input() public projects;
@@ -31,12 +39,11 @@ export class SidenavComponent implements OnInit, OnChanges {
         private dialog: MatDialog,
         private navbar: NavbarComponent,
         private loginObject: LoginComponent
-    ) {
-    }
+    ) {}
 
     ngOnChanges(simpleChanges: SimpleChanges) {
         if (simpleChanges.projects && simpleChanges.projects.currentValue) {
-            simpleChanges.projects.currentValue.forEach(val => {
+            simpleChanges.projects.currentValue.forEach((val) => {
                 if (val.isIncluded) {
                     this.selectedProjects.push(val._id);
                 }
@@ -44,9 +51,7 @@ export class SidenavComponent implements OnInit, OnChanges {
         }
     }
 
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 
     displayAdd(event) {
         this.addButton.emit(event);
@@ -58,32 +63,35 @@ export class SidenavComponent implements OnInit, OnChanges {
         if (event.checked) {
             this.selectedProjects.push(event.source.id);
         } else {
-            this.selectedProjects = this.selectedProjects.filter(val => val != event.source.id);
+            this.selectedProjects = this.selectedProjects.filter(
+                (val) => val != event.source.id
+            );
         }
     }
 
     includeProjects() {
         const dialogRef = this.dialog.open(LoaderComponent, {
-            data: 'Updating, Please wait ...',
+            data: "Updating, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
         this.projectService.includeProjects(this.selectedProjects).subscribe(
             (result) => {
                 dialogRef.close();
-                if (result['message'] == 'success') {
+                if (result["message"] == "success") {
                     for (const project of this.projects) {
-                        project.isIncluded = this.selectedProjects.indexOf(project._id) != -1;
+                        project.isIncluded =
+                            this.selectedProjects.indexOf(project._id) != -1;
                     }
-                    this.snackbar.open('Updated Project Preferences', 'Ok');
+                    this.snackbar.open("Updated Project Preferences", "Ok");
                 }
             },
             () => {
                 this.snackbar.open(
-                    'Some Error Occured! Please re-authenticate.',
-                    'OK'
+                    "Some Error Occured! Please re-authenticate.",
+                    "OK"
                 );
-                this.navbar.role = 'none';
+                this.navbar.role = "none";
                 this.loginObject.signOut();
             }
         );
@@ -96,18 +104,19 @@ export class SidenavComponent implements OnInit, OnChanges {
     }
 
     displayHome() {
-        let id = localStorage.getItem('id');
+        let id = localStorage.getItem("id");
         this.router
-            .navigateByUrl('/refresh', {skipLocationChange: true})
+            .navigateByUrl("/refresh", { skipLocationChange: true })
             .then(() => {
-                this.router.navigate(['/faculty', id], {
-                    queryParams: {
-                        name: this.routeParams.name,
-                        abbr: this.routeParams.abbr,
-                        mode: 'programMode'
-                    }
-                }).then(() => {
-                });
+                this.router
+                    .navigate(["/faculty", id], {
+                        queryParams: {
+                            name: this.routeParams.name,
+                            abbr: this.routeParams.abbr,
+                            mode: "programMode",
+                        },
+                    })
+                    .then(() => {});
             });
     }
 }

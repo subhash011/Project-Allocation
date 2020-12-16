@@ -1,5 +1,5 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ProjectsService } from 'src/app/services/projects/projects.service';
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ProjectsService } from "src/app/services/projects/projects.service";
 import {
     ChangeDetectorRef,
     Component,
@@ -11,16 +11,22 @@ import {
     Pipe,
     PipeTransform,
     SimpleChanges,
-    ViewChild
-} from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatDialog } from '@angular/material/dialog';
-import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+    ViewChild,
+} from "@angular/core";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { MatDialog } from "@angular/material/dialog";
+import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
+import {
+    animate,
+    state,
+    style,
+    transition,
+    trigger,
+} from "@angular/animations";
 
 @Pipe({
-    name: 'preference'
+    name: "preference",
 })
 export class PreferencePipe implements PipeTransform {
     transform(value: any, ...args: any[]): any {
@@ -33,10 +39,10 @@ export class PreferencePipe implements PipeTransform {
                 const index = student.projects_preference.indexOf(project_id);
                 student.index = index;
                 if (index == -1) {
-                    return 'N/A';
+                    return "N/A";
                 }
                 if (index > 2) {
-                    return '>3';
+                    return ">3";
                 }
                 return index + 1;
             }
@@ -45,37 +51,36 @@ export class PreferencePipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'getDisplayedColumns'
+    name: "getDisplayedColumns",
 })
 export class GetDisplayedColumns implements PipeTransform {
     transform(index) {
-        let preferred = ['Name', 'CGPA', 'Roll', 'Index', 'Actions'];
-        let notPreferred = ['Name', 'CGPA', 'Roll', 'Index', 'Actions'];
+        let preferred = ["Name", "CGPA", "Roll", "Index", "Actions"];
+        let notPreferred = ["Name", "CGPA", "Roll", "Index", "Actions"];
         return index == 0 ? preferred : notPreferred;
     }
 }
 
 @Component({
-    selector: 'app-student-table',
-    templateUrl: './student-table.component.html',
-    styleUrls: ['./student-table.component.scss'],
+    selector: "app-student-table",
+    templateUrl: "./student-table.component.html",
+    styleUrls: ["./student-table.component.scss"],
     animations: [
-        trigger('detailExpand', [
+        trigger("detailExpand", [
             state(
-                'collapsed',
-                style({height: '0px', minHeight: '0', display: 'none'})
+                "collapsed",
+                style({ height: "0px", minHeight: "0", display: "none" })
             ),
-            state('expanded', style({height: '*'})),
+            state("expanded", style({ height: "*" })),
             transition(
-                'expanded <=> collapsed',
-                animate('0ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-            )
-        ])
-    ]
+                "expanded <=> collapsed",
+                animate("0ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+            ),
+        ]),
+    ],
 })
 export class StudentTableComponent implements OnInit, OnChanges {
-
-    @ViewChild('table') table: MatTable<any>;
+    @ViewChild("table") table: MatTable<any>;
 
     @Input() public student_list;
     @Input() public project;
@@ -84,7 +89,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
     @Input() public reorder;
     @Output() newReorder = new EventEmitter<any>();
 
-    public fields = ['Name', 'CGPA', 'Roll', 'Index', 'Actions'];
+    public fields = ["Name", "CGPA", "Roll", "Index", "Actions"];
     students: MatTableDataSource<any>;
     non_students: MatTableDataSource<any>;
     expandedElement: any;
@@ -95,8 +100,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
         private snackBar: MatSnackBar,
         private dialog: MatDialog,
         private cdRef: ChangeDetectorRef
-    ) {
-    }
+    ) {}
 
     ngOnChanges(simpleChanges: SimpleChanges) {
         if (simpleChanges.student_list) {
@@ -110,39 +114,53 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
 
     onSubmit() {
-
         let dialogRef;
         if (this.adminStage == 2) {
             dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Updating, Please wait ...',
+                data: "Updating, Please wait ...",
                 disableClose: true,
-                panelClass: 'transparent'
+                panelClass: "transparent",
             });
 
             this.projectService
-                .savePreference(this.students.data, this.project._id, this.project.stream, this.index, this.reorder)
-                .subscribe((data) => {
-                    dialogRef.close();
-                    if (data['status'] == 'success') {
-                        this.reorder = data['reorder'];
-                        this.newReorder.emit([this.reorder, this.project._id, this.students.data, this.index]);
+                .savePreference(
+                    this.students.data,
+                    this.project._id,
+                    this.project.stream,
+                    this.index,
+                    this.reorder
+                )
+                .subscribe(
+                    (data) => {
+                        dialogRef.close();
+                        if (data["status"] == "success") {
+                            this.reorder = data["reorder"];
+                            this.newReorder.emit([
+                                this.reorder,
+                                this.project._id,
+                                this.students.data,
+                                this.index,
+                            ]);
 
-                        this.snackBar.open(data['msg'], 'Ok');
-                    } else {
-                        this.snackBar.open(data['msg'], 'Ok');
+                            this.snackBar.open(data["msg"], "Ok");
+                        } else {
+                            this.snackBar.open(data["msg"], "Ok");
+                        }
+                    },
+                    () => {
+                        dialogRef.close();
+                        this.ngOnInit();
+                        this.snackBar.open(
+                            "Some Error Occured! Try again later.",
+                            "OK"
+                        );
                     }
-                }, () => {
-                    dialogRef.close();
-                    this.ngOnInit();
-                    this.snackBar.open('Some Error Occured! Try again later.', 'OK');
-                });
-
-
+                );
         } else {
             dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Updating, Please wait ...',
+                data: "Updating, Please wait ...",
                 disableClose: true,
-                panelClass: 'transparent'
+                panelClass: "transparent",
             });
             if (this.adminStage < 2) {
                 this.student_list.sort((a, b) => {
@@ -150,12 +168,12 @@ export class StudentTableComponent implements OnInit, OnChanges {
                 });
                 dialogRef.close();
                 this.snackBar.open(
-                    'Preferences can be edited only in the further stages.',
-                    'Ok'
+                    "Preferences can be edited only in the further stages.",
+                    "Ok"
                 );
             } else {
                 dialogRef.close();
-                this.snackBar.open('You cannot edit preferences anymore', 'Ok');
+                this.snackBar.open("You cannot edit preferences anymore", "Ok");
             }
         }
     }
@@ -169,7 +187,6 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
 
     moveToTop(student) {
-
         if (this.checkAdminStage()) {
             return;
         }
@@ -182,7 +199,6 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
 
     moveToBottom(project) {
-
         if (this.checkAdminStage()) {
             return;
         }
@@ -195,7 +211,6 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
 
     moveOneUp(index) {
-
         if (this.checkAdminStage()) {
             return;
         }
@@ -208,7 +223,6 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
 
     moveOneDown(index) {
-
         if (this.checkAdminStage()) {
             return;
         }
@@ -228,16 +242,16 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
 
     sortStudentTable(event) {
-        const isAsc = event.direction == 'asc';
+        const isAsc = event.direction == "asc";
         this.students.data = this.students.data.sort((a, b) => {
             switch (event.active) {
-                case 'Name':
+                case "Name":
                     return this.compare(a.name, b.name, isAsc);
-                case 'CGPA':
+                case "CGPA":
                     return this.compare(a.gpa, b.gpa, isAsc);
-                case 'Roll':
+                case "Roll":
                     return this.compare(a.roll_no, b.roll_no, isAsc);
-                case 'Index':
+                case "Index":
                     return this.compare(a.index, b.index, isAsc);
                 default:
                     return 0;
@@ -252,5 +266,4 @@ export class StudentTableComponent implements OnInit, OnChanges {
     ) {
         return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     }
-
 }

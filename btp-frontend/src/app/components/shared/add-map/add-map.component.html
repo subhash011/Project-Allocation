@@ -1,47 +1,55 @@
 <h2 mat-dialog-title>Add {{ data.heading }}</h2>
 
-<mat-dialog-content [formGroup]="addForm"
-                    novalidate>
+<mat-dialog-content [formGroup]="addForm" novalidate>
     <div class="row">
         <mat-form-field class="full-width">
-            <input autocomplete="off"
-                   formControlName="full"
-                   matInput
-                   placeholder="{{data.heading}} name" />
+            <input
+                autocomplete="off"
+                formControlName="full"
+                matInput
+                placeholder="{{ data.heading }} name"
+            />
             <mat-error *ngIf="addForm.controls['full'].hasError('required')">
-                {{data.heading}} name is <strong>required</strong>
+                {{ data.heading }} name is <strong>required</strong>
             </mat-error>
         </mat-form-field>
     </div>
     <div class="row">
         <mat-form-field class="full-width">
-            <input autocomplete="off"
-                   formControlName="short"
-                   matInput
-                   placeholder="{{data.heading}} Abbrevation" />
+            <input
+                autocomplete="off"
+                formControlName="short"
+                matInput
+                placeholder="{{ data.heading }} Abbrevation"
+            />
             <mat-error *ngIf="addForm.controls['short'].hasError('required')">
-                {{data.heading}} Abbrevation is <strong>required</strong>
+                {{ data.heading }} Abbrevation is <strong>required</strong>
             </mat-error>
             <mat-error *ngIf="addForm.controls['short'].errors?.pattern">
-                {{data.heading}} Abbrevation can only consist of <strong>letters</strong>
+                {{ data.heading }} Abbrevation can only consist of
+                <strong>letters</strong>
             </mat-error>
         </mat-form-field>
     </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button (click)="onSubmit()"
-            [disabled]="!addForm.valid"
-            class="submit_button"
-            color="primary"
-            mat-raised-button>
+    <button
+        (click)="onSubmit()"
+        [disabled]="!addForm.valid"
+        class="submit_button"
+        color="primary"
+        mat-raised-button
+    >
         Submit
     </button>
-    <button (click)="onNoClick()"
-            class="close_button"
-            color="warn"
-            mat-raised-button
-            type="submit">
+    <button
+        (click)="onNoClick()"
+        class="close_button"
+        color="warn"
+        mat-raised-button
+        type="submit"
+    >
         Close
     </button>
 </mat-dialog-actions>

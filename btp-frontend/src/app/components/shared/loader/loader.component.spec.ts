@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { LoaderComponent } from './loader.component';
+import { LoaderComponent } from "./loader.component";
 
-describe('LoaderComponent', () => {
+describe("LoaderComponent", () => {
     let component: LoaderComponent;
     let fixture: ComponentFixture<LoaderComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [LoaderComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [LoaderComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(LoaderComponent);
@@ -19,7 +20,7 @@ describe('LoaderComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

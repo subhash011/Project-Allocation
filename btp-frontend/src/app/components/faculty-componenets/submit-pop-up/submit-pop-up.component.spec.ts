@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SubmitPopUpComponent } from './submit-pop-up.component';
+import { SubmitPopUpComponent } from "./submit-pop-up.component";
 
-describe('SubmitPopUpComponent', () => {
+describe("SubmitPopUpComponent", () => {
     let component: SubmitPopUpComponent;
     let fixture: ComponentFixture<SubmitPopUpComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [SubmitPopUpComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [SubmitPopUpComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(SubmitPopUpComponent);
@@ -19,7 +20,7 @@ describe('SubmitPopUpComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

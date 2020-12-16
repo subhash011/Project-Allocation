@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SuperAdminComponent } from './super-admin.component';
+import { SuperAdminComponent } from "./super-admin.component";
 
-describe('SuperAdminComponent', () => {
+describe("SuperAdminComponent", () => {
     let component: SuperAdminComponent;
     let fixture: ComponentFixture<SuperAdminComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [SuperAdminComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [SuperAdminComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(SuperAdminComponent);
@@ -19,7 +20,7 @@ describe('SuperAdminComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

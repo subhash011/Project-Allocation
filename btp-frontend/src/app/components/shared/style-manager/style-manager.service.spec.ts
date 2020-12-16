@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { StyleManagerService } from './style-manager.service';
+import { StyleManagerService } from "./style-manager.service";
 
-describe('StyleManagerService', () => {
+describe("StyleManagerService", () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
-    it('should be created', () => {
+    it("should be created", () => {
         const service: StyleManagerService = TestBed.get(StyleManagerService);
         expect(service).toBeTruthy();
     });

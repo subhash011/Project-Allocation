@@ -1,20 +1,20 @@
 <div class="display">
-    <div [style.max-height.px]="height - 64"
-         class="table mat-elevation-z8">
-        <mat-table (cdkDropListDropped)="drop($event)"
-                   [cdkDropListData]="preferences.data"
-                   [dataSource]="preferences"
-                   cdkDropList
-                   cdkDropListOrientation="vertical"
-                   class="mat-elevation-z8"
-                   multiTemplateDataRows>
+    <div [style.max-height.px]="height - 64" class="table mat-elevation-z8">
+        <mat-table
+            (cdkDropListDropped)="drop($event)"
+            [cdkDropListData]="preferences.data"
+            [dataSource]="preferences"
+            cdkDropList
+            cdkDropListOrientation="vertical"
+            class="mat-elevation-z8"
+            multiTemplateDataRows
+        >
             <ng-container matColumnDef="Title">
-                <mat-header-cell *matHeaderCellDef
-                                 class="title"> Title
+                <mat-header-cell *matHeaderCellDef class="title">
+                    Title
                 </mat-header-cell>
-                <mat-cell *matCellDef="let preference"
-                          class="title">
-                    {{preference.title}}
+                <mat-cell *matCellDef="let preference" class="title">
+                    {{ preference.title }}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="Faculty">
@@ -24,7 +24,9 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="Intake">
-                <mat-header-cell *matHeaderCellDef> Max. Intake</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>
+                    Max. Intake</mat-header-cell
+                >
                 <mat-cell *matCellDef="let preference">
                     {{ preference.studentIntake }}
                 </mat-cell>
@@ -33,54 +35,76 @@
                 <mat-header-cell *matHeaderCellDef>
                     Project Actions
                 </mat-header-cell>
-                <mat-cell (click)="$event.stopPropagation()"
-                          *matCellDef="let preference; let i = dataIndex">
-                    <mat-icon (click)="moveToTop(preference)"
-                              *ngIf="i != 0"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Push to top">vertical_align_top
+                <mat-cell
+                    (click)="$event.stopPropagation()"
+                    *matCellDef="let preference; let i = dataIndex"
+                >
+                    <mat-icon
+                        (click)="moveToTop(preference)"
+                        *ngIf="i != 0"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Push to top"
+                        >vertical_align_top
                     </mat-icon>
-                    <mat-icon (click)="moveToBottom(preference)"
-                              *ngIf="i != preferences.data.length - 1"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Push to bottom">vertical_align_bottom
+                    <mat-icon
+                        (click)="moveToBottom(preference)"
+                        *ngIf="i != preferences.data.length - 1"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Push to bottom"
+                        >vertical_align_bottom
                     </mat-icon>
-                    <mat-icon (click)="moveOneUp(i)"
-                              *ngIf="i != 0"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Move up">arrow_upward
+                    <mat-icon
+                        (click)="moveOneUp(i)"
+                        *ngIf="i != 0"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Move up"
+                        >arrow_upward
                     </mat-icon>
-                    <mat-icon (click)="moveOneDown(i)"
-                              *ngIf="i != preferences.data.length - 1"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Move down">arrow_downward
+                    <mat-icon
+                        (click)="moveOneDown(i)"
+                        *ngIf="i != preferences.data.length - 1"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Move down"
+                        >arrow_downward
                     </mat-icon>
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="Submit">
                 <mat-header-cell *matHeaderCellDef>
-                    <button (click)="onSubmit()"
-                            [disabled]="stage >= 2"
-                            [matBadge]="preferences.data.length"
-                            class="submit"
-                            color="primary"
-                            mat-raised-button
-                            matBadgeColor="accent">
+                    <button
+                        (click)="onSubmit()"
+                        [disabled]="stage >= 2"
+                        [matBadge]="preferences.data.length"
+                        class="submit"
+                        color="primary"
+                        mat-raised-button
+                        matBadgeColor="accent"
+                    >
                         Save Preferences
                     </button>
                 </mat-header-cell>
-                <mat-cell (click)="$event.stopPropagation()"
-                          *matCellDef="let preference">
-                    <mat-icon (click)="removeOnePreference(preference)"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Remove {{ preference.title }} from preferences">delete
+                <mat-cell
+                    (click)="$event.stopPropagation()"
+                    *matCellDef="let preference"
+                >
+                    <mat-icon
+                        (click)="removeOnePreference(preference)"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Remove {{
+                            preference.title
+                        }} from preferences"
+                        >delete
                     </mat-icon>
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="expandedDetail">
-                <mat-cell *matCellDef="let preference"
-                          [@detailExpand]="preference == expandedElement ? 'expanded' : 'collapsed'"
-                          [attr.colspan]="displayedColumns.length">
+                <mat-cell
+                    *matCellDef="let preference"
+                    [@detailExpand]="
+                        preference == expandedElement ? 'expanded' : 'collapsed'
+                    "
+                    [attr.colspan]="displayedColumns.length"
+                >
                     <div class="example-element-detail">
                         <div class="example-element-description">
                             <p>Description : {{ preference.description }}</p>
@@ -90,19 +114,31 @@
                     </div>
                 </mat-cell>
             </ng-container>
-            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-            <mat-row (click)="expandedElement = expandedElement === row ? null : row"
-                     *matRowDef="let row; columns: displayedColumns; let i = dataIndex"
-                     [cdkDragData]="row"
-                     [class.example-expanded-row]="expandedElement === row"
-                     [style.border-bottom-width]="expandedElement == row ? '0px' : '1px'"
-                     actualContainer="div.table"
-                     cdkDrag
-                     class="example-element-row"></mat-row>
-            <mat-row *matRowDef="let row; columns: ['expandedDetail']"
-                     [style.display]="expandedElement === row ? 'flex' : 'none'"
-                     [style.transition-delay]="'12s'"
-                     class="example-detail-row"></mat-row>
+            <mat-header-row
+                *matHeaderRowDef="displayedColumns; sticky: true"
+            ></mat-header-row>
+            <mat-row
+                (click)="expandedElement = expandedElement === row ? null : row"
+                *matRowDef="
+                    let row;
+                    columns: displayedColumns;
+                    let i = dataIndex
+                "
+                [cdkDragData]="row"
+                [class.example-expanded-row]="expandedElement === row"
+                [style.border-bottom-width]="
+                    expandedElement == row ? '0px' : '1px'
+                "
+                actualContainer="div.table"
+                cdkDrag
+                class="example-element-row"
+            ></mat-row>
+            <mat-row
+                *matRowDef="let row; columns: ['expandedDetail']"
+                [style.display]="expandedElement === row ? 'flex' : 'none'"
+                [style.transition-delay]="'12s'"
+                class="example-detail-row"
+            ></mat-row>
         </mat-table>
     </div>
 </div>

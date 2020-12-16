@@ -1,23 +1,22 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 
 @Component({
-    selector: 'app-help',
-    templateUrl: './help.component.html',
-    styleUrls: ['./help.component.scss']
+    selector: "app-help",
+    templateUrl: "./help.component.html",
+    styleUrls: ["./help.component.scss"],
 })
 export class HelpComponent implements OnInit {
-    @ViewChild('helpvid') help: ElementRef;
-    @ViewChild('helpvidsa') helpsa: ElementRef;
-    @ViewChild('helpvidad') helpad: ElementRef;
-    background = 'primary';
+    @ViewChild("helpvid") help: ElementRef;
+    @ViewChild("helpvidsa") helpsa: ElementRef;
+    @ViewChild("helpvidad") helpad: ElementRef;
+    background = "primary";
     index;
-    role: string = localStorage.getItem('role');
+    role: string = localStorage.getItem("role");
 
-    constructor() {
-    }
+    constructor() {}
 
     ngOnInit() {
-        this.role = localStorage.getItem('role');
+        this.role = localStorage.getItem("role");
     }
 
     gotost(i) {
@@ -73,17 +72,17 @@ export class HelpComponent implements OnInit {
     }
 
     isStudent() {
-        return localStorage.getItem('role') == 'student' ? true : false;
+        return localStorage.getItem("role") == "student" ? true : false;
     }
 
     isFaculty() {
-        return localStorage.getItem('role') == 'faculty' ||
-        localStorage.getItem('role') == 'admin'
+        return localStorage.getItem("role") == "faculty" ||
+            localStorage.getItem("role") == "admin"
             ? true
             : false;
     }
 
     isSuperAdmin() {
-        return localStorage.getItem('role') == 'super_admin' ? true : false;
+        return localStorage.getItem("role") == "super_admin" ? true : false;
     }
 }

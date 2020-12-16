@@ -1,41 +1,44 @@
 @import "../node_modules/@angular/material/theming";
 
 @mixin material-custom-theme($theme) {
-    $primary: map-get($theme, primary);
-    $accent: map-get($theme, accent);
-    $background: map-get($theme, background);
-    $foreground: map-get($theme, foreground);
-    app-home {
-        .container {
-            background: linear-gradient(125deg, white 25%, mat-color($primary) 25%)
-        }
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  app-home {
+    .container {
+      background: linear-gradient(
+                      125deg,
+                      white 25%,
+                      mat-color($primary) 25%
+      );
     }
+  }
 
-    ::-webkit-scrollbar {
-        width: 14px;
-    }
-    ::-webkit-scrollbar-thumb {
-        background-clip: content-box;
-        border: 4px solid transparent;
-        border-radius: 7px;
-        background-color: mat-color($primary);
+  ::-webkit-scrollbar {
+    width: 14px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-clip: content-box;
+    border: 4px solid transparent;
+    border-radius: 7px;
+    background-color: mat-color($primary);
 
-        &:hover {
-            background-color: mat-color($accent);
-        }
+    &:hover {
+      background-color: mat-color($accent);
     }
-    ::-webkit-scrollbar-button {
-        width: 0;
-        height: 0;
-        display: none;
-    }
-    ::-webkit-scrollbar-corner {
-        background-color: transparent;
-    }
+  }
+  ::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
 
-    .transparent .mat-dialog-container {
-        box-shadow: none;
-        background: rgba(0, 0, 0, 0.0);
-    }
+  .transparent .mat-dialog-container {
+    box-shadow: none;
+    background: rgba(0, 0, 0, 0);
+  }
 }
-

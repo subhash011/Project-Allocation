@@ -1,27 +1,34 @@
-import { ExporttocsvService } from 'src/app/services/exporttocsv/exporttocsv.service';
-import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { LoginComponent } from 'src/app/components/shared/login/login.component';
-import { MailService } from 'src/app/services/mailing/mail.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { DeletePopUpComponent } from 'src/app/components/faculty-componenets/delete-pop-up/delete-pop-up.component';
-import { MatDialog } from '@angular/material/dialog';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { UserService } from 'src/app/services/user/user.service';
-import { Component, HostListener, OnDestroy, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
-import { ResetComponent } from 'src/app/components/faculty-componenets/reset/reset.component';
-import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { ShowStudentPreferencesComponent } from 'src/app/components/faculty-componenets/show-student-preferences/show-student-preferences.component';
-import { ShowFacultyPreferencesComponent } from 'src/app/components/faculty-componenets/show-faculty-preferences/show-faculty-preferences.component';
-import { saveAs } from 'file-saver';
-import * as moment from 'moment';
-import { NavbarComponent } from 'src/app/components/shared/navbar/navbar.component';
-
+import { ExporttocsvService } from "src/app/services/exporttocsv/exporttocsv.service";
+import { ProjectsService } from "src/app/services/projects/projects.service";
+import { LoginComponent } from "src/app/components/shared/login/login.component";
+import { MailService } from "src/app/services/mailing/mail.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { DeletePopUpComponent } from "src/app/components/faculty-componenets/delete-pop-up/delete-pop-up.component";
+import { MatDialog } from "@angular/material/dialog";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { UserService } from "src/app/services/user/user.service";
+import {
+    Component,
+    HostListener,
+    OnDestroy,
+    OnInit,
+    Pipe,
+    PipeTransform,
+    ViewChild,
+} from "@angular/core";
+import { MatStepper } from "@angular/material/stepper";
+import { MatTableDataSource } from "@angular/material/table";
+import { SelectionModel } from "@angular/cdk/collections";
+import { ResetComponent } from "src/app/components/faculty-componenets/reset/reset.component";
+import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
+import { ShowStudentPreferencesComponent } from "src/app/components/faculty-componenets/show-student-preferences/show-student-preferences.component";
+import { ShowFacultyPreferencesComponent } from "src/app/components/faculty-componenets/show-faculty-preferences/show-faculty-preferences.component";
+import { saveAs } from "file-saver";
+import * as moment from "moment";
+import { NavbarComponent } from "src/app/components/shared/navbar/navbar.component";
 
 @Pipe({
-    name: 'getViolations'
+    name: "getViolations",
 })
 export class GetViolations implements PipeTransform {
     transform(stCap, prCap, stPerFac, tooltip?: boolean) {
@@ -29,106 +36,103 @@ export class GetViolations implements PipeTransform {
         let flag = true;
         if (stCap) {
             flag = false;
-            violations.push('SPP');
+            violations.push("SPP");
         }
         if (prCap) {
             flag = false;
-            violations.push('PFE');
+            violations.push("PFE");
         }
         if (stPerFac) {
             flag = false;
-            violations.push('SPF');
+            violations.push("SPF");
         }
         if (flag && !tooltip) {
-            return 'None';
+            return "None";
         }
         if (tooltip && violations.length != 0) {
-            return 'Some faculty has a violation, head to the manage tab to check the violations.';
+            return "Some faculty has a violation, head to the manage tab to check the violations.";
         }
-        return violations.join(', ');
+        return violations.join(", ");
     }
 }
 
 @Pipe({
-    name: 'getExportDisabled'
+    name: "getExportDisabled",
 })
 export class GetExportDisabled implements PipeTransform {
     transform(value) {
         if (value) {
-            return 'You cannot export preferences till the results are either published to the faculties or to the students.';
+            return "You cannot export preferences till the results are either published to the faculties or to the students.";
         }
-        return 'Export allocation';
+        return "Export allocation";
     }
 }
 
-
 @Pipe({
-    name: 'getTotalIntake'
+    name: "getTotalIntake",
 })
 export class TotalIntake implements PipeTransform {
-
     transform(filteredData) {
-
         let total = 0;
         let included = 0;
 
-        filteredData.forEach(faculty => {
+        filteredData.forEach((faculty) => {
             total += faculty.total_studentIntake;
             included += faculty.included_studentIntake;
         });
-        return `${ included } / ${ total }`;
+        return `${included} / ${total}`;
     }
-
 }
 
-
 @Pipe({
-    name: 'proceedPipe'
+    name: "proceedPipe",
 })
 export class ProceedPipe implements PipeTransform {
-    transform(value, studentCount, proceedButton, total_intake, emailButton, student_flag) {
-
-
+    transform(
+        value,
+        studentCount,
+        proceedButton,
+        total_intake,
+        emailButton,
+        student_flag
+    ) {
         if (studentCount > total_intake) {
-            return 'Number of students are greater than the number of projects that can be alloted.';
+            return "Number of students are greater than the number of projects that can be alloted.";
         } else {
-
             if (emailButton) {
-                return 'Please set the deadline in order to proceed to the next stage.';
+                return "Please set the deadline in order to proceed to the next stage.";
             }
 
             switch (value) {
-                case '1':
+                case "1":
                     if (proceedButton) {
-                        return 'Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.';
+                        return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.";
                     } else {
-                        return 'Proceed';
+                        return "Proceed";
                     }
 
-                case '2':
+                case "2":
                     if (student_flag) {
-                        return 'Please ensure that all the students are registered or remove unregistered students to proceed further.';
+                        return "Please ensure that all the students are registered or remove unregistered students to proceed further.";
                     } else if (proceedButton) {
-                        return 'Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.';
+                        return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.";
                     } else {
-                        return 'Proceed';
+                        return "Proceed";
                     }
 
-                case '3':
+                case "3":
                     if (proceedButton) {
-                        return 'Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.';
+                        return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.";
                     } else {
-                        return 'Proceed';
+                        return "Proceed";
                     }
             }
-
         }
-
     }
 }
 
 @Pipe({
-    name: 'selectedLength'
+    name: "selectedLength",
 })
 export class SelectedLength implements PipeTransform {
     transform(selected, filteredData) {
@@ -143,13 +147,13 @@ export class SelectedLength implements PipeTransform {
 }
 
 @Pipe({
-    name: 'getAllotedStudents'
+    name: "getAllotedStudents",
 })
 export class AllotedStudents implements PipeTransform {
     transform(alloted) {
-        let ans = '';
+        let ans = "";
         for (const allot of alloted) {
-            ans += allot.name + ', ';
+            ans += allot.name + ", ";
         }
         ans = ans.substring(0, ans.length - 2);
         return ans;
@@ -157,7 +161,7 @@ export class AllotedStudents implements PipeTransform {
 }
 
 @Pipe({
-    name: 'getIncludedOfTotal'
+    name: "getIncludedOfTotal",
 })
 export class GetIncludedOfTotal implements PipeTransform {
     transform(faculties) {
@@ -168,12 +172,12 @@ export class GetIncludedOfTotal implements PipeTransform {
             total += faculty.noOfProjects;
             return;
         });
-        return included + ' / ' + total;
+        return included + " / " + total;
     }
 }
 
 @Pipe({
-    name: 'getStudentIntake'
+    name: "getStudentIntake",
 })
 export class StudentIntake implements PipeTransform {
     transform(projects) {
@@ -186,7 +190,7 @@ export class StudentIntake implements PipeTransform {
 }
 
 @Pipe({
-    name: 'getActiveProjects'
+    name: "getActiveProjects",
 })
 export class ActiveProjects implements PipeTransform {
     transform(projects) {
@@ -201,10 +205,10 @@ export class ActiveProjects implements PipeTransform {
 }
 
 @Component({
-    selector: 'app-admin',
-    templateUrl: './admin.component.html',
-    styleUrls: ['./admin.component.scss'],
-    providers: [LoginComponent]
+    selector: "app-admin",
+    templateUrl: "./admin.component.html",
+    styleUrls: ["./admin.component.scss"],
+    providers: [LoginComponent],
 })
 export class AdminComponent implements OnInit, OnDestroy {
     public details; // For displaying the projects tab
@@ -212,25 +216,25 @@ export class AdminComponent implements OnInit, OnDestroy {
     projectTableHeight: number = window.innerHeight * 0.6;
     studentTableHeight: number = window.innerHeight * 0.6;
     columns: string[] = [
-        'select',
-        'Title',
-        'studentIntake',
-        'Faculty',
-        'Duration',
-        'Preferences',
-        'NoOfStudents',
-        'isIncluded',
-        'Student'
+        "select",
+        "Title",
+        "studentIntake",
+        "Faculty",
+        "Duration",
+        "Preferences",
+        "NoOfStudents",
+        "isIncluded",
+        "Student",
     ];
     facultyCols = [
-        'Name',
-        'NoOfProjects',
-        'StudentIntake',
-        'Email',
-        'Actions',
-        'Violations'
+        "Name",
+        "NoOfProjects",
+        "StudentIntake",
+        "Email",
+        "Actions",
+        "Violations",
     ];
-    studentCols = ['Name', 'Email', 'GPA', 'Registered', 'ViewPref', 'Actions'];
+    studentCols = ["Name", "Email", "GPA", "Registered", "ViewPref", "Actions"];
 
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
@@ -241,7 +245,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     seventhFormGroup: FormGroup;
 
     public programName;
-    position = 'above';
+    position = "above";
 
     public stage_no;
     dateSet = [];
@@ -251,7 +255,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     isActive: boolean = false;
     indexHover: number = -1;
     projects: any = [];
-    background = 'primary';
+    background = "primary";
     //Buttons
     student_flag = 0;
     proceedButton1 = true;
@@ -282,7 +286,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     dataSource: any = new MatTableDataSource([]);
     selection = new SelectionModel(true, []);
 
-    @ViewChild('stepper') stepper: MatStepper;
+    @ViewChild("stepper") stepper: MatStepper;
     timer;
     currentTime: Date = new Date();
 
@@ -298,29 +302,29 @@ export class AdminComponent implements OnInit, OnDestroy {
         private navbar: NavbarComponent
     ) {
         this.firstFormGroup = this.formBuilder.group({
-            firstCtrl: [this.dateSet[0]]
+            firstCtrl: [this.dateSet[0]],
         });
         this.secondFormGroup = this.formBuilder.group({
-            secondCtrl: [this.dateSet[1]]
+            secondCtrl: [this.dateSet[1]],
         });
         this.thirdFormGroup = this.formBuilder.group({
-            thirdCtrl: [this.dateSet[2]]
+            thirdCtrl: [this.dateSet[2]],
         });
         this.fourthFormGroup = this.formBuilder.group({
-            fourthCtrl: [this.dateSet[3]]
+            fourthCtrl: [this.dateSet[3]],
         });
         this.fifthFormGroup = this.formBuilder.group({
-            fifthCtrl: [this.projectCap]
+            fifthCtrl: [this.projectCap],
         });
         this.sixthFormGroup = this.formBuilder.group({
-            sixthCtrl: [this.studentCap]
+            sixthCtrl: [this.studentCap],
         });
         this.seventhFormGroup = this.formBuilder.group({
-            seventhCtrl: [this.studentsPerFaculty]
+            seventhCtrl: [this.studentsPerFaculty],
         });
     }
 
-    @HostListener('window:resize', ['$event'])
+    @HostListener("window:resize", ["$event"])
     onResize(event) {
         if (event.target.innerHeight <= 1400) {
             this.projectTableHeight = event.target.innerHeight * 0.6;
@@ -357,66 +361,89 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.exportDisabled = false;
-        if (localStorage.getItem('allocationMap')) {
+        if (localStorage.getItem("allocationMap")) {
             this.discardAllocation();
         }
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Loading, Please wait ...',
+            data: "Loading, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
 
         this.timer = setInterval(() => {
             this.currentTime = new Date();
         }, 60000);
-        if (!localStorage.getItem('pf')) {
-            localStorage.setItem('pf', 'true');
+        if (!localStorage.getItem("pf")) {
+            localStorage.setItem("pf", "true");
         }
-        if (!localStorage.getItem('ps')) {
-            localStorage.setItem('ps', 'true');
+        if (!localStorage.getItem("ps")) {
+            localStorage.setItem("ps", "true");
         }
-        this.publishFaculty = localStorage.getItem('pf') == 'true';
-        this.publishStudents = localStorage.getItem('ps') == 'true';
+        this.publishFaculty = localStorage.getItem("pf") == "true";
+        this.publishStudents = localStorage.getItem("ps") == "true";
         this.userService.getAdminInfo().subscribe(
             (data) => {
-                if (data['status'] == 'success') {
-                    this.programName = data['stream'];
-                    this.stage_no = data['stage'];
-                    this.dateSet = data['deadlines'];
-                    this.projectCap = data['projectCap'];
-                    this.studentCap = data['studentCap'];
-                    this.studentsPerFaculty = data['studentsPerFaculty'];
+                if (data["status"] == "success") {
+                    this.programName = data["stream"];
+                    this.stage_no = data["stage"];
+                    this.dateSet = data["deadlines"];
+                    this.projectCap = data["projectCap"];
+                    this.studentCap = data["studentCap"];
+                    this.studentsPerFaculty = data["studentsPerFaculty"];
                     this.dateSet = this.dateSet.map((date) => {
                         return new Date(date);
                     });
-                    this.startDate = data['startDate'];
+                    this.startDate = data["startDate"];
                     this.ngAfterViewInit();
                     this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-                    this.firstFormGroup.controls['firstCtrl'].setValue(this.dateSet[0]);
-                    this.secondFormGroup.controls['secondCtrl'].setValue(this.dateSet[1]);
-                    this.thirdFormGroup.controls['thirdCtrl'].setValue(this.dateSet[2]);
-                    this.fifthFormGroup.controls['fifthCtrl'].setValue(this.projectCap);
-                    this.sixthFormGroup.controls['sixthCtrl'].setValue(this.studentCap);
-                    this.seventhFormGroup.controls['seventhCtrl'].setValue(
+                    this.firstFormGroup.controls["firstCtrl"].setValue(
+                        this.dateSet[0]
+                    );
+                    this.secondFormGroup.controls["secondCtrl"].setValue(
+                        this.dateSet[1]
+                    );
+                    this.thirdFormGroup.controls["thirdCtrl"].setValue(
+                        this.dateSet[2]
+                    );
+                    this.fifthFormGroup.controls["fifthCtrl"].setValue(
+                        this.projectCap
+                    );
+                    this.sixthFormGroup.controls["sixthCtrl"].setValue(
+                        this.studentCap
+                    );
+                    this.seventhFormGroup.controls["seventhCtrl"].setValue(
                         this.studentsPerFaculty
                     );
 
                     this.userService.getMembersForAdmin().subscribe(
                         (result) => {
                             dialogRefLoad.close();
-                            if (result['message'] == 'success') {
-                                this.faculties.data = result['result']['faculties'];
-                                this.faculties.data.forEach(faculty => {
-                                    this.total_intake += faculty.included_studentIntake;
+                            if (result["message"] == "success") {
+                                this.faculties.data =
+                                    result["result"]["faculties"];
+                                this.faculties.data.forEach((faculty) => {
+                                    this.total_intake +=
+                                        faculty.included_studentIntake;
                                 });
-                                this.students.data = result['result']['students'];
-                                this.sortStudents({direction: 'asc', active: 'Email'});
-                                this.studentCount = result['result']['students'].length;
-                                this.faculties.filterPredicate = (data: any, filter: string) =>
+                                this.students.data =
+                                    result["result"]["students"];
+                                this.sortStudents({
+                                    direction: "asc",
+                                    active: "Email",
+                                });
+                                this.studentCount =
+                                    result["result"]["students"].length;
+                                this.faculties.filterPredicate = (
+                                    data: any,
+                                    filter: string
+                                ) =>
                                     !filter ||
                                     data.name.toLowerCase().includes(filter) ||
                                     data.email.toLowerCase().includes(filter);
-                                this.students.filterPredicate = (data: any, filter: string) =>
+                                this.students.filterPredicate = (
+                                    data: any,
+                                    filter: string
+                                ) =>
                                     !filter ||
                                     data.name.toLowerCase().includes(filter) ||
                                     data.email.toLowerCase().includes(filter);
@@ -441,42 +468,57 @@ export class AdminComponent implements OnInit, OnDestroy {
                                     }
                                 }
 
-                                this.getAllocationValidation(flag, this.student_flag);
+                                this.getAllocationValidation(
+                                    flag,
+                                    this.student_flag
+                                );
                             } else {
-                                this.navbar.role = 'none';
+                                this.navbar.role = "none";
                                 this.snackBar.open(
-                                    'Session Timed Out! Please Sign-In again',
-                                    'Ok'
+                                    "Session Timed Out! Please Sign-In again",
+                                    "Ok"
                                 );
                                 this.loginService.signOut();
                             }
                         },
                         () => {
                             dialogRefLoad.close();
-                            this.snackBar.open('Some Error Occured! Try again later.', 'OK');
+                            this.snackBar.open(
+                                "Some Error Occured! Try again later.",
+                                "OK"
+                            );
                         }
                     );
                 } else {
                     dialogRefLoad.close();
-                    this.navbar.role = 'none';
-                    this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                    this.navbar.role = "none";
+                    this.snackBar.open(
+                        "Session Timed Out! Please Sign-In again",
+                        "Ok"
+                    );
                     this.loginService.signOut();
                 }
             },
             () => {
                 dialogRefLoad.close();
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                this.navbar.role = "none";
+                this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok"
+                );
                 this.loginService.signOut();
             }
         );
 
         this.projectService.getAllStreamProjects().subscribe(
             (projects) => {
-                if (projects['message'] == 'success') {
-                    this.projects = projects['result'];
+                if (projects["message"] == "success") {
+                    this.projects = projects["result"];
                     this.dataSource.data = this.projects;
-                    this.dataSource.filterPredicate = (data: any, filter: string) =>
+                    this.dataSource.filterPredicate = (
+                        data: any,
+                        filter: string
+                    ) =>
                         !filter ||
                         data.faculty.toLowerCase().includes(filter) ||
                         data.title.toLowerCase().includes(filter) ||
@@ -484,15 +526,21 @@ export class AdminComponent implements OnInit, OnDestroy {
                     this.selectIncluded();
                 } else {
                     dialogRefLoad.close();
-                    this.navbar.role = 'none';
-                    this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                    this.navbar.role = "none";
+                    this.snackBar.open(
+                        "Session Timed Out! Please Sign-In again",
+                        "Ok"
+                    );
                     this.loginService.signOut();
                 }
             },
             () => {
                 dialogRefLoad.close();
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                this.navbar.role = "none";
+                this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok"
+                );
                 this.loginService.signOut();
             }
         );
@@ -501,47 +549,47 @@ export class AdminComponent implements OnInit, OnDestroy {
     getTooltipInculsion(project) {
         return project.isIncluded
             ? null
-            : 'This faculty has excluded the project. Contact the faculty if needed.';
+            : "This faculty has excluded the project. Contact the faculty if needed.";
     }
 
     proceed() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: '400px',
-            height: '250px',
+            width: "400px",
+            height: "250px",
             data: {
-                heading: 'Confirm Proceed',
+                heading: "Confirm Proceed",
                 message:
-                    'Please ensure that mails have been sent. Are you sure you want to proceed to the next stage?'
-            }
+                    "Please ensure that mails have been sent. Are you sure you want to proceed to the next stage?",
+            },
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result['message'] == 'submit') {
+            if (result && result["message"] == "submit") {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Updating, Please wait ...',
+                    data: "Updating, Please wait ...",
                     disableClose: true,
-                    panelClass: 'transparent'
+                    panelClass: "transparent",
                 });
 
                 this.userService.updateStage(this.stage_no + 1).subscribe(
                     (data) => {
-                        if (data['status'] == 'success') {
+                        if (data["status"] == "success") {
                             this.stage_no++;
                             this.stepper.next();
                             this.proceedButton1 = true;
                             this.proceedButton2 = true;
                             this.proceedButton3 = true;
                             let snackBarRef = this.snackBar.open(
-                                'Successfully moved to the next stage!',
-                                'Ok'
+                                "Successfully moved to the next stage!",
+                                "Ok"
                             );
 
                             snackBarRef.afterDismissed().subscribe(() => {
                                 if (this.stage_no >= 3) {
                                     this.snackBar.open(
-                                        'Please go to the project tab to start the allocation',
-                                        'Ok',
+                                        "Please go to the project tab to start the allocation",
+                                        "Ok",
                                         {
-                                            duration: 10000
+                                            duration: 10000,
                                         }
                                     );
                                 }
@@ -555,35 +603,40 @@ export class AdminComponent implements OnInit, OnDestroy {
                             //       })
                             //   }
                             if (this.stage_no >= 3) {
-                                this.exportService.generateCSV_projects().subscribe((data) => {
-                                    dialogRefLoad.close();
-                                    if (data['message'] == 'success') {
-                                        this.exportService
-                                            .generateCSV_students()
-                                            .subscribe((data) => {
-                                                if (data['message'] == 'success') {
-                                                }
-                                            });
-                                    }
-                                });
+                                this.exportService
+                                    .generateCSV_projects()
+                                    .subscribe((data) => {
+                                        dialogRefLoad.close();
+                                        if (data["message"] == "success") {
+                                            this.exportService
+                                                .generateCSV_students()
+                                                .subscribe((data) => {
+                                                    if (
+                                                        data["message"] ==
+                                                        "success"
+                                                    ) {
+                                                    }
+                                                });
+                                        }
+                                    });
                             }
                             dialogRefLoad.close();
                         } else {
                             dialogRefLoad.close();
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
                     },
                     () => {
                         dialogRefLoad.close();
-                        this.navbar.role = 'none';
+                        this.navbar.role = "none";
                         this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again',
-                            'Ok'
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok"
                         );
                         this.loginService.signOut();
                     }
@@ -593,52 +646,56 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     discardAllocation() {
-        localStorage.removeItem('allocationMap');
+        localStorage.removeItem("allocationMap");
     }
 
     removeFaculty(id) {
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
-            height: '200px',
-            width: '300px',
+            height: "200px",
+            width: "300px",
             data: {
-                heading: 'Confirm Deletion',
-                message: 'Are you sure you want to remove the Faculty?'
-            }
+                heading: "Confirm Deletion",
+                message: "Are you sure you want to remove the Faculty?",
+            },
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result['message'] == 'submit') {
+            if (result && result["message"] == "submit") {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Removing, Please wait ...',
+                    data: "Removing, Please wait ...",
                     disableClose: true,
-                    panelClass: 'transparent'
+                    panelClass: "transparent",
                 });
 
                 this.userService.removeFacultyAdmin(id).subscribe(
                     (result) => {
                         dialogRefLoad.close();
-                        if (result['message'] == 'success') {
-                            this.snackBar.open('Removed Faculty', 'Ok');
-                            this.faculties.data = this.faculties.data.filter((val) => {
-                                return val._id != id;
-                            });
-                            this.dataSource.data = this.dataSource.data.filter((val) => {
-                                return val.faculty_id != id;
-                            });
+                        if (result["message"] == "success") {
+                            this.snackBar.open("Removed Faculty", "Ok");
+                            this.faculties.data = this.faculties.data.filter(
+                                (val) => {
+                                    return val._id != id;
+                                }
+                            );
+                            this.dataSource.data = this.dataSource.data.filter(
+                                (val) => {
+                                    return val.faculty_id != id;
+                                }
+                            );
                         } else {
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
                     },
                     () => {
                         dialogRefLoad.close();
-                        this.navbar.role = 'none';
+                        this.navbar.role = "none";
                         this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again',
-                            'Ok'
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok"
                         );
                         this.loginService.signOut();
                     }
@@ -650,51 +707,58 @@ export class AdminComponent implements OnInit, OnDestroy {
     removeStudent(student) {
         const id = student._id;
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
-            height: '200px',
-            width: '300px',
+            height: "200px",
+            width: "300px",
             data: {
-                heading: 'Confirm Deletion',
-                message: 'Are you sure you want to remove the Student?'
-            }
+                heading: "Confirm Deletion",
+                message: "Are you sure you want to remove the Student?",
+            },
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result['message'] == 'submit') {
+            if (result && result["message"] == "submit") {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Removing, Please wait ...',
+                    data: "Removing, Please wait ...",
                     disableClose: true,
-                    panelClass: 'transparent'
+                    panelClass: "transparent",
                 });
 
                 this.userService.removeStudentAdmin(id).subscribe(
                     (result) => {
                         dialogRefLoad.close();
-                        if (result['message'] == 'success') {
+                        if (result["message"] == "success") {
                             this.studentCount--;
-                            this.snackBar.open('Removed Student', 'Ok');
-                            this.students.data = this.students.data.filter((val) => {
-                                return val._id != id;
-                            });
+                            this.snackBar.open("Removed Student", "Ok");
+                            this.students.data = this.students.data.filter(
+                                (val) => {
+                                    return val._id != id;
+                                }
+                            );
                             this.dataSource.data.forEach((project) => {
-                                project.students_id = project.students_id.filter((val) => {
-                                    return val.roll_no != student.email.split('@')[0];
-                                });
+                                project.students_id = project.students_id.filter(
+                                    (val) => {
+                                        return (
+                                            val.roll_no !=
+                                            student.email.split("@")[0]
+                                        );
+                                    }
+                                );
                             });
                             this.dataSource.data = [...this.dataSource.data];
                         } else {
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
                     },
                     () => {
                         dialogRefLoad.close();
-                        this.navbar.role = 'none';
+                        this.navbar.role = "none";
                         this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again',
-                            'Ok'
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok"
                         );
                         this.loginService.signOut();
                     }
@@ -707,52 +771,55 @@ export class AdminComponent implements OnInit, OnDestroy {
         let date;
         this.curr_deadline = this.dateSet[this.dateSet.length - 1];
         if (this.stage_no == 0) {
-            date = this.firstFormGroup.get('firstCtrl').value;
+            date = this.firstFormGroup.get("firstCtrl").value;
         } else if (this.stage_no == 1) {
-            date = this.secondFormGroup.get('secondCtrl').value;
+            date = this.secondFormGroup.get("secondCtrl").value;
         } else if (this.stage_no == 2) {
-            date = this.thirdFormGroup.get('thirdCtrl').value;
+            date = this.thirdFormGroup.get("thirdCtrl").value;
         }
 
-        if (date != null && date != '') {
+        if (date != null && date != "") {
             const dialogRef = this.dialog.open(DeletePopUpComponent, {
-                width: '400px',
-                height: '200px',
+                width: "400px",
+                height: "200px",
                 data: {
-                    heading: 'Confirm Deadline',
-                    message: 'Are you sure you want to fix the deadline?'
-                }
+                    heading: "Confirm Deadline",
+                    message: "Are you sure you want to fix the deadline?",
+                },
             });
             dialogRef.afterClosed().subscribe((result) => {
-                if (result['message'] == 'submit') {
+                if (result["message"] == "submit") {
                     const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                        data: 'Updating, Please wait ...',
+                        data: "Updating, Please wait ...",
                         disableClose: true,
-                        panelClass: 'transparent'
+                        panelClass: "transparent",
                     });
 
                     date = moment(new Date(date)).format();
                     this.userService.setDeadline(date).subscribe(
                         (data) => {
                             dialogRefLoad.close();
-                            if (data['status'] == 'success') {
-                                this.snackBar.open('Deadline set successfully!!', 'Ok');
+                            if (data["status"] == "success") {
+                                this.snackBar.open(
+                                    "Deadline set successfully!!",
+                                    "Ok"
+                                );
                                 this.ngOnInit();
                             } else {
-                                this.navbar.role = 'none';
+                                this.navbar.role = "none";
                                 this.snackBar.open(
-                                    'Session Timed Out! Please Sign-In again',
-                                    'Ok'
+                                    "Session Timed Out! Please Sign-In again",
+                                    "Ok"
                                 );
                                 this.loginService.signOut();
                             }
                         },
                         () => {
                             dialogRefLoad.close();
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
@@ -760,106 +827,136 @@ export class AdminComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            this.snackBar.open('Please choose the deadline', 'Ok');
+            this.snackBar.open("Please choose the deadline", "Ok");
         }
     }
 
     startAllocation() {
         let selectedProjects = this.selection.selected;
         const dialogRef = this.dialog.open(LoaderComponent, {
-            data: 'Allocating projects, Please wait as this may take a while',
+            data: "Allocating projects, Please wait as this may take a while",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
-        const length = this.students.data.filter((val) => val.isRegistered).length;
+        const length = this.students.data.filter((val) => val.isRegistered)
+            .length;
         this.userService.validateAllocation(selectedProjects, length).subscribe(
             (data) => {
-                if (data['status'] == 'success') {
-                    this.projectService.startAllocation(selectedProjects).subscribe(
-                        (data) => {
-                            dialogRef.close();
-                            if (data['message'] == 'success') {
-                                this.exportDisabled = true;
-                                selectedProjects = selectedProjects.map((val) =>
-                                    String(val._id)
-                                );
-                                this.dataSource = new MatTableDataSource(data['result']);
-                                this.selection.clear();
-                                this.dataSource.data.forEach((row) => {
-                                    if (selectedProjects.indexOf(row._id.toString()) != -1) {
-                                        this.selection.select(row);
-                                    }
-                                });
-
-                                localStorage.setItem(
-                                    'allocationMap',
-                                    JSON.stringify(data['allocationMap'])
-                                );
-                                this.userService.updatePublish('reset').subscribe((data) => {
-                                    if (data['status'] == 'success') {
-                                        this.publishStudents = false;
-                                        this.publishFaculty = false;
-                                        localStorage.setItem('ps', 'false');
-                                        localStorage.setItem('pf', 'false');
-                                        if (this.stage_no == 3) {
-                                            this.userService
-                                                .updateStage(this.stage_no + 1)
-                                                .subscribe((data) => {
-                                                    if (data['status'] == 'success') {
-                                                        this.snackBar.open(
-                                                            'Allocation completed successfully',
-                                                            'Ok'
-                                                        );
-                                                    } else {
-                                                        this.navbar.role = 'none';
-                                                        this.snackBar.open(
-                                                            'Session Timed Out! Please Sign-In again',
-                                                            'Ok'
-                                                        );
-                                                        this.loginService.signOut();
-                                                    }
-                                                });
-                                        } else {
-                                            this.snackBar.open(
-                                                'Allocation completed successfully',
-                                                'Ok'
-                                            );
+                if (data["status"] == "success") {
+                    this.projectService
+                        .startAllocation(selectedProjects)
+                        .subscribe(
+                            (data) => {
+                                dialogRef.close();
+                                if (data["message"] == "success") {
+                                    this.exportDisabled = true;
+                                    selectedProjects = selectedProjects.map(
+                                        (val) => String(val._id)
+                                    );
+                                    this.dataSource = new MatTableDataSource(
+                                        data["result"]
+                                    );
+                                    this.selection.clear();
+                                    this.dataSource.data.forEach((row) => {
+                                        if (
+                                            selectedProjects.indexOf(
+                                                row._id.toString()
+                                            ) != -1
+                                        ) {
+                                            this.selection.select(row);
                                         }
-                                    }
-                                });
-                            } else if (data['message'] == 'invalid-token') {
-                                this.navbar.role = 'none';
+                                    });
+
+                                    localStorage.setItem(
+                                        "allocationMap",
+                                        JSON.stringify(data["allocationMap"])
+                                    );
+                                    this.userService
+                                        .updatePublish("reset")
+                                        .subscribe((data) => {
+                                            if (data["status"] == "success") {
+                                                this.publishStudents = false;
+                                                this.publishFaculty = false;
+                                                localStorage.setItem(
+                                                    "ps",
+                                                    "false"
+                                                );
+                                                localStorage.setItem(
+                                                    "pf",
+                                                    "false"
+                                                );
+                                                if (this.stage_no == 3) {
+                                                    this.userService
+                                                        .updateStage(
+                                                            this.stage_no + 1
+                                                        )
+                                                        .subscribe((data) => {
+                                                            if (
+                                                                data[
+                                                                    "status"
+                                                                ] == "success"
+                                                            ) {
+                                                                this.snackBar.open(
+                                                                    "Allocation completed successfully",
+                                                                    "Ok"
+                                                                );
+                                                            } else {
+                                                                this.navbar.role =
+                                                                    "none";
+                                                                this.snackBar.open(
+                                                                    "Session Timed Out! Please Sign-In again",
+                                                                    "Ok"
+                                                                );
+                                                                this.loginService.signOut();
+                                                            }
+                                                        });
+                                                } else {
+                                                    this.snackBar.open(
+                                                        "Allocation completed successfully",
+                                                        "Ok"
+                                                    );
+                                                }
+                                            }
+                                        });
+                                } else if (data["message"] == "invalid-token") {
+                                    this.navbar.role = "none";
+                                    this.snackBar.open(
+                                        "Session Expired! Sign-In and try again",
+                                        "Ok"
+                                    );
+                                    this.loginService.signOut();
+                                } else {
+                                    this.snackBar.open(
+                                        "Some error occured! Try again",
+                                        "Ok"
+                                    );
+                                }
+                            },
+                            () => {
+                                dialogRef.close();
+                                this.navbar.role = "none";
                                 this.snackBar.open(
-                                    'Session Expired! Sign-In and try again',
-                                    'Ok'
+                                    "Session Timed Out! Please Sign-In again",
+                                    "Ok"
                                 );
                                 this.loginService.signOut();
-                            } else {
-                                this.snackBar.open('Some error occured! Try again', 'Ok');
                             }
-                        },
-                        () => {
-                            dialogRef.close();
-                            this.navbar.role = 'none';
-                            this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
-                            );
-                            this.loginService.signOut();
-                        }
-                    );
+                        );
                 } else {
                     dialogRef.close();
                     this.snackBar.open(
-                        'Unable to do an allocation. Please note the number of projects that can be alloted must be greater than or equal to the number of students.',
-                        'Ok'
+                        "Unable to do an allocation. Please note the number of projects that can be alloted must be greater than or equal to the number of students.",
+                        "Ok"
                     );
                 }
             },
             () => {
                 dialogRef.close();
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                this.navbar.role = "none";
+                this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok"
+                );
                 this.loginService.signOut();
             }
         );
@@ -867,43 +964,46 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     sendEmails() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: '400px',
-            height: '200px',
+            width: "400px",
+            height: "200px",
             disableClose: false,
             hasBackdrop: true,
             data: {
-                heading: 'Confirm Sending Mails',
+                heading: "Confirm Sending Mails",
                 message:
-                    'Are you sure you want to send the mails? This cannot be undone.'
-            }
+                    "Are you sure you want to send the mails? This cannot be undone.",
+            },
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result['message'] == 'submit') {
+            if (result && result["message"] == "submit") {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Sending mails, Please wait as this may take a while',
+                    data: "Sending mails, Please wait as this may take a while",
                     disableClose: true,
-                    panelClass: 'transparent'
+                    panelClass: "transparent",
                 });
                 if (this.stage_no == 0 || this.stage_no == 2) {
                     this.userService.getFacultyStreamEmails().subscribe(
                         (data1) => {
-                            if (data1['status'] == 'success') {
+                            if (data1["status"] == "success") {
                                 this.mailer
                                     .adminToFaculty(
                                         this.stage_no,
-                                        data1['result'],
+                                        data1["result"],
                                         this.curr_deadline,
-                                        data1['streamFull']
+                                        data1["streamFull"]
                                     )
                                     .subscribe((data2) => {
                                         dialogRefLoad.close();
-                                        if (data2['message'] == 'success') {
-                                            this.snackBar.open('Mails have been sent', 'Ok');
-                                        } else {
-                                            this.navbar.role = 'none';
+                                        if (data2["message"] == "success") {
                                             this.snackBar.open(
-                                                'Session Timed Out! Please Sign-In again',
-                                                'Ok'
+                                                "Mails have been sent",
+                                                "Ok"
+                                            );
+                                        } else {
+                                            this.navbar.role = "none";
+                                            this.snackBar.open(
+                                                "Session Timed Out! Please Sign-In again",
+                                                "Ok"
                                             );
                                             this.loginService.signOut();
                                         }
@@ -914,10 +1014,10 @@ export class AdminComponent implements OnInit, OnDestroy {
                         },
                         () => {
                             dialogRefLoad.close();
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
@@ -925,23 +1025,26 @@ export class AdminComponent implements OnInit, OnDestroy {
                 } else if (this.stage_no == 1) {
                     this.userService.getStudentStreamEmails().subscribe(
                         (data1) => {
-                            if (data1['status'] == 'success') {
+                            if (data1["status"] == "success") {
                                 this.mailer
                                     .adminToStudents(
-                                        data1['result'],
+                                        data1["result"],
                                         this.curr_deadline,
-                                        data1['streamFull']
+                                        data1["streamFull"]
                                     )
                                     .subscribe((data) => {
                                         dialogRefLoad.close();
-                                        if (data['message'] == 'success') {
-                                            this.snackBar.open('Mails have been sent', 'Ok');
+                                        if (data["message"] == "success") {
+                                            this.snackBar.open(
+                                                "Mails have been sent",
+                                                "Ok"
+                                            );
                                         } else {
-                                            this.navbar.role = 'none';
+                                            this.navbar.role = "none";
                                             dialogRefLoad.close();
                                             this.snackBar.open(
-                                                'Session Timed Out! Please Sign-In again',
-                                                'Ok'
+                                                "Session Timed Out! Please Sign-In again",
+                                                "Ok"
                                             );
                                             this.loginService.signOut();
                                         }
@@ -950,10 +1053,10 @@ export class AdminComponent implements OnInit, OnDestroy {
                         },
                         () => {
                             dialogRefLoad.close();
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
@@ -961,38 +1064,41 @@ export class AdminComponent implements OnInit, OnDestroy {
                 } else {
                     this.userService.fetchAllMails().subscribe(
                         (result) => {
-                            if (result['message'] == 'success') {
+                            if (result["message"] == "success") {
                                 this.mailer
-                                    .allocateMail(result['result'], result['streamFull'])
+                                    .allocateMail(
+                                        result["result"],
+                                        result["streamFull"]
+                                    )
                                     .subscribe((result) => {
                                         dialogRefLoad.close();
-                                        if (result['message'] == 'success') {
+                                        if (result["message"] == "success") {
                                             this.snackBar.open(
-                                                'Mails have been sent successfully.',
-                                                'Ok'
+                                                "Mails have been sent successfully.",
+                                                "Ok"
                                             );
                                         } else {
                                             dialogRefLoad.close();
                                             this.snackBar.open(
-                                                'Mails not sent! Please try again.',
-                                                'Ok'
+                                                "Mails not sent! Please try again.",
+                                                "Ok"
                                             );
                                         }
                                     });
                             } else {
                                 dialogRefLoad.close();
                                 this.snackBar.open(
-                                    'Unable to fetch mails! If the error persists re-authenticate.',
-                                    'Ok'
+                                    "Unable to fetch mails! If the error persists re-authenticate.",
+                                    "Ok"
                                 );
                             }
                         },
                         () => {
                             dialogRefLoad.close();
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
@@ -1004,131 +1110,132 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     setProjectCap() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Updating, Please wait ...',
+            data: "Updating, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
-        if (this.fifthFormGroup.controls['fifthCtrl'].value > 0) {
-
+        if (this.fifthFormGroup.controls["fifthCtrl"].value > 0) {
             this.userService
-                .setProjectCap(this.fifthFormGroup.get('fifthCtrl').value)
+                .setProjectCap(this.fifthFormGroup.get("fifthCtrl").value)
                 .subscribe(
                     (data) => {
                         dialogRefLoad.close();
-                        if (data['status'] == 'success') {
-                            this.snackBar.open(data['msg'], 'Ok');
+                        if (data["status"] == "success") {
+                            this.snackBar.open(data["msg"], "Ok");
                             this.validateFields();
                         } else {
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
                     },
                     () => {
                         dialogRefLoad.close();
-                        this.navbar.role = 'none';
+                        this.navbar.role = "none";
                         this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again',
-                            'Ok'
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok"
                         );
                         this.loginService.signOut();
                     }
                 );
         } else {
             dialogRefLoad.close();
-            this.snackBar.open('Please enter a valid number', 'Ok');
+            this.snackBar.open("Please enter a valid number", "Ok");
         }
     }
 
     setStudentCap() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Updating, Please wait ...',
+            data: "Updating, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
-        if (this.sixthFormGroup.controls['sixthCtrl'].value > 0) {
+        if (this.sixthFormGroup.controls["sixthCtrl"].value > 0) {
             this.userService
-                .setStudentCap(this.sixthFormGroup.get('sixthCtrl').value)
+                .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
                 .subscribe(
                     (data) => {
                         dialogRefLoad.close();
-                        if (data['status'] == 'success') {
-                            this.snackBar.open(data['msg'], 'Ok');
+                        if (data["status"] == "success") {
+                            this.snackBar.open(data["msg"], "Ok");
                             this.validateFields();
                         } else {
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
                     },
                     () => {
                         dialogRefLoad.close();
-                        this.navbar.role = 'none';
+                        this.navbar.role = "none";
                         this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again',
-                            'Ok'
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok"
                         );
                         this.loginService.signOut();
                     }
                 );
         } else {
             dialogRefLoad.close();
-            this.snackBar.open('Please enter a valid number', 'Ok');
+            this.snackBar.open("Please enter a valid number", "Ok");
         }
     }
 
     setStudentsPerFaculty() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Updating, Please wait ...',
+            data: "Updating, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
-        if (this.seventhFormGroup.controls['seventhCtrl'].value > 0) {
+        if (this.seventhFormGroup.controls["seventhCtrl"].value > 0) {
             this.userService
-                .setStudentsPerFaculty(this.seventhFormGroup.get('seventhCtrl').value)
+                .setStudentsPerFaculty(
+                    this.seventhFormGroup.get("seventhCtrl").value
+                )
                 .subscribe(
                     (data) => {
                         dialogRefLoad.close();
-                        if (data['status'] == 'success') {
-                            this.snackBar.open(data['msg'], 'Ok');
+                        if (data["status"] == "success") {
+                            this.snackBar.open(data["msg"], "Ok");
                             this.validateFields();
                         } else {
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.snackBar.open(
-                                'Session Timed Out! Please Sign-In again',
-                                'Ok'
+                                "Session Timed Out! Please Sign-In again",
+                                "Ok"
                             );
                             this.loginService.signOut();
                         }
                     },
                     () => {
                         dialogRefLoad.close();
-                        this.navbar.role = 'none';
+                        this.navbar.role = "none";
                         this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again',
-                            'Ok'
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok"
                         );
                         this.loginService.signOut();
                     }
                 );
         } else {
             dialogRefLoad.close();
-            this.snackBar.open('Please enter a valid number', 'Ok');
+            this.snackBar.open("Please enter a valid number", "Ok");
         }
     }
 
     validateFields() {
         this.userService.getMembersForAdmin().subscribe(
             (result) => {
-                if (result['message'] == 'success') {
-                    this.faculties.data = result['result']['faculties'];
-                    this.students.data = result['result']['students'];
+                if (result["message"] == "success") {
+                    this.faculties.data = result["result"]["faculties"];
+                    this.students.data = result["result"]["students"];
                     let flag = false;
                     for (const faculty of this.faculties.data) {
                         if (
@@ -1153,29 +1260,36 @@ export class AdminComponent implements OnInit, OnDestroy {
 
                     this.getAllocationValidation(flag, this.student_flag);
                 } else {
-                    this.navbar.role = 'none';
-                    this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                    this.navbar.role = "none";
+                    this.snackBar.open(
+                        "Session Timed Out! Please Sign-In again",
+                        "Ok"
+                    );
                     this.loginService.signOut();
                 }
             },
             () => {
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                this.navbar.role = "none";
+                this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok"
+                );
                 this.loginService.signOut();
             }
         );
     }
 
     getAllocationValidation(flag, student_flag) {
-        const length = this.students.data.filter((val) => val.isRegistered).length;
+        const length = this.students.data.filter((val) => val.isRegistered)
+            .length;
 
         this.userService
             .validateAllocation(this.selection.selected, length)
             .subscribe(
                 (data) => {
-                    if (data['status'] == 'success') {
+                    if (data["status"] == "success") {
                         if (this.dateSet.length == 1) {
-                            if (this.firstFormGroup.controls['firstCtrl']) {
+                            if (this.firstFormGroup.controls["firstCtrl"]) {
                                 this.proceedButton1 = false;
                                 if (!flag) {
                                     this.proceedButton1_ = false;
@@ -1184,7 +1298,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                         }
                     } else {
                         if (this.dateSet.length == 1) {
-                            if (this.firstFormGroup.controls['firstCtrl']) {
+                            if (this.firstFormGroup.controls["firstCtrl"]) {
                                 this.proceedButton1 = false;
                                 this.proceedButton1_ = true;
                             }
@@ -1192,7 +1306,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                     }
 
                     if (this.dateSet.length == 2) {
-                        if (this.secondFormGroup.controls['secondCtrl']) {
+                        if (this.secondFormGroup.controls["secondCtrl"]) {
                             this.proceedButton2 = false;
                             if (!flag && student_flag == 0) {
                                 this.proceedButton2_ = false;
@@ -1200,7 +1314,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                         }
                     }
                     if (this.dateSet.length == 3) {
-                        if (this.thirdFormGroup.controls['thirdCtrl']) {
+                        if (this.thirdFormGroup.controls["thirdCtrl"]) {
                             this.proceedButton3 = false;
                         }
                         if (!flag) {
@@ -1210,8 +1324,11 @@ export class AdminComponent implements OnInit, OnDestroy {
                     this.minDate = new Date();
                 },
                 () => {
-                    this.navbar.role = 'none';
-                    this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                    this.navbar.role = "none";
+                    this.snackBar.open(
+                        "Session Timed Out! Please Sign-In again",
+                        "Ok"
+                    );
                     this.loginService.signOut();
                 }
             );
@@ -1247,39 +1364,40 @@ export class AdminComponent implements OnInit, OnDestroy {
     /** The label for the checkbox on the passed row */
     checkboxLabel(row): string {
         if (!row) {
-            return `${ this.isAllSelected() ? 'select' : 'deselect' } all`;
+            return `${this.isAllSelected() ? "select" : "deselect"} all`;
         }
-        return `${ this.selection.isSelected(row) ? 'deselect' : 'select' } row ${
+        return `${this.selection.isSelected(row) ? "deselect" : "select"} row ${
             row.position + 1
         }`;
     }
 
     stepDownStage() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: '400px',
-            height: '250px',
+            width: "400px",
+            height: "250px",
             data: {
-                heading: 'Confirm Proceed',
-                message: 'Are you sure you want to revert back to the previous stage?'
-            }
+                heading: "Confirm Proceed",
+                message:
+                    "Are you sure you want to revert back to the previous stage?",
+            },
         });
 
         const currStage = this.stage_no;
 
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result['message'] == 'submit') {
+            if (result && result["message"] == "submit") {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Updating, Please wait ...',
+                    data: "Updating, Please wait ...",
                     disableClose: true,
-                    panelClass: 'transparent'
+                    panelClass: "transparent",
                 });
                 this.userService.revertStage(currStage).subscribe(
                     (data) => {
-                        localStorage.setItem('pf', 'false');
-                        localStorage.setItem('ps', 'false');
+                        localStorage.setItem("pf", "false");
+                        localStorage.setItem("ps", "false");
                         dialogRefLoad.close();
-                        if ((data['status'] = 'success')) {
-                            this.snackBar.open(data['msg'], 'Ok');
+                        if ((data["status"] = "success")) {
+                            this.snackBar.open(data["msg"], "Ok");
                             this.proceedButton1_ = true;
                             this.proceedButton2_ = true;
                             this.proceedButton3_ = true;
@@ -1291,15 +1409,18 @@ export class AdminComponent implements OnInit, OnDestroy {
                             this.stepper.previous();
                             this.ngOnInit();
                         } else {
-                            this.snackBar.open('Could Not Revert, Please try again.', 'Ok');
+                            this.snackBar.open(
+                                "Could Not Revert, Please try again.",
+                                "Ok"
+                            );
                         }
                     },
                     () => {
                         dialogRefLoad.close();
-                        this.navbar.role = 'none';
+                        this.navbar.role = "none";
                         this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again',
-                            'Ok'
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok"
                         );
                         this.loginService.signOut();
                     }
@@ -1312,10 +1433,10 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.dialog.open(ShowFacultyPreferencesComponent, {
             disableClose: false,
             hasBackdrop: true,
-            maxHeight: '700px',
-            minWidth: '800px',
+            maxHeight: "700px",
+            minWidth: "800px",
             data: project,
-            panelClass: ['custom-dialog-container']
+            panelClass: ["custom-dialog-container"],
         });
     }
 
@@ -1323,52 +1444,52 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.dialog.open(ShowStudentPreferencesComponent, {
             disableClose: false,
             hasBackdrop: true,
-            maxHeight: '700px',
-            minWidth: '800px',
+            maxHeight: "700px",
+            minWidth: "800px",
             data: student,
-            panelClass: ['custom-dialog-container']
+            panelClass: ["custom-dialog-container"],
         });
     }
 
     resetProcess() {
         const dialogRef = this.dialog.open(ResetComponent, {
-            width: '400px',
-            height: '300px',
+            width: "400px",
+            height: "300px",
             disableClose: false,
-            hasBackdrop: true
+            hasBackdrop: true,
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result['message'] == 'submit') {
+            if (result["message"] == "submit") {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Resetting, Please wait ...',
+                    data: "Resetting, Please wait ...",
                     disableClose: true,
-                    panelClass: 'transparent'
+                    panelClass: "transparent",
                 });
                 this.userService.resetUsers().subscribe(
                     (result) => {
                         dialogRefLoad.close();
-                        if (result['message'] == 'success') {
+                        if (result["message"] == "success") {
                             this.snackBar.open(
-                                'The alllocation process has been reinitialised',
-                                'Ok'
+                                "The alllocation process has been reinitialised",
+                                "Ok"
                             );
                             this.stepper.reset();
                             this.ngOnInit();
-                        } else if (result['message'] == 'invalid-token') {
+                        } else if (result["message"] == "invalid-token") {
                             this.snackBar.open(
-                                'Session Expired! Please Sign-In Again',
-                                'Ok'
+                                "Session Expired! Please Sign-In Again",
+                                "Ok"
                             );
-                            this.navbar.role = 'none';
+                            this.navbar.role = "none";
                             this.loginService.signOut();
                         }
                     },
                     () => {
                         dialogRefLoad.close();
-                        this.navbar.role = 'none';
+                        this.navbar.role = "none";
                         this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again',
-                            'Ok'
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok"
                         );
                         this.loginService.signOut();
                     }
@@ -1379,19 +1500,22 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     downloadFile_project() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Loading, Please wait ...',
+            data: "Loading, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
-        this.exportService.download('project').subscribe(
+        this.exportService.download("project").subscribe(
             (data) => {
                 dialogRefLoad.close();
-                saveAs(data, `${ this.programName }_faculty.csv`);
+                saveAs(data, `${this.programName}_faculty.csv`);
             },
             () => {
                 dialogRefLoad.close();
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                this.navbar.role = "none";
+                this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok"
+                );
                 this.loginService.signOut();
             }
         );
@@ -1399,19 +1523,22 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     downloadFile_student() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Loading, Please wait ...',
+            data: "Loading, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
-        this.exportService.download('student').subscribe(
+        this.exportService.download("student").subscribe(
             (data) => {
                 dialogRefLoad.close();
-                saveAs(data, `${ this.programName }_students.csv`);
+                saveAs(data, `${this.programName}_students.csv`);
             },
             () => {
                 dialogRefLoad.close();
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                this.navbar.role = "none";
+                this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok"
+                );
                 this.loginService.signOut();
             }
         );
@@ -1419,19 +1546,22 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     downloadFile_format() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Loading, Please wait ...',
+            data: "Loading, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
-        this.exportService.download('format').subscribe(
+        this.exportService.download("format").subscribe(
             (data) => {
                 dialogRefLoad.close();
-                saveAs(data, `${ this.programName }_format.csv`);
+                saveAs(data, `${this.programName}_format.csv`);
             },
             () => {
                 dialogRefLoad.close();
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                this.navbar.role = "none";
+                this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok"
+                );
                 this.loginService.signOut();
             }
         );
@@ -1439,19 +1569,22 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     downloadFile_allocation() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Loading, Please wait ...',
+            data: "Loading, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
-        this.exportService.download('allocation').subscribe(
+        this.exportService.download("allocation").subscribe(
             (data) => {
                 dialogRefLoad.close();
-                saveAs(data, `${ this.programName }_allocation.csv`);
+                saveAs(data, `${this.programName}_allocation.csv`);
             },
             () => {
                 dialogRefLoad.close();
-                this.navbar.role = 'none';
-                this.snackBar.open('Session Timed Out! Please Sign-In again', 'Ok');
+                this.navbar.role = "none";
+                this.snackBar.open(
+                    "Session Timed Out! Please Sign-In again",
+                    "Ok"
+                );
                 this.loginService.signOut();
             }
         );
@@ -1461,35 +1594,39 @@ export class AdminComponent implements OnInit, OnDestroy {
         const target = event.target;
         const files = target.files;
         this.fileToUpload = files.item(0);
-        if (this.fileToUpload.name.split('.')[1] == 'csv') {
+        if (this.fileToUpload.name.split(".")[1] == "csv") {
             const dialogRef = this.dialog.open(DeletePopUpComponent, {
-                width: '450px',
-                height: '200px',
+                width: "450px",
+                height: "200px",
                 data: {
-                    heading: 'Confirm Upload',
-                    message: `Are you sure that you want to upload ${ this.fileToUpload.name } ?`
-                }
+                    heading: "Confirm Upload",
+                    message: `Are you sure that you want to upload ${this.fileToUpload.name} ?`,
+                },
             });
             dialogRef.afterClosed().subscribe((result) => {
-                if (result && result['message'] == 'submit') {
+                if (result && result["message"] == "submit") {
                     const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                        data: 'Updating, Please wait ...',
+                        data: "Updating, Please wait ...",
                         disableClose: true,
-                        panelClass: 'transparent'
+                        panelClass: "transparent",
                     });
                     this.exportService
                         .uploadStudentList(this.fileToUpload, this.programName)
-                        .subscribe((data) => {
-                                target.value = '';
-                                if (data['status'] == 'success') {
-                                    this.snackBar.open('Successfully uploaded the files.', 'Ok');
+                        .subscribe(
+                            (data) => {
+                                target.value = "";
+                                if (data["status"] == "success") {
+                                    this.snackBar.open(
+                                        "Successfully uploaded the files.",
+                                        "Ok"
+                                    );
                                     this.ngOnInit();
-                                } else if (data['status'] == 'fail_parse') {
-                                    this.snackBar.open(data['msg'], 'Ok');
+                                } else if (data["status"] == "fail_parse") {
+                                    this.snackBar.open(data["msg"], "Ok");
                                 } else {
                                     this.snackBar.open(
-                                        'There was an unexpected error. Please reload and try again!',
-                                        'Ok'
+                                        "There was an unexpected error. Please reload and try again!",
+                                        "Ok"
                                     );
                                 }
                                 dialogRefLoad.close();
@@ -1497,10 +1634,10 @@ export class AdminComponent implements OnInit, OnDestroy {
                             () => {
                                 dialogRefLoad.close();
                                 this.snackBar.open(
-                                    'Session Timed Out! Please Sign-In again',
-                                    'Ok'
+                                    "Session Timed Out! Please Sign-In again",
+                                    "Ok"
                                 );
-                                this.navbar.role = 'none';
+                                this.navbar.role = "none";
                                 this.loginService.signOut();
                             }
                         );
@@ -1508,66 +1645,71 @@ export class AdminComponent implements OnInit, OnDestroy {
             });
         } else {
             this.snackBar.open(
-                'Only .csv files are to imported. Other files types are not supported.',
-                'Ok'
+                "Only .csv files are to imported. Other files types are not supported.",
+                "Ok"
             );
         }
     }
 
     publishToFaculty() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: '400px',
-            height: '200px',
+            width: "400px",
+            height: "200px",
             data: {
-                heading: 'Confirm Publish',
-                message: `Are you sure that you want to publish this allocation to faculty ? Do note that mails will be sent automatically.`
-            }
+                heading: "Confirm Publish",
+                message: `Are you sure that you want to publish this allocation to faculty ? Do note that mails will be sent automatically.`,
+            },
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result['message'] == 'submit') {
+            if (result && result["message"] == "submit") {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Sending mails, Please wait as this may take a while',
+                    data: "Sending mails, Please wait as this may take a while",
                     disableClose: true,
-                    panelClass: 'transparent'
+                    panelClass: "transparent",
                 });
-                this.userService.updatePublish('faculty').subscribe(
+                this.userService.updatePublish("faculty").subscribe(
                     (data) => {
-                        if (data['status'] == 'success') {
+                        if (data["status"] == "success") {
                             this.exportDisabled = false;
-                            if (localStorage.getItem('allocationMap')) {
+                            if (localStorage.getItem("allocationMap")) {
                                 this.discardAllocation();
-                                this.dataSource = new MatTableDataSource(data['result']);
+                                this.dataSource = new MatTableDataSource(
+                                    data["result"]
+                                );
                             }
                             this.selectIncluded();
-                            this.userService.uploadAllocationFile().subscribe(() => {
-                            });
+                            this.userService
+                                .uploadAllocationFile()
+                                .subscribe(() => {});
                             this.publishFaculty = true;
-                            localStorage.setItem('pf', 'true');
-                            this.userService.getFacultyStreamEmails().subscribe((data1) => {
-                                if (data1['status'] == 'success') {
-                                    this.mailer
-                                        .publishMail(
-                                            'faculty',
-                                            data1['result'],
-                                            data1['streamFull']
-                                        )
-                                        .subscribe(() => {
-                                            dialogRefLoad.close();
-                                            this.snackBar.open(
-                                                'Successfully published to faculties and mails have been sent.',
-                                                'Ok'
-                                            );
-                                        });
-                                }
-                            });
+                            localStorage.setItem("pf", "true");
+                            this.userService
+                                .getFacultyStreamEmails()
+                                .subscribe((data1) => {
+                                    if (data1["status"] == "success") {
+                                        this.mailer
+                                            .publishMail(
+                                                "faculty",
+                                                data1["result"],
+                                                data1["streamFull"]
+                                            )
+                                            .subscribe(() => {
+                                                dialogRefLoad.close();
+                                                this.snackBar.open(
+                                                    "Successfully published to faculties and mails have been sent.",
+                                                    "Ok"
+                                                );
+                                            });
+                                    }
+                                });
                         }
                     },
                     () => {
                         dialogRefLoad.close();
-                        this.navbar.role = 'none';
+                        this.navbar.role = "none";
                         this.snackBar.open(
-                            'Session Timed Out! Please Sign-In again',
-                            'Ok'
+                            "Session Timed Out! Please Sign-In again",
+                            "Ok"
                         );
                         this.loginService.signOut();
                     }
@@ -1578,57 +1720,60 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     publishToStudents() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: '400px',
-            height: '250px',
+            width: "400px",
+            height: "250px",
             data: {
-                heading: 'Confirm Publish',
-                message: `Are you sure that you want to publish this allocation to students? Please ensure that the results are published to faculties before it is published to the students. Do note that mails will be sent automatically.`
-            }
+                heading: "Confirm Publish",
+                message: `Are you sure that you want to publish this allocation to students? Please ensure that the results are published to faculties before it is published to the students. Do note that mails will be sent automatically.`,
+            },
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result['message'] == 'submit') {
+            if (result && result["message"] == "submit") {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Sending mails, Please wait as this may take a while',
+                    data: "Sending mails, Please wait as this may take a while",
                     disableClose: true,
-                    panelClass: 'transparent'
+                    panelClass: "transparent",
                 });
 
-                this.userService.updatePublish('student').subscribe((data) => {
-                    if (data['status'] == 'success') {
+                this.userService.updatePublish("student").subscribe((data) => {
+                    if (data["status"] == "success") {
                         this.exportDisabled = false;
-                        if (localStorage.getItem('allocationMap')) {
+                        if (localStorage.getItem("allocationMap")) {
                             this.discardAllocation();
-                            this.dataSource = new MatTableDataSource(data['result']);
+                            this.dataSource = new MatTableDataSource(
+                                data["result"]
+                            );
                         }
                         this.selectIncluded();
-                        this.userService.uploadAllocationFile().subscribe(() => {
-                        });
+                        this.userService
+                            .uploadAllocationFile()
+                            .subscribe(() => {});
                         this.publishStudents = true;
-                        localStorage.setItem('ps', 'true');
+                        localStorage.setItem("ps", "true");
                         this.userService.getStudentStreamEmails().subscribe(
                             (data1) => {
-                                if (data1['status'] == 'success') {
+                                if (data1["status"] == "success") {
                                     this.mailer
                                         .publishMail(
-                                            'student',
-                                            data1['result'],
-                                            data1['streamFull']
+                                            "student",
+                                            data1["result"],
+                                            data1["streamFull"]
                                         )
                                         .subscribe(() => {
                                             dialogRefLoad.close();
                                             this.snackBar.open(
-                                                'Successfully published to students and mails have been sent.',
-                                                'Ok'
+                                                "Successfully published to students and mails have been sent.",
+                                                "Ok"
                                             );
                                         });
                                 }
                             },
                             () => {
                                 dialogRefLoad.close();
-                                this.navbar.role = 'none';
+                                this.navbar.role = "none";
                                 this.snackBar.open(
-                                    'Session Timed Out! Please Sign-In again',
-                                    'Ok'
+                                    "Session Timed Out! Please Sign-In again",
+                                    "Ok"
                                 );
                                 this.loginService.signOut();
                             }
@@ -1641,12 +1786,12 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     applyFilter(event: Event, who: string) {
         const filterValue = (event.target as HTMLInputElement).value;
-        if (who == 'project') {
+        if (who == "project") {
             this.dataSource.filter = filterValue.trim().toLowerCase();
-        } else if (who == 'student') {
+        } else if (who == "student") {
             this.students.filter = filterValue.trim().toLowerCase();
             this.studentCount = this.students.filteredData.length;
-        } else if (who == 'faculty') {
+        } else if (who == "faculty") {
             this.faculties.filter = filterValue.trim().toLowerCase();
         }
     }
@@ -1656,19 +1801,19 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     sortStudents(event) {
-        const isAsc = event.direction == 'asc';
+        const isAsc = event.direction == "asc";
         this.students.data = this.students.data.sort((a, b) => {
             switch (event.active) {
-                case 'Name':
+                case "Name":
                     return this.compare(a.name, b.name, isAsc);
-                case 'GPA':
+                case "GPA":
                     return this.compare(a.gpa, b.gpa, isAsc);
-                case 'Registered':
+                case "Registered":
                     return this.compare(a.isRegistered, b.isRegistered, isAsc);
-                case 'Email':
+                case "Email":
                     return this.compare(
-                        Number(a.email.split('@')[0]),
-                        Number(b.email.split('@')[0]),
+                        Number(a.email.split("@")[0]),
+                        Number(b.email.split("@")[0]),
                         isAsc
                     );
                 default:
@@ -1678,18 +1823,18 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     sortFaculty(event) {
-        const isAsc = event.direction == 'asc';
+        const isAsc = event.direction == "asc";
         this.faculties.data = this.faculties.data.sort((a, b) => {
             switch (event.active) {
-                case 'Name':
+                case "Name":
                     return this.compare(a.name, b.name, isAsc);
-                case 'GPA':
+                case "GPA":
                     return this.compare(a.gpa, b.gpa, isAsc);
-                case 'Registered':
+                case "Registered":
                     return this.compare(a.isRegistered, b.isRegistered, isAsc);
-                case 'NoOfProjects':
+                case "NoOfProjects":
                     return this.compare(a.noOfProjects, b.noOfProjects, isAsc);
-                case 'StudentIntake':
+                case "StudentIntake":
                     return this.compare(
                         a.included_studentIntake,
                         b.included_studentIntake,
@@ -1702,26 +1847,30 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     sortProjects(event) {
-        const isAsc = event.direction == 'asc';
+        const isAsc = event.direction == "asc";
         this.dataSource.data = this.dataSource.data.sort((a, b) => {
             switch (event.active) {
-                case 'select':
+                case "select":
                     return this.compare(
                         this.selection.isSelected(a),
                         this.selection.isSelected(b),
                         isAsc
                     );
-                case 'Title':
+                case "Title":
                     return this.compare(a.title, b.title, isAsc);
-                case 'Faculty':
+                case "Faculty":
                     return this.compare(a.faculty, b.faculty, isAsc);
-                case 'Duration':
+                case "Duration":
                     return this.compare(a.duration, b.duration, isAsc);
-                case 'isIncluded':
+                case "isIncluded":
                     return this.compare(a.isIncluded, b.isIncluded, isAsc);
-                case 'studentIntake':
-                    return this.compare(a.studentIntake, b.studentIntake, isAsc);
-                case 'NoOfStudents':
+                case "studentIntake":
+                    return this.compare(
+                        a.studentIntake,
+                        b.studentIntake,
+                        isAsc
+                    );
+                case "NoOfStudents":
                     return this.compare(
                         a.numberOfPreferences,
                         b.numberOfPreferences,

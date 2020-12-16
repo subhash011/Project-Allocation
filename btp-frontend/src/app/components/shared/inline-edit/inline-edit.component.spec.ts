@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { InlineEditComponent } from './inline-edit.component';
+import { InlineEditComponent } from "./inline-edit.component";
 
-describe('InlineEditComponent', () => {
+describe("InlineEditComponent", () => {
     let component: InlineEditComponent;
     let fixture: ComponentFixture<InlineEditComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [InlineEditComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [InlineEditComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(InlineEditComponent);
@@ -19,7 +20,7 @@ describe('InlineEditComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

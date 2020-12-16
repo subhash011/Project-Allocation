@@ -1,18 +1,24 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { LoaderComponent } from 'src/app/components/shared/loader/loader.component';
-import { HttpResponseAPI } from 'src/app/models/HttpResponseAPI';
-import { LocalAuthService } from 'src/app/services/local-auth/local-auth.service';
-
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+} from "@angular/core";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { ProjectsService } from "src/app/services/projects/projects.service";
+import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
+import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
+import { LocalAuthService } from "src/app/services/local-auth/local-auth.service";
 
 @Component({
-    selector: 'app-display-preferences',
-    templateUrl: './display-preferences.component.html',
-    styleUrls: ['./display-preferences.component.scss']
+    selector: "app-display-preferences",
+    templateUrl: "./display-preferences.component.html",
+    styleUrls: ["./display-preferences.component.scss"],
 })
 export class DisplayPreferencesComponent implements OnInit, OnDestroy {
     @Input() preferences: any = [];
@@ -28,22 +34,21 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
         private localAuthService: LocalAuthService,
         private snackBar: MatSnackBar,
         private dialog: MatDialog
-    ) {
-    }
+    ) {}
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     removeOnePreference(preference) {
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: 'Removing Preference, Please wait ...',
+            data: "Removing Preference, Please wait ...",
             disableClose: true,
-            panelClass: 'transparent'
+            panelClass: "transparent",
         });
         this.projectService
             .removeOneStudentPreference(preference)
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe((responseAPI: HttpResponseAPI) => {
+            .subscribe(
+                (responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
                     if (responseAPI.result.updated) {
                         this.preferences = this.preferences.filter((val) => {
@@ -51,7 +56,7 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
                         });
                         this.updateProjects.emit(preference);
                     } else {
-                        this.snackBar.open(responseAPI.message, 'Ok');
+                        this.snackBar.open(responseAPI.message, "Ok");
                     }
                 },
                 () => {

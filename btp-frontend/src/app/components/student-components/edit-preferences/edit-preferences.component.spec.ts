@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { EditPreferencesComponent } from './edit-preferences.component';
+import { EditPreferencesComponent } from "./edit-preferences.component";
 
-describe('EditPreferencesComponent', () => {
+describe("EditPreferencesComponent", () => {
     let component: EditPreferencesComponent;
     let fixture: ComponentFixture<EditPreferencesComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [EditPreferencesComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [EditPreferencesComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(EditPreferencesComponent);
@@ -19,7 +20,7 @@ describe('EditPreferencesComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

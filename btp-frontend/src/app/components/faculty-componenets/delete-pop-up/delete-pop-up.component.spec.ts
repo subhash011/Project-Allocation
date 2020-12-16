@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { DeletePopUpComponent } from './delete-pop-up.component';
+import { DeletePopUpComponent } from "./delete-pop-up.component";
 
-describe('DeletePopUpComponent', () => {
+describe("DeletePopUpComponent", () => {
     let component: DeletePopUpComponent;
     let fixture: ComponentFixture<DeletePopUpComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            declarations: [DeletePopUpComponent]
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [DeletePopUpComponent],
+            }).compileComponents();
         })
-            .compileComponents();
-    }));
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(DeletePopUpComponent);
@@ -19,7 +20,7 @@ describe('DeletePopUpComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

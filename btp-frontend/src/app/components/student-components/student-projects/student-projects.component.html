@@ -1,13 +1,14 @@
 <div *ngIf="loaded">
-    <div *ngIf="preferences && preferences.length != 0; else empty"
-         class="list">
+    <div
+        *ngIf="preferences && preferences.length != 0; else empty"
+        class="list"
+    >
         <mat-toolbar>
             <mat-toolbar-row>
                 <h4 class="title-center">My Preferences</h4>
             </mat-toolbar-row>
         </mat-toolbar>
-        <div *ngFor="let preference of preferences"
-             class="list-item">
+        <div *ngFor="let preference of preferences" class="list-item">
             <mat-accordion class="example-headers-align">
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
@@ -26,9 +27,9 @@
         </div>
     </div>
     <ng-template #empty>
-        <div class="emptyBlock"
-             style="padding-top: 10%;">
-            No Preferences To Display. Go to the 'Edit Preferences' tab to add Preferences
+        <div class="emptyBlock" style="padding-top: 10%">
+            No Preferences To Display. Go to the 'Edit Preferences' tab to add
+            Preferences
         </div>
     </ng-template>
 </div>
