@@ -10,7 +10,10 @@ import { LoaderComponent } from "src/app/components/shared/loader/loader.compone
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 
 @Component({
-    selector: "app-faculty", templateUrl: "./faculty.component.html", styleUrls: [ "./faculty.component.scss" ], providers: [ LoginComponent ]
+    selector: "app-faculty",
+    templateUrl: "./faculty.component.html",
+    styleUrls: [ "./faculty.component.scss" ],
+    providers: [ LoginComponent ]
 })
 export class FacultyComponent implements OnInit {
     public name: string;
@@ -36,7 +39,17 @@ export class FacultyComponent implements OnInit {
     public studentData;
     private id: string;
 
-    constructor(private activatedRoute: ActivatedRoute, private userDetails: UserService, private router: Router, private snackBar: MatSnackBar, private loginService: LoginComponent, private projectService: ProjectsService, private userService: UserService, private navbar: NavbarComponent, private dialog: MatDialog) {}
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private userDetails: UserService,
+        private router: Router,
+        private snackBar: MatSnackBar,
+        private loginService: LoginComponent,
+        private projectService: ProjectsService,
+        private userService: UserService,
+        private navbar: NavbarComponent,
+        private dialog: MatDialog
+    ) {}
 
     ngOnInit(): void {
         this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
@@ -68,13 +81,12 @@ export class FacultyComponent implements OnInit {
                     }
                     this.projectService
                         .getFacultyProjects(this.stream)
-                        .subscribe((data) => {
-                            this.projects = data["project_details"];
-                            console.log(this.projects);
+                        .subscribe((responseAPI: HttpResponseAPI) => {
+                            this.projects = responseAPI.result.projects;
                         }, () => {
                             dialogRefLoad.close();
-                            this.navbar.role = "none";
                             this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok");
+                            this.navbar.role = "none";
                             this.loginService.signOut();
                         });
                     this.userService.getFacultyPrograms().subscribe((data) => {
@@ -193,20 +205,14 @@ export class FacultyComponent implements OnInit {
             const dialogRef = this.dialog.open(LoaderComponent, {
                 data: "Loading, Please wait ...", disableClose: true, panelClass: "transparent"
             });
-            this.projectService.getStudentsApplied(project._id).subscribe((data) => {
+            this.projectService.getStudentsApplied(project._id).subscribe((responseAPI: HttpResponseAPI) => {
                 dialogRef.close();
-                if (data["status"] == "success") {
-                    this.student_list = data["students"];
-                    this.non_student_list = data["non_students"];
-                    this.reorder = data["reorder"];
-                    this.sortWithReorder();
-                    this.studentData[project._id] = this.student_list;
-                    this.nonStudentData[project._id] = this.non_student_list;
-                } else {
-                    this.navbar.role = "none";
-                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok");
-                    this.loginService.signOut();
-                }
+                this.student_list = responseAPI.result.students;
+                this.non_student_list = responseAPI.result.non_students;
+                this.reorder = responseAPI.result.reorder;
+                this.sortWithReorder();
+                this.studentData[project._id] = this.student_list;
+                this.nonStudentData[project._id] = this.non_student_list;
             }, () => {
                 dialogRef.close();
                 this.navbar.role = "none";
@@ -225,7 +231,7 @@ export class FacultyComponent implements OnInit {
     }
 
     addProject(state) {
-        if (this.adminStage == undefined || this.adminStage == null) {
+        if (!this.adminStage) {
             this.add = !state;
             this.snackBar.open("You can't add projects till the admin sets the first deadline", "Ok");
         } else if (this.adminStage == 0) {

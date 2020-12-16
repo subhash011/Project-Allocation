@@ -194,31 +194,13 @@ export class AdminComponent implements OnInit, OnDestroy {
     projectTableHeight: number = window.innerHeight * 0.6;
     studentTableHeight: number = window.innerHeight * 0.6;
     columns: string[] = [
-        "select",
-        "Title",
-        "studentIntake",
-        "Faculty",
-        "Duration",
-        "Preferences",
-        "NoOfStudents",
-        "isIncluded",
-        "Student"
+        "select", "Title", "studentIntake", "Faculty", "Duration", "Preferences", "NoOfStudents", "isIncluded", "Student"
     ];
     facultyCols = [
-        "Name",
-        "NoOfProjects",
-        "StudentIntake",
-        "Email",
-        "Actions",
-        "Violations"
+        "Name", "NoOfProjects", "StudentIntake", "Email", "Actions", "Violations"
     ];
     studentCols = [
-        "Name",
-        "Email",
-        "GPA",
-        "Registered",
-        "ViewPref",
-        "Actions"
+        "Name", "Email", "GPA", "Registered", "ViewPref", "Actions"
     ];
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
@@ -266,7 +248,17 @@ export class AdminComponent implements OnInit, OnDestroy {
     timer;
     currentTime: Date = new Date();
 
-    constructor(private userService: UserService, private formBuilder: FormBuilder, private dialog: MatDialog, private snackBar: MatSnackBar, private mailer: MailService, private projectService: ProjectsService, private loginService: LoginComponent, private exportService: ExporttocsvService, private navbar: NavbarComponent) {
+    constructor(
+        private userService: UserService,
+        private formBuilder: FormBuilder,
+        private dialog: MatDialog,
+        private snackBar: MatSnackBar,
+        private mailer: MailService,
+        private projectService: ProjectsService,
+        private loginService: LoginComponent,
+        private exportService: ExporttocsvService,
+        private navbar: NavbarComponent
+    ) {
         this.firstFormGroup = this.formBuilder.group({
             firstCtrl: [ this.dateSet[0] ]
         });
@@ -374,8 +366,12 @@ export class AdminComponent implements OnInit, OnDestroy {
                             direction: "asc", active: "Email"
                         });
                         this.studentCount = result["result"]["students"].length;
-                        this.faculties.filterPredicate = (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) || data.email.toLowerCase().includes(filter);
-                        this.students.filterPredicate = (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) || data.email.toLowerCase().includes(filter);
+                        this.faculties.filterPredicate =
+                            (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) ||
+                                                           data.email.toLowerCase().includes(filter);
+                        this.students.filterPredicate =
+                            (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) ||
+                                                           data.email.toLowerCase().includes(filter);
                         let flag = false;
                         for (const faculty of this.faculties.data) {
                             if (faculty.project_cap || faculty.student_cap || faculty.studentsPerFaculty) {
@@ -418,7 +414,9 @@ export class AdminComponent implements OnInit, OnDestroy {
             if (projects["message"] == "success") {
                 this.projects = projects["result"];
                 this.dataSource.data = this.projects;
-                this.dataSource.filterPredicate = (data: any, filter: string) => !filter || data.faculty.toLowerCase().includes(filter) || data.title.toLowerCase().includes(filter) || data.description.toLowerCase().includes(filter);
+                this.dataSource.filterPredicate = (data: any, filter: string) => !filter || data.faculty.toLowerCase().includes(filter) ||
+                                                                                 data.title.toLowerCase().includes(filter) ||
+                                                                                 data.description.toLowerCase().includes(filter);
                 this.selectIncluded();
             } else {
                 dialogRefLoad.close();
@@ -441,7 +439,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     proceed() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
             width: "400px", height: "250px", data: {
-                heading: "Confirm Proceed", message: "Please ensure that mails have been sent. Are you sure you want to proceed to the next stage?"
+                heading: "Confirm Proceed",
+                message: "Please ensure that mails have been sent. Are you sure you want to proceed to the next stage?"
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -565,7 +564,8 @@ export class AdminComponent implements OnInit, OnDestroy {
                         });
                         this.dataSource.data.forEach((project) => {
                             project.students_id = project.students_id.filter((val) => {
-                                return (val.roll_no != student.email.split("@")[0]);
+                                return (val.roll_no != student.email.split("@")[0]
+                                );
                             });
                         });
                         this.dataSource.data = [ ...this.dataSource.data ];
@@ -692,7 +692,10 @@ export class AdminComponent implements OnInit, OnDestroy {
                     });
             } else {
                 dialogRef.close();
-                this.snackBar.open("Unable to do an allocation. Please note the number of projects that can be alloted must be greater than or equal to the number of students.", "Ok");
+                this.snackBar.open(
+                    "Unable to do an allocation. Please note the number of projects that can be alloted must be greater than or equal to the number of students.",
+                    "Ok"
+                );
             }
         }, () => {
             dialogRef.close();
@@ -1004,7 +1007,8 @@ export class AdminComponent implements OnInit, OnDestroy {
                     localStorage.setItem("pf", "false");
                     localStorage.setItem("ps", "false");
                     dialogRefLoad.close();
-                    if ((data["status"] = "success")) {
+                    if ((data["status"] = "success"
+                    )) {
                         this.snackBar.open(data["msg"], "Ok");
                         this.proceedButton1_ = true;
                         this.proceedButton2_ = true;
@@ -1029,13 +1033,23 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     showPreferencesProject(project) {
         this.dialog.open(ShowFacultyPreferencesComponent, {
-            disableClose: false, hasBackdrop: true, maxHeight: "700px", minWidth: "800px", data: project, panelClass: [ "custom-dialog-container" ]
+            disableClose: false,
+            hasBackdrop: true,
+            maxHeight: "700px",
+            minWidth: "800px",
+            data: project,
+            panelClass: [ "custom-dialog-container" ]
         });
     }
 
     showPreferences(student) {
         this.dialog.open(ShowStudentPreferencesComponent, {
-            disableClose: false, hasBackdrop: true, maxHeight: "700px", minWidth: "800px", data: student, panelClass: [ "custom-dialog-container" ]
+            disableClose: false,
+            hasBackdrop: true,
+            maxHeight: "700px",
+            minWidth: "800px",
+            data: student,
+            panelClass: [ "custom-dialog-container" ]
         });
     }
 
@@ -1173,7 +1187,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     publishToFaculty() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
             width: "400px", height: "200px", data: {
-                heading: "Confirm Publish", message: `Are you sure that you want to publish this allocation to faculty ? Do note that mails will be sent automatically.`
+                heading: "Confirm Publish",
+                message: `Are you sure that you want to publish this allocation to faculty ? Do note that mails will be sent automatically.`
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -1220,7 +1235,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     publishToStudents() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
             width: "400px", height: "250px", data: {
-                heading: "Confirm Publish", message: `Are you sure that you want to publish this allocation to students? Please ensure that the results are published to faculties before it is published to the students. Do note that mails will be sent automatically.`
+                heading: "Confirm Publish",
+                message: `Are you sure that you want to publish this allocation to students? Please ensure that the results are published to faculties before it is published to the students. Do note that mails will be sent automatically.`
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -1263,7 +1279,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     applyFilter(event: Event, who: string) {
-        const filterValue = (event.target as HTMLInputElement).value;
+        const filterValue = (event.target as HTMLInputElement
+        ).value;
         if (who == "project") {
             this.dataSource.filter = filterValue.trim().toLowerCase();
         } else if (who == "student") {
@@ -1341,6 +1358,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     compare(a: number | string | boolean, b: number | string | boolean, isAsc: boolean) {
-        return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+        return (a < b ? -1 : 1
+               ) * (isAsc ? 1 : -1
+               );
     }
 }

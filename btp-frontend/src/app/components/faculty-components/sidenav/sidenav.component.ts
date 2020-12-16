@@ -6,6 +6,7 @@ import { ProjectsService } from "src/app/services/projects/projects.service";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { NavbarComponent } from "src/app/components/shared/navbar/navbar.component";
 import { LoginComponent } from "src/app/components/shared/login/login.component";
+import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 
 @Component({
     selector: "app-sidenav", templateUrl: "./sidenav.component.html", styleUrls: [ "./sidenav.component.scss" ]
@@ -21,7 +22,14 @@ export class SidenavComponent implements OnInit, OnChanges {
     public selectedRow;
     selectedProjects: string[] = [];
 
-    constructor(private router: Router, private projectService: ProjectsService, private snackbar: MatSnackBar, private dialog: MatDialog, private navbar: NavbarComponent, private loginObject: LoginComponent) {}
+    constructor(
+        private router: Router,
+        private projectService: ProjectsService,
+        private snackbar: MatSnackBar,
+        private dialog: MatDialog,
+        private navbar: NavbarComponent,
+        private loginObject: LoginComponent
+    ) {}
 
     ngOnChanges(simpleChanges: SimpleChanges) {
         if (simpleChanges.projects && simpleChanges.projects.currentValue) {
@@ -53,16 +61,16 @@ export class SidenavComponent implements OnInit, OnChanges {
         const dialogRef = this.dialog.open(LoaderComponent, {
             data: "Updating, Please wait ...", disableClose: true, panelClass: "transparent"
         });
-        this.projectService.includeProjects(this.selectedProjects).subscribe((result) => {
+        this.projectService.includeProjects(this.selectedProjects).subscribe((responseAPI: HttpResponseAPI) => {
             dialogRef.close();
-            if (result["message"] == "success") {
+            if (responseAPI.result.updated) {
                 for (const project of this.projects) {
                     project.isIncluded = this.selectedProjects.indexOf(project._id) != -1;
                 }
                 this.snackbar.open("Updated Project Preferences", "Ok");
             }
         }, () => {
-            this.snackbar.open("Some Error Occured! Please re-authenticate.", "OK");
+            this.snackbar.open("Some Error Occurred! Please re-authenticate.", "OK");
             this.navbar.role = "none";
             this.loginObject.signOut();
         });
@@ -81,8 +89,7 @@ export class SidenavComponent implements OnInit, OnChanges {
             .then(() => {
                 this.router
                     .navigate([
-                        "/faculty",
-                        id
+                        "/faculty", id
                     ], {
                         queryParams: {
                             name: this.routeParams.name, abbr: this.routeParams.abbr, mode: "programMode"

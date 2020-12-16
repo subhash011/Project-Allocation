@@ -8,6 +8,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { animate, state, style, transition, trigger } from "@angular/animations";
+import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 
 @Pipe({
     name: "preference"
@@ -39,25 +40,20 @@ export class PreferencePipe implements PipeTransform {
 export class GetDisplayedColumns implements PipeTransform {
     transform(index) {
         let preferred = [
-            "Name",
-            "CGPA",
-            "Roll",
-            "Index",
-            "Actions"
+            "Name", "CGPA", "Roll", "Index", "Actions"
         ];
         let notPreferred = [
-            "Name",
-            "CGPA",
-            "Roll",
-            "Index",
-            "Actions"
+            "Name", "CGPA", "Roll", "Index", "Actions"
         ];
         return index == 0 ? preferred : notPreferred;
     }
 }
 
 @Component({
-    selector: "app-student-table", templateUrl: "./student-table.component.html", styleUrls: [ "./student-table.component.scss" ], animations: [
+    selector: "app-student-table",
+    templateUrl: "./student-table.component.html",
+    styleUrls: [ "./student-table.component.scss" ],
+    animations: [
         trigger("detailExpand", [
             state("collapsed", style({height: "0px", minHeight: "0", display: "none"})),
             state("expanded", style({height: "*"})),
@@ -74,18 +70,19 @@ export class StudentTableComponent implements OnInit, OnChanges {
     @Input() public reorder;
     @Output() newReorder = new EventEmitter<any>();
     public fields = [
-        "Name",
-        "CGPA",
-        "Roll",
-        "Index",
-        "Actions"
+        "Name", "CGPA", "Roll", "Index", "Actions"
     ];
     students: MatTableDataSource<any>;
     non_students: MatTableDataSource<any>;
     expandedElement: any;
     studentTableHeight: number = 48 * 11;
 
-    constructor(private projectService: ProjectsService, private snackBar: MatSnackBar, private dialog: MatDialog, private cdRef: ChangeDetectorRef) {}
+    constructor(
+        private projectService: ProjectsService,
+        private snackBar: MatSnackBar,
+        private dialog: MatDialog,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
     ngOnChanges(simpleChanges: SimpleChanges) {
         if (simpleChanges.student_list) {
@@ -106,24 +103,19 @@ export class StudentTableComponent implements OnInit, OnChanges {
             });
             this.projectService
                 .savePreference(this.students.data, this.project._id, this.project.stream, this.index, this.reorder)
-                .subscribe((data) => {
+                .subscribe((responseAPI: HttpResponseAPI) => {
                     dialogRef.close();
-                    if (data["status"] == "success") {
-                        this.reorder = data["reorder"];
+                    if (responseAPI.result.updated) {
+                        this.reorder = responseAPI["reorder"];
                         this.newReorder.emit([
-                            this.reorder,
-                            this.project._id,
-                            this.students.data,
-                            this.index
+                            this.reorder, this.project._id, this.students.data, this.index
                         ]);
-                        this.snackBar.open(data["msg"], "Ok");
-                    } else {
-                        this.snackBar.open(data["msg"], "Ok");
                     }
+                    this.snackBar.open(responseAPI.message, "Ok");
                 }, () => {
                     dialogRef.close();
                     this.ngOnInit();
-                    this.snackBar.open("Some Error Occured! Try again later.", "OK");
+                    this.snackBar.open("Some Error Occurred! Try again later.", "OK");
                 });
         } else {
             dialogRef = this.dialog.open(LoaderComponent, {
@@ -219,6 +211,8 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
 
     compare(a: number | string | boolean, b: number | string | boolean, isAsc: boolean) {
-        return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+        return (a < b ? -1 : 1
+               ) * (isAsc ? 1 : -1
+               );
     }
 }

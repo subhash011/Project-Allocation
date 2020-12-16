@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { tap } from "rxjs/operators";
 
 @Injectable({
     providedIn: "root"
@@ -97,9 +96,9 @@ export class ProjectsService {
         return this.http.post(this.url_post, {preference}, httpOptions);
     }
 
-    getFacultyProjects(stream) {
+    getFacultyProjects(program) {
         const obj = {
-            stream: stream
+            program: program
         };
         let id = localStorage.getItem("id");
         let idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -109,7 +108,7 @@ export class ProjectsService {
             })
         };
         this.url = this.facultyBaseURL + id;
-        return this.http.post(this.url, obj, httpOptions).pipe(tap(res => console.log(res)));
+        return this.http.post(this.url, obj, httpOptions);
     }
 
     saveProject(project) {
@@ -167,13 +166,27 @@ export class ProjectsService {
     }
 
     updateProject(project) {
-        this.url = this.facultyBaseURL + "update/" + project.project_id;
-        return this.http.post(this.url, project);
+        let id = localStorage.getItem("id");
+        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        const httpOptions = {
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", Authorization: idToken
+            })
+        };
+        this.url = this.facultyBaseURL + "update/" + id;
+        return this.http.post(this.url, {project}, httpOptions);
     }
 
     deleteProject(project_id) {
-        this.url = this.facultyBaseURL + "delete/" + project_id;
-        return this.http.delete(this.url);
+        let id = localStorage.getItem("id");
+        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        const httpOptions = {
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", Authorization: idToken, body: project_id
+            })
+        };
+        this.url = this.facultyBaseURL + "delete/" + id;
+        return this.http.delete(this.url, httpOptions);
     }
 
     getAllStreamProjects() {

@@ -14,12 +14,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             if (error.error instanceof ErrorEvent) {
                 this.snackBar.open("Some unknown error occurred! Try again", "Ok");
             } else {
-                if (error.status == 401) {
-                    this.snackBar.open(error.error.message, "Ok");
-                    this.localAuthService.signOut();
-                } else if (error.status == 500) {
-                    this.snackBar.open(error.error.message, "Ok");
-                }
+                console.error(error);
+                // if (error.status == 401) {
+                //     this.snackBar.open(error.error.message, "Ok");
+                //     this.localAuthService.signOut();
+                // } else if (error.status == 500) {
+                //     this.snackBar.open(error.error.message, "Ok");
+                // }
             }
             return throwError(error);
         }));
