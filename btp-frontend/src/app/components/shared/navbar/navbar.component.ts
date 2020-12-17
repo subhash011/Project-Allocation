@@ -4,6 +4,7 @@ import { UserService } from "src/app/services/user/user.service";
 import { Router } from "@angular/router";
 import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
 import { StorageService } from "src/app/services/helpers/storage.service";
+import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 
 @Pipe({
     name: "checkRegister"
@@ -38,7 +39,10 @@ export class GetLinksForNavBar implements PipeTransform {
 }
 
 @Component({
-    selector: "app-navbar", templateUrl: "./navbar.component.html", styleUrls: [ "./navbar.component.scss" ], providers: [ LoginComponent ]
+    selector: "app-navbar",
+    templateUrl: "./navbar.component.html",
+    styleUrls: [ "./navbar.component.scss" ],
+    providers: [ LoginComponent ]
 })
 export class NavbarComponent implements OnInit {
     programsVisible: boolean = false;
@@ -48,7 +52,10 @@ export class NavbarComponent implements OnInit {
     curRole;
     badge: number = 0;
 
-    constructor(private router: Router, private userService: UserService, private login: LoginComponent, private snackBar: MatSnackBar, private storageService: StorageService) {}
+    constructor(
+        private router: Router, private userService: UserService, private login: LoginComponent, private snackBar: MatSnackBar,
+        private storageService: StorageService
+    ) {}
 
     ngOnInit() {
         this.storageService.watchStorage().subscribe((data: string) => {
@@ -60,15 +67,10 @@ export class NavbarComponent implements OnInit {
             this.role = localStorage.getItem("role");
         }
         if ((this.role == "faculty" || this.role == "admin") && localStorage.getItem("isLoggedIn") == "true") {
-            this.userService.getFacultyPrograms().subscribe((data) => {
-                if (data["status"] == "success") {
-                    this.programs = data["programs"];
-                    if (this.programs.length > 0) {
-                        this.programsVisible = true;
-                    }
-                } else {
-                    this.snackBar.open("Session Timed Out! Please Sign in Again!", "Ok");
-                    this.login.signOut();
+            this.userService.getFacultyPrograms().subscribe((responseAPI: HttpResponseAPI) => {
+                this.programs = responseAPI.result.programs;
+                if (this.programs.length > 0) {
+                    this.programsVisible = true;
                 }
             });
         }
@@ -104,7 +106,8 @@ export class NavbarComponent implements OnInit {
                     id
                 ], {
                     queryParams: {
-                        abbr: program.short, mode: "programMode"
+                        abbr: program.short,
+                        mode: "programMode"
                     }
                 });
             });

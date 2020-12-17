@@ -4,7 +4,9 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import Typewriter from "t-writer.js";
 
 @Component({
-    selector: "app-home", templateUrl: "./home.component.html", styleUrls: [ "./home.component.scss" ]
+    selector: "app-home",
+    templateUrl: "./home.component.html",
+    styleUrls: [ "./home.component.scss" ]
 })
 export class HomeComponent implements OnInit, AfterViewInit {
     message = "";
@@ -18,10 +20,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
         const headTarget = this.head.nativeElement;
         const subheadTarget = this.subhead.nativeElement;
         const headWriter = new Typewriter(headTarget, {
-            loop: false, typeSpeed: 80, typeColor: "white", cursorColor: "white", animateCursor: false
+            loop: false,
+            typeSpeed: 80,
+            typeColor: "white",
+            cursorColor: "white",
+            animateCursor: false
         });
         const subheadWriter = new Typewriter(subheadTarget, {
-            loop: false, typeSpeed: 80, typeColor: "white", cursorColor: "white", animateCursor: false
+            loop: false,
+            typeSpeed: 80,
+            typeColor: "white",
+            cursorColor: "white",
+            animateCursor: false
         });
         headWriter
             .type("Project Allocation Portal")

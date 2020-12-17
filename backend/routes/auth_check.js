@@ -165,6 +165,7 @@ router.post("/user_check", async (req, res) => {
             }
         }
     } catch (e) {
+        console.log(e);
         res.json({
             isRegistered: false,
             position: "login-error",

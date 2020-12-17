@@ -251,21 +251,21 @@ router.get("/info/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("(_id isAdmin)");
         if (!faculty) {
-            res.json({
-                status: "fail",
-                stage: 0,
-                deadlines: ""
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
             });
             return;
         }
         let admin = await Admin.findOne({admin_id: faculty._id}).lean();
         if (!admin) {
-            res.json({
-                status: "fail",
-                stage: 0,
-                deadlines: ""
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
             });
             return;
         }
@@ -273,24 +273,28 @@ router.get("/info/:id", async (req, res) => {
         if (admin.deadlines.length) {
             startDate = admin.startDate;
         }
-
-        res.json({
-            status: "success",
-            stage: admin.stage,
-            deadlines: admin.deadlines,
-            startDate: startDate,
-            projectCap: admin.project_cap,
-            studentCap: admin.student_cap,
-            stream: admin.stream,
-            email: faculty.email,
-            studentsPerFaculty: admin.studentsPerFaculty,
-            studentCount: admin.studentCount
+        res.status(200).json({
+            statusCode: 200,
+            message: "success",
+            result: {
+                stage: admin.stage,
+                deadlines: admin.deadlines,
+                startDate: startDate,
+                projectCap: admin.project_cap,
+                studentCap: admin.student_cap,
+                stream: admin.stream,
+                email: faculty.email,
+                studentsPerFaculty: admin.studentsPerFaculty,
+                studentCount: admin.studentCount,
+                publishFaculty: admin.publishFaculty,
+                publishStudents: admin.publishStudents
+            }
         });
     } catch (e) {
-        res.json({
-            status: "fail",
-            stage: 0,
-            deadlines: ""
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });
@@ -303,43 +307,46 @@ router.get("/project/:id", async (req, res) => {
                                    .lean()
                                    .select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                message: "invalid-token",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
         }
-        let admin = await Admin.findOne({admin_id: faculty._id})
-                               .lean()
-                               .select("stream");
+        let admin = await Admin
+            .findOne({admin_id: faculty._id})
+            .lean()
+            .select("stream");
         const stream = admin.stream;
-        let projects = await Project.find({stream: stream})
-                                    .lean()
-                                    .populate({
-                                        path: "faculty_id",
-                                        select: "_id name",
-                                        model: Faculty
-                                    })
-                                    .populate({
-                                        path: "students_id",
-                                        select: {name: 1, roll_no: 1, project_alloted: 1},
-                                        model: Student,
-                                        populate: {
-                                            path: "project_alloted",
-                                            select: {title: 1, faculty_id: 1},
-                                            model: Project,
-                                            populate: {
-                                                path: "faculty_id",
-                                                select: {name: 1},
-                                                model: Faculty
-                                            }
-                                        }
-                                    })
-                                    .populate({
-                                        path: "student_alloted",
-                                        select: "name roll_no gpa",
-                                        model: Student
-                                    });
+        let projects = await Project
+            .find({stream: stream})
+            .lean()
+            .populate({
+                path: "faculty_id",
+                select: "_id name",
+                model: Faculty
+            })
+            .populate({
+                path: "students_id",
+                select: {name: 1, roll_no: 1, project_alloted: 1},
+                model: Student,
+                populate: {
+                    path: "project_alloted",
+                    select: {title: 1, faculty_id: 1},
+                    model: Project,
+                    populate: {
+                        path: "faculty_id",
+                        select: {name: 1},
+                        model: Faculty
+                    }
+                }
+            })
+            .populate({
+                path: "student_alloted",
+                select: "name roll_no gpa",
+                model: Student
+            });
         const arr = [];
         for (const project of projects) {
             const newProj = {
@@ -358,12 +365,19 @@ router.get("/project/:id", async (req, res) => {
             };
             arr.push(newProj);
         }
-        res.json({
+        res.status(200).json({
+            statusCode: 200,
             message: "success",
-            result: arr
+            result: {
+                projects: arr
+            }
         });
     } catch (e) {
-        res.status(500);
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
+        });
     }
 });
 
@@ -373,12 +387,15 @@ router.get("/stream_email/faculty/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const emails = [];
         let programAdmin;
-        let faculty = await Faculty.findOne({
-            google_id: {
-                id: id,
-                idToken: idToken
-            }
-        }).lean().select("adminProgram programs");
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("adminProgram programs isAdmin");
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
+            });
+            return;
+        }
         const stream = faculty.adminProgram;
         for (const program of faculty.programs) {
             if (program.short === stream) {
@@ -390,15 +407,19 @@ router.get("/stream_email/faculty/:id", async (req, res) => {
         for (const fac of faculties) {
             emails.push(fac.email);
         }
-        res.json({
-            status: "success",
-            result: emails,
-            stream: stream,
-            streamFull: programAdmin.full
+        res.status(200).json({
+            statusCode: 200,
+            message: "success",
+            result: {
+                emails,
+                stream,
+                programFull: programAdmin.full
+            }
         });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -413,7 +434,15 @@ router.get("/stream_email/student/:id", async (req, res) => {
 
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}})
                                    .lean()
-                                   .select("adminProgram programs");
+                                   .select("adminProgram programs isAdmin");
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
+            });
+            return;
+        }
         const stream = faculty.adminProgram;
         for (const program of faculty.programs) {
             if (program.short === stream) {
@@ -427,16 +456,19 @@ router.get("/stream_email/student/:id", async (req, res) => {
         for (const student of students) {
             emails.push(student.email);
         }
-
-        res.json({
-            status: "success",
-            result: emails,
-            stream: stream,
-            streamFull: programAdmin.full
+        res.status(200).json({
+            statusCode: 200,
+            message: "success",
+            result: {
+                emails,
+                stream,
+                programFull: programAdmin.full
+            }
         });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -488,8 +520,9 @@ router.get("/members/:id", async (req, res) => {
             }
         }).lean().select("_id programs isAdmin");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                message: "invalid-token",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
@@ -603,13 +636,17 @@ router.get("/members/:id", async (req, res) => {
                    })
         );
         await Promise.all(promises);
-        res.json({
+        res.status(200).json({
+            statusCode: 200,
             message: "success",
-            result: users
+            result: {
+                users
+            }
         });
     } catch (e) {
-        res.json({
-            message: "error",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -621,8 +658,10 @@ router.get("/export_projects/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                message: "invalid-token"
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
             });
             return;
         }
@@ -678,12 +717,18 @@ router.get("/export_projects/:id", async (req, res) => {
         const projects = result[1];
         const data = combineProjects(projects);
         generateCSVProjects(data, programName);
-        res.json({
-            message: "success"
+        res.status(200).json({
+            statusCode: 200,
+            message: "success",
+            result: {
+                updated: true
+            }
         });
     } catch (e) {
-        res.json({
-            message: "invalid-token"
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });
@@ -695,24 +740,27 @@ router.get("/export_allocation/:id", async (req, res) => {
 
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                message: "invalid-token"
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
             });
             return;
         }
         let admin = await Admin.findOne({admin_id: faculty._id}).lean();
         const stream = admin.stream;
-        let projects = await Project.find({stream: stream})
-                                    .populate({
-                                        path: "faculty_id",
-                                        select: {name: 1},
-                                        model: Faculty
-                                    })
-                                    .populate({
-                                        path: "student_alloted",
-                                        select: {name: 1, roll_no: 1, projects_preference: 1},
-                                        model: Student
-                                    });
+        let projects = await Project
+            .find({stream: stream})
+            .populate({
+                path: "faculty_id",
+                select: {name: 1},
+                model: Faculty
+            })
+            .populate({
+                path: "student_alloted",
+                select: {name: 1, roll_no: 1, projects_preference: 1},
+                model: Student
+            });
         const data = projects.map((val) => {
             let studentPreferences = [];
             if (val.student_alloted) {
@@ -731,12 +779,18 @@ router.get("/export_allocation/:id", async (req, res) => {
             };
         });
         generateCSVAllocation(data, stream);
-        res.json({
-            message: "success"
+        res.status(200).json({
+            statusCode: 200,
+            message: "success",
+            result: {
+                uploaded: true
+            }
         });
     } catch (e) {
-        res.json({
-            message: "invalid-token"
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });
@@ -748,8 +802,10 @@ router.get("/export_students/:id", async (req, res) => {
 
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                message: "invalid-token"
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
             });
             return;
         }
@@ -800,12 +856,18 @@ router.get("/export_students/:id", async (req, res) => {
         const projects = result[1];
         const data = combineStudents(projects, students);
         generateCSVStudents(data, programName);
-        res.json({
-            message: "success"
+        res.status(200).json({
+            statusCode: 200,
+            message: "success",
+            result: {
+                uploaded: true
+            }
         });
     } catch (e) {
-        res.json({
-            message: "invalid-token"
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });
@@ -818,8 +880,9 @@ router.get("/download_csv/:id/:role", async (req, res) => {
 
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                status: "fail",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
@@ -841,102 +904,9 @@ router.get("/download_csv/:id/:role", async (req, res) => {
         } else file = null;
         res.download(file);
     } catch (e) {
-        res.json({
-            status: "fail",
-            result: null
-        });
-    }
-});
-
-router.get("/allocationStatus/:id", async (req, res) => {
-    try {
-        const id = req.params.id;
-        const idToken = req.headers.authorization;
-        const allocationStatus = req.body.allocationMap;
-        const result = [];
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
-        if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                message: "invalid-token",
-                result: null
-            });
-            return;
-        }
-        let admin = await Admin.findOne({admin_id: faculty._id});
-        let projects = await Project.find({stream: admin.stream})
-                                    .populate({
-                                        path: "faculty_id",
-                                        select: "name",
-                                        model: Faculty
-                                    })
-                                    .populate({
-                                        path: "not_students_id",
-                                        select: {project_alloted: 1, name: 1, roll_no: 1},
-                                        model: Student
-                                    })
-                                    .populate({
-                                        path: "students_id",
-                                        select: {name: 1, roll_no: 1, project_alloted: 1},
-                                        model: Student,
-                                        populate: {
-                                            path: "project_alloted",
-                                            select: {title: 1, faculty_id: 1},
-                                            model: Project,
-                                            populate: {
-                                                path: "faculty_id",
-                                                select: {_id: 1, name: 1},
-                                                model: Faculty
-                                            }
-                                        }
-                                    })
-                                    .populate({
-                                        path: "student_alloted",
-                                        select: "name roll_no gpa",
-                                        model: Student
-                                    });
-        let students = await Student.find();
-        let student_alloted;
-        students = students.map((val) => {
-            return {
-                _id: val._id,
-                name: val.name,
-                roll_no: val.roll_no
-            };
-        });
-        for (const project of projects) {
-            const pid = project._id.toString();
-            const studentList = allocationStatus[pid];
-            if (!allocationStatus[pid]) {
-                student_alloted = [];
-            } else {
-                student_alloted = students.filter((val) => {
-                    return studentList.indexOf(val._id.toString()) !== -1;
-                });
-            }
-            const newProj = {
-                _id: project._id,
-                title: project.title,
-                faculty_id: project.faculty_id._id,
-                description: project.description,
-                stream: project.stream,
-                duration: project.duration,
-                faculty: project.faculty_id.name,
-                studentIntake: project.studentIntake,
-                numberOfPreferences: project.students_id.length,
-                student_alloted: student_alloted,
-                students_id: project.students_id,
-                not_students_id: project.not_students_id,
-                isIncluded: project.isIncluded
-            };
-            result.push(newProj);
-        }
-        res.json({
-            message: "success",
-            result: result
-        });
-    } catch (e) {
-        res.json({
-            message: "invalid-token",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -953,8 +923,9 @@ router.get("/fetchAllMails/:id", async (req, res) => {
                                    .lean()
                                    .select("_id programs isAdmin");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                message: "invalid-token",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
@@ -984,14 +955,18 @@ router.get("/fetchAllMails/:id", async (req, res) => {
         );
         let result = await Promise.all(promises);
         const answer = [...result[0], ...result[1]];
-        res.json({
+        res.status(200).json({
+            statusCode: 200,
             message: "success",
-            result: answer,
-            streamFull: programAdmin.full
+            result: {
+                emails: answer,
+                programFull: programAdmin.full
+            }
         });
     } catch (e) {
-        res.json({
-            message: "invalid-token",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -1003,23 +978,30 @@ router.post("/update_stage/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const stage = req.body.stage;
 
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
+            });
+            return;
+        }
         let admin = await Admin.findOneAndUpdate({admin_id: faculty._id}, {stage: stage}, {new: true});
         if (admin.stage === 2) {
             await Admin.findByIdAndUpdate(admin._id, {reachedStage2: true});
-            res.json({
-                status: "success",
-                msg: "Successfully moved to the next stage"
-            });
-        } else {
-            res.json({
-                status: "success",
-                msg: "Successfully moved to the next stage"
-            });
         }
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully moved to the next stage",
+            result: {
+                updated: true
+            }
+        });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -1032,7 +1014,15 @@ router.post("/setDeadline/:id", async (req, res) => {
         const date = req.body.deadline;
         const format_date = new Date(date);
         format_date.setHours(23, 59);
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
+            });
+            return;
+        }
         let admin = await Admin.findOne({admin_id: faculty._id});
         if (admin.deadlines.length === admin.stage + 1) {
             admin.deadlines.pop();
@@ -1047,13 +1037,17 @@ router.post("/setDeadline/:id", async (req, res) => {
             admin.deadlines.push(format_date);
 
         await admin.save();
-        res.json({
-            status: "success",
-            msg: "Successfully set the deadline"
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully set the deadline",
+            result: {
+                updated: true
+            }
         });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -1064,16 +1058,28 @@ router.post("/set_projectCap/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         const cap = req.body.cap;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
+            });
+            return;
+        }
         await Admin.findOneAndUpdate({admin_id: faculty._id}, {project_cap: cap});
-        res.json({
-            status: "success",
-            msg: "Successfully updated the project cap"
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully updated the project cap",
+            result: {
+                updated: true
+            }
         });
     } catch (e) {
-        res.json({
-            status: "fail",
-            result: "faculty error"
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });
@@ -1084,43 +1090,60 @@ router.post("/set_studentCap/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const studentCap = req.body.cap;
 
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
+            });
+            return;
+        }
         await Admin.findOneAndUpdate({admin_id: faculty._id}, {student_cap: studentCap});
-        res.json({
-            status: "success",
-            msg: "Successfully updated the student cap"
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully updated the student cap",
+            result: {
+                updated: true
+            }
         });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
 });
 
-router.post("/set_studentsPerFacuty/:id", async (req, res) => {
+router.post("/set_studentsPerFaculty/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         const cap = req.body.cap;
 
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
-        if (faculty) {
-            await Admin.findOneAndUpdate({admin_id: faculty._id}, {studentsPerFaculty: cap});
-            res.json({
-                status: "success",
-                msg: "Successfully set the number of students per faculty!!"
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
             });
-        } else {
-            res.json({
-                status: "fail",
-                result: "Faculty not found"
-            });
+            return;
         }
+        await Admin.findOneAndUpdate({admin_id: faculty._id}, {studentsPerFaculty: cap});
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully set the number of students per faculty!!",
+            result: {
+                updated: true
+            }
+        });
     } catch (e) {
-        res.json({
-            status: "fail",
-            result: "Authentication error"
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });
@@ -1131,12 +1154,14 @@ router.post("/validateAllocation/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const selectedProjects = req.body.projects;
         const students = req.body.students;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}})
-                                   .lean()
-                                   .select("_id isAdmin");
+        let faculty = await Faculty
+            .findOne({google_id: {id: id, idToken: idToken}})
+            .lean()
+            .select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                status: "fail",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
@@ -1150,12 +1175,20 @@ router.post("/validateAllocation/:id", async (req, res) => {
             }
 
             if (count_sum >= Math.min(students, admin.studentCount)) {
-                res.json({
-                    status: "success"
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "Unable to do an allocation! The total sum of student intake must be greater than or equal to the number of registered students.",
+                    result: {
+                        valid: true
+                    }
                 });
             } else {
-                res.json({
-                    status: "fail"
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "success",
+                    result: {
+                        valid: false
+                    }
                 });
             }
         } else {
@@ -1167,20 +1200,27 @@ router.post("/validateAllocation/:id", async (req, res) => {
             }
 
             if (count >= Math.min(students, admin.studentCount)) {
-                res.json({
-                    status: "success",
-                    msg: "Allocation can start"
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "success",
+                    result: {
+                        valid: true
+                    }
                 });
             } else {
-                res.json({
-                    status: "fail",
-                    result: null
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "Cannot proceed because sum of student intake is less than the number of registered students.",
+                    result: {
+                        valid: false
+                    }
                 });
             }
         }
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -1192,10 +1232,11 @@ router.post("/revertStage/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const stage = req.body.stage;
 
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
-        if (!faculty) {
-            res.json({
-                status: "fail",
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).select("_id isAdmin");
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
@@ -1218,13 +1259,17 @@ router.post("/revertStage/:id", async (req, res) => {
             await Project.updateMany({stream: admin.stream}, {student_alloted: []});
             await Student.updateMany({stream: admin.stream}, {$unset: {project_alloted: ""}});
         }
-        res.json({
-            status: "success",
-            msg: "Successfully reverted back to the previous stage"
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully reverted back to the previous stage",
+            result: {
+                updated: true
+            }
         });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -1236,8 +1281,9 @@ router.post("/reset/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("isAdmin _id");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                message: "invalid-token",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
@@ -1266,13 +1312,17 @@ router.post("/reset/:id", async (req, res) => {
         promises.push(Student.deleteMany({stream: stream}));
         promises.push(Project.updateMany({stream: stream}, projectUpdate));
         await Promise.all(promises);
-        res.json({
-            message: "success",
-            result: null
+        res.status(200).json({
+            statusCode: 200,
+            message: "The allocation process has been reset successfully.",
+            result: {
+                updated: true
+            }
         });
     } catch (e) {
-        res.json({
-            message: "invalid-token",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -1282,22 +1332,13 @@ router.post("/uploadStudentList/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
-        if (!faculty) {
-            res.json({
-                status: "fail",
-                result: null
-            });
-            return;
-        }
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
+        res.status(401).json({
+            statusCode: 401,
+            message: "Session timed out! Please Sign-In again.",
+            result: null
+        });
         let admin = await Admin.findOne({admin_id: faculty._id}).lean();
-        if (!admin) {
-            res.json({
-                status: "fail",
-                result: null
-            });
-            return;
-        }
         const file_path = path.resolve(__dirname, "../CSV/StudentList/");
         if (!fs.existsSync(file_path)) {
             fs.mkdirSync(file_path, {recursive: true});
@@ -1313,68 +1354,71 @@ router.post("/uploadStudentList/:id", async (req, res) => {
         });
         let upload = multer({storage: storage}).single("student_list");
         upload = util.promisify(upload);
-        try {
-            await upload(req, res);
-            let fileRows = await readCSV(req.file.path);
-            const validationError = validateCsvData(fileRows);
-            if (validationError) {
-                fs.unlinkSync(req.file.path);
-                return res.json({
-                    status: "fail_parse",
-                    msg: validationError
-                });
-            }
-            const promises = [];
-            for (let i = 1; i < fileRows.length; i++) {
-                let data = fileRows[i];
-
-                promises.push(
-                    Student.findOne({roll_no: data[1]}).then(
-                        (student) => {
-                            if (student) {
-                                student.name = data[0];
-                                student.gpa = data[2];
-
-                                return student.save().then((result) => {
-                                    return result;
-                                });
-                            } else {
-                                const newStudent = new Student({
-                                    name: data[0],
-                                    roll_no: data[1],
-                                    gpa: data[2],
-                                    stream: admin.stream,
-                                    email: data[1] + "@smail.iitpkd.ac.in"
-                                });
-                                return newStudent.save().then((result) => {
-                                    return result;
-                                });
-                            }
-                        }
-                    )
-                );
-            }
-
-            await Promise.all(promises);
-            let students = await Student.find({stream: admin.stream}).select("_id");
-            admin.studentCount = students.length;
-            await admin.save();
+        await upload(req, res);
+        let fileRows = await readCSV(req.file.path);
+        const validationError = validateCsvData(fileRows);
+        if (validationError) {
+            fs.unlinkSync(req.file.path);
             return res.json({
-                status: "success",
-                msg: "Successfully uploaded the student list."
-            });
-        } catch (e) {
-            return res.json({
-                status: "success",
-                msg: "Successfully uploaded the student list."
+                status: "fail_parse",
+                msg: validationError
             });
         }
+        const promises = [];
+        for (let i = 1; i < fileRows.length; i++) {
+            let data = fileRows[i];
+
+            promises.push(
+                Student.findOne({roll_no: data[1]}).then(
+                    (student) => {
+                        if (student) {
+                            student.name = data[0];
+                            student.gpa = data[2];
+
+                            return student.save().then((result) => {
+                                return result;
+                            });
+                        } else {
+                            const newStudent = new Student({
+                                name: data[0],
+                                roll_no: data[1],
+                                gpa: data[2],
+                                stream: admin.stream,
+                                email: data[1] + "@smail.iitpkd.ac.in"
+                            });
+                            return newStudent.save().then((result) => {
+                                return result;
+                            });
+                        }
+                    }
+                )
+            );
+        }
+
+        await Promise.all(promises);
+        let students = await Student.find({stream: admin.stream}).select("(_id isAdmin)");
+        admin.studentCount = students.length;
+        await admin.save();
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully uploaded the student list.",
+            result: {
+                uploaded: true
+            }
+        });
     } catch (e) {
         if (e instanceof multer.MulterError)
-            res.send(e);
+            res.status(400).json({
+                statusCode: 400,
+                message: "Error while uploading file.",
+                result: {
+                    error: e
+                }
+            });
         else
-            res.json({
-                status: "fail",
+            res.status(500).json({
+                statusCode: 500,
+                message: "Internal Server Error! Please Sign-In again.",
                 result: null
             });
     }
@@ -1386,11 +1430,12 @@ router.post("/updatePublish/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const mode = req.body.mode;
         const allocationStatus = req.body.allocationMap;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
-            res.json({
-                status: "fail",
-                msg: null
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
             });
             return;
         }
@@ -1404,9 +1449,12 @@ router.post("/updatePublish/:id", async (req, res) => {
         await admin.save();
         const stream = admin.stream;
         if (!allocationStatus) {
-            res.json({
-                status: "success",
-                message: null
+            res.status(200).json({
+                statusCode: 200,
+                message: "success",
+                result: {
+                    updated: false
+                }
             });
         } else if (mode !== "reset") {
             let projects = await Project.find({stream: stream});
@@ -1445,37 +1493,38 @@ router.post("/updatePublish/:id", async (req, res) => {
             Object.keys(allocationStatus).map(function (key) {
                 allocationStatus[key] = allocationStatus[key].map((val) => val.name);
             });
-            projects = await Project.find({stream: stream})
-                                    .populate("faculty_id", null, Faculty)
-                                    .populate({
-                                        path: "students_id",
-                                        select: {name: 1, roll_no: 1},
-                                        model: Student
-                                    })
-                                    .populate({
-                                        path: "students_id",
-                                        select: {
-                                            name: 1,
-                                            roll_no: 1,
-                                            project_alloted: 1
-                                        },
-                                        model: Student,
-                                        populate: {
-                                            path: "project_alloted",
-                                            select: {title: 1, faculty_id: 1},
-                                            model: Project,
-                                            populate: {
-                                                path: "faculty_id",
-                                                select: {_id: 1, name: 1},
-                                                model: Faculty
-                                            }
-                                        }
-                                    })
-                                    .populate({
-                                        path: "student_alloted",
-                                        select: "name roll_no gpa",
-                                        model: Student
-                                    });
+            projects = await Project
+                .find({stream: stream})
+                .populate("faculty_id", null, Faculty)
+                .populate({
+                    path: "students_id",
+                    select: {name: 1, roll_no: 1},
+                    model: Student
+                })
+                .populate({
+                    path: "students_id",
+                    select: {
+                        name: 1,
+                        roll_no: 1,
+                        project_alloted: 1
+                    },
+                    model: Student,
+                    populate: {
+                        path: "project_alloted",
+                        select: {title: 1, faculty_id: 1},
+                        model: Project,
+                        populate: {
+                            path: "faculty_id",
+                            select: {_id: 1, name: 1},
+                            model: Faculty
+                        }
+                    }
+                })
+                .populate({
+                    path: "student_alloted",
+                    select: "name roll_no gpa",
+                    model: Student
+                });
             const arr = [];
             for (const project of projects) {
                 const newProj = {
@@ -1496,20 +1545,28 @@ router.post("/updatePublish/:id", async (req, res) => {
                 };
                 arr.push(newProj);
             }
-            res.json({
-                status: "success",
-                result: arr
+            res.status(200).json({
+                statusCode: 200,
+                message: "success",
+                result: {
+                    projects: arr,
+                    updated: true
+                }
             });
         } else {
-            res.json({
-                status: "success",
-                message: null
+            res.status(200).json({
+                statusCode: 200,
+                message: "success",
+                result: {
+                    updated: false
+                }
             });
         }
     } catch (e) {
-        res.json({
-            status: "fail",
-            msg: null
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });
@@ -1595,6 +1652,7 @@ router.post("/getPublish/:id", async (req, res) => {
     }
 });
 
+// TODO is this route used
 router.post("/updateLists/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -1631,46 +1689,50 @@ router.delete("/faculty/:id", async (req, res) => {
         let programAdmin = {};
 
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
-        if (faculty && faculty.isAdmin) {
-            for (const program of faculty.programs) {
-                if (program.short === faculty.adminProgram) {
-                    programAdmin = program;
-                }
-            }
-            let projects = await Project.find({
-                stream: programAdmin.short,
-                faculty_id: facultyID
-            });
-            const projectIDs = projects.map((val) => val._id);
-            const updateCondition = {
-                project_alloted: {$in: projectIDs}
-            };
-            let studRemovePrefs = {
-                $pullAll: {projects_preference: projectIDs}
-            };
-            const studRemoveAllot = {
-                $unset: {project_alloted: ""}
-            };
-            const updateFaculty = {
-                $pullAll: {project_list: projectIDs},
-                $pull: {programs: programAdmin}
-            };
-            let promises = [];
-            promises.push(Project.deleteMany({stream: programAdmin.short, faculty_id: facultyID}));
-            promises.push(Student.updateMany({stream: programAdmin.short}, studRemovePrefs));
-            promises.push(Student.updateMany(updateCondition, studRemoveAllot));
-            promises.push(Faculty.findByIdAndUpdate(facultyID, updateFaculty));
-            await Promise.all(promises);
-            res.json({
-                message: "success",
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
-        } else {
-            res.json({
-                message: "invalid-token",
-                result: null
-            });
+            return;
         }
+        for (const program of faculty.programs) {
+            if (program.short === faculty.adminProgram) {
+                programAdmin = program;
+            }
+        }
+        let projects = await Project.find({
+            stream: programAdmin.short,
+            faculty_id: facultyID
+        });
+        const projectIDs = projects.map((val) => val._id);
+        const updateCondition = {
+            project_alloted: {$in: projectIDs}
+        };
+        let studRemovePrefs = {
+            $pullAll: {projects_preference: projectIDs}
+        };
+        const studRemoveAllot = {
+            $unset: {project_alloted: ""}
+        };
+        const updateFaculty = {
+            $pullAll: {project_list: projectIDs},
+            $pull: {programs: programAdmin}
+        };
+        let promises = [];
+        promises.push(Project.deleteMany({stream: programAdmin.short, faculty_id: facultyID}));
+        promises.push(Student.updateMany({stream: programAdmin.short}, studRemovePrefs));
+        promises.push(Student.updateMany(updateCondition, studRemoveAllot));
+        promises.push(Faculty.findByIdAndUpdate(facultyID, updateFaculty));
+        await Promise.all(promises);
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully removed the faculty from your program.",
+            result: {
+                deleted: true
+            }
+        });
     } catch (e) {
         res.json({
             message: "invalid-token",
@@ -1685,25 +1747,30 @@ router.delete("/student/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const mid = req.headers.body;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
-        if (faculty && faculty.isAdmin) {
-            let student = await Student.findByIdAndDelete(mid);
-            const updateCondition = {
-                $pullAll: {students_id: [mid], not_students_id: [mid], student_alloted: [mid]}
-            };
-            await Project.updateMany({stream: student.stream}, updateCondition);
-            res.json({
-                message: "success",
+        if (!(faculty && faculty.isAdmin)) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
-        } else {
-            res.json({
-                message: "invalid-token",
-                result: null
-            });
+            return;
         }
+        let student = await Student.findByIdAndDelete(mid);
+        const updateCondition = {
+            $pullAll: {students_id: [mid], not_students_id: [mid], student_alloted: [mid]}
+        };
+        await Project.updateMany({stream: student.stream}, updateCondition);
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully removed the student.",
+            result: {
+                deleted: true
+            }
+        });
     } catch (e) {
-        res.json({
-            message: "invalid-token",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }

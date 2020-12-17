@@ -23,7 +23,9 @@ import { StudentProjectsComponent } from "src/app/components/student-components/
 import { ContentComponent, FacultyPublish } from "src/app/components/faculty-components/content/content.component";
 import { SidenavComponent } from "src/app/components/faculty-components/sidenav/sidenav.component";
 import {
-    GetDisplayedColumns, PreferencePipe, StudentTableComponent
+    GetDisplayedColumns,
+    PreferencePipe,
+    StudentTableComponent
 } from "src/app/components/faculty-components/student-table/student-table.component";
 import { SubmitPopUpComponent } from "src/app/components/faculty-components/submit-pop-up/submit-pop-up.component";
 import { DeletePopUpComponent } from "src/app/components/faculty-components/delete-pop-up/delete-pop-up.component";
@@ -50,7 +52,8 @@ import { LoaderComponent } from "src/app/components/shared/loader/loader.compone
 import { ShowStudentPreferencesComponent } from "src/app/components/faculty-components/show-student-preferences/show-student-preferences.component";
 import { ShowFacultyPreferencesComponent } from "src/app/components/faculty-components/show-faculty-preferences/show-faculty-preferences.component";
 import {
-    IsPreferenceEdit, ShowAvailableProjectsComponent
+    IsPreferenceEdit,
+    ShowAvailableProjectsComponent
 } from "src/app/components/student-components/show-available-projects/show-available-projects.component";
 import { EditPreferencesComponent } from "src/app/components/student-components/edit-preferences/edit-preferences.component";
 import { DisplayPreferencesComponent } from "src/app/components/student-components/display-preferences/display-preferences.component";
@@ -130,7 +133,8 @@ const googleLoginOption = {
         GetDisplayedColumns,
         GetExportDisabled,
         EditFormComponent
-    ], imports: [
+    ],
+    imports: [
         BrowserModule,
         AppRoutingModule,
         SocialLoginModule,
@@ -144,28 +148,38 @@ const googleLoginOption = {
         MatTableModule,
         MatSortModule,
         SatPopoverModule
-    ], exports: [], providers: [
+    ],
+    exports: [],
+    providers: [
         {
-            provide: "SocialAuthServiceConfig", useValue: {
-                autoLogin: false, providers: [
+            provide: "SocialAuthServiceConfig",
+            useValue: {
+                autoLogin: false,
+                providers: [
                     {
-                        id: GoogleLoginProvider.PROVIDER_ID, provider: new GoogleLoginProvider(environment.GOOGLE_CLIENT_ID, googleLoginOption)
+                        id: GoogleLoginProvider.PROVIDER_ID,
+                        provider: new GoogleLoginProvider(environment.GOOGLE_CLIENT_ID, googleLoginOption)
                     }
                 ]
             } as SocialAuthServiceConfig
         },
         {
-            provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}
+            provide: MAT_DIALOG_DEFAULT_OPTIONS,
+            useValue: {hasBackdrop: true}
         },
         {
-            provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 3000}
+            provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+            useValue: {duration: 3000}
         },
         UserService,
         ExporttocsvService,
         {
-            provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpErrorInterceptor,
+            multi: true
         },
         StorageService
-    ], bootstrap: [ AppComponent ]
+    ],
+    bootstrap: [ AppComponent ]
 })
 export class AppModule {}

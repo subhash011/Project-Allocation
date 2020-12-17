@@ -3,12 +3,17 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
-    selector: "app-show-faculty-preferences", templateUrl: "./show-faculty-preferences.component.html", styleUrls: [ "./show-faculty-preferences.component.scss" ]
+    selector: "app-show-faculty-preferences",
+    templateUrl: "./show-faculty-preferences.component.html",
+    styleUrls: [ "./show-faculty-preferences.component.scss" ]
 })
 export class ShowFacultyPreferencesComponent implements OnInit {
     value: string = "";
 
-    constructor(public dialogRef: MatDialogRef<ShowFacultyPreferencesComponent>, @Inject(MAT_DIALOG_DATA) public preferences: any, private snackBar: MatSnackBar) {}
+    constructor(
+        public dialogRef: MatDialogRef<ShowFacultyPreferencesComponent>, @Inject(MAT_DIALOG_DATA) public preferences: any,
+        private snackBar: MatSnackBar
+    ) {}
 
     ngOnInit() {
         const projects = this.preferences.students_id;

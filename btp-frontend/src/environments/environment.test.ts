@@ -1,6 +1,5 @@
 export const environment = {
-    production: false,
-    apiUrl: "https://pal.iitpkd.ac.in:10443/api/",
-    GOOGLE_CLIENT_ID:
-        "230915389834-2691reval2kd1d9pag9gr1vmq8ssp15j.apps.googleusercontent.com",
+    production: true,
+    apiUrl: "http://localhost:8080/api/",
+    GOOGLE_CLIENT_ID: "1040090111157-llhk2n9egrpbv82tkijqm279q30s9mrk.apps.googleusercontent.com"
 };

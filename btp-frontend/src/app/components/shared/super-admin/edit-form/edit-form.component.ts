@@ -3,7 +3,9 @@ import { SatPopover } from "@ncstate/sat-popover";
 import { FormBuilder, Validators } from "@angular/forms";
 
 @Component({
-    selector: "edit-form", styleUrls: [ "edit-form.component.scss" ], templateUrl: "./edit-form.component.html"
+    selector: "edit-form",
+    styleUrls: [ "edit-form.component.scss" ],
+    templateUrl: "./edit-form.component.html"
 })
 export class EditFormComponent implements OnInit {
     @Input() full = "";
@@ -14,7 +16,8 @@ export class EditFormComponent implements OnInit {
         full: [
             this.full,
             Validators.required
-        ], short: [
+        ],
+        short: [
             this.short,
             Validators.compose([
                 Validators.required,
@@ -35,7 +38,8 @@ export class EditFormComponent implements OnInit {
     onSubmit() {
         if (this.popover && this.addForm.valid) {
             const map = {
-                full: this.addForm.get("full").value, short: this.addForm.get("short").value.toUpperCase()
+                full: this.addForm.get("full").value,
+                short: this.addForm.get("short").value.toUpperCase()
             };
             this.update.next(map);
             this.popover.close();

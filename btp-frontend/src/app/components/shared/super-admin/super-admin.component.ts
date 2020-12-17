@@ -35,7 +35,9 @@ export class FacultyTooltipSuper implements PipeTransform {
             if (adminProgram == branch) {
                 return "Remove co-ordinator Status to delete the faculty";
             } else {
-                return ("This faculty is a co-ordinator for " + adminProgram + " please remove the co-ordinator status to remove the faculty");
+                return ("This faculty is a co-ordinator for " + adminProgram +
+                    " please remove the co-ordinator status to remove the faculty"
+                );
             }
         } else {
             return "";
@@ -44,14 +46,22 @@ export class FacultyTooltipSuper implements PipeTransform {
 }
 
 @Component({
-    selector: "app-super-admin", templateUrl: "./super-admin.component.html", styleUrls: [ "./super-admin.component.scss" ], animations: [
+    selector: "app-super-admin",
+    templateUrl: "./super-admin.component.html",
+    styleUrls: [ "./super-admin.component.scss" ],
+    animations: [
         trigger("detailExpand", [
-            state("collapsed, void", style({height: "0px", minHeight: "0", display: "flex"})),
+            state("collapsed, void", style({
+                height: "0px",
+                minHeight: "0",
+                display: "flex"
+            })),
             state("expanded", style({height: "*"})),
             transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
             transition("expanded <=> void", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)"))
         ])
-    ], providers: [ LoginComponent ]
+    ],
+    providers: [ LoginComponent ]
 })
 export class SuperAdminComponent implements OnInit {
     @ViewChild("table") table: MatTable<any>;
@@ -60,39 +70,19 @@ export class SuperAdminComponent implements OnInit {
     background = "primary";
     projects: any = {};
     displayedColumnsFaculty: string[] = [
-        "Name",
-        "Stream",
-        "Email-ID",
-        "isAdmin",
-        "Actions"
+        "Name", "Stream", "Email-ID", "isAdmin", "Actions"
     ];
     displayedColumnsStudent: string[] = [
-        "Name",
-        "Email-ID",
-        "CGPA",
-        "isRegistered",
-        "Actions"
+        "Name", "Email-ID", "CGPA", "isRegistered", "Actions"
     ];
     displayedColumnsProjects: string[] = [
-        "Title",
-        "Faculty",
-        "Stream",
-        "NoOfStudents",
-        "Duration"
+        "Title", "Faculty", "Stream", "NoOfStudents", "Duration"
     ];
     displayedColumnsMaps: string[] = [
-        "Branch",
-        "Short",
-        "Stage",
-        "FacCount",
-        "StudCount",
-        "ProjCount",
-        "Actions"
+        "Branch", "Short", "Stage", "FacCount", "StudCount", "ProjCount", "Actions"
     ];
     displayedColumnsStreams: string[] = [
-        "Stream",
-        "Short",
-        "Actions"
+        "Stream", "Short", "Actions"
     ];
     faculties: any = {};
     students: any = {};
@@ -109,6 +99,7 @@ export class SuperAdminComponent implements OnInit {
     expandedElement;
     isActive;
     indexHover;
+    loaded = false;
 
     constructor(private userService: UserService, private dialog: MatDialog, private snackBar: MatSnackBar) {}
 
@@ -129,11 +120,17 @@ export class SuperAdminComponent implements OnInit {
             this.userService.getAllFaculties(),
             this.userService.getAllStudents()
         ];
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: "Loading, please wait.",
+            disableClose: true,
+            panelClass: "transparent"
+        });
         forkJoin(requests).subscribe((response: Array<HttpResponseAPI>) => {
             /* Get all streams */
             this.streams.data = response[0].result.streams.map((val) => {
                 return {
-                    full: val.full, short: val.short
+                    full: val.full,
+                    short: val.short
                 };
             });
             /* Get all programs */
@@ -141,7 +138,8 @@ export class SuperAdminComponent implements OnInit {
                 this.faculties[val.short] = new MatTableDataSource([]);
                 this.students[val.short] = new MatTableDataSource([]);
                 return {
-                    full: val.full, short: val.short
+                    full: val.full,
+                    short: val.short
                 };
             });
             /* Get all projects */
@@ -150,8 +148,14 @@ export class SuperAdminComponent implements OnInit {
                     return val.stream == program.short;
                 });
                 this.projects[program.short] = new MatTableDataSource(projectsTemp);
-                this.sortProjects({direction: "asc", active: "Title"}, program);
-                this.projects[program.short].filterPredicate = (data: any, filter: string) => !filter || data.faculty.toLowerCase().includes(filter) || data.title.toLowerCase().includes(filter) || data.description.toLowerCase().includes(filter);
+                this.sortProjects({
+                    direction: "asc",
+                    active: "Title"
+                }, program);
+                this.projects[program.short].filterPredicate = (data: any, filter: string) => !filter ||
+                    data.faculty.toLowerCase().includes(filter) ||
+                    data.title.toLowerCase().includes(filter) ||
+                    data.description.toLowerCase().includes(filter);
             }
             /* Get all admins */
             const adminObj = response[3].result.admins;
@@ -159,7 +163,8 @@ export class SuperAdminComponent implements OnInit {
                 if (adminObj.hasOwnProperty(program)) {
                     const admin = adminObj.program;
                     if (admin) {
-                        this.stages[program] = admin.stage + (admin.stage == 4 ? 0 : 1);
+                        this.stages[program] = admin.stage + (admin.stage == 4 ? 0 : 1
+                        );
                     } else {
                         this.stages[program] = null;
                     }
@@ -168,18 +173,32 @@ export class SuperAdminComponent implements OnInit {
             /* Get all faculties */
             for (const program of this.programs.data) {
                 this.faculties[program.short] = new MatTableDataSource(response[4].result.faculties[program.short]);
-                this.sortFaculties({direction: "asc", active: "Name"}, program);
-                this.faculties[program.short].filterPredicate = (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) || data.stream.toLowerCase().includes(filter) || data.email.toLowerCase().includes(filter);
+                this.sortFaculties({
+                    direction: "asc",
+                    active: "Name"
+                }, program);
+                this.faculties[program.short].filterPredicate = (data: any, filter: string) => !filter ||
+                    data.name.toLowerCase().includes(filter) ||
+                    data.stream.toLowerCase().includes(filter) ||
+                    data.email.toLowerCase().includes(filter);
                 this.hasAdmins[program.short] = this.faculties[program.short].data.filter((val) => {
-                    return (val.adminProgram && val.adminProgram == program.short);
+                    return (val.adminProgram && val.adminProgram == program.short
+                    );
                 }).length > 0;
             }
             /* Get all students */
             for (const branch of this.programs.data) {
                 this.students[branch.short] = new MatTableDataSource(response[5].result.students[branch.short]);
-                this.sortStudents({direction: "asc", active: "Name"}, branch);
-                this.students[branch.short].filterPredicate = (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) || data.roll_no.toLowerCase().includes(filter);
+                this.sortStudents({
+                    direction: "asc",
+                    active: "Name"
+                }, branch);
+                this.students[branch.short].filterPredicate = (data: any, filter: string) => !filter ||
+                    data.name.toLowerCase().includes(filter) ||
+                    data.roll_no.toLowerCase().includes(filter);
             }
+            this.loaded = true;
+            this.dialogRefLoad.close();
         }, () => {
             this.dialogRefLoad.close();
         });
@@ -193,8 +212,14 @@ export class SuperAdminComponent implements OnInit {
                     return val.stream == branch.short;
                 });
                 this.projects[branch.short] = new MatTableDataSource(projectsTemp);
-                this.sortProjects({direction: "asc", active: "Title"}, branch);
-                this.projects[branch.short].filterPredicate = (data: any, filter: string) => !filter || data.faculty.toLowerCase().includes(filter) || data.title.toLowerCase().includes(filter) || data.description.toLowerCase().includes(filter);
+                this.sortProjects({
+                    direction: "asc",
+                    active: "Title"
+                }, branch);
+                this.projects[branch.short].filterPredicate = (data: any, filter: string) => !filter ||
+                    data.faculty.toLowerCase().includes(filter) ||
+                    data.title.toLowerCase().includes(filter) ||
+                    data.description.toLowerCase().includes(filter);
             }
         }, () => {
             this.dialogRefLoad.close();
@@ -203,7 +228,9 @@ export class SuperAdminComponent implements OnInit {
 
     addAdmin(faculty, branch) {
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Adding admin, Please wait ...", disableClose: true, panelClass: "transparent"
+            data: "Adding admin, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
         this.userService.addAdmin(faculty._id, branch).subscribe(() => {
             this.dialogRefLoad.close();
@@ -224,7 +251,9 @@ export class SuperAdminComponent implements OnInit {
 
     removeAdmin(faculty, branch) {
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Removing admin, Please wait ...", disableClose: true, panelClass: "transparent"
+            data: "Removing admin, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
         this.userService.removeAdmin(faculty._id).subscribe((responseAPI: HttpResponseAPI) => {
             this.dialogRefLoad.close();
@@ -285,8 +314,11 @@ export class SuperAdminComponent implements OnInit {
 
     addPrograms() {
         let dialogRef = this.dialog.open(AddMapComponent, {
-            width: "40%", data: {
-                heading: "Program", message: "Are you sure you want to proceed to add program", add: "program"
+            width: "40%",
+            data: {
+                heading: "Program",
+                message: "Are you sure you want to proceed to add program",
+                add: "program"
             }
         });
         dialogRef.afterClosed().subscribe((data) => {
@@ -296,13 +328,16 @@ export class SuperAdminComponent implements OnInit {
                     return;
                 }
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Adding Program, Please wait ...", disableClose: true, panelClass: "transparent"
+                    data: "Adding Program, Please wait ...",
+                    disableClose: true,
+                    panelClass: "transparent"
                 });
                 this.userService.addProgram(data["map"]).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
                     const val = responseAPI.result.program;
                     const newMap = {
-                        full: val.full, short: val.short
+                        full: val.full,
+                        short: val.short
                     };
                     this.programs.data.push(newMap);
                     this.programs.data = [ ...this.programs.data ];
@@ -319,8 +354,11 @@ export class SuperAdminComponent implements OnInit {
 
     addBranches() {
         let dialogRef = this.dialog.open(AddMapComponent, {
-            width: "40%", data: {
-                heading: "Stream", message: "Are you sure you want to proceed to add stream", add: "branch"
+            width: "40%",
+            data: {
+                heading: "Stream",
+                message: "Are you sure you want to proceed to add stream",
+                add: "branch"
             }
         });
         dialogRef.afterClosed().subscribe((data) => {
@@ -330,13 +368,16 @@ export class SuperAdminComponent implements OnInit {
                     return;
                 }
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Updating, Please wait ...", disableClose: true, panelClass: "transparent"
+                    data: "Updating, Please wait ...",
+                    disableClose: true,
+                    panelClass: "transparent"
                 });
                 this.userService.addStream(data["map"]).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
                     const val = responseAPI.result.stream;
                     const newMap = {
-                        full: val.full, short: val.short
+                        full: val.full,
+                        short: val.short
                     };
                     this.streams.data.push(newMap);
                     this.streams.data = [ ...this.streams.data ];
@@ -350,14 +391,18 @@ export class SuperAdminComponent implements OnInit {
 
     deleteStream(short) {
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
-            height: "200px", data: {
-                heading: "Confirm Deletion", message: "Are you sure you want to remove the stream"
+            height: "200px",
+            data: {
+                heading: "Confirm Deletion",
+                message: "Are you sure you want to remove the stream"
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result["message"] == "submit") {
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Removing stream, Please wait ...", disableClose: true, panelClass: "transparent"
+                    data: "Removing stream, Please wait ...",
+                    disableClose: true,
+                    panelClass: "transparent"
                 });
                 this.userService.removeStream(short).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
@@ -372,14 +417,18 @@ export class SuperAdminComponent implements OnInit {
 
     deleteProgram(short) {
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
-            height: "200px", data: {
-                heading: "Confirm Deletion", message: "Are you sure you want to remove the program"
+            height: "200px",
+            data: {
+                heading: "Confirm Deletion",
+                message: "Are you sure you want to remove the program"
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result["message"] == "submit") {
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Removing Program, Please wait ...", disableClose: true, panelClass: "transparent"
+                    data: "Removing Program, Please wait ...",
+                    disableClose: true,
+                    panelClass: "transparent"
                 });
                 this.userService.removeProgram(short).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
@@ -394,20 +443,25 @@ export class SuperAdminComponent implements OnInit {
 
     deleteFaculty(faculty) {
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
-            height: "200px", data: {
-                heading: "Confirm Removal", message: "Are you sure you want to remove this faculty"
+            height: "200px",
+            data: {
+                heading: "Confirm Removal",
+                message: "Are you sure you want to remove this faculty"
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result["message"] == "submit") {
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Removing faculty, Please wait ...", disableClose: true, panelClass: "transparent"
+                    data: "Removing faculty, Please wait ...",
+                    disableClose: true,
+                    panelClass: "transparent"
                 });
                 this.userService.removeFaculty(faculty._id).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
                     for (const program of this.programs.data) {
                         this.faculties[program.short].data = this.faculties[program.short].data.filter((val) => val._id != faculty._id);
-                        this.projects[program.short].data = this.projects[program.short].data.filter((val) => val.faculty_id != faculty._id);
+                        this.projects[program.short].data = this.projects[program.short].data.filter((val) => val.faculty_id !=
+                            faculty._id);
                     }
                     this.snackBar.open(responseAPI.message, "OK");
                 }, () => {
@@ -419,14 +473,18 @@ export class SuperAdminComponent implements OnInit {
 
     deleteStudent(student) {
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
-            height: "200px", data: {
-                heading: "Confirm Removal", message: "Are you sure you want to remove this student"
+            height: "200px",
+            data: {
+                heading: "Confirm Removal",
+                message: "Are you sure you want to remove this student"
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result["message"] == "submit") {
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Removing student, Please wait ...", disableClose: true, panelClass: "transparent"
+                    data: "Removing student, Please wait ...",
+                    disableClose: true,
+                    panelClass: "transparent"
                 });
                 this.userService.removeStudent(student._id).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
@@ -444,7 +502,8 @@ export class SuperAdminComponent implements OnInit {
     }
 
     applyFilter(event: Event, branch: any, who: string) {
-        const filterValue = (event.target as HTMLInputElement).value;
+        const filterValue = (event.target as HTMLInputElement
+        ).value;
         if (who == "faculty") {
             this.faculties[branch.short].filter = filterValue.trim().toLowerCase();
         } else if (who == "student") {
@@ -455,7 +514,9 @@ export class SuperAdminComponent implements OnInit {
     }
 
     compare(a: number | string, b: number | string, isAsc: boolean) {
-        return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+        return (a < b ? -1 : 1
+        ) * (isAsc ? 1 : -1
+        );
     }
 
     sortFaculties(event, branch) {
@@ -506,7 +567,10 @@ export class SuperAdminComponent implements OnInit {
 
     checkStreamDuplicates(curMap, newMap) {
         const streams = this.streams.data;
-        let presence = {full: 0, short: 0};
+        let presence = {
+            full: 0,
+            short: 0
+        };
         for (const stream of streams) {
             if (stream.short == curMap.short) {
                 continue;
@@ -525,7 +589,10 @@ export class SuperAdminComponent implements OnInit {
 
     checkProgramDuplicates(curMap, newMap) {
         const programs = this.programs.data;
-        let presence = {full: 0, short: 0};
+        let presence = {
+            full: 0,
+            short: 0
+        };
         for (const program of programs) {
             if (program.short == curMap.short) {
                 continue;
@@ -547,14 +614,22 @@ export class SuperAdminComponent implements OnInit {
         let short = event.short;
         let curMap = JSON.parse(JSON.stringify(map));
         if (full != map.full || short != map.short) {
-            let status = this.checkStreamDuplicates(map, {full, short});
+            let status = this.checkStreamDuplicates(map, {
+                full,
+                short
+            });
             if (status != 0) {
                 this.snackBar.open("No changes made. Please check for duplicate entries!", "Ok");
             } else {
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Updating, Please wait ...", disableClose: true, panelClass: "transparent"
+                    data: "Updating, Please wait ...",
+                    disableClose: true,
+                    panelClass: "transparent"
                 });
-                this.userService.updateStream(map, {full, short}).subscribe((responseAPI: HttpResponseAPI) => {
+                this.userService.updateStream(map, {
+                    full,
+                    short
+                }).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
                     for (const stream of this.streams.data) {
                         if (stream.short == curMap.short) {
@@ -586,15 +661,23 @@ export class SuperAdminComponent implements OnInit {
         let short = event.short;
         let curMap = JSON.parse(JSON.stringify(map));
         if (full != curMap.full || short != curMap.short) {
-            let status = this.checkProgramDuplicates(curMap, {full, short});
+            let status = this.checkProgramDuplicates(curMap, {
+                full,
+                short
+            });
             if (status != 0) {
                 this.snackBar.open("No changes made. Please check for duplicate entries!", "Ok");
             } else {
                 this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Updating, Please wait ...", disableClose: true, panelClass: "transparent"
+                    data: "Updating, Please wait ...",
+                    disableClose: true,
+                    panelClass: "transparent"
                 });
                 this.userService
-                    .updateProgram(curMap, {full, short})
+                    .updateProgram(curMap, {
+                        full,
+                        short
+                    })
                     .subscribe((responseAPI: HttpResponseAPI) => {
                         this.dialogRefLoad.close();
                         this.snackBar.open(responseAPI.message, "Ok");

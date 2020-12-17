@@ -3,7 +3,9 @@ import { SatPopover } from "@ncstate/sat-popover";
 import { filter } from "rxjs/operators";
 
 @Component({
-    selector: "app-inline-edit", templateUrl: "./inline-edit.component.html", styleUrls: [ "./inline-edit.component.scss" ]
+    selector: "app-inline-edit",
+    templateUrl: "./inline-edit.component.html",
+    styleUrls: [ "./inline-edit.component.scss" ]
 })
 export class InlineEditComponent implements OnInit {
     @Input() head: string = "Edit this Field";
@@ -33,7 +35,10 @@ export class InlineEditComponent implements OnInit {
 
     onSubmit() {
         if (this.popover) {
-            this.popover.close({message: "submit", value: this.comment});
+            this.popover.close({
+                message: "submit",
+                value: this.comment
+            });
         }
     }
 

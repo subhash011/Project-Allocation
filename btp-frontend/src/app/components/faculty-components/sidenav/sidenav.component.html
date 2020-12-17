@@ -15,18 +15,6 @@
                     [id]="project._id"></mat-checkbox>
             </mat-list-item>
         </mat-nav-list>
-        <!-- <mat-list-option
-          *ngFor="let project of projects; let i = index"
-          (click)="onClick(project, i)"
-          [class.active]="i == selectedRow"
-          [selected]="project.isIncluded"
-          [value]="project._id"
-        >
-          <div class="text">
-            {{ project.title }}
-            <mat-icon *ngIf="project.isIncluded">check</mat-icon>
-          </div>
-        </mat-list-option> -->
     </mat-selection-list>
 
     <ng-template #normalList>

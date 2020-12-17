@@ -2,7 +2,9 @@ import { Component, Input, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
-    selector: "app-faculty-home", templateUrl: "./faculty-home.component.html", styleUrls: [ "./faculty-home.component.scss" ]
+    selector: "app-faculty-home",
+    templateUrl: "./faculty-home.component.html",
+    styleUrls: [ "./faculty-home.component.scss" ]
 })
 export class FacultyHomeComponent implements OnInit {
     public stageTableCols = [

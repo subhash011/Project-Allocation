@@ -21,6 +21,7 @@ router.post("/:id", async (req, res) => {
             return;
         }
         let projects = await Project.find({faculty_id: faculty._id, stream: program}).lean();
+
         res.status(200).json({
             statusCode: 200,
             message: "success",

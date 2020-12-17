@@ -9,7 +9,9 @@ import { LoginComponent } from "src/app/components/shared/login/login.component"
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 
 @Component({
-    selector: "app-sidenav", templateUrl: "./sidenav.component.html", styleUrls: [ "./sidenav.component.scss" ]
+    selector: "app-sidenav",
+    templateUrl: "./sidenav.component.html",
+    styleUrls: [ "./sidenav.component.scss" ]
 })
 export class SidenavComponent implements OnInit, OnChanges {
     @Input() public projects;
@@ -21,6 +23,7 @@ export class SidenavComponent implements OnInit, OnChanges {
     @Output() addButton = new EventEmitter<Event>();
     public selectedRow;
     selectedProjects: string[] = [];
+    id: string;
 
     constructor(
         private router: Router,
@@ -41,7 +44,9 @@ export class SidenavComponent implements OnInit, OnChanges {
         }
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.id = localStorage.getItem("id");
+    }
 
     displayAdd(event) {
         this.addButton.emit(event);
@@ -59,7 +64,9 @@ export class SidenavComponent implements OnInit, OnChanges {
 
     includeProjects() {
         const dialogRef = this.dialog.open(LoaderComponent, {
-            data: "Updating, Please wait ...", disableClose: true, panelClass: "transparent"
+            data: "Updating, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
         this.projectService.includeProjects(this.selectedProjects).subscribe((responseAPI: HttpResponseAPI) => {
             dialogRef.close();
@@ -82,20 +89,19 @@ export class SidenavComponent implements OnInit, OnChanges {
         this.selectedRow = index;
     }
 
-    displayHome() {
-        let id = localStorage.getItem("id");
-        this.router
-            .navigateByUrl("/refresh", {skipLocationChange: true})
-            .then(() => {
-                this.router
-                    .navigate([
-                        "/faculty", id
-                    ], {
-                        queryParams: {
-                            name: this.routeParams.name, abbr: this.routeParams.abbr, mode: "programMode"
-                        }
-                    })
-                    .then(() => {});
-            });
+    async displayHome() {
+        await this.router.navigate([ "/faculty", this.id ], {
+            queryParams: {
+                name: this.routeParams.name,
+                abbr: this.routeParams.abbr
+            }
+        });
+        await this.router.navigate([ "/faculty", this.id ], {
+            queryParams: {
+                name: this.routeParams.name,
+                abbr: this.routeParams.abbr,
+                mode: "programMode"
+            }
+        });
     }
 }

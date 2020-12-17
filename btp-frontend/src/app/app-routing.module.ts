@@ -12,33 +12,67 @@ import { HomeComponent } from "src/app/components/home/home.component";
 import { ShowAvailableProjectsComponent } from "src/app/components/student-components/show-available-projects/show-available-projects.component";
 
 const routes: Routes = [
-    {path: "", component: HomeComponent},
-    {path: "register/:id", component: RegisterComponent},
-    {path: "student/:id", component: StudentComponent},
     {
-        path: "faculty/:id", component: FacultyComponent, runGuardsAndResolvers: "always"
+        path: "",
+        component: HomeComponent
+    }, {
+        path: "register/:id",
+        component: RegisterComponent
     },
     {
-        path: "refresh", component: RefreshComponent
+        path: "student/:id",
+        component: StudentComponent
     },
     {
-        path: "student/projects/:id", component: ShowAvailableProjectsComponent
+        path: "faculty/:id",
+        component: FacultyComponent,
+        runGuardsAndResolvers: "always"
     },
     {
-        path: "student/preferences/:id", component: ShowAvailableProjectsComponent
+        path: "refresh",
+        component: RefreshComponent
     },
-    {path: "profile/:id", component: ProfileComponent},
-    {path: "super", component: SuperAdminComponent},
-    {path: "admin/:id", component: AdminComponent},
-    {path: "super_admin/:id", component: SuperAdminComponent},
-    {path: "help", component: HelpComponent}
+    {
+        path: "student/projects/:id",
+        component: ShowAvailableProjectsComponent
+    },
+    {
+        path: "student/preferences/:id",
+        component: ShowAvailableProjectsComponent
+    },
+    {
+        path: "profile/:id",
+        component: ProfileComponent
+    },
+    {
+        path: "super",
+        component: SuperAdminComponent
+    },
+    {
+        path: "admin/:id",
+        component: AdminComponent
+    },
+    {
+        path: "super_admin/:id",
+        component: SuperAdminComponent
+    },
+    {
+        path: "help",
+        component: HelpComponent
+    },
+    {
+        path: "**",
+        redirectTo: ""
+    }
 ];
 
 @NgModule({
     imports: [
         RouterModule.forRoot(routes, {
-            onSameUrlNavigation: "reload", relativeLinkResolution: "legacy"
+            onSameUrlNavigation: "reload",
+            relativeLinkResolution: "legacy"
         })
-    ], exports: [ RouterModule ]
+    ],
+    exports: [ RouterModule ]
 })
 export class AppRoutingModule {}

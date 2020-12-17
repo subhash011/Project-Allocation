@@ -12,9 +12,16 @@ import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 import { LocalAuthService } from "src/app/services/local-auth/local-auth.service";
 
 @Component({
-    selector: "app-edit-preferences", templateUrl: "./edit-preferences.component.html", styleUrls: [ "./edit-preferences.component.scss" ], animations: [
+    selector: "app-edit-preferences",
+    templateUrl: "./edit-preferences.component.html",
+    styleUrls: [ "./edit-preferences.component.scss" ],
+    animations: [
         trigger("detailExpand", [
-            state("collapsed, void", style({height: "0px", minHeight: "0", display: "flex"})),
+            state("collapsed, void", style({
+                height: "0px",
+                minHeight: "0",
+                display: "flex"
+            })),
             state("expanded", style({height: "*"})),
             transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
             transition("expanded <=> void", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)"))
@@ -41,7 +48,10 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     dialogRefLoad: MatDialogRef<any>;
     private ngUnsubscribe: Subject<any> = new Subject();
 
-    constructor(private projectService: ProjectsService, private localAuthService: LocalAuthService, private snackBar: MatSnackBar, private dialog: MatDialog) {}
+    constructor(
+        private projectService: ProjectsService, private localAuthService: LocalAuthService, private snackBar: MatSnackBar,
+        private dialog: MatDialog
+    ) {}
 
     ngOnInit() {
         this.tableStyle = {"max-height.px": this.height - 64};
@@ -53,7 +63,9 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Saving preferences, Please wait ...", disableClose: true, panelClass: "transparent"
+            data: "Saving preferences, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
         this.projectService
             .storeStudentPreferences(this.preferences.data)
@@ -71,7 +83,9 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
 
     removeOnePreference(preference) {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Removing Preference, Please wait ...", disableClose: true, panelClass: "transparent"
+            data: "Removing Preference, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
         this.projectService
             .removeOneStudentPreference(preference)

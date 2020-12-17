@@ -23,9 +23,15 @@ export class IsPreferenceEdit implements PipeTransform {
 }
 
 @Component({
-    selector: "app-show-available-projects", templateUrl: "./show-available-projects.component.html", styleUrls: [ "./show-available-projects.component.scss" ], animations: [
+    selector: "app-show-available-projects",
+    templateUrl: "./show-available-projects.component.html",
+    styleUrls: [ "./show-available-projects.component.scss" ],
+    animations: [
         trigger("detailExpand", [
-            state("collapsed", style({height: "0px", minHeight: "0"})),
+            state("collapsed", style({
+                height: "0px",
+                minHeight: "0"
+            })),
             state("expanded", style({height: "*"})),
             transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)"))
         ]),
@@ -64,7 +70,10 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     dialogRefLoad: MatDialogRef<any>;
     private ngUnsubscribe: Subject<any> = new Subject();
 
-    constructor(private dialog: MatDialog, private projectService: ProjectsService, private localAuthService: LocalAuthService, private snackBar: MatSnackBar, public router: Router, private userService: UserService) {}
+    constructor(
+        private dialog: MatDialog, private projectService: ProjectsService, private localAuthService: LocalAuthService,
+        private snackBar: MatSnackBar, public router: Router, private userService: UserService
+    ) {}
 
     @HostListener("window:resize", [ "$event" ]) onResize(event) {
         this.tableHeight = event.target.innerHeight * 0.65;
@@ -105,7 +114,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this.ngUnsubscribe))
         ];
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Loading, Please wait! ...", disableClose: true, panelClass: "transparent"
+            data: "Loading, Please wait! ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
         forkJoin(requests).subscribe((response: Array<HttpResponseAPI>) => {
             let optedResponse: HttpResponseAPI = response[0];
@@ -115,7 +126,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
             this.stage = stageResponse.result.adminPresent ? stageResponse.result.stage : 0;
             this.preferences.data = optedResponse.result.preferences;
             this.projects.data = notOptedResponse.result.not_preferences;
-            this.projects.filterPredicate = (data: any, filter: string) => !filter || data.faculty_name.toLowerCase().includes(filter) || data.title.toLowerCase().includes(filter) || data.description.toLowerCase().includes(filter) || data.faculty_email.toLowerCase().includes(filter);
+            this.projects.filterPredicate = (data: any, filter: string) => !filter || data.faculty_name.toLowerCase().includes(filter) ||
+                data.title.toLowerCase().includes(filter) || data.description.toLowerCase().includes(filter) ||
+                data.faculty_email.toLowerCase().includes(filter);
         }, () => {
             this.dialogRefLoad.close();
         });
@@ -129,14 +142,15 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
 
     isAnyOneSelected() {
         let filteredProjects = this.projects.filteredData.map((val) => val._id);
-        const numSelected = this.selection.selected ? this.selection.selected.filter((val) => filteredProjects.includes(val._id)).length : 0;
+        const numSelected = this.selection.selected ? this.selection.selected.filter((val) => filteredProjects.includes(val._id)).length
+                                                    : 0;
         return numSelected != 0;
     }
 
     changeSelection() {
         let unfilteredData = this.projects.data
-            .filter((val) => !this.projects.filteredData.includes(val))
-            .map((val) => val._id);
+                                 .filter((val) => !this.projects.filteredData.includes(val))
+                                 .map((val) => val._id);
         this.projects.filteredData.forEach((val) => {
             if (unfilteredData.includes(val._id)) {
                 this.deselectProject(val);
@@ -146,7 +160,8 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
 
     isAllSelected() {
         let filteredProjects = this.projects.filteredData.map((val) => val._id);
-        const numSelected = this.selection.selected ? this.selection.selected.filter((val) => filteredProjects.includes(val._id)).length : 0;
+        const numSelected = this.selection.selected ? this.selection.selected.filter((val) => filteredProjects.includes(val._id)).length
+                                                    : 0;
         const numRows = this.projects.filteredData ? this.projects.filteredData.length : 0;
         return numSelected === numRows;
     }
@@ -174,7 +189,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
 
     addOnePreference(project) {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Adding Preference, Please wait ...", disableClose: true, panelClass: "transparent"
+            data: "Adding Preference, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
         this.projectService
             .addOneStudentPreference(project)
@@ -198,7 +215,9 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
 
     onSubmit(event) {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Adding to preferences, Please wait ...", disableClose: true, panelClass: "transparent"
+            data: "Adding to preferences, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
         const preference = this.selection.selected;
         this.projectService

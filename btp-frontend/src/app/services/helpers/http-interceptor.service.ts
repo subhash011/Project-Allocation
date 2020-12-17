@@ -11,10 +11,10 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError((error: HttpErrorResponse) => {
+            console.log(error);
             if (error.error instanceof ErrorEvent) {
                 this.snackBar.open("Some unknown error occurred! Try again", "Ok");
             } else {
-                console.error(error);
                 // if (error.status == 401) {
                 //     this.snackBar.open(error.error.message, "Ok");
                 //     this.localAuthService.signOut();

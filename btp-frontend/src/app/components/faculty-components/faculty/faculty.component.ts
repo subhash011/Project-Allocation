@@ -3,11 +3,13 @@ import { LoginComponent } from "src/app/components/shared/login/login.component"
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, ParamMap, Router } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { UserService } from "src/app/services/user/user.service";
 import { NavbarComponent } from "src/app/components/shared/navbar/navbar.component";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
+import { forkJoin } from "rxjs";
+import { map, mergeMap, take } from "rxjs/operators";
 
 @Component({
     selector: "app-faculty",
@@ -52,119 +54,89 @@ export class FacultyComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
-            this.id = params.get("id");
-        });
+        this.id = localStorage.getItem("id");
         this.studentData = {};
         this.nonStudentData = {};
+        const requests1 = [
+            this.userDetails.getFacultyDetails(this.id),
+            this.activatedRoute.queryParams.pipe(take(1)),
+            this.userService.getFacultyPrograms(),
+            this.userService.getPublishMode("faculty"),
+            this.userService.facultyHomeDetails()
+        ];
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Loading, Please wait ...", disableClose: true, panelClass: "transparent"
+            data: "Loading, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
-        this.userDetails.getFacultyDetails(this.id).subscribe((data) => {
-            if (data["status"] == "success") {
-                const user_info = data["user_details"];
-                this.name = user_info.name;
-                if (user_info.programs.length > 0) {
-                    this.navbar.programsVisible = true;
-                }
-                this.navbar.programs = user_info.programs;
-                this.activatedRoute.queryParams.subscribe((params) => {
+        forkJoin(requests1)
+            .pipe(map((response: Array<any>) => {
+                    let i: number = 0;
+                    /*faculty details*/
+                    const facDetails = response[i++].result;
+                    const faculty = facDetails.faculty;
+                    this.name = faculty.name;
+                    if (faculty.programs.length > 0) this.navbar.programsVisible = true;
+                    this.navbar.programs = faculty.programs;
+                    // /*route params*/
+                    const params = response[i++] as Params;
                     this.routeParams = params;
                     if (params.mode == "programMode") {
                         this.faculty_home = false;
                     }
                     if (Object.keys(params).length === 0 && params.constructor === Object) {
-                        this.stream = user_info.stream;
+                        this.stream = faculty.stream;
                     } else {
                         this.stream = params.abbr;
                         this.empty = true;
                     }
-                    this.projectService
-                        .getFacultyProjects(this.stream)
-                        .subscribe((responseAPI: HttpResponseAPI) => {
-                            this.projects = responseAPI.result.projects;
-                        }, () => {
-                            dialogRefLoad.close();
-                            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok");
-                            this.navbar.role = "none";
-                            this.loginService.signOut();
-                        });
-                    this.userService.getFacultyPrograms().subscribe((data) => {
-                        dialogRefLoad.close();
-                        if (data["status"] == "success") {
-                            this.programs = data["programs"];
-                            this.curr_program = this.programs.filter((val) => val.short == this.stream)[0];
-                            this.userService
-                                .facultyHomeDetails()
-                                .subscribe((data) => {
-                                    data["stageDetails"].forEach((val) => {
-                                        if (val.deadlines.length > 0) {
-                                            val.deadlines = new Date(val.deadlines[val.deadlines.length - 1]);
-                                        } else {
-                                            val.deadlines = null;
-                                        }
-                                        for (let program of this.programs) {
-                                            if (program.short == val.stream) {
-                                                val.full = program.full;
-                                            }
-                                        }
-                                    });
-                                    this.stageHomeDetails = data["stageDetails"];
-                                    this.projectHomeDetails = data["projects"];
-                                    this.program_details = this.projectHomeDetails.filter((val) => val.stream == this.stream);
-                                }, () => {
-                                    dialogRefLoad.close();
-                                    this.navbar.role = "none";
-                                    this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok");
-                                    this.loginService.signOut();
-                                });
+                    /*faculty programs*/
+                    const facPrograms = response[i++].result;
+                    this.programs = facPrograms.programs;
+                    this.curr_program = this.programs.filter((val) => val.short == this.stream)[0];
+                    /*publish mode*/
+                    const programPublishMode = response[i++].result;
+                    this.publishFaculty = programPublishMode.publishFaculty;
+                    this.publishStudents = programPublishMode.publishStudents;
+                    /*faculty home*/
+                    const facHome = response[i++].result;
+                    facHome.stageDetails.forEach((val) => {
+                        if (val.deadlines.length > 0) {
+                            val.deadlines = new Date(val.deadlines[val.deadlines.length - 1]);
+                        } else {
+                            val.deadlines = null;
                         }
-                    }, () => {
-                        dialogRefLoad.close();
-                        this.navbar.role = "none";
-                        this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok");
-                        this.loginService.signOut();
-                    });
-                    this.userService
-                        .getAdminInfo_program(this.stream)
-                        .subscribe((data) => {
-                            if (data["status"] == "success") {
-                                this.adminStage = data["admin"].stage;
-                            } else {
-                                this.adminStage = undefined;
+                        for (let program of this.programs) {
+                            if (program.short == val.stream) {
+                                val.full = program.full;
                             }
-                        }, () => {
-                            dialogRefLoad.close();
-                            this.navbar.role = "none";
-                            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok");
-                            this.loginService.signOut();
-                        });
-                    this.userService
-                        .getPublishMode("faculty")
-                        .subscribe((responseAPI: HttpResponseAPI) => {
-                            this.publishFaculty = responseAPI.result.publishFaculty;
-                            this.publishStudents = responseAPI.result.publishStudents;
-                        }, () => {
-                            dialogRefLoad.close();
-                        });
-                }, () => {
-                    dialogRefLoad.close();
-                    this.snackBar.open("Some Error Occured! Please re-authenticate.", "OK");
-                    this.navbar.role = "none";
-                    this.loginService.signOut();
-                });
-            } else {
+                        }
+                    });
+                    this.stageHomeDetails = facHome.stageDetails;
+                    this.projectHomeDetails = facHome.projects;
+                    this.program_details = this.projectHomeDetails.filter((val) => val.stream == this.stream);
+                    return this.stream;
+                }),
+                mergeMap((stream) => {
+                    const requests2 = [
+                        this.projectService.getFacultyProjects(stream),
+                        this.userService.getAdminInfo_program(stream)
+                    ];
+                    return forkJoin(requests2);
+                }))
+            .subscribe((response: Array<any>) => {
+                let i = 0;
+                /*projects*/
+                const facProjects = response[i++].result;
+                this.projects = facProjects.projects;
+                /*admin programs*/
+                const programAdmin = response[i++].result;
+                this.adminStage = programAdmin?.admin?.stage;
                 dialogRefLoad.close();
-                this.navbar.role = "none";
-                this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok");
-                this.loginService.signOut();
-            }
-        }, () => {
-            dialogRefLoad.close();
-            this.navbar.role = "none";
-            this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok");
-            this.loginService.signOut();
-        });
+            }, () => {
+                console.log("here");
+                dialogRefLoad.close();
+            });
     }
 
     sortWithReorder() {
@@ -203,7 +175,9 @@ export class FacultyComponent implements OnInit {
     displayProject(project) {
         if (!this.studentData[project._id]) {
             const dialogRef = this.dialog.open(LoaderComponent, {
-                data: "Loading, Please wait ...", disableClose: true, panelClass: "transparent"
+                data: "Loading, Please wait ...",
+                disableClose: true,
+                panelClass: "transparent"
             });
             this.projectService.getStudentsApplied(project._id).subscribe((responseAPI: HttpResponseAPI) => {
                 dialogRef.close();
@@ -215,9 +189,6 @@ export class FacultyComponent implements OnInit {
                 this.nonStudentData[project._id] = this.non_student_list;
             }, () => {
                 dialogRef.close();
-                this.navbar.role = "none";
-                this.snackBar.open("Session Timed Out! Please Sign-In again", "Ok");
-                this.loginService.signOut();
             });
         } else {
             this.student_list = this.studentData[project._id];
@@ -231,7 +202,7 @@ export class FacultyComponent implements OnInit {
     }
 
     addProject(state) {
-        if (!this.adminStage) {
+        if (this.adminStage == null) {
             this.add = !state;
             this.snackBar.open("You can't add projects till the admin sets the first deadline", "Ok");
         } else if (this.adminStage == 0) {

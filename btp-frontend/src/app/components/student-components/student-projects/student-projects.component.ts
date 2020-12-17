@@ -9,7 +9,10 @@ import { takeUntil } from "rxjs/operators";
 import { LocalAuthService } from "src/app/services/local-auth/local-auth.service";
 
 @Component({
-    selector: "app-student-projects", templateUrl: "./student-projects.component.html", styleUrls: [ "./student-projects.component.scss" ], providers: [ LoginComponent ]
+    selector: "app-student-projects",
+    templateUrl: "./student-projects.component.html",
+    styleUrls: [ "./student-projects.component.scss" ],
+    providers: [ LoginComponent ]
 })
 export class StudentProjectsComponent implements OnInit, OnDestroy {
     projects: any;

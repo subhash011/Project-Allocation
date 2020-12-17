@@ -28,7 +28,7 @@ app.use(bodyparser.json({limit: "50mb", extended: true}));
 mongoose.set("useFindAndModify", false);
 
 //uncomment during production
-// app.use(express.static(__dirname + "/btp-frontend"));
+app.use(express.static(__dirname + "/btp-frontend"));
 
 const mongoConnect = process.env.MONGO_URL_BACK;
 //connect to mongodb

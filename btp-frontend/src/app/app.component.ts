@@ -1,7 +1,10 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
-    selector: "app-root", templateUrl: "./app.component.html", styleUrls: [ "./app.component.scss" ]
+    selector: "app-root",
+    templateUrl: "./app.component.html",
+    styleUrls: [ "./app.component.scss" ]
 })
 export class AppComponent implements OnInit {
     title = "btp-frontend";
@@ -9,7 +12,11 @@ export class AppComponent implements OnInit {
     maps: any = [];
     branches: any = [];
 
-    constructor() {}
+    constructor(private router: Router) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        if (localStorage.getItem("isLoggedIn") == "false") {
+            this.router.navigate([ "" ]);
+        }
+    }
 }

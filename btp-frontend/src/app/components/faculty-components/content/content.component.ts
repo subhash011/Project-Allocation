@@ -1,7 +1,6 @@
-import { UserService } from "src/app/services/user/user.service";
 import { FacultyComponent } from "src/app/components/faculty-components/faculty/faculty.component";
 import { LoginComponent } from "src/app/components/shared/login/login.component";
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { FormBuilder, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -10,7 +9,6 @@ import { SubmitPopUpComponent } from "src/app/components/faculty-components/subm
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
-import { NavbarComponent } from "src/app/components/shared/navbar/navbar.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 
 @Pipe({
@@ -23,7 +21,10 @@ export class FacultyPublish implements PipeTransform {
 }
 
 @Component({
-    selector: "app-content", templateUrl: "./content.component.html", styleUrls: [ "./content.component.scss" ], providers: [
+    selector: "app-content",
+    templateUrl: "./content.component.html",
+    styleUrls: [ "./content.component.scss" ],
+    providers: [
         LoginComponent, FacultyComponent
     ]
 })
@@ -41,6 +42,7 @@ export class ContentComponent implements OnInit, DoCheck {
     @Input() public publishStudents;
     @Input() public non_student_list;
     @Input() public reorder;
+    dialogRefLoad: MatDialogRef<any>;
     @Output() newReorder = new EventEmitter<any>();
     public id;
     public index = 0;
@@ -50,22 +52,28 @@ export class ContentComponent implements OnInit, DoCheck {
     public ProjectForm = this.formBuilder.group({
         title: [
             "", Validators.required
-        ], duration: [
-            "", Validators.compose([ Validators.required, Validators.min(0) ])
-        ], studentIntake: [
-            "", Validators.compose([ Validators.required, Validators.min(0) ])
-        ], description: [
+        ],
+        duration: [
+            "", Validators.compose([ Validators.required, Validators.min(1) ])
+        ],
+        studentIntake: [
+            "", Validators.compose([ Validators.required, Validators.min(1) ])
+        ],
+        description: [
             "", Validators.required
         ]
     });
     public EditForm = this.formBuilder.group({
         title: [
             "", Validators.required
-        ], duration: [
-            "", Validators.compose([ Validators.required, Validators.min(0) ])
-        ], studentIntake: [
-            "", Validators.compose([ Validators.required, Validators.min(0) ])
-        ], description: [
+        ],
+        duration: [
+            "", Validators.compose([ Validators.required, Validators.min(1) ])
+        ],
+        studentIntake: [
+            "", Validators.compose([ Validators.required, Validators.min(1) ])
+        ],
+        description: [
             "", Validators.required
         ]
     });
@@ -75,10 +83,7 @@ export class ContentComponent implements OnInit, DoCheck {
         private projectService: ProjectsService,
         private dialog: MatDialog,
         private snackBar: MatSnackBar,
-        private router: Router,
-        private userService: UserService,
-        private login: LoginComponent,
-        private navbar: NavbarComponent
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -100,108 +105,114 @@ export class ContentComponent implements OnInit, DoCheck {
         this.newReorder.emit(event);
     }
 
-    displayHome() {
-        this.router
-            .navigateByUrl("/refresh", {skipLocationChange: true})
-            .then(() => {
-                this.router.navigate([
-                    "/faculty", this.id
-                ], {
-                    queryParams: {
-                        name: this.routeParams.name, abbr: this.routeParams.abbr, mode: "programMode"
-                    }
-                });
-            });
+    async displayHome() {
+        await this.router.navigate([ "/faculty", this.id ], {
+            queryParams: {
+                name: this.routeParams.name,
+                abbr: this.routeParams.abbr
+            }
+        });
+        await this.router.navigate([ "/faculty", this.id ], {
+            queryParams: {
+                name: this.routeParams.name,
+                abbr: this.routeParams.abbr,
+                mode: "programMode"
+            }
+        });
     }
 
     onSubmit() {
-        if (this.ProjectForm.valid) {
-            const project = {
-                title: this.ProjectForm.get("title").value.replace(/  +/g, " "),
-                duration: this.ProjectForm.get("duration").value,
-                studentIntake: this.ProjectForm.get("studentIntake").value,
-                description: this.ProjectForm.get("description").value.replace(/  +/g, " "),
-                program: this.stream
-            };
-            const dialogRef = this.dialog.open(LoaderComponent, {
-                data: "Updating, Please Wait ....", disableClose: true, panelClass: "transparent"
-            });
-            this.projectService.saveProject(project).subscribe((responseAPI: HttpResponseAPI) => {
-                dialogRef.close();
-                let snackBarRef = this.snackBar.open(responseAPI.message, "Ok");
-                if (responseAPI.result.updated) {
-                    snackBarRef.afterDismissed().subscribe(() => {
-                        this.displayHome();
-                    });
-                }
-            }, () => {
-                dialogRef.close();
-                this.ngOnInit();
-                this.snackBar.open("Some Error Occured! Try again later.", "OK");
-            });
-        }
+        const project = {
+            title: this.ProjectForm.get("title").value.replace(/  +/g, " "),
+            duration: this.ProjectForm.get("duration").value,
+            studentIntake: this.ProjectForm.get("studentIntake").value,
+            description: this.ProjectForm.get("description").value.replace(/  +/g, " "),
+            program: this.stream
+        };
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: "Updating, Please Wait ....",
+            disableClose: true,
+            panelClass: "transparent"
+        });
+        this.projectService.saveProject(project).subscribe((responseAPI: HttpResponseAPI) => {
+            this.dialogRefLoad.close();
+            let snackBarRef = this.snackBar.open(responseAPI.message, "Ok");
+            const {updated} = responseAPI.result;
+            if (updated) {
+                snackBarRef.afterDismissed().subscribe(() => {
+                    this.displayHome();
+                });
+            }
+        }, () => {
+            this.dialogRefLoad.close();
+            this.ngOnInit();
+            this.snackBar.open("Some Error Occurred! Try again later.", "OK");
+        });
     }
 
     onEditSubmit(param) {
-        if (this.EditForm.valid) {
-            const project = {
-                title: this.EditForm.get("title").value.replace(/  +/g, " "),
-                duration: this.EditForm.get("duration").value,
-                studentIntake: this.EditForm.get("studentIntake").value,
-                description: this.EditForm.get("description").value.replace(/  +/g, " "),
-                project_id: param._id
-            };
-            let dialogRef = this.dialog.open(SubmitPopUpComponent, {
-                height: "200px", width: "400px"
+        const project = {
+            title: this.EditForm.get("title").value.replace(/  +/g, " "),
+            duration: this.EditForm.get("duration").value,
+            studentIntake: this.EditForm.get("studentIntake").value,
+            description: this.EditForm.get("description").value.replace(/  +/g, " "),
+            project_id: param._id
+        };
+        this.dialogRefLoad = this.dialog.open(SubmitPopUpComponent, {
+            height: "200px",
+            width: "400px"
+        });
+        this.dialogRefLoad.afterClosed().subscribe(({message}) => {
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: "Updating, Please wait ...",
+                disableClose: true,
+                panelClass: "transparent"
             });
-            dialogRef.afterClosed().subscribe((result) => {
-                const dialogRef = this.dialog.open(LoaderComponent, {
-                    data: "Updating, Please wait ...", disableClose: true, panelClass: "transparent"
+            if (message == "submit") {
+                this.projectService.updateProject(project).subscribe((responseAPI: HttpResponseAPI) => {
+                    this.dialogRefLoad.close();
+                    this.snackBar.open(responseAPI.message, "Ok");
+                }, () => {
+                    this.dialogRefLoad.close();
                 });
-                if (result["message"] == "submit") {
-                    this.projectService.updateProject(project).subscribe((responseAPI: HttpResponseAPI) => {
-                        dialogRef.close();
-                        this.snackBar.open(responseAPI.message, "Ok");
-                    }, () => {
-                        dialogRef.close();
-                    });
-                } else {
-                    dialogRef.close();
-                }
-            });
-        }
+            } else {
+                this.dialogRefLoad.close();
+            }
+        });
     }
 
     deleteProject(project) {
-        if (this.dialog.openDialogs.length == 0) {
-            let dialogRef = this.dialog.open(DeletePopUpComponent, {
-                height: "200px", width: "400px", data: {
-                    message: "Are you sure you want to delete the project", heading: "Confirm Deletion"
-                }
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result) {
-                    if (result["message"] == "submit") {
-                        const dialogRef = this.dialog.open(LoaderComponent, {
-                            data: "Updating, Please wait ...", disableClose: true, panelClass: "transparent"
+        this.dialogRefLoad = this.dialog.open(DeletePopUpComponent, {
+            height: "200px",
+            width: "400px",
+            data: {
+                message: "Are you sure you want to delete the project",
+                heading: "Confirm Deletion"
+            },
+            disableClose: true
+        });
+        this.dialogRefLoad.afterClosed().subscribe(({message}) => {
+            if (message == "submit") {
+                this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                    data: "Updating, Please wait ...",
+                    disableClose: true,
+                    panelClass: "transparent"
+                });
+                this.projectService.deleteProject(project._id).subscribe((responseAPI: HttpResponseAPI) => {
+                    this.dialogRefLoad.close();
+                    if (responseAPI.result.deleted) {
+                        let snackBarRef = this.snackBar.open(responseAPI.message, "Ok");
+                        snackBarRef.afterDismissed().subscribe(() => {
+                            this.displayHome();
                         });
-                        this.projectService.deleteProject(project._id).subscribe((responseAPI: HttpResponseAPI) => {
-                            dialogRef.close();
-                            if (responseAPI.result.deleted) {
-                                let snackBarRef = this.snackBar.open(responseAPI.message, "Ok");
-                                snackBarRef.afterDismissed().subscribe(() => {
-                                    this.displayHome();
-                                });
-                            } else {
-                                this.snackBar.open(responseAPI.message, "Ok");
-                            }
-                        }, () => {
-                            dialogRef.close();
-                        });
+                    } else {
+                        this.snackBar.open(responseAPI.message, "Ok");
                     }
-                }
-            });
-        }
+                }, () => {
+                    this.dialogRefLoad.close();
+                });
+            }
+        });
     }
 
     sortProjectDetails(event) {
@@ -224,8 +235,6 @@ export class ContentComponent implements OnInit, DoCheck {
     }
 
     compare(a: number | string | boolean, b: number | string | boolean, isAsc: boolean) {
-        return (a < b ? -1 : 1
-               ) * (isAsc ? 1 : -1
-               );
+        return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     }
 }

@@ -3,7 +3,9 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dial
 import { ProjectsService } from "src/app/services/projects/projects.service";
 
 @Component({
-    selector: "app-submit-pop-up", templateUrl: "./submit-pop-up.component.html", styleUrls: [ "./submit-pop-up.component.scss" ]
+    selector: "app-submit-pop-up",
+    templateUrl: "./submit-pop-up.component.html",
+    styleUrls: [ "./submit-pop-up.component.scss" ]
 })
 export class SubmitPopUpComponent implements OnInit {
     constructor(

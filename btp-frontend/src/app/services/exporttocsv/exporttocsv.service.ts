@@ -19,7 +19,8 @@ export class ExporttocsvService {
         this.url = this.base_url + "admin/export_projects/" + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
         return this.http.get(this.url, httpOptions);
@@ -32,7 +33,8 @@ export class ExporttocsvService {
         this.url = this.base_url + "admin/export_students/" + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
         return this.http.get(this.url, httpOptions);
@@ -46,7 +48,10 @@ export class ExporttocsvService {
         const headers = new HttpHeaders({
             Authorization: idToken
         });
-        return this.http.get(this.url, {headers, responseType: "blob"});
+        return this.http.get(this.url, {
+            headers,
+            responseType: "blob"
+        });
     }
 
     uploadStudentList(fileToUpload: File, programName) {
@@ -55,7 +60,8 @@ export class ExporttocsvService {
         const idToken = user.idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                enctype: "multipart/form-data", Authorization: idToken
+                enctype: "multipart/form-data",
+                Authorization: idToken
             })
         };
         this.url = this.base_url + "admin/uploadStudentList/" + id;

@@ -38,21 +38,26 @@ router.get("/details/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("-google_id -date");
-        if (faculty) {
-            res.json({
-                status: "success",
-                user_details: faculty
+        if (!faculty) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
             });
-        } else {
-            res.json({
-                status: "fail",
-                user_details: ""
-            });
+            return;
         }
+        res.status(200).json({
+            statusCode: 200,
+            message: "success",
+            result: {
+                faculty
+            }
+        });
     } catch (e) {
-        res.json({
-            status: "fail",
-            user_details: e
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });
@@ -138,27 +143,25 @@ router.get("/getAllPrograms/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!faculty) {
-            res.json({
-                status: "fail",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
         }
         let programs = await Programs.find().lean();
-        if (programs) {
-            res.json({
-                status: "success",
-                programs: programs
-            });
-        } else {
-            res.json({
-                status: "fail",
-                result: null
-            });
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: "success",
+            result: {
+                programs
+            }
+        });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -207,20 +210,25 @@ router.get("/getFacultyPrograms/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("programs");
         if (!faculty) {
-            res.json({
-                status: "fail",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
         }
         const programs = faculty.programs;
-        res.json({
-            status: "success",
-            programs: programs
+        res.status(200).json({
+            statusCode: 200,
+            message: "success",
+            result: {
+                programs
+            }
         });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -285,19 +293,27 @@ router.post("/getAdminInfo_program/:id", async (req, res) => {
         const program = req.body.program;
         let admin = await Admin.findOne({stream: program}).lean();
         if (admin && admin.admin_id) {
-            res.json({
-                status: "success",
-                admin: admin
+            res.status(200).json({
+                statusCode: 200,
+                message: "success",
+                result: {
+                    adminPresent: true,
+                    admin
+                }
             });
         } else {
-            res.json({
-                status: "fail",
-                result: null
+            res.status(200).json({
+                statusCode: 200,
+                message: "success",
+                result: {
+                    adminPresent: false
+                }
             });
         }
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -307,19 +323,28 @@ router.get("/home/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}})
-                                   .lean()
-                                   .select("-google_id")
-                                   .populate({
-                                       path: "project_list",
-                                       select: "students_id student_alloted title studentIntake description duration stream",
-                                       model: Project,
-                                       populate: {
-                                           path: "student_alloted",
-                                           select: "name roll_no",
-                                           model: Student
-                                       }
-                                   });
+        let faculty = await Faculty
+            .findOne({google_id: {id: id, idToken: idToken}})
+            .lean()
+            .select("-google_id")
+            .populate({
+                path: "project_list",
+                select: "students_id student_alloted title studentIntake description duration stream",
+                model: Project,
+                populate: {
+                    path: "student_alloted",
+                    select: "name roll_no",
+                    model: Student
+                }
+            });
+        if (!faculty) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
+            });
+            return;
+        }
         let facultyPrograms = faculty.programs.map(val => val.short);
         let facultyProjects = faculty.project_list;
         facultyProjects = facultyProjects.map(val => {
@@ -338,12 +363,6 @@ router.get("/home/:id", async (req, res) => {
             facultyPrograms: facultyPrograms,
             facultyProjects: facultyProjects
         };
-        if (!facultyData) {
-            res.json({
-                message: "invalid-token"
-            });
-            return;
-        }
         facultyProjects = facultyData.facultyProjects;
         facultyPrograms = facultyData.facultyPrograms;
         let admins = await Admin.find({stream: {$in: facultyPrograms}}).lean().select("deadlines stream stage");
@@ -354,14 +373,19 @@ router.get("/home/:id", async (req, res) => {
                 stage: val.stage
             };
         });
-        res.json({
+        res.status(200).json({
+            statusCode: 200,
             message: "success",
-            projects: facultyProjects,
-            stageDetails: stageDetails
+            result: {
+                projects: facultyProjects,
+                stageDetails: stageDetails
+            }
         });
     } catch (e) {
-        res.json({
-            message: "error"
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });

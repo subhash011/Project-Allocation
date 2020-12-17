@@ -3,14 +3,17 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-    selector: "app-add-map", templateUrl: "./add-map.component.html", styleUrls: [ "./add-map.component.scss" ]
+    selector: "app-add-map",
+    templateUrl: "./add-map.component.html",
+    styleUrls: [ "./add-map.component.scss" ]
 })
 export class AddMapComponent implements OnInit {
     addForm = this.fb.group({
         full: [
             null,
             Validators.required
-        ], short: [
+        ],
+        short: [
             null,
             Validators.compose([
                 Validators.required,
@@ -30,9 +33,13 @@ export class AddMapComponent implements OnInit {
     onSubmit() {
         if (this.addForm.valid) {
             const map = {
-                full: this.addForm.get("full").value, short: this.addForm.get("short").value.toUpperCase()
+                full: this.addForm.get("full").value,
+                short: this.addForm.get("short").value.toUpperCase()
             };
-            this.dialogRef.close({map: map, message: "submit"});
+            this.dialogRef.close({
+                map: map,
+                message: "submit"
+            });
         }
     }
 }

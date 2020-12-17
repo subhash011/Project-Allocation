@@ -13,7 +13,13 @@ sendEmail = (mailOptions, transporter) =>
         });
     });
 router.post("/send", async (req, res) => {
-    res.json({message: "success"});
+    res.status(200).json({
+        statusCode: 200,
+        message: "Mails have been sent.",
+        result: {
+            sent: true
+        }
+    });
     // try {
     //     const to = req.body.to;
     //     const subject = req.body.subject;
@@ -34,9 +40,22 @@ router.post("/send", async (req, res) => {
     //         }
     //     });
     //     await sendEmail(options, transport);
-    //     res.json({message: "success"});
+    //     res.status(200).json({
+    //         statusCode: 200,
+    //         message: "Mails have been sent.",
+    //         result: {
+    //             sent: true
+    //         }
+    //     });
     // } catch (e) {
-    //     res.json({message: "error", result: e});
+    //     res.status(500).json({
+    //         statusCode: 500,
+    //         message: "Internal Server Error! Please Sign-In again.",
+    //         result: {
+    //             sent: false,
+    //             error: e
+    //         }
+    //     });
     // }
 });
 

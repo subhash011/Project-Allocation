@@ -22,7 +22,8 @@ export class ProjectsService {
         const user = JSON.parse(localStorage.getItem("user"));
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: user.idToken
+                "Content-Type": "application/json",
+                Authorization: user.idToken
             })
         };
         return this.http.get(this.url_pref, httpOptions);
@@ -34,7 +35,8 @@ export class ProjectsService {
         const user = JSON.parse(localStorage.getItem("user"));
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: user.idToken
+                "Content-Type": "application/json",
+                Authorization: user.idToken
             })
         };
         return this.http.get(this.url_pref, httpOptions);
@@ -51,7 +53,8 @@ export class ProjectsService {
         const user = JSON.parse(localStorage.getItem("user"));
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: user.idToken
+                "Content-Type": "application/json",
+                Authorization: user.idToken
             })
         };
         return this.http.post(this.url_post, preferences, httpOptions);
@@ -64,7 +67,8 @@ export class ProjectsService {
         const user = JSON.parse(localStorage.getItem("user"));
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: user.idToken
+                "Content-Type": "application/json",
+                Authorization: user.idToken
             })
         };
         return this.http.post(this.url_post, preferences, httpOptions);
@@ -77,7 +81,8 @@ export class ProjectsService {
         const user = JSON.parse(localStorage.getItem("user"));
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: user.idToken
+                "Content-Type": "application/json",
+                Authorization: user.idToken
             })
         };
         return this.http.post(this.url_post, {preference}, httpOptions);
@@ -90,25 +95,24 @@ export class ProjectsService {
         const user = JSON.parse(localStorage.getItem("user"));
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: user.idToken
+                "Content-Type": "application/json",
+                Authorization: user.idToken
             })
         };
         return this.http.post(this.url_post, {preference}, httpOptions);
     }
 
     getFacultyProjects(program) {
-        const obj = {
-            program: program
-        };
         let id = localStorage.getItem("id");
         let idToken = JSON.parse(localStorage.getItem("user")).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
         this.url = this.facultyBaseURL + id;
-        return this.http.post(this.url, obj, httpOptions);
+        return this.http.post(this.url, {program}, httpOptions);
     }
 
     saveProject(project) {
@@ -116,7 +120,8 @@ export class ProjectsService {
         let idToken = JSON.parse(localStorage.getItem("user")).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
         this.url = this.facultyBaseURL + "add/" + id;
@@ -128,7 +133,8 @@ export class ProjectsService {
         let idToken = JSON.parse(localStorage.getItem("user")).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
         this.url = this.facultyBaseURL + "applied/" + id;
@@ -140,13 +146,18 @@ export class ProjectsService {
             return per._id;
         });
         const student_data = {
-            student: student_order, project_id: project_id, stream: stream, index: index, reorder: reorder
+            student: student_order,
+            project_id: project_id,
+            stream: stream,
+            index: index,
+            reorder: reorder
         };
         let id = localStorage.getItem("id");
         let idToken = JSON.parse(localStorage.getItem("user")).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
         this.url = this.facultyBaseURL + "save_preference/" + id;
@@ -158,7 +169,8 @@ export class ProjectsService {
         let idToken = JSON.parse(localStorage.getItem("user")).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
         this.url = this.facultyBaseURL + "include_projects/" + id;
@@ -170,7 +182,8 @@ export class ProjectsService {
         let idToken = JSON.parse(localStorage.getItem("user")).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
         this.url = this.facultyBaseURL + "update/" + id;
@@ -182,7 +195,9 @@ export class ProjectsService {
         let idToken = JSON.parse(localStorage.getItem("user")).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken, body: project_id
+                "Content-Type": "application/json",
+                Authorization: idToken,
+                body: project_id
             })
         };
         this.url = this.facultyBaseURL + "delete/" + id;
@@ -190,13 +205,14 @@ export class ProjectsService {
     }
 
     getAllStreamProjects() {
-        this.url = this.adminBaseURL + localStorage.getItem("id");
         const idToken = JSON.parse(localStorage.getItem("user")).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
+        this.url = this.adminBaseURL + localStorage.getItem("id");
         return this.http.get(this.url, httpOptions);
     }
 
@@ -205,7 +221,8 @@ export class ProjectsService {
         const idToken = JSON.parse(localStorage.getItem("user")).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json", Authorization: idToken
+                "Content-Type": "application/json",
+                Authorization: idToken
             })
         };
         return this.http.post(this.url, {projects: projects}, httpOptions);

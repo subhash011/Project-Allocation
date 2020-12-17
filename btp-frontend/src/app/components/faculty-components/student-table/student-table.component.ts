@@ -1,7 +1,17 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import {
-    ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, Pipe, PipeTransform, SimpleChanges, ViewChild
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    Pipe,
+    PipeTransform,
+    SimpleChanges,
+    ViewChild
 } from "@angular/core";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { MatDialog } from "@angular/material/dialog";
@@ -55,7 +65,11 @@ export class GetDisplayedColumns implements PipeTransform {
     styleUrls: [ "./student-table.component.scss" ],
     animations: [
         trigger("detailExpand", [
-            state("collapsed", style({height: "0px", minHeight: "0", display: "none"})),
+            state("collapsed", style({
+                height: "0px",
+                minHeight: "0",
+                display: "none"
+            })),
             state("expanded", style({height: "*"})),
             transition("expanded <=> collapsed", animate("0ms cubic-bezier(0.4, 0.0, 0.2, 1)"))
         ])
@@ -99,7 +113,9 @@ export class StudentTableComponent implements OnInit, OnChanges {
         let dialogRef;
         if (this.adminStage == 2) {
             dialogRef = this.dialog.open(LoaderComponent, {
-                data: "Updating, Please wait ...", disableClose: true, panelClass: "transparent"
+                data: "Updating, Please wait ...",
+                disableClose: true,
+                panelClass: "transparent"
             });
             this.projectService
                 .savePreference(this.students.data, this.project._id, this.project.stream, this.index, this.reorder)
@@ -119,7 +135,9 @@ export class StudentTableComponent implements OnInit, OnChanges {
                 });
         } else {
             dialogRef = this.dialog.open(LoaderComponent, {
-                data: "Updating, Please wait ...", disableClose: true, panelClass: "transparent"
+                data: "Updating, Please wait ...",
+                disableClose: true,
+                panelClass: "transparent"
             });
             if (this.adminStage < 2) {
                 this.student_list.sort((a, b) => {
@@ -212,7 +230,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
 
     compare(a: number | string | boolean, b: number | string | boolean, isAsc: boolean) {
         return (a < b ? -1 : 1
-               ) * (isAsc ? 1 : -1
-               );
+        ) * (isAsc ? 1 : -1
+        );
     }
 }

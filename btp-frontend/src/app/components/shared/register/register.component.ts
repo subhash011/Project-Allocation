@@ -11,7 +11,9 @@ import { LoginComponent } from "../login/login.component";
 import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
-    selector: "app-register", templateUrl: "./register.component.html", styleUrls: [ "./register.component.scss" ]
+    selector: "app-register",
+    templateUrl: "./register.component.html",
+    styleUrls: [ "./register.component.scss" ]
 })
 export class RegisterComponent implements OnInit {
     streams: any = [];
@@ -23,13 +25,16 @@ export class RegisterComponent implements OnInit {
         firstName: [
             this.user.firstName,
             Validators.required
-        ], lastName: [
+        ],
+        lastName: [
             this.user.lastName,
             Validators.required
-        ], email: [
+        ],
+        email: [
             this.user.email,
             Validators.required
-        ], stream: [
+        ],
+        stream: [
             null,
             Validators.required
         ]
@@ -38,18 +43,24 @@ export class RegisterComponent implements OnInit {
     hasUnitNumber = false;
     dialogRefLoad: MatDialogRef<any>;
 
-    constructor(private fb: FormBuilder, private userService: UserService, private snackBar: MatSnackBar, private router: Router, private dialog: MatDialog, private login: LoginComponent, private navbar: NavbarComponent) {}
+    constructor(
+        private fb: FormBuilder, private userService: UserService, private snackBar: MatSnackBar, private router: Router,
+        private dialog: MatDialog, private login: LoginComponent, private navbar: NavbarComponent
+    ) {}
 
     ngOnInit() {
         this.role = localStorage.getItem("role");
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Loading, Please wait ...", disableClose: true, panelClass: "transparent"
+            data: "Loading, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
         });
         this.userService.getAllBranches().subscribe((responseAPI: HttpResponseAPI) => {
             this.dialogRefLoad.close();
             this.streams = responseAPI.result.streams.map((val) => {
                 return {
-                    full: val.full, short: val.short
+                    full: val.full,
+                    short: val.short
                 };
             });
             JSON.parse(localStorage.getItem("user"));
@@ -71,19 +82,25 @@ export class RegisterComponent implements OnInit {
     onSubmit() {
         if (this.userForm.valid) {
             const user = {
-                name: this.userForm.get("firstName").value + " " + this.userForm.get("lastName").value, roll_no: String(this.userForm.get("email").value).split("@")[0], email: this.userForm.get("email").value, stream: this.userForm.get("stream").value
+                name: this.userForm.get("firstName").value + " " + this.userForm.get("lastName").value,
+                roll_no: String(this.userForm.get("email").value).split("@")[0],
+                email: this.userForm.get("email").value,
+                stream: this.userForm.get("stream").value
             };
             const _user = JSON.parse(localStorage.getItem("user"));
             const httpOptions = {
                 headers: new HttpHeaders({
-                    "Content-Type": "application/json", Authorization: _user.idToken
+                    "Content-Type": "application/json",
+                    Authorization: _user.idToken
                 })
             };
             let position = "";
             position = localStorage.getItem("role");
             const id = _user.id;
             const dialogRef = this.dialog.open(LoaderComponent, {
-                data: "Registering, Please wait ...", disableClose: true, panelClass: "transparent"
+                data: "Registering, Please wait ...",
+                disableClose: true,
+                panelClass: "transparent"
             });
             this.userService
                 .registerUser(user, httpOptions, position, id)
