@@ -33,27 +33,27 @@
                         "styles": [
                             "src/styles.scss",
                             {
-                                "inject": true,
+                                "inject": false,
                                 "input": "src/assets/out-themes/pink-grey.css",
                                 "bundleName": "pink-grey"
                             },
                             {
-                                "inject": true,
+                                "inject": false,
                                 "input": "src/assets/out-themes/purple-green.css",
                                 "bundleName": "purple-green"
                             },
                             {
-                                "inject": true,
+                                "inject": false,
                                 "input": "src/assets/out-themes/indigo-pink.css",
                                 "bundleName": "indigo-pink"
                             },
                             {
-                                "inject": true,
+                                "inject": false,
                                 "input": "src/assets/out-themes/deeppurple-amber.css",
                                 "bundleName": "deeppurple-amber"
                             },
                             {
-                                "inject": true,
+                                "inject": false,
                                 "input": "src/assets/out-themes/iitpkd-light.css",
                                 "bundleName": "iitpkd-light"
                             }
@@ -78,7 +78,7 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "3mb",
+                                    "maximumWarning": "2mb",
                                     "maximumError": "5mb"
                                 },
                                 {
@@ -105,7 +105,7 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "3mb",
+                                    "maximumWarning": "2mb",
                                     "maximumError": "5mb"
                                 },
                                 {

@@ -338,9 +338,8 @@
                             | selectedLength: dataSource.filteredData}}
                         </td>
                     </ng-container>
-
                     <ng-container matColumnDef="Title">
-                        <th *matHeaderCellDef [style.color]="background" mat-header-cell mat-sort-header>
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>
                             Title
                         </th>
                         <td *matCellDef="let project" mat-cell>
@@ -351,7 +350,7 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="isIncluded">
-                        <th *matHeaderCellDef [style.color]="background" mat-header-cell mat-sort-header>
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>
                             Project Excluded
                         </th>
                         <td *matCellDef="let project" class="align-center" mat-cell>
@@ -381,7 +380,7 @@
                     </ng-container>
                     <ng-container matColumnDef="studentIntake">
                         <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                            Max Student Intake
+                            Student Intake
                         </th>
                         <td *matCellDef="let project" class="align-right" mat-cell>
                             {{ project.studentIntake }}
@@ -389,15 +388,6 @@
                         <td *matFooterCellDef class="align-center" mat-footer-cell>
                             <b>Total : </b>{{ dataSource.filteredData | getStudentIntake }}
                         </td>
-                    </ng-container>
-                    <ng-container matColumnDef="NoOfStudents">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                            No.of preferences
-                        </th>
-                        <td *matCellDef="let project" class="align-right" mat-cell>
-                            {{ project.numberOfPreferences }}
-                        </td>
-                        <td *matFooterCellDef mat-footer-cell></td>
                     </ng-container>
                     <ng-container matColumnDef="Preferences">
                         <th *matHeaderCellDef mat-header-cell>Preferences</th>
@@ -647,8 +637,7 @@
                                     {{ faculty.includedProjectsCount }} /{{faculty.noOfProjects}}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell>
-                                    <b>Total Projects : </b>{{faculties.filteredData
-                                    | getIncludedOfTotal}}
+                                    <b>Total Projects : </b>{{faculties.filteredData | getIncludedOfTotal}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="StudentIntake">

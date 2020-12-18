@@ -35,19 +35,25 @@
                                     <input
                                         formControlName="name" matInput placeholder="name" />
                                 </mat-card-title>
+                                <mat-error
+                                    *ngIf="facultyFormGroup.controls['name'].hasError('required')">
+                                    Name is <strong>required</strong>
+                                </mat-error>
                             </mat-form-field>
 
                             <p class="example-full-width">
                                 <strong>Stream</strong> : {{ user_info.stream }}
                             </p>
                             <p class="example-full-width">
-                                <strong>Email-ID</strong> :
-                                {{ user_info.email }}
+                                <strong>Email-ID</strong> :{{ user_info.email }}
                             </p>
 
                             <mat-card-actions>
                                 <button
-                                    (click)="updateFacultyProfile()" color="primary" mat-raised-button>
+                                    (click)="updateFacultyProfile()"
+                                    [disabled]="!facultyFormGroup.valid"
+                                    color="primary"
+                                    mat-raised-button>
                                     Update Profile
                                 </button>
                             </mat-card-actions>
@@ -65,17 +71,17 @@
                                 [value]="[program.short, program.full]">{{ program.full }}</mat-option>
                         </mat-select>
                         <mat-error
-                            *ngIf="
-                                programGroup.controls['programs'].hasError(
-                                    'required'
-                                )
-                            ">
+                            *ngIf="programGroup.controls['programs'].hasError('required')">
                             Programs are <strong>required</strong>
                         </mat-error>
                     </mat-form-field>
                     <span>
                         <button
-                            (click)="addProgram()" class="submit" color="primary" mat-raised-button>
+                            (click)="addProgram()"
+                            [disabled]="!programGroup.valid"
+                            class="submit"
+                            color="primary"
+                            mat-raised-button>
                             Submit
                         </button>
                     </span>

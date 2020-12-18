@@ -6,8 +6,7 @@
 </div>
 <div class="register-wrapper">
     <div class="register-page">
-        <form
-            (ngSubmit)="onSubmit()" [formGroup]="userForm" class="register" novalidate>
+        <form (ngSubmit)="onSubmit()" [formGroup]="userForm" class="register" novalidate>
             <mat-card class="shipping-card">
                 <mat-card-header>
                     <mat-card-title><strong>
@@ -17,28 +16,17 @@
                 <mat-card-content>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input
-                                formControlName="firstName" matInput placeholder="First name" />
+                            <input formControlName="firstName" matInput placeholder="First name" />
                             <mat-error
-                                *ngIf="
-                                    userForm.controls['firstName'].hasError(
-                                        'required'
-                                    )
-                                ">
+                                *ngIf="userForm.controls['firstName'].hasError('required')">
                                 First name is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input
-                                formControlName="lastName" matInput placeholder="Last name" />
-                            <mat-error
-                                *ngIf="
-                                    userForm.controls['lastName'].hasError(
-                                        'required'
-                                    )
-                                ">
+                            <input formControlName="lastName" matInput placeholder="Last name" />
+                            <mat-error *ngIf="userForm.controls['lastName'].hasError('required')">
                                 Last name is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -46,33 +34,20 @@
                     <div *ngIf="hasUnitNumber" class="row"></div>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input
-                                formControlName="email" matInput placeholder="Email-ID" />
-                            <mat-error
-                                *ngIf="
-                                    userForm.controls['email'].hasError(
-                                        'required'
-                                    )
-                                ">
+                            <input formControlName="email" matInput placeholder="Email-ID" />
+                            <mat-error *ngIf="userForm.controls['email'].hasError('required')">
                                 Email-ID is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div *ngIf="role | isFaculty" class="row">
                         <mat-form-field class="full-width">
-                            <mat-select
-                                [placeholder]="head" formControlName="stream">
-                                <mat-option
-                                    *ngFor="let stream of streams" [value]="stream.short">
+                            <mat-select [placeholder]="head" formControlName="stream">
+                                <mat-option *ngFor="let stream of streams" [value]="stream.short">
                                     {{ stream.full }}
                                 </mat-option>
                             </mat-select>
-                            <mat-error
-                                *ngIf="
-                                    userForm.controls['stream'].hasError(
-                                        'required'
-                                    )
-                                ">
+                            <mat-error *ngIf="userForm.controls['stream'].hasError('required')">
                                 {{ head }} is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -80,10 +55,11 @@
                 </mat-card-content>
                 <mat-card-actions>
                     <button
-                        [disabled]="
-                            !userForm.valid ||
-                            userForm.controls['stream'].hasError('required')
-                        " class="submit_button" color="primary" mat-raised-button type="submit">
+                        [disabled]="!userForm.valid"
+                        class="submit_button"
+                        color="primary"
+                        mat-raised-button
+                        type="submit">
                         Submit
                     </button>
                 </mat-card-actions>

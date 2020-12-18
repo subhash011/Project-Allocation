@@ -37,8 +37,7 @@
                                 Stage
                             </th>
                             <td *matCellDef="let admin" mat-cell>
-                                {{ admin.stage >= 3 ? 4 : admin.stage + 1 }} /
-                                {{ 4 }}
+                                {{ admin.stage >= 3 ? 4 : admin.stage + 1 }} /{{ 4 }}
                             </td>
                         </ng-container>
 
@@ -47,10 +46,8 @@
                             <td *matCellDef="let admin" mat-cell>
                                 <span
                                     class="days_left"><strong *ngIf="admin.deadlines; else none">
-                                        {{
-                                    admin.deadlines
-                                        | countdown: currentTime
-                                    }}</strong>
+                                        {{admin.deadlines
+                                    | countdown: currentTime}}</strong>
                                     <ng-template #none> N/A </ng-template>
                                 </span>
                             </td>

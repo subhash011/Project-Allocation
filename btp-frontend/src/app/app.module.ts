@@ -169,7 +169,7 @@ const googleLoginOption = {
         },
         {
             provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
-            useValue: {duration: 3000}
+            useValue: {duration: 3000, panelClass: "default-class"}
         },
         UserService,
         ExporttocsvService,

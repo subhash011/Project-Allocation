@@ -5,13 +5,24 @@ const Project = require("../models/Project");
 const Programs = require("../models/Programs");
 const Admin = require("../models/Admin_Info");
 const Student = require("../models/Student");
+const oauth = require("../config/oauth");
 
 router.post("/register/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         const user = req.body;
-        await oauth(idToken);
+        let authUser = await oauth(idToken);
+        if (!authUser) {
+            res.status(200).json({
+                statusCode: 200,
+                message: "Registration failed! Please try again",
+                result: {
+                    registered: false
+                }
+            });
+            return;
+        }
         const newUser = new Faculty({
             name: user.name,
             google_id: {
@@ -23,12 +34,18 @@ router.post("/register/:id", async (req, res) => {
             isAdmin: false
         });
         await newUser.save();
-        res.json({
-            registration: "success"
+        res.status(200).json({
+            statusCode: 200,
+            message: "Registration Successful",
+            result: {
+                registered: true
+            }
         });
     } catch (e) {
-        res.json({
-            registration: "fail"
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });
@@ -66,44 +83,36 @@ router.post("/set_programs/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        const programs = req.body.programs;
-
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
+        const programs = req.body.programs.map((val) => {
+            return {
+                full: val[1],
+                short: val[0]
+            };
+        });
+        const updateCond = {
+            $addToSet: {programs: programs}
+        };
+        let faculty = await Faculty.findOneAndUpdate({google_id: {id: id, idToken: idToken}}, updateCond, {new: true});
         if (!faculty) {
-            res.json({
-                status: "fail",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
         }
-        const streamMap = new Map(programs);
-
-        const curPrograms = faculty.programs;
-
-        if (curPrograms && curPrograms.length > 0) {
-            for (const program of curPrograms) {
-                if (streamMap.has(program.short)) {
-                    streamMap.delete(program.short);
-                }
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully added the programs",
+            result: {
+                updated: true,
+                programs: faculty.programs
             }
-        }
-
-        streamMap.forEach(function (value, key) {
-            const obj = {
-                full: value,
-                short: key
-            };
-            faculty.programs.push(obj);
-        });
-
-        await faculty.save();
-        res.json({
-            status: "success",
-            msg: "Successfully added the programs"
         });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -116,22 +125,27 @@ router.post("/updateProfile/:id", async (req, res) => {
         const name = req.body.name;
 
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
-        if (faculty) {
-            faculty.name = name;
-            await faculty.save();
-            res.json({
-                status: "success",
-                msg: "Successfully updated the profile!!"
-            });
-        } else {
-            res.json({
-                status: "fail",
+        if (!faculty) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
+            return;
         }
+        faculty.name = name;
+        await faculty.save();
+        res.status(200).json({
+            statusCode: 200,
+            message: "Successfully updated your profile.",
+            result: {
+                updated: true
+            }
+        });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -179,8 +193,9 @@ router.post("/deleteProgram/:id", async (req, res) => {
 
         let faculty = await Faculty.findOneAndUpdate({google_id: {id: id, idToken: idToken}}, updateConfig);
         if (!faculty) {
-            res.json({
-                status: "fail",
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
                 result: null
             });
             return;
@@ -192,13 +207,17 @@ router.post("/deleteProgram/:id", async (req, res) => {
             $pullAll: {projects_preference: project_ids}
         };
         await Student.updateMany({stream: curr_program.short}, updateConfig);
-        res.json({
-            status: "success",
-            msg: "Successfully removed the program."
+        res.status(200).json({
+            statusCode: 200,
+            message: "Removed the program along with all your projects in that program.",
+            result: {
+                deleted: true
+            }
         });
     } catch (e) {
-        res.json({
-            status: "fail",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }
@@ -229,60 +248,6 @@ router.get("/getFacultyPrograms/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
-        });
-    }
-});
-
-router.post("/getFacultyProgramDetails/:id", async (req, res) => {
-    try {
-        const id = req.params.id;
-        const idToken = req.headers.authorization;
-        const program = req.body.program;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
-        let admin = await Admin.findOne({stream: program.short}).lean();
-        let deadline;
-        if (admin) {
-            if (admin.deadlines.length) {
-                deadline = admin.deadlines[admin.deadlines.length - 1];
-            } else {
-                deadline = null;
-            }
-            let projects = await Project.find({faculty_id: faculty._id, stream: program.short})
-                                        .populate({path: "student_alloted", select: "-google_id -date", model: Student});
-            const obj = {
-                program: program,
-                admin: admin,
-                curDeadline: deadline,
-                projects: projects
-            };
-
-            res.json({
-                status: "success",
-                program_details: obj
-            });
-        } else {
-            if (faculty) {
-                let projects = await Project.find({faculty_id: faculty._id, stream: program.short})
-                                            .populate({path: "student_alloted", select: "-google_id -date", model: Student});
-                const obj = {
-                    program: program,
-                    projects: projects
-                };
-                res.json({
-                    status: "success",
-                    program_details: obj
-                });
-            } else {
-                res.json({
-                    status: "fail",
-                    result: null
-                });
-            }
-        }
-    } catch (e) {
-        res.json({
-            status: "Faculty not found",
             result: null
         });
     }

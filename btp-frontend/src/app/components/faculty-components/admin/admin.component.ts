@@ -205,7 +205,6 @@ export class AdminComponent implements OnInit, OnDestroy {
         "Faculty",
         "Duration",
         "Preferences",
-        "NoOfStudents",
         "isIncluded",
         "Student"
     ];
@@ -893,7 +892,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     showPreferencesProject(project) {
         this.dialog.open(ShowFacultyPreferencesComponent, {
             disableClose: false,
-            hasBackdrop: true,
             maxHeight: "700px",
             minWidth: "800px",
             data: project,
@@ -904,7 +902,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     showPreferences(student) {
         this.dialog.open(ShowStudentPreferencesComponent, {
             disableClose: false,
-            hasBackdrop: true,
             maxHeight: "700px",
             minWidth: "800px",
             data: student,
@@ -1065,7 +1062,6 @@ export class AdminComponent implements OnInit, OnDestroy {
                     }
                     this.selectIncluded();
                     this.publishFaculty = true;
-                    localStorage.setItem("pf", "true");
                     this.mailer.publishMail("faculty", emails, programFull)
                         .subscribe(() => {
                             dialogRefLoad.close();

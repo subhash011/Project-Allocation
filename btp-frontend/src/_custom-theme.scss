@@ -5,6 +5,7 @@
     $accent: map-get($theme, accent);
     $background: map-get($theme, background);
     $foreground: map-get($theme, foreground);
+    $border-radius: map-get($theme, border-radius);
     app-home {
         .container {
             background: linear-gradient(
@@ -13,6 +14,10 @@
                     mat-color($primary) 25%
             );
         }
+    }
+
+    .default-class .mat-simple-snackbar-action {
+        color: deeppink;
     }
 
     ::-webkit-scrollbar {
@@ -36,6 +41,13 @@
     }
     ::-webkit-scrollbar-corner {
         background-color: transparent;
+    }
+
+    mat-expansion-panel {
+        mat-expansion-panel-header {
+            min-height: 48px;
+            height: auto !important;
+        }
     }
 
     .transparent .mat-dialog-container {

@@ -1734,8 +1734,9 @@ router.delete("/faculty/:id", async (req, res) => {
             }
         });
     } catch (e) {
-        res.json({
-            message: "invalid-token",
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
             result: null
         });
     }

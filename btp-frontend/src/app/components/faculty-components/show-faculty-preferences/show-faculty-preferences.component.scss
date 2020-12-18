@@ -5,6 +5,16 @@
     overflow: hidden;
 }
 
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+    flex-basis: auto;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
 mat-dialog-content {
     height: 100%;
     overflow: auto;
@@ -51,7 +61,7 @@ mat-icon:hover {
 }
 
 .list-item {
-    padding: 10px 10px;
+    padding: 10px 10px 10px;
     box-sizing: border-box;
     cursor: move;
     color: black;

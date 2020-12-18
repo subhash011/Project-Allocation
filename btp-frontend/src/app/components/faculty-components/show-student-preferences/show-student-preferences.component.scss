@@ -13,6 +13,35 @@
     position: sticky;
 }
 
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+    flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+}
+
+.mat-accordion .mat-expansion-panel:not(.mat-expanded),
+.mat-accordion .mat-expansion-panel:not(.mat-expansion-panel-spacing) {
+    margin-top: 20px;
+}
+
+::ng-deep .ng-animating div mat-accordion mat-expansion-panel mat-expansion-panel-header {
+    height: 48px;
+}
+
+::ng-deep .ng-animating div mat-accordion mat-expansion-panel div.mat-expansion-panel-content {
+    height: 0;
+    visibility: hidden;
+}
+
+
 .example-viewport {
     height: 400px;
     width: 800px;
@@ -41,7 +70,7 @@ mat-icon:hover {
     padding: 10px 10px;
     box-sizing: border-box;
     cursor: move;
-    color: black;
+    //color: black;
     font-size: 14px;
 }
 

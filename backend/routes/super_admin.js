@@ -190,7 +190,17 @@ router.post("/register/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         const user = req.body;
-        await oauth(idToken);
+        let authUser = await oauth(idToken);
+        if (!authUser) {
+            res.status(200).json({
+                statusCode: 200,
+                message: "Registration failed! Please try again",
+                result: {
+                    registered: false
+                }
+            });
+            return;
+        }
         const newUser = new SuperAdmin({
             name: user.name,
             google_id: {
@@ -200,12 +210,18 @@ router.post("/register/:id", async (req, res) => {
             email: user.email
         });
         await newUser.save();
-        res.json({
-            registration: "success"
+        res.status(200).json({
+            statusCode: 200,
+            message: "Registration Successful",
+            result: {
+                registered: true
+            }
         });
     } catch (e) {
-        res.json({
-            registration: "fail"
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal Server Error! Please Sign-In again.",
+            result: null
         });
     }
 });

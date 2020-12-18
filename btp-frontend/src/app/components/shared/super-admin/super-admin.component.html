@@ -42,11 +42,8 @@
                                     {{ faculty.name }}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell>
-                                    <b>Total : </b>
-                                    {{
-                                    faculties[program.short]?.filteredData
-                                        .length
-                                    }}
+                                    <b>Total : </b>{{faculties[program.short]?.filteredData
+                                    .length}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Stream">
@@ -72,11 +69,9 @@
                                     Co-ordinator
                                 </th>
                                 <td *matCellDef="let faculty" mat-cell>
-                                    {{
-                                    faculty.isAdmin
-                                    ? faculty.adminProgram
-                                    : "NO"
-                                    }}
+                                    {{faculty.isAdmin
+                                      ? faculty.adminProgram
+                                      : "NO"}}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
@@ -176,11 +171,8 @@
                                     {{ student.name }}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell>
-                                    <b>Total : </b>
-                                    {{
-                                    students[program.short]?.filteredData
-                                        .length
-                                    }}
+                                    <b>Total : </b>{{students[program.short]?.filteredData
+                                    .length}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Email-ID">
@@ -212,11 +204,8 @@
                                     {{ student.isRegistered ? "Yes" : "No" }}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell>
-                                    <b>Registered : </b>
-                                    {{
-                                    students[program.short].filteredData
-                                        | getRegisteredCount
-                                    }}
+                                    <b>Registered : </b>{{students[program.short].filteredData
+                                    | getRegisteredCount}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Actions">
@@ -288,11 +277,8 @@
                                     {{ project.title }}
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell>
-                                    <b>Total : </b>
-                                    {{
-                                    projects[program.short]?.filteredData
-                                        .length
-                                    }}
+                                    <b>Total : </b>{{projects[program.short]?.filteredData
+                                    .length}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="Faculty">
@@ -342,8 +328,7 @@
                                         " class="example-element-detail">
                                         <div
                                             class="example-element-description">
-                                            Description :
-                                            {{ project.description }}
+                                            Description :{{ project.description }}
                                         </div>
                                     </div>
                                 </td>
@@ -524,11 +509,9 @@
                         </th>
                         <td
                             *matCellDef="let map" mat-cell style="padding-left: 15px">
-                            {{
-                            faculties[map.short]
-                            ? faculties[map.short].data.length
-                            : 0
-                            }}
+                            {{faculties[map.short]
+                              ? faculties[map.short].data.length
+                              : 0}}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="StudCount">
@@ -537,14 +520,12 @@
                         </th>
                         <td
                             *matCellDef="let map" mat-cell style="padding-left: 20px">
-                            {{
-                            students[map.short]
-                            ? (students[map.short].data
-                                    | getRegisteredCount) +
-                                " / " +
-                                students[map.short].data.length
-                            : 0
-                            }}
+                            {{students[map.short]
+                              ? (students[map.short].data
+                                | getRegisteredCount) +
+                                  " / " +
+                                  students[map.short].data.length
+                              : 0}}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="ProjCount">
@@ -553,11 +534,9 @@
                         </th>
                         <td
                             *matCellDef="let map" mat-cell style="padding-left: 15px">
-                            {{
-                            projects[map.short]
-                            ? projects[map.short].data.length
-                            : 0
-                            }}
+                            {{projects[map.short]
+                              ? projects[map.short].data.length
+                              : 0}}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="Actions">

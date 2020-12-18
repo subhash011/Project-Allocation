@@ -77,9 +77,7 @@ export class SidenavComponent implements OnInit, OnChanges {
                 this.snackbar.open("Updated Project Preferences", "Ok");
             }
         }, () => {
-            this.snackbar.open("Some Error Occurred! Please re-authenticate.", "OK");
-            this.navbar.role = "none";
-            this.loginObject.signOut();
+            dialogRef.close();
         });
     }
 

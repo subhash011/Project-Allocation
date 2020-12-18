@@ -7,7 +7,11 @@
         <div class="fill-space"></div>
         <div #container class="copy">
             <button
-                [cdkCopyToClipboard]="value" color="primary" mat-raised-button>
+                [cdkCopyToClipboard]="value"
+                [matBadgeColor]="'accent'"
+                [matBadge]="preferences.students_id.length"
+                color="primary"
+                mat-raised-button>
                 Copy to Clipboard
             </button>
         </div>
@@ -16,7 +20,7 @@
         <div>
             <div
                 *cdkVirtualFor="let preference of preferences.students_id" class="list-item">
-                <mat-accordion>
+                <mat-accordion class="example-headers-align">
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
@@ -27,22 +31,14 @@
                                 Roll number : {{ preference["roll_no"] }}
                             </mat-panel-description>
                         </mat-expansion-panel-header>
-                        <div class="faculty">
-                            Faculty:{{
-                            preference["project_alloted"]
-                            ? preference["project_alloted"][
-                                "faculty_id"
-                                ]["name"]
-                            : "N/A"
-                            }}
-                        </div>
-                        <div class="project">
-                            Project Alloted:{{
-                            preference["project_alloted"]
-                            ? preference["project_alloted"]["title"]
-                            : "N/A"
-                            }}
-                        </div>
+                        <p>
+                            Project Allotted:{{preference["project_alloted"] ? preference["project_alloted"]["title"] :
+                                               "N/A"}}
+                        </p>
+                        <p>
+                            Faculty:{{preference["project_alloted"] ?
+                                      preference["project_alloted"]["faculty_id"]["name"] : "N/A"}}
+                        </p>
                     </mat-expansion-panel>
                 </mat-accordion>
                 <div class="flex-space"></div>

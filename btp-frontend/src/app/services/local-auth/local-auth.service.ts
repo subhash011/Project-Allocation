@@ -1,10 +1,12 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { SocialAuthService } from "angularx-social-login";
+import { GoogleLoginProvider, SocialAuthService } from "angularx-social-login";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { StorageService } from "../helpers/storage.service";
+import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
+import { from } from "rxjs";
 
 @Injectable({
     providedIn: "root"
@@ -22,52 +24,48 @@ export class LocalAuthService {
         return this.http.post<any>(this.user_url, user);
     }
 
-    validate(data) {
-        if (data.isRegistered) {
-            if (data.position === "student") {
+    validate(data: HttpResponseAPI) {
+        const {position, registered} = data.result;
+        const {id} = data.result.user_details;
+        if (registered) {
+            if (position === "student") {
                 return {
-                    route: "/student/" + data.user_details.id,
+                    route: "/student/" + id,
                     error: "none"
                 };
-            } else if (data.position == "faculty" || data.position == "admin") {
+            } else if (position == "faculty" || position == "admin") {
                 return {
-                    route: "/faculty/" + data.user_details.id,
+                    route: "/faculty/" + id,
                     error: "none"
                 };
-            } else if (data.position == "super_admin") {
+            } else if (position == "super_admin") {
                 return {
-                    route: "/super_admin/" + data.user_details.id,
+                    route: "/super_admin/" + id,
                     error: "none"
                 };
             }
-        } else if (!data.isRegistered) {
-            if (data.position === "student") {
+        } else if (!registered) {
+            if (position === "student") {
                 return {
-                    route: "/register/" + data.user_details.id,
-                    error: data.msg
+                    route: "/register/" + id,
+                    error: data.message
                 };
-            } else if (data.position === "faculty") {
+            } else if (position === "faculty") {
                 return {
-                    route: "/register/" + data.user_details.id,
+                    route: "/register/" + id,
                     error: "none"
                 };
-            } else if (data.position == "super_admin") {
+            } else if (position == "super_admin") {
                 return {
-                    route: "/register/" + data.user_details.id,
+                    route: "/register/" + id,
                     error: "none"
-                };
-            } else if (data.position === "error") {
-                return {
-                    route: "/error",
-                    error: "Invalid Email"
-                };
-            } else if (data.position === "login-error") {
-                return {
-                    route: "/error",
-                    error: "Some error occured! Try again later."
                 };
             }
         }
+    }
+
+    signIn() {
+        return from(this.authService.signIn(GoogleLoginProvider.PROVIDER_ID));
     }
 
     async signOut(userClick?: boolean) {

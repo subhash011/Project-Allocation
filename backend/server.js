@@ -1,7 +1,7 @@
-//imports
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
+const compression = require("compression");
 const fs = require("fs");
 require("dotenv/config");
 
@@ -22,13 +22,14 @@ app.use(
 );
 
 app.use(cors());
+app.use(compression());
 
 //use body-parser
 app.use(bodyparser.json({limit: "50mb", extended: true}));
 mongoose.set("useFindAndModify", false);
 
 //uncomment during production
-app.use(express.static(__dirname + "/btp-frontend"));
+// app.use(express.static(__dirname + "/btp-frontend"));
 
 const mongoConnect = process.env.MONGO_URL_BACK;
 //connect to mongodb

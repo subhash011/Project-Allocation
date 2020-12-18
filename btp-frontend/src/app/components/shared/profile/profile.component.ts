@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
         "Program Name",
         "Delete"
     ];
-    programs;
+    programs = [];
     faculty_programs = [];
     user_info: any;
     role: string = localStorage.getItem("role");
@@ -85,7 +85,6 @@ export class ProfileComponent implements OnInit {
                     }
                 }, () => {
                     this.dialogRefLoad.close();
-                    this.snackBar.open("Some error occurred, if the error persists re-authenticate", "Ok");
                 });
         } else if (this.role == "faculty" || this.role == "admin") {
             const requests = [
@@ -101,113 +100,74 @@ export class ProfileComponent implements OnInit {
             }, () => {
                 this.dialogRefLoad.close();
             });
-            // this.userService
-            //     .getFacultyDetails(localStorage.getItem("id"))
-            //     .subscribe((responseAPI: HttpResponseAPI) => {
-            //         this.dialogRefLoad.close();
-            //         this.user_info = responseAPI.result.faculty;
-            //         this.faculty_programs = this.user_info["programs"];
-            //         this.facultyFormGroup.controls["name"].setValue(this.user_info.name);
-            //         this.userService
-            //             .getAllPrograms()
-            //             .subscribe((responseAPI: HttpResponseAPI) => {
-            //                 this.programs = responseAPI.result.programs;
-            //             });
-            //     }, () => {
-            //         this.dialogRefLoad.close();
-            //         this.snackBar.open("Some error occured, if the error persists re-authenticate", "Ok");
-            //     });
         }
     }
 
     updateFacultyProfile() {
-        if (this.facultyFormGroup.valid) {
-            const faculty = {
-                name: this.facultyFormGroup.get("name").value
-            };
-            const dialogRef = this.dialog.open(LoaderComponent, {
-                data: "Updating, Please wait ...",
-                disableClose: true,
-                panelClass: "transparent"
-            });
-            this.userService.updateFacultyProfile(faculty).subscribe((data) => {
-                dialogRef.close();
-                if (data["status"] == "success") {
-                    this.snackBar.open(data["msg"], "Ok");
-                } else {
-                    this.snackBar.open("Session Timed Out! Please Sign in Again!", "Ok");
-                    this.login.signOut();
-                }
-            }, () => {
-                dialogRef.close();
-                this.ngOnInit();
-                this.snackBar.open("Some Error Occured! Try again later.", "OK");
-            });
-        }
+        const faculty = {
+            name: this.facultyFormGroup.get("name").value
+        };
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: "Updating, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
+        });
+        this.userService.updateFacultyProfile(faculty).subscribe((responseAPI: HttpResponseAPI) => {
+            this.dialogRefLoad.close();
+            this.snackBar.open(responseAPI.message, "Ok");
+        }, () => {
+            this.dialogRefLoad.close();
+        });
     }
 
     addProgram() {
-        if (this.programGroup.valid) {
-            const programs = {
-                programs: this.programGroup.get("programs").value
-            };
-            const dialogRef = this.dialog.open(LoaderComponent, {
-                data: "Updating, please wait ...",
-                disableClose: true,
-                panelClass: "transparent"
-            });
-            this.userService.setPrograms(programs).subscribe((data) => {
-                dialogRef.close();
-                if (data["status"] == "success") {
-                    this.snackBar.open(data["msg"], "Ok");
-                    this.ngOnInit();
-                } else {
-                    this.snackBar.open("Session Timed Out! Please Sign in Again!", "Ok");
-                    this.login.signOut();
-                }
-            }, () => {
-                dialogRef.close();
-                this.ngOnInit();
-                this.snackBar.open("Some Error Occured! Try again later.", "Ok");
-            });
-        }
+        const programs = {
+            programs: this.programGroup.get("programs").value
+        };
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: "Updating, please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
+        });
+        this.userService.setPrograms(programs).subscribe((responseAPI: HttpResponseAPI) => {
+            this.dialogRefLoad.close();
+            this.faculty_programs = responseAPI.result.programs;
+            this.snackBar.open(responseAPI.message, "Ok");
+        }, () => {
+            this.dialogRefLoad.close();
+        });
     }
 
     deleteProgram(program) {
         const obj = {
             program: program
         };
-        let dialogRef = this.dialog.open(DeletePopUpComponent, {
+        this.dialogRefLoad = this.dialog.open(DeletePopUpComponent, {
             height: "200px",
             data: {
                 heading: "Confirm Deletion",
                 message: "Are you sure you want to remove the branch"
-            }
+            },
+            disableClose: true
         });
-        dialogRef.afterClosed().subscribe((result) => {
+        this.dialogRefLoad.afterClosed().subscribe((result) => {
             if (result["message"] == "submit") {
-                const dialogRef = this.dialog.open(LoaderComponent, {
-                    data: "Loading, Please Wait ....",
+                this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                    data: "Removing, Please Wait ....",
                     disableClose: true,
                     panelClass: "transparent"
                 });
                 this.userService
                     .deleteFacultyProgram(obj)
-                    .subscribe((data) => {
-                        dialogRef.close();
-                        if (data["status"] == "success") {
-                            this.snackBar.open(data["msg"], "Ok");
-                            this.ngOnInit();
-                        } else {
-                            this.snackBar.open("Session Timed Out! Please Sign in Again!", "Ok");
-                            this.login.signOut();
-                        }
+                    .subscribe((responseAPI: HttpResponseAPI) => {
+                        const {program} = obj;
+                        this.dialogRefLoad.close();
+                        this.snackBar.open(responseAPI.message, "Ok");
+                        this.faculty_programs = this.faculty_programs.filter(val => val.short !== program.short);
                     });
             }
         }, () => {
-            dialogRef.close();
-            this.ngOnInit();
-            this.snackBar.open("Some Error Occured! Try again later.");
+            this.dialogRefLoad.close();
         });
     }
 }

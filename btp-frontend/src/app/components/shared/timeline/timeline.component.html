@@ -11,8 +11,7 @@
                     </ng-template>
                     <span class="days_left">
                         <strong *ngIf="curDeadline; else no_deadline">
-                            Current stage ends in :
-                            {{ curDeadline | countdown: currentTime }}
+                            Current stage ends in :{{ curDeadline | countdown: currentTime }}
                         </strong>
                         <ng-template #no_deadline>
                             <div>
@@ -41,14 +40,12 @@
     <mat-card class="general-details">
         <mat-card-title
             class="general-title"><u>Description of stages</u></mat-card-title>
-        <br />
-        <br />
+        <br /> <br />
         <mat-card-content>
             <p>Stage 1 : Faculties add projects to the portal</p>
             <p>Stage 2 : Students give their preferences for the projects</p>
             <p>
-                Stage 3 : Faculties give prefernces among the students who have
-                chosen their projects </p>
+                Stage 3 : Faculties give prefernces among the students who have chosen their projects </p>
             <p>Stage 4 : Projects will be alloted</p>
         </mat-card-content>
     </mat-card>

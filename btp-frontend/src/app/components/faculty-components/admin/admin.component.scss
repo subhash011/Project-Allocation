@@ -134,7 +134,6 @@ mat-icon:hover {
 }
 
 .table {
-    // max-height: 600px;
     overflow: auto;
     width: 80%;
     margin-left: 10%;
@@ -176,7 +175,8 @@ mat-tab {
 }
 
 .mat-column-select {
-    flex: 0 0 10%;
+    flex: 0;
+    width: 50px;
 }
 
 .startAllocationButton {

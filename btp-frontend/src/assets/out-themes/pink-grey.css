@@ -2068,6 +2068,10 @@ app-home .container {
     background: linear-gradient(125deg, white 25%, #e91e63 25%);
 }
 
+.mat-simple-snackbar-action {
+    color: #b0bec5;
+}
+
 ::-webkit-scrollbar {
     width: 14px;
     height: 14px;
@@ -2092,6 +2096,11 @@ app-home .container {
 
 ::-webkit-scrollbar-corner {
     background-color: transparent;
+}
+
+mat-expansion-panel mat-expansion-panel-header {
+    min-height: 48px;
+    height: auto !important;
 }
 
 .transparent .mat-dialog-container {

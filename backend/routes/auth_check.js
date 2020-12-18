@@ -4,7 +4,7 @@ const Student = require("../models/Student");
 const Faculty = require("../models/Faculty");
 const SuperAdmin = require("../models/SuperAdmin");
 const Project = require("../models/Project");
-oauth = require("../config/oauth");
+const oauth = require("../config/oauth");
 
 //add your email here if you want to be a super admin
 const superAdmins = process.env.SUPER_ADMINS.split(",");
@@ -44,132 +44,126 @@ router.post("/user_check", async (req, res) => {
         if (superAdmins.includes(userDetails.email)) {
             let superAdmin = await SuperAdmin.findOne({email: userDetails.email});
             if (!superAdmin) {
-                res.json({
-                    isRegistered: false,
-                    position: "super_admin",
-                    user_details: userDetails
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "success",
+                    result: {
+                        registered: false,
+                        position: "super_admin",
+                        user_details: userDetails
+                    }
                 });
                 return;
             }
             superAdmin.google_id.idToken = userDetails.idToken;
-            let role = "super_admin";
-            try {
-                await superAdmin.save();
-                res.json({
-                    isRegistered: true,
-                    position: role,
+            await superAdmin.save();
+            res.status(200).json({
+                statusCode: 200,
+                message: "success",
+                result: {
+                    registered: true,
+                    position: "super_admin",
                     user_details: userDetails
-                });
-            } catch (e) {
-                res.json({
-                    isRegistered: true,
-                    position: "error",
-                    user_details: "SuperAdmin Not Saved - DB Error"
-                });
-            }
+                }
+            });
         } else if (
             email_check === "iitpkd.ac.in" ||
             email_check === "gmail.com"
         ) {
-            try {
-                let faculty = await Faculty.findOne({email: userDetails.email});
-                if (!faculty) {
-                    res.json({
-                        isRegistered: false,
+            let faculty = await Faculty.findOne({email: userDetails.email});
+            if (!faculty) {
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "success",
+                    result: {
+                        registered: false,
                         position: "faculty",
                         user_details: userDetails
-                    });
-                    return;
-                }
-                faculty.google_id.idToken = userDetails.idToken;
-
-                let role = "";
-                if (faculty.isAdmin) {
-                    role = "admin";
-                } else {
-                    role = "faculty";
-                }
-
-                try {
-                    await faculty.save();
-                    res.json({
-                        isRegistered: true,
-                        position: role,
-                        user_details: userDetails
-                    });
-                } catch (e) {
-                    res.json({
-                        isRegistered: true,
-                        position: "error",
-                        user_details: "Faculty Not Saved - DB Error"
-                    });
-                }
-            } catch (e) {
-                res.json({
-                    isRegistered: false,
-                    position: "error",
-                    user_details: "Faculty Not Found"
-                });
-            }
-        } else {
-            try {
-                let studentRegistered = true;
-                let student = await Student.findOne({email: userDetails.email});
-                if (!student) {
-                    res.json({
-                        isRegistered: false,
-                        position: "student",
-                        user_details: userDetails,
-                        msg:
-                            "Your name was not in the list of students provided by the co-ordinator. Please contact your stream co-ordinator."
-                    });
-                    return;
-                }
-                if (!student.isRegistered) {
-                    student.google_id.idToken = userDetails.idToken;
-                    student.google_id.id = id;
-                    student.isRegistered = true;
-                    studentRegistered = false;
-                } else {
-                    student.google_id.idToken = userDetails.idToken;
-                }
-                student = await student.save();
-                if (!studentRegistered) {
-                    let result = await addStudentToNotOpted(student);
-                    if (result) {
-                        res.json({
-                            isRegistered: true,
-                            position: "student",
-                            user_details: userDetails
-                        });
-                    } else {
-                        res.json({
-                            isRegistered: true,
-                            position: "error",
-                            user_details: "Student Not Saved - DB Error"
-                        });
                     }
-                } else {
-                    res.json({
-                        isRegistered: true,
+                });
+                return;
+            }
+            faculty.google_id.idToken = userDetails.idToken;
+            let role;
+            if (faculty.isAdmin) {
+                role = "admin";
+            } else {
+                role = "faculty";
+            }
+            await faculty.save();
+            res.status(200).json({
+                statusCode: 200,
+                message: "success",
+                result: {
+                    registered: true,
+                    position: role,
+                    user_details: userDetails
+                }
+            });
+        } else {
+            let studentRegistered = true;
+            let student = await Student.findOne({email: userDetails.email});
+            if (!student) {
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "Your name was not in the list of students provided by the co-ordinator. Please contact your program co-ordinator.",
+                    result: {
+                        registered: false,
                         position: "student",
                         user_details: userDetails
-                    });
-                }
-            } catch (e) {
-                res.json({
-                    isRegistered: true,
-                    position: "error",
-                    user_details: "Student Not Saved - DB Error"
+                    }
                 });
+                return;
             }
+            if (!student.isRegistered) {
+                student.google_id.idToken = userDetails.idToken;
+                student.google_id.id = id;
+                student.isRegistered = true;
+                studentRegistered = false;
+            } else {
+                student.google_id.idToken = userDetails.idToken;
+            }
+            student = await student.save();
+            if (studentRegistered) {
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "success",
+                    result: {
+                        registered: true,
+                        position: "student",
+                        user_details: userDetails
+                    }
+                });
+                return;
+            }
+            let result = await addStudentToNotOpted(student);
+            if (!result) {
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "There was an issue while setting up your data. Please let your program co-ordinator know about this.",
+                    result: {
+                        registered: false,
+                        position: "student",
+                        user_details: userDetails
+                    }
+                });
+                return;
+            }
+            res.status(200).json({
+                statusCode: 200,
+                message: "success",
+                result: {
+                    registered: true,
+                    position: "student",
+                    user_details: userDetails
+                }
+            });
         }
     } catch (e) {
-        console.log(e);
-        res.json({
-            isRegistered: false,
-            position: "login-error",
-            user_details: "Server Error"
+        res.status(500).json({
+            statusCode: 500,
+            message: "User not registered. There was some error, please try again.",
+            result: null
         });
     }
 });
