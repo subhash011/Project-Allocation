@@ -4,7 +4,7 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { FormBuilder, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Component, DoCheck, EventEmitter, Input, OnInit, Output, Pipe, PipeTransform } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Pipe, PipeTransform, SimpleChanges } from "@angular/core";
 import { SubmitPopUpComponent } from "src/app/components/faculty-components/submit-pop-up/submit-pop-up.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
@@ -28,7 +28,7 @@ export class FacultyPublish implements PipeTransform {
         LoginComponent, FacultyComponent
     ]
 })
-export class ContentComponent implements OnInit, DoCheck {
+export class ContentComponent implements OnInit, OnChanges {
     @Input() public project;
     @Input() public add: boolean;
     @Input() public empty = true;
@@ -44,6 +44,7 @@ export class ContentComponent implements OnInit, DoCheck {
     @Input() public reorder;
     dialogRefLoad: MatDialogRef<any>;
     @Output() newReorder = new EventEmitter<any>();
+    @Output() homeClick = new EventEmitter<boolean>();
     public id;
     public index = 0;
     Headers = [
@@ -90,13 +91,17 @@ export class ContentComponent implements OnInit, DoCheck {
         this.id = localStorage.getItem("id");
     }
 
-    ngDoCheck(): void {
-        if (this.project) {
+    ngOnChanges(simpleChanges: SimpleChanges): void {
+        if (simpleChanges.empty) {
+            console.log(simpleChanges.empty);
+            this.empty = simpleChanges.empty.currentValue;
+        }
+        if (simpleChanges.project) {
             this.EditForm.setValue({
-                title: this.project.title,
-                duration: this.project.duration,
-                studentIntake: this.project.studentIntake,
-                description: this.project.description
+                title: simpleChanges.project.currentValue.title,
+                duration: simpleChanges.project.currentValue.duration,
+                studentIntake: simpleChanges.project.currentValue.studentIntake,
+                description: simpleChanges.project.currentValue.description
             });
         }
     }
@@ -106,19 +111,7 @@ export class ContentComponent implements OnInit, DoCheck {
     }
 
     async displayHome() {
-        await this.router.navigate([ "/faculty", this.id ], {
-            queryParams: {
-                name: this.routeParams.name,
-                abbr: this.routeParams.abbr
-            }
-        });
-        await this.router.navigate([ "/faculty", this.id ], {
-            queryParams: {
-                name: this.routeParams.name,
-                abbr: this.routeParams.abbr,
-                mode: "programMode"
-            }
-        });
+        this.homeClick.emit(true);
     }
 
     onSubmit() {

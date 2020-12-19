@@ -423,7 +423,7 @@
                         <th *matHeaderCellDef mat-header-cell>Delete Stream</th>
                         <td *matCellDef="let map" mat-cell>
                             <mat-icon
-                                (click)="deleteStream(map.short)" matTooltip="Delete Stream" matTooltipPosition="right">
+                                (click)="deleteStream(map)" matTooltip="Delete Stream" matTooltipPosition="right">
                                 delete_outline
                             </mat-icon>
                             <ng-container *ngIf="map.short">
@@ -545,7 +545,7 @@
                         </th>
                         <td *matCellDef="let map" mat-cell>
                             <mat-icon
-                                (click)="deleteProgram(map.short)"
+                                (click)="deleteProgram(map)"
                                 matTooltip="Delete Program"
                                 matTooltipPosition="right">delete_outline
                             </mat-icon>

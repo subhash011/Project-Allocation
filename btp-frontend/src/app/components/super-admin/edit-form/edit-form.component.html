@@ -16,6 +16,7 @@
         <div class="row">
             <mat-form-field class="full-width">
                 <input
+                    (input)="addForm.controls['short'].setValue(addForm.controls['short'].value.toUpperCase())"
                     [value]="short"
                     autocomplete="off"
                     formControlName="short"
@@ -23,10 +24,10 @@
                     placeholder="{{ which }} Abbrevation" />
                 <mat-error
                     *ngIf="addForm.controls['short'].hasError('required')">
-                    {{ which }} Abbrevation is <strong>required</strong>
+                    {{ which }} Abbreviation is <strong>required</strong>
                 </mat-error>
                 <mat-error *ngIf="addForm.controls['short'].errors?.pattern">
-                    {{ which }} Abbrevation can only consist of <strong>letters</strong>
+                    {{ which }} Abbreviation can only consist of <strong>letters</strong>
                 </mat-error>
             </mat-form-field>
         </div>

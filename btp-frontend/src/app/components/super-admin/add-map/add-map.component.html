@@ -13,12 +13,16 @@
     <div class="row">
         <mat-form-field class="full-width">
             <input
-                autocomplete="off" formControlName="short" matInput placeholder="{{ data.heading }} Abbrevation" />
+                (input)="addForm.controls['short'].setValue(addForm.controls['short'].value.toUpperCase())"
+                autocomplete="off"
+                formControlName="short"
+                matInput
+                placeholder="{{ data.heading }} Abbrevation" />
             <mat-error *ngIf="addForm.controls['short'].hasError('required')">
-                {{ data.heading }} Abbrevation is <strong>required</strong>
+                {{ data.heading }} Abbreviation is <strong>required</strong>
             </mat-error>
             <mat-error *ngIf="addForm.controls['short'].errors?.pattern">
-                {{ data.heading }} Abbrevation can only consist of <strong>letters</strong>
+                {{ data.heading }} Abbreviation can only consist of <strong>letters</strong>
             </mat-error>
         </mat-form-field>
     </div>

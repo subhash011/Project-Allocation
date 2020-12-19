@@ -13,22 +13,12 @@ export class CountDown implements PipeTransform {
         const distance = endTime - currentTime; // ms of difference
         let days, hrs, mins, seconds;
         if (distance > 0) {
-            days = Math.floor(distance / (1000 * 60 * 60 * 24
-            ));
-            hrs = Math.floor((distance % (1000 * 60 * 60 * 24
-                )
-            ) / (1000 * 60 * 60
-            ));
-            mins = Math.floor((distance % (1000 * 60 * 60
-                )
-            ) / (1000 * 60
-            ));
-            str += days == 0 ? "" : days > 9 ? days + " days " : "0" + days + (days == 1 ? " day " : " days "
-            );
-            str += hrs == 0 ? "" : hrs > 9 ? hrs + " hours " : "0" + hrs + (hrs == 1 ? " hour " : " hours "
-            );
-            str += mins == 0 ? "" : mins > 9 ? mins + " minutes " : "0" + mins + (mins == 1 ? " minute " : " minutes "
-            );
+            days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            str += days == 0 ? "" : days > 9 ? days + " days " : "0" + days + (days == 1 ? " day " : " days ");
+            str += hrs == 0 ? "" : hrs > 9 ? hrs + " hours " : "0" + hrs + (hrs == 1 ? " hour " : " hours ");
+            str += mins == 0 ? "" : mins > 9 ? mins + " minutes " : "0" + mins + (mins == 1 ? " minute " : " minutes ");
         } else {
             days = 0;
             hrs = 0;
@@ -131,7 +121,8 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
                         this.message = "Project allocation will be done within this period";
                         this.next = null;
                         break;
-                    default:
+                    case 4:
+                        this.stage = 3;
                         this.message = null;
                         this.next = null;
                         break;

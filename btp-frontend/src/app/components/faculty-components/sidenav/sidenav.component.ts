@@ -1,11 +1,9 @@
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+import { Component, EventEmitter, Input, NgZone, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
-import { NavbarComponent } from "src/app/components/shared/navbar/navbar.component";
-import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 
 @Component({
@@ -21,6 +19,7 @@ export class SidenavComponent implements OnInit, OnChanges {
     @Input() public adminStage;
     @Output() projectClicked = new EventEmitter<Event>();
     @Output() addButton = new EventEmitter<Event>();
+    @Output() homeClicked = new EventEmitter<boolean>();
     public selectedRow;
     selectedProjects: string[] = [];
     id: string;
@@ -30,8 +29,7 @@ export class SidenavComponent implements OnInit, OnChanges {
         private projectService: ProjectsService,
         private snackbar: MatSnackBar,
         private dialog: MatDialog,
-        private navbar: NavbarComponent,
-        private loginObject: LoginComponent
+        private ngZone: NgZone
     ) {}
 
     ngOnChanges(simpleChanges: SimpleChanges) {
@@ -88,18 +86,7 @@ export class SidenavComponent implements OnInit, OnChanges {
     }
 
     async displayHome() {
-        await this.router.navigate([ "/faculty", this.id ], {
-            queryParams: {
-                name: this.routeParams.name,
-                abbr: this.routeParams.abbr
-            }
-        });
-        await this.router.navigate([ "/faculty", this.id ], {
-            queryParams: {
-                name: this.routeParams.name,
-                abbr: this.routeParams.abbr,
-                mode: "programMode"
-            }
-        });
+        this.selectedRow = -1;
+        this.homeClicked.emit(true);
     }
 }

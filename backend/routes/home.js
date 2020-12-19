@@ -129,11 +129,12 @@ router.post("/maps/:id", async (req, res) => {
 });
 
 // remove a branch/stream
+// TODO removing branch and stream does not remove users in them
 router.delete("/branches/remove/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        const short = req.headers.body;
+        const stream = JSON.parse(req.headers.body);
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
@@ -143,7 +144,7 @@ router.delete("/branches/remove/:id", async (req, res) => {
             });
             return;
         }
-        let stream = await Streams.findOneAndDelete({short: short});
+        await Streams.findOneAndDelete({short: short});
         res.status(200).json({
             statusCode: 200,
             message: "Successfully removed the stream.",
@@ -166,7 +167,8 @@ router.delete("/maps/remove/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        const short = req.headers.body;
+        const program = JSON.parse(req.headers.body);
+        const short = program.short;
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
@@ -176,24 +178,7 @@ router.delete("/maps/remove/:id", async (req, res) => {
             });
             return;
         }
-        let program;
-        let faculty = await Faculty.findOneAndUpdate({adminProgram: short}, {
-            isAdmin: false,
-            $unset: {adminProgram: ""}
-        });
-        for (const facProgram of faculty.programs) {
-            if (facProgram.short === short) {
-                program = facProgram;
-            }
-        }
-        let promises = [
-            Programs.findOneAndDelete({short: short}),
-            Admin.findOneAndDelete({stream: short}),
-            Students.deleteMany({stream: short}),
-            Projects.deleteMany({stream: short}),
-            Faculty.updateMany({"programs.short": short}, {$pull: {programs: program}})
-        ];
-        await Promise.all(promises);
+        await Programs.findOneAndDelete({short: short});
         res.status(200).json({
             statusCode: 200,
             message: "Successfully removed the program",

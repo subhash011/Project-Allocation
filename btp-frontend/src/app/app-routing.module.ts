@@ -1,6 +1,6 @@
 import { HelpComponent } from "src/app/components/shared/help/help.component";
 import { AdminComponent } from "src/app/components/faculty-components/admin/admin.component";
-import { SuperAdminComponent } from "src/app/components/shared/super-admin/super-admin.component";
+import { SuperAdminComponent } from "src/app/components/super-admin/main/super-admin.component";
 import { RefreshComponent } from "src/app/components/faculty-components/refresh/refresh.component";
 import { ProfileComponent } from "src/app/components/shared/profile/profile.component";
 import { NgModule } from "@angular/core";

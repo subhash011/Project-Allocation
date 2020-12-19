@@ -384,7 +384,7 @@ export class UserService {
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 Authorization: idToken,
-                body: map
+                body: JSON.stringify(map)
             })
         };
         return this.http.delete(this.url, httpOptions);
@@ -409,7 +409,7 @@ export class UserService {
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 Authorization: idToken,
-                body: map
+                body: JSON.stringify(map)
             })
         };
         return this.http.delete(this.url, httpOptions);

@@ -16,6 +16,7 @@
             </mat-toolbar>
             <app-sidenav
                 (addButton)="addProject($event)"
+                (homeClicked)="empty = true"
                 (projectClicked)="displayProject($event)"
                 [adminStage]="adminStage"
                 [empty]="empty"
@@ -35,6 +36,7 @@
                 </button>
             </mat-toolbar>
             <app-content
+                (homeClick)="empty = true"
                 (newReorder)="changeReorder($event)"
                 [add]="add"
                 [adminStage]="adminStage"

@@ -1,4 +1,4 @@
-import { AddMapComponent } from "src/app/components/shared/add-map/add-map.component";
+import { AddMapComponent } from "src/app/components/super-admin/add-map/add-map.component";
 import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "src/app/components/faculty-components/delete-pop-up/delete-pop-up.component";
@@ -389,7 +389,7 @@ export class SuperAdminComponent implements OnInit {
         });
     }
 
-    deleteStream(short) {
+    deleteStream(stream) {
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
             height: "200px",
             data: {
@@ -404,10 +404,10 @@ export class SuperAdminComponent implements OnInit {
                     disableClose: true,
                     panelClass: "transparent"
                 });
-                this.userService.removeStream(short).subscribe((responseAPI: HttpResponseAPI) => {
+                this.userService.removeStream(stream).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
                     this.snackBar.open(responseAPI.message, "Ok");
-                    this.streams.data = this.streams.data.filter((val) => val.short != short);
+                    this.streams.data = this.streams.data.filter((val) => val.short != stream.short);
                 }, () => {
                     this.dialogRefLoad.close();
                 });
@@ -415,7 +415,7 @@ export class SuperAdminComponent implements OnInit {
         });
     }
 
-    deleteProgram(short) {
+    deleteProgram(program) {
         let dialogRef = this.dialog.open(DeletePopUpComponent, {
             height: "200px",
             data: {
@@ -430,10 +430,10 @@ export class SuperAdminComponent implements OnInit {
                     disableClose: true,
                     panelClass: "transparent"
                 });
-                this.userService.removeProgram(short).subscribe((responseAPI: HttpResponseAPI) => {
+                this.userService.removeProgram(program).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
                     this.snackBar.open(responseAPI.message, "Ok");
-                    this.programs.data = this.programs.data.filter((val) => val.short != short);
+                    this.programs.data = this.programs.data.filter((val) => val.short != program.short);
                 }, () => {
                     this.dialogRefLoad.close();
                 });
@@ -633,7 +633,7 @@ export class SuperAdminComponent implements OnInit {
                     this.dialogRefLoad.close();
                     for (const stream of this.streams.data) {
                         if (stream.short == curMap.short) {
-                            stream.short = short;
+                            stream.short = short.toUpperCase();
                             stream.full = full;
                         }
                     }
@@ -683,7 +683,7 @@ export class SuperAdminComponent implements OnInit {
                         this.snackBar.open(responseAPI.message, "Ok");
                         for (const program of this.programs.data) {
                             if (program.short == curMap.short) {
-                                program.short = short;
+                                program.short = short.toUpperCase();
                                 program.full = full;
                             }
                         }

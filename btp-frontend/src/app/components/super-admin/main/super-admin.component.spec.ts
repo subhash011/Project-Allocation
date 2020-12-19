@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
-import { InlineEditComponent } from "./inline-edit.component";
+import { SuperAdminComponent } from "src/app/components/super-admin/main/super-admin.component";
 
-describe("InlineEditComponent", () => {
-    let component: InlineEditComponent;
-    let fixture: ComponentFixture<InlineEditComponent>;
+describe("SuperAdminComponent", () => {
+    let component: SuperAdminComponent;
+    let fixture: ComponentFixture<SuperAdminComponent>;
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [ InlineEditComponent ]
+            declarations: [ SuperAdminComponent ]
         }).compileComponents();
     }));
     beforeEach(() => {
-        fixture = TestBed.createComponent(InlineEditComponent);
+        fixture = TestBed.createComponent(SuperAdminComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
