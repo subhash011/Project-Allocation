@@ -1,7 +1,7 @@
 import { AddMapComponent } from "src/app/components/super-admin/add-map/add-map.component";
 import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { DeletePopUpComponent } from "src/app/components/faculty-components/delete-pop-up/delete-pop-up.component";
+import { DeletePopUpComponent } from "src/app/components/faculty/delete-pop-up/delete-pop-up.component";
 import { MatDialog } from "@angular/material/dialog";
 import { UserService } from "src/app/services/user/user.service";
 import { Component, HostListener, OnInit, Pipe, PipeTransform, ViewChild } from "@angular/core";
@@ -10,21 +10,6 @@ import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 import { forkJoin } from "rxjs";
-
-@Pipe({
-    name: "getRegisteredCount"
-})
-export class GetRegisteredCount implements PipeTransform {
-    transform(students) {
-        let registered = 0;
-        let total = 0;
-        students.forEach((student) => {
-            total++;
-            registered += student.isRegistered ? 1 : 0;
-        });
-        return registered;
-    }
-}
 
 @Pipe({
     name: "getToolTipToRemoveFaculty"

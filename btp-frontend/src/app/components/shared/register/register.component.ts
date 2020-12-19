@@ -105,7 +105,7 @@ export class RegisterComponent implements OnInit {
         this.userService
             .registerUser(user, httpOptions, position, id)
             .subscribe((responseAPI: any) => {
-                if (responseAPI.result.registered == "success") {
+                if (responseAPI.result.registered) {
                     localStorage.setItem("role", position);
                     localStorage.setItem("isRegistered", "true");
                     const route = "/" + position + "/" + id;

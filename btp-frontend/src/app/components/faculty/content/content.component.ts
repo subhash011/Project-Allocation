@@ -1,11 +1,11 @@
-import { FacultyComponent } from "src/app/components/faculty-components/faculty/faculty.component";
+import { FacultyComponent } from "src/app/components/faculty/main/faculty.component";
 import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { FormBuilder, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Pipe, PipeTransform, SimpleChanges } from "@angular/core";
-import { SubmitPopUpComponent } from "src/app/components/faculty-components/submit-pop-up/submit-pop-up.component";
+import { SubmitPopUpComponent } from "src/app/components/faculty/submit-pop-up/submit-pop-up.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";

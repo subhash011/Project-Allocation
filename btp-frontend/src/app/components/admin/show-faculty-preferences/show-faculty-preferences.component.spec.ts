@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
-import { ShowFacultyPreferencesComponent } from "./show-faculty-preferences.component";
+import { ShowFacultyPreferencesComponent } from "src/app/components/admin/show-faculty-preferences/show-faculty-preferences.component";
 
 describe("ShowFacultyPreferencesComponent", () => {
     let component: ShowFacultyPreferencesComponent;

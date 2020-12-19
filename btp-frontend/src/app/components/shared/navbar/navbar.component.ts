@@ -23,7 +23,7 @@ export class GetLinksForNavBar implements PipeTransform {
     transform(value, role) {
         role = role == "admin" ? "faculty" : role;
         if (value == "profile") {
-            return "profile/" + localStorage.getItem("id");
+            return (role == "admin" ? "faculty" : role) + "/profile/" + localStorage.getItem("id");
         } else if (value == "home") {
             if (localStorage.getItem("role") == "admin") {
                 return "faculty" + "/" + localStorage.getItem("id");

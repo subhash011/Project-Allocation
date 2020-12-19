@@ -4,7 +4,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "src/app/services/user/user.service";
 import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
-import { DeletePopUpComponent } from "src/app/components/faculty-components/delete-pop-up/delete-pop-up.component";
+import { DeletePopUpComponent } from "src/app/components/faculty/delete-pop-up/delete-pop-up.component";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 import { forkJoin } from "rxjs";

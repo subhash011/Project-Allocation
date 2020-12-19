@@ -76,8 +76,8 @@ export class FacultyComponent implements OnInit {
                     const facDetails = response[i++].result;
                     const faculty = facDetails.faculty;
                     this.name = faculty.name;
-                    if (faculty.programs.length > 0) this.navbar.programsVisible = true;
-                    this.navbar.programs = faculty.programs;
+                    // if (faculty.programs.length > 0) this.navbar.programsVisible = true;
+                    // this.navbar.programs = faculty.programs;
                     // /*route params*/
                     const params = response[i++] as Params;
                     this.routeParams = params;
