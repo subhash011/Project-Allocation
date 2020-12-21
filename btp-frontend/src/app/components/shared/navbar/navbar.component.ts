@@ -58,31 +58,38 @@ export class NavbarComponent implements OnInit {
 
     goToHome() {
         let id = localStorage.getItem("id");
-        this.router
-            .navigateByUrl("/refresh", {
-                skipLocationChange: true
-            })
-            .then(() => {
-                this.ngOnInit();
-                this.router.navigate([ decodeURI("/faculty/" + id) ]);
-            });
+        this.router.navigate([ decodeURI("/faculty/" + id) ]);
+        // this.router
+        //     .navigateByUrl("/refresh", {
+        //         skipLocationChange: true
+        //     })
+        //     .then(() => {
+        //         this.ngOnInit();
+        //         this.router.navigate([ decodeURI("/faculty/" + id) ]);
+        //     });
     }
 
     goToProgram(program) {
         let id = localStorage.getItem("id");
-        this.router
-            .navigateByUrl("/refresh", {skipLocationChange: true})
-            .then(() => {
-                this.router.navigate([
-                    "/faculty",
-                    id
-                ], {
-                    queryParams: {
-                        abbr: program.short,
-                        mode: "programMode"
-                    }
-                });
-            });
+        this.router.navigate([ "/faculty", id ], {
+            queryParams: {
+                abbr: program.short,
+                mode: "programMode"
+            }
+        });
+        // this.router
+        //     .navigateByUrl("/refresh", {skipLocationChange: true})
+        //     .then(() => {
+        //         this.router.navigate([
+        //             "/faculty",
+        //             id
+        //         ], {
+        //             queryParams: {
+        //                 abbr: program.short,
+        //                 mode: "programMode"
+        //             }
+        //         });
+        //     });
     }
 
     changeRole() {
