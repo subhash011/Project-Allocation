@@ -136,12 +136,6 @@ npm i
 After the above steps are completed, in the backend folder, replace the 'environment.txt' file with a file named '.env'
 and add all the required parameters as mentioned in the environment.txt file.
 
-## Configuring Angular app
-
-The above commands will install all the required packages but some changes are to made for the application to run as expected:
-
-**Check the instructions given in btp-frontend folder's readme for more information.**
-
 ## Running the web app locally
 
 Open two terminal windows and locate to Project-Allocation/btp-frontend and Project-Allocation/backend respectively one in each of the terminal.
