@@ -59,7 +59,7 @@
                     ('' | checkRegister)
                 ">
                 <div class="flex-grow-right"></div>
-                <button mat-button routerLink="/help">
+                <button [routerLink]="'help' | links: role" mat-button>
                     <span class="nav-text">Help</span>
                 </button>
                 <button [matMenuTriggerFor]="beforeMenu" mat-button>
@@ -78,7 +78,7 @@
                 </mat-menu>
             </div>
             <div *ngIf="role | isSuper">
-                <button mat-button routerLink="/help">Help</button>
+                <button [routerLink]="'help' | links: role" mat-button>Help</button>
             </div>
         </div>
         <div class="flex-grow-right"></div>

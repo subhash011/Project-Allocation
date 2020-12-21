@@ -1,18 +1,15 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Subject } from "rxjs";
 import { ProjectsService } from "src/app/services/projects/projects.service";
-import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 import { takeUntil } from "rxjs/operators";
-import { LocalAuthService } from "src/app/services/local-auth/local-auth.service";
 
 @Component({
     selector: "app-student-projects",
     templateUrl: "./student-projects.component.html",
     styleUrls: [ "./student-projects.component.scss" ],
-    providers: [ LoginComponent ]
+    providers: []
 })
 export class StudentProjectsComponent implements OnInit, OnDestroy {
     projects: any;
@@ -21,7 +18,7 @@ export class StudentProjectsComponent implements OnInit, OnDestroy {
     loaded: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
 
-    constructor(private projectService: ProjectsService, private localAuthService: LocalAuthService, private snackBar: MatSnackBar) {}
+    constructor(private projectService: ProjectsService) {}
 
     ngOnInit() {
         this.getStudentPreferences();

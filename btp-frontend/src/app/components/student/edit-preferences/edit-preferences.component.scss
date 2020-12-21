@@ -13,6 +13,14 @@ mat-table {
     height: 90vh;
 }
 
+.no-data {
+    display: flex;
+    height: 400px;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+}
+
 .cdk-drag-preview {
     box-sizing: border-box;
     border-radius: 4px;

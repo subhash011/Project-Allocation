@@ -1,6 +1,5 @@
 <div *ngIf="loaded" class="student-home">
-    <app-timeline
-        *ngIf="details && !publishStudents && !reviewCondition" [program]="details.stream"></app-timeline>
+    <app-timeline *ngIf="details && !publishStudents && !reviewCondition" [program]="details.stream"></app-timeline>
     <div *ngIf="reviewCondition" class="display-review">
         <mat-card class="card-review">
             <div class="review">
@@ -10,8 +9,7 @@
             </div>
         </mat-card>
     </div>
-    <div
-        *ngIf="details && details.project_alloted && publishStudents" class="display">
+    <div *ngIf="details && details.project_alloted && publishStudents" class="display">
         <div class="allocationStatus">
             <h1><b>Project Allotted : &emsp;&emsp;&emsp;</b></h1>
         </div>

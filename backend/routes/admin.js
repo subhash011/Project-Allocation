@@ -902,7 +902,8 @@ router.get("/download_csv/:id/:role", async (req, res) => {
                 fs.writeFileSync(file, "Name, Roll no., Gpa\n");
             }
         } else file = null;
-        res.download(file);
+        const data = fs.readFileSync(file);
+        res.status(200).send(data);
     } catch (e) {
         res.status(500).json({
             statusCode: 500,

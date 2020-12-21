@@ -1,9 +1,8 @@
-import { FacultyComponent } from "src/app/components/faculty/main/faculty.component";
+import { FacultyComponent } from "src/app/components/faculty/faculty.component";
 import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { FormBuilder, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Pipe, PipeTransform, SimpleChanges } from "@angular/core";
 import { SubmitPopUpComponent } from "src/app/components/faculty/submit-pop-up/submit-pop-up.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -42,11 +41,11 @@ export class ContentComponent implements OnInit, OnChanges {
     @Input() public publishStudents;
     @Input() public non_student_list;
     @Input() public reorder;
-    dialogRefLoad: MatDialogRef<any>;
     @Output() newReorder = new EventEmitter<any>();
-    @Output() homeClick = new EventEmitter<boolean>();
+    @Output() homeClick = new EventEmitter<any>();
     public id;
     public index = 0;
+    dialogRefLoad: MatDialogRef<any>;
     Headers = [
         "Program", "Project", "StudentsApplied", "StudentIntake", "StudentsAlloted"
     ];
@@ -83,8 +82,7 @@ export class ContentComponent implements OnInit, OnChanges {
         private formBuilder: FormBuilder,
         private projectService: ProjectsService,
         private dialog: MatDialog,
-        private snackBar: MatSnackBar,
-        private router: Router
+        private snackBar: MatSnackBar
     ) {}
 
     ngOnInit() {
@@ -93,15 +91,14 @@ export class ContentComponent implements OnInit, OnChanges {
 
     ngOnChanges(simpleChanges: SimpleChanges): void {
         if (simpleChanges.empty) {
-            console.log(simpleChanges.empty);
             this.empty = simpleChanges.empty.currentValue;
         }
-        if (simpleChanges.project) {
+        if (simpleChanges.project?.currentValue) {
             this.EditForm.setValue({
-                title: simpleChanges.project.currentValue.title,
-                duration: simpleChanges.project.currentValue.duration,
-                studentIntake: simpleChanges.project.currentValue.studentIntake,
-                description: simpleChanges.project.currentValue.description
+                title: simpleChanges.project.currentValue?.title,
+                duration: simpleChanges.project.currentValue?.duration,
+                studentIntake: simpleChanges.project.currentValue?.studentIntake,
+                description: simpleChanges.project.currentValue?.description
             });
         }
     }
@@ -110,8 +107,8 @@ export class ContentComponent implements OnInit, OnChanges {
         this.newReorder.emit(event);
     }
 
-    async displayHome() {
-        this.homeClick.emit(true);
+    async displayHome(fetchData?: any) {
+        this.homeClick.emit(fetchData);
     }
 
     onSubmit() {
@@ -129,11 +126,11 @@ export class ContentComponent implements OnInit, OnChanges {
         });
         this.projectService.saveProject(project).subscribe((responseAPI: HttpResponseAPI) => {
             this.dialogRefLoad.close();
-            let snackBarRef = this.snackBar.open(responseAPI.message, "Ok");
             const {updated} = responseAPI.result;
+            let snackBarRef = this.snackBar.open(responseAPI.message, "Ok");
             if (updated) {
                 snackBarRef.afterDismissed().subscribe(() => {
-                    this.displayHome();
+                    this.displayHome({changed: true, change: "add", project: responseAPI.result.project}).then(() => {});
                 });
             }
         }, () => {
@@ -153,7 +150,8 @@ export class ContentComponent implements OnInit, OnChanges {
         };
         this.dialogRefLoad = this.dialog.open(SubmitPopUpComponent, {
             height: "200px",
-            width: "400px"
+            width: "400px",
+            disableClose: true
         });
         this.dialogRefLoad.afterClosed().subscribe(({message}) => {
             this.dialogRefLoad = this.dialog.open(LoaderComponent, {
@@ -164,6 +162,10 @@ export class ContentComponent implements OnInit, OnChanges {
             if (message == "submit") {
                 this.projectService.updateProject(project).subscribe((responseAPI: HttpResponseAPI) => {
                     this.dialogRefLoad.close();
+                    this.project.title = project.title;
+                    this.project.duration = project.duration;
+                    this.project.studentIntake = project.studentIntake;
+                    this.project.description = project.description;
                     this.snackBar.open(responseAPI.message, "Ok");
                 }, () => {
                     this.dialogRefLoad.close();
@@ -196,7 +198,7 @@ export class ContentComponent implements OnInit, OnChanges {
                     if (responseAPI.result.deleted) {
                         let snackBarRef = this.snackBar.open(responseAPI.message, "Ok");
                         snackBarRef.afterDismissed().subscribe(() => {
-                            this.displayHome();
+                            this.displayHome({changed: true, change: "delete", project}).then(() => {});
                         });
                     } else {
                         this.snackBar.open(responseAPI.message, "Ok");

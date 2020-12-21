@@ -1,8 +1,4 @@
 import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { StudentRoutingModule } from "./student-routing.module";
-import { SharedModule } from "src/app/components/shared/shared.module";
-import { StudentComponent } from "src/app/components/student/main/student.component";
 import { StudentProjectsComponent } from "src/app/components/student/student-projects/student-projects.component";
 import {
     IsPreferenceEdit,
@@ -10,7 +6,11 @@ import {
 } from "src/app/components/student/show-available-projects/show-available-projects.component";
 import { EditPreferencesComponent } from "src/app/components/student/edit-preferences/edit-preferences.component";
 import { DisplayPreferencesComponent } from "src/app/components/student/display-preferences/display-preferences.component";
-import { CdkDropListActualContainer } from "src/app/components/student/edit-preferences/edit-preferences.directive";
+import { SharedModule } from "src/app/components/shared/shared.module";
+import { StudentRoutingModule } from "src/app/components/student/student-routing.module";
+import { TimelineModule } from "src/app/components/shared/timeline/timeline.component";
+import { StudentComponent } from "src/app/components/student/student.component";
+import { CdkDroplistContainerModule } from "src/app/components/shared/DragDropContainer/cdk-droplist-container.directive";
 
 @NgModule({
     declarations: [
@@ -19,13 +19,13 @@ import { CdkDropListActualContainer } from "src/app/components/student/edit-pref
         IsPreferenceEdit,
         ShowAvailableProjectsComponent,
         EditPreferencesComponent,
-        DisplayPreferencesComponent,
-        CdkDropListActualContainer
+        DisplayPreferencesComponent
     ],
     imports: [
-        CommonModule,
+        SharedModule,
         StudentRoutingModule,
-        SharedModule
+        TimelineModule,
+        CdkDroplistContainerModule
     ]
 })
 export class StudentModule {}

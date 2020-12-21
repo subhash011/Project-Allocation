@@ -1,21 +1,19 @@
-import { MatDialog } from "@angular/material/dialog";
-import { LoginComponent } from "src/app/components/shared/login/login.component";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Params, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { UserService } from "src/app/services/user/user.service";
 import { NavbarComponent } from "src/app/components/shared/navbar/navbar.component";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 import { forkJoin } from "rxjs";
-import { map, mergeMap, take } from "rxjs/operators";
+import { mergeMap } from "rxjs/operators";
 
 @Component({
     selector: "app-faculty",
     templateUrl: "./faculty.component.html",
-    styleUrls: [ "./faculty.component.scss" ],
-    providers: [ LoginComponent ]
+    styleUrls: [ "./faculty.component.scss" ]
 })
 export class FacultyComponent implements OnInit {
     public name: string;
@@ -39,14 +37,12 @@ export class FacultyComponent implements OnInit {
     public nonStudentData;
     public reorder;
     public studentData;
+    dialogRefLoad: MatDialogRef<any>;
     private id: string;
 
     constructor(
         private activatedRoute: ActivatedRoute,
-        private userDetails: UserService,
-        private router: Router,
         private snackBar: MatSnackBar,
-        private loginService: LoginComponent,
         private projectService: ProjectsService,
         private userService: UserService,
         private navbar: NavbarComponent,
@@ -57,86 +53,106 @@ export class FacultyComponent implements OnInit {
         this.id = localStorage.getItem("id");
         this.studentData = {};
         this.nonStudentData = {};
-        const requests1 = [
-            this.userDetails.getFacultyDetails(this.id),
-            this.activatedRoute.queryParams.pipe(take(1)),
+        const requests = [
+            this.userService.getFacultyDetails(this.id),
             this.userService.getFacultyPrograms(),
             this.userService.getPublishMode("faculty"),
             this.userService.facultyHomeDetails()
         ];
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: "Loading, Please wait ...",
             disableClose: true,
             panelClass: "transparent"
         });
-        forkJoin(requests1)
-            .pipe(map((response: Array<any>) => {
-                    let i: number = 0;
-                    /*faculty details*/
-                    const facDetails = response[i++].result;
-                    const faculty = facDetails.faculty;
-                    this.name = faculty.name;
-                    // if (faculty.programs.length > 0) this.navbar.programsVisible = true;
-                    // this.navbar.programs = faculty.programs;
-                    // /*route params*/
-                    const params = response[i++] as Params;
-                    this.routeParams = params;
-                    if (params.mode == "programMode") {
-                        this.faculty_home = false;
-                    }
-                    if (Object.keys(params).length === 0 && params.constructor === Object) {
-                        this.stream = faculty.stream;
-                    } else {
-                        this.stream = params.abbr;
-                        this.empty = true;
-                    }
-                    /*faculty programs*/
-                    const facPrograms = response[i++].result;
-                    this.programs = facPrograms.programs;
-                    this.curr_program = this.programs.filter((val) => val.short == this.stream)[0];
-                    /*publish mode*/
-                    const programPublishMode = response[i++].result;
-                    this.publishFaculty = programPublishMode.publishFaculty;
-                    this.publishStudents = programPublishMode.publishStudents;
-                    /*faculty home*/
-                    const facHome = response[i++].result;
-                    facHome.stageDetails.forEach((val) => {
-                        if (val.deadlines.length > 0) {
-                            val.deadlines = new Date(val.deadlines[val.deadlines.length - 1]);
-                        } else {
-                            val.deadlines = null;
-                        }
-                        for (let program of this.programs) {
-                            if (program.short == val.stream) {
-                                val.full = program.full;
-                            }
-                        }
-                    });
-                    this.stageHomeDetails = facHome.stageDetails;
-                    this.projectHomeDetails = facHome.projects;
-                    this.program_details = this.projectHomeDetails.filter((val) => val.stream == this.stream);
-                    return this.stream;
-                }),
-                mergeMap((stream) => {
-                    const requests2 = [
-                        this.projectService.getFacultyProjects(stream),
-                        this.userService.getAdminInfo_program(stream)
-                    ];
-                    return forkJoin(requests2);
-                }))
-            .subscribe((response: Array<any>) => {
+        forkJoin(requests).pipe(
+            mergeMap((response: Array<HttpResponseAPI>) => {
                 let i = 0;
-                /*projects*/
-                const facProjects = response[i++].result;
-                this.projects = facProjects.projects;
-                /*admin programs*/
-                const programAdmin = response[i++].result;
-                this.adminStage = programAdmin?.admin?.stage;
-                dialogRefLoad.close();
-            }, () => {
-                console.log("here");
-                dialogRefLoad.close();
+                const facDetails = response[i++].result;
+                const faculty = facDetails.faculty;
+                this.name = faculty.name;
+                if (faculty.programs.length > 0) this.navbar.programsVisible = true;
+                this.navbar.programs = faculty.programs;
+                /*faculty programs*/
+                const facPrograms = response[i++].result;
+                this.programs = facPrograms.programs;
+                /*publish mode*/
+                const programPublishMode = response[i++].result;
+                this.publishFaculty = programPublishMode.publishFaculty;
+                this.publishStudents = programPublishMode.publishStudents;
+                /*faculty home*/
+                const facHome = response[i++].result;
+                facHome.stageDetails.forEach((val) => {
+                    if (val.deadlines.length > 0) {
+                        val.deadlines = new Date(val.deadlines[val.deadlines.length - 1]);
+                    } else {
+                        val.deadlines = null;
+                    }
+                    for (let program of this.programs) {
+                        if (program.short == val.stream) {
+                            val.full = program.full;
+                        }
+                    }
+                });
+                this.stageHomeDetails = facHome.stageDetails;
+                this.projectHomeDetails = facHome.projects;
+                this.dialogRefLoad.close();
+                return this.activatedRoute.queryParams;
+            })
+        ).subscribe((params) => {
+            this.routeParams = params;
+            if (params.mode == "programMode") {
+                this.faculty_home = false;
+            }
+            if (Object.keys(params).length === 0 && params.constructor === Object) {
+                this.stream = null;
+                this.faculty_home = true;
+            } else {
+                this.getProgramDetails(params);
+            }
+        });
+    }
+
+    getProgramDetails(params) {
+        this.empty = true;
+        this.stream = params.abbr;
+        this.curr_program = this.programs.filter((val) => val.short == this.stream)[0];
+        this.program_details = this.projectHomeDetails.filter((val) => val.stream == this.stream);
+        const requests2 = [
+            this.projectService.getFacultyProjects(this.stream),
+            this.userService.getAdminInfo_program(this.stream)
+        ];
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+            data: "Loading, Please wait ...",
+            disableClose: true,
+            panelClass: "transparent"
+        });
+        forkJoin(requests2).subscribe((response: Array<any>) => {
+            let i = 0;
+            /*projects*/
+            const facProjects = response[i++].result;
+            this.projects = facProjects.projects;
+            /*admin programs*/
+            const programAdmin = response[i++].result;
+            this.adminStage = programAdmin?.admin?.stage;
+            this.dialogRefLoad.close();
+        }, () => {
+            this.dialogRefLoad.close();
+        });
+    }
+
+    homeClicked(event) {
+        if (!event.changed) {
+            this.empty = true;
+            return;
+        }
+        if (event.change == "add") {
+            this.projects.push(event.project);
+        } else if (event.change == "delete") {
+            this.projects = this.projects.filter((val) => {
+                return val._id != event.project._id;
             });
+        }
+        this.empty = true;
     }
 
     sortWithReorder() {

@@ -1,35 +1,9 @@
 import { UserService } from "src/app/services/user/user.service";
-import { Component, Input, OnChanges, OnDestroy, OnInit, Pipe, PipeTransform, SimpleChanges } from "@angular/core";
+import { Component, Input, NgModule, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
-
-@Pipe({
-    name: "countdown"
-})
-export class CountDown implements PipeTransform {
-    transform(value, now) {
-        let str = "";
-        const currentTime = now.getTime();
-        const endTime = value.getTime();
-        const distance = endTime - currentTime; // ms of difference
-        let days, hrs, mins, seconds;
-        if (distance > 0) {
-            days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            str += days == 0 ? "" : days > 9 ? days + " days " : "0" + days + (days == 1 ? " day " : " days ");
-            str += hrs == 0 ? "" : hrs > 9 ? hrs + " hours " : "0" + hrs + (hrs == 1 ? " hour " : " hours ");
-            str += mins == 0 ? "" : mins > 9 ? mins + " minutes " : "0" + mins + (mins == 1 ? " minute " : " minutes ");
-        } else {
-            days = 0;
-            hrs = 0;
-            mins = 0;
-        }
-        if (days == 0 && hrs == 0 && mins == 0) {
-            return "This stage has ended.";
-        }
-        return str;
-    }
-}
+import { MaterialModule } from "src/app/material/material.module";
+import { PipeModule } from "src/app/components/shared/Pipes/pipe.module";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: "app-timeline",
@@ -144,3 +118,18 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
         clearInterval(this.timer);
     }
 }
+
+@NgModule({
+    declarations: [
+        TimelineComponent
+    ],
+    imports: [
+        CommonModule,
+        MaterialModule,
+        PipeModule
+    ],
+    exports: [
+        TimelineComponent
+    ]
+})
+export class TimelineModule {}

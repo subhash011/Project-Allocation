@@ -22,7 +22,6 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatTableModule } from "@angular/material/table";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule, MatRippleModule } from "@angular/material/core";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatPaginatorModule } from "@angular/material/paginator";
@@ -33,6 +32,8 @@ import { ScrollingModule } from "@angular/cdk/scrolling";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatSortModule } from "@angular/material/sort";
 import { ClipboardModule } from "@angular/cdk/clipboard";
+import { DragDropModule } from "@angular/cdk/drag-drop";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 
 const MaterialComponents = [
     MatButtonModule,
@@ -69,7 +70,8 @@ const MaterialComponents = [
     ScrollingModule,
     MatChipsModule,
     MatSortModule,
-    ClipboardModule
+    ClipboardModule,
+    DragDropModule
 ];
 
 @NgModule({

@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const compression = require("compression");
-const fs = require("fs");
 require("dotenv/config");
 
 // start the server

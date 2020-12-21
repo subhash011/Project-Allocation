@@ -51,7 +51,7 @@ router.post("/add/:id", async (req, res) => {
             });
             return;
         }
-        const project = new Project({
+        let project = new Project({
             title: project_details.title,
             duration: project_details.duration,
             studentIntake: project_details.studentIntake,
@@ -117,14 +117,15 @@ router.post("/add/:id", async (req, res) => {
             } else {
                 let students = await Student.find({stream: program}).sort([["gpa", -1]]).lean().select("_id");
                 project.not_students_id = students.map(val => val._id);
-                await project.save();
+                project = await project.save();
                 faculty.project_list.push(project._id);
                 await faculty.save();
                 res.status(200).json({
                     statusCode: 200,
                     message: "Your project has been successfully added",
                     result: {
-                        updated: true
+                        updated: true,
+                        project
                     }
                 });
             }

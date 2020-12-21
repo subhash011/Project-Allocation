@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { SuperAdminRoutingModule } from "./super-admin-routing.module";
-import { SharedModule } from "src/app/components/shared/shared.module";
-import { FacultyTooltipSuper, SuperAdminComponent } from "src/app/components/super-admin/main/super-admin.component";
 import { AddMapComponent } from "src/app/components/super-admin/add-map/add-map.component";
 import { EditFormComponent } from "src/app/components/super-admin/edit-form/edit-form.component";
+import { SharedModule } from "src/app/components/shared/shared.module";
+import { SuperAdminRoutingModule } from "src/app/components/super-admin/super-admin-routing.module";
+import { SatPopoverModule } from "@ncstate/sat-popover";
+import { FacultyTooltipSuper, SuperAdminComponent } from "src/app/components/super-admin/super-admin.component";
 
 @NgModule({
     declarations: [
@@ -14,9 +14,9 @@ import { EditFormComponent } from "src/app/components/super-admin/edit-form/edit
         FacultyTooltipSuper
     ],
     imports: [
-        CommonModule,
+        SharedModule,
         SuperAdminRoutingModule,
-        SharedModule
+        SatPopoverModule
     ]
 })
 export class SuperAdminModule {}

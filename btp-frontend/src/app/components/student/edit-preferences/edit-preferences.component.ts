@@ -9,7 +9,6 @@ import { takeUntil } from "rxjs/operators";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
-import { LocalAuthService } from "src/app/services/local-auth/local-auth.service";
 
 @Component({
     selector: "app-edit-preferences",
@@ -49,7 +48,8 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
-        private projectService: ProjectsService, private localAuthService: LocalAuthService, private snackBar: MatSnackBar,
+        private projectService: ProjectsService,
+        private snackBar: MatSnackBar,
         private dialog: MatDialog
     ) {}
 

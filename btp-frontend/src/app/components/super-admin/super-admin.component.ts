@@ -1,5 +1,4 @@
 import { AddMapComponent } from "src/app/components/super-admin/add-map/add-map.component";
-import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "src/app/components/faculty/delete-pop-up/delete-pop-up.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -46,7 +45,7 @@ export class FacultyTooltipSuper implements PipeTransform {
             transition("expanded <=> void", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)"))
         ])
     ],
-    providers: [ LoginComponent ]
+    providers: []
 })
 export class SuperAdminComponent implements OnInit {
     @ViewChild("table") table: MatTable<any>;
@@ -86,7 +85,11 @@ export class SuperAdminComponent implements OnInit {
     indexHover;
     loaded = false;
 
-    constructor(private userService: UserService, private dialog: MatDialog, private snackBar: MatSnackBar) {}
+    constructor(
+        private userService: UserService,
+        private dialog: MatDialog,
+        private snackBar: MatSnackBar
+    ) {}
 
     @HostListener("window:resize", [ "$event" ]) onResize(event) {
         if (event.target.innerWidth <= 1400) {

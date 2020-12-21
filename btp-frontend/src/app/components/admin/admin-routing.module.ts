@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { AdminComponent } from "src/app/components/admin/main/admin.component";
+import { AdminComponent } from "src/app/components/admin/admin.component";
 
 const routes: Routes = [
     {
-        path: "",
+        path: ":id",
         component: AdminComponent
     }
 ];

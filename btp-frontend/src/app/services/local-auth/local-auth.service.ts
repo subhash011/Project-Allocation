@@ -45,19 +45,14 @@ export class LocalAuthService {
                 };
             }
         } else if (!registered) {
-            if (position === "student") {
+            if (position === "faculty") {
                 return {
-                    route: "/register/" + id,
-                    error: data.message
-                };
-            } else if (position === "faculty") {
-                return {
-                    route: "/register/" + id,
+                    route: "/faculty/register/" + id,
                     error: "none"
                 };
             } else if (position == "super_admin") {
                 return {
-                    route: "/register/" + id,
+                    route: "/super_admin/register/" + id,
                     error: "none"
                 };
             }
@@ -76,11 +71,11 @@ export class LocalAuthService {
         } finally {
             const theme = localStorage.getItem("current-theme");
             let user = {};
-            this.storageService.clear();
+            localStorage.clear();
             this.storageService.setItem("isLoggedIn", "false");
-            this.storageService.setItem("role", "none");
-            this.storageService.setItem("current-theme", theme);
-            this.storageService.setItem("user", JSON.stringify(user));
+            localStorage.setItem("role", "none");
+            localStorage.setItem("current-theme", theme);
+            localStorage.setItem("user", JSON.stringify(user));
             await this.router.navigate([ "" ]);
             if (userClick) {
                 this.snackBar.open("Signed out", "Ok");

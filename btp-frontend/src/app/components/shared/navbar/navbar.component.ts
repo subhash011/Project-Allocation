@@ -1,42 +1,14 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { LoginComponent } from "src/app/components/shared/login/login.component";
+import { LoginComponent, LoginModule } from "src/app/components/shared/login/login.component";
 import { UserService } from "src/app/services/user/user.service";
-import { Router } from "@angular/router";
-import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
+import { Router, RouterModule } from "@angular/router";
+import { Component, NgModule, OnInit } from "@angular/core";
 import { StorageService } from "src/app/services/helpers/storage.service";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
-
-@Pipe({
-    name: "checkRegister"
-})
-export class CheckRegister implements PipeTransform {
-    transform(value) {
-        const role = localStorage.getItem("role");
-        return (role == "faculty" || role == "admin" || role == "student" || role == "super_admin");
-    }
-}
-
-@Pipe({
-    name: "links"
-})
-export class GetLinksForNavBar implements PipeTransform {
-    transform(value, role) {
-        role = role == "admin" ? "faculty" : role;
-        if (value == "profile") {
-            return (role == "admin" ? "faculty" : role) + "/profile/" + localStorage.getItem("id");
-        } else if (value == "home") {
-            if (localStorage.getItem("role") == "admin") {
-                return "faculty" + "/" + localStorage.getItem("id");
-            } else {
-                return role + "/" + localStorage.getItem("id");
-            }
-        } else if (value == "studentProjects") {
-            return role + "/projects/" + localStorage.getItem("id");
-        } else if (value == "studentPreferences") {
-            return "student" + "/preferences/" + localStorage.getItem("id");
-        }
-    }
-}
+import { CommonModule } from "@angular/common";
+import { PipeModule } from "src/app/components/shared/Pipes/pipe.module";
+import { MaterialModule } from "src/app/material/material.module";
+import { ThemePickerModule } from "src/app/components/shared/theme-picker/theme-picker.component";
 
 @Component({
     selector: "app-navbar",
@@ -53,7 +25,10 @@ export class NavbarComponent implements OnInit {
     badge: number = 0;
 
     constructor(
-        private router: Router, private userService: UserService, private login: LoginComponent, private snackBar: MatSnackBar,
+        private router: Router,
+        private userService: UserService,
+        private login: LoginComponent,
+        private snackBar: MatSnackBar,
         private storageService: StorageService
     ) {}
 
@@ -78,10 +53,7 @@ export class NavbarComponent implements OnInit {
 
     getAdmin() {
         let id = localStorage.getItem("id");
-        this.router.navigate([
-            "/admin",
-            id
-        ]);
+        this.router.navigate([ "/admin", id ]);
     }
 
     goToHome() {
@@ -117,3 +89,21 @@ export class NavbarComponent implements OnInit {
         this.role = localStorage.getItem("role");
     }
 }
+
+@NgModule({
+    imports: [
+        CommonModule,
+        RouterModule,
+        PipeModule,
+        MaterialModule,
+        LoginModule,
+        ThemePickerModule
+    ],
+    declarations: [
+        NavbarComponent
+    ],
+    exports: [
+        NavbarComponent
+    ]
+})
+export class NavbarModule {}

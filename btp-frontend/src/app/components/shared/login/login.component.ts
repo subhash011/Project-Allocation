@@ -1,32 +1,13 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LocalAuthService } from "src/app/services/local-auth/local-auth.service";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    Pipe,
-    PipeTransform,
-    ViewChild
-} from "@angular/core";
-import { SocialAuthService } from "angularx-social-login";
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, NgModule, OnInit, Output, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { LoaderComponent } from "../loader/loader.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
-
-@Pipe({
-    name: "checkLogIn",
-    pure: false
-})
-export class CheckLogIn implements PipeTransform {
-    transform(value) {
-        return localStorage.getItem("isLoggedIn") == "true";
-    }
-}
+import { CommonModule } from "@angular/common";
+import { MaterialModule } from "src/app/material/material.module";
+import { PipeModule } from "src/app/components/shared/Pipes/pipe.module";
 
 @Component({
     selector: "app-login",
@@ -42,7 +23,6 @@ export class LoginComponent implements OnInit {
     isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
 
     constructor(
-        private authService: SocialAuthService,
         private router: Router,
         private dialog: MatDialog,
         private localAuth: LocalAuthService,
@@ -128,3 +108,18 @@ export class LoginComponent implements OnInit {
         await this.localAuth.signOut(userClick);
     }
 }
+
+@NgModule({
+    imports: [
+        CommonModule,
+        MaterialModule,
+        PipeModule
+    ],
+    declarations: [
+        LoginComponent
+    ],
+    exports: [
+        LoginComponent
+    ]
+})
+export class LoginModule {}

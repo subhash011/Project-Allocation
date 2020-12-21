@@ -1,8 +1,9 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { StudentComponent } from "./main/student.component";
+import { StudentComponent } from "src/app/components/student/student.component";
 import { ShowAvailableProjectsComponent } from "src/app/components/student/show-available-projects/show-available-projects.component";
 import { ProfileComponent } from "src/app/components/shared/profile/profile.component";
+import { HelpComponent } from "src/app/components/shared/help/help.component";
 
 const routes: Routes = [
     {
@@ -20,6 +21,10 @@ const routes: Routes = [
     {
         path: "profile/:id",
         component: ProfileComponent
+    },
+    {
+        path: "help/:id",
+        component: HelpComponent
     }
 ];
 

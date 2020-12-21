@@ -1,6 +1,5 @@
 import { ExporttocsvService } from "src/app/services/exporttocsv/exporttocsv.service";
 import { ProjectsService } from "src/app/services/projects/projects.service";
-import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { MailService } from "src/app/services/mailing/mail.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DeletePopUpComponent } from "src/app/components/faculty/delete-pop-up/delete-pop-up.component";
@@ -15,9 +14,6 @@ import { ResetComponent } from "src/app/components/faculty/reset/reset.component
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { ShowStudentPreferencesComponent } from "src/app/components/admin/show-student-preferences/show-student-preferences.component";
 import { ShowFacultyPreferencesComponent } from "src/app/components/admin/show-faculty-preferences/show-faculty-preferences.component";
-import { saveAs } from "file-saver";
-import * as moment from "moment";
-import { NavbarComponent } from "src/app/components/shared/navbar/navbar.component";
 import { forkJoin } from "rxjs";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 
@@ -191,7 +187,7 @@ export class ActiveProjects implements PipeTransform {
     selector: "app-admin",
     templateUrl: "./admin.component.html",
     styleUrls: [ "./admin.component.scss" ],
-    providers: [ LoginComponent ]
+    providers: []
 })
 export class AdminComponent implements OnInit, OnDestroy {
     public details; // For displaying the projects tab
@@ -276,9 +272,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         private snackBar: MatSnackBar,
         private mailer: MailService,
         private projectService: ProjectsService,
-        private loginService: LoginComponent,
-        private exportService: ExporttocsvService,
-        private navbar: NavbarComponent
+        private exportService: ExporttocsvService
     ) {
         this.firstFormGroup = this.formBuilder.group({
             firstCtrl: [ this.dateSet[0] ]
@@ -571,8 +565,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                         disableClose: true,
                         panelClass: "transparent"
                     });
-                    date = moment(new Date(date)).format();
-                    this.userService.setDeadline(date).subscribe((data) => {
+                    this.userService.setDeadline(date).subscribe(() => {
                         dialogRefLoad.close();
                         this.snackBar.open("Deadline set successfully!!", "Ok");
                         this.ngOnInit();
@@ -650,7 +643,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             width: "400px",
             height: "200px",
             disableClose: false,
-            hasBackdrop: true,
             data: {
                 heading: "Confirm Sending Mails",
                 message: "Are you sure you want to send the mails? This cannot be undone."
@@ -913,8 +905,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         const dialogRef = this.dialog.open(ResetComponent, {
             width: "400px",
             height: "300px",
-            disableClose: false,
-            hasBackdrop: true
+            disableClose: false
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result["message"] == "submit") {
@@ -935,6 +926,17 @@ export class AdminComponent implements OnInit, OnDestroy {
         });
     }
 
+    triggerFileDownload(blob, fileName) {
+        const objectUrl: string = URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = document.createElement("a") as HTMLAnchorElement;
+        a.href = objectUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+    }
+
     downloadFile_project() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: "Loading, Please wait ...",
@@ -943,7 +945,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         });
         this.exportService.download("project").subscribe((data) => {
             dialogRefLoad.close();
-            saveAs(data, `${ this.programName }_faculty.csv`);
+            const blob: Blob = new Blob([ data ], {type: "text/csv"});
+            const fileName = `${ this.programName }_faculty.csv`;
+            this.triggerFileDownload(blob, fileName);
         }, () => {
             dialogRefLoad.close();
         });
@@ -957,7 +961,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         });
         this.exportService.download("student").subscribe((data) => {
             dialogRefLoad.close();
-            saveAs(data, `${ this.programName }_students.csv`);
+            const blob: Blob = new Blob([ data ], {type: "text/csv"});
+            const fileName = `${ this.programName }_students.csv`;
+            this.triggerFileDownload(blob, fileName);
         }, () => {
             dialogRefLoad.close();
         });
@@ -971,7 +977,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         });
         this.exportService.download("format").subscribe((data) => {
             dialogRefLoad.close();
-            saveAs(data, `${ this.programName }_format.csv`);
+            const blob: Blob = new Blob([ data ], {type: "text/csv"});
+            const fileName = `${ this.programName }_format.csv`;
+            this.triggerFileDownload(blob, fileName);
         }, () => {
             dialogRefLoad.close();
         });
@@ -985,7 +993,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         });
         this.exportService.download("allocation").subscribe((data) => {
             dialogRefLoad.close();
-            saveAs(data, `${ this.programName }_allocation.csv`);
+            const blob: Blob = new Blob([ data ], {type: "text/csv"});
+            const fileName = `${ this.programName }_allocation.csv`;
+            this.triggerFileDownload(blob, fileName);
         }, () => {
             dialogRefLoad.close();
         });

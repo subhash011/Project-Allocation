@@ -1,16 +1,12 @@
-import { HelpComponent } from "src/app/components/shared/help/help.component";
 import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { RegisterComponent } from "src/app/components/shared/register/register.component";
+import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 
+const role = localStorage.getItem("role") == "admin" ? "faculty" : localStorage.getItem("role");
+const id = localStorage.getItem("id");
 const routes: Routes = [
     {
         path: "",
         loadChildren: () => import("src/app/components/home/home.module").then(m => m.HomeModule)
-    },
-    {
-        path: "register/:id",
-        component: RegisterComponent
     },
     {
         path: "student",
@@ -29,12 +25,8 @@ const routes: Routes = [
         loadChildren: () => import("src/app/components/super-admin/super-admin.module").then(m => m.SuperAdminModule)
     },
     {
-        path: "help",
-        component: HelpComponent
-    },
-    {
         path: "**",
-        redirectTo: ""
+        redirectTo: `${ role }/${ id }`
     }
 ];
 
@@ -42,7 +34,8 @@ const routes: Routes = [
     imports: [
         RouterModule.forRoot(routes, {
             onSameUrlNavigation: "reload",
-            relativeLinkResolution: "legacy"
+            relativeLinkResolution: "legacy",
+            preloadingStrategy: PreloadAllModules
         })
     ],
     exports: [ RouterModule ]

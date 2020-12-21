@@ -87,11 +87,7 @@
                         <mat-form-field class="full-width">
                             <input formControlName="title" matInput placeholder="Title" />
                             <mat-error
-                                *ngIf="
-                                    ProjectForm.controls['title'].hasError(
-                                        'required'
-                                    )
-                                ">
+                                *ngIf="ProjectForm.controls['title'].hasError('required')">
                                 Title is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -100,11 +96,7 @@
                         <mat-form-field class="full-width">
                             <input formControlName="duration" matInput placeholder="Duration (months)" type="number" />
                             <mat-error
-                                *ngIf="
-                                    ProjectForm.controls['duration'].hasError(
-                                        'required'
-                                    )
-                                ">
+                                *ngIf="ProjectForm.controls['duration'].hasError('required')">
                                 Duration is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -115,11 +107,7 @@
                             <input
                                 formControlName="studentIntake" matInput placeholder="No. of Students" type="number" />
                             <mat-error
-                                *ngIf="
-                                    ProjectForm.controls[
-                                        'studentIntake'
-                                    ].hasError('required')
-                                ">
+                                *ngIf="ProjectForm.controls['studentIntake'].hasError('required')">
                                 StudentIntake is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -139,7 +127,7 @@
                         type="submit">
                         Submit
                     </button>
-                    <button (click)="displayHome()" color="primary" mat-raised-button>
+                    <button (click)="displayHome({changed: false})" color="primary" mat-raised-button type="button">
                         Cancel
                     </button>
                 </mat-card-actions>
@@ -172,7 +160,7 @@
 
             <mat-tab class="editPage" label="Edit">
                 <div class="container-edit">
-                    <form (ngSubmit)="onEditSubmit(project)" [formGroup]="EditForm" class="form-card" novalidate>
+                    <form (ngSubmit)="onEditSubmit(project)" [formGroup]="EditForm" class="edit-form-card" novalidate>
                         <mat-card class="add-card mat-elevation-z12">
                             <mat-card-title> Edit Project</mat-card-title>
 
@@ -180,16 +168,9 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <input
-                                            [(ngModel)]="project.title"
-                                            formControlName="title"
-                                            matInput
-                                            placeholder="Title" />
+                                            formControlName="title" matInput placeholder="Title" />
                                         <mat-error
-                                            *ngIf="
-                                                EditForm.controls[
-                                                    'title'
-                                                ].hasError('required')
-                                            ">
+                                            *ngIf="EditForm.controls['title'].hasError('required')">
                                             Title is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -198,16 +179,12 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <input
-                                            [(ngModel)]="project.duration"
                                             formControlName="duration"
                                             matInput
-                                            placeholder="Duration (months)" />
+                                            placeholder="Duration (months)"
+                                            type="number" />
                                         <mat-error
-                                            *ngIf="
-                                                EditForm.controls[
-                                                    'duration'
-                                                ].hasError('required')
-                                            ">
+                                            *ngIf="EditForm.controls['duration'].hasError('required')">
                                             Duration is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -216,17 +193,12 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <input
-                                            [(ngModel)]="project.studentIntake"
                                             formControlName="studentIntake"
                                             matInput
                                             placeholder="No. of Students"
                                             type="number" />
                                         <mat-error
-                                            *ngIf="
-                                                EditForm.controls[
-                                                    'studentIntake'
-                                                ].hasError('required')
-                                            ">
+                                            *ngIf="EditForm.controls['studentIntake'].hasError('required')">
                                             StudentIntake is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -234,16 +206,11 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <textarea
-                                            [(ngModel)]="project.description"
-                                            formControlName="description"
-                                            matInput
-                                            placeholder="Description"></textarea>
+                                            formControlName="description" matInput placeholder="Description"></textarea>
                                     </mat-form-field>
                                     <mat-error
                                         *ngIf="
-                                            EditForm.controls[
-                                                'description'
-                                            ].hasError('required')
+                                            EditForm.controls['description'].hasError('required')
                                         ">
                                         Description is <strong>required</strong>
                                     </mat-error>
@@ -264,10 +231,15 @@
                                     *ngIf="adminStage == 0"
                                     class="deleteButton"
                                     color="warn"
-                                    mat-raised-button>
+                                    mat-raised-button
+                                    type="button">
                                     Delete
                                 </button>
-                                <button (click)="displayHome()" color="primary" mat-raised-button>
+                                <button
+                                    (click)="displayHome({changed: false})"
+                                    color="primary"
+                                    mat-raised-button
+                                    type="button">
                                     Cancel
                                 </button>
                             </mat-card-actions>

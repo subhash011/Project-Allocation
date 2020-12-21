@@ -26,7 +26,8 @@ export class FacultyHomeComponent implements OnInit {
     @Input() publishStudents;
     currentTime: Date = new Date();
 
-    constructor() {}
+    constructor() {
+    }
 
     ngOnInit() {}
 

@@ -11,7 +11,8 @@ export class ShowStudentPreferencesComponent implements OnInit {
     value: string = "";
 
     constructor(
-        public dialogRef: MatDialogRef<ShowStudentPreferencesComponent>, @Inject(MAT_DIALOG_DATA) public preferences: any,
+        public dialogRef: MatDialogRef<ShowStudentPreferencesComponent>,
+        @Inject(MAT_DIALOG_DATA) public preferences: any,
         private snackBar: MatSnackBar
     ) {}
 

@@ -1,10 +1,10 @@
-import { Directive, ElementRef, Input } from "@angular/core";
 import { CdkDrag } from "@angular/cdk/drag-drop";
+import { Directive, ElementRef, Input, NgModule } from "@angular/core";
 
 @Directive({
     selector: "[cdkDrag][actualContainer]"
 })
-export class CdkDropListActualContainer {
+export class CdkDroplistContainerDirective {
     @Input("actualContainer") actualContainer: string;
     originalElement: ElementRef<HTMLElement>;
 
@@ -25,3 +25,13 @@ export class CdkDropListActualContainer {
         });
     }
 }
+
+@NgModule({
+    declarations: [
+        CdkDroplistContainerDirective
+    ],
+    exports: [
+        CdkDroplistContainerDirective
+    ]
+})
+export class CdkDroplistContainerModule {}

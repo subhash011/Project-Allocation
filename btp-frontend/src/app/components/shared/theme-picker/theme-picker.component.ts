@@ -1,6 +1,8 @@
 import { HomeComponent } from "src/app/components/home/home.component";
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { StyleManagerService } from "src/app/components/shared/style-manager/style-manager.service";
+import { Component, NgModule, OnInit, ViewEncapsulation } from "@angular/core";
+import { StyleManagerService } from "src/app/services/style-manager/style-manager.service";
+import { CommonModule } from "@angular/common";
+import { MaterialModule } from "src/app/material/material.module";
 
 @Component({
     selector: "app-theme-picker",
@@ -83,3 +85,17 @@ export interface CustomTheme {
     isDefault?: boolean;
     displayName: string;
 }
+
+@NgModule({
+    imports: [
+        CommonModule,
+        MaterialModule
+    ],
+    declarations: [
+        ThemePickerComponent
+    ],
+    exports: [
+        ThemePickerComponent
+    ]
+})
+export class ThemePickerModule {}

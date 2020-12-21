@@ -2,7 +2,14 @@
     <a (click)="userActivity()">
         <div
             *ngIf="!(isLoggedIn | checkLogIn); else elseBlock" class="google-btn" matRipple matRippleCentered="true">
-            <img src="../../../../assets/btn_google_signin_light_focus_web.png" />
+            <div class="google-btn" matRipple>
+                <div class="google-icon-wrapper">
+                    <img
+                        class="google-icon"
+                        src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+                </div>
+                <p class="btn-text">Sign in with google</p>
+            </div>
         </div>
         <ng-template #elseBlock>
             <mat-icon

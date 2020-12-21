@@ -5,15 +5,13 @@ import { forkJoin, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { UserService } from "src/app/services/user/user.service";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
-import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
-import { LocalAuthService } from "src/app/services/local-auth/local-auth.service";
 
 @Component({
     selector: "app-student",
     templateUrl: "./student.component.html",
     styleUrls: [ "./student.component.scss" ],
-    providers: [ LoginComponent ]
+    providers: []
 })
 export class StudentComponent implements OnInit, OnDestroy {
     dialogRefLoad: any;
@@ -26,7 +24,6 @@ export class StudentComponent implements OnInit, OnDestroy {
 
     constructor(
         private userService: UserService,
-        private localAuthService: LocalAuthService,
         private snackBar: MatSnackBar,
         private dialog: MatDialog
     ) {}

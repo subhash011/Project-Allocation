@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 
 @Component({
@@ -11,8 +11,7 @@ export class SubmitPopUpComponent implements OnInit {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
         private projectService: ProjectsService,
-        private dialogRef: MatDialogRef<SubmitPopUpComponent>,
-        private dialog: MatDialog
+        private dialogRef: MatDialogRef<SubmitPopUpComponent>
     ) {}
 
     ngOnInit() {}

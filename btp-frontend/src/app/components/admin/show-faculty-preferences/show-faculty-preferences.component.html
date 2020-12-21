@@ -18,8 +18,7 @@
     </mat-toolbar>
     <cdk-virtual-scroll-viewport class="example-viewport" itemSize="50">
         <div>
-            <div
-                *cdkVirtualFor="let preference of preferences.students_id" class="list-item">
+            <div *ngFor="let preference of preferences.students_id" class="list-item">
                 <mat-accordion class="example-headers-align">
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>

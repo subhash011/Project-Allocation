@@ -2,11 +2,14 @@ import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UserService } from "src/app/services/user/user.service";
 import { HttpHeaders } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
+import { Component, NgModule, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
+import { CommonModule } from "@angular/common";
+import { PipeModule } from "src/app/components/shared/Pipes/pipe.module";
+import { MaterialModule } from "src/app/material/material.module";
 
 @Component({
     selector: "app-register",
@@ -118,3 +121,18 @@ export class RegisterComponent implements OnInit {
             });
     }
 }
+
+@NgModule({
+    imports: [
+        CommonModule,
+        MaterialModule,
+        PipeModule
+    ],
+    declarations: [
+        RegisterComponent
+    ],
+    exports: [
+        RegisterComponent
+    ]
+})
+export class RegisterModule {}

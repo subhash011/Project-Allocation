@@ -8,8 +8,12 @@
     padding-right: 15%;
 }
 
+.edit-form-card {
+    padding: 6% 15% 2%;
+}
+
 mat-card-title {
-    padding-top: 5%;
+    padding-top: 50px;
     padding-bottom: 2%;
     padding-left: 40%;
 }
@@ -49,16 +53,11 @@ mat-form-field {
     height: 90%;
 }
 
-.container-edit {
-    height: 900px;
-    overflow: hidden;
-}
 
 .project_tab {
     padding-top: 50%;
     height: 810px;
     overflow-y: hidden;
-    background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/03/Free-Set-of-40-Material-Design-Backgrounds.jpg");
 }
 
 .project-card {
@@ -71,7 +70,6 @@ mat-form-field {
     padding-right: 15%;
     height: 650px;
     overflow: hidden;
-    background-image: url("https://superdevresources.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg");
 }
 
 .display {

@@ -7,7 +7,10 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-    constructor(private snackBar: MatSnackBar, private localAuthService: LocalAuthService) {}
+    constructor(
+        private snackBar: MatSnackBar,
+        private localAuthService: LocalAuthService
+    ) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(

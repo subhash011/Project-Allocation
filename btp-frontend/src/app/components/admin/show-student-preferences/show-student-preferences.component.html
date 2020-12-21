@@ -20,7 +20,7 @@
         <div style="padding:5px">
             <mat-accordion class="example-headers-align">
                 <mat-expansion-panel
-                    *ngFor="let preference of preferences.projects_preference">
+                    *cdkVirtualFor="let preference of preferences.projects_preference">
                     <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
                         <mat-panel-title>
                             Faculty : {{ preference["faculty_name"] }}

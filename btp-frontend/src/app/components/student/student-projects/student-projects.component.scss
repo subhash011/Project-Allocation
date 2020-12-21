@@ -24,7 +24,8 @@
 }
 
 .emptyBlock {
-    padding-left: 33%;
+    display: flex;
+    justify-content: center;
     font-size: large;
 }
 
@@ -65,8 +66,7 @@ mat-toolbar {
         margin-left: 0;
     }
     .emptyBlock {
-        padding-left: 10%;
-        font-size: smaller;
+        font-size: small;
     }
     h4 {
         padding-left: 20%;

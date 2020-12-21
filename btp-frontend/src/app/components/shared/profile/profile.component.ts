@@ -1,29 +1,22 @@
 import { MatDialog } from "@angular/material/dialog";
-import { LoginComponent } from "src/app/components/shared/login/login.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "src/app/services/user/user.service";
-import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
+import { Component, NgModule, OnInit } from "@angular/core";
 import { DeletePopUpComponent } from "src/app/components/faculty/delete-pop-up/delete-pop-up.component";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 import { forkJoin } from "rxjs";
-
-@Pipe({
-    name: "userPhoto"
-})
-export class UserPhoto implements PipeTransform {
-    transform(value) {
-        const user = JSON.parse(localStorage.getItem("user"));
-        return user["photoUrl"];
-    }
-}
+import { CommonModule } from "@angular/common";
+import { MaterialModule } from "src/app/material/material.module";
+import { PipeModule } from "src/app/components/shared/Pipes/pipe.module";
+import { NavbarComponent } from "src/app/components/shared/navbar/navbar.component";
 
 @Component({
     selector: "app-profile",
     templateUrl: "./profile.component.html",
     styleUrls: [ "./profile.component.scss" ],
-    providers: [ LoginComponent ]
+    providers: []
 })
 export class ProfileComponent implements OnInit {
     programHeader: string[] = [
@@ -60,8 +53,11 @@ export class ProfileComponent implements OnInit {
     });
 
     constructor(
-        private userService: UserService, private formBuilder: FormBuilder, private snackBar: MatSnackBar, private login: LoginComponent,
-        private dialog: MatDialog
+        private userService: UserService,
+        private formBuilder: FormBuilder,
+        private snackBar: MatSnackBar,
+        private dialog: MatDialog,
+        private navbar: NavbarComponent
     ) {}
 
     ngOnInit() {
@@ -132,6 +128,7 @@ export class ProfileComponent implements OnInit {
         this.userService.setPrograms(programs).subscribe((responseAPI: HttpResponseAPI) => {
             this.dialogRefLoad.close();
             this.faculty_programs = responseAPI.result.programs;
+            this.navbar.programs = this.faculty_programs;
             this.snackBar.open(responseAPI.message, "Ok");
         }, () => {
             this.dialogRefLoad.close();
@@ -164,6 +161,7 @@ export class ProfileComponent implements OnInit {
                         this.dialogRefLoad.close();
                         this.snackBar.open(responseAPI.message, "Ok");
                         this.faculty_programs = this.faculty_programs.filter(val => val.short !== program.short);
+                        this.navbar.programs = this.faculty_programs;
                     });
             }
         }, () => {
@@ -171,3 +169,18 @@ export class ProfileComponent implements OnInit {
         });
     }
 }
+
+@NgModule({
+    imports: [
+        CommonModule,
+        MaterialModule,
+        PipeModule
+    ],
+    declarations: [
+        ProfileComponent
+    ],
+    exports: [
+        ProfileComponent
+    ]
+})
+export class ProfileModule {}

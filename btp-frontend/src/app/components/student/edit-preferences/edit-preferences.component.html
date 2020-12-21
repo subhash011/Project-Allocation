@@ -119,4 +119,7 @@
                 class="example-detail-row"></mat-row>
         </mat-table>
     </div>
+    <div *ngIf="preferences.data.length == 0" class="no-data">
+        Start adding preferences to reorder them.
+    </div>
 </div>

@@ -1,8 +1,8 @@
 import { environment } from "src/environments/environment";
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import * as moment from "moment";
 
+// import * as moment from "moment";
 @Injectable({
     providedIn: "root"
 })
@@ -151,8 +151,10 @@ export class UserService {
     }
 
     setDeadline(date) {
+        // TODO Why is moment needed here ?
         const obj = {
-            deadline: moment(date).format("YYYY-MM-DD")
+            deadline: date
+            // deadline: moment(date).format("YYYY-MM-DD")
         };
         let id = localStorage.getItem("id");
         let idToken = JSON.parse(localStorage.getItem("user")).idToken;

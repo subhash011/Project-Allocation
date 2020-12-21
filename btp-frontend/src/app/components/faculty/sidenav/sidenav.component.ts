@@ -1,6 +1,5 @@
 import { MatDialog } from "@angular/material/dialog";
-import { Router } from "@angular/router";
-import { Component, EventEmitter, Input, NgZone, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProjectsService } from "src/app/services/projects/projects.service";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
@@ -19,17 +18,15 @@ export class SidenavComponent implements OnInit, OnChanges {
     @Input() public adminStage;
     @Output() projectClicked = new EventEmitter<Event>();
     @Output() addButton = new EventEmitter<Event>();
-    @Output() homeClicked = new EventEmitter<boolean>();
+    @Output() homeClicked = new EventEmitter<any>();
     public selectedRow;
     selectedProjects: string[] = [];
     id: string;
 
     constructor(
-        private router: Router,
         private projectService: ProjectsService,
         private snackbar: MatSnackBar,
-        private dialog: MatDialog,
-        private ngZone: NgZone
+        private dialog: MatDialog
     ) {}
 
     ngOnChanges(simpleChanges: SimpleChanges) {
@@ -87,6 +84,6 @@ export class SidenavComponent implements OnInit, OnChanges {
 
     async displayHome() {
         this.selectedRow = -1;
-        this.homeClicked.emit(true);
+        this.homeClicked.emit({changed: false});
     }
 }

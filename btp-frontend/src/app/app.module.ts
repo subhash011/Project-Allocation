@@ -7,12 +7,13 @@ import { AppComponent } from "src/app/app.component";
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from "angularx-social-login";
 // angular
 import { BrowserModule } from "@angular/platform-browser";
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from "@angular/material/snack-bar";
-import { SharedModule } from "src/app/components/shared/shared.module";
+import { NavbarModule } from "src/app/components/shared/navbar/navbar.component";
+import { MaterialModule } from "src/app/material/material.module";
 
 const googleLoginOption = {
     prompt: "select_account"
@@ -25,9 +26,11 @@ const googleLoginOption = {
     imports: [
         BrowserModule,
         AppRoutingModule,
+        HttpClientModule,
         BrowserAnimationsModule,
         SocialLoginModule,
-        SharedModule
+        MaterialModule,
+        NavbarModule
     ],
     exports: [],
     providers: [

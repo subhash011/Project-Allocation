@@ -1,4 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, NgModule, OnInit, ViewChild } from "@angular/core";
+import { PipeModule } from "src/app/components/shared/Pipes/pipe.module";
+import { MaterialModule } from "src/app/material/material.module";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: "app-help",
@@ -70,16 +73,19 @@ export class HelpComponent implements OnInit {
             video.currentTime = 194;
         }
     }
-
-    isStudent() {
-        return localStorage.getItem("role") == "student" ? true : false;
-    }
-
-    isFaculty() {
-        return localStorage.getItem("role") == "faculty" || localStorage.getItem("role") == "admin" ? true : false;
-    }
-
-    isSuperAdmin() {
-        return localStorage.getItem("role") == "super_admin" ? true : false;
-    }
 }
+
+@NgModule({
+    declarations: [
+        HelpComponent
+    ],
+    imports: [
+        CommonModule,
+        MaterialModule,
+        PipeModule
+    ],
+    exports: [
+        HelpComponent
+    ]
+})
+export class HelpModule {}

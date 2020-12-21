@@ -1,8 +1,4 @@
 import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { FacultyRoutingModule } from "./faculty-routing.module";
-import { SharedModule } from "../shared/shared.module";
-import { FacultyComponent } from "src/app/components/faculty/main/faculty.component";
 import { ContentComponent, FacultyPublish } from "src/app/components/faculty/content/content.component";
 import { SidenavComponent } from "src/app/components/faculty/sidenav/sidenav.component";
 import {
@@ -15,6 +11,11 @@ import { DeletePopUpComponent } from "src/app/components/faculty/delete-pop-up/d
 import { ResetComponent } from "src/app/components/faculty/reset/reset.component";
 import { ShowStudentAllotedComponent } from "src/app/components/faculty/show-student-alloted/show-student-alloted.component";
 import { FacultyHomeComponent } from "src/app/components/faculty/faculty-home/faculty-home.component";
+import { SharedModule } from "src/app/components/shared/shared.module";
+import { FacultyRoutingModule } from "src/app/components/faculty/faculty-routing.module";
+import { TimelineModule } from "src/app/components/shared/timeline/timeline.component";
+import { FacultyComponent } from "src/app/components/faculty/faculty.component";
+import { CdkDroplistContainerModule } from "../shared/DragDropContainer/cdk-droplist-container.directive";
 
 @NgModule({
     declarations: [
@@ -32,9 +33,10 @@ import { FacultyHomeComponent } from "src/app/components/faculty/faculty-home/fa
         FacultyHomeComponent
     ],
     imports: [
-        CommonModule,
+        SharedModule,
         FacultyRoutingModule,
-        SharedModule
+        TimelineModule,
+        CdkDroplistContainerModule
     ]
 })
 export class FacultyModule {}
