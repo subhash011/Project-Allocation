@@ -10,7 +10,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them
 
-- [Angular CLI](https://github.com/angular/angular-cli) version 8.3.25.
+- [Angular CLI](https://github.com/angular/angular-cli) version 11.0.4.
 - [Node.js](https://github.com/nodejs) version 12.x
 - [Angular Material](https://github.com/angular/components)
 - [MongoDB](https://github.com/mongodb/mongo) version 4.2
@@ -68,25 +68,7 @@ Please follow the link to install npm and node on CentOS or Fedora :
 https://computingforgeeks.com/how-to-install-nodejs-on-centos-fedora/
 ```
 
-#### 2. Angular CLI
-
-##### Windows
-
-Execute the following command on the command line :
-
-```
-npm install -g @angular/cli
-```
-
-##### Linux
-
-Execute the following command on the command line :
-
-```
-$ npm install -g @angular/cli
-```
-
-#### 3. MongoDB & MongoDB Compass
+#### 2. MongoDB & MongoDB Compass
 
 ##### Windows
 
@@ -114,37 +96,29 @@ _MongoDB Compass (Probably not required unless direct visualisation of database 
 sudo yum install mongodb-compass-1.20.4.x86_64.rpm
 ```
 
+#### 3. Setup
 
+##### Clone the repository.
 
-#### 4. This is not required for now. During the build process if you face any error related to angular material then use this option.
+###### SSH
+```
+git clone git@github.com:subhash011/Project-Allocation.git
+```
 
-Clone the repository to your local machine
-
-```sh
+###### HTTPS
+```
 git clone https://github.com/subhash011/Project-Allocation.git
 ```
 
-Navigate to the angular app which is the btp-frontend folder.
-
+###### GitHub CLI
 ```
-cd Project-Allocation/btp-frontend
-```
-
-Execute the following command to add angular material :
-
-```
-ng add @angular/material
+gh repo clone subhash011/Project-Allocation
 ```
 
-This command will open a prompt asking you questions :
-
-`Choose a prebuilt theme name, or "custom" for a custom theme:` Choose Indigo/Pink and then hit enter.
-
-`Set up global Angular Material typography styles?` Press Y and then hit enter.
-
-`Set up browser animations for Angular Material?` Press Y and then hit enter.
-
-#### 5. Other Dependencies
+##### Install npx if not already installed - This can be used to run angular using the local version.
+```
+npm i -g npx
+```
 
 Go to the main directory of the project that is Project-Allocation
 Execute the following commands :
@@ -152,7 +126,6 @@ Execute the following commands :
 ```
 cd btp-frontend
 npm i
-
 cd ..
 cd backend
 npm i
@@ -163,12 +136,6 @@ npm i
 After the above steps are completed, in the backend folder, replace the 'environment.txt' file with a file named '.env'
 and add all the required parameters as mentioned in the environment.txt file.
 
-## Configuring Angular app
-
-The above commands will install all the required packages but some changes are to made for the application to run as expected:
-
-**Check the instructions given in btp-frontend folder's readme for more information.**
-
 ## Running the web app locally
 
 Open two terminal windows and locate to Project-Allocation/btp-frontend and Project-Allocation/backend respectively one in each of the terminal.
@@ -176,7 +143,11 @@ Open two terminal windows and locate to Project-Allocation/btp-frontend and Proj
 In the terminal where you navigated to btp-frontend folder execute the following command :
 
 ```
-ng serve
+npx ng serve
+
+or
+
+npm start
 ```
 
 > Angular will listen to the port 4200 by default and to change the port and run use `ng serve --port PORT_NO`
@@ -184,13 +155,15 @@ ng serve
 In the terminal where you navigated to backend folder execute the following command :
 
 ```
-node server.js
-```
+npm start
 
 or
 
-```
-nodemon
+npx nodemon
+
+or
+
+node server.js
 ```
 
 > If nodemon is not installed then use `npm i --save nodemon` in the same terminal to install it.
