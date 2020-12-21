@@ -96,7 +96,24 @@ _MongoDB Compass (Probably not required unless direct visualisation of database 
 sudo yum install mongodb-compass-1.20.4.x86_64.rpm
 ```
 
-#### 3. Other Dependencies
+#### 3. Setup
+
+##### Clone the repository.
+
+###### SSH
+```
+git clone git@github.com:subhash011/Project-Allocation.git
+```
+
+###### HTTPS
+```
+git clone https://github.com/subhash011/Project-Allocation.git
+```
+
+###### GitHub CLI
+```
+gh repo clone subhash011/Project-Allocation
+```
 
 ##### Install npx if not already installed - This can be used to run angular using the local version.
 ```
@@ -109,7 +126,6 @@ Execute the following commands :
 ```
 cd btp-frontend
 npm i
-
 cd ..
 cd backend
 npm i
@@ -134,6 +150,10 @@ In the terminal where you navigated to btp-frontend folder execute the following
 
 ```
 npx ng serve
+
+or
+
+npm start
 ```
 
 > Angular will listen to the port 4200 by default and to change the port and run use `ng serve --port PORT_NO`
@@ -141,13 +161,15 @@ npx ng serve
 In the terminal where you navigated to backend folder execute the following command :
 
 ```
-node server.js
-```
+npm start
 
 or
 
-```
 npx nodemon
+
+or
+
+node server.js
 ```
 
 > If nodemon is not installed then use `npm i --save nodemon` in the same terminal to install it.
