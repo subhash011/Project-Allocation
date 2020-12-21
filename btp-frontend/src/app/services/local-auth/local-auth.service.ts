@@ -4,7 +4,7 @@ import { environment } from "src/environments/environment";
 import { GoogleLoginProvider, SocialAuthService } from "angularx-social-login";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
-import { StorageService } from "../helpers/storage.service";
+import { StorageService } from "src/app/services/helpers/storage.service";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 import { from } from "rxjs";
 

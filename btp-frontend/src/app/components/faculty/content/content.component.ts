@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Pipe, PipeTransform, SimpleChanges } from "@angular/core";
 import { SubmitPopUpComponent } from "src/app/components/faculty/submit-pop-up/submit-pop-up.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { DeletePopUpComponent } from "../delete-pop-up/delete-pop-up.component";
+import { DeletePopUpComponent } from "src/app/components/faculty/delete-pop-up/delete-pop-up.component";
 import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 

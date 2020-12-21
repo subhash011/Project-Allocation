@@ -3,7 +3,7 @@ import { LocalAuthService } from "src/app/services/local-auth/local-auth.service
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, NgModule, OnInit, Output, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
-import { LoaderComponent } from "../loader/loader.component";
+import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
 import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
 import { CommonModule } from "@angular/common";
 import { MaterialModule } from "src/app/material/material.module";

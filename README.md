@@ -1,10 +1,13 @@
 # Project-Allocation Portal
 
-Project Allocation Web Application for University using MEAN Stack. Projects can be floated by teachers and the students can give their preferences for these projects. In turn teachers also give their preference of students. The final allocation is done using the Gale-Shapley algorithm of stable marriages.
+Project Allocation Web Application for University using MEAN Stack. Projects can be floated by teachers and the students
+can give their preferences for these projects. In turn teachers also give their preference of students. The final
+allocation is done using the Gale-Shapley algorithm of stable marriages.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing
+purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Pre-requisites
 
@@ -24,7 +27,8 @@ Install the following step by step in order to get a development environment up 
 
 ##### Windows
 
-Visit the nodejs website here ([Install Node](https://nodejs.org/en/download/)) and choose the windows installer option with the appropriate architecture of your computer.
+Visit the nodejs website here ([Install Node](https://nodejs.org/en/download/)) and choose the windows installer option
+with the appropriate architecture of your computer.
 
 ##### Ubuntu
 
@@ -91,7 +95,8 @@ _MongoDB Community Edition_ :
 Please follow the instructions given in the documentation -
 [Mongo Docs CentOS](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/)
 
-_MongoDB Compass (Probably not required unless direct visualisation of database is needed) _ :
+_MongoDB Compass_ (Not required unless direct visualisation of database is needed) :
+
 ```
 sudo yum install mongodb-compass-1.20.4.x86_64.rpm
 ```
@@ -101,27 +106,30 @@ sudo yum install mongodb-compass-1.20.4.x86_64.rpm
 ##### Clone the repository.
 
 ###### SSH
+
 ```
 git clone git@github.com:subhash011/Project-Allocation.git
 ```
 
 ###### HTTPS
+
 ```
 git clone https://github.com/subhash011/Project-Allocation.git
 ```
 
 ###### GitHub CLI
+
 ```
 gh repo clone subhash011/Project-Allocation
 ```
 
 ##### Install npx if not already installed - This can be used to run angular using the local version.
+
 ```
 npm i -g npx
 ```
 
-Go to the main directory of the project that is Project-Allocation
-Execute the following commands :
+Go to the main directory of the project that is Project-Allocation Execute the following commands :
 
 ```
 cd btp-frontend
@@ -138,7 +146,8 @@ and add all the required parameters as mentioned in the environment.txt file.
 
 ## Running the web app locally
 
-Open two terminal windows and locate to Project-Allocation/btp-frontend and Project-Allocation/backend respectively one in each of the terminal.
+Open two terminal windows and locate to Project-Allocation/btp-frontend and Project-Allocation/backend respectively one
+in each of the terminal.
 
 In the terminal where you navigated to btp-frontend folder execute the following command :
 
@@ -150,7 +159,7 @@ or
 npm start
 ```
 
-> Angular will listen to the port 4200 by default and to change the port and run use `ng serve --port PORT_NO`
+> Angular will listen to the port 4200 by default and to change the port and run use `npx ng serve --port PORT_NO`
 
 In the terminal where you navigated to backend folder execute the following command :
 
@@ -174,8 +183,8 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 
 1. Navigate to the `environments` folder under the `src` folder and open the environment.prod.ts file.
 
-2. `apiUrl` is the base URL to which angular application will be listening, `GOOGLE_CLIENT_ID` is the ID obtained from google developer console on
-   registering the application
+2. `apiUrl` is the base URL to which angular application will be listening, `GOOGLE_CLIENT_ID` is the ID obtained from
+   google developer console on registering the application
 
    To register the app on google's developer console follow the link given:
    ```
@@ -195,13 +204,14 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
    > This artice explains very well on how to use the file replacements array:
    > https://medium.com/@balramchavan/configure-and-build-angular-application-for-different-environments-7e94a3c0af23
 
-4. To build the application after completing all the configuration steps, run `ng build --prod --build-optimizer`.
+4. To build the application after completing all the configuration steps, run `ng build --prod`.
 
    > ### This is required only if the above optional steps are followed
    >
    > if you have made any file replacements run the build command accordingly. Remember to run the ng build command in the root directory of the project i.e btp-frontend.
 
-5. After running the build command the in step 4, the backend folder is ready to be deployed along with the necessary static files. The entire app is present in the backend folder now so it is enough to deploy this folder.
+5. After running the build command the in step 4, the backend folder is ready to be deployed along with the necessary
+   static files. The entire app is present in the backend folder now so it is enough to deploy this folder.
 
 6. For deployment instructions on centos 7 follow this link:
    ```
