@@ -104,8 +104,8 @@ router.post("/user_check", async (req, res) => {
             let studentRegistered = true;
             let student = await Student.findOne({email: userDetails.email});
             if (!student) {
-                res.status(200).json({
-                    statusCode: 200,
+                res.status(403).json({
+                    statusCode: 403,
                     message: "Your name was not in the list of students provided by the co-ordinator. Please contact your program co-ordinator.",
                     result: {
                         registered: false,

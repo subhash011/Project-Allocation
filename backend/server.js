@@ -30,7 +30,7 @@ mongoose.set("useFindAndModify", false);
 //uncomment during production
 app.use(express.static(__dirname + "/btp-frontend"));
 
-const mongoConnect = process.env.MONGO_URL_BACK;
+const mongoConnect = process.env.MONGO_URL;
 //connect to mongodb
 mongoose
     .connect(mongoConnect, {
