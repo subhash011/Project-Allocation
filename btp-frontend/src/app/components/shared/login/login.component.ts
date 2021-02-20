@@ -88,7 +88,6 @@ export class LoginComponent implements OnInit {
                     this.dialogRefLoad.close();
                 }, () => {
                     this.dialogRefLoad.close();
-                    this.snackBar.open("Some error occurred. Check your network connection and try again!", "Ok");
                 });
             }, (err) => {
                 if (err.error == "popup_closed_by_user") {

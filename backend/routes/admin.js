@@ -890,6 +890,9 @@ router.get("/download_csv/:id/:role", async (req, res) => {
         let admin = await Admin.findOne({admin_id: faculty._id}).lean().select("stream");
         const filename = admin.stream;
         let file;
+        if (!fs.existsSync("./CSV")) {
+            fs.mkdirSync("./CSV");
+        }
         if (role === "project") {
             file = path.resolve(__dirname, `../CSV/projects/${filename}.csv`);
         } else if (role === "student") {
@@ -1334,12 +1337,14 @@ router.post("/uploadStudentList/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id isAdmin");
-        res.status(401).json({
-            statusCode: 401,
-            message: "Session timed out! Please Sign-In again.",
-            result: null
-        });
-        let admin = await Admin.findOne({admin_id: faculty._id}).lean();
+        if(!faculty) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Session timed out! Please Sign-In again.",
+                result: null
+            });
+        }
+        let admin = await Admin.findOne({admin_id: faculty._id});
         const file_path = path.resolve(__dirname, "../CSV/StudentList/");
         if (!fs.existsSync(file_path)) {
             fs.mkdirSync(file_path, {recursive: true});
@@ -1367,8 +1372,10 @@ router.post("/uploadStudentList/:id", async (req, res) => {
         }
         const promises = [];
         for (let i = 1; i < fileRows.length; i++) {
-            let data = fileRows[i];
-
+            let data = [];
+            for(const col of fileRows[i]) {
+                data.push(col.toString().trim());
+            }
             promises.push(
                 Student.findOne({roll_no: data[1]}).then(
                     (student) => {
@@ -1397,7 +1404,7 @@ router.post("/uploadStudentList/:id", async (req, res) => {
         }
 
         await Promise.all(promises);
-        let students = await Student.find({stream: admin.stream}).select("(_id isAdmin)");
+        let students = await Student.find({stream: admin.stream}).select("_id");
         admin.studentCount = students.length;
         await admin.save();
         res.status(200).json({

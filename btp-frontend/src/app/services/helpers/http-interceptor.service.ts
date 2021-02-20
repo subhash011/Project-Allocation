@@ -21,10 +21,10 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                 } else {
                     if (error.status == 401) {
                         this.snackBar.open(error.error.message, "Ok");
-                        this.localAuthService.signOut();
                     } else {
                         this.snackBar.open(error.error.message, "Ok");
                     }
+                    this.localAuthService.signOut();
                 }
                 return throwError(error);
             }));

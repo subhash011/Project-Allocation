@@ -1025,9 +1025,11 @@ export class AdminComponent implements OnInit, OnDestroy {
                         .uploadStudentList(this.fileToUpload, this.programName)
                         .subscribe((responseAPI: HttpResponseAPI) => {
                             target.value = "";
-                            this.snackBar.open(responseAPI.message);
+                            this.snackBar.open(responseAPI.message, "Ok");
                             dialogRefLoad.close();
+                            this.ngOnInit();
                         }, (e) => {
+                            target.value = "";
                             if (e.status == 400) {
                                 this.snackBar.open(e.error.result.error.message, "Ok");
                             }
