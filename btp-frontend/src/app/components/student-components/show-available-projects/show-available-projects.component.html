@@ -2,16 +2,13 @@
   <mat-sidenav-container class="example-container">
     <!-- TODO Try to convert this as angular animations -->
     <mat-sidenav
-      (openedChange)="openedSidenav($event)"
-      (closedStart)="startClosing()"
-      (openedStart)="startOpening()"
       [style.width.%]="sidenavWidth"
       class="drawer"
       #side
       mode="side"
       closed
     >
-      <mat-toolbar [style.width.%]="openedDrawerWidth" color="accent" class="toolbar">
+      <mat-toolbar [@openClose]="side.opened? (sidenavWidth == 100 ? 'fullOpen': 'open'):'close'" color="accent" class="toolbar">
         <div class="fill-space"></div>
         <h1 class="heading">
           Current Preferences

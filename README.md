@@ -75,7 +75,7 @@ https://computingforgeeks.com/how-to-install-nodejs-on-centos-fedora/
 Execute the following command on the command line :
 
 ```
-npm install -g @angular/cli
+npm install -g @angular/cli@8.3.25
 ```
 
 ##### Linux
@@ -83,7 +83,7 @@ npm install -g @angular/cli
 Execute the following command on the command line :
 
 ```
-$ npm install -g @angular/cli
+$ npm install -g @angular/cli@8.3.25
 ```
 
 #### 3. MongoDB & MongoDB Compass
@@ -241,9 +241,9 @@ Now open a web browser and go to the url <http://localhost:4200> to use the web 
 **MEAN STACK**
 
 - [MongoDB](https://github.com/mongodb/mongo) - DataBase
-- [Express.js](https://rometools.github.io/rome/) - Backend web application framework
-- [Angular](http://www.dropwizard.io/1.0.2/docs/) - Frontend web application framework
-- [Node.js](https://maven.apache.org/) - Backend web framework
+- [Express.js](https://expressjs.com/) - Backend web application framework
+- [Angular](https://angular.io/) - Frontend web application framework
+- [Node.js](https://nodejs.org/en/) - Backend web framework
 
 ## Authors
 

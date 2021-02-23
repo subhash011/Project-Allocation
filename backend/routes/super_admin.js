@@ -566,20 +566,6 @@ router.post("/edit/:field/:id",(req,res) => {
 						})
 					});
 					break;
-				case "programMap":
-					let arr = curVal.split("|");
-					let length = arr[0];
-					Mapping.findOneAndUpdate({length:length,map:curVal},{length:newVal.split("|")[0],map:newVal}).then(map => {
-						res.json({
-							message:"success",
-							result:"null"
-						})
-					}).catch(() => {
-						res.json({
-							message:"error"
-						})
-					})
-					break;
 				case "streamShort":
 					Streams.findOneAndUpdate({short:curVal},{short:newVal}).then(streams => {
 						Faculty.updateMany({stream:curVal},{stream:newVal}).then(() => {

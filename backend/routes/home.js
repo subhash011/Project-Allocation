@@ -7,6 +7,8 @@ const Faculty = require("../models/Faculty");
 const Admin = require("../models/Admin_Info");
 const Mapping = require("../models/Mapping");
 const Streams = require("../models/Streams");
+
+
 router.get("/maps", (req, res) => {
 	Mapping.find()
 		.lean()
@@ -43,8 +45,6 @@ router.post("/maps/:id", (req, res) => {
 				const newMap = new Mapping({
 					short: map.short,
 					full: map.full,
-					map: map.map,
-					length: map.map.split("|")[0],
 				});
 				newMap.save().then((map) => {
 					res.json({

@@ -52,6 +52,17 @@ export class IsPreferenceEdit implements PipeTransform {
         animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
       ),
     ]),
+    trigger("openClose", [
+        state("open", style({width: '40%'})),
+        state("close", style({width:'0px'})),
+        state('fullOpen', style({width: '100%'})),
+        transition("*<=>close",[
+            animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+        ]),
+        transition("fullOpen=>open",[
+          animate("225ms ease-in")
+        ])
+    ])
   ],
 })
 export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
@@ -64,7 +75,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
   stage = 0;
   sidenavMaxWith = 40;
   sidenavWidth: number = this.sidenavMaxWith;
-  openedDrawerWidth = 100;
   isActive: boolean = false;
   indexHover: number = -1;
   showToggleOnSidenav: boolean = false;
@@ -96,9 +106,7 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     if (width <= 1300) {
       this.showToggleOnSidenav = true;
       this.sidenavWidth = 100;
-      this.openedDrawerWidth = 100;
     } else {
-      this.openedDrawerWidth = this.sidenavMaxWith;
       this.showToggleOnSidenav = false;
       this.sidenavWidth = this.sidenavMaxWith;
     }
@@ -436,25 +444,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     });
     this.expandedElement = null;
     this.table.renderRows();
-  }
-
-  openedSidenav(event) {
-    if (event) {
-      this.openedDrawerWidth = this.sidenavMaxWith;
-      if (window.innerWidth <= 1300) {
-        this.openedDrawerWidth = 100;
-      }
-    } else {
-      this.openedDrawerWidth = 100;
-    }
-  }
-
-  startClosing() {
-    this.openedDrawerWidth = 100;
-  }
-
-  startOpening() {
-    this.openedDrawerWidth = 100;
   }
 
   ngOnDestroy() {

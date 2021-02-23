@@ -247,7 +247,7 @@
               <ng-container matColumnDef="Faculty">
                 <th
                   mat-header-cell
-                  class="common-padding" 
+                  class="common-padding"
                   mat-sort-header
                   *matHeaderCellDef
                   [style.color]="background"
@@ -459,21 +459,6 @@
                   <span style="padding-left:15px">N/A</span>
                 </ng-template>
               </ng-container>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="Map">
-            <th mat-header-cell *matHeaderCellDef>Map</th>
-            <td mat-cell [satPopoverAnchor]="p" (click)="p.open()" *matCellDef="let map">
-              <ng-container *ngIf="map.map">
-                {{map.map}}<span matTooltip="Edit Field" [matTooltipPosition]="'above'" class="edit-row"><i [satPopoverAnchor]="p" (click)="p.open()" class="fa fa-edit"></i></span>
-              </ng-container>
-              <sat-popover #p
-                  hasBackdrop
-                  xAlign="start"
-                  yAlign="start"
-                  (closed)="updateProgramMap(map, $event)">
-                <app-inline-edit [head]="'Edit map'" [placeholder]="'New map'" [value]="map.map"></app-inline-edit>
-              </sat-popover>
             </td>
           </ng-container>
           <ng-container matColumnDef="FacCount">
