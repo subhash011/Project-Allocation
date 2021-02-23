@@ -1,7 +1,6 @@
-.env
+**/.env
 .vscode/
-backend/node_modules/
-backend/btp-frontend/
+**/node_modules/
+**/build/
 backend/CSV/
-scripts/node_modules/
 .idea/

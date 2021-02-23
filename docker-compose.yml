@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  frontend:
+    container_name: pal-frontend
+    depends_on:
+      - mongodb
+      - backend_1
+      - backend_2
+    image: pal-frontend
+    build:
+      context: ./btp-frontend
+    ports:
+      - "8080:80"
+
+  backend_1:
+    container_name: pal-backend-1
+    image: pal-backend-1
+    depends_on:
+      - mongodb
+    build:
+      context: ./backend
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "8081:8080"
+    restart: always
+
+  backend_2:
+    container_name: pal-backend-2
+    image: pal-backend-2
+    depends_on:
+      - mongodb
+    build:
+      context: ./backend
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "8082:8080"
+    restart: always
+
+  mongodb:
+    container_name: mongodb-pal
+    image: mongo
+    ports:
+      - "27017:27017"
+    restart: always
+    volumes:
+      - /home/subhash011/pal-mongodb:/data/db
