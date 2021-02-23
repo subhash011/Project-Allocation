@@ -12,7 +12,7 @@ const superAdmins = process.env.SUPER_ADMINS.split(",");
 // add this student to non-opted list in all projects
 async function addStudentToNotOpted(result) {
     let updateResult = {
-        $addToSet: {not_students_id: result._id}
+        $addToSet: { not_students_id: result._id }
     };
     let populator = {
         path: "not_students_id",
@@ -20,8 +20,8 @@ async function addStudentToNotOpted(result) {
         model: Student
     };
     try {
-        await Project.updateMany({stream: result.stream}, updateResult);
-        let projects = await Project.find({stream: result.stream}).populate(populator);
+        await Project.updateMany({ stream: result.stream }, updateResult);
+        let projects = await Project.find({ stream: result.stream }).populate(populator);
         let promises = [];
         for (const project of projects) {
             project.not_students_id.sort((a, b) => b.gpa - a.gpa);
@@ -42,7 +42,7 @@ router.post("/user_check", async (req, res) => {
         const email = userDetails.email.split("@");
         const email_check = email[1];
         if (superAdmins.includes(userDetails.email)) {
-            let superAdmin = await SuperAdmin.findOne({email: userDetails.email});
+            let superAdmin = await SuperAdmin.findOne({ email: userDetails.email });
             if (!superAdmin) {
                 res.status(200).json({
                     statusCode: 200,
@@ -70,7 +70,7 @@ router.post("/user_check", async (req, res) => {
             email_check === "iitpkd.ac.in" ||
             email_check === "gmail.com"
         ) {
-            let faculty = await Faculty.findOne({email: userDetails.email});
+            let faculty = await Faculty.findOne({ email: userDetails.email });
             if (!faculty) {
                 res.status(200).json({
                     statusCode: 200,
@@ -102,7 +102,7 @@ router.post("/user_check", async (req, res) => {
             });
         } else {
             let studentRegistered = true;
-            let student = await Student.findOne({email: userDetails.email});
+            let student = await Student.findOne({ email: userDetails.email });
             if (!student) {
                 res.status(403).json({
                     statusCode: 403,

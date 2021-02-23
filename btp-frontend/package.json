@@ -4,7 +4,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
-        "build": "ng build",
+        "build:dev": "ng build",
         "build:prod": "ng build --prod",
         "build:local": "ng build -c prod-local",
         "build-css": "node-sass src/assets/custom-themes/ -o src/assets/out-themes/",

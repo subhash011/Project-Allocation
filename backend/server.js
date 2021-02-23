@@ -31,10 +31,12 @@ app.use(compression());
 app.use(bodyparser.json({ limit: "50mb", extended: true }));
 mongoose.set("useFindAndModify", false);
 
-//uncomment during production
-app.use(express.static(__dirname + "/build"));
+const { PORT = 8080, NODE_ENV = "DEV" } = process.env;
 
-const mongoConnect = process.env.MONGO_URL;
+// uncomment during production
+app.use(express.static(__dirname + "./../btp-frontend/build"));
+
+const mongoConnect = process.env[`MONGO_URL_${NODE_ENV}`];
 //connect to mongodb
 mongoose
     .connect(mongoConnect, {
@@ -81,8 +83,6 @@ app.use("/api/email", mail);
 
 const backup = require("./routes/backup");
 app.use("/api/backup", backup);
-
-const PORT = process.env.PORT || 8080;
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname + "/build/index.html"));
