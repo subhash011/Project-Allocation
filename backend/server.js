@@ -34,7 +34,7 @@ mongoose.set("useFindAndModify", false);
 const { PORT = 8080, NODE_ENV = "DEV" } = process.env;
 
 // uncomment during production
-app.use(express.static(__dirname + "./../btp-frontend/build"));
+app.use(express.static(__dirname + "/build"));
 
 const mongoConnect = process.env[`MONGO_URL_${NODE_ENV}`];
 //connect to mongodb
