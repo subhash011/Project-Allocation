@@ -5,12 +5,13 @@ require("dotenv/config");
 
 sendEmail = (mailOptions, transporter) =>
     new Promise((resolve, reject) => {
-        transporter.sendMail(mailOptions, (error) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve();
-        });
+        resolve();
+        // transporter.sendMail(mailOptions, (error) => {
+        //     if (error) {
+        //         return reject(error);
+        //     }
+        //     resolve();
+        // });
     });
 
 router.post("/send", async (req, res) => {

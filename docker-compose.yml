@@ -1,54 +1,60 @@
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
     container_name: pal-frontend
-    depends_on:
-      - mongodb
-      - backend_1
-      - backend_2
     image: pal-frontend
+    depends_on:
+      - backend
     environment:
       - NODE_ENV=dev
     build:
       context: ./btp-frontend
     ports:
-      - "8080:80"
-    restart: always
+      - "4200:4200"
     volumes:
-      - /etc/nginx/ssl:/etc/nginx/ssl
+      - ./btp-frontend:/code
+      - /code/node_modules
+    restart: on-failure
 
-  backend_1:
-    container_name: pal-backend-1
-    image: pal-backend-1
+  backend:
+    container_name: pal-backend
+    image: pal-backend
     depends_on:
       - mongodb
     build:
       context: ./backend
     environment:
-      - NODE_ENV=PROD
+      - NODE_ENV=DEV
     ports:
-      - "8081:8080"
-    restart: always
+      - "8080:8080"
+    restart: on-failure
+    volumes:
+      - ./backend:/code
+      - /code/node_modules
 
-  backend_2:
-    container_name: pal-backend-2
-    image: pal-backend-2
+  scripts:
+    container_name: pal-scripts
+    image: pal-scripts
     depends_on:
       - mongodb
     build:
-      context: ./backend
-    environment:
-      - NODE_ENV=PROD
+      context: ./scripts
     ports:
-      - "8082:8080"
-    restart: always
+      - "8000:8000"
+    restart: on-failure
+    volumes:
+      - ./scripts:/code
+      - /code/node_modules
 
   mongodb:
-    container_name: mongodb-pal
+    container_name: pal-mongodb
     image: mongo
     ports:
       - "27017:27017"
-    restart: always
+    restart: on-failure
     volumes:
-      - ~/pal-mongodb:/data/db
+      - pal-mongodb:/data/db
+
+volumes:
+  pal-mongodb:

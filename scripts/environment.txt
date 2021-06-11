@@ -1,0 +1,21 @@
+This file explains on how to create the configuration file required for the application to run:
+
+1. In the scripts folder create a file named ".env"
+The file should look as follows
+
+/**********************************************************************************************
+SECRET_KEY = the secret key for backup.
+MONGO_URL = mongodb connection stirng.
+MY_NAME = name to replace the coordinator's name.
+MY_EMAIL = email-id for logging in as coordinator.
+MY_ID = google id for the account used to log-in as coordinator.
+
+***********************************************************************************************/
+
+Ex:
+SECRET_KEY = "key"
+MONGO_URL = "123"
+MY_NAME = "foo"
+MY_EMAIL = "foo@bar.com"
+MY_ID = "123"
+

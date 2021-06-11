@@ -1,5 +1,3 @@
 /node_modules
-.gitignore
 /CSV
 /build
-/environment.txt

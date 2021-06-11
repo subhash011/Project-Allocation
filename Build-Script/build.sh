@@ -14,11 +14,11 @@ git pull
 popd
 
 pushd "${path}${backend}"
-npm i --save
+npm ci
 popd
 
 pushd "${path}${frontend}"
-npm i --save
+npm ci
 popd
 
 if [ "$str" == "yes" ]

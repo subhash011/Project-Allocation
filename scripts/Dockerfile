@@ -2,10 +2,10 @@ FROM node:14.15
 
 RUN mkdir -p /code/
 WORKDIR /code/
-COPY package*.json .
+COPY package*.json . 
 RUN npm ci
 
-EXPOSE 4200
+EXPOSE 8000
 
 CMD [ "npm", "start" ]
 

@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build frontend",
+			"type": "shell",
+			"command": "npm run build:local",
+			"options": {
+				"cwd": "${workspaceFolder}/btp-frontend"
+			},
+			"group": {
+				"isDefault": true,
+				"kind": "build"
+			},
+		}	
+	]
+}

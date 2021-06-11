@@ -1,46 +1,43 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-    _id: {
-        type: mongoose.Types.ObjectId,
-        required: true
-    },
     name: {
         type: String,
-        required: true,
+        required: true
     },
     email: {
         type: String,
-        required: true,
+        required: true
     },
     google_id: {
         id: {
-            type: String,
+            type: String
         },
         idToken: {
-            type: String,
-        },
+            type: String
+        }
     },
     isAdmin: {
         type: Boolean,
+        default: false
     },
     stream: {
         type: String,
-        required: true,
+        required: true
     },
     project_list: {
-        type: [mongoose.SchemaTypes.ObjectId],
+        type: [mongoose.SchemaTypes.ObjectId]
     },
     programs: {
-        type: [],
+        type: []
     },
     date: {
         type: Date,
-        default: Date.now(),
+        default: Date.now()
     },
     adminProgram: {
-        type: String,
-    },
+        type: String
+    }
 });
 
 module.exports = mongoose.model("Faculty", UserSchema);
