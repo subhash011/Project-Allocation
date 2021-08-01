@@ -1,100 +1,100 @@
 .image {
-    height: 100%;
-    margin-top: 100px;
-    width: 100%;
-    background: url("../../../assets/IITPKD_Logo.png") no-repeat;
-    background-size: 60%;
+  height: 100%;
+  margin-top: 100px;
+  width: 100%;
+  background: url("../../../assets/IITPKD_Logo.png") no-repeat;
+  background-size: 60%;
 }
 
 .container {
-    width: 100%;
-    position: fixed;
-    height: 400vh;
+  width: 100%;
+  position: fixed;
+  height: 400vh;
 }
 
 .mobile {
-    width: 100%;
-    background-color: white;
-    position: fixed;
+  width: 100%;
+  background-color: white;
+  position: fixed;
 }
 
 .image .Info {
-    opacity: 1;
+  opacity: 1;
 }
 
 .heading {
-    margin-bottom: 20%;
+  margin-bottom: 20%;
 }
 
 .line {
-    margin-top: 4%;
+  margin-top: 4%;
 }
 
 h1 {
-    font-size: 40px;
-    color: white;
+  font-size: 40px;
+  color: white;
 }
 
 h2 {
-    color: white;
+  color: white;
 }
 
 @media only screen and (min-width: 1200px) {
-    .container {
-        height: 400vh;
-    }
-    .mobile {
-        display: none;
-    }
+  .container {
+    height: 400vh;
+  }
+  .mobile {
+    display: none;
+  }
 }
 
 @media only screen and (max-width: 1500px) {
-    .container {
-        height: 300vh;
-    }
-    .image {
-        margin-top: 100px;
-    }
-    .heading {
-        margin-bottom: 0;
-    }
-    h1 {
-        font-size: 40px;
-    }
-    .mobile {
-        display: none;
-    }
+  .container {
+    height: 300vh;
+  }
+  .image {
+    margin-top: 100px;
+  }
+  .heading {
+    margin-bottom: 0;
+  }
+  h1 {
+    font-size: 40px;
+  }
+  .mobile {
+    display: none;
+  }
 }
 
 @media only screen and (min-width: 300px) and (max-width: 967px) {
-    .container {
-        display: none;
-    }
-    .mobile {
-        display: block;
-        position: fixed;
-    }
-    h1 {
-        font-size: 20px;
-        color: black;
-    }
-    h2 {
-        font-size: 10px;
-        color: black;
-        padding-left: 30px;
-    }
-    .image {
-        margin-top: 100px;
-        background-size: 50%;
-        margin-left: 20%;
-    }
-    .mobile-head {
-        bottom: 130px;
-    }
-    .login {
-        display: none;
-    }
-    .line {
-        margin-top: 5px;
-    }
+  .container {
+    display: none;
+  }
+  .mobile {
+    display: block;
+    position: fixed;
+  }
+  h1 {
+    font-size: 20px;
+    color: black;
+  }
+  h2 {
+    font-size: 10px;
+    color: black;
+    padding-left: 30px;
+  }
+  .image {
+    margin-top: 100px;
+    background-size: 50%;
+    margin-left: 20%;
+  }
+  .mobile-head {
+    bottom: 130px;
+  }
+  .login {
+    display: none;
+  }
+  .line {
+    margin-top: 5px;
+  }
 }

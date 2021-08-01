@@ -1,16 +1,17 @@
-import { Injectable } from "@angular/core";
+import {Injectable} from '@angular/core';
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class StyleManagerService {
-    constructor() {}
+    constructor() {
+    }
 
     /**
      * Set the stylesheet with the specified key.
      */
     setStyle(key: string, href: string) {
-        getLinkElementForKey(key).setAttribute("href", href);
+        getLinkElementForKey(key).setAttribute('href', href);
     }
 
     /**
@@ -29,18 +30,18 @@ function getLinkElementForKey(key: string) {
 }
 
 function getExistingLinkElementByKey(key: string) {
-    return document.head.querySelector(`link[rel="stylesheet"].${ getClassNameForKey(key) }`);
+    return document.head.querySelector(`link[rel="stylesheet"].${getClassNameForKey(key)}`);
 }
 
 function createLinkElementWithKey(key: string) {
-    const linkEl = document.createElement("link");
-    linkEl.setAttribute("rel", "stylesheet");
-    linkEl.setAttribute("type", "text/css");
+    const linkEl = document.createElement('link');
+    linkEl.setAttribute('rel', 'stylesheet');
+    linkEl.setAttribute('type', 'text/css');
     linkEl.classList.add(getClassNameForKey(key));
     document.head.appendChild(linkEl);
     return linkEl;
 }
 
 function getClassNameForKey(key: string) {
-    return `style-manager-${ key }`;
+    return `style-manager-${key}`;
 }

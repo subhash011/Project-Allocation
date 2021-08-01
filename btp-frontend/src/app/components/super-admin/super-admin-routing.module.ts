@@ -1,26 +1,27 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { SuperAdminComponent } from "src/app/components/super-admin/super-admin.component";
-import { HelpComponent } from "src/app/components/shared/help/help.component";
-import { RegisterComponent } from "src/app/components/shared/register/register.component";
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {SuperAdminComponent} from 'src/app/components/super-admin/super-admin.component';
+import {HelpComponent} from 'src/app/components/shared/help/help.component';
+import {RegisterComponent} from 'src/app/components/shared/register/register.component';
 
 const routes: Routes = [
     {
-        path: ":id",
+        path: ':id',
         component: SuperAdminComponent
     },
     {
-        path: "help/:id",
+        path: 'help/:id',
         component: HelpComponent
     },
     {
-        path: "register/:id",
+        path: 'register/:id',
         component: RegisterComponent
     }
 ];
 
 @NgModule({
-    imports: [ RouterModule.forChild(routes) ],
-    exports: [ RouterModule ]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
-export class SuperAdminRoutingModule {}
+export class SuperAdminRoutingModule {
+}

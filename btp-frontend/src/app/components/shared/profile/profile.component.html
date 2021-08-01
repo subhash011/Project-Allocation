@@ -1,20 +1,20 @@
 <div class="profile">
     <div *ngIf="role | isStudent">
         <mat-card class="example-card">
-            <img [src]="'' | userPhoto" class="image" mat-card-avatar />
-            <div *ngIf="user_info">
+            <img [src]="'' | userPhoto" class="image" mat-card-avatar/>
+            <div *ngIf="userInfo">
                 <form [formGroup]="studentFormGroup" class="facultyForm">
                     <p class="example-full-width">
-                        <strong>Name</strong> : {{ user_info.name }}
+                        <strong>Name</strong> : {{ userInfo.name }}
                     </p>
                     <p class="example-full-width">
-                        <strong>Stream</strong> : {{ user_info.stream }}
+                        <strong>Stream</strong> : {{ userInfo.stream }}
                     </p>
                     <p class="example-full-width">
-                        <strong>Email-ID</strong> : {{ user_info.email }}
+                        <strong>Email-ID</strong> : {{ userInfo.email }}
                     </p>
                     <p class="example-full-width">
-                        <strong>CGPA</strong> : {{ user_info.gpa }}
+                        <strong>CGPA</strong> : {{ userInfo.gpa }}
                     </p>
                 </form>
             </div>
@@ -22,38 +22,38 @@
     </div>
     <div *ngIf="(role | isFaculty) || (role | isAdmin)">
         <mat-tab-group
-            [backgroundColor]="'primary'" animationDuration="0" dynamicHeight="true" mat-align-tabs="center">
+                [backgroundColor]="'primary'" animationDuration="0" dynamicHeight="true" mat-align-tabs="center">
             <mat-tab label="About Me">
                 <mat-card class="example-card">
-                    <img [src]="'' | userPhoto" class="image" mat-card-avatar />
-                    <div *ngIf="user_info">
+                    <img [src]="'' | userPhoto" class="image" mat-card-avatar/>
+                    <div *ngIf="userInfo">
                         <form
-                            [formGroup]="facultyFormGroup" class="facultyForm">
+                                [formGroup]="facultyFormGroup" class="facultyForm">
                             <mat-form-field class="example-full-width">
                                 <mat-label>Name</mat-label>
                                 <mat-card-title>
                                     <input
-                                        formControlName="name" matInput placeholder="name" />
+                                            formControlName="name" matInput placeholder="name"/>
                                 </mat-card-title>
                                 <mat-error
-                                    *ngIf="facultyFormGroup.controls['name'].hasError('required')">
+                                        *ngIf="facultyFormGroup.controls['name'].hasError('required')">
                                     Name is <strong>required</strong>
                                 </mat-error>
                             </mat-form-field>
 
                             <p class="example-full-width">
-                                <strong>Stream</strong> : {{ user_info.stream }}
+                                <strong>Stream</strong> : {{ userInfo.stream }}
                             </p>
                             <p class="example-full-width">
-                                <strong>Email-ID</strong> :{{ user_info.email }}
+                                <strong>Email-ID</strong> :{{ userInfo.email }}
                             </p>
 
                             <mat-card-actions>
                                 <button
-                                    (click)="updateFacultyProfile()"
-                                    [disabled]="!facultyFormGroup.valid"
-                                    color="primary"
-                                    mat-raised-button>
+                                        (click)="updateFacultyProfile()"
+                                        [disabled]="!facultyFormGroup.valid"
+                                        color="primary"
+                                        mat-raised-button>
                                     Update Profile
                                 </button>
                             </mat-card-actions>
@@ -67,21 +67,21 @@
                         <mat-label>Programs</mat-label>
                         <mat-select formControlName="programs" multiple>
                             <mat-option
-                                *ngFor="let program of programs"
-                                [value]="[program.short, program.full]">{{ program.full }}</mat-option>
+                                    *ngFor="let program of programs"
+                                    [value]="[program.short, program.full]">{{ program.full }}</mat-option>
                         </mat-select>
                         <mat-error
-                            *ngIf="programGroup.controls['programs'].hasError('required')">
+                                *ngIf="programGroup.controls['programs'].hasError('required')">
                             Programs are <strong>required</strong>
                         </mat-error>
                     </mat-form-field>
                     <span>
                         <button
-                            (click)="addProgram()"
-                            [disabled]="!programGroup.valid"
-                            class="submit"
-                            color="primary"
-                            mat-raised-button>
+                                (click)="addProgram()"
+                                [disabled]="!programGroup.valid"
+                                class="submit"
+                                color="primary"
+                                mat-raised-button>
                             Submit
                         </button>
                     </span>
@@ -89,7 +89,7 @@
                 <div class="display">
                     <div class="table mat-elevation-z8">
                         <table
-                            #table [dataSource]="faculty_programs" class="mat-elevation-z8" mat-table>
+                            #table [dataSource]="facultyPrograms" class="mat-elevation-z8" mat-table>
                             <ng-container matColumnDef="Program Name">
                                 <th *matHeaderCellDef mat-header-cell>
                                     Program Name
@@ -104,16 +104,16 @@
                                 </th>
                                 <td *matCellDef="let map" mat-cell>
                                     <mat-icon
-                                        (click)="deleteProgram(map)"
-                                        matTooltip="Delete Program"
-                                        matTooltipPosition="right">delete_outline
+                                            (click)="deleteProgram(map)"
+                                            matTooltip="Delete Program"
+                                            matTooltipPosition="right">delete_outline
                                     </mat-icon>
                                 </td>
                             </ng-container>
                             <tr
-                                *matHeaderRowDef="programHeader" mat-header-row></tr>
+                                    *matHeaderRowDef="programHeader" mat-header-row></tr>
                             <tr
-                                *matRowDef="let row; columns: programHeader" mat-row></tr>
+                                    *matRowDef="let row; columns: programHeader" mat-row></tr>
                         </table>
                     </div>
                 </div>

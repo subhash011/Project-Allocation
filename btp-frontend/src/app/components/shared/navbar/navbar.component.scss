@@ -1,76 +1,76 @@
 .navbar {
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 a {
-    float: right;
-    padding-right: 10px;
+  float: right;
+  padding-right: 10px;
 }
 
 .flex-space {
-    flex: auto;
+  flex: auto;
 }
 
 .flex-grow-right {
-    flex-grow: 0.02;
+  flex-grow: 0.02;
 }
 
 .flex-grow-left {
-    flex-grow: 0.02;
+  flex-grow: 0.02;
 }
 
 .nav-text {
-    font-size: large;
+  font-size: large;
 }
 
 .navhead {
-    font-size: x-large;
+  font-size: x-large;
 }
 
 .text {
-    font-size: medium;
+  font-size: medium;
 }
 
 mat-toolbar {
-    top: 0%;
-    right: 0%;
-    left: 0%;
-    z-index: 2;
+  top: 0%;
+  right: 0%;
+  left: 0%;
+  z-index: 2;
 }
 
 .mobile {
-    display: none;
+  display: none;
 }
 
 @media only screen and (max-width: 700px) {
-    .primary-toolbar {
-        display: none;
-    }
-    .nav-text {
-        font-size: x-small;
-    }
-    .navhead {
-        font-size: small;
-    }
-    .flex-grow-right {
-        flex-grow: 0.01;
-    }
-    .flex-grow-left {
-        flex-grow: 0.01;
-    }
-    .mobile {
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
-    .flex-grow-login {
-        display: inline-block;
-    }
-    .login-mobile {
-        float: right;
-    }
-    .theme-mobile {
-        float: right;
-        margin-right: 10px;
-    }
+  .primary-toolbar {
+    display: none;
+  }
+  .nav-text {
+    font-size: x-small;
+  }
+  .navhead {
+    font-size: small;
+  }
+  .flex-grow-right {
+    flex-grow: 0.01;
+  }
+  .flex-grow-left {
+    flex-grow: 0.01;
+  }
+  .mobile {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .flex-grow-login {
+    display: inline-block;
+  }
+  .login-mobile {
+    float: right;
+  }
+  .theme-mobile {
+    float: right;
+    margin-right: 10px;
+  }
 }

@@ -1,126 +1,126 @@
 .group {
-    justify-content: center;
-    height: 15%;
+  justify-content: center;
+  height: 15%;
 }
 
 .timer {
-    margin-top: 30px;
-    margin-left: 5%;
-    clear: left;
+  margin-top: 30px;
+  margin-left: 5%;
+  clear: left;
 }
 
 .noadmin {
-    margin-top: 2%;
-    text-align: center;
+  margin-top: 2%;
+  text-align: center;
 }
 
 .timer-text {
-    width: 100%;
-    margin-top: 8%;
-    text-align: center;
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  width: 100%;
+  margin-top: 8%;
+  text-align: center;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+  "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .days_left {
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+  "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .text {
-    float: right;
-    margin-right: 5%;
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  float: right;
+  margin-right: 5%;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+  "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .stage-1 {
-    max-width: 20%;
-    float: left;
-    padding-top: 3.5%;
+  max-width: 20%;
+  float: left;
+  padding-top: 3.5%;
 }
 
 .start {
-    padding-left: 5%;
+  padding-left: 5%;
 }
 
 .icon:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .card {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 .icon:hover .card {
-    visibility: visible;
+  visibility: visible;
 }
 
 .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 400px;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
+  visibility: hidden;
+  width: 400px;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
 }
 
 .tooltip:hover .tooltiptext {
-    visibility: visible;
+  visibility: visible;
 }
 
 .program-details {
-    margin-top: 50px;
-    display: inline-block;
-    min-width: fit-content;
-    text-align: center;
+  margin-top: 50px;
+  display: inline-block;
+  min-width: fit-content;
+  text-align: center;
 }
 
 .general-details {
-    margin-left: 5%;
-    margin-right: 5%;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 .faculty-card {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .card-content {
-    display: inline-block;
+  display: inline-block;
 }
 
 .content {
-    text-align: left;
+  text-align: left;
 }
 
 mat-card-title {
-    margin-top: 5%;
+  margin-top: 5%;
 }
 
 .general {
-    margin-top: 50px;
+  margin-top: 50px;
 }
 
 .general-title {
-    margin-left: 43%;
+  margin-left: 43%;
 }
 
 .students {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 @media (min-width: 300px) and (max-width: 600px) {
-    .mobile {
-        display: none;
-    }
+  .mobile {
+    display: none;
+  }
 }
 
 @media (min-width: 600px) and (max-width: 992px) {
-    .stage-1 {
-        max-width: 18%;
-        float: left;
-        padding-top: 3.5%;
-    }
+  .stage-1 {
+    max-width: 18%;
+    float: left;
+    padding-top: 3.5%;
+  }
 }

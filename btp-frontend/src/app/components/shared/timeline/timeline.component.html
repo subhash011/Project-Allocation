@@ -1,29 +1,27 @@
 <div
-    *ngIf="admins && admins.startDate && displayTimeline && loaded" class="faculty-card">
+        *ngIf="admins && admins.startDate && displayTimeline && loaded" class="faculty-card">
     <mat-card class="program-details">
         <mat-card-title><u> Stage {{ stage + 1 }} of 4 </u></mat-card-title>
-        <br />
+        <br/>
         <mat-card-content class="card-content">
             <div class="content">
                 <p>
                     <ng-template
-                        matStepLabel>Current Stage ends in
+                            matStepLabel>Current Stage ends in
                     </ng-template>
                     <span class="days_left">
                         <strong *ngIf="curDeadline; else no_deadline">
-                            Current stage ends in :{{ curDeadline | countdown: currentTime }}
+                            Current stage ends in: {{ curDeadline | countdown: currentTime }}
                         </strong>
                         <ng-template #no_deadline>
-                            <div *ngIf="admins.stage != 4; else allocationStage">
-                                <strong>
-                                    Deadline for this stage is not yet decided.
-                                </strong>
-                            </div>
+                            <strong *ngIf="admins.stage != 3; else allocationStage">
+                                Deadline for this stage is not yet decided.
+                            </strong>
+                            <ng-template #allocationStage>
+                                <strong>Allocation will be done during this stage</strong>
+                            </ng-template>
                         </ng-template>
-                        <ng-template #allocationStage>
-                            <strong>Allocation will be done during this stage</strong>
-                        </ng-template>
-                    </span>
+                </span>
                 </p>
                 <p *ngIf="message">
                     <ng-template matStepLabel>About this stage</ng-template>
@@ -39,11 +37,11 @@
 </div>
 
 <div
-    *ngIf="loaded && (!admins || !(admins && admins.startDate))" class="general">
+        *ngIf="loaded && (!admins || !(admins && admins.startDate))" class="general">
     <mat-card class="general-details">
         <mat-card-title
-            class="general-title"><u>Description of stages</u></mat-card-title>
-        <br /> <br />
+                class="general-title"><u>Description of stages</u></mat-card-title>
+        <br/> <br/>
         <mat-card-content>
             <p>Stage 1 : Faculties add projects to the portal</p>
             <p>Stage 2 : Students give their preferences for the projects</p>

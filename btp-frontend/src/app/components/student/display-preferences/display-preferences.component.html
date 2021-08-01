@@ -1,7 +1,7 @@
 <div *ngIf="preferences && preferences.length != 0; else empty" class="list">
     <mat-accordion class="accordion">
         <div
-            *ngFor="let preference of preferences; let i = index" class="list-item">
+                *ngFor="let preference of preferences; let i = index" class="list-item">
             <div class="expansion-panel">
                 <mat-expansion-panel
                     #panel
@@ -15,7 +15,7 @@
                         <mat-panel-description>
                             <div class="fill-space"></div>
                             <mat-icon
-                                (click)="
+                                    (click)="
                                     removeOnePreference(preference);
                                     $event.stopPropagation()
                                 " [matTooltipPosition]="'above'" matTooltip="Remove {{

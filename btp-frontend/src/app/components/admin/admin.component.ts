@@ -1,65 +1,65 @@
-import { ExporttocsvService } from "src/app/services/exporttocsv/exporttocsv.service";
-import { ProjectsService } from "src/app/services/projects/projects.service";
-import { MailService } from "src/app/services/mailing/mail.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { DeletePopUpComponent } from "src/app/components/faculty/delete-pop-up/delete-pop-up.component";
-import { MatDialog } from "@angular/material/dialog";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { UserService } from "src/app/services/user/user.service";
-import { Component, HostListener, OnDestroy, OnInit, Pipe, PipeTransform, ViewChild } from "@angular/core";
-import { MatStepper } from "@angular/material/stepper";
-import { MatTableDataSource } from "@angular/material/table";
-import { SelectionModel } from "@angular/cdk/collections";
-import { ResetComponent } from "src/app/components/faculty/reset/reset.component";
-import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
-import { ShowStudentPreferencesComponent } from "src/app/components/admin/show-student-preferences/show-student-preferences.component";
-import { ShowFacultyPreferencesComponent } from "src/app/components/admin/show-faculty-preferences/show-faculty-preferences.component";
-import { forkJoin } from "rxjs";
-import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
+import {ExporttocsvService} from 'src/app/services/exporttocsv/exporttocsv.service';
+import {ProjectsService} from 'src/app/services/projects/projects.service';
+import {MailService} from 'src/app/services/mailing/mail.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {DeletePopUpComponent} from 'src/app/components/faculty/delete-pop-up/delete-pop-up.component';
+import {MatDialog} from '@angular/material/dialog';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UserService} from 'src/app/services/user/user.service';
+import {AfterViewInit, Component, HostListener, OnDestroy, OnInit, Pipe, PipeTransform, ViewChild} from '@angular/core';
+import {MatStepper} from '@angular/material/stepper';
+import {MatTableDataSource} from '@angular/material/table';
+import {SelectionModel} from '@angular/cdk/collections';
+import {ResetComponent} from 'src/app/components/faculty/reset/reset.component';
+import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
+import {ShowStudentPreferencesComponent} from 'src/app/components/admin/show-student-preferences/show-student-preferences.component';
+import {ShowFacultyPreferencesComponent} from 'src/app/components/admin/show-faculty-preferences/show-faculty-preferences.component';
+import {forkJoin} from 'rxjs';
+import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
 
 @Pipe({
-    name: "getViolations"
+    name: 'getViolations'
 })
 export class GetViolations implements PipeTransform {
     transform(stCap, prCap, stPerFac, tooltip?: boolean) {
-        let violations = [];
+        const violations = [];
         let flag = true;
         if (stCap) {
             flag = false;
-            violations.push("SPP");
+            violations.push('SPP');
         }
         if (prCap) {
             flag = false;
-            violations.push("PFE");
+            violations.push('PFE');
         }
         if (stPerFac) {
             flag = false;
-            violations.push("SPF");
+            violations.push('SPF');
         }
         if (flag && !tooltip) {
-            return "None";
+            return 'None';
         }
-        if (tooltip && violations.length != 0) {
-            return "Some faculty has a violation, head to the manage tab to check the violations.";
+        if (tooltip && violations.length !== 0) {
+            return 'Some faculty has a violation, head to the manage tab to check the violations.';
         }
-        return violations.join(", ");
+        return violations.join(', ');
     }
 }
 
 @Pipe({
-    name: "getExportDisabled"
+    name: 'getExportDisabled'
 })
 export class GetExportDisabled implements PipeTransform {
     transform(value) {
         if (value) {
-            return "You cannot export preferences till the results are either published to the faculties or to the students.";
+            return 'You cannot export preferences till the results are either published to the faculties or to the students.';
         }
-        return "Export allocation";
+        return 'Export allocation';
     }
 }
 
 @Pipe({
-    name: "getTotalIntake"
+    name: 'getTotalIntake'
 })
 export class TotalIntake implements PipeTransform {
     transform(filteredData) {
@@ -69,41 +69,41 @@ export class TotalIntake implements PipeTransform {
             total += faculty.total_studentIntake;
             included += faculty.included_studentIntake;
         });
-        return `${ included } / ${ total }`;
+        return `${included} / ${total}`;
     }
 }
 
 @Pipe({
-    name: "proceedPipe"
+    name: 'proceedPipe'
 })
 export class ProceedPipe implements PipeTransform {
-    transform(value, studentCount, proceedButton, total_intake, emailButton, student_flag) {
-        if (studentCount > total_intake) {
-            return "Number of students are greater than the number of projects that can be alloted.";
+    transform(value, studentCount, proceedButton, totalIntake, emailButton, studentFlag) {
+        if (studentCount > totalIntake) {
+            return 'Number of students are greater than the number of projects that can be alloted.';
         } else {
             if (emailButton) {
-                return "Please set the deadline in order to proceed to the next stage.";
+                return 'Please set the deadline in order to proceed to the next stage.';
             }
             switch (value) {
-                case "1":
+                case '1':
                     if (proceedButton) {
-                        return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.";
+                        return 'Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.';
                     } else {
-                        return "Proceed";
+                        return 'Proceed';
                     }
-                case "2":
-                    if (student_flag) {
-                        return "Please ensure that all the students are registered or remove unregistered students to proceed further.";
+                case '2':
+                    if (studentFlag) {
+                        return 'Please ensure that all the students are registered or remove unregistered students to proceed further.';
                     } else if (proceedButton) {
-                        return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.";
+                        return 'Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.';
                     } else {
-                        return "Proceed";
+                        return 'Proceed';
                     }
-                case "3":
+                case '3':
                     if (proceedButton) {
-                        return "Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.";
+                        return 'Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.';
                     } else {
-                        return "Proceed";
+                        return 'Proceed';
                     }
             }
         }
@@ -111,7 +111,7 @@ export class ProceedPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: "selectedLength"
+    name: 'selectedLength'
 })
 export class SelectedLength implements PipeTransform {
     transform(selected, filteredData) {
@@ -119,20 +119,20 @@ export class SelectedLength implements PipeTransform {
         filteredData = filteredData.map((val) => val._id);
         let count = 0;
         selected.forEach((project) => {
-            count += filteredData.indexOf(project) != -1 ? 1 : 0;
+            count += filteredData.indexOf(project) !== -1 ? 1 : 0;
         });
         return count;
     }
 }
 
 @Pipe({
-    name: "getAllotedStudents"
+    name: 'getAllotedStudents'
 })
 export class AllotedStudents implements PipeTransform {
     transform(alloted) {
-        let ans = "";
+        let ans = '';
         for (const allot of alloted) {
-            ans += allot.name + ", ";
+            ans += allot.name + ', ';
         }
         ans = ans.substring(0, ans.length - 2);
         return ans;
@@ -140,7 +140,7 @@ export class AllotedStudents implements PipeTransform {
 }
 
 @Pipe({
-    name: "getIncludedOfTotal"
+    name: 'getIncludedOfTotal'
 })
 export class GetIncludedOfTotal implements PipeTransform {
     transform(faculties) {
@@ -151,17 +151,17 @@ export class GetIncludedOfTotal implements PipeTransform {
             total += faculty.noOfProjects;
             return;
         });
-        return included + " / " + total;
+        return included + ' / ' + total;
     }
 }
 
 @Pipe({
-    name: "getStudentIntake"
+    name: 'getStudentIntake'
 })
 export class StudentIntake implements PipeTransform {
     transform(projects) {
         let sum = 0;
-        for (let project of projects) {
+        for (const project of projects) {
             sum += project.studentIntake;
         }
         return sum;
@@ -169,7 +169,7 @@ export class StudentIntake implements PipeTransform {
 }
 
 @Pipe({
-    name: "getActiveProjects"
+    name: 'getActiveProjects'
 })
 export class ActiveProjects implements PipeTransform {
     transform(projects) {
@@ -184,41 +184,41 @@ export class ActiveProjects implements PipeTransform {
 }
 
 @Component({
-    selector: "app-admin",
-    templateUrl: "./admin.component.html",
-    styleUrls: [ "./admin.component.scss" ],
+    selector: 'app-admin',
+    templateUrl: './admin.component.html',
+    styleUrls: ['./admin.component.scss'],
     providers: []
 })
-export class AdminComponent implements OnInit, OnDestroy {
+export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     public details; // For displaying the projects tab
     public fileToUpload: File = null;
     projectTableHeight: number = window.innerHeight * 0.6;
     studentTableHeight: number = window.innerHeight * 0.6;
     columns: string[] = [
-        "select",
-        "Title",
-        "studentIntake",
-        "Faculty",
-        "Duration",
-        "Preferences",
-        "isIncluded",
-        "Student"
+        'select',
+        'Title',
+        'studentIntake',
+        'Faculty',
+        'Duration',
+        'Preferences',
+        'isIncluded',
+        'Student'
     ];
     facultyCols = [
-        "Name",
-        "NoOfProjects",
-        "StudentIntake",
-        "Email",
-        "Actions",
-        "Violations"
+        'Name',
+        'NoOfProjects',
+        'StudentIntake',
+        'Email',
+        'Actions',
+        'Violations'
     ];
     studentCols = [
-        "Name",
-        "Email",
-        "GPA",
-        "Registered",
-        "ViewPref",
-        "Actions"
+        'Name',
+        'Email',
+        'GPA',
+        'Registered',
+        'ViewPref',
+        'Actions'
     ];
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
@@ -228,22 +228,25 @@ export class AdminComponent implements OnInit, OnDestroy {
     sixthFormGroup: FormGroup;
     seventhFormGroup: FormGroup;
     public programName;
-    public stage_no;
+    public stageNo;
     dateSet = [];
-    curr_deadline;
+    currDeadline;
     startDate;
     minDate;
-    isActive: boolean = false;
-    indexHover: number = -1;
+    isActive = false;
+    indexHover = -1;
     projects: any = [];
-    background = "primary";
-    //Buttons
-    student_flag = 0;
+    background = 'primary';
+    // Buttons
+    studentFlag = 0;
     proceedButton1 = true;
     proceedButton2 = true;
     proceedButton3 = true;
+    // tslint:disable-next-line:variable-name
     proceedButton1_ = true;
+    // tslint:disable-next-line:variable-name
     proceedButton2_ = true;
+    // tslint:disable-next-line:variable-name
     proceedButton3_ = true;
     publishStudents = true;
     publishFaculty = true;
@@ -253,7 +256,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     student;
     faculty;
     exportDisabled: boolean;
-    total_intake = 0;
+    totalIntake = 0;
     studentsPerFaculty;
     projectCap;
     studentCap;
@@ -261,7 +264,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     project: any;
     dataSource: any = new MatTableDataSource([]);
     selection = new SelectionModel(true, []);
-    @ViewChild("stepper") stepper: MatStepper;
+    @ViewChild('stepper') stepper: MatStepper;
     timer;
     currentTime: Date = new Date();
 
@@ -275,29 +278,29 @@ export class AdminComponent implements OnInit, OnDestroy {
         private exportService: ExporttocsvService
     ) {
         this.firstFormGroup = this.formBuilder.group({
-            firstCtrl: [ this.dateSet[0] ]
+            firstCtrl: [this.dateSet[0]]
         });
         this.secondFormGroup = this.formBuilder.group({
-            secondCtrl: [ this.dateSet[1] ]
+            secondCtrl: [this.dateSet[1]]
         });
         this.thirdFormGroup = this.formBuilder.group({
-            thirdCtrl: [ this.dateSet[2] ]
+            thirdCtrl: [this.dateSet[2]]
         });
         this.fourthFormGroup = this.formBuilder.group({
-            fourthCtrl: [ this.dateSet[3] ]
+            fourthCtrl: [this.dateSet[3]]
         });
         this.fifthFormGroup = this.formBuilder.group({
-            fifthCtrl: [ this.projectCap, Validators.min(1) ]
+            fifthCtrl: [this.projectCap, Validators.min(1)]
         });
         this.sixthFormGroup = this.formBuilder.group({
-            sixthCtrl: [ this.studentCap, Validators.min(1) ]
+            sixthCtrl: [this.studentCap, Validators.min(1)]
         });
         this.seventhFormGroup = this.formBuilder.group({
-            seventhCtrl: [ this.studentsPerFaculty, Validators.min(1) ]
+            seventhCtrl: [this.studentsPerFaculty, Validators.min(1)]
         });
     }
 
-    @HostListener("window:resize", [ "$event" ]) onResize(event) {
+    @HostListener('window:resize', ['$event']) onResize(event) {
         if (event.target.innerHeight <= 1400) {
             this.projectTableHeight = event.target.innerHeight * 0.6;
             this.studentTableHeight = event.target.innerHeight * 0.6;
@@ -309,19 +312,19 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     ngAfterViewInit() {
         setTimeout(() => {
-            if (this.stage_no == 1) {
-                if (this.stepper.selectedIndex == 0) {
+            if (this.stageNo === 1) {
+                if (this.stepper.selectedIndex === 0) {
                     this.stepper.next();
                 }
             }
-            if (this.stage_no == 2) {
-                if (this.stepper.selectedIndex == 0) {
+            if (this.stageNo === 2) {
+                if (this.stepper.selectedIndex === 0) {
                     this.stepper.next();
                     this.stepper.next();
                 }
             }
-            if (this.stage_no >= 3) {
-                if (this.stepper.selectedIndex == 0) {
+            if (this.stageNo >= 3) {
+                if (this.stepper.selectedIndex === 0) {
                     this.stepper.next();
                     this.stepper.next();
                     this.stepper.next();
@@ -332,13 +335,13 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.exportDisabled = false;
-        if (localStorage.getItem("allocationMap")) {
+        if (localStorage.getItem('allocationMap')) {
             this.discardAllocation();
         }
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Loading, Please wait ...",
+            data: 'Loading, Please wait ...',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
         this.timer = setInterval(() => {
             this.currentTime = new Date();
@@ -352,7 +355,7 @@ export class AdminComponent implements OnInit, OnDestroy {
             const adminInfo = (response[0] as HttpResponseAPI).result;
             /* admin info*/
             this.programName = adminInfo.stream;
-            this.stage_no = adminInfo.stage;
+            this.stageNo = adminInfo.stage;
             this.dateSet = adminInfo.deadlines;
             this.projectCap = adminInfo.projectCap;
             this.studentCap = adminInfo.studentCap;
@@ -360,25 +363,25 @@ export class AdminComponent implements OnInit, OnDestroy {
             this.publishFaculty = adminInfo.publishFaculty;
             this.publishStudents = adminInfo.publishStudents;
             this.dateSet = this.dateSet.map((date) => new Date(date));
-            this.startDate = adminInfo["startDate"];
+            this.startDate = adminInfo.startDate;
             this.ngAfterViewInit();
-            this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-            this.firstFormGroup.controls["firstCtrl"].setValue(this.dateSet[0]);
-            this.secondFormGroup.controls["secondCtrl"].setValue(this.dateSet[1]);
-            this.thirdFormGroup.controls["thirdCtrl"].setValue(this.dateSet[2]);
-            this.fifthFormGroup.controls["fifthCtrl"].setValue(this.projectCap);
-            this.sixthFormGroup.controls["sixthCtrl"].setValue(this.studentCap);
-            this.seventhFormGroup.controls["seventhCtrl"].setValue(this.studentsPerFaculty);
+            this.currDeadline = this.dateSet[this.dateSet.length - 1];
+            this.firstFormGroup.controls.firstCtrl.setValue(this.dateSet[0]);
+            this.secondFormGroup.controls.secondCtrl.setValue(this.dateSet[1]);
+            this.thirdFormGroup.controls.thirdCtrl.setValue(this.dateSet[2]);
+            this.fifthFormGroup.controls.fifthCtrl.setValue(this.projectCap);
+            this.sixthFormGroup.controls.sixthCtrl.setValue(this.studentCap);
+            this.seventhFormGroup.controls.seventhCtrl.setValue(this.studentsPerFaculty);
             /*members for admin*/
             const adminMembers = (response[1] as HttpResponseAPI).result;
             this.faculties.data = adminMembers.users.faculties;
             this.faculties.data.forEach((faculty) => {
-                this.total_intake += faculty.included_studentIntake;
+                this.totalIntake += faculty.included_studentIntake;
             });
             this.students.data = adminMembers.users.students;
             this.sortStudents({
-                direction: "asc",
-                active: "Email"
+                direction: 'asc',
+                active: 'Email'
             });
             this.studentCount = adminMembers.users.students.length;
             this.faculties.filterPredicate =
@@ -397,13 +400,13 @@ export class AdminComponent implements OnInit, OnDestroy {
                     break;
                 }
             }
-            this.student_flag = 0;
-            for (let student of this.students.data) {
-                if (student.isRegistered == false) {
-                    this.student_flag = 1;
+            this.studentFlag = 0;
+            for (const student of this.students.data) {
+                if (student.isRegistered === false) {
+                    this.studentFlag = 1;
                 }
             }
-            this.getAllocationValidation(flag, this.student_flag);
+            this.getAllocationValidation(flag, this.studentFlag);
             /*projects*/
             const {projects} = (response[2] as HttpResponseAPI).result;
             this.projects = projects;
@@ -419,41 +422,41 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     getTooltipInclusion(project) {
-        return project.isIncluded ? null : "This faculty has excluded the project. Contact the faculty if needed.";
+        return project.isIncluded ? null : 'This faculty has excluded the project. Contact the faculty if needed.';
     }
 
     proceed() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: "400px",
-            height: "250px",
+            width: '400px',
+            height: '250px',
             data: {
-                heading: "Confirm Proceed",
-                message: "Please ensure that mails have been sent. Are you sure you want to proceed to the next stage?"
+                heading: 'Confirm Proceed',
+                message: 'Please ensure that mails have been sent. Are you sure you want to proceed to the next stage?'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result["message"] == "submit") {
+            if (result && result.message === 'submit') {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Updating, Please wait ...",
+                    data: 'Updating, Please wait ...',
                     disableClose: true,
-                    panelClass: "transparent"
+                    panelClass: 'transparent'
                 });
-                let requests = [
-                    this.userService.updateStage(this.stage_no + 1)
+                const requests = [
+                    this.userService.updateStage(this.stageNo + 1)
                 ];
-                if (this.stage_no >= 2) {
+                if (this.stageNo >= 2) {
                     requests.push(this.exportService.generateCSV_projects(), this.exportService.generateCSV_students());
                 }
                 forkJoin(requests).subscribe(() => {
-                    this.stage_no++;
+                    this.stageNo++;
                     this.stepper.next();
                     this.proceedButton1 = true;
                     this.proceedButton2 = true;
                     this.proceedButton3 = true;
-                    let snackBarRef = this.snackBar.open("Successfully moved to the next stage!", "Ok");
+                    const snackBarRef = this.snackBar.open('Successfully moved to the next stage!', 'Ok');
                     snackBarRef.afterDismissed().subscribe(() => {
-                        if (this.stage_no >= 3) {
-                            this.snackBar.open("Please go to the project tab to start the allocation", "Ok", {
+                        if (this.stageNo >= 3) {
+                            this.snackBar.open('Please go to the project tab to start the allocation', 'Ok', {
                                 duration: 5000
                             });
                         }
@@ -467,34 +470,34 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     discardAllocation() {
-        localStorage.removeItem("allocationMap");
+        localStorage.removeItem('allocationMap');
     }
 
     removeFaculty(id) {
-        let dialogRef = this.dialog.open(DeletePopUpComponent, {
-            height: "200px",
-            width: "300px",
+        const dialogRef = this.dialog.open(DeletePopUpComponent, {
+            height: '200px',
+            width: '300px',
             data: {
-                heading: "Confirm Deletion",
-                message: "Are you sure you want to remove the Faculty?"
+                heading: 'Confirm Deletion',
+                message: 'Are you sure you want to remove the Faculty?'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result["message"] == "submit") {
+            if (result && result.message === 'submit') {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Removing, Please wait ...",
+                    data: 'Removing, Please wait ...',
                     disableClose: true,
-                    panelClass: "transparent"
+                    panelClass: 'transparent'
                 });
                 this.userService.removeFacultyAdmin(id).subscribe((responseAPI: HttpResponseAPI) => {
                     dialogRefLoad.close();
                     this.faculties.data = this.faculties.data.filter((val) => {
-                        return val._id != id;
+                        return val._id !== id;
                     });
                     this.dataSource.data = this.dataSource.data.filter((val) => {
-                        return val.faculty_id != id;
+                        return val.faculty_id !== id;
                     });
-                    this.snackBar.open(responseAPI.message, "Ok");
+                    this.snackBar.open(responseAPI.message, 'Ok');
                 }, () => {
                     dialogRefLoad.close();
                 });
@@ -504,33 +507,33 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     removeStudent(student) {
         const id = student._id;
-        let dialogRef = this.dialog.open(DeletePopUpComponent, {
-            height: "200px",
-            width: "300px",
+        const dialogRef = this.dialog.open(DeletePopUpComponent, {
+            height: '200px',
+            width: '300px',
             data: {
-                heading: "Confirm Deletion",
-                message: "Are you sure you want to remove the Student?"
+                heading: 'Confirm Deletion',
+                message: 'Are you sure you want to remove the Student?'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result["message"] == "submit") {
+            if (result && result.message === 'submit') {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Removing, Please wait ...",
+                    data: 'Removing, Please wait ...',
                     disableClose: true,
-                    panelClass: "transparent"
+                    panelClass: 'transparent'
                 });
                 this.userService.removeStudentAdmin(id).subscribe((responseAPI: HttpResponseAPI) => {
                     dialogRefLoad.close();
                     this.studentCount--;
                     this.students.data = this.students.data.filter((val) => {
-                        return val._id != id;
+                        return val._id !== id;
                     });
                     this.dataSource.data.forEach((project) => {
                         project.students_id = project.students_id.filter((val) => {
-                            return (val.roll_no != student.email.split("@")[0]);
+                            return (val.roll_no !== student.email.split('@')[0]);
                         });
                     });
-                    this.snackBar.open(responseAPI.message, "Ok");
+                    this.snackBar.open(responseAPI.message, 'Ok');
                 }, () => {
                     dialogRefLoad.close();
                 });
@@ -540,34 +543,34 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     setDeadline() {
         let date;
-        this.curr_deadline = this.dateSet[this.dateSet.length - 1];
-        if (this.stage_no == 0) {
-            date = this.firstFormGroup.get("firstCtrl").value;
-        } else if (this.stage_no == 1) {
-            date = this.secondFormGroup.get("secondCtrl").value;
-        } else if (this.stage_no == 2) {
-            date = this.thirdFormGroup.get("thirdCtrl").value;
+        this.currDeadline = this.dateSet[this.dateSet.length - 1];
+        if (this.stageNo === 0) {
+            date = this.firstFormGroup.get('firstCtrl').value;
+        } else if (this.stageNo === 1) {
+            date = this.secondFormGroup.get('secondCtrl').value;
+        } else if (this.stageNo === 2) {
+            date = this.thirdFormGroup.get('thirdCtrl').value;
         }
-        if (date != null && date != "") {
+        if (date !== null && date !== '') {
             const dialogRef = this.dialog.open(DeletePopUpComponent, {
-                width: "400px",
-                height: "200px",
+                width: '400px',
+                height: '200px',
                 data: {
-                    heading: "Confirm Deadline",
-                    message: "Are you sure you want to fix the deadline?"
+                    heading: 'Confirm Deadline',
+                    message: 'Are you sure you want to fix the deadline?'
                 },
                 disableClose: true
             });
             dialogRef.afterClosed().subscribe((result) => {
-                if (result.message == "submit") {
+                if (result.message === 'submit') {
                     const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                        data: "Updating, Please wait ...",
+                        data: 'Updating, Please wait ...',
                         disableClose: true,
-                        panelClass: "transparent"
+                        panelClass: 'transparent'
                     });
                     this.userService.setDeadline(date).subscribe(() => {
                         dialogRefLoad.close();
-                        this.snackBar.open("Deadline set successfully!!", "Ok");
+                        this.snackBar.open('Deadline set successfully!!', 'Ok');
                         this.ngOnInit();
                     }, () => {
                         dialogRefLoad.close();
@@ -575,52 +578,52 @@ export class AdminComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            this.snackBar.open("Please choose the deadline", "Ok");
+            this.snackBar.open('Please choose the deadline', 'Ok');
         }
     }
 
     startAllocation() {
         let selectedProjects = this.selection.selected;
         const dialogRef = this.dialog.open(LoaderComponent, {
-            data: "Allocating projects, Please wait as this may take a while",
+            data: 'Allocating projects, Please wait as this may take a while',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
         const length = this.students.data.filter((val) => val.isRegistered).length;
         this.userService.validateAllocation(selectedProjects, length).subscribe((responseAPI: HttpResponseAPI) => {
             if (responseAPI.result.valid) {
                 this.projectService
                     .startAllocation(selectedProjects)
-                    .subscribe((responseAPI: HttpResponseAPI) => {
+                    .subscribe(({result}: HttpResponseAPI) => {
                         dialogRef.close();
                         this.exportDisabled = true;
                         selectedProjects = selectedProjects.map((val) => String(val._id));
-                        this.dataSource = new MatTableDataSource(responseAPI.result.projects);
+                        this.dataSource = new MatTableDataSource(result.projects);
                         this.selection.clear();
                         this.dataSource.data.forEach((row) => {
-                            if (selectedProjects.indexOf(row._id.toString()) != -1) {
+                            if (selectedProjects.indexOf(row._id.toString()) !== -1) {
                                 this.selection.select(row);
                             }
                         });
-                        localStorage.setItem("allocationMap", JSON.stringify(responseAPI.result.allocationMap));
+                        localStorage.setItem('allocationMap', JSON.stringify(result.allocationMap));
                         this.userService
-                            .updatePublish("reset")
+                            .updatePublish('reset')
                             .subscribe(() => {
                                 this.publishStudents = false;
                                 this.publishFaculty = false;
-                                if (this.stage_no == 3) {
+                                if (this.stageNo === 3) {
                                     this.userService
-                                        .updateStage(this.stage_no + 1)
-                                        .subscribe((responseAPI: HttpResponseAPI) => {
-                                            if (responseAPI.result.updated) {
-                                                this.snackBar.open("Allocation completed successfully", "Ok");
+                                        .updateStage(this.stageNo + 1)
+                                        .subscribe(({result: result1}: HttpResponseAPI) => {
+                                            if (result1.updated) {
+                                                this.snackBar.open('Allocation completed successfully', 'Ok');
                                             }
                                             dialogRef.close();
                                         }, () => {
                                             dialogRef.close();
                                         });
                                 } else {
-                                    this.snackBar.open("Allocation completed successfully", "Ok");
+                                    this.snackBar.open('Allocation completed successfully', 'Ok');
                                     dialogRef.close();
                                 }
                             }, () => {
@@ -631,7 +634,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                     });
             } else {
                 dialogRef.close();
-                this.snackBar.open(responseAPI.message, "Ok");
+                this.snackBar.open(responseAPI.message, 'Ok');
             }
         }, () => {
             dialogRef.close();
@@ -640,51 +643,51 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     sendEmails() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: "400px",
-            height: "200px",
+            width: '400px',
+            height: '200px',
             disableClose: false,
             data: {
-                heading: "Confirm Sending Mails",
-                message: "Are you sure you want to send the mails? This cannot be undone."
+                heading: 'Confirm Sending Mails',
+                message: 'Are you sure you want to send the mails? This cannot be undone.'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result["message"] == "submit") {
+            if (result && result.message === 'submit') {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Sending mails, Please wait as this may take a while",
+                    data: 'Sending mails, Please wait as this may take a while',
                     disableClose: true,
-                    panelClass: "transparent"
+                    panelClass: 'transparent'
                 });
-                if (this.stage_no == 0 || this.stage_no == 2) {
+                if (this.stageNo === 0 || this.stageNo === 2) {
                     this.userService.getFacultyStreamEmails().subscribe((responseAPI: HttpResponseAPI) => {
                         const {emails, programFull} = responseAPI.result;
                         this.mailer
-                            .adminToFaculty(this.stage_no, emails, this.curr_deadline, programFull)
-                            .subscribe((responseAPI: HttpResponseAPI) => {
-                                this.snackBar.open(responseAPI.message, "Ok");
+                            .adminToFaculty(this.stageNo, emails, this.currDeadline, programFull)
+                            .subscribe(({message}: HttpResponseAPI) => {
+                                this.snackBar.open(message, 'Ok');
                                 dialogRefLoad.close();
                             });
                     }, () => {
                         dialogRefLoad.close();
                     });
-                } else if (this.stage_no == 1) {
+                } else if (this.stageNo === 1) {
                     this.userService.getStudentStreamEmails().subscribe((responseAPI: HttpResponseAPI) => {
                         const {emails, programFull} = responseAPI.result;
                         this.mailer
-                            .adminToStudents(emails, this.curr_deadline, programFull)
-                            .subscribe((responseAPI: HttpResponseAPI) => {
-                                this.snackBar.open(responseAPI.message, "Ok");
+                            .adminToStudents(emails, this.currDeadline, programFull)
+                            .subscribe(({message}: HttpResponseAPI) => {
+                                this.snackBar.open(message, 'Ok');
                                 dialogRefLoad.close();
                             });
                     }, () => {
                         dialogRefLoad.close();
                     });
                 } else {
-                    this.userService.fetchAllMails().subscribe((result) => {
+                    this.userService.fetchAllMails().subscribe(({result: {result1, programFull}}: HttpResponseAPI) => {
                         this.mailer
-                            .allocateMail(result["result"], result["streamFull"])
+                            .allocateMail(result1, programFull)
                             .subscribe((responseAPI: HttpResponseAPI) => {
-                                this.snackBar.open(responseAPI.message, "Ok");
+                                this.snackBar.open(responseAPI.message, 'Ok');
                                 dialogRefLoad.close();
                             });
                     }, () => {
@@ -697,15 +700,15 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     setProjectCap() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Updating, Please wait ...",
+            data: 'Updating, Please wait ...',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
         this.userService
-            .setProjectCap(this.fifthFormGroup.get("fifthCtrl").value)
+            .setProjectCap(this.fifthFormGroup.get('fifthCtrl').value)
             .subscribe((responseAPI: HttpResponseAPI) => {
                 dialogRefLoad.close();
-                this.snackBar.open(responseAPI.message, "Ok");
+                this.snackBar.open(responseAPI.message, 'Ok');
                 this.validateFields();
             }, () => {
                 dialogRefLoad.close();
@@ -714,15 +717,15 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     setStudentCap() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Updating, Please wait ...",
+            data: 'Updating, Please wait ...',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
         this.userService
-            .setStudentCap(this.sixthFormGroup.get("sixthCtrl").value)
+            .setStudentCap(this.sixthFormGroup.get('sixthCtrl').value)
             .subscribe((responseAPI: HttpResponseAPI) => {
                 dialogRefLoad.close();
-                this.snackBar.open(responseAPI.message, "Ok");
+                this.snackBar.open(responseAPI.message, 'Ok');
                 this.validateFields();
             }, () => {
                 dialogRefLoad.close();
@@ -731,14 +734,14 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     setStudentsPerFaculty() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Updating, Please wait ...",
+            data: 'Updating, Please wait ...',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
         this.userService
-            .setStudentsPerFaculty(this.seventhFormGroup.get("seventhCtrl").value)
+            .setStudentsPerFaculty(this.seventhFormGroup.get('seventhCtrl').value)
             .subscribe((responseAPI: HttpResponseAPI) => {
-                this.snackBar.open(responseAPI.message, "Ok");
+                this.snackBar.open(responseAPI.message, 'Ok');
                 this.validateFields();
                 dialogRefLoad.close();
             }, () => {
@@ -761,25 +764,25 @@ export class AdminComponent implements OnInit, OnDestroy {
                     break;
                 }
             }
-            this.student_flag = 0;
-            for (let student of this.students.data) {
-                if (student.isRegistered == false) {
+            this.studentFlag = 0;
+            for (const student of this.students.data) {
+                if (student.isRegistered === false) {
                     flag = true;
-                    this.student_flag = 1;
+                    this.studentFlag = 1;
                 }
             }
-            this.getAllocationValidation(flag, this.student_flag);
+            this.getAllocationValidation(flag, this.studentFlag);
         });
     }
 
-    getAllocationValidation(flag, student_flag) {
+    getAllocationValidation(flag, studentFlag) {
         const length = this.students.data.filter((val) => val.isRegistered).length;
         this.userService
             .validateAllocation(this.selection.selected, length)
             .subscribe((responseAPI: HttpResponseAPI) => {
                 if (responseAPI.result.valid) {
-                    if (this.dateSet.length == 1) {
-                        if (this.firstFormGroup.controls["firstCtrl"]) {
+                    if (this.dateSet.length === 1) {
+                        if (this.firstFormGroup.controls.firstCtrl) {
                             this.proceedButton1 = false;
                             if (!flag) {
                                 this.proceedButton1_ = false;
@@ -787,23 +790,23 @@ export class AdminComponent implements OnInit, OnDestroy {
                         }
                     }
                 } else {
-                    if (this.dateSet.length == 1) {
-                        if (this.firstFormGroup.controls["firstCtrl"]) {
+                    if (this.dateSet.length === 1) {
+                        if (this.firstFormGroup.controls.firstCtrl) {
                             this.proceedButton1 = false;
                             this.proceedButton1_ = true;
                         }
                     }
                 }
-                if (this.dateSet.length == 2) {
-                    if (this.secondFormGroup.controls["secondCtrl"]) {
+                if (this.dateSet.length === 2) {
+                    if (this.secondFormGroup.controls.secondCtrl) {
                         this.proceedButton2 = false;
-                        if (!flag && student_flag == 0) {
+                        if (!flag && studentFlag === 0) {
                             this.proceedButton2_ = false;
                         }
                     }
                 }
-                if (this.dateSet.length == 3) {
-                    if (this.thirdFormGroup.controls["thirdCtrl"]) {
+                if (this.dateSet.length === 3) {
+                    if (this.thirdFormGroup.controls.thirdCtrl) {
                         this.proceedButton3 = false;
                     }
                     if (!flag) {
@@ -838,28 +841,28 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     checkboxLabel(row): string {
         if (!row) {
-            return `${ this.isAllSelected() ? "select" : "deselect" } all`;
+            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
-        return `${ this.selection.isSelected(row) ? "deselect" : "select" } row ${ row.position + 1 }`;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
     }
 
     stepDownStage() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: "400px",
-            height: "250px",
+            width: '400px',
+            height: '250px',
             data: {
-                heading: "Confirm Proceed",
-                message: "Are you sure you want to revert back to the previous stage?"
+                heading: 'Confirm Proceed',
+                message: 'Are you sure you want to revert back to the previous stage?'
             },
             disableClose: true
         });
-        const currStage = this.stage_no;
+        const currStage = this.stageNo;
         dialogRef.afterClosed().subscribe((result) => {
-            if (result.message == "submit") {
+            if (result.message === 'submit') {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Updating, Please wait ...",
+                    data: 'Updating, Please wait ...',
                     disableClose: true,
-                    panelClass: "transparent"
+                    panelClass: 'transparent'
                 });
                 this.userService.revertStage(currStage).subscribe((responseAPI: HttpResponseAPI) => {
                     this.publishFaculty = false;
@@ -872,7 +875,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                     this.proceedButton3 = true;
                     this.stepper.previous();
                     this.ngOnInit();
-                    this.snackBar.open(responseAPI.message, "Ok");
+                    this.snackBar.open(responseAPI.message, 'Ok');
                     dialogRefLoad.close();
                 }, () => {
                     dialogRefLoad.close();
@@ -884,39 +887,39 @@ export class AdminComponent implements OnInit, OnDestroy {
     showPreferencesProject(project) {
         this.dialog.open(ShowFacultyPreferencesComponent, {
             disableClose: false,
-            maxHeight: "700px",
-            minWidth: "800px",
+            maxHeight: '700px',
+            minWidth: '800px',
             data: project,
-            panelClass: [ "custom-dialog-container" ]
+            panelClass: ['custom-dialog-container']
         });
     }
 
     showPreferences(student) {
         this.dialog.open(ShowStudentPreferencesComponent, {
             disableClose: false,
-            maxHeight: "700px",
-            minWidth: "800px",
+            maxHeight: '700px',
+            minWidth: '800px',
             data: student,
-            panelClass: [ "custom-dialog-container" ]
+            panelClass: ['custom-dialog-container']
         });
     }
 
     resetProcess() {
         const dialogRef = this.dialog.open(ResetComponent, {
-            width: "400px",
-            height: "300px",
+            width: '400px',
+            height: '300px',
             disableClose: false
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result["message"] == "submit") {
+            if (result.message === 'submit') {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Resetting, Please wait ...",
+                    data: 'Resetting, Please wait ...',
                     disableClose: true,
-                    panelClass: "transparent"
+                    panelClass: 'transparent'
                 });
                 this.userService.resetUsers().subscribe((responseAPI: HttpResponseAPI) => {
                     dialogRefLoad.close();
-                    this.snackBar.open(responseAPI.message, "Ok");
+                    this.snackBar.open(responseAPI.message, 'Ok');
                     this.stepper.reset();
                     this.ngOnInit();
                 }, () => {
@@ -928,7 +931,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     triggerFileDownload(blob, fileName) {
         const objectUrl: string = URL.createObjectURL(blob);
-        const a: HTMLAnchorElement = document.createElement("a") as HTMLAnchorElement;
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
         a.href = objectUrl;
         a.download = fileName;
         document.body.appendChild(a);
@@ -939,14 +942,14 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     downloadFile_project() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Loading, Please wait ...",
+            data: 'Loading, Please wait ...',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
-        this.exportService.download("project").subscribe((data) => {
+        this.exportService.download('project').subscribe((data) => {
             dialogRefLoad.close();
-            const blob: Blob = new Blob([ data ], {type: "text/csv"});
-            const fileName = `${ this.programName }_faculty.csv`;
+            const blob: Blob = new Blob([data], {type: 'text/csv'});
+            const fileName = `${this.programName}_faculty.csv`;
             this.triggerFileDownload(blob, fileName);
         }, () => {
             dialogRefLoad.close();
@@ -955,14 +958,14 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     downloadFile_student() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Loading, Please wait ...",
+            data: 'Loading, Please wait ...',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
-        this.exportService.download("student").subscribe((data) => {
+        this.exportService.download('student').subscribe((data) => {
             dialogRefLoad.close();
-            const blob: Blob = new Blob([ data ], {type: "text/csv"});
-            const fileName = `${ this.programName }_students.csv`;
+            const blob: Blob = new Blob([data], {type: 'text/csv'});
+            const fileName = `${this.programName}_students.csv`;
             this.triggerFileDownload(blob, fileName);
         }, () => {
             dialogRefLoad.close();
@@ -971,14 +974,14 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     downloadFile_format() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Loading, Please wait ...",
+            data: 'Loading, Please wait ...',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
-        this.exportService.download("format").subscribe((data) => {
+        this.exportService.download('format').subscribe((data) => {
             dialogRefLoad.close();
-            const blob: Blob = new Blob([ data ], {type: "text/csv"});
-            const fileName = `${ this.programName }_format.csv`;
+            const blob: Blob = new Blob([data], {type: 'text/csv'});
+            const fileName = `${this.programName}_format.csv`;
             this.triggerFileDownload(blob, fileName);
         }, () => {
             dialogRefLoad.close();
@@ -987,14 +990,14 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     downloadFile_allocation() {
         const dialogRefLoad = this.dialog.open(LoaderComponent, {
-            data: "Loading, Please wait ...",
+            data: 'Loading, Please wait ...',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
-        this.exportService.download("allocation").subscribe((data) => {
+        this.exportService.download('allocation').subscribe((data) => {
             dialogRefLoad.close();
-            const blob: Blob = new Blob([ data ], {type: "text/csv"});
-            const fileName = `${ this.programName }_allocation.csv`;
+            const blob: Blob = new Blob([data], {type: 'text/csv'});
+            const fileName = `${this.programName}_allocation.csv`;
             this.triggerFileDownload(blob, fileName);
         }, () => {
             dialogRefLoad.close();
@@ -1005,62 +1008,62 @@ export class AdminComponent implements OnInit, OnDestroy {
         const target = event.target;
         const files = target.files;
         this.fileToUpload = files.item(0);
-        if (this.fileToUpload.name.split(".")[1] == "csv") {
+        if (this.fileToUpload.name.split('.')[1] === 'csv') {
             const dialogRef = this.dialog.open(DeletePopUpComponent, {
-                width: "450px",
-                height: "200px",
+                width: '450px',
+                height: '200px',
                 data: {
-                    heading: "Confirm Upload",
-                    message: `Are you sure that you want to upload ${ this.fileToUpload.name } ?`
+                    heading: 'Confirm Upload',
+                    message: `Are you sure that you want to upload ${this.fileToUpload.name} ?`
                 }
             });
             dialogRef.afterClosed().subscribe((result) => {
-                if (result && result["message"] == "submit") {
+                if (result && result.message === 'submit') {
                     const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                        data: "Updating, Please wait ...",
+                        data: 'Updating, Please wait ...',
                         disableClose: true,
-                        panelClass: "transparent"
+                        panelClass: 'transparent'
                     });
                     this.exportService
                         .uploadStudentList(this.fileToUpload, this.programName)
                         .subscribe((responseAPI: HttpResponseAPI) => {
-                            target.value = "";
-                            this.snackBar.open(responseAPI.message, "Ok");
+                            target.value = '';
+                            this.snackBar.open(responseAPI.message, 'Ok');
                             dialogRefLoad.close();
                             this.ngOnInit();
                         }, (e) => {
-                            target.value = "";
-                            if (e.status == 400) {
-                                this.snackBar.open(e.error.result.error.message, "Ok");
+                            target.value = '';
+                            if (e.status === 400) {
+                                this.snackBar.open(e.error.result.error.message, 'Ok');
                             }
                             dialogRefLoad.close();
                         });
                 }
             });
         } else {
-            this.snackBar.open("Only .csv files are to imported. Other files types are not supported.", "Ok");
+            this.snackBar.open('Only .csv files are to imported. Other files types are not supported.', 'Ok');
         }
     }
 
     publishToFaculty() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: "400px",
-            height: "200px",
+            width: '400px',
+            height: '200px',
             data: {
-                heading: "Confirm Publish",
+                heading: 'Confirm Publish',
                 message: `Are you sure that you want to publish this allocation to faculty ? Do note that mails will be sent automatically.`
             },
             disableClose: true
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result.message == "submit") {
+            if (result.message === 'submit') {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Sending mails, Please wait as this may take a while",
+                    data: 'Sending mails, Please wait as this may take a while',
                     disableClose: true,
-                    panelClass: "transparent"
+                    panelClass: 'transparent'
                 });
                 const requests = [
-                    this.userService.updatePublish("faculty"),
+                    this.userService.updatePublish('faculty'),
                     this.userService.uploadAllocationFile(),
                     this.userService.getFacultyStreamEmails()
                 ];
@@ -1068,16 +1071,16 @@ export class AdminComponent implements OnInit, OnDestroy {
                     const data = response[0].result.projects;
                     const {emails, programFull} = response[2].result;
                     this.exportDisabled = false;
-                    if (localStorage.getItem("allocationMap")) {
+                    if (localStorage.getItem('allocationMap')) {
                         this.discardAllocation();
                         this.dataSource = new MatTableDataSource(data);
                     }
                     this.selectIncluded();
                     this.publishFaculty = true;
-                    this.mailer.publishMail("faculty", emails, programFull)
+                    this.mailer.publishMail('faculty', emails, programFull)
                         .subscribe(() => {
                             dialogRefLoad.close();
-                            this.snackBar.open("Successfully published to faculties and mails have been sent.", "Ok");
+                            this.snackBar.open('Successfully published to faculties and mails have been sent.', 'Ok');
                         }, () => {
                             dialogRefLoad.close();
                         });
@@ -1090,22 +1093,22 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     publishToStudents() {
         const dialogRef = this.dialog.open(DeletePopUpComponent, {
-            width: "400px",
-            height: "250px",
+            width: '400px',
+            height: '250px',
             data: {
-                heading: "Confirm Publish",
+                heading: 'Confirm Publish',
                 message: `Are you sure that you want to publish this allocation to students? Please ensure that the results are published to faculties before it is published to the students. Do note that mails will be sent automatically.`
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && result["message"] == "submit") {
+            if (result && result.message === 'submit') {
                 const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: "Sending mails, Please wait as this may take a while",
+                    data: 'Sending mails, Please wait as this may take a while',
                     disableClose: true,
-                    panelClass: "transparent"
+                    panelClass: 'transparent'
                 });
                 const requests = [
-                    this.userService.updatePublish("student"),
+                    this.userService.updatePublish('student'),
                     this.userService.uploadAllocationFile(),
                     this.userService.getStudentStreamEmails()
                 ];
@@ -1113,18 +1116,18 @@ export class AdminComponent implements OnInit, OnDestroy {
                     const data = response[0].result.projects;
                     const {emails, programFull} = response[2].result;
                     this.exportDisabled = false;
-                    if (localStorage.getItem("allocationMap")) {
+                    if (localStorage.getItem('allocationMap')) {
                         this.discardAllocation();
                         this.dataSource = new MatTableDataSource(data);
                     }
                     this.selectIncluded();
                     this.publishStudents = true;
-                    localStorage.setItem("ps", "true");
+                    localStorage.setItem('ps', 'true');
                     this.mailer
-                        .publishMail("student", emails, programFull)
+                        .publishMail('student', emails, programFull)
                         .subscribe(() => {
                             dialogRefLoad.close();
-                            this.snackBar.open("Successfully published to students and mails have been sent.", "Ok");
+                            this.snackBar.open('Successfully published to students and mails have been sent.', 'Ok');
                         }, () => {
                             dialogRefLoad.close();
                         });
@@ -1138,12 +1141,12 @@ export class AdminComponent implements OnInit, OnDestroy {
     applyFilter(event: Event, who: string) {
         const filterValue = (event.target as HTMLInputElement
         ).value;
-        if (who == "project") {
+        if (who === 'project') {
             this.dataSource.filter = filterValue.trim().toLowerCase();
-        } else if (who == "student") {
+        } else if (who === 'student') {
             this.students.filter = filterValue.trim().toLowerCase();
             this.studentCount = this.students.filteredData.length;
-        } else if (who == "faculty") {
+        } else if (who === 'faculty') {
             this.faculties.filter = filterValue.trim().toLowerCase();
         }
     }
@@ -1153,17 +1156,17 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     sortStudents(event) {
-        const isAsc = event.direction == "asc";
+        const isAsc = event.direction === 'asc';
         this.students.data = this.students.data.sort((a, b) => {
             switch (event.active) {
-                case "Name":
+                case 'Name':
                     return this.compare(a.name, b.name, isAsc);
-                case "GPA":
+                case 'GPA':
                     return this.compare(a.gpa, b.gpa, isAsc);
-                case "Registered":
+                case 'Registered':
                     return this.compare(a.isRegistered, b.isRegistered, isAsc);
-                case "Email":
-                    return this.compare(Number(a.email.split("@")[0]), Number(b.email.split("@")[0]), isAsc);
+                case 'Email':
+                    return this.compare(Number(a.email.split('@')[0]), Number(b.email.split('@')[0]), isAsc);
                 default:
                     return 0;
             }
@@ -1171,18 +1174,18 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     sortFaculty(event) {
-        const isAsc = event.direction == "asc";
+        const isAsc = event.direction === 'asc';
         this.faculties.data = this.faculties.data.sort((a, b) => {
             switch (event.active) {
-                case "Name":
+                case 'Name':
                     return this.compare(a.name, b.name, isAsc);
-                case "GPA":
+                case 'GPA':
                     return this.compare(a.gpa, b.gpa, isAsc);
-                case "Registered":
+                case 'Registered':
                     return this.compare(a.isRegistered, b.isRegistered, isAsc);
-                case "NoOfProjects":
+                case 'NoOfProjects':
                     return this.compare(a.noOfProjects, b.noOfProjects, isAsc);
-                case "StudentIntake":
+                case 'StudentIntake':
                     return this.compare(a.included_studentIntake, b.included_studentIntake, isAsc);
                 default:
                     return 0;
@@ -1191,22 +1194,22 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
 
     sortProjects(event) {
-        const isAsc = event.direction == "asc";
+        const isAsc = event.direction === 'asc';
         this.dataSource.data = this.dataSource.data.sort((a, b) => {
             switch (event.active) {
-                case "select":
+                case 'select':
                     return this.compare(this.selection.isSelected(a), this.selection.isSelected(b), isAsc);
-                case "Title":
+                case 'Title':
                     return this.compare(a.title, b.title, isAsc);
-                case "Faculty":
+                case 'Faculty':
                     return this.compare(a.faculty, b.faculty, isAsc);
-                case "Duration":
+                case 'Duration':
                     return this.compare(a.duration, b.duration, isAsc);
-                case "isIncluded":
+                case 'isIncluded':
                     return this.compare(a.isIncluded, b.isIncluded, isAsc);
-                case "studentIntake":
+                case 'studentIntake':
                     return this.compare(a.studentIntake, b.studentIntake, isAsc);
-                case "NoOfStudents":
+                case 'NoOfStudents':
                     return this.compare(a.numberOfPreferences, b.numberOfPreferences, isAsc);
                 default:
                     return 0;

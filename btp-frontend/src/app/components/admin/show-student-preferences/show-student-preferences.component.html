@@ -1,17 +1,17 @@
 <mat-dialog-content
-    *ngIf="preferences.projects_preference.length != 0; else elseBlock">
+        *ngIf="preferences.projects_preference.length != 0; else elseBlock">
     <mat-toolbar class="toolbar">
         <mat-icon
-            (click)="close()" color="accent" matTooltip="close pop-up" matTooltipPosition="above">close
+                (click)="close()" color="accent" matTooltip="close pop-up" matTooltipPosition="above">close
         </mat-icon>
         <div class="fill-space"></div>
         <div #container class="copy">
             <button
-                [cdkCopyToClipboard]="value"
-                [matBadgeColor]="'accent'"
-                [matBadge]="preferences.projects_preference.length"
-                color="primary"
-                mat-raised-button>
+                    [cdkCopyToClipboard]="value"
+                    [matBadgeColor]="'accent'"
+                    [matBadge]="preferences.projects_preference.length"
+                    color="primary"
+                    mat-raised-button>
                 Copy to Clipboard
             </button>
         </div>
@@ -20,7 +20,7 @@
         <div style="padding:5px">
             <mat-accordion class="example-headers-align">
                 <mat-expansion-panel
-                    *cdkVirtualFor="let preference of preferences.projects_preference">
+                        *cdkVirtualFor="let preference of preferences.projects_preference">
                     <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
                         <mat-panel-title>
                             Faculty : {{ preference["faculty_name"] }}

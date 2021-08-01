@@ -1,5 +1,5 @@
 <mat-tab-group
-    animationDuration="0" backgroundColor="primary" dynamicHeight="true" mat-align-tabs="center">
+        animationDuration="0" backgroundColor="primary" dynamicHeight="true" mat-align-tabs="center">
     <mat-tab label="Stage Summary">
         <div class="stages">
             <div class="display">
@@ -13,7 +13,7 @@
                         matSort>
                         <ng-container matColumnDef="Program">
                             <th
-                                *matHeaderCellDef mat-header-cell mat-sort-header>
+                                    *matHeaderCellDef mat-header-cell mat-sort-header>
                                 Program
                             </th>
                             <td *matCellDef="let admin" mat-cell>
@@ -23,7 +23,7 @@
 
                         <ng-container matColumnDef="Abbreviation">
                             <th
-                                *matHeaderCellDef mat-header-cell mat-sort-header>
+                                    *matHeaderCellDef mat-header-cell mat-sort-header>
                                 Abbreviation
                             </th>
                             <td *matCellDef="let admin" mat-cell>
@@ -33,7 +33,7 @@
 
                         <ng-container matColumnDef="Stage">
                             <th
-                                *matHeaderCellDef mat-header-cell mat-sort-header>
+                                    *matHeaderCellDef mat-header-cell mat-sort-header>
                                 Stage
                             </th>
                             <td *matCellDef="let admin" mat-cell>
@@ -45,7 +45,7 @@
                             <th *matHeaderCellDef mat-header-cell>Time Left</th>
                             <td *matCellDef="let admin" mat-cell>
                                 <span
-                                    class="days_left"><strong *ngIf="admin.deadlines; else none">
+                                        class="days_left"><strong *ngIf="admin.deadlines; else none">
                                         {{admin.deadlines
                                     | countdown: currentTime}}</strong>
                                     <ng-template #none> N/A </ng-template>
@@ -54,9 +54,9 @@
                         </ng-container>
 
                         <tr
-                            *matHeaderRowDef="stageTableCols; sticky: true" mat-header-row></tr>
+                                *matHeaderRowDef="stageTableCols; sticky: true" mat-header-row></tr>
                         <tr
-                            *matRowDef="let row; columns: stageTableCols" mat-row></tr>
+                                *matRowDef="let row; columns: stageTableCols" mat-row></tr>
                     </table>
                 </div>
             </div>
@@ -96,7 +96,7 @@
                             Students Applied
                         </th>
                         <td
-                            *matCellDef="let project" class="align-center" mat-cell>
+                                *matCellDef="let project" class="align-center" mat-cell>
                             {{ project.noOfPreferences }}
                         </td>
                     </ng-container>
@@ -105,7 +105,7 @@
                             Student Intake
                         </th>
                         <td
-                            *matCellDef="let project" class="align-center" mat-cell>
+                                *matCellDef="let project" class="align-center" mat-cell>
                             {{ project.studentIntake }}
                         </td>
                     </ng-container>
@@ -115,7 +115,7 @@
                         </th>
                         <td *matCellDef="let project" mat-cell>
                             <div
-                                *ngIf="
+                                    *ngIf="
                                     project.student_alloted &&
                                         project.student_alloted.length > 0 &&
                                         publishFaculty &&
@@ -123,7 +123,7 @@
                                     else elseBlock
                                 ">
                                 <div
-                                    *ngFor="
+                                        *ngFor="
                                         let student of project.student_alloted
                                     ">
                                     {{ student | displayFacultyPublish }}
@@ -134,9 +134,9 @@
                     </ng-container>
 
                     <tr
-                        *matHeaderRowDef="allProjectCols; sticky: true" mat-header-row></tr>
+                            *matHeaderRowDef="allProjectCols; sticky: true" mat-header-row></tr>
                     <tr
-                        *matRowDef="let row; columns: allProjectCols" mat-row></tr>
+                            *matRowDef="let row; columns: allProjectCols" mat-row></tr>
                 </table>
             </div>
         </div>

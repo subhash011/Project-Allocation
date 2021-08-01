@@ -1,6 +1,6 @@
-import { NgModule } from "@angular/core";
-import { AdminCheck, FacultyCheck, StudentCheck, SuperAdminCheck } from "src/app/components/shared/Pipes/rolePipes";
-import { CheckLogIn, CheckRegister, CountDown, GetLinksForNavBar, GetRegisteredCount, UserPhoto } from "./otherPipes";
+import {NgModule} from '@angular/core';
+import {AdminCheck, FacultyCheck, StudentCheck, SuperAdminCheck} from 'src/app/components/shared/Pipes/rolePipes';
+import {CheckLogIn, CheckRegister, CountDown, GetLinksForNavBar, GetRegisteredCount, UserPhoto} from './otherPipes';
 
 @NgModule({
     imports: [],
@@ -29,4 +29,5 @@ import { CheckLogIn, CheckRegister, CountDown, GetLinksForNavBar, GetRegisteredC
         UserPhoto
     ]
 })
-export class PipeModule {}
+export class PipeModule {
+}

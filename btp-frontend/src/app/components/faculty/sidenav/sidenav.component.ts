@@ -1,14 +1,14 @@
-import { MatDialog } from "@angular/material/dialog";
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { ProjectsService } from "src/app/services/projects/projects.service";
-import { LoaderComponent } from "src/app/components/shared/loader/loader.component";
-import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
+import {MatDialog} from '@angular/material/dialog';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {ProjectsService} from 'src/app/services/projects/projects.service';
+import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
+import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
 
 @Component({
-    selector: "app-sidenav",
-    templateUrl: "./sidenav.component.html",
-    styleUrls: [ "./sidenav.component.scss" ]
+    selector: 'app-sidenav',
+    templateUrl: './sidenav.component.html',
+    styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit, OnChanges {
     @Input() public projects;
@@ -27,7 +27,8 @@ export class SidenavComponent implements OnInit, OnChanges {
         private projectService: ProjectsService,
         private snackbar: MatSnackBar,
         private dialog: MatDialog
-    ) {}
+    ) {
+    }
 
     ngOnChanges(simpleChanges: SimpleChanges) {
         if (simpleChanges.projects && simpleChanges.projects.currentValue) {
@@ -40,7 +41,7 @@ export class SidenavComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.id = localStorage.getItem("id");
+        this.id = localStorage.getItem('id');
     }
 
     displayAdd(event) {
@@ -53,23 +54,23 @@ export class SidenavComponent implements OnInit, OnChanges {
         if (event.checked) {
             this.selectedProjects.push(event.source.id);
         } else {
-            this.selectedProjects = this.selectedProjects.filter((val) => val != event.source.id);
+            this.selectedProjects = this.selectedProjects.filter((val) => val !== event.source.id);
         }
     }
 
     includeProjects() {
         const dialogRef = this.dialog.open(LoaderComponent, {
-            data: "Updating, Please wait ...",
+            data: 'Updating, Please wait ...',
             disableClose: true,
-            panelClass: "transparent"
+            panelClass: 'transparent'
         });
         this.projectService.includeProjects(this.selectedProjects).subscribe((responseAPI: HttpResponseAPI) => {
             dialogRef.close();
             if (responseAPI.result.updated) {
                 for (const project of this.projects) {
-                    project.isIncluded = this.selectedProjects.indexOf(project._id) != -1;
+                    project.isIncluded = this.selectedProjects.indexOf(project._id) !== -1;
                 }
-                this.snackbar.open("Updated Project Preferences", "Ok");
+                this.snackbar.open('Updated Project Preferences', 'Ok');
             }
         }, () => {
             dialogRef.close();

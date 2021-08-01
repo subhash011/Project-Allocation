@@ -1,38 +1,38 @@
 .display {
-    margin-top: 5%;
-    padding-bottom: 2%;
-    padding-right: 1%;
-    z-index: 2;
+  margin-top: 5%;
+  padding-bottom: 2%;
+  padding-right: 1%;
+  z-index: 2;
 }
 
 .table {
-    margin-top: 10%;
-    max-height: 600px;
-    overflow: auto;
-    width: 80%;
-    margin-left: 10%;
+  margin-top: 10%;
+  max-height: 600px;
+  overflow: auto;
+  width: 80%;
+  margin-left: 10%;
 }
 
 table {
-    width: 100%;
+  width: 100%;
 }
 
 th,
 td {
-    overflow: hidden;
-    width: 10%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  width: 10%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .top {
-    margin-left: 5%;
-    margin-top: 5%;
-    width: 100%;
-    display: inline-flex;
-    justify-content: space-around;
+  margin-left: 5%;
+  margin-top: 5%;
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-around;
 }
 
 .align-center {
-    padding-left: 18px;
+  padding-left: 18px;
 }

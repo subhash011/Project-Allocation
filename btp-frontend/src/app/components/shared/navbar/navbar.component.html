@@ -2,9 +2,9 @@
     <mat-toolbar-row>
         <div>
             <button
-                *ngIf="!(role | isFaculty) && !(role | isAdmin); else elseBlock"
-                [routerLink]="'home' | links: role"
-                mat-button>
+                    *ngIf="!(role | isFaculty) && !(role | isAdmin); else elseBlock"
+                    [routerLink]="'home' | links: role"
+                    mat-button>
                 <span class="navhead">IIT Palakkad</span>
             </button>
             <ng-template #elseBlock>
@@ -14,7 +14,7 @@
             </ng-template>
         </div>
         <div
-            *ngIf="
+                *ngIf="
                 ((role | isFaculty) || (role | isAdmin)) && ('' | checkRegister)
             ">
             <div class="flex-grow-left"></div>
@@ -22,14 +22,14 @@
                 Home
             </button>
             <button
-                *ngIf="programsVisible" [matMenuTriggerFor]="menu" class="nav-text" mat-button>
+                    *ngIf="programsVisible" [matMenuTriggerFor]="menu" class="nav-text" mat-button>
                 Programs
                 <mat-icon>keyboard_arrow_down</mat-icon>
             </button>
 
             <mat-menu #menu="matMenu">
                 <button
-                    (click)="goToProgram(program)" *ngFor="let program of programs" mat-menu-item>
+                        (click)="goToProgram(program)" *ngFor="let program of programs" mat-menu-item>
                     {{ program.full }}
                 </button>
             </mat-menu>
@@ -37,14 +37,14 @@
         <div *ngIf="role | isStudent">
             <div class="flex-grow-left"></div>
             <button
-                [routerLink]="'studentProjects' | links: role" class="nav-text" mat-button>
+                    [routerLink]="'studentProjects' | links: role" class="nav-text" mat-button>
                 Add Preferences
             </button>
         </div>
         <div *ngIf="role | isStudent">
             <div class="flex-grow-left"></div>
             <button
-                [routerLink]="'studentPreferences' | links: role" class="nav-text" mat-button>
+                    [routerLink]="'studentPreferences' | links: role" class="nav-text" mat-button>
                 Reorder Preferences
             </button>
         </div>
@@ -52,7 +52,7 @@
         <div class="flex-grow-right"></div>
         <div>
             <div
-                *ngIf="
+                    *ngIf="
                     ((role | isFaculty) ||
                         (role | isAdmin) ||
                         (role | isStudent)) &&
@@ -68,11 +68,11 @@
                 </button>
                 <mat-menu #beforeMenu="matMenu" xPosition="before">
                     <button
-                        [routerLink]="'profile' | links: role" mat-menu-item>
+                            [routerLink]="'profile' | links: role" mat-menu-item>
                         Profile
                     </button>
                     <button
-                        (click)="getAdmin()" *ngIf="role | isAdmin" mat-menu-item>
+                            (click)="getAdmin()" *ngIf="role | isAdmin" mat-menu-item>
                         Co-ordinator
                     </button>
                 </mat-menu>
@@ -85,11 +85,11 @@
         <app-theme-picker class="primary-toolbar"></app-theme-picker>
         <div class="flex-grow-right primary-toolbar"></div>
         <app-login
-            (isSignedIn)="changeRole()" [role]="role" class="primary-toolbar"></app-login>
+                (isSignedIn)="changeRole()" [role]="role" class="primary-toolbar"></app-login>
     </mat-toolbar-row>
     <mat-toolbar-row class="mobile">
         <app-login
-            (isSignedIn)="changeRole()" [role]="role" class="login-mobile"></app-login>
+                (isSignedIn)="changeRole()" [role]="role" class="login-mobile"></app-login>
         <app-theme-picker class="theme-mobile"></app-theme-picker>
     </mat-toolbar-row>
 </mat-toolbar>

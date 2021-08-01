@@ -530,13 +530,13 @@ router.get("/members/:id", async (req, res) => {
             return;
         }
         let admin = await Admin.findOne({ admin_id: faculty._id }).lean();
-        for (const program of faculty.programs) {
-            if (program.short === admin.stream) {
-                programAdmin = program;
-            }
-        }
+        // for (const program of faculty.programs) {
+        //     if (program.short === admin.stream) {
+        //         programAdmin = program;
+        //     }
+        // }
         promises.push(
-            Faculty.find({ programs: { $elemMatch: programAdmin } })
+            Faculty.find({ "programs.short": admin.stream })
                 .lean()
                 .populate({
                     path: "project_list",
@@ -1707,13 +1707,8 @@ router.delete("/faculty/:id", async (req, res) => {
             });
             return;
         }
-        for (const program of faculty.programs) {
-            if (program.short === faculty.adminProgram) {
-                programAdmin = program;
-            }
-        }
         let projects = await Project.find({
-            stream: programAdmin.short,
+            stream: faculty.adminProgram,
             faculty_id: facultyID
         });
         const projectIDs = projects.map((val) => val._id);
@@ -1728,7 +1723,7 @@ router.delete("/faculty/:id", async (req, res) => {
         };
         const updateFaculty = {
             $pullAll: { project_list: projectIDs },
-            $pull: { programs: programAdmin }
+            $pull: { programs: { short: faculty.adminProgram } }
         };
         let promises = [];
         promises.push(Project.deleteMany({ stream: programAdmin.short, faculty_id: facultyID }));

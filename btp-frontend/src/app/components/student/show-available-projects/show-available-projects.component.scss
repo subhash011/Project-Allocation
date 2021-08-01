@@ -1,138 +1,138 @@
 .example-container {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 64px;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 mat-form-field {
-    margin-left: 5%;
-    width: 30%;
-    margin-top: 50px;
+  margin-left: 5%;
+  width: 30%;
+  margin-top: 50px;
 }
 
 mat-icon:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .add-preferences {
-    float: right;
-    margin-top: 60px;
-    margin-right: 5%;
+  float: right;
+  margin-top: 60px;
+  margin-right: 5%;
 }
 
 tr {
-    :hover {
-        cursor: pointer;
-    }
+  :hover {
+    cursor: pointer;
+  }
 }
 
 tr.example-detail-row {
-    height: 0;
+  height: 0;
 
-    :hover {
-        cursor: default;
-    }
+  :hover {
+    cursor: default;
+  }
 }
 
 tr.example-element-row:not(.example-expanded-row):hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 tr.example-element-row:not(.example-expanded-row):active {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .example-element-row td {
-    border-bottom-width: 0;
+  border-bottom-width: 0;
 }
 
 [mat-row].remove-background {
-    background: none;
+  background: none;
 }
 
 .example-element-detail {
-    overflow: hidden;
-    display: flex;
+  overflow: hidden;
+  display: flex;
 }
 
 .fill-space {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
 .align-head {
-    padding-left: 30px;
+  padding-left: 30px;
 }
 
 .align-data {
-    padding-left: 50px;
+  padding-left: 50px;
 }
 
 .common-padding {
-    padding-left: 15px;
+  padding-left: 15px;
 }
 
 .example-element-symbol {
-    font-weight: bold;
-    font-size: 40px;
-    line-height: normal;
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
 }
 
 .example-element-description {
-    padding: 16px;
+  padding: 16px;
 }
 
 .example-element-description-attribution {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 .display {
-    z-index: 2;
+  z-index: 2;
 }
 
 .display-preferences {
-    height: 100%;
-    width: 100%;
-    padding-top: 64px;
+  height: 100%;
+  width: 100%;
+  padding-top: 64px;
 }
 
 .table {
-    overflow: auto;
-    width: 90%;
-    margin-left: 5%;
+  overflow: auto;
+  width: 90%;
+  margin-left: 5%;
 }
 
 table {
-    width: 100%;
+  width: 100%;
 }
 
 th,
 td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    word-wrap: break-word;
-    max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
 }
 
 .mat-column-Faculty {
-    padding-left: 20px;
+  padding-left: 20px;
 }
 
 .mat-column-Title {
-    padding-left: 16px;
-    max-width: 350px;
+  padding-left: 16px;
+  max-width: 350px;
 }
 
 .mat-column-studentIntake {
-    max-width: 200px;
+  max-width: 200px;
 }
 
 .toolbar {
-    position: fixed;
-    z-index: 2;
-    border-right: 1px solid whitesmoke;
+  position: fixed;
+  z-index: 2;
+  border-right: 1px solid whitesmoke;
 }

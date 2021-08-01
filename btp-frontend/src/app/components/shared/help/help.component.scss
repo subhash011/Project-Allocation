@@ -1,68 +1,68 @@
 .container {
-    padding-top: 5px;
-    width: 100%;
-    text-align: center;
+  padding-top: 5px;
+  width: 100%;
+  text-align: center;
 }
 
 code {
-    background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .head {
-    margin-top: 2%;
+  margin-top: 2%;
 }
 
 .video {
-    display: inline-block;
-    width: 967px;
-    height: 544px;
+  display: inline-block;
+  width: 967px;
+  height: 544px;
 }
 
 a {
-    color: blue;
+  color: blue;
 }
 
 a:hover {
-    cursor: pointer;
-    color: green;
+  cursor: pointer;
+  color: green;
 }
 
 a:active {
-    color: red;
+  color: red;
 }
 
 .timestamps {
-    margin-top: 2%;
-    text-align: left;
-    display: inline-block;
+  margin-top: 2%;
+  text-align: left;
+  display: inline-block;
 }
 
 .instructions {
-    text-align: center;
+  text-align: center;
 }
 
 .supertext {
-    display: inline-block;
+  display: inline-block;
 }
 
 p {
-    display: inline-block;
+  display: inline-block;
 }
 
 pre {
-    white-space: pre-wrap;
-    font-family: "Computer Modern Sans", "sans-serif";
+  white-space: pre-wrap;
+  font-family: "Computer Modern Sans", "sans-serif";
 }
 
 .stages-card {
-    margin-top: 6%;
-    margin-left: 11%;
-    margin-right: 11%;
-    margin-bottom: 6%;
-    // z-index: -8;
-    font-family: "Computer Modern Sans", "sans-serif";
+  margin-top: 6%;
+  margin-left: 11%;
+  margin-right: 11%;
+  margin-bottom: 6%;
+  // z-index: -8;
+  font-family: "Computer Modern Sans", "sans-serif";
 }
 
 h4 {
-    font-weight: bold;
+  font-weight: bold;
 }

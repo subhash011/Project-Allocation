@@ -4,7 +4,7 @@
     <div class="row">
         <mat-form-field class="full-width">
             <input
-                autocomplete="off" formControlName="full" matInput placeholder="{{ data.heading }} name" />
+                    autocomplete="off" formControlName="full" matInput placeholder="{{ data.heading }} name"/>
             <mat-error *ngIf="addForm.controls['full'].hasError('required')">
                 {{ data.heading }} name is <strong>required</strong>
             </mat-error>
@@ -13,11 +13,11 @@
     <div class="row">
         <mat-form-field class="full-width">
             <input
-                (input)="addForm.controls['short'].setValue(addForm.controls['short'].value.toUpperCase())"
-                autocomplete="off"
-                formControlName="short"
-                matInput
-                placeholder="{{ data.heading }} Abbrevation" />
+                    (input)="addForm.controls['short'].setValue(addForm.controls['short'].value.toUpperCase())"
+                    autocomplete="off"
+                    formControlName="short"
+                    matInput
+                    placeholder="{{ data.heading }} Abbrevation"/>
             <mat-error *ngIf="addForm.controls['short'].hasError('required')">
                 {{ data.heading }} Abbreviation is <strong>required</strong>
             </mat-error>
@@ -30,11 +30,11 @@
 
 <mat-dialog-actions>
     <button
-        (click)="onSubmit()" [disabled]="!addForm.valid" class="submit_button" color="primary" mat-raised-button>
+            (click)="onSubmit()" [disabled]="!addForm.valid" class="submit_button" color="primary" mat-raised-button>
         Submit
     </button>
     <button
-        (click)="onNoClick()" class="close_button" color="warn" mat-raised-button type="submit">
+            (click)="onNoClick()" class="close_button" color="warn" mat-raised-button type="submit">
         Close
     </button>
 </mat-dialog-actions>

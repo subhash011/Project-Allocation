@@ -1,24 +1,25 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "src/environments/environment";
-import { GoogleLoginProvider, SocialAuthService } from "angularx-social-login";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Router } from "@angular/router";
-import { StorageService } from "src/app/services/helpers/storage.service";
-import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
-import { from } from "rxjs";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {environment} from 'src/environments/environment';
+import {GoogleLoginProvider, SocialAuthService} from 'angularx-social-login';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from '@angular/router';
+import {StorageService} from 'src/app/services/helpers/storage.service';
+import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
+import {from} from 'rxjs';
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class LocalAuthService {
     private root = environment.apiUrl;
-    private user_url = this.root + "auth/user_check";
+    private user_url = this.root + 'auth/user_check';
 
     constructor(
         private http: HttpClient, private authService: SocialAuthService, private router: Router, private snackBar: MatSnackBar,
         private storageService: StorageService
-    ) {}
+    ) {
+    }
 
     checkUser(user) {
         return this.http.post<any>(this.user_url, user);
@@ -28,32 +29,32 @@ export class LocalAuthService {
         const {position, registered} = data.result;
         const {id} = data.result.user_details;
         if (registered) {
-            if (position === "student") {
+            if (position === 'student') {
                 return {
-                    route: "/student/" + id,
-                    error: "none"
+                    route: '/student/' + id,
+                    error: 'none'
                 };
-            } else if (position == "faculty" || position == "admin") {
+            } else if (position == 'faculty' || position == 'admin') {
                 return {
-                    route: "/faculty/" + id,
-                    error: "none"
+                    route: '/faculty/' + id,
+                    error: 'none'
                 };
-            } else if (position == "super_admin") {
+            } else if (position == 'super_admin') {
                 return {
-                    route: "/super_admin/" + id,
-                    error: "none"
+                    route: '/super_admin/' + id,
+                    error: 'none'
                 };
             }
         } else if (!registered) {
-            if (position === "faculty") {
+            if (position === 'faculty') {
                 return {
-                    route: "/faculty/register/" + id,
-                    error: "none"
+                    route: '/faculty/register/' + id,
+                    error: 'none'
                 };
-            } else if (position == "super_admin") {
+            } else if (position == 'super_admin') {
                 return {
-                    route: "/super_admin/register/" + id,
-                    error: "none"
+                    route: '/super_admin/register/' + id,
+                    error: 'none'
                 };
             }
         }
@@ -69,16 +70,16 @@ export class LocalAuthService {
         } catch (e) {
             console.log(e);
         } finally {
-            const theme = localStorage.getItem("current-theme");
+            const theme = localStorage.getItem('current-theme');
             let user = {};
             localStorage.clear();
-            this.storageService.setItem("isLoggedIn", "false");
-            localStorage.setItem("role", "none");
-            localStorage.setItem("current-theme", theme);
-            localStorage.setItem("user", JSON.stringify(user));
-            await this.router.navigate([ "" ]);
+            this.storageService.setItem('isLoggedIn', 'false');
+            localStorage.setItem('role', 'none');
+            localStorage.setItem('current-theme', theme);
+            localStorage.setItem('user', JSON.stringify(user));
+            await this.router.navigate(['']);
             if (userClick) {
-                this.snackBar.open("Signed out", "Ok");
+                this.snackBar.open('Signed out', 'Ok');
             }
         }
     }

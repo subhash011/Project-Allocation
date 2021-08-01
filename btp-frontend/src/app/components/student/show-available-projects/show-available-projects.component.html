@@ -3,7 +3,7 @@
         <mat-sidenav
             #side [style.width.%]="sidenavWidth" class="drawer" closed mode="side">
             <mat-toolbar
-                [@openClose]="
+                    [@openClose]="
                     side.opened
                         ? sidenavWidth == 100
                             ? 'fullOpen'
@@ -15,7 +15,7 @@
                     Current Preferences ({{ preferences.filteredData.length }}) </h1>
                 <div class="fill-space"></div>
                 <button
-                    (click)="side.toggle()" *ngIf="showToggleOnSidenav" [matTooltip]="
+                        (click)="side.toggle()" *ngIf="showToggleOnSidenav" [matTooltip]="
                         side.opened ? 'close preferences' : 'view preferences'
                     " class="show-preferences" mat-button matTooltipPosition="above">
                     <mat-icon>list</mat-icon>
@@ -23,15 +23,15 @@
             </mat-toolbar>
             <div class="display-preferences">
                 <app-display-preferences
-                    (updateProjects)="updateProjects($event)"
-                    [preferences]="preferences.data"
-                    [stage]="stage"></app-display-preferences>
+                        (updateProjects)="updateProjects($event)"
+                        [preferences]="preferences.data"
+                        [stage]="stage"></app-display-preferences>
             </div>
         </mat-sidenav>
         <mat-sidenav-content>
             <mat-toolbar color="accent">
                 <button
-                    (click)="side.toggle()" [matTooltip]="
+                        (click)="side.toggle()" [matTooltip]="
                         side.opened ? 'close preferences' : 'view preferences'
                     " class="show-preferences" mat-button matTooltipPosition="above">
                     <mat-icon>list</mat-icon>
@@ -44,38 +44,39 @@
             <mat-form-field>
                 <mat-label>Filter by any...</mat-label>
                 <input
-                    (keyup)="applyFilter($event)" autocomplete="off" matInput placeholder="Search...." type="search" />
+                        (keyup)="applyFilter($event)" autocomplete="off" matInput placeholder="Search...."
+                        type="search"/>
             </mat-form-field>
             <button
-                (click)="onSubmit($event)"
-                [disabled]="stage >= 2"
-                class="add-preferences"
-                color="primary"
-                mat-raised-button>
+                    (click)="onSubmit($event)"
+                    [disabled]="stage >= 2"
+                    class="add-preferences"
+                    color="primary"
+                    mat-raised-button>
                 Add to Preferences
             </button>
 
             <div class="display">
                 <div
-                    [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
+                        [style.max-height.px]="tableHeight" class="table mat-elevation-z8">
                     <table
                         #table [dataSource]="projects" class="mat-elevation-z8" mat-table multiTemplateDataRows>
                         <ng-container matColumnDef="select">
                             <th *matHeaderCellDef mat-header-cell>
                                 <mat-checkbox
-                                    (change)="$event ? masterToggle() : null"
-                                    [aria-label]="checkboxLabel(null)"
-                                    [checked]="selection.hasValue() && isAllSelected()"
-                                    [indeterminate]="isAnyOneSelected() && !isAllSelected()"
-                                    color="primary"></mat-checkbox>
+                                        (change)="$event ? masterToggle() : null"
+                                        [aria-label]="checkboxLabel(null)"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="isAnyOneSelected() && !isAllSelected()"
+                                        color="primary"></mat-checkbox>
                             </th>
                             <td *matCellDef="let row" mat-cell>
                                 <mat-checkbox
-                                    (change)="$event ? selection.toggle(row) : null"
-                                    (click)="$event.stopPropagation()"
-                                    [aria-label]="checkboxLabel(row)"
-                                    [checked]="selection.isSelected(row)"
-                                    color="primary"></mat-checkbox>
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        (click)="$event.stopPropagation()"
+                                        [aria-label]="checkboxLabel(row)"
+                                        [checked]="selection.isSelected(row)"
+                                        color="primary"></mat-checkbox>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="Title">
@@ -92,21 +93,21 @@
                         </ng-container>
                         <ng-container matColumnDef="Email">
                             <th
-                                *matHeaderCellDef class="align-head" mat-header-cell>
+                                    *matHeaderCellDef class="align-head" mat-header-cell>
                                 Email-ID
                             </th>
                             <td
-                                *matCellDef="let project" class="align-head" mat-cell>
+                                    *matCellDef="let project" class="align-head" mat-cell>
                                 {{ project.faculty_email }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="Intake">
                             <th
-                                *matHeaderCellDef class="align-head" mat-header-cell>
+                                    *matHeaderCellDef class="align-head" mat-header-cell>
                                 Student Intake
                             </th>
                             <td
-                                *matCellDef="let project" class="align-data" mat-cell>
+                                    *matCellDef="let project" class="align-data" mat-cell>
                                 {{ project.studentIntake }}
                             </td>
                         </ng-container>
@@ -115,21 +116,21 @@
                                 Add Preference
                             </th>
                             <td
-                                (click)="$event.stopPropagation()" *matCellDef="let project" mat-cell>
+                                    (click)="$event.stopPropagation()" *matCellDef="let project" mat-cell>
                                 <mat-icon
-                                    (click)="addOnePreference(project)"
-                                    [matTooltipPosition]="'above'"
-                                    matTooltip="Add {{project.title}} to preferences">
+                                        (click)="addOnePreference(project)"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Add {{project.title}} to preferences">
                                     add
                                 </mat-icon>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="expandedDetail">
                             <td
-                                *matCellDef="let project" [attr.colspan]="displayedColumns.length" mat-cell>
+                                    *matCellDef="let project" [attr.colspan]="displayedColumns.length" mat-cell>
                                 <div
-                                    [@detailExpand]="project == expandedElement? 'expanded': 'collapsed'"
-                                    class="example-element-detail">
+                                        [@detailExpand]="project == expandedElement? 'expanded': 'collapsed'"
+                                        class="example-element-detail">
                                     <div class="example-element-description">
                                         <p>
                                             Description : {{ project.description }}
@@ -141,20 +142,20 @@
                         </ng-container>
 
                         <tr
-                            *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+                                *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
                         <tr
-                            (click)="expandedElement = expandedElement === element ? null : element"
-                            (mouseenter)="isActive = true; indexHover = i"
-                            (mouseleave)="isActive = false; indexHover = -1"
-                            *matRowDef="
+                                (click)="expandedElement = expandedElement === element ? null : element"
+                                (mouseenter)="isActive = true; indexHover = i"
+                                (mouseleave)="isActive = false; indexHover = -1"
+                                *matRowDef="
                                 let element;
                                 let i = dataIndex;
                                 columns: displayedColumns
                             "
-                            [class.example-expanded-row]="expandedElement === element"
-                            [class.mat-elevation-z8]="isActive && indexHover == i"
-                            class="example-element-row remove-background"
-                            mat-row></tr>
+                                [class.example-expanded-row]="expandedElement === element"
+                                [class.mat-elevation-z8]="isActive && indexHover == i"
+                                class="example-element-row remove-background"
+                                mat-row></tr>
                         <tr *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row" mat-row></tr>
                     </table>
                 </div>

@@ -1,28 +1,28 @@
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { LoginComponent, LoginModule } from "src/app/components/shared/login/login.component";
-import { UserService } from "src/app/services/user/user.service";
-import { Router, RouterModule } from "@angular/router";
-import { Component, NgModule, OnInit } from "@angular/core";
-import { StorageService } from "src/app/services/helpers/storage.service";
-import { HttpResponseAPI } from "src/app/models/HttpResponseAPI";
-import { CommonModule } from "@angular/common";
-import { PipeModule } from "src/app/components/shared/Pipes/pipe.module";
-import { MaterialModule } from "src/app/material/material.module";
-import { ThemePickerModule } from "src/app/components/shared/theme-picker/theme-picker.component";
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {LoginComponent, LoginModule} from 'src/app/components/shared/login/login.component';
+import {UserService} from 'src/app/services/user/user.service';
+import {Router, RouterModule} from '@angular/router';
+import {Component, NgModule, OnInit} from '@angular/core';
+import {StorageService} from 'src/app/services/helpers/storage.service';
+import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
+import {CommonModule} from '@angular/common';
+import {PipeModule} from 'src/app/components/shared/Pipes/pipe.module';
+import {MaterialModule} from 'src/app/material/material.module';
+import {ThemePickerModule} from 'src/app/components/shared/theme-picker/theme-picker.component';
 
 @Component({
-    selector: "app-navbar",
-    templateUrl: "./navbar.component.html",
-    styleUrls: [ "./navbar.component.scss" ],
-    providers: [ LoginComponent ]
+    selector: 'app-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.scss'],
+    providers: [LoginComponent]
 })
 export class NavbarComponent implements OnInit {
-    programsVisible: boolean = false;
-    role: string = localStorage.getItem("role");
+    programsVisible = false;
+    role: string = localStorage.getItem('role');
     programs;
     adminProgram;
     curRole;
-    badge: number = 0;
+    badge = 0;
 
     constructor(
         private router: Router,
@@ -30,18 +30,19 @@ export class NavbarComponent implements OnInit {
         private login: LoginComponent,
         private snackBar: MatSnackBar,
         private storageService: StorageService
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.storageService.watchStorage().subscribe((data: string) => {
-            if (data == "isLoggedIn") {
-                this.role = localStorage.getItem("role");
+            if (data === 'isLoggedIn') {
+                this.role = localStorage.getItem('role');
             }
         });
-        if (localStorage.getItem("isLoggedIn") == "true") {
-            this.role = localStorage.getItem("role");
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            this.role = localStorage.getItem('role');
         }
-        if ((this.role == "faculty" || this.role == "admin") && localStorage.getItem("isLoggedIn") == "true") {
+        if ((this.role === 'faculty' || this.role === 'admin') && localStorage.getItem('isLoggedIn') === 'true') {
             this.userService.getFacultyPrograms().subscribe((responseAPI: HttpResponseAPI) => {
                 this.programs = responseAPI.result.programs;
                 if (this.programs.length > 0) {
@@ -52,13 +53,13 @@ export class NavbarComponent implements OnInit {
     }
 
     getAdmin() {
-        let id = localStorage.getItem("id");
-        this.router.navigate([ "/admin", id ]);
+        const id = localStorage.getItem('id');
+        this.router.navigate(['/admin', id]);
     }
 
     goToHome() {
-        let id = localStorage.getItem("id");
-        this.router.navigate([ decodeURI("/faculty/" + id) ]);
+        const id = localStorage.getItem('id');
+        this.router.navigate([decodeURI('/faculty/' + id)]);
         // this.router
         //     .navigateByUrl("/refresh", {
         //         skipLocationChange: true
@@ -70,11 +71,11 @@ export class NavbarComponent implements OnInit {
     }
 
     goToProgram(program) {
-        let id = localStorage.getItem("id");
-        this.router.navigate([ "/faculty", id ], {
+        const id = localStorage.getItem('id');
+        this.router.navigate(['/faculty', id], {
             queryParams: {
                 abbr: program.short,
-                mode: "programMode"
+                mode: 'programMode'
             }
         });
         // this.router
@@ -93,7 +94,7 @@ export class NavbarComponent implements OnInit {
     }
 
     changeRole() {
-        this.role = localStorage.getItem("role");
+        this.role = localStorage.getItem('role');
     }
 }
 
@@ -113,4 +114,5 @@ export class NavbarComponent implements OnInit {
         NavbarComponent
     ]
 })
-export class NavbarModule {}
+export class NavbarModule {
+}

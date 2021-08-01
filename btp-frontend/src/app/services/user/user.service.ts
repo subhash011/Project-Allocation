@@ -1,39 +1,40 @@
-import { environment } from "src/environments/environment";
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import {environment} from 'src/environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 // import * as moment from "moment";
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class UserService {
     private url: string;
     private root = environment.apiUrl;
-    private base_url = this.root;
+    private baseUrl = this.root;
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+    }
 
     addAdmin(id, branch) {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "super/addAdmin/" + user.id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'super/addAdmin/' + user.id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken
             })
         };
         return this.http.post(this.url, {
-            id: id,
-            branch: branch
+            id,
+            branch
         }, httpOptions);
     }
 
     removeFaculty(id) {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "super/faculty/" + user.id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'super/faculty/' + user.id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken,
                 body: id
             })
@@ -42,11 +43,11 @@ export class UserService {
     }
 
     removeStudent(id) {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "super/student/" + user.id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'super/student/' + user.id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken,
                 body: id
             })
@@ -55,23 +56,23 @@ export class UserService {
     }
 
     removeAdmin(id) {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "super/removeAdmin/" + user.id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'super/removeAdmin/' + user.id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken
             })
         };
-        return this.http.post(this.url, {id: id}, httpOptions);
+        return this.http.post(this.url, {id}, httpOptions);
     }
 
     getAllStudents() {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "super/student/details/" + user.id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'super/student/details/' + user.id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken
             })
         };
@@ -79,35 +80,35 @@ export class UserService {
     }
 
     getAllFaculties() {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "super/faculty/details/" + user.id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'super/faculty/details/' + user.id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken
             })
         };
         return this.http.get(this.url, httpOptions);
     }
 
-    getStudentDetails(id: String) {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "student/details/" + id;
+    getStudentDetails(id) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'student/details/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken
             })
         };
         return this.http.get(this.url, httpOptions);
     }
 
-    getFacultyDetails(id: String) {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "faculty/details/" + id;
+    getFacultyDetails(id) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'faculty/details/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken
             })
         };
@@ -115,19 +116,19 @@ export class UserService {
     }
 
     registerUser(user, httpOptions, position, id) {
-        if (position == "super_admin") {
-            position = "super";
+        if (position === 'super_admin') {
+            position = 'super';
         }
-        return this.http.post(this.base_url + position + "/register/" + id, user, httpOptions);
+        return this.http.post(this.baseUrl + position + '/register/' + id, user, httpOptions);
     }
 
     getAdminInfo() {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "admin/info/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'admin/info/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -136,14 +137,14 @@ export class UserService {
 
     updateStage(stage) {
         const obj = {
-            stage: stage
+            stage
         };
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "admin/update_stage/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'admin/update_stage/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -156,12 +157,12 @@ export class UserService {
             deadline: date
             // deadline: moment(date).format("YYYY-MM-DD")
         };
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "admin/setDeadline/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'admin/setDeadline/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -169,12 +170,12 @@ export class UserService {
     }
 
     uploadAllocationFile() {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "admin/export_allocation/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'admin/export_allocation/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -182,12 +183,12 @@ export class UserService {
     }
 
     getFacultyStreamEmails() {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "admin/stream_email/faculty/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'admin/stream_email/faculty/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -195,29 +196,29 @@ export class UserService {
     }
 
     getStudentStreamEmails() {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "admin/stream_email/student/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'admin/stream_email/student/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                Authorization: idToken //change it later
+                'Content-Type': 'application/json',
+                Authorization: idToken // change it later
             })
         };
         return this.http.get(this.url, httpOptions);
     }
 
     getAllAdminDetails() {
-        this.url = this.base_url + "admin/all/info";
+        this.url = this.baseUrl + 'admin/all/info';
         return this.http.get(this.url);
     }
 
     getStreamStage() {
-        this.url = this.base_url + "student/stage/" + localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        this.url = this.baseUrl + 'student/stage/' + localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -225,12 +226,12 @@ export class UserService {
     }
 
     getAllProjects() {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "super/projects/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'super/projects/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -239,14 +240,14 @@ export class UserService {
 
     setProjectCap(cap) {
         const obj = {
-            cap: cap
+            cap
         };
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "admin/set_projectCap/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'admin/set_projectCap/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -255,14 +256,14 @@ export class UserService {
 
     setStudentCap(cap) {
         const obj = {
-            cap: cap
+            cap
         };
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "admin/set_studentCap/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'admin/set_studentCap/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -271,14 +272,14 @@ export class UserService {
 
     setStudentsPerFaculty(cap) {
         const obj = {
-            cap: cap
+            cap
         };
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "admin/set_studentsPerFaculty/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'admin/set_studentsPerFaculty/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -286,12 +287,12 @@ export class UserService {
     }
 
     setPrograms(programs) {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "faculty/set_programs/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'faculty/set_programs/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -299,12 +300,12 @@ export class UserService {
     }
 
     updateFacultyProfile(faculty) {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "faculty/updateProfile/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'faculty/updateProfile/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -312,12 +313,12 @@ export class UserService {
     }
 
     getAllPrograms() {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "faculty/getAllPrograms/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'faculty/getAllPrograms/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -325,12 +326,12 @@ export class UserService {
     }
 
     deleteFacultyProgram(program) {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "faculty/deleteProgram/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'faculty/deleteProgram/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -338,12 +339,12 @@ export class UserService {
     }
 
     getFacultyPrograms() {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "faculty/getFacultyPrograms/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'faculty/getFacultyPrograms/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -351,12 +352,12 @@ export class UserService {
     }
 
     getAdminInfo_program(program) {
-        let id = localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
-        this.url = this.base_url + "faculty/getAdminInfo_program/" + id;
+        const id = localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        this.url = this.baseUrl + 'faculty/getAdminInfo_program/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -364,15 +365,15 @@ export class UserService {
     }
 
     getAllMaps() {
-        return this.http.get(this.base_url + "maps");
+        return this.http.get(this.baseUrl + 'maps');
     }
 
     addStream(details) {
-        this.url = this.base_url + "branches/" + localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        this.url = this.baseUrl + 'branches/' + localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -380,11 +381,11 @@ export class UserService {
     }
 
     removeStream(map) {
-        this.url = this.base_url + "branches/remove/" + localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        this.url = this.baseUrl + 'branches/remove/' + localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken,
                 body: JSON.stringify(map)
             })
@@ -393,11 +394,11 @@ export class UserService {
     }
 
     addProgram(map) {
-        this.url = this.base_url + "maps/" + localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        this.url = this.baseUrl + 'maps/' + localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -405,11 +406,11 @@ export class UserService {
     }
 
     removeProgram(map) {
-        this.url = this.base_url + "maps/remove/" + localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        this.url = this.baseUrl + 'maps/remove/' + localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken,
                 body: JSON.stringify(map)
             })
@@ -418,11 +419,11 @@ export class UserService {
     }
 
     getMembersForAdmin() {
-        this.url = this.base_url + "admin/members/" + localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        this.url = this.baseUrl + 'admin/members/' + localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -430,11 +431,11 @@ export class UserService {
     }
 
     removeFacultyAdmin(id) {
-        this.url = this.base_url + "admin/faculty/" + localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        this.url = this.baseUrl + 'admin/faculty/' + localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken,
                 body: id
             })
@@ -443,11 +444,11 @@ export class UserService {
     }
 
     removeStudentAdmin(id) {
-        this.url = this.base_url + "admin/student/" + localStorage.getItem("id");
-        let idToken = JSON.parse(localStorage.getItem("user")).idToken;
+        this.url = this.baseUrl + 'admin/student/' + localStorage.getItem('id');
+        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken,
                 body: id
             })
@@ -456,17 +457,17 @@ export class UserService {
     }
 
     getAllBranches() {
-        return this.http.get(this.base_url + "branches");
+        return this.http.get(this.baseUrl + 'branches');
     }
 
     fetchAllMails() {
-        const user = JSON.parse(localStorage.getItem("user"));
+        const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const idToken = user.idToken;
-        this.url = this.base_url + "admin/fetchAllMails/" + id;
+        this.url = this.baseUrl + 'admin/fetchAllMails/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -474,76 +475,76 @@ export class UserService {
     }
 
     validateAllocation(projects, studentsEnrolled) {
-        const user = JSON.parse(localStorage.getItem("user"));
+        const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const idToken = user.idToken;
-        this.url = this.base_url + "admin/validateAllocation/" + id;
+        this.url = this.baseUrl + 'admin/validateAllocation/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
         return this.http.post(this.url, {
-            projects: projects,
+            projects,
             students: studentsEnrolled
         }, httpOptions);
     }
 
-    revertStage(stage_no) {
-        const user = JSON.parse(localStorage.getItem("user"));
+    revertStage(stageNo) {
+        const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const idToken = user.idToken;
-        this.url = this.base_url + "admin/revertStage/" + id;
+        this.url = this.baseUrl + 'admin/revertStage/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
-        return this.http.post(this.url, {stage: stage_no}, httpOptions);
+        return this.http.post(this.url, {stage: stageNo}, httpOptions);
     }
 
     resetUsers() {
-        const user = JSON.parse(localStorage.getItem("user"));
+        const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const idToken = user.idToken;
-        this.url = this.base_url + "admin/reset/" + id;
+        this.url = this.baseUrl + 'admin/reset/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
-        return this.http.post(this.url, {message: "hi"}, httpOptions);
+        return this.http.post(this.url, {message: 'hi'}, httpOptions);
     }
 
     updatePublish(key) {
-        const user = JSON.parse(localStorage.getItem("user"));
+        const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const idToken = user.idToken;
-        this.url = this.base_url + "admin/updatePublish/" + id;
-        const allocationMap = JSON.parse(localStorage.getItem("allocationMap"));
+        this.url = this.baseUrl + 'admin/updatePublish/' + id;
+        const allocationMap = JSON.parse(localStorage.getItem('allocationMap'));
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
         return this.http.post(this.url, {
             mode: key,
-            allocationMap: allocationMap
+            allocationMap
         }, httpOptions);
     }
 
     getPublishMode(key) {
-        const user = JSON.parse(localStorage.getItem("user"));
+        const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const idToken = user.idToken;
-        this.url = this.base_url + "admin/getPublish/" + id;
+        this.url = this.baseUrl + 'admin/getPublish/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: idToken
             })
         };
@@ -551,11 +552,11 @@ export class UserService {
     }
 
     facultyHomeDetails() {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "faculty/home/" + user.id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'faculty/home/' + user.id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken
             })
         };
@@ -563,11 +564,11 @@ export class UserService {
     }
 
     updateProgram(curMap, newMap) {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "super/update/program/" + user.id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'super/update/program/' + user.id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken
             })
         };
@@ -578,11 +579,11 @@ export class UserService {
     }
 
     updateStream(curMap, newMap) {
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.url = this.base_url + "super/update/stream/" + user.id;
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.url = this.baseUrl + 'super/update/stream/' + user.id;
         const httpOptions = {
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 Authorization: user.idToken
             })
         };
@@ -593,7 +594,7 @@ export class UserService {
     }
 
     // updateList(stream) {
-    //     this.url = this.base_url + 'admin/updateLists/' + localStorage.getItem('id');
+    //     this.url = this.baseUrl + 'admin/updateLists/' + localStorage.getItem('id');
     //     const idToken = JSON.parse(localStorage.getItem('user')).idToken;
     //     const httpOptions = {
     //         headers: new HttpHeaders({

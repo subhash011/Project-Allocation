@@ -1,13 +1,13 @@
 <div *ngIf="empty; else Forms" class="container">
-    <div *ngIf="program_details">
-        <app-timeline *ngIf="program_details" [clone]="'temp'" [program]="stream"></app-timeline>
+    <div *ngIf="programDetails">
+        <app-timeline *ngIf="programDetails" [clone]="'temp'" [program]="stream"></app-timeline>
         <!-- <div class="flex-space" *ngIf="program_details"></div> -->
         <div class="display">
             <div class="table mat-elevation-z8">
                 <table
                     #table
                     (matSortChange)="sortProjectDetails($event)"
-                    [dataSource]="program_details"
+                    [dataSource]="programDetails"
                     class="mat-elevation-z8"
                     mat-table
                     matSort>
@@ -51,7 +51,7 @@
                         </th>
                         <td *matCellDef="let project" mat-cell>
                             <div
-                                *ngIf="
+                                    *ngIf="
                                     project.student_alloted &&
                                         project.student_alloted.length > 0 &&
                                         publishFaculty &&
@@ -59,7 +59,7 @@
                                     else elseBlock
                                 ">
                                 <div
-                                    *ngFor="
+                                        *ngFor="
                                         let student of project.student_alloted
                                     ">
                                     {{ student | displayFacultyPublish }}
@@ -85,18 +85,18 @@
                 <mat-card-content class="add-card-content">
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input formControlName="title" matInput placeholder="Title" />
+                            <input formControlName="title" matInput placeholder="Title"/>
                             <mat-error
-                                *ngIf="ProjectForm.controls['title'].hasError('required')">
+                                    *ngIf="ProjectForm.controls['title'].hasError('required')">
                                 Title is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input formControlName="duration" matInput placeholder="Duration (months)" type="number" />
+                            <input formControlName="duration" matInput placeholder="Duration (months)" type="number"/>
                             <mat-error
-                                *ngIf="ProjectForm.controls['duration'].hasError('required')">
+                                    *ngIf="ProjectForm.controls['duration'].hasError('required')">
                                 Duration is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -105,9 +105,10 @@
                     <div class="row">
                         <mat-form-field class="full-width">
                             <input
-                                formControlName="studentIntake" matInput placeholder="No. of Students" type="number" />
+                                    formControlName="studentIntake" matInput placeholder="No. of Students"
+                                    type="number"/>
                             <mat-error
-                                *ngIf="ProjectForm.controls['studentIntake'].hasError('required')">
+                                    *ngIf="ProjectForm.controls['studentIntake'].hasError('required')">
                                 StudentIntake is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -120,11 +121,11 @@
                 </mat-card-content>
                 <mat-card-actions class="card-actions">
                     <button
-                        [disabled]="!ProjectForm.valid"
-                        class="submit_button"
-                        color="primary"
-                        mat-raised-button
-                        type="submit">
+                            [disabled]="!ProjectForm.valid"
+                            class="submit_button"
+                            color="primary"
+                            mat-raised-button
+                            type="submit">
                         Submit
                     </button>
                     <button (click)="displayHome({changed: false})" color="primary" mat-raised-button type="button">
@@ -138,24 +139,24 @@
         <mat-tab-group [(selectedIndex)]="index" animationDuration="0" color="accent" dynamicHeight="true">
             <mat-tab label="Students who opted">
                 <app-student-table
-                    (newReorder)="changeReorder($event)"
-                    *ngIf="student_list"
-                    [adminStage]="adminStage"
-                    [index]="index"
-                    [project]="project"
-                    [reorder]="reorder"
-                    [student_list]="student_list"></app-student-table>
+                        (newReorder)="changeReorder($event)"
+                        *ngIf="studentList"
+                        [adminStage]="adminStage"
+                        [index]="index"
+                        [project]="project"
+                        [reorder]="reorder"
+                        [studentList]="studentList"></app-student-table>
             </mat-tab>
 
             <mat-tab *ngIf="adminStage >= 2" label="Students who did not opt">
                 <app-student-table
-                    (newReorder)="changeReorder($event)"
-                    *ngIf="non_student_list"
-                    [adminStage]="adminStage"
-                    [index]="index"
-                    [project]="project"
-                    [reorder]="reorder"
-                    [student_list]="non_student_list"></app-student-table>
+                        (newReorder)="changeReorder($event)"
+                        *ngIf="nonStudentList"
+                        [adminStage]="adminStage"
+                        [index]="index"
+                        [project]="project"
+                        [reorder]="reorder"
+                        [studentList]="nonStudentList"></app-student-table>
             </mat-tab>
 
             <mat-tab class="editPage" label="Edit">
@@ -168,9 +169,9 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <input
-                                            formControlName="title" matInput placeholder="Title" />
+                                                formControlName="title" matInput placeholder="Title"/>
                                         <mat-error
-                                            *ngIf="EditForm.controls['title'].hasError('required')">
+                                                *ngIf="EditForm.controls['title'].hasError('required')">
                                             Title is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -179,12 +180,12 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <input
-                                            formControlName="duration"
-                                            matInput
-                                            placeholder="Duration (months)"
-                                            type="number" />
+                                                formControlName="duration"
+                                                matInput
+                                                placeholder="Duration (months)"
+                                                type="number"/>
                                         <mat-error
-                                            *ngIf="EditForm.controls['duration'].hasError('required')">
+                                                *ngIf="EditForm.controls['duration'].hasError('required')">
                                             Duration is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -193,12 +194,12 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <input
-                                            formControlName="studentIntake"
-                                            matInput
-                                            placeholder="No. of Students"
-                                            type="number" />
+                                                formControlName="studentIntake"
+                                                matInput
+                                                placeholder="No. of Students"
+                                                type="number"/>
                                         <mat-error
-                                            *ngIf="EditForm.controls['studentIntake'].hasError('required')">
+                                                *ngIf="EditForm.controls['studentIntake'].hasError('required')">
                                             StudentIntake is <strong>required</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -206,10 +207,11 @@
                                 <div class="row">
                                     <mat-form-field class="full-width">
                                         <textarea
-                                            formControlName="description" matInput placeholder="Description"></textarea>
+                                                formControlName="description" matInput
+                                                placeholder="Description"></textarea>
                                     </mat-form-field>
                                     <mat-error
-                                        *ngIf="
+                                            *ngIf="
                                             EditForm.controls['description'].hasError('required')
                                         ">
                                         Description is <strong>required</strong>
@@ -218,28 +220,28 @@
                             </mat-card-content>
                             <mat-card-actions class="card-actions">
                                 <button
-                                    *ngIf="adminStage == 0"
-                                    [disabled]="!EditForm.valid"
-                                    class="edit-submit"
-                                    color="primary"
-                                    mat-raised-button
-                                    type="submit">
+                                        *ngIf="adminStage == 0"
+                                        [disabled]="!EditForm.valid"
+                                        class="edit-submit"
+                                        color="primary"
+                                        mat-raised-button
+                                        type="submit">
                                     Submit
                                 </button>
                                 <button
-                                    (click)="deleteProject(project)"
-                                    *ngIf="adminStage == 0"
-                                    class="deleteButton"
-                                    color="warn"
-                                    mat-raised-button
-                                    type="button">
+                                        (click)="deleteProject(project)"
+                                        *ngIf="adminStage == 0"
+                                        class="deleteButton"
+                                        color="warn"
+                                        mat-raised-button
+                                        type="button">
                                     Delete
                                 </button>
                                 <button
-                                    (click)="displayHome({changed: false})"
-                                    color="primary"
-                                    mat-raised-button
-                                    type="button">
+                                        (click)="displayHome({changed: false})"
+                                        color="primary"
+                                        mat-raised-button
+                                        type="button">
                                     Cancel
                                 </button>
                             </mat-card-actions>

@@ -1,232 +1,232 @@
 .progress-bar {
-    margin: 4% 2% 2% 2%;
-    display: flex;
+  margin: 4% 2% 2% 2%;
+  display: flex;
 }
 
 .header {
-    margin-left: 2%;
-    margin-top: 2%;
+  margin-left: 2%;
+  margin-top: 2%;
 }
 
 .messages {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .manage-font {
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+  "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 [mat-row].remove-background {
-    background: none;
+  background: none;
 }
 
 .days_left {
-    margin-top: 2%;
-    margin-left: 2%;
+  margin-top: 2%;
+  margin-left: 2%;
 }
 
 mat-sidenav-container {
-    position: fixed;
-    height: 100%;
-    min-height: 100%;
-    width: 100%;
-    min-width: 100%;
+  position: fixed;
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
 }
 
 mat-sidenav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
 }
 
 mat-sidenav-content {
-    position: relative;
-    margin-right: 30%;
+  position: relative;
+  margin-right: 30%;
 }
 
 .display-student {
-    padding-bottom: 20px;
-    margin-top: 3%;
+  padding-bottom: 20px;
+  margin-top: 3%;
 }
 
 .fill-remaining-space {
-    flex: 1 auto 1;
+  flex: 1 auto 1;
 }
 
 mat-toolbar {
-    justify-content: center;
+  justify-content: center;
 }
 
 .datelabel {
-    margin-top: 8%;
+  margin-top: 8%;
 }
 
 ::ng-deep .mat-horizontal-stepper-header {
-    pointer-events: none !important;
+  pointer-events: none !important;
 }
 
 .setButton {
-    margin-left: 1%;
+  margin-left: 1%;
 }
 
 .example-full-width {
-    width: 250px;
+  width: 250px;
 }
 
 .searchBox {
-    position: absolute;
-    left: 70%;
-    transform: translate(-50%, 50%);
-    background: #2f3640;
-    height: 40px;
-    border-radius: 40px;
-    padding: 0;
+  position: absolute;
+  left: 70%;
+  transform: translate(-50%, 50%);
+  background: #2f3640;
+  height: 40px;
+  border-radius: 40px;
+  padding: 0;
 }
 
 .searchBox:hover > .searchInput {
-    width: 240px;
-    padding: 0 6px;
+  width: 240px;
+  padding: 0 6px;
 }
 
 .searchBox:hover > .searchButton {
-    background: white;
-    color: #2f3640;
+  background: white;
+  color: #2f3640;
 }
 
 .searchButton {
-    color: white;
-    float: right;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #2f3640;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.4s;
+  color: white;
+  float: right;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2f3640;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.4s;
 }
 
 .searchInput {
-    border: none;
-    background: none;
-    outline: none;
-    float: left;
-    padding: 0;
-    color: white;
-    font-size: 16px;
-    transition: 0.4s;
-    line-height: 40px;
-    width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  float: left;
+  padding: 0;
+  color: white;
+  font-size: 16px;
+  transition: 0.4s;
+  line-height: 40px;
+  width: 0;
 }
 
 mat-icon:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .display {
-    padding-bottom: 2%;
-    margin-top: 100px;
-    padding-right: 1%;
-    z-index: 2;
+  padding-bottom: 2%;
+  margin-top: 100px;
+  padding-right: 1%;
+  z-index: 2;
 }
 
 .table {
-    overflow: auto;
-    width: 80%;
-    margin-left: 10%;
+  overflow: auto;
+  width: 80%;
+  margin-left: 10%;
 }
 
 table {
-    width: 100%;
+  width: 100%;
 }
 
 th,
 td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    word-wrap: break-word;
-    max-width: 200px;
-    min-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
+  min-width: 100px;
 }
 
 .align-right {
-    padding-left: 45px;
+  padding-left: 45px;
 }
 
 .align-center {
-    padding-left: 18px;
+  padding-left: 18px;
 }
 
 mat-tab {
-    overflow-x: scroll;
+  overflow-x: scroll;
 }
 
 .finalStageButtons {
-    display: inline-flex;
-    margin-left: 10%;
+  display: inline-flex;
+  margin-left: 10%;
 }
 
 .reset {
-    float: right;
+  float: right;
 }
 
 .mat-column-select {
-    flex: 0;
-    width: 50px;
+  flex: 0;
+  width: 50px;
 }
 
 .startAllocationButton {
-    margin-top: 10%;
-    margin-left: 3%;
+  margin-top: 10%;
+  margin-left: 3%;
 }
 
 .project_download {
-    left: 80%;
+  left: 80%;
 }
 
 .download-format {
-    margin-left: 1%;
+  margin-left: 1%;
 }
 
 .student_download {
-    margin-left: 10%;
+  margin-left: 10%;
 }
 
 .flex-space {
-    margin-top: 2%;
+  margin-top: 2%;
 }
 
 .buttons {
-    margin-left: 10%;
+  margin-left: 10%;
 }
 
 .import_students {
-    margin-left: 1%;
+  margin-left: 1%;
 }
 
 .register_total {
-    margin-left: 70%;
+  margin-left: 70%;
 }
 
 .registered {
-    padding-right: 2%;
+  padding-right: 2%;
 }
 
 .table_info {
-    width: 90px;
+  width: 90px;
 }
 
 .display_faculties {
-    padding-top: 100px;
-    padding-bottom: 2%;
-    padding-right: 1%;
-    z-index: 2;
+  padding-top: 100px;
+  padding-bottom: 2%;
+  padding-right: 1%;
+  z-index: 2;
 }
 
 ::ng-deep .mat-tab-label .mat-tab-label-content {
-    font-weight: lighter;
+  font-weight: lighter;
 }

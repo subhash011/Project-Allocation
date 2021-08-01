@@ -1,16 +1,16 @@
 <mat-tab-group
-    [(selectedIndex)]="index"
-    [backgroundColor]="'primary'"
-    animationDuration="0"
-    dynamicHeight="true"
-    mat-align-tabs="center">
+        [(selectedIndex)]="index"
+        [backgroundColor]="'primary'"
+        animationDuration="0"
+        dynamicHeight="true"
+        mat-align-tabs="center">
     <mat-tab label="Co-ordinator">
         <div class="header">
             <h1>{{ programName }}</h1>
-            <h2 *ngIf="stage_no == 0">Creating Projects</h2>
-            <h2 *ngIf="stage_no == 1">Student Preferences</h2>
-            <h2 *ngIf="stage_no == 2">Faculty Preferences</h2>
-            <h2 *ngIf="stage_no == 3">Project Allocation</h2>
+            <h2 *ngIf="stageNo == 0">Creating Projects</h2>
+            <h2 *ngIf="stageNo == 1">Student Preferences</h2>
+            <h2 *ngIf="stageNo == 2">Faculty Preferences</h2>
+            <h2 *ngIf="stageNo == 3">Project Allocation</h2>
         </div>
 
         <div class="progress-bar">
@@ -20,20 +20,20 @@
                         <mat-label>Max number of projects per faculty
                         </mat-label>
                         <input
-                            class="projectCapForm"
-                            formControlName="fifthCtrl"
-                            matInput
-                            placeholder="Project Cap"
-                            step="1"
-                            type="number" />
+                                class="projectCapForm"
+                                formControlName="fifthCtrl"
+                                matInput
+                                placeholder="Project Cap"
+                                step="1"
+                                type="number"/>
                     </mat-form-field>
 
                     <button
-                        (click)="setProjectCap()"
-                        [disabled]="!fifthFormGroup.valid"
-                        class="setButton"
-                        color="primary"
-                        mat-raised-button>
+                            (click)="setProjectCap()"
+                            [disabled]="!fifthFormGroup.valid"
+                            class="setButton"
+                            color="primary"
+                            mat-raised-button>
                         Set Project Cap
                     </button>
                 </form>
@@ -44,15 +44,15 @@
                     <mat-form-field class="example-full-width">
                         <mat-label>Max number of students per project
                         </mat-label>
-                        <input formControlName="sixthCtrl" matInput placeholder="Student Cap" step="1" type="number" />
+                        <input formControlName="sixthCtrl" matInput placeholder="Student Cap" step="1" type="number"/>
                     </mat-form-field>
 
                     <button
-                        (click)="setStudentCap()"
-                        [disabled]="!sixthFormGroup.valid"
-                        class="setButton"
-                        color="accent"
-                        mat-raised-button>
+                            (click)="setStudentCap()"
+                            [disabled]="!sixthFormGroup.valid"
+                            class="setButton"
+                            color="accent"
+                            mat-raised-button>
                         Set Student Cap
                     </button>
                 </form>
@@ -62,41 +62,41 @@
                     <mat-form-field class="example-full-width" style="width: 250px">
                         <mat-label>Number of students per faculty</mat-label>
                         <input
-                            formControlName="seventhCtrl"
-                            matInput
-                            placeholder="Number of students"
-                            step="1"
-                            type="number" />
+                                formControlName="seventhCtrl"
+                                matInput
+                                placeholder="Number of students"
+                                step="1"
+                                type="number"/>
                     </mat-form-field>
 
                     <button
-                        (click)="setStudentsPerFaculty()"
-                        [disabled]="!seventhFormGroup.valid"
-                        class="setButton"
-                        color="primary"
-                        mat-raised-button>
+                            (click)="setStudentsPerFaculty()"
+                            [disabled]="!seventhFormGroup.valid"
+                            class="setButton"
+                            color="primary"
+                            mat-raised-button>
                         Submit
                     </button>
                 </form>
             </div>
 
-            <span class="days_left"><strong *ngIf="curr_deadline">Time Left
-                    :{{curr_deadline | countdown: currentTime}}</strong></span>
+            <span class="days_left"><strong *ngIf="currDeadline">Time Left
+                    :{{currDeadline | countdown: currentTime}}</strong></span>
         </div>
 
-        <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stage_no }}">
+        <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stageNo }}">
             <mat-step [editable]="'true'" [stepControl]="firstFormGroup">
                 <form [formGroup]="firstFormGroup">
                     <ng-template matStepLabel>
                         Creating Projects
-                        <div *ngIf="stage_no > 0" class="datelabel">
+                        <div *ngIf="stageNo > 0" class="datelabel">
                             {{ dateSet[0] | date: "fullDate" }}
                         </div>
                     </ng-template>
 
                     <mat-form-field class="example-full-width">
                         <mat-label>Choose Date1</mat-label>
-                        <input [matDatepicker]="picker1" [min]="minDate" formControlName="firstCtrl" matInput />
+                        <input [matDatepicker]="picker1" [min]="minDate" formControlName="firstCtrl" matInput/>
                         <mat-datepicker-toggle [for]="picker1" matSuffix></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
@@ -110,16 +110,16 @@
                             Send Emails
                         </button>
                         <span
-                            [matTooltip]="
+                                [matTooltip]="
                                 '1'
                                     | proceedPipe
                                         : studentCount
                                         : proceedButton1_
-                                        : total_intake
+                                        : totalIntake
                                         : proceedButton1
-                                        : student_flag
+                                        : studentFlag
                             ">
-                            <button (click)="proceed()" [disabled]="proceedButton1_" mat-button>
+                            <button (click)="proceed()"  mat-button>
                                 Proceed
                             </button>
                         </span>
@@ -135,14 +135,14 @@
                 <form [formGroup]="secondFormGroup">
                     <ng-template matStepLabel>
                         Student Preferences
-                        <div *ngIf="stage_no > 1" class="datelabel">
+                        <div *ngIf="stageNo > 1" class="datelabel">
                             {{ dateSet[1] | date: "fullDate" }}
                         </div>
                     </ng-template>
 
                     <mat-form-field class="example-full-width">
                         <mat-label>Choose a date 2</mat-label>
-                        <input [matDatepicker]="picker2" [min]="minDate" formControlName="secondCtrl" matInput />
+                        <input [matDatepicker]="picker2" [min]="minDate" formControlName="secondCtrl" matInput/>
                         <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
                     </mat-form-field>
@@ -158,16 +158,16 @@
                             Go Back
                         </button>
                         <span
-                            [matTooltip]="
+                                [matTooltip]="
                                 '2'
                                     | proceedPipe
                                         : studentCount
                                         : proceedButton2_
-                                        : total_intake
+                                        : totalIntake
                                         : proceedButton2
-                                        : student_flag
+                                        : studentFlag
                             ">
-                            <button (click)="proceed()" [disabled]="proceedButton2_" mat-button>
+                            <button (click)="proceed()"  mat-button>
                                 Proceed
                             </button>
                         </span>
@@ -183,14 +183,14 @@
                 <form [formGroup]="thirdFormGroup">
                     <ng-template matStepLabel>Faculty Preferences
 
-                        <div *ngIf="stage_no > 2" class="datelabel">
+                        <div *ngIf="stageNo > 2" class="datelabel">
                             {{ dateSet[2] | date: "fullDate" }}
                         </div>
                     </ng-template>
 
                     <mat-form-field class="example-full-width">
                         <mat-label>Choose a date 3</mat-label>
-                        <input [matDatepicker]="picker3" [min]="minDate" formControlName="thirdCtrl" matInput />
+                        <input [matDatepicker]="picker3" [min]="minDate" formControlName="thirdCtrl" matInput/>
                         <mat-datepicker-toggle [for]="picker3" matSuffix></mat-datepicker-toggle>
                         <mat-datepicker #picker3></mat-datepicker>
                     </mat-form-field>
@@ -206,16 +206,16 @@
                             Go Back
                         </button>
                         <span
-                            [matTooltip]="
+                                [matTooltip]="
                                 '3'
                                     | proceedPipe
                                         : studentCount
                                         : proceedButton3_
-                                        : total_intake
+                                        : totalIntake
                                         : proceedButton3
-                                        : student_flag
+                                        : studentFlag
                             ">
-                            <button (click)="proceed()" [disabled]="proceedButton3_" mat-button>
+                            <button (click)="proceed()"  mat-button>
                                 Proceed
                             </button>
                         </span>
@@ -251,39 +251,39 @@
     <mat-tab label="Projects">
         <div class="searchBox">
             <input
-                (keyup)="applyFilter($event, 'project')"
-                autocomplete="off"
-                class="searchInput"
-                matInput
-                name="search"
-                placeholder="Search by any ... "
-                type="search" />
+                    (keyup)="applyFilter($event, 'project')"
+                    autocomplete="off"
+                    class="searchInput"
+                    matInput
+                    name="search"
+                    placeholder="Search by any ... "
+                    type="search"/>
             <button class="searchButton">
                 <i class="material-icons">search</i>
             </button>
         </div>
 
-        <div *ngIf="stage_no >= 3" class="finalStageButtons">
+        <div *ngIf="stageNo >= 3" class="finalStageButtons">
             <div class="startAllocationButton">
                 <button (click)="startAllocation()" color="primary" mat-raised-button>
                     Start Allocation
                 </button>
             </div>
             <div
-                [matTooltipDisabled]="!publishFaculty"
-                [matTooltipPosition]="'above'"
-                class="startAllocationButton"
-                matTooltip="Already published to faculties or no allocation has been done. Complete another allocation to publish to faculties">
+                    [matTooltipDisabled]="!publishFaculty"
+                    [matTooltipPosition]="'above'"
+                    class="startAllocationButton"
+                    matTooltip="Already published to faculties or no allocation has been done. Complete another allocation to publish to faculties">
                 <button
-                    (click)="publishToFaculty()" [disabled]="publishFaculty" color="accent" mat-raised-button>
+                        (click)="publishToFaculty()" [disabled]="publishFaculty" color="accent" mat-raised-button>
                     Publish to Faculties
                 </button>
             </div>
             <div
-                [matTooltipDisabled]="!publishStudents"
-                [matTooltipPosition]="'above'"
-                class="startAllocationButton"
-                matTooltip="Already published to students or no allocation has been done. Complete another allocation to publish to students">
+                    [matTooltipDisabled]="!publishStudents"
+                    [matTooltipPosition]="'above'"
+                    class="startAllocationButton"
+                    matTooltip="Already published to students or no allocation has been done. Complete another allocation to publish to students">
                 <button (click)="publishToStudents()" [disabled]="publishStudents" color="primary" mat-raised-button>
                     Publish to Students
                 </button>
@@ -295,11 +295,12 @@
             </div>
 
             <div
-                class="startAllocationButton"
-                matTooltip="{{ exportDisabled | getExportDisabled }}"
-                matTooltipPosition="above">
+                    class="startAllocationButton"
+                    matTooltip="{{ exportDisabled | getExportDisabled }}"
+                    matTooltipPosition="above">
                 <button
-                    (click)="downloadFile_allocation()" [disabled]="exportDisabled" color="primary" mat-raised-button>
+                        (click)="downloadFile_allocation()" [disabled]="exportDisabled" color="primary"
+                        mat-raised-button>
                     Export Allocation
                 </button>
             </div>
@@ -308,30 +309,30 @@
         <div class="display">
             <div [style.max-height.px]="projectTableHeight" class="table mat-elevation-z8">
                 <table
-                    (matSortChange)="sortProjects($event)"
-                    [dataSource]="dataSource"
-                    class="mat-elevation-z8"
-                    mat-table
-                    matSort>
+                        (matSortChange)="sortProjects($event)"
+                        [dataSource]="dataSource"
+                        class="mat-elevation-z8"
+                        mat-table
+                        matSort>
                     <ng-container matColumnDef="select">
                         <th *matHeaderCellDef mat-header-cell mat-sort-header>
                             <mat-checkbox
-                                (change)="$event ? masterToggle() : null"
-                                (click)="$event.stopPropagation()"
-                                [aria-label]="checkboxLabel(null)"
-                                [checked]="selection.hasValue() && isAllSelected()"
-                                [indeterminate]="selection.hasValue() && !isAllSelected()
+                                    (change)="$event ? masterToggle() : null"
+                                    (click)="$event.stopPropagation()"
+                                    [aria-label]="checkboxLabel(null)"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()
                                 "></mat-checkbox>
                         </th>
                         <td *matCellDef="let row" mat-cell>
                             <mat-checkbox
-                                (change)="$event ? selection.toggle(row) : null"
-                                (click)="$event.stopPropagation()"
-                                [aria-label]="checkboxLabel(row)"
-                                [checked]="selection.isSelected(row)"
-                                [disabled]="!row.isIncluded"
-                                [matTooltipPosition]="'above'"
-                                [matTooltip]="getTooltipInclusion(row)"></mat-checkbox>
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    (click)="$event.stopPropagation()"
+                                    [aria-label]="checkboxLabel(row)"
+                                    [checked]="selection.isSelected(row)"
+                                    [disabled]="!row.isIncluded"
+                                    [matTooltipPosition]="'above'"
+                                    [matTooltip]="getTooltipInclusion(row)"></mat-checkbox>
                         </td>
                         <td *matFooterCellDef mat-footer-cell matTooltip="Selected projects">
                             {{this.selection.selected
@@ -393,9 +394,9 @@
                         <th *matHeaderCellDef mat-header-cell>Preferences</th>
                         <td *matCellDef="let project" class="align-center" mat-cell>
                             <mat-icon
-                                (click)="showPreferencesProject(project)"
-                                matTooltip="Prefences of {{ project.faculty }}"
-                                matTooltipPosition="above">
+                                    (click)="showPreferencesProject(project)"
+                                    matTooltip="Prefences of {{ project.faculty }}"
+                                    matTooltipPosition="above">
                                 open_in_new
                             </mat-icon>
                         </td>
@@ -405,14 +406,14 @@
                         <th *matHeaderCellDef mat-header-cell>Alloted To</th>
                         <td *matCellDef="let project" mat-cell>
                             <div
-                                *ngIf="
+                                    *ngIf="
                                     !project.student_alloted ||
                                     project.student_alloted.length <= 0
                                 ">
                                 N/A
                             </div>
                             <div
-                                *ngIf="
+                                    *ngIf="
                                     project.student_alloted &&
                                     project.student_alloted.length > 0
                                 ">
@@ -423,12 +424,12 @@
                     </ng-container>
                     <tr *matHeaderRowDef="columns; sticky: true" mat-header-row></tr>
                     <tr
-                        (mouseenter)="isActive = true; indexHover = i"
-                        (mouseleave)="isActive = false; indexHover = -1"
-                        *matRowDef="let row; let i = index; columns: columns"
-                        [class.mat-elevation-z8]="isActive && indexHover == i"
-                        class="remove-background"
-                        mat-row></tr>
+                            (mouseenter)="isActive = true; indexHover = i"
+                            (mouseleave)="isActive = false; indexHover = -1"
+                            *matRowDef="let row; let i = index; columns: columns"
+                            [class.mat-elevation-z8]="isActive && indexHover == i"
+                            class="remove-background"
+                            mat-row></tr>
                     <tr *matFooterRowDef="columns; sticky: true" mat-footer-row></tr>
                 </table>
             </div>
@@ -436,17 +437,18 @@
     </mat-tab>
     <mat-tab label="Manage">
         <mat-tab-group
-            *ngIf="index == 2" [selectedIndex]="0" animationDuration="0" dynamicHeight="true" mat-align-tabs="center">
+                *ngIf="index == 2" [selectedIndex]="0" animationDuration="0" dynamicHeight="true"
+                mat-align-tabs="center">
             <mat-tab label="Students">
                 <div class="searchBox">
                     <input
-                        (keyup)="applyFilter($event, 'student')"
-                        autocomplete="off"
-                        class="searchInput"
-                        matInput
-                        name="search"
-                        placeholder="Search by any ... "
-                        type="search" />
+                            (keyup)="applyFilter($event, 'student')"
+                            autocomplete="off"
+                            class="searchInput"
+                            matInput
+                            name="search"
+                            placeholder="Search by any ... "
+                            type="search"/>
                     <button class="searchButton">
                         <i class="material-icons">search</i>
                     </button>
@@ -454,11 +456,11 @@
                 <div class="flex-space">
                     <div class="buttons">
                         <button
-                            (click)="downloadFile_student()"
-                            *ngIf="stage_no >= 3"
-                            class="student_download"
-                            color="accent"
-                            mat-raised-button>
+                                (click)="downloadFile_student()"
+                                *ngIf="stageNo >= 3"
+                                class="student_download"
+                                color="accent"
+                                mat-raised-button>
                             Export Preferences
                         </button>
 
@@ -466,22 +468,23 @@
                             Import Students
                         </button>
                         <button
-                            (click)="downloadFile_format()" class="download-format" color="accent" mat-raised-button>
+                                (click)="downloadFile_format()" class="download-format" color="accent"
+                                mat-raised-button>
                             Download file format
                         </button>
                     </div>
                 </div>
 
-                <input #fileInput (change)="handleFileInput($event)" style="display: none" type="file" />
+                <input #fileInput (change)="handleFileInput($event)" style="display: none" type="file"/>
 
                 <div class="display-student">
                     <div [style.max-height.px]="studentTableHeight" class="table mat-elevation-z8">
                         <table
-                            (matSortChange)="sortStudents($event)"
-                            [dataSource]="students"
-                            class="mat-elevation-z8"
-                            mat-table
-                            matSort>
+                                (matSortChange)="sortStudents($event)"
+                                [dataSource]="students"
+                                class="mat-elevation-z8"
+                                mat-table
+                                matSort>
                             <ng-container matColumnDef="Name">
                                 <th *matHeaderCellDef [style.color]="background" mat-header-cell mat-sort-header>
                                     Name
@@ -529,9 +532,9 @@
                                 </th>
                                 <td *matCellDef="let student" mat-cell>
                                     <mat-icon
-                                        (click)="removeStudent(student)"
-                                        matTooltip="Remove {{ student.name }}"
-                                        matTooltipPosition="right">
+                                            (click)="removeStudent(student)"
+                                            matTooltip="Remove {{ student.name }}"
+                                            matTooltipPosition="right">
                                         delete_outline
                                     </mat-icon>
                                 </td>
@@ -543,7 +546,7 @@
                                 </th>
                                 <td *matCellDef="let student" mat-cell>
                                     <mat-icon
-                                        (click)="showPreferences(student)" matTooltip="Prefences of {{
+                                            (click)="showPreferences(student)" matTooltip="Prefences of {{
                                             student.name
                                         }}" matTooltipPosition="above">
                                         open_in_new
@@ -553,16 +556,16 @@
                             </ng-container>
                             <tr *matHeaderRowDef="studentCols; sticky: true" mat-header-row></tr>
                             <tr
-                                (mouseenter)="isActive = true; indexHover = i"
-                                (mouseleave)="isActive = false; indexHover = -1"
-                                *matRowDef="
+                                    (mouseenter)="isActive = true; indexHover = i"
+                                    (mouseleave)="isActive = false; indexHover = -1"
+                                    *matRowDef="
                                     let row;
                                     let i = index;
                                     columns: studentCols
                                 "
-                                [class.mat-elevation-z8]="isActive && indexHover == i"
-                                class="remove-background"
-                                mat-row></tr>
+                                    [class.mat-elevation-z8]="isActive && indexHover == i"
+                                    class="remove-background"
+                                    mat-row></tr>
                             <tr *matFooterRowDef="studentCols; sticky: true" mat-footer-row></tr>
                         </table>
                     </div>
@@ -571,13 +574,13 @@
             <mat-tab label="Faculties">
                 <div class="searchBox">
                     <input
-                        (keyup)="applyFilter($event, 'faculty')"
-                        autocomplete="off"
-                        class="searchInput"
-                        matInput
-                        name="search"
-                        placeholder="Search by any ... "
-                        type="search" />
+                            (keyup)="applyFilter($event, 'faculty')"
+                            autocomplete="off"
+                            class="searchInput"
+                            matInput
+                            name="search"
+                            placeholder="Search by any ... "
+                            type="search"/>
                     <button class="searchButton">
                         <i class="material-icons">search</i>
                     </button>
@@ -591,11 +594,11 @@
                     </div>
                     <div [style.max-height.px]="studentTableHeight" class="table mat-elevation-z8">
                         <table
-                            (matSortChange)="sortFaculty($event)"
-                            [dataSource]="faculties"
-                            class="mat-elevation-z8"
-                            mat-table
-                            matSort>
+                                (matSortChange)="sortFaculty($event)"
+                                [dataSource]="faculties"
+                                class="mat-elevation-z8"
+                                mat-table
+                                matSort>
                             <ng-container matColumnDef="Name">
                                 <th *matHeaderCellDef [style.color]="background" mat-header-cell mat-sort-header>
                                     Name
@@ -657,25 +660,25 @@
                                 </th>
                                 <td *matCellDef="let faculty" mat-cell>
                                     <mat-icon
-                                        (click)="removeFaculty(faculty._id)"
-                                        matTooltip="Remove {{ faculty.name }}"
-                                        matTooltipPosition="right">delete_outline
+                                            (click)="removeFaculty(faculty._id)"
+                                            matTooltip="Remove {{ faculty.name }}"
+                                            matTooltipPosition="right">delete_outline
                                     </mat-icon>
                                 </td>
                                 <td *matFooterCellDef mat-footer-cell></td>
                             </ng-container>
                             <tr *matHeaderRowDef="facultyCols; sticky: true" mat-header-row></tr>
                             <tr
-                                (mouseenter)="isActive = true; indexHover = i"
-                                (mouseleave)="isActive = false; indexHover = -1"
-                                *matRowDef="
+                                    (mouseenter)="isActive = true; indexHover = i"
+                                    (mouseleave)="isActive = false; indexHover = -1"
+                                    *matRowDef="
                                     let row;
                                     let i = index;
                                     columns: facultyCols
                                 "
-                                [class.mat-elevation-z8]="isActive && indexHover == i"
-                                class="remove-background"
-                                mat-row></tr>
+                                    [class.mat-elevation-z8]="isActive && indexHover == i"
+                                    class="remove-background"
+                                    mat-row></tr>
                             <tr *matFooterRowDef="facultyCols; sticky: true" mat-footer-row></tr>
                         </table>
                     </div>

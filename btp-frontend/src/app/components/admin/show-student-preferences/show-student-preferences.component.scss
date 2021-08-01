@@ -1,79 +1,79 @@
 .list {
-    min-height: 60px;
-    border-radius: 4px;
-    display: block;
-    overflow: hidden;
+  min-height: 60px;
+  border-radius: 4px;
+  display: block;
+  overflow: hidden;
 }
 
 .copy {
-    float: right;
+  float: right;
 }
 
 .toolbar {
-    position: sticky;
+  position: sticky;
 }
 
 .example-headers-align .mat-expansion-panel-header-title,
 .example-headers-align .mat-expansion-panel-header-description {
-    flex-basis: 0;
+  flex-basis: 0;
 }
 
 .example-headers-align .mat-expansion-panel-header-description {
-    justify-content: space-between;
-    align-items: center;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .example-headers-align .mat-form-field + .mat-form-field {
-    margin-left: 8px;
+  margin-left: 8px;
 }
 
 .mat-accordion .mat-expansion-panel:not(.mat-expanded),
 .mat-accordion .mat-expansion-panel:not(.mat-expansion-panel-spacing) {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 ::ng-deep .ng-animating div mat-accordion mat-expansion-panel mat-expansion-panel-header {
-    height: 48px;
+  height: 48px;
 }
 
 ::ng-deep .ng-animating div mat-accordion mat-expansion-panel div.mat-expansion-panel-content {
-    height: 0;
-    visibility: hidden;
+  height: 0;
+  visibility: hidden;
 }
 
 
 .example-viewport {
-    height: 400px;
-    width: 800px;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  height: 400px;
+  width: 800px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 
-    &::-webkit-scrollbar {
-        display: none;
-    }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .text {
-    text-align: center;
+  text-align: center;
 }
 
 mat-icon:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .fill-space {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
 .list-item {
-    padding: 10px 10px;
-    box-sizing: border-box;
-    cursor: move;
-    //color: black;
-    font-size: 14px;
+  padding: 10px 10px;
+  box-sizing: border-box;
+  cursor: move;
+  //color: black;
+  font-size: 14px;
 }
 
 .list-item:last-child {
-    border: none;
+  border: none;
 }

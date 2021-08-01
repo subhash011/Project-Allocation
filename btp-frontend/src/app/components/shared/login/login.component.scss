@@ -45,15 +45,15 @@
 // }
 
 a:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .sign-out {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .google-btn {
-    height: 45px;
+  height: 45px;
 }
 
 $white: #fff;
@@ -61,34 +61,34 @@ $google-blue: #4285f4;
 $button-active-blue: #1669F2;
 
 .google-btn {
-    width: 184px;
-    height: 42px;
-    background-color: white;
+  width: 184px;
+  height: 42px;
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .25);
+
+  .google-icon-wrapper {
+    position: absolute;
+    margin-top: 1px;
+    margin-left: 1px;
+    width: 40px;
+    height: 40px;
     border-radius: 2px;
-    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .25);
+    background-color: $white;
+  }
 
-    .google-icon-wrapper {
-        position: absolute;
-        margin-top: 1px;
-        margin-left: 1px;
-        width: 40px;
-        height: 40px;
-        border-radius: 2px;
-        background-color: $white;
-    }
+  .google-icon {
+    position: absolute;
+    margin-top: 11px;
+    margin-left: 8px;
+    width: 18px;
+    height: 18px;
+  }
 
-    .google-icon {
-        position: absolute;
-        margin-top: 11px;
-        margin-left: 8px;
-        width: 18px;
-        height: 18px;
-    }
-
-    .btn-text {
-        float: right;
-        margin: 5px 14px 0 0;
-        color: black;
-        font-size: 14px;
-    }
+  .btn-text {
+    float: right;
+    margin: 5px 14px 0 0;
+    color: black;
+    font-size: 14px;
+  }
 }

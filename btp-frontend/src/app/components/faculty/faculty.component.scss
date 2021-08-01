@@ -1,61 +1,61 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 64px;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 mat-sidenav-container {
-    flex: 1;
-    width: 100%;
-    min-width: 100%;
-    overflow-x: hidden;
+  flex: 1;
+  width: 100%;
+  min-width: 100%;
+  overflow-x: hidden;
 }
 
 mat-sidenav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
 }
 
 mat-sidenav-content {
-    position: relative;
-    overflow-x: hidden;
+  position: relative;
+  overflow-x: hidden;
 }
 
 mat-sidenav-content::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 mat-sidenav-content {
-    -ms-overflow-style: none;
+  -ms-overflow-style: none;
 }
 
 .example-spacer {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .fill-remaining-space {
-    flex: 1 auto 1;
+  flex: 1 auto 1;
 }
 
 mat-toolbar {
-    justify-content: center;
+  justify-content: center;
 }
 
 .mobile {
-    display: none;
+  display: none;
 }
 
 @media only screen and (max-width: 768px) {
-    mat-sidenav {
-        width: 100%;
-    }
-    .mobile {
-        display: block;
-    }
+  mat-sidenav {
+    width: 100%;
+  }
+  .mobile {
+    display: block;
+  }
 }

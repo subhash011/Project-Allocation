@@ -16,16 +16,16 @@
                 <mat-card-content>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input formControlName="firstName" matInput placeholder="First name" />
+                            <input formControlName="firstName" matInput placeholder="First name"/>
                             <mat-error
-                                *ngIf="userForm.controls['firstName'].hasError('required')">
+                                    *ngIf="userForm.controls['firstName'].hasError('required')">
                                 First name is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input formControlName="lastName" matInput placeholder="Last name" />
+                            <input formControlName="lastName" matInput placeholder="Last name"/>
                             <mat-error *ngIf="userForm.controls['lastName'].hasError('required')">
                                 Last name is <strong>required</strong>
                             </mat-error>
@@ -34,7 +34,7 @@
                     <div *ngIf="hasUnitNumber" class="row"></div>
                     <div class="row">
                         <mat-form-field class="full-width">
-                            <input formControlName="email" matInput placeholder="Email-ID" />
+                            <input formControlName="email" matInput placeholder="Email-ID"/>
                             <mat-error *ngIf="userForm.controls['email'].hasError('required')">
                                 Email-ID is <strong>required</strong>
                             </mat-error>
@@ -55,11 +55,11 @@
                 </mat-card-content>
                 <mat-card-actions>
                     <button
-                        [disabled]="!userForm.valid"
-                        class="submit_button"
-                        color="primary"
-                        mat-raised-button
-                        type="submit">
+                            [disabled]="!userForm.valid"
+                            class="submit_button"
+                            color="primary"
+                            mat-raised-button
+                            type="submit">
                         Submit
                     </button>
                 </mat-card-actions>

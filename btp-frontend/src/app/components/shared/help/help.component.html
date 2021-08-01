@@ -1,15 +1,16 @@
 <mat-tab-group
-    [(selectedIndex)]="index" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
+        [(selectedIndex)]="index" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
     <mat-tab label="Overview">
         <mat-card class="stages-card">
             <h2><strong>1 &nbsp;&nbsp; About the Process</strong></h2>
-            <hr />
-            <br />
+            <hr/>
+            <br/>
             <mat-card-content>
                 <p>
                     There are three types of users namely
                     <b>Student, Faculty, Super Admin</b>. And there are four roles namely
-                    <b>Student, Faculty, Co-ordinator, Super Admin</b>. We will have a quick glance on how the process works. We will go through these roles in detail first.
+                    <b>Student, Faculty, Co-ordinator, Super Admin</b>. We will have a quick glance on how the process
+                    works. We will go through these roles in detail first.
                 </p>
                 <ul>
                     <li>
@@ -21,27 +22,41 @@
                     <li>
                         <h4>Faculty</h4>
                         <p>
-                            No special priviliges given. Faculty have to select the programs which they wish to support i.e the programs in which they would like to float their projects. They are responsible for giving the student preference for the projects they floated. </p>
+                            No special priviliges given. Faculty have to select the programs which they wish to support
+                            i.e the programs in which they would like to float their projects. They are responsible for
+                            giving the student preference for the projects they floated. </p>
                     </li>
 
                     <li>
                         <h4>Co-ordinator</h4>
                         <p>
-                            Co-ordinator has to import the student list containing Name,Rollno.,CGPA of each student in csv format in the Manage->Students tab to enable the students to register. Note that students not present in this list wont be able to register. Presets help to control the number of students assigned to each faculty. These are assigned by the Co-ordinator of each program and is unique to a program. Co-ordinator is responsible for setting the deadlines of the programs. Mails can be sent to the particular groups of users about the deadline. Please note that this is not automated for any of the stages i.e you have to click the Send Mails button. </p>
+                            Co-ordinator has to import the student list containing Name,Rollno.,CGPA of each student in
+                            csv format in the Manage->Students tab to enable the students to register. Note that
+                            students not present in this list wont be able to register. Presets help to control the
+                            number of students assigned to each faculty. These are assigned by the Co-ordinator of each
+                            program and is unique to a program. Co-ordinator is responsible for setting the deadlines of
+                            the programs. Mails can be sent to the particular groups of users about the deadline. Please
+                            note that this is not automated for any of the stages i.e you have to click the Send Mails
+                            button. </p>
                         <ol>
                             <li>
                                 <h4>Presets</h4>
 
                                 <ul>
                                     <li>
-                                        <b>Project Cap</b>: This is the maximum number of projects each faculty can float. This is not set to anything in the start. If not set, no faculty will be able to add projects.
+                                        <b>Project Cap</b>: This is the maximum number of projects each faculty can
+                                        float. This is not set to anything in the start. If not set, no faculty will be
+                                        able to add projects.
                                     </li>
                                     <li>
-                                        <b>Student Cap</b>: This is the maximum number of students each project can intake. This is set to 1 by default.
+                                        <b>Student Cap</b>: This is the maximum number of students each project can
+                                        intake. This is set to 1 by default.
                                     </li>
 
                                     <li>
-                                        <b>Students Per Faculty</b>: This is the maximum number of students each faculty can intake considering all the projects they floated. This is not set to anything in the start.
+                                        <b>Students Per Faculty</b>: This is the maximum number of students each faculty
+                                        can intake considering all the projects they floated. This is not set to
+                                        anything in the start.
                                     </li>
                                 </ul>
                             </li>
@@ -49,7 +64,8 @@
                                 <h4>Priviliges</h4>
                                 <ul>
                                     <li>
-                                        Co-ordinator can access the details of students & faculty who opted for the program.
+                                        Co-ordinator can access the details of students & faculty who opted for the
+                                        program.
                                     </li>
                                     <li>
                                         Co-ordinator can remove any student or faculty who opted for that program.
@@ -67,14 +83,15 @@
                         <ul>
                             <li>Super Admin has the access to the database.</li>
                             <li>
-                                Super Admin is responsible for selecting the program Co-ordinators before the start of the Allocation.
+                                Super Admin is responsible for selecting the program Co-ordinators before the start of
+                                the Allocation.
                             </li>
                             <li>They have the privilige to add programs.</li>
                         </ul>
                     </li>
                 </ul>
 
-                <br />
+                <br/>
                 <h4>Flow of the Process</h4>
                 <ul>
                     <li>
@@ -82,19 +99,24 @@
                     </li>
 
                     <li>
-                        All the faculty members have to register to the portal choosing their respective stream. If your stream is not present in the registraion page please contact the Super Admin to add it.
+                        All the faculty members have to register to the portal choosing their respective stream. If your
+                        stream is not present in the registraion page please contact the Super Admin to add it.
                     </li>
 
                     <li>
-                        Super Admin has to then choose a Co-ordinator to each program. Do note that one faculty member can behave as a Co-ordinator only for one program.
+                        Super Admin has to then choose a Co-ordinator to each program. Do note that one faculty member
+                        can behave as a Co-ordinator only for one program.
                     </li>
 
                     <li>
-                        Each Co-ordinator has to then import the student list in a csv file containing Name,Rollno.,CGPA of each student. Do note that only the students in this list will be able to register to the portal. Students not in this list wont be able to register to the portal.
+                        Each Co-ordinator has to then import the student list in a csv file containing Name,Rollno.,CGPA
+                        of each student. Do note that only the students in this list will be able to register to the
+                        portal. Students not in this list wont be able to register to the portal.
                     </li>
 
                     <li>
-                        The Co-ordinators of each program have to start the allocation by setting the first deadline and fillng in the presets. On setting the first deadine the stages start i.e it will go to stage 1.
+                        The Co-ordinators of each program have to start the allocation by setting the first deadline and
+                        fillng in the presets. On setting the first deadine the stages start i.e it will go to stage 1.
                     </li>
                     <li>
                         <b>Start of Stage 1</b>
@@ -106,7 +128,10 @@
                         <b>End of Stage 1</b>
                     </li>
                     <li>
-                        Co-ordinators have to proceed to the next stage by hitting the proceed button. Co-ordinators have to make sure that no faculty have violated the presets, otherwise you wont be able to move to the next stage. Note that there are some violations which have to be resolved in the Manage->Faculty tab otherwise you wont be able to proceed to the next stage.
+                        Co-ordinators have to proceed to the next stage by hitting the proceed button. Co-ordinators
+                        have to make sure that no faculty have violated the presets, otherwise you wont be able to move
+                        to the next stage. Note that there are some violations which have to be resolved in the
+                        Manage->Faculty tab otherwise you wont be able to proceed to the next stage.
                     </li>
                     <li>
                         <b>Start of Stage 2</b>
@@ -122,7 +147,9 @@
                         <b>Start of Stage 3</b>
                     </li>
                     <li>
-                        Faculty have to fill in their preferences of students for each project they floated. In this stage faculty can choose which projects they finally want to float of the all the projects they floated.
+                        Faculty have to fill in their preferences of students for each project they floated. In this
+                        stage faculty can choose which projects they finally want to float of the all the projects they
+                        floated.
                     </li>
                     <li>
                         <b>End of Stage 3</b>
@@ -131,16 +158,19 @@
                         <b>Stage 4 is Allocation</b>
                     </li>
                     <li>
-                        Co-ordinator can try out various allocations in the Project tab and then can publish to Faculty or Students. Do note that on publishing the allocation details to Faculty or Students mails will be sent to the respective groups automatically.
+                        Co-ordinator can try out various allocations in the Project tab and then can publish to Faculty
+                        or Students. Do note that on publishing the allocation details to Faculty or Students mails will
+                        be sent to the respective groups automatically.
                     </li>
                 </ul>
-                <br />
+                <br/>
 
                 <h2><strong>2 &nbsp;&nbsp; Stages</strong></h2>
-                <hr />
-                <br />
+                <hr/>
+                <br/>
                 <p>
-                    The project allocation consists of four stages namely Creating Projects, Student Preference, Faculty Preference and Project Allocation. This is a quick overview as to understand the process. </p>
+                    The project allocation consists of four stages namely Creating Projects, Student Preference, Faculty
+                    Preference and Project Allocation. This is a quick overview as to understand the process. </p>
                 <ul>
                     <li>
                         <h4>Stage 1 : Creating Projects</h4>
@@ -148,23 +178,28 @@
                         <ol>
                             <li>
                                 The faculty can
-                                <b>ADD/EDIT/DELETE</b> projects. Note that these options will be disabled in the further stages.
+                                <b>ADD/EDIT/DELETE</b> projects. Note that these options will be disabled in the further
+                                stages.
                             </li>
                             <li>
-                                Sometimes you wont be able to add any projects because you may be violating certain presets set by the Co-ordinator of that program. In such case you need to communicate with the Co-ordinator and take necessary steps.
+                                Sometimes you wont be able to add any projects because you may be violating certain
+                                presets set by the Co-ordinator of that program. In such case you need to communicate
+                                with the Co-ordinator and take necessary steps.
                             </li>
                             <li>
-                                The Save Preferences button in the Students Tab in each project will be disabled. Please refrain from clicking it.
+                                The Save Preferences button in the Students Tab in each project will be disabled. Please
+                                refrain from clicking it.
                             </li>
                             <li>
                                 Students preferences will be locked i.e students wont be able to edit their preferences.
                             </li>
                             <li>
-                                Sometimes you will be logged out of the application. Dont worry this is because of session expiry or because of any server error. In the later case please contact us.
+                                Sometimes you will be logged out of the application. Dont worry this is because of
+                                session expiry or because of any server error. In the later case please contact us.
                             </li>
                         </ol>
                     </li>
-                    <br />
+                    <br/>
                     <li>
                         <h4>Stage 2 : Student Preferences</h4>
                         <p>In this stage :</p>
@@ -174,71 +209,82 @@
                             </li>
                             <li>
                                 Students can now give their preferences.
-                                <b>Please do note that if you dont give any preference, you will be alloted a random project</b>.
+                                <b>Please do note that if you dont give any preference, you will be alloted a random
+                                    project</b>.
                             </li>
                         </ol>
                     </li>
-                    <br />
+                    <br/>
                     <li>
                         <h4>Stage 3 : Faculty Preferences</h4>
                         <p>In this stage :</p>
                         <ol>
                             <li>
-                                Faculty have to give their preference in the Student tab in each project section. You can Save Preferences how many ever times you want. Note that the latest save will be considered for the allocation.
+                                Faculty have to give their preference in the Student tab in each project section. You
+                                can Save Preferences how many ever times you want. Note that the latest save will be
+                                considered for the allocation.
                             </li>
                             <li>
-                                Faculty also have to select a final list of projects from all the projects they floated which they finally want to offer.
+                                Faculty also have to select a final list of projects from all the projects they floated
+                                which they finally want to offer.
                             </li>
                             <li>
                                 Students wont be able to edit their preferences further.
                             </li>
                         </ol>
                     </li>
-                    <br />
+                    <br/>
                     <li>
                         <h4>Stage 4 : Project Allocation</h4>
                         <p>In this stage :</p>
                         <ol>
                             <li>
-                                Project Allocation allocates program wise, and after the allocation make sure to click on the
+                                Project Allocation allocates program wise, and after the allocation make sure to click
+                                on the
                                 <b>Publish to Faculty</b> and the
-                                <b>Publish to Students</b> button to send mails to all the members involved in that particular program indicating the end of the allocation and to publish the details of the allocation to the respective group.
+                                <b>Publish to Students</b> button to send mails to all the members involved in that
+                                particular program indicating the end of the allocation and to publish the details of
+                                the allocation to the respective group.
                             </li>
                             <li>
-                                Now you can exclude projects from the allocation by deselecting them in the Project tab. Go through the video to understand this better.
+                                Now you can exclude projects from the allocation by deselecting them in the Project tab.
+                                Go through the video to understand this better.
                             </li>
                             <li>
-                                Students will be able to see their project alloted in their home page. It will appear as an expansion panel in place of the timeline.
+                                Students will be able to see their project alloted in their home page. It will appear as
+                                an expansion panel in place of the timeline.
                             </li>
                         </ol>
                     </li>
                 </ul>
-                <br />
+                <br/>
                 <h2><strong>3 &nbsp;&nbsp; Contact Us</strong></h2>
-                <hr />
-                <br />
+                <hr/>
+                <br/>
                 <ul>
                     <li>
                         If you find any issues in the portal you can open an issue <a
-                        href="https://github.com/subhash011/Project-Allocation/issues"
-                        target="_blank"> here</a>. Please consider this as your first option.
+                            href="https://github.com/subhash011/Project-Allocation/issues"
+                            target="_blank"> here</a>. Please consider this as your first option.
                     </li>
-                    <br />
+                    <br/>
                     <li>
-                        Try using the issue tracker using the link given above. If you find it difficult, please feel free to mail us.<br /> Mail-Id's :
-                        <br /> Sai Vamsi : 111801002@smail.iitpkd.ac.in <br /> Subhash : 111801042@smail.iitpkd.ac.in
+                        Try using the issue tracker using the link given above. If you find it difficult, please feel
+                        free to mail us.<br/> Mail-Id's :
+                        <br/> Sai Vamsi : 111801002@smail.iitpkd.ac.in <br/> Subhash : 111801042@smail.iitpkd.ac.in
                     </li>
                 </ul>
-                <br />
+                <br/>
                 <h2><strong>4 &nbsp;&nbsp; Additional Information</strong></h2>
-                <hr />
-                <br />
+                <hr/>
+                <br/>
                 <ul>
                     <li>
                         <mat-card-actions>
-                            For more information on the project allocation algorithm and it's implementation you can download the report form the given link :
+                            For more information on the project allocation algorithm and it's implementation you can
+                            download the report form the given link :
                             <a
-                                download href="../../../../assets/BTP_Report.pdf">Report</a>
+                                    download href="../../../../assets/BTP_Report.pdf">Report</a>
                         </mat-card-actions>
                     </li>
                 </ul>
@@ -252,39 +298,39 @@
                 <b><u>Student's guide for the portal.</u></b>
             </h1>
             <video #helpvid class="video" controls name="media">
-                <source src="../../../assets/Student.mp4" type="video/mp4" />
+                <source src="../../../assets/Student.mp4" type="video/mp4"/>
             </video>
-            <br />
+            <br/>
             <div class="timestamps">
                 <h4>Timestamps :</h4>
                 <p>
                     <a
-                        (click)="gotost(1)"
-                        class="link"
-                        id="viewpref">1. View preferences, check the timeline and select a theme</a>
+                            (click)="gotost(1)"
+                            class="link"
+                            id="viewpref">1. View preferences, check the timeline and select a theme</a>
                 </p>
-                <br />
+                <br/>
                 <p>
                     <a
-                        (click)="gotost(2)" class="link" id="editpref">2. Add or Remove Prefereneces</a>
+                            (click)="gotost(2)" class="link" id="editpref">2. Add or Remove Prefereneces</a>
                 </p>
-                <br />
+                <br/>
                 <p>
                     <a
-                        (click)="gotost(3)" class="link" id="editpref">2. Reorder preferences</a>
+                            (click)="gotost(3)" class="link" id="editpref">2. Reorder preferences</a>
                 </p>
-                <br />
+                <br/>
             </div>
         </div>
     </mat-tab>
     <mat-tab
-        *ngIf="(role | isFaculty) || (role | isAdmin) || (role | isSuper)" label="Faculty/Co-ordinator">
+            *ngIf="(role | isFaculty) || (role | isAdmin) || (role | isSuper)" label="Faculty/Co-ordinator">
         <mat-tab-group
-            *ngIf="index == 2"
-            [backgroundColor]="background"
-            [selectedIndex]="0"
-            dynamicHeight="true"
-            mat-align-tabs="center">
+                *ngIf="index == 2"
+                [backgroundColor]="background"
+                [selectedIndex]="0"
+                dynamicHeight="true"
+                mat-align-tabs="center">
             <mat-tab label="Faculty">
                 <div class="container">
                     <h1 class="head">
@@ -292,30 +338,30 @@
                     </h1>
                     <video #helpvidsa class="video" controls name="media">
                         <source
-                            src="../../../assets/Faculty.mp4" type="video/mp4" />
+                                src="../../../assets/Faculty.mp4" type="video/mp4"/>
                     </video>
                     <!-- <iframe #helpvid class="video" width="967" height="544" src="../../../assets/Student.mp4" frameborder="0" allowfullscreen></iframe> -->
-                    <br />
+                    <br/>
                     <div class="timestamps">
                         <h4>Timestamps :</h4>
                         <p>
                             <a
-                                (click)="gotofa(1)" class="link" id="viewpref">1. Home Page</a>
+                                    (click)="gotofa(1)" class="link" id="viewpref">1. Home Page</a>
                         </p>
-                        <br />
+                        <br/>
                         <p>
                             <a
-                                (click)="gotofa(2)" class="link" id="editpref">2. Add/Delete Programs</a>
+                                    (click)="gotofa(2)" class="link" id="editpref">2. Add/Delete Programs</a>
                         </p>
-                        <br />
+                        <br/>
                         <p>
                             <a
-                                (click)="gotofa(3)" class="link" id="editProfile">3. Add/Edit/Delete Projects</a>
+                                    (click)="gotofa(3)" class="link" id="editProfile">3. Add/Edit/Delete Projects</a>
                         </p>
-                        <br />
+                        <br/>
                         <p>
                             <a
-                                (click)="gotofa(4)" class="link" id="editProfile">4. Student Preference</a>
+                                    (click)="gotofa(4)" class="link" id="editProfile">4. Student Preference</a>
                         </p>
                     </div>
                 </div>
@@ -328,25 +374,25 @@
                     </h1>
                     <video #helpvidad class="video" controls name="media">
                         <source
-                            src="../../../assets/Admin_Remade.mp4" type="video/mp4" />
+                                src="../../../assets/Admin_Remade.mp4" type="video/mp4"/>
                     </video>
                     <!-- <iframe #helpvid class="video" width="967" height="544" src="../../../assets/Student.mp4" frameborder="0" allowfullscreen></iframe> -->
-                    <br />
+                    <br/>
                     <div class="timestamps">
                         <h4>Timestamps :</h4>
                         <p>
                             <a
-                                (click)="gotoad(1)" class="link" id="viewpref">1. Home Page</a>
+                                    (click)="gotoad(1)" class="link" id="viewpref">1. Home Page</a>
                         </p>
-                        <br />
+                        <br/>
                         <p>
                             <a
-                                (click)="gotoad(2)" class="link" id="editpref">2. Allocation Stage</a>
+                                    (click)="gotoad(2)" class="link" id="editpref">2. Allocation Stage</a>
                         </p>
-                        <br />
+                        <br/>
                         <p>
                             <a
-                                (click)="gotoad(3)" class="link" id="editProfile">3. Managing Stream Details</a>
+                                    (click)="gotoad(3)" class="link" id="editProfile">3. Managing Stream Details</a>
                         </p>
                     </div>
                 </div>
@@ -360,34 +406,34 @@
             </h1>
             <video #helpvidsa class="video" controls name="media">
                 <source
-                    src="../../../assets/SuperAdminVideo.mp4" type="video/mp4" />
+                        src="../../../assets/SuperAdminVideo.mp4" type="video/mp4"/>
             </video>
             <!-- <iframe #helpvid class="video" width="967" height="544" src="../../../assets/Student.mp4" frameborder="0" allowfullscreen></iframe> -->
-            <br />
+            <br/>
             <div class="timestamps">
                 <h4>Timestamps :</h4>
                 <p>
                     <a
-                        (click)="gotosa(1)" class="link" id="viewpref">1. Faculty guide.</a>
+                            (click)="gotosa(1)" class="link" id="viewpref">1. Faculty guide.</a>
                 </p>
-                <br />
+                <br/>
                 <p>
                     <a
-                        (click)="gotosa(2)" class="link" id="editpref">2. Student guide.</a>
+                            (click)="gotosa(2)" class="link" id="editpref">2. Student guide.</a>
                 </p>
-                <br />
+                <br/>
                 <p>
                     <a
-                        (click)="gotosa(3)" class="link" id="editProfile">3. Project guide</a>
+                            (click)="gotosa(3)" class="link" id="editProfile">3. Project guide</a>
                 </p>
-                <br />
+                <br/>
                 <p>
                     <a
-                        (click)="gotosa(4)" class="link" id="editProfile">4. Streams and programs</a>
+                            (click)="gotosa(4)" class="link" id="editProfile">4. Streams and programs</a>
                 </p>
             </div>
         </div>
-        <hr />
+        <hr/>
 
         <mat-card class="stages-card">
             <mat-card-content>
@@ -396,8 +442,8 @@
                         <b>The below text is the information on how to add streams or programs.</b>
                     </h1>
                 </div>
-                <hr />
-                <br />
+                <hr/>
+                <br/>
                 <pre>
             <b><u>Streams Tab</u></b> : This tab is for adding any new streams in the institute.
 
