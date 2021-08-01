@@ -50,6 +50,20 @@
             "configurations": [
                 "Run backend",
                 "Run scripts",
+                "Run frontend"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "",
+                "order": 1
+            }
+        },
+        {
+            "name": "Debug pal",
+            "configurations": [
+                "Run backend",
+                "Run scripts",
                 "Run frontend",
                 "Attach to Chrome"
             ],
