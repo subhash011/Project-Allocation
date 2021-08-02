@@ -581,13 +581,13 @@ router.get("/members/:id", (req, res) => {
 					.lean()
 					.then((admin) => {
 						if (admin) {
-							for (const program of faculty.programs) {
-								if (program.short == admin.stream) {
-									programAdmin = program;
-								}
-							}
+							// for (const program of faculty.programs) {
+							// 	if (program.short == admin.stream) {
+							// 		programAdmin = program;
+							// 	}
+							// }
 							promises.push(
-								Faculty.find({ programs: { $elemMatch: programAdmin } })
+								Faculty.find({ "programs.short": admin.stream})
 									.lean()
 									.populate({path:"project_list",select:{isIncluded:1,studentIntake:1,stream:1}, model:Project})
 									.then((faculties) => {
@@ -729,25 +729,26 @@ router.delete("/faculty/:id", (req, res) => {
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } }).then(
 		(faculty) => {
 			if (faculty && faculty.isAdmin) {
-				for (const program of faculty.programs) {
-					if (program.short == faculty.adminProgram) {
-						programAdmin = program;
-					}
-				}
+				// for (const program of faculty.programs) {
+				// 	if (program.short == faculty.adminProgram) {
+				// 		programAdmin = program;
+				// 	}
+				// }
+
 				Project.find({
-					stream: programAdmin.short,
+					stream: faculty.adminProgram,
 					faculty_id: mid,
 				}).then((projects) => {
 					var projectIDs = projects.map((val) => val._id);
 					Project.deleteMany({
-						stream: programAdmin.short,
+						stream: faculty.adminProgram,
 						faculty_id: mid,
 					}).then(() => {
 						var updateResult = {
 							$pullAll: { projects_preference: projectIDs },
 						};
 						Student.updateMany(
-							{ stream: programAdmin.short },
+							{ stream: faculty.adminProgram },
 							updateResult
 						).then(() => {
 							var updateCondition = {
@@ -757,15 +758,52 @@ router.delete("/faculty/:id", (req, res) => {
 								$unset: { project_alloted: "" },
 							};
 							Student.updateMany(updateCondition, updateResult).then(() => {
-								updateResult = {
-									$pullAll: { project_list: projectIDs },
-									$pull: { programs: programAdmin },
-								};
-								Faculty.findByIdAndUpdate(mid, updateResult).then(() => {
-									res.json({
-										message: "success",
-										result: null,
-									});
+								// updateResult = {
+								// 	$pullAll: { project_list: projectIDs },
+								// 	$pull: { programs: {short: faculty.adminProgram}},
+								// };
+								Faculty.findById(mid).then((fac) => {
+
+									let new_list = []
+									let flag = 0
+
+									for(const project of fac.project_list) {
+										flag = 0
+										for(const p of projectIDs) {
+											if(project.toString().localeCompare(p.toString()) == 0) {
+												flag = 1
+											}
+										}		
+										if(flag == 0) {
+											new_list.push(project.toString())
+										}
+									}
+
+
+									fac.project_list = new_list
+
+									fac.programs = fac.programs.filter(program => {
+										return program.short != faculty.adminProgram
+									})
+
+									
+									
+									fac.save().then((result) => {
+										res.json({
+											message: "success",
+											result: null,
+										});
+									})
+									.catch(err => {
+										console.log(err)
+										res.json({
+											message: "fail",
+											result: null,
+										});
+									}) 
+									
+
+									
 								});
 							});
 						});
