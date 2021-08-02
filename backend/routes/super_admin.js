@@ -228,11 +228,11 @@ router.post("/register/:id", async (req, res) => {
 
 router.post("/addAdmin/:id", async (req, res) => {
     try {
-        const id = req.body.id;
+        const facultyId = req.body.facultyId;
         const program = req.body.branch;
-        const google_user_id = req.params.id;
+        const id = req.params.id;
         const idToken = req.headers.authorization;
-        let user = await SuperAdmin.findOne({google_id: {id: google_user_id, idToken: idToken}}).lean().select("_id");
+        let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
         if (!user) {
             res.status(401).json({
                 statusCode: 401,
@@ -241,7 +241,7 @@ router.post("/addAdmin/:id", async (req, res) => {
             });
             return;
         }
-        let faculty = await Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
+        let faculty = await Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(facultyId), {
             isAdmin: true,
             adminProgram: program
         });

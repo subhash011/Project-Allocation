@@ -13,6 +13,7 @@ export class MailService {
     constructor(private http: HttpClient) {
     }
 
+    // TODO try and remove user from local storage here
     allocateMail(mails, program) {
         const user = JSON.parse(localStorage.getItem('user'));
         const url = this.baseUrl + 'send';

@@ -1122,7 +1122,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                     this.selectIncluded();
                     this.publishStudents = true;
-                    localStorage.setItem('ps', 'true');
                     this.mailer
                         .publishMail('student', emails, programFull)
                         .subscribe(() => {

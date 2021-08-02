@@ -68,7 +68,6 @@ export class RegisterComponent implements OnInit {
                     short: val.short
                 };
             });
-            JSON.parse(localStorage.getItem('user'));
             this.userForm.get('email').disable();
             if (localStorage.getItem('role') === 'super_admin') {
                 this.userForm.get('stream').clearValidators();

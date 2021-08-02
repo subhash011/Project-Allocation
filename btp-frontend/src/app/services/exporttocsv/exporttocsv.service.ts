@@ -13,10 +13,15 @@ export class ExporttocsvService {
     constructor(private http: HttpClient) {
     }
 
+    getCredentials() {
+        return {
+            id: localStorage.getItem('id'),
+            idToken: localStorage.getItem('idToken')
+        };
+    }
+
     generateCSV_projects() {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/export_projects/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -28,9 +33,7 @@ export class ExporttocsvService {
     }
 
     generateCSV_students() {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/export_students/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -42,9 +45,7 @@ export class ExporttocsvService {
     }
 
     download(role) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/download_csv/' + id + '/' + role;
         const headers = new HttpHeaders({
             Authorization: idToken
@@ -56,9 +57,7 @@ export class ExporttocsvService {
     }
 
     uploadStudentList(fileToUpload: File, programName) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         const httpOptions = {
             headers: new HttpHeaders({
                 enctype: 'multipart/form-data',

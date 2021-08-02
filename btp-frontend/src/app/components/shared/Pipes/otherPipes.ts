@@ -95,7 +95,6 @@ export class CountDown implements PipeTransform {
 })
 export class UserPhoto implements PipeTransform {
     transform(value) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        return user.photoUrl;
+        return localStorage.getItem('photoUrl');
     }
 }

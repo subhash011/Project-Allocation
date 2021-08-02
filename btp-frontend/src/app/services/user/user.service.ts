@@ -14,102 +14,109 @@ export class UserService {
     constructor(private http: HttpClient) {
     }
 
-    addAdmin(id, branch) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'super/addAdmin/' + user.id;
+    getCredentials() {
+        return {
+            id: localStorage.getItem('id'),
+            idToken: localStorage.getItem('idToken')
+        };
+    }
+
+    addAdmin(facultyId, branch) {
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'super/addAdmin/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         return this.http.post(this.url, {
-            id,
+            facultyId,
             branch
         }, httpOptions);
     }
 
-    removeFaculty(id) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'super/faculty/' + user.id;
+    removeFaculty(facultyId) {
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'super/faculty/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-                body: id
+                Authorization: idToken,
+                body: facultyId
             })
         };
         return this.http.delete(this.url, httpOptions);
     }
 
-    removeStudent(id) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'super/student/' + user.id;
+    removeStudent(studentId) {
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'super/student/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken,
-                body: id
+                Authorization: idToken,
+                body: studentId
             })
         };
         return this.http.delete(this.url, httpOptions);
     }
 
-    removeAdmin(id) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'super/removeAdmin/' + user.id;
+    removeAdmin(adminId) {
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'super/removeAdmin/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
-        return this.http.post(this.url, {id}, httpOptions);
+        return this.http.post(this.url, {adminId}, httpOptions);
     }
 
     getAllStudents() {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'super/student/details/' + user.id;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'super/student/details/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         return this.http.get(this.url, httpOptions);
     }
 
     getAllFaculties() {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'super/faculty/details/' + user.id;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'super/faculty/details/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         return this.http.get(this.url, httpOptions);
     }
 
     getStudentDetails(id) {
-        const user = JSON.parse(localStorage.getItem('user'));
+        const {idToken} = this.getCredentials();
         this.url = this.baseUrl + 'student/details/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         return this.http.get(this.url, httpOptions);
     }
 
-    getFacultyDetails(id) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'faculty/details/' + id;
+    getFacultyDetails(facultyId) {
+        const {idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'faculty/details/' + facultyId;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         return this.http.get(this.url, httpOptions);
@@ -123,8 +130,7 @@ export class UserService {
     }
 
     getAdminInfo() {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/info/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -139,8 +145,7 @@ export class UserService {
         const obj = {
             stage
         };
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/update_stage/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -157,8 +162,7 @@ export class UserService {
             deadline: date
             // deadline: moment(date).format("YYYY-MM-DD")
         };
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/setDeadline/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -170,8 +174,7 @@ export class UserService {
     }
 
     uploadAllocationFile() {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/export_allocation/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -183,8 +186,7 @@ export class UserService {
     }
 
     getFacultyStreamEmails() {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/stream_email/faculty/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -196,8 +198,7 @@ export class UserService {
     }
 
     getStudentStreamEmails() {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/stream_email/student/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -214,8 +215,8 @@ export class UserService {
     }
 
     getStreamStage() {
-        this.url = this.baseUrl + 'student/stage/' + localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'student/stage/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -226,8 +227,7 @@ export class UserService {
     }
 
     getAllProjects() {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'super/projects/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -242,8 +242,7 @@ export class UserService {
         const obj = {
             cap
         };
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/set_projectCap/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -258,8 +257,7 @@ export class UserService {
         const obj = {
             cap
         };
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/set_studentCap/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -274,8 +272,7 @@ export class UserService {
         const obj = {
             cap
         };
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/set_studentsPerFaculty/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -287,8 +284,7 @@ export class UserService {
     }
 
     setPrograms(programs) {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'faculty/set_programs/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -300,8 +296,7 @@ export class UserService {
     }
 
     updateFacultyProfile(faculty) {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'faculty/updateProfile/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -313,8 +308,7 @@ export class UserService {
     }
 
     getAllPrograms() {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'faculty/getAllPrograms/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -326,8 +320,7 @@ export class UserService {
     }
 
     deleteFacultyProgram(program) {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'faculty/deleteProgram/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -339,8 +332,7 @@ export class UserService {
     }
 
     getFacultyPrograms() {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'faculty/getFacultyPrograms/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -352,8 +344,7 @@ export class UserService {
     }
 
     getAdminInfo_program(program) {
-        const id = localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'faculty/getAdminInfo_program/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -369,8 +360,8 @@ export class UserService {
     }
 
     addStream(details) {
-        this.url = this.baseUrl + 'branches/' + localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'branches/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -381,8 +372,8 @@ export class UserService {
     }
 
     removeStream(map) {
-        this.url = this.baseUrl + 'branches/remove/' + localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'branches/remove/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -394,8 +385,8 @@ export class UserService {
     }
 
     addProgram(map) {
-        this.url = this.baseUrl + 'maps/' + localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'maps/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -406,8 +397,8 @@ export class UserService {
     }
 
     removeProgram(map) {
-        this.url = this.baseUrl + 'maps/remove/' + localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'maps/remove/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -419,8 +410,8 @@ export class UserService {
     }
 
     getMembersForAdmin() {
-        this.url = this.baseUrl + 'admin/members/' + localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'admin/members/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -430,27 +421,27 @@ export class UserService {
         return this.http.get(this.url, httpOptions);
     }
 
-    removeFacultyAdmin(id) {
-        this.url = this.baseUrl + 'admin/faculty/' + localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+    removeFacultyAdmin(facultyId) {
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'admin/faculty/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: idToken,
-                body: id
+                body: facultyId
             })
         };
         return this.http.delete(this.url, httpOptions);
     }
 
-    removeStudentAdmin(id) {
-        this.url = this.baseUrl + 'admin/student/' + localStorage.getItem('id');
-        const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+    removeStudentAdmin(studentId) {
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'admin/student/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: idToken,
-                body: id
+                body: studentId
             })
         };
         return this.http.delete(this.url, httpOptions);
@@ -461,9 +452,7 @@ export class UserService {
     }
 
     fetchAllMails() {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/fetchAllMails/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -475,9 +464,7 @@ export class UserService {
     }
 
     validateAllocation(projects, studentsEnrolled) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/validateAllocation/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -492,9 +479,7 @@ export class UserService {
     }
 
     revertStage(stageNo) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/revertStage/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -506,9 +491,7 @@ export class UserService {
     }
 
     resetUsers() {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/reset/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -520,9 +503,7 @@ export class UserService {
     }
 
     updatePublish(key) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/updatePublish/' + id;
         const allocationMap = JSON.parse(localStorage.getItem('allocationMap'));
         const httpOptions = {
@@ -538,9 +519,7 @@ export class UserService {
     }
 
     getPublishMode(key) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const id = user.id;
-        const idToken = user.idToken;
+        const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/getPublish/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
@@ -552,24 +531,24 @@ export class UserService {
     }
 
     facultyHomeDetails() {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'faculty/home/' + user.id;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'faculty/home/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         return this.http.get(this.url, httpOptions);
     }
 
     updateProgram(curMap, newMap) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'super/update/program/' + user.id;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'super/update/program/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         return this.http.post(this.url, {
@@ -579,12 +558,12 @@ export class UserService {
     }
 
     updateStream(curMap, newMap) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.url = this.baseUrl + 'super/update/stream/' + user.id;
+        const {id, idToken} = this.getCredentials();
+        this.url = this.baseUrl + 'super/update/stream/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         return this.http.post(this.url, {
@@ -595,7 +574,7 @@ export class UserService {
 
     // updateList(stream) {
     //     this.url = this.baseUrl + 'admin/updateLists/' + localStorage.getItem('id');
-    //     const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+    //     const idToken = localStorage.getItem('idToken');
     //     const httpOptions = {
     //         headers: new HttpHeaders({
     //             'Content-Type': 'application/json',

@@ -35,9 +35,9 @@ export class StudentComponent implements OnInit, OnDestroy {
             disableClose: true,
             panelClass: 'transparent'
         });
-        const user = JSON.parse(localStorage.getItem('user'));
+        const id = localStorage.getItem('id');
         const requests = [
-            this.userService.getStudentDetails(user.id).pipe(takeUntil(this.ngUnsubscribe)),
+            this.userService.getStudentDetails(id).pipe(takeUntil(this.ngUnsubscribe)),
             this.userService.getPublishMode('student').pipe(takeUntil(this.ngUnsubscribe))
         ];
         forkJoin(requests).subscribe((response: Array<HttpResponseAPI>) => {

@@ -66,6 +66,8 @@ export class LoginComponent implements OnInit {
                     name: user.name,
                     authToken: user.authToken
                 };
+                localStorage.setItem('idToken"', user.idToken);
+                localStorage.setItem('photoUrl"', user.photoUrl);
                 localStorage.setItem('user', JSON.stringify(userModified));
                 localStorage.setItem('isLoggedIn', 'true');
                 this.isLoggedIn = true;
