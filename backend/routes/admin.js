@@ -796,6 +796,10 @@ router.delete("/faculty/:id", (req, res) => {
 									})
 									.catch(err => {
 										console.log(err)
+										res.json({
+											message: "fail",
+											result: null,
+										});
 									}) 
 									
 
