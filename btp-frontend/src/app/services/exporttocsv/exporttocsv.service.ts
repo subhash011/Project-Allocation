@@ -8,7 +8,7 @@ import {Injectable} from '@angular/core';
 export class ExporttocsvService {
     private url: string;
     private root = environment.apiUrl;
-    private base_url = this.root;
+    private baseUrl = this.root;
 
     constructor(private http: HttpClient) {
     }
@@ -17,7 +17,7 @@ export class ExporttocsvService {
         const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const idToken = user.idToken;
-        this.url = this.base_url + 'admin/export_projects/' + id;
+        this.url = this.baseUrl + 'admin/export_projects/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export class ExporttocsvService {
         const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const idToken = user.idToken;
-        this.url = this.base_url + 'admin/export_students/' + id;
+        this.url = this.baseUrl + 'admin/export_students/' + id;
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ export class ExporttocsvService {
         const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const idToken = user.idToken;
-        this.url = this.base_url + 'admin/download_csv/' + id + '/' + role;
+        this.url = this.baseUrl + 'admin/download_csv/' + id + '/' + role;
         const headers = new HttpHeaders({
             Authorization: idToken
         });
@@ -65,7 +65,7 @@ export class ExporttocsvService {
                 Authorization: idToken
             })
         };
-        this.url = this.base_url + 'admin/uploadStudentList/' + id;
+        this.url = this.baseUrl + 'admin/uploadStudentList/' + id;
         const formData: FormData = new FormData();
         formData.append('student_list', fileToUpload, programName);
         return this.http.post(this.url, formData, httpOptions);

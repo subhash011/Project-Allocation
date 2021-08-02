@@ -13,7 +13,7 @@ import {from} from 'rxjs';
 })
 export class LocalAuthService {
     private root = environment.apiUrl;
-    private user_url = this.root + 'auth/user_check';
+    private userUrl = this.root + 'auth/user_check';
 
     constructor(
         private http: HttpClient, private authService: SocialAuthService, private router: Router, private snackBar: MatSnackBar,
@@ -22,7 +22,7 @@ export class LocalAuthService {
     }
 
     checkUser(user) {
-        return this.http.post<any>(this.user_url, user);
+        return this.http.post<any>(this.userUrl, user);
     }
 
     validate(data: HttpResponseAPI) {
@@ -34,12 +34,12 @@ export class LocalAuthService {
                     route: '/student/' + id,
                     error: 'none'
                 };
-            } else if (position == 'faculty' || position == 'admin') {
+            } else if (position === 'faculty' || position === 'admin') {
                 return {
                     route: '/faculty/' + id,
                     error: 'none'
                 };
-            } else if (position == 'super_admin') {
+            } else if (position === 'super_admin') {
                 return {
                     route: '/super_admin/' + id,
                     error: 'none'
@@ -51,7 +51,7 @@ export class LocalAuthService {
                     route: '/faculty/register/' + id,
                     error: 'none'
                 };
-            } else if (position == 'super_admin') {
+            } else if (position === 'super_admin') {
                 return {
                     route: '/super_admin/register/' + id,
                     error: 'none'
@@ -71,7 +71,7 @@ export class LocalAuthService {
             console.log(e);
         } finally {
             const theme = localStorage.getItem('current-theme');
-            let user = {};
+            const user = {};
             localStorage.clear();
             this.storageService.setItem('isLoggedIn', 'false');
             localStorage.setItem('role', 'none');

@@ -5,7 +5,6 @@ const bodyparser = require("body-parser");
 require("dotenv/config");
 
 // start the server
-const session = require("express-session");
 const cors = require("cors");
 const path = require("path");
 const app = express();
@@ -16,7 +15,7 @@ app.use(cors());
 app.use(bodyparser.json());
 mongoose.set("useFindAndModify", false);
 
-var mongoConnect = process.env.MONGO_URL;
+const mongoConnect = process.env.MONGO_URL;
 
 mongoose
     .connect(mongoConnect, {

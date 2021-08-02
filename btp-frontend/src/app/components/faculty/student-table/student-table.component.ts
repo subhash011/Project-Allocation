@@ -204,11 +204,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
 
     checkAdminStage() {
-        if (this.adminStage !== 2) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.adminStage !== 2;
     }
 
     sortStudentTable(event) {

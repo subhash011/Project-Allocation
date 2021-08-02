@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 
-const role = localStorage.getItem('role') == 'admin' ? 'faculty' : localStorage.getItem('role');
+const role = localStorage.getItem('role') === 'admin' ? 'faculty' : localStorage.getItem('role');
 const id = localStorage.getItem('id');
 const routes: Routes = [
     {
