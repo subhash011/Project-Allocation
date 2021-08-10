@@ -1,12 +1,12 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {SelectionModel} from '@angular/cdk/collections';
-import {Component, HostListener, OnDestroy, OnInit, Pipe, PipeTransform, ViewChild} from '@angular/core';
+import {Component, HostListener, OnInit, Pipe, PipeTransform, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {Router} from '@angular/router';
-import {forkJoin, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {forkJoin} from 'rxjs';
+import {finalize} from 'rxjs/operators';
 import {ProjectsService} from 'src/app/services/projects/projects.service';
 import {UserService} from 'src/app/services/user/user.service';
 import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
@@ -46,7 +46,7 @@ export class IsPreferenceEdit implements PipeTransform {
         ])
     ]
 })
-export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
+export class ShowAvailableProjectsComponent implements OnInit {
     @ViewChild('table') table: MatTable<any>;
     preferences: any = new MatTableDataSource([]);
     projects = new MatTableDataSource([]);
@@ -68,13 +68,14 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         'Actions'
     ];
     dialogRefLoad: MatDialogRef<any>;
-    private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private dialog: MatDialog, private projectService: ProjectsService, private localAuthService: LocalAuthService,
         private snackBar: MatSnackBar, public router: Router, private userService: UserService
     ) {
     }
+
+    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     @HostListener('window:resize', ['$event']) onResize(event) {
         this.tableHeight = event.target.innerHeight * 0.65;
@@ -104,35 +105,29 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
 
     getAllDetailsStudent() {
         const requests = [
-            this.projectService
-                .getStudentPreference()
-                .pipe(takeUntil(this.ngUnsubscribe)),
-            this.projectService
-                .getNotStudentPreferences()
-                .pipe(takeUntil(this.ngUnsubscribe)),
-            this.userService
-                .getStreamStage()
-                .pipe(takeUntil(this.ngUnsubscribe))
+            this.projectService.getStudentPreference(),
+            this.projectService.getNotStudentPreferences(),
+            this.userService.getStreamStage()
         ];
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Loading, Please wait! ...',
             disableClose: true,
             panelClass: 'transparent'
         });
-        forkJoin(requests).subscribe((response: Array<HttpResponseAPI>) => {
-            const optedResponse: HttpResponseAPI = response[0];
-            const notOptedResponse: HttpResponseAPI = response[1];
-            const stageResponse: HttpResponseAPI = response[2];
-            this.dialogRefLoad.close();
-            this.stage = stageResponse.result.adminPresent ? stageResponse.result.stage : 0;
-            this.preferences.data = optedResponse.result.preferences;
-            this.projects.data = notOptedResponse.result.not_preferences;
-            this.projects.filterPredicate = (data: any, filter: string) => !filter || data.faculty_name.toLowerCase().includes(filter) ||
-                data.title.toLowerCase().includes(filter) || data.description.toLowerCase().includes(filter) ||
-                data.faculty_email.toLowerCase().includes(filter);
-        }, () => {
-            this.dialogRefLoad.close();
-        });
+        forkJoin(requests)
+            .pipe(this.closeDialog)
+            .subscribe((response: Array<HttpResponseAPI>) => {
+                const optedResponse: HttpResponseAPI = response[0];
+                const notOptedResponse: HttpResponseAPI = response[1];
+                const stageResponse: HttpResponseAPI = response[2];
+                this.stage = stageResponse.result.adminPresent ? stageResponse.result.stage : 0;
+                this.preferences.data = optedResponse.result.preferences;
+                this.projects.data = notOptedResponse.result.not_preferences;
+                this.projects.filterPredicate = (data: any, filter: string) =>
+                    !filter || data.faculty_name.toLowerCase().includes(filter) ||
+                    data.title.toLowerCase().includes(filter) || data.description.toLowerCase().includes(filter) ||
+                    data.faculty_email.toLowerCase().includes(filter);
+            });
     }
 
     applyFilter(event: Event) {
@@ -189,16 +184,15 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
     }
 
     addOnePreference(project) {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Adding Preference, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
         this.projectService
             .addOneStudentPreference(project)
-            .pipe(takeUntil(this.ngUnsubscribe))
+            .pipe(this.closeDialog)
             .subscribe((responseAPI: HttpResponseAPI) => {
-                dialogRefLoad.close();
                 if (responseAPI.result.updated) {
                     this.projects.data = this.projects.data.filter((val) => {
                         return val._id !== project._id;
@@ -209,13 +203,11 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                 } else {
                     this.snackBar.open(responseAPI.message, 'OK');
                 }
-            }, () => {
-                this.dialogRefLoad.close();
             });
     }
 
     onSubmit(event) {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Adding to preferences, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
@@ -223,9 +215,8 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         const preference = this.selection.selected;
         this.projectService
             .appendStudentPreferences(preference)
-            .pipe(takeUntil(this.ngUnsubscribe))
+            .pipe(this.closeDialog)
             .subscribe((responseAPI: HttpResponseAPI) => {
-                dialogRefLoad.close();
                 this.deselectAll();
                 if (responseAPI.result.updated) {
                     this.preferences.data = [
@@ -240,8 +231,6 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
                 } else {
                     this.snackBar.open(responseAPI.message, 'Ok');
                 }
-            }, () => {
-                this.dialogRefLoad.close();
             });
     }
 
@@ -252,10 +241,5 @@ export class ShowAvailableProjectsComponent implements OnInit, OnDestroy {
         });
         this.expandedElement = null;
         this.table.renderRows();
-    }
-
-    ngOnDestroy() {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
     }
 }

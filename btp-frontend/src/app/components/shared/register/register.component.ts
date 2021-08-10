@@ -10,6 +10,7 @@ import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
 import {CommonModule} from '@angular/common';
 import {PipeModule} from 'src/app/components/shared/Pipes/pipe.module';
 import {MaterialModule} from 'src/app/material/material.module';
+import {finalize} from 'rxjs/operators';
 
 @Component({
     selector: 'app-register',
@@ -53,6 +54,9 @@ export class RegisterComponent implements OnInit {
     ) {
     }
 
+    closeDialog = finalize(() => this.dialogRefLoad.close());
+
+
     ngOnInit() {
         this.role = localStorage.getItem('role');
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
@@ -60,27 +64,26 @@ export class RegisterComponent implements OnInit {
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.userService.getAllBranches().subscribe((responseAPI: HttpResponseAPI) => {
-            this.dialogRefLoad.close();
-            this.streams = responseAPI.result.streams.map((val) => {
-                return {
-                    full: val.full,
-                    short: val.short
-                };
+        this.userService.getAllBranches()
+            .pipe(this.closeDialog)
+            .subscribe((responseAPI: HttpResponseAPI) => {
+                this.streams = responseAPI.result.streams.map((val) => {
+                    return {
+                        full: val.full,
+                        short: val.short
+                    };
+                });
+                this.userForm.get('email').disable();
+                if (localStorage.getItem('role') === 'super_admin') {
+                    this.userForm.get('stream').clearValidators();
+                }
+                if (localStorage.getItem('role') === 'faculty') {
+                    this.head = 'Stream';
+                } else {
+                    this.userForm.get('stream').clearValidators();
+                    this.userForm.get('stream').updateValueAndValidity();
+                }
             });
-            this.userForm.get('email').disable();
-            if (localStorage.getItem('role') === 'super_admin') {
-                this.userForm.get('stream').clearValidators();
-            }
-            if (localStorage.getItem('role') === 'faculty') {
-                this.head = 'Stream';
-            } else {
-                this.userForm.get('stream').clearValidators();
-                this.userForm.get('stream').updateValueAndValidity();
-            }
-        }, () => {
-            this.dialogRefLoad.close();
-        });
     }
 
     onSubmit() {
@@ -90,34 +93,33 @@ export class RegisterComponent implements OnInit {
             email: this.userForm.get('email').value,
             stream: this.userForm.get('stream').value
         };
-        const localUser = JSON.parse(localStorage.getItem('user'));
+        const id = localStorage.getItem('id');
+        const idToken = localStorage.getItem('idToken');
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: localUser.idToken
+                Authorization: idToken
             })
         };
         let position = '';
         position = localStorage.getItem('role');
-        const id = localUser.id;
-        const dialogRef = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Registering, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
         this.userService
             .registerUser(user, httpOptions, position, id)
+            .pipe(this.closeDialog)
             .subscribe((responseAPI: any) => {
                 if (responseAPI.result.registered) {
                     localStorage.setItem('role', position);
                     localStorage.setItem('isRegistered', 'true');
+                    localStorage.removeItem('user');
                     const route = '/' + position + '/' + id;
                     this.router.navigate([route]);
                 }
                 this.snackBar.open(responseAPI.message, 'Ok');
-                dialogRef.close();
-            }, () => {
-                dialogRef.close();
             });
     }
 }

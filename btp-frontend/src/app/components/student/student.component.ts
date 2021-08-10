@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {forkJoin, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {finalize, takeUntil} from 'rxjs/operators';
 import {UserService} from 'src/app/services/user/user.service';
 import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
@@ -13,14 +13,13 @@ import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
     styleUrls: ['./student.component.scss'],
     providers: []
 })
-export class StudentComponent implements OnInit, OnDestroy {
+export class StudentComponent implements OnInit {
     dialogRefLoad: any;
     details: any;
     loaded = false;
     publishStudents: boolean;
     publishFaculty: boolean;
     reviewCondition: boolean;
-    private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private userService: UserService,
@@ -28,6 +27,8 @@ export class StudentComponent implements OnInit, OnDestroy {
         private dialog: MatDialog
     ) {
     }
+
+    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     ngOnInit() {
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
@@ -37,27 +38,22 @@ export class StudentComponent implements OnInit, OnDestroy {
         });
         const id = localStorage.getItem('id');
         const requests = [
-            this.userService.getStudentDetails(id).pipe(takeUntil(this.ngUnsubscribe)),
-            this.userService.getPublishMode('student').pipe(takeUntil(this.ngUnsubscribe))
+            this.userService.getStudentDetails(id),
+            this.userService.getPublishMode('student')
         ];
-        forkJoin(requests).subscribe((response: Array<HttpResponseAPI>) => {
-            const studentResponse = response[0];
-            const publishResponse = response[1];
-            this.details = studentResponse.result.student;
-            this.publishFaculty = publishResponse.result.publishFaculty;
-            this.publishStudents = publishResponse.result.publishStudents;
-            if (!this.publishStudents && this.publishFaculty) {
-                this.reviewCondition = true;
-            }
-            this.loaded = true;
-            this.dialogRefLoad.close();
-        }, () => {
-            this.dialogRefLoad.close();
-        });
-    }
-
-    ngOnDestroy() {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
+        forkJoin(requests)
+            .pipe(this.closeDialog)
+            .subscribe((response: Array<HttpResponseAPI>) => {
+                const studentResponse = response[0];
+                const publishResponse = response[1];
+                this.details = studentResponse.result.student;
+                this.publishFaculty = publishResponse.result.publishFaculty;
+                this.publishStudents = publishResponse.result.publishStudents;
+                if (!this.publishStudents && this.publishFaculty) {
+                    this.reviewCondition = true;
+                }
+                this.loaded = true;
+                this.dialogRefLoad.close();
+            });
     }
 }

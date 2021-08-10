@@ -8,6 +8,7 @@ import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
 import {CommonModule} from '@angular/common';
 import {MaterialModule} from 'src/app/material/material.module';
 import {PipeModule} from 'src/app/components/shared/Pipes/pipe.module';
+import {finalize} from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
@@ -16,11 +17,6 @@ import {PipeModule} from 'src/app/components/shared/Pipes/pipe.module';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-    @Output() isSignedIn = new EventEmitter<any>();
-    @Input() role: string;
-    @ViewChild('sigInDiv') signInDiv: ElementRef;
-    dialogRefLoad: any;
-    isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
     constructor(
         private router: Router,
@@ -29,6 +25,13 @@ export class LoginComponent implements OnInit {
         private snackBar: MatSnackBar
     ) {
     }
+    @Output() isSignedIn = new EventEmitter<any>();
+    @Input() role: string;
+    @ViewChild('sigInDiv') signInDiv: ElementRef;
+    dialogRefLoad: any;
+    isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     ngOnInit() {
         if (!localStorage.getItem('isLoggedIn')) {
@@ -56,42 +59,40 @@ export class LoginComponent implements OnInit {
                     disableClose: true,
                     panelClass: 'transparent'
                 });
-                const userModified = {
-                    id: user.id,
-                    idToken: user.idToken,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    photoUrl: user.photoUrl,
-                    email: user.email,
-                    name: user.name,
-                    authToken: user.authToken
-                };
-                localStorage.setItem('idToken"', user.idToken);
-                localStorage.setItem('photoUrl"', user.photoUrl);
-                localStorage.setItem('user', JSON.stringify(userModified));
-                localStorage.setItem('isLoggedIn', 'true');
                 this.isLoggedIn = true;
-                this.localAuth.checkUser(user).subscribe((responseAPI: HttpResponseAPI) => {
-                    const {position, user_details} = responseAPI.result;
-                    const {error, route} = this.localAuth.validate(responseAPI);
-                    localStorage.setItem('id', user_details.id);
-                    localStorage.setItem('role', position);
-                    this.isSignedIn.emit(position);
-                    if (route.includes('register')) {
-                        localStorage.setItem('isRegistered', 'false');
-                    } else {
-                        localStorage.setItem('isRegistered', 'true');
-                    }
-                    if (error === 'none') {
-                        this.router.navigate([route]);
-                    } else {
-                        this.signOut();
-                        this.snackBar.open(error, 'Ok', {duration: 10000});
-                    }
-                    this.dialogRefLoad.close();
-                }, () => {
-                    this.dialogRefLoad.close();
-                });
+                this.localAuth.checkUser(user)
+                    .pipe(this.closeDialog)
+                    .subscribe((responseAPI: HttpResponseAPI) => {
+                        const {position} = responseAPI.result;
+                        const {error, route} = this.localAuth.validate(responseAPI);
+                        localStorage.setItem('name', user.name);
+                        localStorage.setItem('id', user.id);
+                        localStorage.setItem('idToken', user.idToken);
+                        localStorage.setItem('photoUrl', user.photoUrl);
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('role', position);
+                        this.isSignedIn.emit(position);
+                        if (route.includes('register')) {
+                            localStorage.setItem('isRegistered', 'false');
+                            const userModified = {
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                email: user.email
+                            };
+                            localStorage.setItem('user', JSON.stringify(userModified));
+                        } else {
+                            localStorage.setItem('isRegistered', 'true');
+                        }
+                        if (error === 'none') {
+                            this.router.navigate([route]);
+                        } else {
+                            this.signOut();
+                            this.snackBar.open(error, 'Ok', {duration: 10000});
+                        }
+                        this.dialogRefLoad.close();
+                    }, () => {
+                        this.dialogRefLoad.close();
+                    });
             }, (err) => {
                 if (err.error === 'popup_closed_by_user') {
                     this.snackBar.open('Cancelled Sign-In!', 'Ok');
@@ -99,8 +100,7 @@ export class LoginComponent implements OnInit {
                     if (err.includes('Login providers not ready yet')) {
                         this.snackBar.open('Please wait for the page to load before you sign-in', 'Ok');
                     } else {
-                        this.snackBar.open(
-                            'Check your network connection or Provide access to third party cookies if your are in incognito.', 'Ok');
+                        this.snackBar.open('Check your network connection or Provide access to third party cookies if your are in incognito.', 'Ok');
                     }
                 }
             });

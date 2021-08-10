@@ -9,6 +9,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {DeletePopUpComponent} from 'src/app/components/faculty/delete-pop-up/delete-pop-up.component';
 import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
+import {finalize} from 'rxjs/operators';
 
 @Pipe({
     name: 'displayFacultyPublish'
@@ -86,6 +87,8 @@ export class ContentComponent implements OnInit, OnChanges {
     ) {
     }
 
+    closeDialog = finalize(() => this.dialogRefLoad.close());
+
     ngOnInit() {
         this.id = localStorage.getItem('id');
     }
@@ -125,21 +128,17 @@ export class ContentComponent implements OnInit, OnChanges {
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.projectService.saveProject(project).subscribe((responseAPI: HttpResponseAPI) => {
-            this.dialogRefLoad.close();
-            const {updated} = responseAPI.result;
-            const snackBarRef = this.snackBar.open(responseAPI.message, 'Ok');
-            if (updated) {
+        this.projectService
+            .saveProject(project)
+            .pipe(this.closeDialog)
+            .subscribe((responseAPI: HttpResponseAPI) => {
+                const {updated} = responseAPI.result;
+                const snackBarRef = this.snackBar.open(responseAPI.message, 'Ok');
+                if (!updated) { return; }
                 snackBarRef.afterDismissed().subscribe(() => {
-                    this.displayHome({changed: true, change: 'add', project: responseAPI.result.project}).then(() => {
-                    });
+                    this.displayHome({changed: true, change: 'add', project: responseAPI.result.project});
                 });
-            }
-        }, () => {
-            this.dialogRefLoad.close();
-            this.ngOnInit();
-            this.snackBar.open('Some Error Occurred! Try again later.', 'OK');
-        });
+            });
     }
 
     onEditSubmit(param) {
@@ -150,36 +149,33 @@ export class ContentComponent implements OnInit, OnChanges {
             description: this.EditForm.get('description').value.replace(/  +/g, ' '),
             project_id: param._id
         };
-        this.dialogRefLoad = this.dialog.open(SubmitPopUpComponent, {
+        const confirmDialog = this.dialog.open(SubmitPopUpComponent, {
             height: '200px',
             width: '400px',
             disableClose: true
         });
-        this.dialogRefLoad.afterClosed().subscribe(({message}) => {
+        confirmDialog.afterClosed().subscribe(({message}) => {
             this.dialogRefLoad = this.dialog.open(LoaderComponent, {
                 data: 'Updating, Please wait ...',
                 disableClose: true,
                 panelClass: 'transparent'
             });
-            if (message === 'submit') {
-                this.projectService.updateProject(project).subscribe((responseAPI: HttpResponseAPI) => {
-                    this.dialogRefLoad.close();
+            if (message !== 'submit') { return; }
+            this.projectService
+                .updateProject(project)
+                .pipe(this.closeDialog)
+                .subscribe((responseAPI: HttpResponseAPI) => {
                     this.project.title = project.title;
                     this.project.duration = project.duration;
                     this.project.studentIntake = project.studentIntake;
                     this.project.description = project.description;
                     this.snackBar.open(responseAPI.message, 'Ok');
-                }, () => {
-                    this.dialogRefLoad.close();
                 });
-            } else {
-                this.dialogRefLoad.close();
-            }
         });
     }
 
     deleteProject(project) {
-        this.dialogRefLoad = this.dialog.open(DeletePopUpComponent, {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
             height: '200px',
             width: '400px',
             data: {
@@ -188,28 +184,26 @@ export class ContentComponent implements OnInit, OnChanges {
             },
             disableClose: true
         });
-        this.dialogRefLoad.afterClosed().subscribe(({message}) => {
-            if (message === 'submit') {
-                this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Updating, Please wait ...',
-                    disableClose: true,
-                    panelClass: 'transparent'
-                });
-                this.projectService.deleteProject(project._id).subscribe((responseAPI: HttpResponseAPI) => {
-                    this.dialogRefLoad.close();
+        confirmDialog.afterClosed().subscribe(({message}) => {
+            if (message !== 'submit') { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Updating, Please wait ...',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            this.projectService
+                .deleteProject(project._id)
+                .pipe(this.closeDialog)
+                .subscribe((responseAPI: HttpResponseAPI) => {
                     if (responseAPI.result.deleted) {
                         const snackBarRef = this.snackBar.open(responseAPI.message, 'Ok');
                         snackBarRef.afterDismissed().subscribe(() => {
-                            this.displayHome({changed: true, change: 'delete', project}).then(() => {
-                            });
+                            this.displayHome({changed: true, change: 'delete', project});
                         });
                     } else {
                         this.snackBar.open(responseAPI.message, 'Ok');
                     }
-                }, () => {
-                    this.dialogRefLoad.close();
                 });
-            }
         });
     }
 

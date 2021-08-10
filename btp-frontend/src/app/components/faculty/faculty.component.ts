@@ -8,7 +8,7 @@ import {NavbarComponent} from 'src/app/components/shared/navbar/navbar.component
 import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
 import {forkJoin} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
+import {finalize, mergeMap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-faculty',
@@ -49,6 +49,8 @@ export class FacultyComponent implements OnInit {
         private dialog: MatDialog
     ) {
     }
+
+    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     ngOnInit(): void {
         this.id = localStorage.getItem('id');
@@ -129,18 +131,17 @@ export class FacultyComponent implements OnInit {
             disableClose: true,
             panelClass: 'transparent'
         });
-        forkJoin(requests2).subscribe((response: Array<any>) => {
-            let i = 0;
-            /*projects*/
-            const facProjects = response[i++].result;
-            this.projects = facProjects.projects;
-            /*admin programs*/
-            const programAdmin = response[i++].result;
-            this.adminStage = programAdmin?.admin?.stage;
-            this.dialogRefLoad.close();
-        }, () => {
-            this.dialogRefLoad.close();
-        });
+        forkJoin(requests2)
+            .pipe(this.closeDialog)
+            .subscribe((response: Array<any>) => {
+                let i = 0;
+                /*projects*/
+                const facProjects = response[i++].result;
+                this.projects = facProjects.projects;
+                /*admin programs*/
+                const programAdmin = response[i++].result;
+                this.adminStage = programAdmin?.admin?.stage;
+            });
     }
 
     homeClicked(event) {
@@ -193,31 +194,34 @@ export class FacultyComponent implements OnInit {
 
     displayProject(project) {
         if (!this.studentData[project._id]) {
-            const dialogRef = this.dialog.open(LoaderComponent, {
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
                 data: 'Loading, Please wait ...',
                 disableClose: true,
                 panelClass: 'transparent'
             });
-            this.projectService.getStudentsApplied(project._id).subscribe((responseAPI: HttpResponseAPI) => {
-                dialogRef.close();
-                this.studentList = responseAPI.result.students;
-                this.nonStudentList = responseAPI.result.non_students;
-                this.reorder = responseAPI.result.reorder;
-                this.sortWithReorder();
-                this.studentData[project._id] = this.studentList;
-                this.nonStudentData[project._id] = this.nonStudentList;
-            }, () => {
-                dialogRef.close();
-            });
+            this.projectService
+                .getStudentsApplied(project._id)
+                .pipe(this.closeDialog)
+                .subscribe((responseAPI: HttpResponseAPI) => {
+                    this.studentList = responseAPI.result.students;
+                    this.nonStudentList = responseAPI.result.non_students;
+                    this.reorder = responseAPI.result.reorder;
+                    this.sortWithReorder();
+                    this.studentData[project._id] = this.studentList;
+                    this.nonStudentData[project._id] = this.nonStudentList;
+                    this.project = project;
+                    this.add = false;
+                    this.empty = false;
+                });
         } else {
             this.studentList = this.studentData[project._id];
             this.nonStudentList = this.nonStudentData[project._id];
             this.reorder = project.reorder;
             this.sortWithReorder();
+            this.project = project;
+            this.add = false;
+            this.empty = false;
         }
-        this.project = project;
-        this.add = false;
-        this.empty = false;
     }
 
     addProject(state) {

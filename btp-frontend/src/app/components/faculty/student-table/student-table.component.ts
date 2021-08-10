@@ -19,6 +19,7 @@ import {LoaderComponent} from 'src/app/components/shared/loader/loader.component
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
+import {finalize} from 'rxjs/operators';
 
 @Pipe({
     name: 'preference'
@@ -90,6 +91,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
     nonStudents: MatTableDataSource<any>;
     expandedElement: any;
     studentTableHeight: number = 48 * 11;
+    dialogRefLoad: any;
 
     constructor(
         private projectService: ProjectsService,
@@ -99,8 +101,10 @@ export class StudentTableComponent implements OnInit, OnChanges {
     ) {
     }
 
+    closeDialog = finalize(() => this.dialogRefLoad.close());
+
     ngOnChanges(simpleChanges: SimpleChanges) {
-        if (simpleChanges.student_list) {
+        if (simpleChanges.studentList) {
             this.students = new MatTableDataSource(this.studentList);
             this.cdRef.detectChanges();
         }
@@ -111,17 +115,16 @@ export class StudentTableComponent implements OnInit, OnChanges {
     }
 
     onSubmit() {
-        let dialogRef;
         if (this.adminStage === 2) {
-            dialogRef = this.dialog.open(LoaderComponent, {
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
                 data: 'Updating, Please wait ...',
                 disableClose: true,
                 panelClass: 'transparent'
             });
             this.projectService
                 .savePreference(this.students.data, this.project._id, this.project.stream, this.index, this.reorder)
+                .pipe(this.closeDialog)
                 .subscribe((responseAPI: HttpResponseAPI) => {
-                    dialogRef.close();
                     if (responseAPI.result.updated) {
                         this.reorder = responseAPI.result.reorder;
                         this.newReorder.emit([
@@ -130,24 +133,16 @@ export class StudentTableComponent implements OnInit, OnChanges {
                     }
                     this.snackBar.open(responseAPI.message, 'Ok');
                 }, () => {
-                    dialogRef.close();
                     this.ngOnInit();
                     this.snackBar.open('Some Error Occurred! Try again later.', 'OK');
                 });
         } else {
-            dialogRef = this.dialog.open(LoaderComponent, {
-                data: 'Updating, Please wait ...',
-                disableClose: true,
-                panelClass: 'transparent'
-            });
             if (this.adminStage < 2) {
                 this.studentList.sort((a, b) => {
                     return b.gpa - a.gpa;
                 });
-                dialogRef.close();
                 this.snackBar.open('Preferences can be edited only in the further stages.', 'Ok');
             } else {
-                dialogRef.close();
                 this.snackBar.open('You cannot edit preferences anymore', 'Ok');
             }
         }

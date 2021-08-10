@@ -1,8 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {finalize} from 'rxjs/operators';
 import {ProjectsService} from 'src/app/services/projects/projects.service';
 import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
@@ -12,14 +11,13 @@ import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
     templateUrl: './display-preferences.component.html',
     styleUrls: ['./display-preferences.component.scss']
 })
-export class DisplayPreferencesComponent implements OnInit, OnDestroy {
+export class DisplayPreferencesComponent implements OnInit {
     @Input() preferences: any = [];
     @Output() updateProjects = new EventEmitter<any>();
     @Input() stage = 0;
     isActive = false;
     indexHover = -1;
     dialogRefLoad: MatDialogRef<any>;
-    private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private projectService: ProjectsService,
@@ -27,6 +25,8 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
         private dialog: MatDialog
     ) {
     }
+
+    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     ngOnInit() {
     }
@@ -39,9 +39,8 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
         });
         this.projectService
             .removeOneStudentPreference(preference)
-            .pipe(takeUntil(this.ngUnsubscribe))
+            .pipe(this.closeDialog)
             .subscribe((responseAPI: HttpResponseAPI) => {
-                this.dialogRefLoad.close();
                 if (responseAPI.result.updated) {
                     this.preferences = this.preferences.filter((val) => {
                         return val._id !== preference._id;
@@ -50,13 +49,6 @@ export class DisplayPreferencesComponent implements OnInit, OnDestroy {
                 } else {
                     this.snackBar.open(responseAPI.message, 'Ok');
                 }
-            }, () => {
-                this.dialogRefLoad.close();
             });
-    }
-
-    ngOnDestroy() {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
     }
 }

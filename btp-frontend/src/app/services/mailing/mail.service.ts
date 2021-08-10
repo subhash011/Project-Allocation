@@ -15,12 +15,13 @@ export class MailService {
 
     // TODO try and remove user from local storage here
     allocateMail(mails, program) {
-        const user = JSON.parse(localStorage.getItem('user'));
+        const idToken = localStorage.getItem('idToken');
+        const name = localStorage.getItem('name');
         const url = this.baseUrl + 'send';
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         const body = {
@@ -33,7 +34,7 @@ The URL for the project allocation portal is : ${this.apiUrl}.
 THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
 
 Regards,
-${user.name},
+${name},
 Project Coordinator (${program})
  `,
             to: mails,
@@ -48,12 +49,13 @@ Project Coordinator (${program})
             month: 'numeric',
             day: 'numeric'
         });
-        const user = JSON.parse(localStorage.getItem('user'));
+        const idToken = localStorage.getItem('idToken');
+        const name = localStorage.getItem('name');
         const url = this.baseUrl + 'send';
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         let body: { mailBody: string; subject: string; to: any };
@@ -69,7 +71,7 @@ The URL for the project allocation portal is : ${this.apiUrl}.
 THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
 
 Regards,
-${user.name},
+${name},
 Project Coordinator (${stream})
 `,
                 to: emails,
@@ -87,7 +89,7 @@ The URL for the project allocation portal is : ${this.apiUrl}.
 THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
 
 Regards,
-${user.name},
+${name},
 Project Coordinator (${stream})
 `,
                 to: emails,
@@ -103,12 +105,13 @@ Project Coordinator (${stream})
             month: 'numeric',
             day: 'numeric'
         });
-        const user = JSON.parse(localStorage.getItem('user'));
+        const idToken = localStorage.getItem('idToken');
+        const name = localStorage.getItem('name');
         const url = this.baseUrl + 'send';
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         const body = {
@@ -122,7 +125,7 @@ The URL for the project allocation portal is : ${this.apiUrl}.
 THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
 
 Regards,
-${user.name},
+${name},
 Project Coordinator (${stream})
     `,
             to: emails,
@@ -132,12 +135,13 @@ Project Coordinator (${stream})
     }
 
     publishMail(role, emails, program) {
-        const user = JSON.parse(localStorage.getItem('user'));
+        const idToken = localStorage.getItem('idToken');
+        const name = localStorage.getItem('name');
         const url = this.baseUrl + 'send';
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: user.idToken
+                Authorization: idToken
             })
         };
         let body: { mailBody: string; subject: string; to: any };
@@ -152,7 +156,7 @@ The URL for the project allocation portal is : ${this.apiUrl}.
 THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
 
 Regards,
-${user.name},
+${name},
 Project Coordinator (${program})
          `,
                 to: emails,
@@ -169,7 +173,7 @@ The URL for the project allocation portal is : ${this.apiUrl}.
 THIS IS A SYSTEM GENERATED E-MAIL. PLEASE DO NOT REPLY TO THIS EMAIL. IF THERE ARE ANY ISSUES/CONCERNS PLEASE CONTACT THE PROGRAM COORDINATOR.
 
 Regards,
-${user.name},
+${name},
 Project Coordinator (${program})
          `,
                 to: emails,

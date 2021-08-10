@@ -16,6 +16,7 @@ import {ShowStudentPreferencesComponent} from 'src/app/components/admin/show-stu
 import {ShowFacultyPreferencesComponent} from 'src/app/components/admin/show-faculty-preferences/show-faculty-preferences.component';
 import {forkJoin} from 'rxjs';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
+import {concat, finalize, map, mergeMap, tap} from 'rxjs/operators';
 
 @Pipe({
     name: 'getViolations'
@@ -267,6 +268,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('stepper') stepper: MatStepper;
     timer;
     currentTime: Date = new Date();
+    dialogRefLoad: any;
 
     constructor(
         private userService: UserService,
@@ -299,6 +301,8 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             seventhCtrl: [this.studentsPerFaculty, Validators.min(1)]
         });
     }
+
+    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     @HostListener('window:resize', ['$event']) onResize(event) {
         if (event.target.innerHeight <= 1400) {
@@ -338,7 +342,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
         if (localStorage.getItem('allocationMap')) {
             this.discardAllocation();
         }
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Loading, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
@@ -351,74 +355,78 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             this.userService.getMembersForAdmin(),
             this.projectService.getAllStreamProjects()
         ];
-        forkJoin(requests).subscribe((response: Array<any>) => {
-            const adminInfo = (response[0] as HttpResponseAPI).result;
-            /* admin info*/
-            this.programName = adminInfo.stream;
-            this.stageNo = adminInfo.stage;
-            this.dateSet = adminInfo.deadlines;
-            this.projectCap = adminInfo.projectCap;
-            this.studentCap = adminInfo.studentCap;
-            this.studentsPerFaculty = adminInfo.studentsPerFaculty;
-            this.publishFaculty = adminInfo.publishFaculty;
-            this.publishStudents = adminInfo.publishStudents;
-            this.dateSet = this.dateSet.map((date) => new Date(date));
-            this.startDate = adminInfo.startDate;
-            this.ngAfterViewInit();
-            this.currDeadline = this.dateSet[this.dateSet.length - 1];
-            this.firstFormGroup.controls.firstCtrl.setValue(this.dateSet[0]);
-            this.secondFormGroup.controls.secondCtrl.setValue(this.dateSet[1]);
-            this.thirdFormGroup.controls.thirdCtrl.setValue(this.dateSet[2]);
-            this.fifthFormGroup.controls.fifthCtrl.setValue(this.projectCap);
-            this.sixthFormGroup.controls.sixthCtrl.setValue(this.studentCap);
-            this.seventhFormGroup.controls.seventhCtrl.setValue(this.studentsPerFaculty);
-            /*members for admin*/
-            const adminMembers = (response[1] as HttpResponseAPI).result;
-            this.faculties.data = adminMembers.users.faculties;
-            this.faculties.data.forEach((faculty) => {
-                this.totalIntake += faculty.included_studentIntake;
-            });
-            this.students.data = adminMembers.users.students;
-            this.sortStudents({
-                direction: 'asc',
-                active: 'Email'
-            });
-            this.studentCount = adminMembers.users.students.length;
-            this.faculties.filterPredicate =
-                (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) ||
-                    data.email.toLowerCase().includes(filter);
-            this.students.filterPredicate =
-                (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) ||
-                    data.email.toLowerCase().includes(filter);
-            let flag = false;
-            for (const faculty of this.faculties.data) {
-                if (faculty.project_cap || faculty.student_cap || faculty.studentsPerFaculty) {
-                    this.proceedButton1_ = true;
-                    this.proceedButton2_ = true;
-                    this.proceedButton3_ = true;
-                    flag = true;
-                    break;
-                }
-            }
-            this.studentFlag = 0;
-            for (const student of this.students.data) {
-                if (student.isRegistered === false) {
-                    this.studentFlag = 1;
-                }
-            }
-            this.getAllocationValidation(flag, this.studentFlag);
-            /*projects*/
-            const {projects} = (response[2] as HttpResponseAPI).result;
-            this.projects = projects;
-            this.dataSource.data = this.projects;
-            this.dataSource.filterPredicate = (data: any, filter: string) => !filter || data.faculty.toLowerCase().includes(filter) ||
-                data.title.toLowerCase().includes(filter) ||
-                data.description.toLowerCase().includes(filter);
-            this.selectIncluded();
-            dialogRefLoad.close();
-        }, () => {
-            dialogRefLoad.close();
-        });
+        forkJoin(requests)
+            .pipe(
+                map((response: Array<any>) => {
+                    const adminInfo = (response[0] as HttpResponseAPI).result;
+                    /* admin info*/
+                    this.programName = adminInfo.stream;
+                    this.stageNo = adminInfo.stage;
+                    this.dateSet = adminInfo.deadlines;
+                    this.projectCap = adminInfo.projectCap;
+                    this.studentCap = adminInfo.studentCap;
+                    this.studentsPerFaculty = adminInfo.studentsPerFaculty;
+                    this.publishFaculty = adminInfo.publishFaculty;
+                    this.publishStudents = adminInfo.publishStudents;
+                    this.dateSet = this.dateSet.map((date) => new Date(date));
+                    this.startDate = adminInfo.startDate;
+                    this.ngAfterViewInit();
+                    this.currDeadline = this.dateSet[this.dateSet.length - 1];
+                    this.firstFormGroup.controls.firstCtrl.setValue(this.dateSet[0]);
+                    this.secondFormGroup.controls.secondCtrl.setValue(this.dateSet[1]);
+                    this.thirdFormGroup.controls.thirdCtrl.setValue(this.dateSet[2]);
+                    this.fifthFormGroup.controls.fifthCtrl.setValue(this.projectCap);
+                    this.sixthFormGroup.controls.sixthCtrl.setValue(this.studentCap);
+                    this.seventhFormGroup.controls.seventhCtrl.setValue(this.studentsPerFaculty);
+                    /*members for admin*/
+                    const adminMembers = (response[1] as HttpResponseAPI).result;
+                    this.faculties.data = adminMembers.users.faculties;
+                    this.faculties.data.forEach((faculty) => {
+                        this.totalIntake += faculty.included_studentIntake;
+                    });
+                    this.students.data = adminMembers.users.students;
+                    this.sortStudents({
+                        direction: 'asc',
+                        active: 'Email'
+                    });
+                    this.studentCount = adminMembers.users.students.length;
+                    this.faculties.filterPredicate =
+                        (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) ||
+                            data.email.toLowerCase().includes(filter);
+                    this.students.filterPredicate =
+                        (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) ||
+                            data.email.toLowerCase().includes(filter);
+                    let flag = false;
+                    for (const faculty of this.faculties.data) {
+                        if (faculty.project_cap || faculty.student_cap || faculty.studentsPerFaculty) {
+                            this.proceedButton1_ = true;
+                            this.proceedButton2_ = true;
+                            this.proceedButton3_ = true;
+                            flag = true;
+                            break;
+                        }
+                    }
+                    this.studentFlag = 0;
+                    for (const student of this.students.data) {
+                        if (student.isRegistered === false) {
+                            this.studentFlag = 1;
+                        }
+                    }
+                    /*projects*/
+                    const {projects} = (response[2] as HttpResponseAPI).result;
+                    this.projects = projects;
+                    this.dataSource.data = this.projects;
+                    this.dataSource.filterPredicate = (data: any, filter: string) =>
+                        !filter || data.faculty.toLowerCase().includes(filter) ||
+                        data.title.toLowerCase().includes(filter) ||
+                        data.description.toLowerCase().includes(filter);
+                    this.selectIncluded();
+                    return {flag, studentFlag: this.studentFlag};
+                }),
+                mergeMap(({flag, studentFlag}) => this.getAllocationValidation(flag, studentFlag)),
+                this.closeDialog
+            )
+            .subscribe();
     }
 
     getTooltipInclusion(project) {
@@ -426,7 +434,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     proceed() {
-        const dialogRef = this.dialog.open(DeletePopUpComponent, {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
             width: '400px',
             height: '250px',
             data: {
@@ -434,20 +442,22 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 message: 'Please ensure that mails have been sent. Are you sure you want to proceed to the next stage?'
             }
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result && result.message === 'submit') {
-                const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Updating, Please wait ...',
-                    disableClose: true,
-                    panelClass: 'transparent'
-                });
-                const requests = [
-                    this.userService.updateStage(this.stageNo + 1)
-                ];
-                if (this.stageNo >= 2) {
-                    requests.push(this.exportService.generateCSV_projects(), this.exportService.generateCSV_students());
-                }
-                forkJoin(requests).subscribe(() => {
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (!(result && result.message === 'submit')) { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Updating, Please wait ...',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            const requests = [
+                this.userService.updateStage(this.stageNo + 1)
+            ];
+            if (this.stageNo >= 2) {
+                requests.push(this.exportService.generateCSV_projects(), this.exportService.generateCSV_students());
+            }
+            forkJoin(requests)
+                .pipe(this.closeDialog)
+                .subscribe(() => {
                     this.stageNo++;
                     this.stepper.next();
                     this.proceedButton1 = true;
@@ -461,11 +471,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                             });
                         }
                     });
-                    dialogRefLoad.close();
-                }, () => {
-                    dialogRefLoad.close();
                 });
-            }
         });
     }
 
@@ -474,7 +480,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     removeFaculty(id) {
-        const dialogRef = this.dialog.open(DeletePopUpComponent, {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
             height: '200px',
             width: '300px',
             data: {
@@ -482,15 +488,17 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 message: 'Are you sure you want to remove the Faculty?'
             }
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result && result.message === 'submit') {
-                const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Removing, Please wait ...',
-                    disableClose: true,
-                    panelClass: 'transparent'
-                });
-                this.userService.removeFacultyAdmin(id).subscribe((responseAPI: HttpResponseAPI) => {
-                    dialogRefLoad.close();
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (!(result && result.message === 'submit')) { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Removing, Please wait ...',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            this.userService
+                .removeFacultyAdmin(id)
+                .pipe(this.closeDialog)
+                .subscribe((responseAPI: HttpResponseAPI) => {
                     this.faculties.data = this.faculties.data.filter((val) => {
                         return val._id !== id;
                     });
@@ -498,16 +506,13 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                         return val.faculty_id !== id;
                     });
                     this.snackBar.open(responseAPI.message, 'Ok');
-                }, () => {
-                    dialogRefLoad.close();
                 });
-            }
         });
     }
 
     removeStudent(student) {
         const id = student._id;
-        const dialogRef = this.dialog.open(DeletePopUpComponent, {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
             height: '200px',
             width: '300px',
             data: {
@@ -515,15 +520,17 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 message: 'Are you sure you want to remove the Student?'
             }
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result && result.message === 'submit') {
-                const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Removing, Please wait ...',
-                    disableClose: true,
-                    panelClass: 'transparent'
-                });
-                this.userService.removeStudentAdmin(id).subscribe((responseAPI: HttpResponseAPI) => {
-                    dialogRefLoad.close();
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (!(result && result.message === 'submit')) { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Removing, Please wait ...',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            this.userService
+                .removeStudentAdmin(id)
+                .pipe(this.closeDialog)
+                .subscribe((responseAPI: HttpResponseAPI) => {
                     this.studentCount--;
                     this.students.data = this.students.data.filter((val) => {
                         return val._id !== id;
@@ -534,10 +541,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                         });
                     });
                     this.snackBar.open(responseAPI.message, 'Ok');
-                }, () => {
-                    dialogRefLoad.close();
                 });
-            }
         });
     }
 
@@ -552,7 +556,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             date = this.thirdFormGroup.get('thirdCtrl').value;
         }
         if (date !== null && date !== '') {
-            const dialogRef = this.dialog.open(DeletePopUpComponent, {
+            const confirmDialog = this.dialog.open(DeletePopUpComponent, {
                 width: '400px',
                 height: '200px',
                 data: {
@@ -561,21 +565,20 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 disableClose: true
             });
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result.message === 'submit') {
-                    const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                        data: 'Updating, Please wait ...',
-                        disableClose: true,
-                        panelClass: 'transparent'
-                    });
-                    this.userService.setDeadline(date).subscribe(() => {
-                        dialogRefLoad.close();
-                        this.snackBar.open('Deadline set successfully!!', 'Ok');
-                        this.ngOnInit();
-                    }, () => {
-                        dialogRefLoad.close();
-                    });
-                }
+            confirmDialog.afterClosed().subscribe((result) => {
+                if (result.message !== 'submit') { return; }
+                this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                    data: 'Updating, Please wait ...',
+                    disableClose: true,
+                    panelClass: 'transparent'
+                });
+                this.userService
+                    .setDeadline(date)
+                    .pipe(this.closeDialog)
+                    .subscribe(() => {
+                    this.snackBar.open('Deadline set successfully!!', 'Ok');
+                    // this.ngOnInit();
+                });
             });
         } else {
             this.snackBar.open('Please choose the deadline', 'Ok');
@@ -642,7 +645,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     sendEmails() {
-        const dialogRef = this.dialog.open(DeletePopUpComponent, {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
             width: '400px',
             height: '200px',
             disableClose: false,
@@ -651,170 +654,172 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 message: 'Are you sure you want to send the mails? This cannot be undone.'
             }
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result && result.message === 'submit') {
-                const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Sending mails, Please wait as this may take a while',
-                    disableClose: true,
-                    panelClass: 'transparent'
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (!(result && result.message === 'submit')) { return; }
+            const dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Sending mails, Please wait as this may take a while',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            if (this.stageNo === 0 || this.stageNo === 2) {
+                this.userService.getFacultyStreamEmails().subscribe((responseAPI: HttpResponseAPI) => {
+                    const {emails, programFull} = responseAPI.result;
+                    this.mailer
+                        .adminToFaculty(this.stageNo, emails, this.currDeadline, programFull)
+                        .subscribe(({message}: HttpResponseAPI) => {
+                            this.snackBar.open(message, 'Ok');
+                            dialogRefLoad.close();
+                        });
+                }, () => {
+                    dialogRefLoad.close();
                 });
-                if (this.stageNo === 0 || this.stageNo === 2) {
-                    this.userService.getFacultyStreamEmails().subscribe((responseAPI: HttpResponseAPI) => {
-                        const {emails, programFull} = responseAPI.result;
-                        this.mailer
-                            .adminToFaculty(this.stageNo, emails, this.currDeadline, programFull)
-                            .subscribe(({message}: HttpResponseAPI) => {
-                                this.snackBar.open(message, 'Ok');
-                                dialogRefLoad.close();
-                            });
-                    }, () => {
-                        dialogRefLoad.close();
-                    });
-                } else if (this.stageNo === 1) {
-                    this.userService.getStudentStreamEmails().subscribe((responseAPI: HttpResponseAPI) => {
-                        const {emails, programFull} = responseAPI.result;
-                        this.mailer
-                            .adminToStudents(emails, this.currDeadline, programFull)
-                            .subscribe(({message}: HttpResponseAPI) => {
-                                this.snackBar.open(message, 'Ok');
-                                dialogRefLoad.close();
-                            });
-                    }, () => {
-                        dialogRefLoad.close();
-                    });
-                } else {
-                    this.userService.fetchAllMails().subscribe(({result: {result1, programFull}}: HttpResponseAPI) => {
-                        this.mailer
-                            .allocateMail(result1, programFull)
-                            .subscribe((responseAPI: HttpResponseAPI) => {
-                                this.snackBar.open(responseAPI.message, 'Ok');
-                                dialogRefLoad.close();
-                            });
-                    }, () => {
-                        dialogRefLoad.close();
-                    });
-                }
+            } else if (this.stageNo === 1) {
+                this.userService.getStudentStreamEmails().subscribe((responseAPI: HttpResponseAPI) => {
+                    const {emails, programFull} = responseAPI.result;
+                    this.mailer
+                        .adminToStudents(emails, this.currDeadline, programFull)
+                        .subscribe(({message}: HttpResponseAPI) => {
+                            this.snackBar.open(message, 'Ok');
+                            dialogRefLoad.close();
+                        });
+                }, () => {
+                    dialogRefLoad.close();
+                });
+            } else {
+                this.userService.fetchAllMails().subscribe(({result: {result1, programFull}}: HttpResponseAPI) => {
+                    this.mailer
+                        .allocateMail(result1, programFull)
+                        .subscribe((responseAPI: HttpResponseAPI) => {
+                            this.snackBar.open(responseAPI.message, 'Ok');
+                            dialogRefLoad.close();
+                        });
+                }, () => {
+                    dialogRefLoad.close();
+                });
             }
         });
     }
 
     setProjectCap() {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Updating, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
         this.userService
             .setProjectCap(this.fifthFormGroup.get('fifthCtrl').value)
-            .subscribe((responseAPI: HttpResponseAPI) => {
-                dialogRefLoad.close();
-                this.snackBar.open(responseAPI.message, 'Ok');
-                this.validateFields();
-            }, () => {
-                dialogRefLoad.close();
-            });
+            .pipe(
+                map((responseAPI: HttpResponseAPI) => this.snackBar.open(responseAPI.message, 'Ok')),
+                mergeMap(() => this.validateFields()),
+                this.closeDialog
+            ).subscribe();
     }
 
     setStudentCap() {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Updating, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
         this.userService
             .setStudentCap(this.sixthFormGroup.get('sixthCtrl').value)
-            .subscribe((responseAPI: HttpResponseAPI) => {
-                dialogRefLoad.close();
-                this.snackBar.open(responseAPI.message, 'Ok');
-                this.validateFields();
-            }, () => {
-                dialogRefLoad.close();
-            });
+            .pipe(
+                map((responseAPI: HttpResponseAPI) => this.snackBar.open(responseAPI.message, 'Ok')),
+                mergeMap(() => this.validateFields()),
+                this.closeDialog
+            ).subscribe();
     }
 
     setStudentsPerFaculty() {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Updating, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
         this.userService
             .setStudentsPerFaculty(this.seventhFormGroup.get('seventhCtrl').value)
-            .subscribe((responseAPI: HttpResponseAPI) => {
-                this.snackBar.open(responseAPI.message, 'Ok');
-                this.validateFields();
-                dialogRefLoad.close();
-            }, () => {
-                dialogRefLoad.close();
-            });
+            .pipe(
+                map((responseAPI: HttpResponseAPI) => this.snackBar.open(responseAPI.message, 'Ok')),
+                mergeMap(() => this.validateFields()),
+                this.closeDialog
+            ).subscribe();
     }
 
     validateFields() {
-        this.userService.getMembersForAdmin().subscribe((responseAPI: HttpResponseAPI) => {
-            const {users} = responseAPI.result;
-            this.faculties.data = users.faculties;
-            this.students.data = users.students;
-            let flag = false;
-            for (const faculty of this.faculties.data) {
-                if (faculty.project_cap || faculty.student_cap || faculty.studentsPerFaculty) {
-                    this.proceedButton1_ = true;
-                    this.proceedButton2_ = true;
-                    this.proceedButton3_ = true;
-                    flag = true;
-                    break;
-                }
-            }
-            this.studentFlag = 0;
-            for (const student of this.students.data) {
-                if (student.isRegistered === false) {
-                    flag = true;
-                    this.studentFlag = 1;
-                }
-            }
-            this.getAllocationValidation(flag, this.studentFlag);
-        });
+        return this.userService
+            .getMembersForAdmin()
+            .pipe(
+                map((responseAPI: HttpResponseAPI) => {
+                    const {users} = responseAPI.result;
+                    this.faculties.data = users.faculties;
+                    this.students.data = users.students;
+                    let flag = false;
+                    for (const faculty of this.faculties.data) {
+                        if (faculty.project_cap || faculty.student_cap || faculty.studentsPerFaculty) {
+                            this.proceedButton1_ = true;
+                            this.proceedButton2_ = true;
+                            this.proceedButton3_ = true;
+                            flag = true;
+                            break;
+                        }
+                    }
+                    this.studentFlag = 0;
+                    for (const student of this.students.data) {
+                        if (student.isRegistered === false) {
+                            flag = true;
+                            this.studentFlag = 1;
+                        }
+                    }
+                    return {flag, studentFlag: this.studentFlag};
+                }),
+                mergeMap(({flag, studentFlag}) => {
+                    return this.getAllocationValidation(flag, studentFlag);
+                })
+            );
     }
 
     getAllocationValidation(flag, studentFlag) {
         const length = this.students.data.filter((val) => val.isRegistered).length;
-        this.userService
+        return this.userService
             .validateAllocation(this.selection.selected, length)
-            .subscribe((responseAPI: HttpResponseAPI) => {
-                if (responseAPI.result.valid) {
-                    if (this.dateSet.length === 1) {
-                        if (this.firstFormGroup.controls.firstCtrl) {
-                            this.proceedButton1 = false;
-                            if (!flag) {
-                                this.proceedButton1_ = false;
+            .pipe(
+                map((responseAPI: HttpResponseAPI) => {
+                    if (responseAPI.result.valid) {
+                        if (this.dateSet.length === 1) {
+                            if (this.firstFormGroup.controls.firstCtrl) {
+                                this.proceedButton1 = false;
+                                if (!flag) {
+                                    this.proceedButton1_ = false;
+                                }
+                            }
+                        }
+                    } else {
+                        if (this.dateSet.length === 1) {
+                            if (this.firstFormGroup.controls.firstCtrl) {
+                                this.proceedButton1 = false;
+                                this.proceedButton1_ = true;
                             }
                         }
                     }
-                } else {
-                    if (this.dateSet.length === 1) {
-                        if (this.firstFormGroup.controls.firstCtrl) {
-                            this.proceedButton1 = false;
-                            this.proceedButton1_ = true;
+                    if (this.dateSet.length === 2) {
+                        if (this.secondFormGroup.controls.secondCtrl) {
+                            this.proceedButton2 = false;
+                            if (!flag && studentFlag === 0) {
+                                this.proceedButton2_ = false;
+                            }
                         }
                     }
-                }
-                if (this.dateSet.length === 2) {
-                    if (this.secondFormGroup.controls.secondCtrl) {
-                        this.proceedButton2 = false;
-                        if (!flag && studentFlag === 0) {
-                            this.proceedButton2_ = false;
+                    if (this.dateSet.length === 3) {
+                        if (this.thirdFormGroup.controls.thirdCtrl) {
+                            this.proceedButton3 = false;
+                        }
+                        if (!flag) {
+                            this.proceedButton3_ = false;
                         }
                     }
-                }
-                if (this.dateSet.length === 3) {
-                    if (this.thirdFormGroup.controls.thirdCtrl) {
-                        this.proceedButton3 = false;
-                    }
-                    if (!flag) {
-                        this.proceedButton3_ = false;
-                    }
-                }
-                this.minDate = new Date();
-            });
+                    this.minDate = new Date();
+                })
+            );
     }
 
     isAllSelected() {
@@ -847,7 +852,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     stepDownStage() {
-        const dialogRef = this.dialog.open(DeletePopUpComponent, {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
             width: '400px',
             height: '250px',
             data: {
@@ -857,29 +862,28 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             disableClose: true
         });
         const currStage = this.stageNo;
-        dialogRef.afterClosed().subscribe((result) => {
+        confirmDialog.afterClosed().subscribe((result) => {
             if (result.message === 'submit') {
-                const dialogRefLoad = this.dialog.open(LoaderComponent, {
+                this.dialogRefLoad = this.dialog.open(LoaderComponent, {
                     data: 'Updating, Please wait ...',
                     disableClose: true,
                     panelClass: 'transparent'
                 });
-                this.userService.revertStage(currStage).subscribe((responseAPI: HttpResponseAPI) => {
-                    this.publishFaculty = false;
-                    this.publishStudents = false;
-                    this.proceedButton1_ = true;
-                    this.proceedButton2_ = true;
-                    this.proceedButton3_ = true;
-                    this.proceedButton1 = true;
-                    this.proceedButton2 = true;
-                    this.proceedButton3 = true;
-                    this.stepper.previous();
-                    this.ngOnInit();
-                    this.snackBar.open(responseAPI.message, 'Ok');
-                    dialogRefLoad.close();
-                }, () => {
-                    dialogRefLoad.close();
-                });
+                this.userService.revertStage(currStage)
+                    .pipe(this.closeDialog)
+                    .subscribe((responseAPI: HttpResponseAPI) => {
+                        this.publishFaculty = false;
+                        this.publishStudents = false;
+                        this.proceedButton1_ = true;
+                        this.proceedButton2_ = true;
+                        this.proceedButton3_ = true;
+                        this.proceedButton1 = true;
+                        this.proceedButton2 = true;
+                        this.proceedButton3 = true;
+                        this.stepper.previous();
+                        // this.ngOnInit();
+                        this.snackBar.open(responseAPI.message, 'Ok');
+                    });
             }
         });
     }
@@ -905,27 +909,26 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     resetProcess() {
-        const dialogRef = this.dialog.open(ResetComponent, {
+        const confirmDialog = this.dialog.open(ResetComponent, {
             width: '400px',
             height: '300px',
             disableClose: false
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result.message === 'submit') {
-                const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Resetting, Please wait ...',
-                    disableClose: true,
-                    panelClass: 'transparent'
-                });
-                this.userService.resetUsers().subscribe((responseAPI: HttpResponseAPI) => {
-                    dialogRefLoad.close();
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (result.message !== 'submit') { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Resetting, Please wait ...',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            this.userService
+                .resetUsers()
+                .pipe(this.closeDialog)
+                .subscribe((responseAPI: HttpResponseAPI) => {
                     this.snackBar.open(responseAPI.message, 'Ok');
                     this.stepper.reset();
-                    this.ngOnInit();
-                }, () => {
-                    dialogRefLoad.close();
+                    // this.ngOnInit();
                 });
-            }
         });
     }
 
@@ -941,112 +944,110 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     downloadFile_project() {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Loading, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.exportService.download('project').subscribe((data) => {
-            dialogRefLoad.close();
-            const blob: Blob = new Blob([data], {type: 'text/csv'});
-            const fileName = `${this.programName}_faculty.csv`;
-            this.triggerFileDownload(blob, fileName);
-        }, () => {
-            dialogRefLoad.close();
-        });
+        this.exportService
+            .download('project')
+            .pipe(this.closeDialog)
+            .subscribe((data: Blob) => {
+                const blob: Blob = new Blob([data], {type: 'text/csv'});
+                const fileName = `${this.programName}_faculty.csv`;
+                this.triggerFileDownload(blob, fileName);
+            });
     }
 
     downloadFile_student() {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Loading, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.exportService.download('student').subscribe((data) => {
-            dialogRefLoad.close();
-            const blob: Blob = new Blob([data], {type: 'text/csv'});
-            const fileName = `${this.programName}_students.csv`;
-            this.triggerFileDownload(blob, fileName);
-        }, () => {
-            dialogRefLoad.close();
-        });
+        this.exportService
+            .download('student')
+            .pipe(this.closeDialog)
+            .subscribe((data: Blob) => {
+                const blob: Blob = new Blob([data], {type: 'text/csv'});
+                const fileName = `${this.programName}_students.csv`;
+                this.triggerFileDownload(blob, fileName);
+            });
     }
 
     downloadFile_format() {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Loading, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.exportService.download('format').subscribe((data) => {
-            dialogRefLoad.close();
-            const blob: Blob = new Blob([data], {type: 'text/csv'});
-            const fileName = `${this.programName}_format.csv`;
-            this.triggerFileDownload(blob, fileName);
-        }, () => {
-            dialogRefLoad.close();
-        });
+        this.exportService
+            .download('format')
+            .pipe(this.closeDialog)
+            .subscribe((data: Blob) => {
+                const blob: Blob = new Blob([data], {type: 'text/csv'});
+                const fileName = `${this.programName}_format.csv`;
+                this.triggerFileDownload(blob, fileName);
+            });
     }
 
     downloadFile_allocation() {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Loading, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.exportService.download('allocation').subscribe((data) => {
-            dialogRefLoad.close();
-            const blob: Blob = new Blob([data], {type: 'text/csv'});
-            const fileName = `${this.programName}_allocation.csv`;
-            this.triggerFileDownload(blob, fileName);
-        }, () => {
-            dialogRefLoad.close();
-        });
+        this.exportService
+            .download('allocation')
+            .pipe(this.closeDialog)
+            .subscribe((data: Blob) => {
+                const blob: Blob = new Blob([data], {type: 'text/csv'});
+                const fileName = `${this.programName}_allocation.csv`;
+                this.triggerFileDownload(blob, fileName);
+            });
     }
 
     handleFileInput(event) {
         const target = event.target;
         const files = target.files;
         this.fileToUpload = files.item(0);
-        if (this.fileToUpload.name.split('.')[1] === 'csv') {
-            const dialogRef = this.dialog.open(DeletePopUpComponent, {
-                width: '450px',
-                height: '200px',
-                data: {
-                    heading: 'Confirm Upload',
-                    message: `Are you sure that you want to upload ${this.fileToUpload.name} ?`
-                }
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result && result.message === 'submit') {
-                    const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                        data: 'Updating, Please wait ...',
-                        disableClose: true,
-                        panelClass: 'transparent'
-                    });
-                    this.exportService
-                        .uploadStudentList(this.fileToUpload, this.programName)
-                        .subscribe((responseAPI: HttpResponseAPI) => {
-                            target.value = '';
-                            this.snackBar.open(responseAPI.message, 'Ok');
-                            dialogRefLoad.close();
-                            this.ngOnInit();
-                        }, (e) => {
-                            target.value = '';
-                            if (e.status === 400) {
-                                this.snackBar.open(e.error.result.error.message, 'Ok');
-                            }
-                            dialogRefLoad.close();
-                        });
-                }
-            });
-        } else {
+        if (this.fileToUpload.name.split('.')[1] !== 'csv') {
             this.snackBar.open('Only .csv files are to imported. Other files types are not supported.', 'Ok');
+            return;
         }
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
+            width: '450px',
+            height: '200px',
+            data: {
+                heading: 'Confirm Upload',
+                message: `Are you sure that you want to upload ${this.fileToUpload.name} ?`
+            }
+        });
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (!(result && result.message === 'submit')) { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Updating, Please wait ...',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            this.exportService
+                .uploadStudentList(this.fileToUpload, this.programName)
+                .pipe(this.closeDialog)
+                .subscribe((responseAPI: HttpResponseAPI) => {
+                    target.value = '';
+                    this.snackBar.open(responseAPI.message, 'Ok');
+                    // this.ngOnInit();
+                }, (e) => {
+                    target.value = '';
+                    if (e.status === 400) {
+                        this.snackBar.open(e.error.result.error.message, 'Ok');
+                    }
+                });
+        });
     }
 
     publishToFaculty() {
-        const dialogRef = this.dialog.open(DeletePopUpComponent, {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
             width: '400px',
             height: '200px',
             data: {
@@ -1055,19 +1056,21 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             disableClose: true
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result.message === 'submit') {
-                const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Sending mails, Please wait as this may take a while',
-                    disableClose: true,
-                    panelClass: 'transparent'
-                });
-                const requests = [
-                    this.userService.updatePublish('faculty'),
-                    this.userService.uploadAllocationFile(),
-                    this.userService.getFacultyStreamEmails()
-                ];
-                forkJoin(requests).subscribe((response: Array<HttpResponseAPI>) => {
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (!(result && result.message === 'submit')) { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Sending mails, Please wait as this may take a while',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            const requests = [
+                this.userService.updatePublish('faculty'),
+                this.userService.uploadAllocationFile(),
+                this.userService.getFacultyStreamEmails()
+            ];
+            forkJoin(requests)
+                .pipe(this.closeDialog)
+                .subscribe((response: Array<HttpResponseAPI>) => {
                     const data = response[0].result.projects;
                     const {emails, programFull} = response[2].result;
                     this.exportDisabled = false;
@@ -1079,20 +1082,14 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.publishFaculty = true;
                     this.mailer.publishMail('faculty', emails, programFull)
                         .subscribe(() => {
-                            dialogRefLoad.close();
                             this.snackBar.open('Successfully published to faculties and mails have been sent.', 'Ok');
-                        }, () => {
-                            dialogRefLoad.close();
                         });
-                }, () => {
-                    dialogRefLoad.close();
                 });
-            }
         });
     }
 
     publishToStudents() {
-        const dialogRef = this.dialog.open(DeletePopUpComponent, {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
             width: '400px',
             height: '250px',
             data: {
@@ -1100,19 +1097,21 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 message: `Are you sure that you want to publish this allocation to students? Please ensure that the results are published to faculties before it is published to the students. Do note that mails will be sent automatically.`
             }
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result && result.message === 'submit') {
-                const dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Sending mails, Please wait as this may take a while',
-                    disableClose: true,
-                    panelClass: 'transparent'
-                });
-                const requests = [
-                    this.userService.updatePublish('student'),
-                    this.userService.uploadAllocationFile(),
-                    this.userService.getStudentStreamEmails()
-                ];
-                forkJoin(requests).subscribe((response: Array<any>) => {
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (!(result && result.message === 'submit')) { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Sending mails, Please wait as this may take a while',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            const requests = [
+                this.userService.updatePublish('student'),
+                this.userService.uploadAllocationFile(),
+                this.userService.getStudentStreamEmails()
+            ];
+            forkJoin(requests)
+                .pipe(this.closeDialog)
+                .subscribe((response: Array<any>) => {
                     const data = response[0].result.projects;
                     const {emails, programFull} = response[2].result;
                     this.exportDisabled = false;
@@ -1125,15 +1124,9 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.mailer
                         .publishMail('student', emails, programFull)
                         .subscribe(() => {
-                            dialogRefLoad.close();
                             this.snackBar.open('Successfully published to students and mails have been sent.', 'Ok');
-                        }, () => {
-                            dialogRefLoad.close();
                         });
-                }, () => {
-                    dialogRefLoad.close();
                 });
-            }
         });
     }
 

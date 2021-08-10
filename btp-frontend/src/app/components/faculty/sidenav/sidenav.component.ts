@@ -4,6 +4,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {ProjectsService} from 'src/app/services/projects/projects.service';
 import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
+import {finalize} from 'rxjs/operators';
 
 @Component({
     selector: 'app-sidenav',
@@ -22,6 +23,7 @@ export class SidenavComponent implements OnInit, OnChanges {
     public selectedRow;
     selectedProjects: string[] = [];
     id: string;
+    dialogRefLoad: any;
 
     constructor(
         private projectService: ProjectsService,
@@ -29,6 +31,8 @@ export class SidenavComponent implements OnInit, OnChanges {
         private dialog: MatDialog
     ) {
     }
+
+    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     ngOnChanges(simpleChanges: SimpleChanges) {
         if (simpleChanges.projects && simpleChanges.projects.currentValue) {
@@ -59,22 +63,22 @@ export class SidenavComponent implements OnInit, OnChanges {
     }
 
     includeProjects() {
-        const dialogRef = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Updating, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.projectService.includeProjects(this.selectedProjects).subscribe((responseAPI: HttpResponseAPI) => {
-            dialogRef.close();
-            if (responseAPI.result.updated) {
-                for (const project of this.projects) {
-                    project.isIncluded = this.selectedProjects.indexOf(project._id) !== -1;
+        this.projectService
+            .includeProjects(this.selectedProjects)
+            .pipe(this.closeDialog)
+            .subscribe((responseAPI: HttpResponseAPI) => {
+                if (responseAPI.result.updated) {
+                    for (const project of this.projects) {
+                        project.isIncluded = this.selectedProjects.indexOf(project._id) !== -1;
+                    }
+                    this.snackbar.open('Updated Project Preferences', 'Ok');
                 }
-                this.snackbar.open('Updated Project Preferences', 'Ok');
-            }
-        }, () => {
-            dialogRef.close();
-        });
+            });
     }
 
     onClick(project, index) {

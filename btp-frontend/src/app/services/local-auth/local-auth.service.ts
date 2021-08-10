@@ -71,12 +71,10 @@ export class LocalAuthService {
             console.log(e);
         } finally {
             const theme = localStorage.getItem('current-theme');
-            const user = {};
             localStorage.clear();
             this.storageService.setItem('isLoggedIn', 'false');
             localStorage.setItem('role', 'none');
             localStorage.setItem('current-theme', theme);
-            localStorage.setItem('user', JSON.stringify(user));
             await this.router.navigate(['']);
             if (userClick) {
                 this.snackBar.open('Signed out', 'Ok');

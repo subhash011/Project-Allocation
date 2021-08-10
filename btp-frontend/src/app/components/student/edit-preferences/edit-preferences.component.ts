@@ -5,7 +5,7 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {from, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {finalize, takeUntil} from 'rxjs/operators';
 import {ProjectsService} from 'src/app/services/projects/projects.service';
 import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
@@ -27,7 +27,7 @@ import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
         ])
     ]
 })
-export class EditPreferencesComponent implements OnInit, OnDestroy {
+export class EditPreferencesComponent implements OnInit {
     @Input() preferences: any = new MatTableDataSource([]);
     @Input() stage = 0;
     projects: any = [];
@@ -45,7 +45,6 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
         'Submit'
     ];
     dialogRefLoad: MatDialogRef<any>;
-    private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private projectService: ProjectsService,
@@ -53,6 +52,8 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
         private dialog: MatDialog
     ) {
     }
+
+    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     ngOnInit() {
         this.tableStyle = {'max-height.px': this.height - 64};
@@ -70,29 +71,25 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
         });
         this.projectService
             .storeStudentPreferences(this.preferences.data)
-            .pipe(takeUntil(this.ngUnsubscribe))
+            .pipe(this.closeDialog)
             .subscribe((responseAPI: HttpResponseAPI) => {
-                this.dialogRefLoad.close();
                 if (responseAPI.result.updated) {
                     this.preferences.data = responseAPI.result.preferences;
                 }
                 this.snackBar.open(responseAPI.message, 'OK');
-            }, () => {
-                this.dialogRefLoad.close();
             });
     }
 
     removeOnePreference(preference) {
-        const dialogRefLoad = this.dialog.open(LoaderComponent, {
+        this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Removing Preference, Please wait ...',
             disableClose: true,
             panelClass: 'transparent'
         });
         this.projectService
             .removeOneStudentPreference(preference)
-            .pipe(takeUntil(this.ngUnsubscribe))
+            .pipe(this.closeDialog)
             .subscribe((responseAPI: HttpResponseAPI) => {
-                dialogRefLoad.close();
                 if (responseAPI.result.updated) {
                     this.preferences.data = this.preferences.data.filter((val) => {
                         return val._id !== preference._id;
@@ -100,8 +97,6 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
                 } else {
                     this.snackBar.open(responseAPI.message, 'Ok');
                 }
-            }, () => {
-                this.dialogRefLoad.close();
             });
     }
 
@@ -141,10 +136,5 @@ export class EditPreferencesComponent implements OnInit, OnDestroy {
         const previousIndex = this.preferences.data.indexOf(event.item.data);
         moveItemInArray(event.container.data, previousIndex, event.currentIndex);
         this.preferences = new MatTableDataSource(event.container.data);
-    }
-
-    ngOnDestroy() {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
     }
 }

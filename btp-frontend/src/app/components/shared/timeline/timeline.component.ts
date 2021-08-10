@@ -15,26 +15,15 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
     @Input() clone;
     admins: any;
     check = false;
-    startCompleted: boolean;
-    stageOneCompleted: boolean;
-    stageTwoCompleted: boolean;
-    stageThreeCompleted: boolean;
-    stageFourCompleted: boolean;
     curDeadline: Date;
     startDate: Date;
     dates: Date[] = [];
     stage = 0;
-    stageOne: number;
-    stageTwo: number;
-    stageThree: number;
-    stageFour: number;
     message;
     currentTime: Date = new Date();
     next;
-    icon;
     displayTimeline: boolean;
     loaded = false;
-    styles;
     timer;
 
     constructor(private userService: UserService) {
@@ -46,23 +35,10 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.ngOnInit();
     }
 
-    initialize() {
-        this.stageOne = 0;
-        this.stageTwo = 0;
-        this.stageThree = 0;
-        this.stageFour = 0;
-        this.startCompleted = false;
-        this.stageOneCompleted = false;
-        this.stageTwoCompleted = false;
-        this.stageThreeCompleted = false;
-        this.stageFourCompleted = false;
-    }
-
     ngOnInit() {
         this.timer = setInterval(() => {
             this.currentTime = new Date();
         }, 60000);
-        this.initialize();
         this.userService.getAllAdminDetails().subscribe((responseAPI: HttpResponseAPI) => {
             this.displayTimeline = true;
             this.admins = responseAPI.result.admins[this.program];
@@ -108,11 +84,6 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
             this.displayTimeline = false;
             this.loaded = true;
         });
-    }
-
-    refresh(program) {
-        this.program = program.short;
-        this.ngOnInit();
     }
 
     ngOnDestroy() {

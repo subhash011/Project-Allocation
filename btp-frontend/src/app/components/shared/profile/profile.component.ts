@@ -11,6 +11,7 @@ import {CommonModule} from '@angular/common';
 import {MaterialModule} from 'src/app/material/material.module';
 import {PipeModule} from 'src/app/components/shared/Pipes/pipe.module';
 import {NavbarComponent} from 'src/app/components/shared/navbar/navbar.component';
+import {finalize} from 'rxjs/operators';
 
 @Component({
     selector: 'app-profile',
@@ -61,6 +62,8 @@ export class ProfileComponent implements OnInit {
     ) {
     }
 
+    closeDialog = finalize(() => this.dialogRefLoad.close());
+
     ngOnInit() {
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Loading, Please wait! ...',
@@ -71,8 +74,8 @@ export class ProfileComponent implements OnInit {
         if (this.role === 'student') {
             this.userService
                 .getStudentDetails(localStorage.getItem('id'))
+                .pipe(this.closeDialog)
                 .subscribe((responseAPI: HttpResponseAPI) => {
-                    this.dialogRefLoad.close();
                     if (responseAPI.statusCode === 401) {
                         this.snackBar.open(responseAPI.message, 'Ok');
                     } else {
@@ -80,23 +83,20 @@ export class ProfileComponent implements OnInit {
                         this.studentFormGroup.controls.name.setValue(this.userInfo.name);
                         this.studentFormGroup.controls.gpa.setValue(this.userInfo.gpa);
                     }
-                }, () => {
-                    this.dialogRefLoad.close();
                 });
         } else if (this.role === 'faculty' || this.role === 'admin') {
             const requests = [
                 this.userService.getFacultyDetails(localStorage.getItem('id')),
                 this.userService.getAllPrograms()
             ];
-            forkJoin(requests).subscribe((response: Array<HttpResponseAPI>) => {
-                this.dialogRefLoad.close();
-                this.userInfo = response[0].result.faculty;
-                this.facultyPrograms = this.userInfo.programs;
-                this.facultyFormGroup.controls.name.setValue(this.userInfo.name);
-                this.programs = response[1].result.programs;
-            }, () => {
-                this.dialogRefLoad.close();
-            });
+            forkJoin(requests)
+                .pipe(this.closeDialog)
+                .subscribe((response: Array<HttpResponseAPI>) => {
+                    this.userInfo = response[0].result.faculty;
+                    this.facultyPrograms = this.userInfo.programs;
+                    this.facultyFormGroup.controls.name.setValue(this.userInfo.name);
+                    this.programs = response[1].result.programs;
+                });
         }
     }
 
@@ -109,12 +109,12 @@ export class ProfileComponent implements OnInit {
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.userService.updateFacultyProfile(faculty).subscribe((responseAPI: HttpResponseAPI) => {
-            this.dialogRefLoad.close();
-            this.snackBar.open(responseAPI.message, 'Ok');
-        }, () => {
-            this.dialogRefLoad.close();
-        });
+        this.userService.updateFacultyProfile(faculty)
+            .pipe(this.closeDialog)
+            .subscribe((responseAPI: HttpResponseAPI) => {
+                this.dialogRefLoad.close();
+                this.snackBar.open(responseAPI.message, 'Ok');
+            });
     }
 
     addProgram() {
@@ -126,21 +126,20 @@ export class ProfileComponent implements OnInit {
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.userService.setPrograms(programs).subscribe((responseAPI: HttpResponseAPI) => {
-            this.dialogRefLoad.close();
-            this.facultyPrograms = responseAPI.result.programs;
-            this.navbar.programs = this.facultyPrograms;
-            this.snackBar.open(responseAPI.message, 'Ok');
-        }, () => {
-            this.dialogRefLoad.close();
-        });
+        this.userService.setPrograms(programs)
+            .pipe(this.closeDialog)
+            .subscribe((responseAPI: HttpResponseAPI) => {
+                this.facultyPrograms = responseAPI.result.programs;
+                this.navbar.programs = this.facultyPrograms;
+                this.snackBar.open(responseAPI.message, 'Ok');
+            });
     }
 
     deleteProgram(program) {
         const obj = {
             program
         };
-        this.dialogRefLoad = this.dialog.open(DeletePopUpComponent, {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
             height: '200px',
             data: {
                 heading: 'Confirm Deletion',
@@ -148,24 +147,21 @@ export class ProfileComponent implements OnInit {
             },
             disableClose: true
         });
-        this.dialogRefLoad.afterClosed().subscribe((result) => {
-            if (result.message === 'submit') {
-                this.dialogRefLoad = this.dialog.open(LoaderComponent, {
-                    data: 'Removing, Please Wait ....',
-                    disableClose: true,
-                    panelClass: 'transparent'
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (result.message !== 'submit') { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Removing, Please Wait ....',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            this.userService
+                .deleteFacultyProgram(obj)
+                .pipe(this.closeDialog)
+                .subscribe((responseAPI: HttpResponseAPI) => {
+                    this.snackBar.open(responseAPI.message, 'Ok');
+                    this.facultyPrograms = this.facultyPrograms.filter(val => val.short !== program.short);
+                    this.navbar.programs = this.facultyPrograms;
                 });
-                this.userService
-                    .deleteFacultyProgram(obj)
-                    .subscribe((responseAPI: HttpResponseAPI) => {
-                        this.dialogRefLoad.close();
-                        this.snackBar.open(responseAPI.message, 'Ok');
-                        this.facultyPrograms = this.facultyPrograms.filter(val => val.short !== program.short);
-                        this.navbar.programs = this.facultyPrograms;
-                    });
-            }
-        }, () => {
-            this.dialogRefLoad.close();
         });
     }
 }
