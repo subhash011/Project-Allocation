@@ -448,6 +448,18 @@
             </td>
             <td mat-footer-cell *matFooterCellDef></td>
           </ng-container>
+          <ng-container matColumnDef="Actions">
+            <th *matHeaderCellDef mat-header-cell>Delete</th>
+            <td *matCellDef="let project" mat-cell>
+              <mat-icon
+                (click)="removeProject(project._id)"
+                matTooltip="{{project.title}}"
+                matTooltipPosition="above">
+                delete_outline
+              </mat-icon>
+            </td>
+            <td *matFooterCellDef mat-footer-cell></td>
+          </ng-container>
           <ng-container matColumnDef="Student">
             <th mat-header-cell *matHeaderCellDef>Alloted To</th>
             <td mat-cell *matCellDef="let project">

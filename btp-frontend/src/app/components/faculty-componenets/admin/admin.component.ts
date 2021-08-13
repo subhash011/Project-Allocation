@@ -31,6 +31,7 @@ import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/sho
 import { saveAs } from "file-saver";
 import * as moment from "moment";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
+import {HttpResponseAPI} from '../../../../../../../btp-frontend/src/app/models/HttpResponseAPI';
 
 
 @Pipe({
@@ -237,6 +238,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     "NoOfStudents",
     "isIncluded",
     "Student",
+    "Actions"
   ];
   facultyCols = [
     "Name",
@@ -756,6 +758,21 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
         );
       }
+    });
+  }
+
+  removeProject(projectId) {
+    const confirmDialog = this.dialog.open(DeletePopUpComponent, {
+      width: '450px',
+      height: '200px',
+      data: {
+        heading: 'Confirm Deletion',
+        message: `Are you sure that you want to delete this project ?`
+      }
+    });
+    confirmDialog.afterClosed().subscribe((result) => {
+      this.projectService.deleteProjectAdmin(projectId)
+      // add the remaining here
     });
   }
 

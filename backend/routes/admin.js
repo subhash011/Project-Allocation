@@ -842,6 +842,49 @@ router.delete("/student/:id", (req, res) => {
 	);
 });
 
+router.delete("/project/:id", async (req, res) => {
+	try {
+		const id = req.params.id;
+		const idToken = req.headers.authorization;
+		const projectId = req.headers.body;
+		let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
+		if (!(faculty && faculty.isAdmin)) {
+			res.status(401).json({
+				statusCode: 401,
+				message: "Session timed out! Please Sign-In again.",
+				result: null
+			});
+			return;
+		}
+		let project = await Project.findByIdAndRemove({_id: projectId});
+		let students_id = project.students_id;
+		let faculty_id = project.faculty_id;
+		let facUpdate = {
+			$pull: {project_list: projectId}
+		};
+		let studUpdate = {
+			$pull: {projects_preference: projectId}
+		};
+		let promises = [];
+		promises.push(Faculty.findByIdAndUpdate(faculty_id, facUpdate));
+		promises.push(Student.updateMany({_id: {$in: students_id}}, studUpdate));
+		await Promise.all(promises);
+		res.status(200).json({
+			statusCode: 200,
+			message: "Successfully removed the project.",
+			result: {
+				deleted: true
+			}
+		});
+	} catch (e) {
+		res.status(500).json({
+			statusCode: 500,
+			message: "Internal Server Error! Please try-again.",
+			result: null
+		});
+	}
+});
+
 router.post("/set_projectCap/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;

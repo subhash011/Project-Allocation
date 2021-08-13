@@ -202,6 +202,20 @@ export class ProjectsService {
     return this.http.delete(this.url);
   }
 
+  deleteProjectAdmin(projectId) {
+    const id = localStorage.getItem('id');
+    const idToken = JSON.parse(localStorage.getItem('user')).idToken;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: idToken,
+        body: projectId
+      })
+    };
+    this.url = this.adminBaseURL + id;
+    return this.http.delete(this.url, httpOptions);
+  }
+
   getAllStreamProjects() {
     this.url = this.adminBaseURL + localStorage.getItem("id");
     const idToken = JSON.parse(localStorage.getItem("user")).idToken;
@@ -224,7 +238,7 @@ export class ProjectsService {
       }),
     };
     return this.http.post(this.url, { projects: projects }, httpOptions);
-  
+
   }
 
 }
