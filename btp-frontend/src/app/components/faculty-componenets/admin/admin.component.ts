@@ -31,7 +31,7 @@ import { ShowFacultyPreferencesComponent } from "../show-faculty-preferences/sho
 import { saveAs } from "file-saver";
 import * as moment from "moment";
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
-import {HttpResponseAPI} from '../../../../../../../btp-frontend/src/app/models/HttpResponseAPI';
+// import {HttpResponseAPI} from '../../../../../../../btp-frontend/src/app/models/HttpResponseAPI';
 
 
 @Pipe({
@@ -599,6 +599,7 @@ export class AdminComponent implements OnInit, OnDestroy {
                       .generateCSV_students()
                       .subscribe((data) => {
                         if (data["message"] == "success") {
+                          this.ngOnInit()
                         }
                       });
                   }
@@ -771,7 +772,38 @@ export class AdminComponent implements OnInit, OnDestroy {
       }
     });
     confirmDialog.afterClosed().subscribe((result) => {
+      var dialogRefLoad = this.dialog.open(LoaderComponent, {
+        data: "Please wait ...",
+        disableClose: true,
+        hasBackdrop: true,
+      });
+
       this.projectService.deleteProjectAdmin(projectId)
+        .subscribe(result => {
+          dialogRefLoad.close();
+
+          if(result["statusCode"] == 200) {
+
+            this.snackBar.open("Project Removed", "Ok", {
+              duration: 3000,
+            });
+            
+            this.ngOnInit()
+          }
+
+          else {
+            this.navbar.role = "none";
+            this.snackBar.open(
+              "Session Timed Out! Please Sign-In again",
+              "Ok",
+              {
+                duration: 3000,
+              }
+            );
+            this.loginService.signOut();
+          }
+
+        })
       // add the remaining here
     });
   }

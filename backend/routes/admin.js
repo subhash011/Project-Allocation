@@ -363,24 +363,79 @@ router.post("/update_stage/:id", (req, res) => {
 	const id = req.params.id;
 	const idToken = req.headers.authorization;
 	const stage = req.body.stage;
+	let promises = []
 
 	Faculty.findOne({ google_id: { id: id, idToken: idToken } })
 		.lean()
 		.select("_id")
 		.then((faculty) => {
-			Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
-			.then((admin) => {
-				res.json({
-					status: "success",
-					msg: "Successfully moved to the next stage",
-				});
-			})
-			.catch((err) => {
-				res.json({
-					status: "fail",
-					result: null,
-				});
-			});
+
+			if (stage == 3) {
+				Admin.findOne({admin_id: faculty._id})
+					.then((admin) => {
+						let stream = admin.stream;
+
+						Project.find({stream: stream})
+							.populate({path:"students_id", model:Student})
+							.populate({path:"not_students_id", model:Student})
+							.then((result) => {
+								
+								for(const project of result) {
+
+									if(project.reorder == 0){
+
+										project.students_id.sort((a, b) => {
+											return b.gpa - a.gpa
+										})
+
+										project.not_students_id.sort((a,b) => {
+											return b.gpa - a.gpa
+										})
+
+									}
+									else if(project.reorder == -1){
+										project.not_students_id.sort((a,b)=>{
+											return b.gpa - a.gpa;
+										})
+									}
+									else if(project.reorder == 1){
+										project.students_id.sort((a, b) => {
+											return b.gpa - a.gpa;
+										});
+									}
+									
+
+									project.reorder = 2
+									
+									promises.push(
+										project.save()
+									)
+
+								}
+
+								Promise.all(promises)
+									.then(result => {
+										Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
+											.then((admin) => {
+												res.json({
+													status: "success",
+													msg: "Successfully moved to the next stage",
+												});
+											})
+											.catch((err) => {
+												res.json({
+													status: "fail",
+													result: null,
+												});
+											});
+									})
+
+							})
+					})
+			}
+
+
+			
 		})
 		.catch((err) => {
 			res.json({
