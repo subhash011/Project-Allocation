@@ -203,7 +203,8 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
         'Duration',
         'Preferences',
         'isIncluded',
-        'Student'
+        'Student',
+        'Actions'
     ];
     facultyCols = [
         'Name',
@@ -236,7 +237,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     minDate;
     isActive = false;
     indexHover = -1;
-    projects: any = [];
     background = 'primary';
     // Buttons
     studentFlag = 0;
@@ -263,7 +263,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     studentCap;
     studentCount = 0;
     project: any;
-    dataSource: any = new MatTableDataSource([]);
+    projects: any = new MatTableDataSource([]);
     selection = new SelectionModel(true, []);
     @ViewChild('stepper') stepper: MatStepper;
     timer;
@@ -414,9 +414,8 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                     /*projects*/
                     const {projects} = (response[2] as HttpResponseAPI).result;
-                    this.projects = projects;
-                    this.dataSource.data = this.projects;
-                    this.dataSource.filterPredicate = (data: any, filter: string) =>
+                    this.projects.data = projects;
+                    this.projects.filterPredicate = (data: any, filter: string) =>
                         !filter || data.faculty.toLowerCase().includes(filter) ||
                         data.title.toLowerCase().includes(filter) ||
                         data.description.toLowerCase().includes(filter);
@@ -502,7 +501,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.faculties.data = this.faculties.data.filter((val) => {
                         return val._id !== id;
                     });
-                    this.dataSource.data = this.dataSource.data.filter((val) => {
+                    this.projects.data = this.projects.data.filter((val) => {
                         return val.faculty_id !== id;
                     });
                     this.snackBar.open(responseAPI.message, 'Ok');
@@ -535,12 +534,46 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.students.data = this.students.data.filter((val) => {
                         return val._id !== id;
                     });
-                    this.dataSource.data.forEach((project) => {
+                    this.projects.data.forEach((project) => {
                         project.students_id = project.students_id.filter((val) => {
                             return (val.roll_no !== student.email.split('@')[0]);
                         });
                     });
                     this.snackBar.open(responseAPI.message, 'Ok');
+                });
+        });
+    }
+
+    removeProject(projectId) {
+        const confirmDialog = this.dialog.open(DeletePopUpComponent, {
+            width: '450px',
+            height: '200px',
+            data: {
+                heading: 'Confirm Deletion',
+                message: `Are you sure that you want to delete this project ?`
+            }
+        });
+        confirmDialog.afterClosed().subscribe((result) => {
+            if (!(result && result.message === 'submit')) { return; }
+            this.dialogRefLoad = this.dialog.open(LoaderComponent, {
+                data: 'Deleting Project...',
+                disableClose: true,
+                panelClass: 'transparent'
+            });
+            this.projectService
+                .deleteProjectAdmin(projectId)
+                .pipe(this.closeDialog)
+                .subscribe((responseAPI: HttpResponseAPI) => {
+                    this.snackBar.open(responseAPI.message, 'Ok');
+                    this.projects.data = this.projects.data.filter((project) => {
+                        return project._id !== projectId;
+                    });
+                    this.students.data.forEach((student) => {
+                        student.projects_preference = student.projects_preference.filter(project => {
+                            return project._id !== projectId;
+                        });
+                    });
+                    this.students.data = [...this.students.data];
                 });
         });
     }
@@ -601,9 +634,9 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                         dialogRef.close();
                         this.exportDisabled = true;
                         selectedProjects = selectedProjects.map((val) => String(val._id));
-                        this.dataSource = new MatTableDataSource(result.projects);
+                        this.projects = new MatTableDataSource(result.projects);
                         this.selection.clear();
-                        this.dataSource.data.forEach((row) => {
+                        this.projects.data.forEach((row) => {
                             if (selectedProjects.indexOf(row._id.toString()) !== -1) {
                                 this.selection.select(row);
                             }
@@ -825,8 +858,8 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     isAllSelected() {
         const numSelected = this.selection.selected ? this.selection.selected.length : 0;
         let numRows = 0;
-        if (this.dataSource.data) {
-            this.dataSource.data.forEach((row) => {
+        if (this.projects.data) {
+            this.projects.data.forEach((row) => {
                 numRows += row.isIncluded ? 1 : 0;
             });
         }
@@ -839,7 +872,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
 
     selectIncluded() {
         this.selection.clear();
-        this.dataSource.data.forEach((row) => {
+        this.projects.data.forEach((row) => {
             row.isIncluded ? this.selection.select(row) : this.selection.deselect(row);
         });
     }
@@ -1076,7 +1109,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.exportDisabled = false;
                     if (localStorage.getItem('allocationMap')) {
                         this.discardAllocation();
-                        this.dataSource = new MatTableDataSource(data);
+                        this.projects = new MatTableDataSource(data);
                     }
                     this.selectIncluded();
                     this.publishFaculty = true;
@@ -1117,7 +1150,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.exportDisabled = false;
                     if (localStorage.getItem('allocationMap')) {
                         this.discardAllocation();
-                        this.dataSource = new MatTableDataSource(data);
+                        this.projects = new MatTableDataSource(data);
                     }
                     this.selectIncluded();
                     this.publishStudents = true;
@@ -1134,7 +1167,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
         const filterValue = (event.target as HTMLInputElement
         ).value;
         if (who === 'project') {
-            this.dataSource.filter = filterValue.trim().toLowerCase();
+            this.projects.filter = filterValue.trim().toLowerCase();
         } else if (who === 'student') {
             this.students.filter = filterValue.trim().toLowerCase();
             this.studentCount = this.students.filteredData.length;
@@ -1187,7 +1220,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
 
     sortProjects(event) {
         const isAsc = event.direction === 'asc';
-        this.dataSource.data = this.dataSource.data.sort((a, b) => {
+        this.projects.data = this.projects.data.sort((a, b) => {
             switch (event.active) {
                 case 'select':
                     return this.compare(this.selection.isSelected(a), this.selection.isSelected(b), isAsc);

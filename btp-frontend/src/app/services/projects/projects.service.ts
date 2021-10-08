@@ -199,6 +199,19 @@ export class ProjectsService {
         return this.http.delete(this.url, httpOptions);
     }
 
+    deleteProjectAdmin(projectId) {
+        const {id, idToken} = this.getCredentials();
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                Authorization: idToken,
+                body: projectId
+            })
+        };
+        this.url = this.adminBaseURL + id;
+        return this.http.delete(this.url, httpOptions);
+    }
+
     getAllStreamProjects() {
         const {idToken} = this.getCredentials();
         const httpOptions = {

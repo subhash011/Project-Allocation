@@ -160,7 +160,7 @@ export class FacultyComponent implements OnInit {
     }
 
     sortWithReorder() {
-        if (this.reorder === 0) {
+         if (this.reorder === 0) {
             this.studentList.sort((a, b) => {
                 return b.gpa - a.gpa;
             });
@@ -203,6 +203,7 @@ export class FacultyComponent implements OnInit {
                 .getStudentsApplied(project._id)
                 .pipe(this.closeDialog)
                 .subscribe((responseAPI: HttpResponseAPI) => {
+                    console.log(project._id, responseAPI);
                     this.studentList = responseAPI.result.students;
                     this.nonStudentList = responseAPI.result.non_students;
                     this.reorder = responseAPI.result.reorder;

@@ -310,7 +310,7 @@
             <div [style.max-height.px]="projectTableHeight" class="table mat-elevation-z8">
                 <table
                         (matSortChange)="sortProjects($event)"
-                        [dataSource]="dataSource"
+                        [dataSource]="projects"
                         class="mat-elevation-z8"
                         mat-table
                         matSort>
@@ -336,7 +336,7 @@
                         </td>
                         <td *matFooterCellDef mat-footer-cell matTooltip="Selected projects">
                             {{this.selection.selected
-                            | selectedLength: dataSource.filteredData}}
+                            | selectedLength: projects.filteredData}}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="Title">
@@ -347,7 +347,7 @@
                             {{ project.title }}
                         </td>
                         <td *matFooterCellDef mat-footer-cell>
-                            <b>Total : </b> {{ dataSource.filteredData.length }}
+                            <b>Total : </b> {{ projects.filteredData.length }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="isIncluded">
@@ -367,7 +367,7 @@
                             {{ project.faculty }}
                         </td>
                         <td *matFooterCellDef mat-footer-cell>
-                            <b>Active Projects : </b>{{ dataSource.filteredData | getActiveProjects }}
+                            <b>Active Projects : </b>{{ projects.filteredData | getActiveProjects }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="Duration">
@@ -387,7 +387,7 @@
                             {{ project.studentIntake }}
                         </td>
                         <td *matFooterCellDef class="align-center" mat-footer-cell>
-                            <b>Total : </b>{{ dataSource.filteredData | getStudentIntake }}
+                            <b>Total : </b>{{ projects.filteredData | getStudentIntake }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="Preferences">
@@ -398,6 +398,18 @@
                                     matTooltip="Prefences of {{ project.faculty }}"
                                     matTooltipPosition="above">
                                 open_in_new
+                            </mat-icon>
+                        </td>
+                        <td *matFooterCellDef mat-footer-cell></td>
+                    </ng-container>
+                    <ng-container matColumnDef="Actions">
+                        <th *matHeaderCellDef mat-header-cell>Delete</th>
+                        <td *matCellDef="let project" mat-cell>
+                            <mat-icon
+                                    (click)="removeProject(project._id)"
+                                    matTooltip="{{project.title}}"
+                                    matTooltipPosition="above">
+                                delete_outline
                             </mat-icon>
                         </td>
                         <td *matFooterCellDef mat-footer-cell></td>
