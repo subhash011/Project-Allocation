@@ -432,9 +432,21 @@ router.post("/update_stage/:id", (req, res) => {
 
 							})
 					})
+			} else {
+				Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage })
+					.then((admin) => {
+						res.json({
+							status: "success",
+							msg: "Successfully moved to the next stage",
+						});
+					})
+					.catch((err) => {
+						res.json({
+							status: "fail",
+							result: null,
+						});
+					});
 			}
-
-
 			
 		})
 		.catch((err) => {
