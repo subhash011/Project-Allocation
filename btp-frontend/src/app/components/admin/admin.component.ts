@@ -451,7 +451,10 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             const requests = [
                 this.userService.updateStage(this.stageNo + 1)
             ];
-            if (this.stageNo >= 2) {
+            if (this.stageNo === 2) {
+                requests.push(this.userService.updateList(this.programName));
+            }
+            if (this.stageNo >= 3) {
                 requests.push(this.exportService.generateCSV_projects(), this.exportService.generateCSV_students());
             }
             forkJoin(requests)

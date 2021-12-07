@@ -984,6 +984,7 @@ router.post("/update_stage/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         const stage = req.body.stage;
+        const promises = [];
 
         let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } }).lean().select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
@@ -994,10 +995,45 @@ router.post("/update_stage/:id", async (req, res) => {
             });
             return;
         }
-        let admin = await Admin.findOneAndUpdate({ admin_id: faculty._id }, { stage: stage }, { new: true });
-        if (admin.stage === 2) {
-            await Admin.findByIdAndUpdate(admin._id, { reachedStage2: true });
+        if (stage === 3) {
+            let admin = await Admin.findOne({admin_id: faculty._id});
+            let stream = admin.stream;
+
+            let projects = await Project.find({stream: stream})
+                .populate({path: "students_id", model: Student})
+                .populate({path: "not_students_id", model: Student});
+
+            for (const project of projects) {
+
+                if (project.reorder === 0) {
+
+                    project.students_id.sort((a, b) => {
+                        return b.gpa - a.gpa
+                    })
+
+                    project.not_students_id.sort((a, b) => {
+                        return b.gpa - a.gpa
+                    })
+
+                } else if (project.reorder === -1) {
+                    project.not_students_id.sort((a, b) => {
+                        return b.gpa - a.gpa;
+                    })
+                } else if (project.reorder === 1) {
+                    project.students_id.sort((a, b) => {
+                        return b.gpa - a.gpa;
+                    });
+                }
+
+                project.reorder = 2
+
+                promises.push(project.save())
+
+            }
+
+            await Promise.all(promises);
         }
+        await Admin.findOneAndUpdate({admin_id: faculty._id}, { stage: stage });
         res.status(200).json({
             statusCode: 200,
             message: "Successfully moved to the next stage",

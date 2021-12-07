@@ -218,5 +218,8 @@
       }
     }
   },
-  "defaultProject": "btp-frontend"
+  "defaultProject": "btp-frontend",
+  "cli": {
+    "analytics": "f85bdc55-df0b-443a-b4c6-b97f9fb189dc"
+  }
 }

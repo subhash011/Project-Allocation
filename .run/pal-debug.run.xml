@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="pal-debug" type="CompoundRunConfigurationType">
+    <toRun name="backend" type="js.build_tools.npm" />
+    <toRun name="frontend" type="js.build_tools.npm" />
+    <toRun name="scripts" type="js.build_tools.npm" />
+    <method v="2" />
+  </configuration>
+</component>

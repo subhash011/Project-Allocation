@@ -203,7 +203,6 @@ export class FacultyComponent implements OnInit {
                 .getStudentsApplied(project._id)
                 .pipe(this.closeDialog)
                 .subscribe((responseAPI: HttpResponseAPI) => {
-                    console.log(project._id, responseAPI);
                     this.studentList = responseAPI.result.students;
                     this.nonStudentList = responseAPI.result.non_students;
                     this.reorder = responseAPI.result.reorder;

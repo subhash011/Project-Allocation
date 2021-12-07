@@ -85,7 +85,7 @@
         </div>
 
         <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stageNo }}">
-            <mat-step [editable]="'true'" [stepControl]="firstFormGroup">
+            <mat-step [editable]="true" [stepControl]="firstFormGroup">
                 <form [formGroup]="firstFormGroup">
                     <ng-template matStepLabel>
                         Creating Projects
@@ -179,7 +179,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step [editable]="'true'" [stepControl]="thirdFormGroup">
+            <mat-step [editable]="true" [stepControl]="thirdFormGroup">
                 <form [formGroup]="thirdFormGroup">
                     <ng-template matStepLabel>Faculty Preferences
 
@@ -228,7 +228,7 @@
                 </form>
             </mat-step>
 
-            <mat-step [editable]="'true'" [stepControl]="fourthFormGroup">
+            <mat-step [editable]="true" [stepControl]="fourthFormGroup">
                 <form [formGroup]="fourthFormGroup">
                     <ng-template matStepLabel>Project Allocation</ng-template>
                     <div>
@@ -406,9 +406,7 @@
                         <th *matHeaderCellDef mat-header-cell>Delete</th>
                         <td *matCellDef="let project" mat-cell>
                             <mat-icon
-                                    (click)="removeProject(project._id)"
-                                    matTooltip="{{project.title}}"
-                                    matTooltipPosition="above">
+                                    (click)="removeProject(project._id)">
                                 delete_outline
                             </mat-icon>
                         </td>
