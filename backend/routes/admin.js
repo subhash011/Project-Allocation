@@ -514,7 +514,7 @@ router.get("/members/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const promises = [];
         const users = {};
-        let programAdmin = {};
+
         let faculty = await Faculty.findOne({
             google_id: {
                 id: id,
@@ -530,11 +530,6 @@ router.get("/members/:id", async (req, res) => {
             return;
         }
         let admin = await Admin.findOne({ admin_id: faculty._id }).lean();
-        // for (const program of faculty.programs) {
-        //     if (program.short === admin.stream) {
-        //         programAdmin = program;
-        //     }
-        // }
         promises.push(
             Faculty.find({ "programs.short": admin.stream })
                 .lean()
