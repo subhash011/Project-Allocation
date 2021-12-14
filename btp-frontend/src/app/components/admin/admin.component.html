@@ -119,7 +119,7 @@
                                         : proceedButton1
                                         : studentFlag
                             ">
-                            <button (click)="proceed()"  mat-button>
+                            <button (click)="proceed()" [disabled]="proceedButton1_"  mat-button>
                                 Proceed
                             </button>
                         </span>
@@ -167,7 +167,7 @@
                                         : proceedButton2
                                         : studentFlag
                             ">
-                            <button (click)="proceed()"  mat-button>
+                            <button (click)="proceed()" [disabled]="proceedButton2_"  mat-button>
                                 Proceed
                             </button>
                         </span>
@@ -215,7 +215,7 @@
                                         : proceedButton3
                                         : studentFlag
                             ">
-                            <button (click)="proceed()"  mat-button>
+                            <button (click)="proceed()" [disabled]="proceedButton3_"  mat-button>
                                 Proceed
                             </button>
                         </span>

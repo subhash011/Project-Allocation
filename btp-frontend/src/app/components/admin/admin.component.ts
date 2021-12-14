@@ -14,7 +14,7 @@ import {ResetComponent} from 'src/app/components/faculty/reset/reset.component';
 import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
 import {ShowStudentPreferencesComponent} from 'src/app/components/admin/show-student-preferences/show-student-preferences.component';
 import {ShowFacultyPreferencesComponent} from 'src/app/components/admin/show-faculty-preferences/show-faculty-preferences.component';
-import {forkJoin} from 'rxjs';
+import {forkJoin, of} from 'rxjs';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
 import {concat, finalize, map, mergeMap, tap} from 'rxjs/operators';
 
@@ -269,6 +269,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     timer;
     currentTime: Date = new Date();
     dialogRefLoad: any;
+    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     constructor(
         private userService: UserService,
@@ -301,8 +302,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             seventhCtrl: [this.studentsPerFaculty, Validators.min(1)]
         });
     }
-
-    closeDialog = finalize(() => this.dialogRefLoad.close());
 
     @HostListener('window:resize', ['$event']) onResize(event) {
         if (event.target.innerHeight <= 1400) {
@@ -337,6 +336,15 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    setFormValues() {
+        this.firstFormGroup.controls.firstCtrl.setValue(this.dateSet[0]);
+        this.secondFormGroup.controls.secondCtrl.setValue(this.dateSet[1]);
+        this.thirdFormGroup.controls.thirdCtrl.setValue(this.dateSet[2]);
+        this.fifthFormGroup.controls.fifthCtrl.setValue(this.projectCap);
+        this.sixthFormGroup.controls.sixthCtrl.setValue(this.studentCap);
+        this.seventhFormGroup.controls.seventhCtrl.setValue(this.studentsPerFaculty);
+    }
+
     ngOnInit() {
         this.exportDisabled = false;
         if (localStorage.getItem('allocationMap')) {
@@ -352,12 +360,11 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 60000);
         const requests = [
             this.userService.getAdminInfo(),
-            this.userService.getMembersForAdmin(),
             this.projectService.getAllStreamProjects()
         ];
         forkJoin(requests)
             .pipe(
-                map((response: Array<any>) => {
+                mergeMap((response: any[]) => {
                     const adminInfo = (response[0] as HttpResponseAPI).result;
                     /* admin info*/
                     this.programName = adminInfo.stream;
@@ -371,61 +378,22 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.dateSet = this.dateSet.map((date) => new Date(date));
                     this.startDate = adminInfo.startDate;
                     this.ngAfterViewInit();
-                    this.currDeadline = this.dateSet[this.dateSet.length - 1];
-                    this.firstFormGroup.controls.firstCtrl.setValue(this.dateSet[0]);
-                    this.secondFormGroup.controls.secondCtrl.setValue(this.dateSet[1]);
-                    this.thirdFormGroup.controls.thirdCtrl.setValue(this.dateSet[2]);
-                    this.fifthFormGroup.controls.fifthCtrl.setValue(this.projectCap);
-                    this.sixthFormGroup.controls.sixthCtrl.setValue(this.studentCap);
-                    this.seventhFormGroup.controls.seventhCtrl.setValue(this.studentsPerFaculty);
-                    /*members for admin*/
-                    const adminMembers = (response[1] as HttpResponseAPI).result;
-                    this.faculties.data = adminMembers.users.faculties;
-                    this.faculties.data.forEach((faculty) => {
-                        this.totalIntake += faculty.included_studentIntake;
-                    });
-                    this.students.data = adminMembers.users.students;
-                    this.sortStudents({
-                        direction: 'asc',
-                        active: 'Email'
-                    });
-                    this.studentCount = adminMembers.users.students.length;
-                    this.faculties.filterPredicate =
-                        (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) ||
-                            data.email.toLowerCase().includes(filter);
-                    this.students.filterPredicate =
-                        (data: any, filter: string) => !filter || data.name.toLowerCase().includes(filter) ||
-                            data.email.toLowerCase().includes(filter);
-                    let flag = false;
-                    for (const faculty of this.faculties.data) {
-                        if (faculty.project_cap || faculty.student_cap || faculty.studentsPerFaculty) {
-                            this.proceedButton1_ = true;
-                            this.proceedButton2_ = true;
-                            this.proceedButton3_ = true;
-                            flag = true;
-                            break;
-                        }
-                    }
-                    this.studentFlag = 0;
-                    for (const student of this.students.data) {
-                        if (student.isRegistered === false) {
-                            this.studentFlag = 1;
-                        }
-                    }
-                    /*projects*/
-                    const {projects} = (response[2] as HttpResponseAPI).result;
+                    this.currDeadline = this.dateSet[this.stageNo];
+                    this.setFormValues();
+                    return of(response);
+                }),
+                mergeMap((response: any[]) => this.validateFields(response)),
+                map((response: any[]) => {
+                    const {projects} = (response[1] as HttpResponseAPI).result;
                     this.projects.data = projects;
                     this.projects.filterPredicate = (data: any, filter: string) =>
                         !filter || data.faculty.toLowerCase().includes(filter) ||
                         data.title.toLowerCase().includes(filter) ||
                         data.description.toLowerCase().includes(filter);
                     this.selectIncluded();
-                    return {flag, studentFlag: this.studentFlag};
                 }),
-                mergeMap(({flag, studentFlag}) => this.getAllocationValidation(flag, studentFlag)),
                 this.closeDialog
-            )
-            .subscribe();
+            ).subscribe();
     }
 
     getTooltipInclusion(project) {
@@ -449,7 +417,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 panelClass: 'transparent'
             });
             const requests = [
-                this.userService.updateStage(this.stageNo + 1)
+                this.userService.updateStage(this.stageNo)
             ];
             if (this.stageNo === 2) {
                 requests.push(this.userService.updateList(this.programName));
@@ -458,14 +426,20 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 requests.push(this.exportService.generateCSV_projects(), this.exportService.generateCSV_students());
             }
             forkJoin(requests)
-                .pipe(this.closeDialog)
-                .subscribe(() => {
-                    this.stageNo++;
-                    this.stepper.next();
-                    this.proceedButton1 = true;
-                    this.proceedButton2 = true;
-                    this.proceedButton3 = true;
-                    const snackBarRef = this.snackBar.open('Successfully moved to the next stage!', 'Ok');
+                .pipe(
+                    mergeMap((responses: HttpResponseAPI[]) => {
+                        this.stageNo++;
+                        this.ngAfterViewInit();
+                        this.currDeadline = null;
+                        this.setFormValues();
+                        this.stepper.next();
+                        return of(responses[0]);
+                    }),
+                    mergeMap((responseAPI: HttpResponseAPI) => this.validateFields(responseAPI)),
+                    this.closeDialog
+                )
+                .subscribe((responseAPI: HttpResponseAPI) => {
+                    const snackBarRef = this.snackBar.open(responseAPI.message, 'Ok');
                     snackBarRef.afterDismissed().subscribe(() => {
                         if (this.stageNo >= 3) {
                             this.snackBar.open('Please go to the project tab to start the allocation', 'Ok', {
@@ -583,7 +557,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
 
     setDeadline() {
         let date;
-        this.currDeadline = this.dateSet[this.dateSet.length - 1];
         if (this.stageNo === 0) {
             date = this.firstFormGroup.get('firstCtrl').value;
         } else if (this.stageNo === 1) {
@@ -610,10 +583,17 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
                 this.userService
                     .setDeadline(date)
-                    .pipe(this.closeDialog)
-                    .subscribe(() => {
-                    this.snackBar.open('Deadline set successfully!!', 'Ok');
-                    // this.ngOnInit();
+                    .pipe(
+                        mergeMap((responseAPI: HttpResponseAPI) => {
+                            this.dateSet.push(date);
+                            this.dateSet = [...this.dateSet];
+                            this.currDeadline = date;
+                            return of(responseAPI);
+                        }),
+                        mergeMap((responseAPI: HttpResponseAPI) => this.validateFields(responseAPI)),
+                        this.closeDialog
+                    ).subscribe((responseAPI: HttpResponseAPI) => {
+                    this.snackBar.open(responseAPI.message, 'Ok');
                 });
             });
         } else {
@@ -652,7 +632,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                                 this.publishFaculty = false;
                                 if (this.stageNo === 3) {
                                     this.userService
-                                        .updateStage(this.stageNo + 1)
+                                        .updateStage(this.stageNo)
                                         .subscribe(({result: result1}: HttpResponseAPI) => {
                                             if (result1.updated) {
                                                 this.snackBar.open('Allocation completed successfully', 'Ok');
@@ -781,7 +761,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             ).subscribe();
     }
 
-    validateFields() {
+    validateFields(returnObj?: any) {
         return this.userService
             .getMembersForAdmin()
             .pipe(
@@ -808,9 +788,8 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                     return {flag, studentFlag: this.studentFlag};
                 }),
-                mergeMap(({flag, studentFlag}) => {
-                    return this.getAllocationValidation(flag, studentFlag);
-                })
+                mergeMap(({flag, studentFlag}) => this.getAllocationValidation(flag, studentFlag)),
+                mergeMap(() => of(returnObj))
             );
     }
 
@@ -906,18 +885,22 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     panelClass: 'transparent'
                 });
                 this.userService.revertStage(currStage)
-                    .pipe(this.closeDialog)
+                    .pipe(
+                        mergeMap((responseAPI: HttpResponseAPI) => {
+                            if (this.dateSet.length > this.stageNo) {
+                                this.dateSet.pop();
+                            }
+                            this.stageNo--;
+                            this.stepper.previous();
+                            this.ngAfterViewInit();
+                            this.currDeadline = this.dateSet[this.stageNo];
+                            this.setFormValues();
+                            return of(responseAPI);
+                        }),
+                        mergeMap((responseAPI: HttpResponseAPI) => this.validateFields(responseAPI)),
+                        this.closeDialog
+                    )
                     .subscribe((responseAPI: HttpResponseAPI) => {
-                        this.publishFaculty = false;
-                        this.publishStudents = false;
-                        this.proceedButton1_ = true;
-                        this.proceedButton2_ = true;
-                        this.proceedButton3_ = true;
-                        this.proceedButton1 = true;
-                        this.proceedButton2 = true;
-                        this.proceedButton3 = true;
-                        this.stepper.previous();
-                        // this.ngOnInit();
                         this.snackBar.open(responseAPI.message, 'Ok');
                     });
             }

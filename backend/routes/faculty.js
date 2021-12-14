@@ -5,7 +5,7 @@ const Project = require("../models/Project");
 const Programs = require("../models/Programs");
 const Admin = require("../models/Admin_Info");
 const Student = require("../models/Student");
-const oauth = require("../config/oauth");
+const oauth = require("../commons/oauth");
 
 router.post("/register/:id", async (req, res) => {
     try {

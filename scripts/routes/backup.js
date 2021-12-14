@@ -52,6 +52,9 @@ router.get("/", (req, res) => {
         let mappings = result[3].data;
         let superAdmins = result[4].data;
         let admins = result[5].data;
+        for (const admin of admins) {
+            admin.maxStage = admin.stage;
+        }
         let projects = result[6].data;
         mongoose.connection.dropDatabase().then(() => {
             let promises = [];

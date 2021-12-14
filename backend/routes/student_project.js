@@ -5,11 +5,12 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
 const Admin = require("../models/Admin_Info");
+const { STAGES } = require("../commons/constants");
 
 async function canUpdateProject(res, idToken, id) {
     try {
         let student = await Student.findOne({google_id: {id: id, idToken: idToken}})
-                                   .lean().select("_id stream");
+            .lean().select("_id stream");
         if (!student) {
             res.status(401).json({
                 statusCode: 401,
@@ -19,20 +20,11 @@ async function canUpdateProject(res, idToken, id) {
             return false;
         }
         let admin = await Admin.findOne({stream: student.stream})
-                               .lean().select("stage reachedStage2");
-        if (admin.stage < 1) {
+            .lean().select("stage maxStage");
+        if (admin.stage !== STAGES.STUDENT_PREFERENCES) {
             res.status(200).json({
                 statusCode: 200,
-                message: "The stage has not yet started.",
-                result: {
-                    updated: false
-                }
-            });
-            return false;
-        } else if (admin.stage >= 2) {
-            res.status(200).json({
-                statusCode: 200,
-                message: "The stage has already ended.",
+                message: "You cannot edit preferences now.",
                 result: {
                     updated: false
                 }
@@ -41,7 +33,7 @@ async function canUpdateProject(res, idToken, id) {
         }
         return {
             student: student,
-            toSort: !admin.reachedStage2
+            toSort: admin.maxStage > STAGES.STUDENT_PREFERENCES
         };
     } catch (e) {
         res.status(500).json({
@@ -79,7 +71,7 @@ router.get("/not_preference/:id", async (req, res) => {
             model: Faculty
         };
         let student = await Student.findOne({google_id: {id: id, idToken: idToken}})
-                                   .lean().select("projects_preference stream");
+            .lean().select("projects_preference stream");
         if (!student) {
             res.status(401).json({
                 statusCode: 401,
@@ -185,10 +177,7 @@ router.post("/preference/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        let projects = req.body;
-        const project_idArr = projects.map((val) =>
-            mongoose.Types.ObjectId(val["_id"])
-        );
+        const projectIds = req.body;
 
         let obj = await canUpdateProject(res, idToken, id);
 
@@ -218,8 +207,40 @@ router.post("/preference/:id", async (req, res) => {
                 model: Faculty
             }
         };
-        student =
-            await Student.findByIdAndUpdate(studentID, {projects_preference: project_idArr}, {new: true}).select("-google_id -date -__v").populate(populator);
+        student = await Student.findByIdAndUpdate(
+                studentID, {projects_preference: projectIds}, {new: true}
+            )
+            .select("-google_id -date -__v").populate(populator);
+        // add student to all opted projects
+        await Project.updateMany(
+            {_id: {$in: projectIds}},
+            {
+                $push: {students_id: studentID},
+                $pull: {not_students_id: studentID}
+            }
+        );
+        // remove student from all non-opted projects
+        await Project.updateMany(
+            {_id: {$nin: projectIds}},
+            {
+                $push: {not_students_id: studentID},
+                $pull: {students_opted: studentID}
+            }
+        );
+        const projects = await Project.find().populate({
+            path: "not_students_id",
+            select: "_id gpa",
+            model: Student
+        });
+        if (obj.toSort) {
+            let promises = [];
+            for (let project of projects) {
+                project.students_id.sort((a, b) => b.gpa - a.gpa);
+                project.not_students_id.sort((a, b) => b.gpa - a.gpa);
+                promises.push(project.save());
+            }
+            await Promise.all(promises);
+        }
         const preferences = student.projects_preference.map((val) => {
                 return {
                     _id: val._id,
@@ -254,8 +275,7 @@ router.post("/append/preference/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        let projects = req.body;
-        const project_idArr = projects;
+        const projectIds = req.body;
         let obj = await canUpdateProject(res, idToken, id);
 
         if (!obj) {
@@ -264,21 +284,19 @@ router.post("/append/preference/:id", async (req, res) => {
 
         let student = obj.student;
         let updateResult = {
-            $push: {projects_preference: {$each: project_idArr}}
+            $push: {projects_preference: {$each: projectIds}}
         };
         await Student.findByIdAndUpdate(student._id, updateResult);
-        const studentStream = student.stream;
         const studentID = student._id;
         const updateCondition = {
-            stream: studentStream,
-            _id: {$in: project_idArr}
+            _id: {$in: projectIds}
         };
         updateResult = {
-            $addToSet: {students_id: studentID},
+            $push: {students_id: studentID},
             $pull: {not_students_id: studentID}
         };
         await Project.updateMany(updateCondition, updateResult);
-        projects = await Project.find(updateCondition).populate({
+        const projects = await Project.find(updateCondition).populate({
             path: "students_id",
             select: "_id gpa",
             model: Student
@@ -312,9 +330,9 @@ router.post("/remove/preference/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        const project = req.body.preference;
+        const projectId = req.body.preference;
         let updateResult = {
-            $pull: {projects_preference: project}
+            $pull: {projects_preference: projectId}
         };
         let obj = await canUpdateProject(res, idToken, id);
 
@@ -324,14 +342,13 @@ router.post("/remove/preference/:id", async (req, res) => {
 
         let student = obj.student;
         let studentID = student._id;
-        let _id = mongoose.Types.ObjectId(project);
         await Student.findByIdAndUpdate(student._id, updateResult);
         updateResult = {
             $pull: {students_id: studentID},
-            $addToSet: {not_students_id: studentID}
+            $push: {not_students_id: studentID}
         };
-        await Project.findByIdAndUpdate(_id, updateResult);
-        let projects = await Project.findById(_id).populate({
+        await Project.findByIdAndUpdate(projectId, updateResult);
+        const projects = await Project.findById(projectId).populate({
             path: "not_students_id",
             select: "_id gpa",
             model: Student
@@ -359,7 +376,7 @@ router.post("/remove/preference/:id", async (req, res) => {
     }
 });
 
-// add a project to exising preferencces
+// add a project to exising preferences
 router.post("/add/preference/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -379,7 +396,7 @@ router.post("/add/preference/:id", async (req, res) => {
         let _id = mongoose.Types.ObjectId(project);
         updateResult = {
             $pull: {not_students_id: student._id},
-            $addToSet: {students_id: student._id}
+            $push: {students_id: student._id}
         };
         await Project.findByIdAndUpdate(_id, updateResult);
         let projects = await Project.findById(_id).populate({path: "students_id", select: "_id gpa", model: Student});

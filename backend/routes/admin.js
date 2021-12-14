@@ -11,6 +11,7 @@ const path = require("path");
 const multer = require("multer");
 const parse = require("csv-parse");
 const util = require("util");
+const { STAGES, REORDER } = require("../commons/constants");
 
 // read CSV and return data row-wise
 async function readCSV(filePath) {
@@ -978,7 +979,7 @@ router.post("/update_stage/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        const stage = req.body.stage;
+        const currentStage = req.body.stage;
         const promises = [];
 
         let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } }).lean().select("_id isAdmin");
@@ -990,8 +991,8 @@ router.post("/update_stage/:id", async (req, res) => {
             });
             return;
         }
-        if (stage === 3) {
-            let admin = await Admin.findOne({admin_id: faculty._id});
+        let admin = await Admin.findOne({admin_id: faculty._id});
+        if (currentStage === STAGES.STUDENT_PREFERENCES) {
             let stream = admin.stream;
 
             let projects = await Project.find({stream: stream})
@@ -1000,7 +1001,7 @@ router.post("/update_stage/:id", async (req, res) => {
 
             for (const project of projects) {
 
-                if (project.reorder === 0) {
+                if (project.reorder === REORDER.BOTH) {
 
                     project.students_id.sort((a, b) => {
                         return b.gpa - a.gpa
@@ -1010,17 +1011,17 @@ router.post("/update_stage/:id", async (req, res) => {
                         return b.gpa - a.gpa
                     })
 
-                } else if (project.reorder === -1) {
+                } else if (project.reorder === REORDER.NOT_OPTED) {
                     project.not_students_id.sort((a, b) => {
                         return b.gpa - a.gpa;
                     })
-                } else if (project.reorder === 1) {
+                } else if (project.reorder === REORDER.OPTED) {
                     project.students_id.sort((a, b) => {
                         return b.gpa - a.gpa;
                     });
                 }
 
-                project.reorder = 2
+                project.reorder = REORDER.NONE
 
                 promises.push(project.save())
 
@@ -1028,7 +1029,9 @@ router.post("/update_stage/:id", async (req, res) => {
 
             await Promise.all(promises);
         }
-        await Admin.findOneAndUpdate({admin_id: faculty._id}, { stage: stage });
+        admin.stage = currentStage + 1;
+        admin.maxStage = Math.max(admin.maxStage, currentStage + 1);
+        await admin.save();
         res.status(200).json({
             statusCode: 200,
             message: "Successfully moved to the next stage",
@@ -1067,7 +1070,7 @@ router.post("/setDeadline/:id", async (req, res) => {
             admin.deadlines.push(format_date);
         }
 
-        if (admin.stage === 0) {
+        if (admin.stage === STAGES.ADD_PROJECTS) {
             admin.startDate = new Date();
         }
 
@@ -1205,7 +1208,7 @@ router.post("/validateAllocation/:id", async (req, res) => {
             return;
         }
         let admin = await Admin.findOne({ admin_id: faculty._id }).lean();
-        if (admin.stage >= 3) {
+        if (admin.stage >= STAGES.ALLOCATION) {
             let count_sum = 0;
 
             for (const project of selectedProjects) {
@@ -1268,7 +1271,7 @@ router.post("/revertStage/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        const stage = req.body.stage;
+        const currentStage = req.body.stage;
 
         let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } }).select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
@@ -1280,20 +1283,19 @@ router.post("/revertStage/:id", async (req, res) => {
             return;
         }
         let admin = await Admin.findOne({ admin_id: faculty._id });
-        admin.deadlines.pop();
+        if (admin.deadlines.length > currentStage)
+        {
+            admin.deadlines.pop();
+        }
         admin.publishFaculty = false;
         admin.publishStudents = false;
-        if (stage >= 3) {
-            admin.stage = 2;
+        if (currentStage >= STAGES.ALLOCATION) {
+            admin.stage = STAGES.ALLOCATION;
         } else {
-            if (admin.stage === 1) {
-                admin.startDate = undefined;
-                admin.deadlines = [];
-            }
-            admin.stage = stage - 1;
+            admin.stage = currentStage - 1;
         }
         await admin.save();
-        if (stage >= 3) {
+        if (currentStage >= 3) {
             await Project.updateMany({ stream: admin.stream }, { student_alloted: [] });
             await Student.updateMany({ stream: admin.stream }, { $unset: { project_alloted: "" } });
         }
@@ -1333,16 +1335,16 @@ router.post("/reset/:id", async (req, res) => {
             deadlines: [],
             publishFaculty: false,
             publishStudents: false,
-            stage: 0,
+            stage: STAGES.ADD_PROJECTS,
+            maxStage: STAGES.ADD_PROJECTS,
             studentCount: 0,
-            reachedStage2: false
         };
         let projectUpdate = {
             project_alloted: [],
             students_id: [],
             not_students_id: [],
             isIncluded: true,
-            reorder: 0
+            reorder: REORDER.BOTH
         };
         const stream = faculty.adminProgram;
         let promises = [];

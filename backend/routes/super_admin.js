@@ -8,7 +8,7 @@ const SuperAdmin = require("../models/SuperAdmin");
 const Admin = require("../models/Admin_Info");
 const Programs = require("../models/Programs");
 const Streams = require("../models/Streams");
-const oauth = require("../config/oauth");
+const oauth = require("../commons/oauth");
 
 Array.prototype.contains = function (v) {
     for (let i = 0; i < this.length; i++) {
@@ -274,7 +274,7 @@ router.post("/addAdmin/:id", async (req, res) => {
 
 router.post("/removeAdmin/:id", async (req, res) => {
     try {
-        const adminId = req.body.id;
+        const facultyId = req.body.adminId;
         const id = req.params.id;
         const idToken = req.headers.authorization;
         let user = await SuperAdmin.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
@@ -286,7 +286,7 @@ router.post("/removeAdmin/:id", async (req, res) => {
             });
             return;
         }
-        let faculty = await Faculty.findByIdAndUpdate(mongoose.Types.ObjectId(adminId), {
+        let faculty = await Faculty.findByIdAndUpdate(facultyId, {
             isAdmin: false,
             $unset: {adminProgram: 1}
         });

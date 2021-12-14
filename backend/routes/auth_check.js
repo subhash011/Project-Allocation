@@ -4,7 +4,7 @@ const Student = require("../models/Student");
 const Faculty = require("../models/Faculty");
 const SuperAdmin = require("../models/SuperAdmin");
 const Project = require("../models/Project");
-const oauth = require("../config/oauth");
+const oauth = require("../commons/oauth");
 
 //add your email here if you want to be a super admin
 const superAdmins = process.env.SUPER_ADMINS.split(",");

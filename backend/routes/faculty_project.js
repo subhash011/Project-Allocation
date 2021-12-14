@@ -5,6 +5,7 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
 const Admin = require("../models/Admin_Info");
+const { STAGES, REORDER } = require("../commons/constants");
 
 router.post("/:id", async (req, res) => {
     try {
@@ -232,40 +233,40 @@ router.post("/save_preference/:id", async (req, res) => {
         const index = req.body.index;
         let reorder = req.body.reorder;
         let admin = await Admin.findOne({stream: stream}).lean().select("stage");
-        if (admin.stage === 2) {
-            let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
-            if (!faculty) {
-                res.status(401).json({
-                    statusCode: 401,
-                    message: "Faculty not found with the given details.",
-                    result: null
-                });
-                return;
-            }
-            if (index === 0) {
-                if (reorder === 0) reorder = -1;
-                else if (reorder === 1) reorder = 2;
-                await Project.findByIdAndUpdate(project_id, {students_id: students, reorder: reorder});
-                res.status(200).json({
-                    statusCode: 200,
-                    message: "Your preferences are saved",
-                    result: {reorder, updated: true}
-                });
-            } else if (index === 1) {
-                if (reorder === 0) reorder = 1;
-                else if (reorder === -1) reorder = 2;
-                await Project.findByIdAndUpdate(project_id, {not_students_id: students, reorder: reorder});
-                res.status(200).json({
-                    statusCode: 200,
-                    message: "Your preferences are saved",
-                    result: {reorder, updated: true}
-                });
-            }
-        } else {
+        if (admin.stage !== STAGES.FACULTY_PREFERENCES) {
             res.status(200).json({
                 statusCode: 200,
-                message: "You cannot edit preferences anymore.",
+                message: "You cannot edit preferences now.",
                 result: {reorder, updated: false}
+            });
+            return;
+        }
+        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        if (!faculty) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Faculty not found with the given details.",
+                result: null
+            });
+            return;
+        }
+        if (index === 0) {
+            if (reorder === REORDER.BOTH) reorder = REORDER.NOT_OPTED;
+            else if (reorder === REORDER.OPTED) reorder = REORDER.NONE;
+            await Project.findByIdAndUpdate(project_id, {students_id: students, reorder: reorder});
+            res.status(200).json({
+                statusCode: 200,
+                message: "Your preferences are saved",
+                result: {reorder, updated: true}
+            });
+        } else if (index === 1) {
+            if (reorder === REORDER.BOTH) reorder = REORDER.NOT_OPTED;
+            else if (reorder === REORDER.NOT_OPTED) reorder = REORDER.NONE;
+            await Project.findByIdAndUpdate(project_id, {not_students_id: students, reorder: reorder});
+            res.status(200).json({
+                statusCode: 200,
+                message: "Your preferences are saved",
+                result: {reorder, updated: true}
             });
         }
     } catch (e) {
