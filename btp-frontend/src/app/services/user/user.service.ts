@@ -157,10 +157,8 @@ export class UserService {
     }
 
     setDeadline(date) {
-        // TODO Why is moment needed here ?
         const obj = {
             deadline: date
-            // deadline: moment(date).format("YYYY-MM-DD")
         };
         const {id, idToken} = this.getCredentials();
         this.url = this.baseUrl + 'admin/setDeadline/' + id;

@@ -80,8 +80,7 @@
                 </form>
             </div>
 
-            <span class="days_left"><strong *ngIf="currDeadline">Time Left
-                    :{{currDeadline | countdown: currentTime}}</strong></span>
+            <span class="days_left"><strong *ngIf="currDeadline">Time Left: {{currDeadline | countdown: currentTime}}</strong></span>
         </div>
 
         <mat-horizontal-stepper #stepper [labelPosition]="'bottom'" ngClass="{{ 'last-edited-step-' + stageNo }}">
@@ -599,7 +598,7 @@
                     <div class="messages">
                         <p class="manage-font">
                             <strong>SPP</strong> : Students per project limit exceeded,
-                            <strong>PFE</strong> : Projects per faculty limit exceeded,
+                            <strong>PPF</strong> : Projects per faculty limit exceeded,
                             <strong>SPF</strong> : Students per faculty limit exceeded </p>
                     </div>
                     <div [style.max-height.px]="studentTableHeight" class="table mat-elevation-z8">

@@ -135,9 +135,7 @@ export class ContentComponent implements OnInit, OnChanges {
                 const {updated} = responseAPI.result;
                 const snackBarRef = this.snackBar.open(responseAPI.message, 'Ok');
                 if (!updated) { return; }
-                snackBarRef.afterDismissed().subscribe(() => {
-                    this.displayHome({changed: true, change: 'add', project: responseAPI.result.project});
-                });
+                this.displayHome({changed: true, change: 'add', project: responseAPI.result.project});
             });
     }
 

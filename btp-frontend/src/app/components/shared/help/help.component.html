@@ -1,5 +1,5 @@
 <mat-tab-group
-        [(selectedIndex)]="index" [backgroundColor]="background" dynamicHeight="true" mat-align-tabs="center">
+        [(selectedIndex)]="index" dynamicHeight="true" mat-align-tabs="center">
     <mat-tab label="Overview">
         <mat-card class="stages-card">
             <h2><strong>1 &nbsp;&nbsp; About the Process</strong></h2>
@@ -331,7 +331,6 @@
             *ngIf="(role | isFaculty) || (role | isAdmin) || (role | isSuper)" label="Faculty/Co-ordinator">
         <mat-tab-group
                 *ngIf="index == 2"
-                [backgroundColor]="background"
                 [selectedIndex]="0"
                 dynamicHeight="true"
                 mat-align-tabs="center">

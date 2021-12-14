@@ -14,9 +14,16 @@ import {ResetComponent} from 'src/app/components/faculty/reset/reset.component';
 import {LoaderComponent} from 'src/app/components/shared/loader/loader.component';
 import {ShowStudentPreferencesComponent} from 'src/app/components/admin/show-student-preferences/show-student-preferences.component';
 import {ShowFacultyPreferencesComponent} from 'src/app/components/admin/show-faculty-preferences/show-faculty-preferences.component';
-import {forkJoin, of} from 'rxjs';
+import { forkJoin, interval, of, Subject } from 'rxjs';
 import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
-import {concat, finalize, map, mergeMap, tap} from 'rxjs/operators';
+import {
+    concat,
+    finalize,
+    map,
+    mergeMap,
+    takeUntil,
+    tap
+} from 'rxjs/operators';
 
 @Pipe({
     name: 'getViolations'
@@ -31,7 +38,7 @@ export class GetViolations implements PipeTransform {
         }
         if (prCap) {
             flag = false;
-            violations.push('PFE');
+            violations.push('PPF');
         }
         if (stPerFac) {
             flag = false;
@@ -87,7 +94,9 @@ export class ProceedPipe implements PipeTransform {
             }
             switch (value) {
                 case '1':
-                    if (proceedButton) {
+                    if (studentFlag) {
+                        return 'Please ensure that all the students are registered or remove unregistered students to proceed further.';
+                    } else if (proceedButton) {
                         return 'Some faculties have violated the presets. Please navigate to Manage->Faculty to view the violations.';
                     } else {
                         return 'Proceed';
@@ -266,7 +275,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     projects: any = new MatTableDataSource([]);
     selection = new SelectionModel(true, []);
     @ViewChild('stepper') stepper: MatStepper;
-    timer;
+    timer: Subject<any> = new Subject();
     currentTime: Date = new Date();
     dialogRefLoad: any;
     closeDialog = finalize(() => this.dialogRefLoad.close());
@@ -355,9 +364,11 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             disableClose: true,
             panelClass: 'transparent'
         });
-        this.timer = setInterval(() => {
+        interval(60000)
+            .pipe(takeUntil(this.timer))
+            .subscribe(() => {
             this.currentTime = new Date();
-        }, 60000);
+        });
         const requests = [
             this.userService.getAdminInfo(),
             this.projectService.getAllStreamProjects()
@@ -505,7 +516,10 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             });
             this.userService
                 .removeStudentAdmin(id)
-                .pipe(this.closeDialog)
+                .pipe(
+                    mergeMap((responseAPI: HttpResponseAPI) => this.validateFields(responseAPI)),
+                    this.closeDialog
+                )
                 .subscribe((responseAPI: HttpResponseAPI) => {
                     this.studentCount--;
                     this.students.data = this.students.data.filter((val) => {
@@ -585,6 +599,8 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     .setDeadline(date)
                     .pipe(
                         mergeMap((responseAPI: HttpResponseAPI) => {
+                            date = new Date(date);
+                            date.setHours(23, 59);
                             this.dateSet.push(date);
                             this.dateSet = [...this.dateSet];
                             this.currDeadline = date;
@@ -946,7 +962,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                 .subscribe((responseAPI: HttpResponseAPI) => {
                     this.snackBar.open(responseAPI.message, 'Ok');
                     this.stepper.reset();
-                    // this.ngOnInit();
                 });
         });
     }
@@ -1051,11 +1066,13 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
             });
             this.exportService
                 .uploadStudentList(this.fileToUpload, this.programName)
-                .pipe(this.closeDialog)
+                .pipe(
+                    mergeMap((response) => this.validateFields(response)),
+                    this.closeDialog
+                )
                 .subscribe((responseAPI: HttpResponseAPI) => {
                     target.value = '';
                     this.snackBar.open(responseAPI.message, 'Ok');
-                    // this.ngOnInit();
                 }, (e) => {
                     target.value = '';
                     if (e.status === 400) {
@@ -1163,7 +1180,8 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy() {
-        clearInterval(this.timer);
+        this.timer.next();
+        this.timer.complete();
     }
 
     sortStudents(event) {

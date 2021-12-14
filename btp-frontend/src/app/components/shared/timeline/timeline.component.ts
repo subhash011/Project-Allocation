@@ -4,6 +4,8 @@ import {HttpResponseAPI} from 'src/app/models/HttpResponseAPI';
 import {MaterialModule} from 'src/app/material/material.module';
 import {PipeModule} from 'src/app/components/shared/Pipes/pipe.module';
 import {CommonModule} from '@angular/common';
+import { interval, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-timeline',
@@ -24,7 +26,7 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
     next;
     displayTimeline: boolean;
     loaded = false;
-    timer;
+    timer: Subject<any> = new Subject();
 
     constructor(private userService: UserService) {
     }
@@ -36,9 +38,11 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        this.timer = setInterval(() => {
+        interval(60000)
+            .pipe(takeUntil(this.timer))
+            .subscribe(() => {
             this.currentTime = new Date();
-        }, 60000);
+        });
         this.userService.getAllAdminDetails().subscribe((responseAPI: HttpResponseAPI) => {
             this.displayTimeline = true;
             this.admins = responseAPI.result.admins[this.program];
@@ -87,7 +91,8 @@ export class TimelineComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnDestroy() {
-        clearInterval(this.timer);
+        this.timer.next();
+        this.timer.complete();
     }
 }
 

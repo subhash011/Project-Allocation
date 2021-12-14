@@ -12,7 +12,7 @@ export class HelpComponent implements OnInit {
     @ViewChild('helpvid') help: ElementRef;
     @ViewChild('helpvidsa') helpsa: ElementRef;
     @ViewChild('helpvidad') helpad: ElementRef;
-    background = 'primary';
+
     index;
     role: string = localStorage.getItem('role');
 

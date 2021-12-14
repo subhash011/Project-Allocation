@@ -9,7 +9,7 @@ const { STAGES } = require("../commons/constants");
 
 async function canUpdateProject(res, idToken, id) {
     try {
-        let student = await Student.findOne({google_id: {id: id, idToken: idToken}})
+        let student = await Student.findOne({ google_id: { id: id, idToken: idToken } })
             .lean().select("_id stream");
         if (!student) {
             res.status(401).json({
@@ -70,7 +70,7 @@ router.get("/not_preference/:id", async (req, res) => {
             },
             model: Faculty
         };
-        let student = await Student.findOne({google_id: {id: id, idToken: idToken}})
+        let student = await Student.findOne({ google_id: { id: id, idToken: idToken } })
             .lean().select("projects_preference stream");
         if (!student) {
             res.status(401).json({
@@ -81,7 +81,7 @@ router.get("/not_preference/:id", async (req, res) => {
             return;
         }
         const findCondition = {
-            _id: {$nin: student.projects_preference},
+            _id: { $nin: student.projects_preference },
             stream: student.stream
         };
         let notOptedProjects = await Project.find(findCondition).populate(populator);
@@ -136,7 +136,7 @@ router.get("/preference/:id", async (req, res) => {
                 model: Faculty
             }
         };
-        let student = await Student.findOne({google_id: {id: id, idToken: idToken}}).lean().populate(populator);
+        let student = await Student.findOne({ google_id: { id: id, idToken: idToken } }).lean().populate(populator);
         if (!student) {
             res.status(401).json({
                 statusCode: 401,
@@ -208,25 +208,36 @@ router.post("/preference/:id", async (req, res) => {
             }
         };
         student = await Student.findByIdAndUpdate(
-                studentID, {projects_preference: projectIds}, {new: true}
-            )
+            studentID, { projects_preference: projectIds }, { new: true }
+        )
             .select("-google_id -date -__v").populate(populator);
-        // add student to all opted projects
-        await Project.updateMany(
-            {_id: {$in: projectIds}},
+
+        await Project.bulkWrite([
             {
-                $push: {students_id: studentID},
-                $pull: {not_students_id: studentID}
-            }
-        );
-        // remove student from all non-opted projects
-        await Project.updateMany(
-            {_id: {$nin: projectIds}},
+                updateMany: {
+                    filter: { _id: { $in: projectIds }, students_id: { $ne: studentID } },
+                    update: { $push: { students_id: studentID } }
+                }
+            },
             {
-                $push: {not_students_id: studentID},
-                $pull: {students_opted: studentID}
+                updateMany: {
+                    filter: { _id: { $in: projectIds } },
+                    update: { $pull: { not_students_id: studentID } }
+                }
+            },
+            {
+                updateMany: {
+                    filter: { _id: { $nin: projectIds }, not_students_id: { $ne: studentID } },
+                    update: { $push: { not_students_id: studentID } }
+                }
+            },
+            {
+                updateMany: {
+                    filter: { _id: { $nin: projectIds } },
+                    update: { $pull: { students_id: studentID } }
+                }
             }
-        );
+        ]);
         const projects = await Project.find().populate({
             path: "not_students_id",
             select: "_id gpa",
@@ -262,6 +273,7 @@ router.post("/preference/:id", async (req, res) => {
             }
         });
     } catch (e) {
+        console.log(e)
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
@@ -284,19 +296,25 @@ router.post("/append/preference/:id", async (req, res) => {
 
         let student = obj.student;
         let updateResult = {
-            $push: {projects_preference: {$each: projectIds}}
+            $push: { projects_preference: { $each: projectIds } }
         };
         await Student.findByIdAndUpdate(student._id, updateResult);
         const studentID = student._id;
-        const updateCondition = {
-            _id: {$in: projectIds}
-        };
-        updateResult = {
-            $push: {students_id: studentID},
-            $pull: {not_students_id: studentID}
-        };
-        await Project.updateMany(updateCondition, updateResult);
-        const projects = await Project.find(updateCondition).populate({
+        await Project.bulkWrite([
+            {
+                updateMany: {
+                    filter: { _id: { $in: projectIds } },
+                    update: { $pull: { not_students_id: studentID } }
+                }
+            },
+            {
+                updateMany: {
+                    filter: { _id: { $in: projectIds }, students_id: { $ne: studentID } },
+                    update: { $push: { students_id: studentID } }
+                }
+            }
+        ]);
+        const projects = await Project.find({ _id: { $in: projectIds } }).populate({
             path: "students_id",
             select: "_id gpa",
             model: Student
@@ -332,7 +350,7 @@ router.post("/remove/preference/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const projectId = req.body.preference;
         let updateResult = {
-            $pull: {projects_preference: projectId}
+            $pull: { projects_preference: projectId }
         };
         let obj = await canUpdateProject(res, idToken, id);
 
@@ -343,11 +361,20 @@ router.post("/remove/preference/:id", async (req, res) => {
         let student = obj.student;
         let studentID = student._id;
         await Student.findByIdAndUpdate(student._id, updateResult);
-        updateResult = {
-            $pull: {students_id: studentID},
-            $push: {not_students_id: studentID}
-        };
-        await Project.findByIdAndUpdate(projectId, updateResult);
+        await Project.bulkWrite([
+            {
+                updateOne: {
+                    filter: { _id: projectId },
+                    update: { $pull: { students_id: studentID } }
+                }
+            },
+            {
+                updateOne: {
+                    filter: { _id: projectId, not_students_id: { $ne: studentID } },
+                    update: { $push: { not_students_id: studentID } }
+                }
+            }
+        ]);
         const projects = await Project.findById(projectId).populate({
             path: "not_students_id",
             select: "_id gpa",
@@ -365,7 +392,7 @@ router.post("/remove/preference/:id", async (req, res) => {
         res.status(200).json({
             statusCode: 200,
             message: "Removed the project from preferences.",
-            result: {updated: true}
+            result: { updated: true }
         });
     } catch (e) {
         res.status(500).json({
@@ -383,7 +410,7 @@ router.post("/add/preference/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         let project = req.body.preference;
         let updateResult = {
-            $push: {projects_preference: project}
+            $push: { projects_preference: project }
         };
         let obj = await canUpdateProject(res, idToken, id);
 
@@ -394,12 +421,21 @@ router.post("/add/preference/:id", async (req, res) => {
         let student = obj.student;
         await Student.findByIdAndUpdate(student._id, updateResult);
         let _id = mongoose.Types.ObjectId(project);
-        updateResult = {
-            $pull: {not_students_id: student._id},
-            $push: {students_id: student._id}
-        };
-        await Project.findByIdAndUpdate(_id, updateResult);
-        let projects = await Project.findById(_id).populate({path: "students_id", select: "_id gpa", model: Student});
+        await Project.bulkWrite([
+            {
+                updateOne: {
+                    filter: { _id },
+                    update: { $pull: { not_students_id: student._id } }
+                }
+            },
+            {
+                updateOne: {
+                    filter: { _id, students_id: { $ne: student._id } },
+                    update: { $push: { students_id: student._id } }
+                }
+            }
+        ]);
+        let projects = await Project.findById(_id).populate({ path: "students_id", select: "_id gpa", model: Student });
         if (obj.toSort) {
             let promises = [];
             for (let project of [projects]) {
@@ -431,7 +467,7 @@ router.get("/assert/order", async (req, res) => {
             stream: "UGCSE",
             isRegistered: true
         }).lean().select("_id name gpa roll_no").sort([["gpa", -1]]);
-        let projects = await Project.find({stream: "UGCSE"}).lean().populate({
+        let projects = await Project.find({ stream: "UGCSE" }).lean().populate({
             path: "students_id",
             select: "_id name gpa roll_no",
             model: Student
