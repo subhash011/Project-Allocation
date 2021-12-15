@@ -24,7 +24,7 @@ router.get("/maps", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -45,7 +45,7 @@ router.get("/branches", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -82,7 +82,7 @@ router.post("/branches/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -123,7 +123,7 @@ router.post("/maps/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -157,7 +157,7 @@ router.delete("/branches/remove/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -191,7 +191,7 @@ router.delete("/maps/remove/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });

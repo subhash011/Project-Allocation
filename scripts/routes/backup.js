@@ -106,7 +106,7 @@ router.get("/", (req, res) => {
                     email: process.env.MY_EMAIL,
                     google_id: {id: process.env.MY_ID, idToken: "1"}
                 };
-                Faculty.findOneAndUpdate({email: "albert@iitpkd.ac.in"}, updateRes).then(() => {
+                Faculty.findOneAndUpdate({email: "unnikrishnan@iitpkd.ac.in"}, updateRes).then(() => {
                     res.send(result);
                 });
             })

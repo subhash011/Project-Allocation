@@ -297,7 +297,7 @@ router.get("/info/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -379,7 +379,7 @@ router.get("/project/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -423,7 +423,7 @@ router.get("/stream_email/faculty/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -472,7 +472,7 @@ router.get("/stream_email/student/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -504,7 +504,7 @@ router.get("/all/info", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -646,7 +646,7 @@ router.get("/members/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -727,7 +727,7 @@ router.get("/export_projects/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -789,7 +789,7 @@ router.get("/export_allocation/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -866,7 +866,7 @@ router.get("/export_students/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -910,7 +910,7 @@ router.get("/download_csv/:id/:role", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -970,7 +970,7 @@ router.get("/fetchAllMails/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -992,43 +992,6 @@ router.post("/update_stage/:id", async (req, res) => {
             return;
         }
         let admin = await Admin.findOne({admin_id: faculty._id});
-        if (currentStage === STAGES.STUDENT_PREFERENCES) {
-            let stream = admin.stream;
-
-            let projects = await Project.find({stream: stream})
-                .populate({path: "students_id", model: Student})
-                .populate({path: "not_students_id", model: Student});
-
-            for (const project of projects) {
-
-                if (project.reorder === REORDER.BOTH) {
-
-                    project.students_id.sort((a, b) => {
-                        return b.gpa - a.gpa
-                    })
-
-                    project.not_students_id.sort((a, b) => {
-                        return b.gpa - a.gpa
-                    })
-
-                } else if (project.reorder === REORDER.NOT_OPTED) {
-                    project.not_students_id.sort((a, b) => {
-                        return b.gpa - a.gpa;
-                    })
-                } else if (project.reorder === REORDER.OPTED) {
-                    project.students_id.sort((a, b) => {
-                        return b.gpa - a.gpa;
-                    });
-                }
-
-                project.reorder = REORDER.NONE
-
-                promises.push(project.save())
-
-            }
-
-            await Promise.all(promises);
-        }
         admin.stage = currentStage + 1;
         admin.maxStage = Math.max(admin.maxStage, currentStage + 1);
         await admin.save();
@@ -1043,7 +1006,7 @@ router.post("/update_stage/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1089,7 +1052,7 @@ router.post("/setDeadline/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1120,7 +1083,7 @@ router.post("/set_projectCap/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1152,7 +1115,7 @@ router.post("/set_studentCap/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1184,7 +1147,7 @@ router.post("/set_studentsPerFaculty/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1262,7 +1225,7 @@ router.post("/validateAllocation/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1290,7 +1253,7 @@ router.post("/revertStage/:id", async (req, res) => {
         admin.publishFaculty = false;
         admin.publishStudents = false;
         if (currentStage >= STAGES.ALLOCATION) {
-            admin.stage = STAGES.ALLOCATION;
+            admin.stage = STAGES.FACULTY_PREFERENCES;
         } else {
             admin.stage = currentStage - 1;
         }
@@ -1310,7 +1273,7 @@ router.post("/revertStage/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1363,7 +1326,7 @@ router.post("/reset/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1610,7 +1573,7 @@ router.post("/updatePublish/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1776,7 +1739,7 @@ router.delete("/faculty/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1811,7 +1774,7 @@ router.delete("/student/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -1854,7 +1817,7 @@ router.delete("/project/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });

@@ -33,6 +33,9 @@ mongoose
 const student = require("./routes/student");
 app.use("/student", student);
 
+const tests = require("./routes/tests");
+app.use("/test", tests);
+
 const project = require("./routes/project");
 app.use("/project", project);
 

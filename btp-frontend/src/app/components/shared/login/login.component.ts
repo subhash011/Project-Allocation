@@ -89,9 +89,6 @@ export class LoginComponent implements OnInit {
                             this.signOut();
                             this.snackBar.open(error, 'Ok', {duration: 10000});
                         }
-                        this.dialogRefLoad.close();
-                    }, () => {
-                        this.dialogRefLoad.close();
                     });
             }, (err) => {
                 if (err.error === 'popup_closed_by_user') {

@@ -45,7 +45,7 @@ router.post("/register/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -74,7 +74,7 @@ router.get("/details/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -113,7 +113,7 @@ router.post("/set_programs/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -146,7 +146,7 @@ router.post("/updateProfile/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -176,7 +176,7 @@ router.get("/getAllPrograms/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -218,7 +218,7 @@ router.post("/deleteProgram/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -248,7 +248,7 @@ router.get("/getFacultyPrograms/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -279,7 +279,7 @@ router.post("/getAdminInfo_program/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -350,7 +350,7 @@ router.get("/home/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });

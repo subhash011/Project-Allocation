@@ -41,7 +41,7 @@ router.get("/details/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -84,7 +84,7 @@ router.get("/stage/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });

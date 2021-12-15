@@ -42,7 +42,7 @@ export class ContentComponent implements OnInit, OnChanges {
     @Input() public publishStudents;
     @Input() public nonStudentList;
     @Input() public reorder;
-    @Output() newReorder = new EventEmitter<any>();
+    @Output() reorderChange = new EventEmitter<any>();
     @Output() homeClick = new EventEmitter<any>();
     public id;
     public index = 0;
@@ -105,10 +105,6 @@ export class ContentComponent implements OnInit, OnChanges {
                 description: simpleChanges.project.currentValue?.description
             });
         }
-    }
-
-    changeReorder(event) {
-        this.newReorder.emit(event);
     }
 
     async displayHome(fetchData?: any) {

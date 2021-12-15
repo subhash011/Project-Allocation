@@ -356,9 +356,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnInit() {
         this.exportDisabled = false;
-        if (localStorage.getItem('allocationMap')) {
-            this.discardAllocation();
-        }
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {
             data: 'Loading, Please wait ...',
             disableClose: true,
@@ -460,10 +457,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     });
                 });
         });
-    }
-
-    discardAllocation() {
-        localStorage.removeItem('allocationMap');
     }
 
     removeFaculty(id) {
@@ -640,7 +633,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                                 this.selection.select(row);
                             }
                         });
-                        localStorage.setItem('allocationMap', JSON.stringify(result.allocationMap));
                         this.userService
                             .updatePublish('reset')
                             .subscribe(() => {
@@ -1110,10 +1102,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     const data = response[0].result.projects;
                     const {emails, programFull} = response[2].result;
                     this.exportDisabled = false;
-                    if (localStorage.getItem('allocationMap')) {
-                        this.discardAllocation();
-                        this.projects = new MatTableDataSource(data);
-                    }
+                    this.projects = new MatTableDataSource(data);
                     this.selectIncluded();
                     this.publishFaculty = true;
                     this.mailer.publishMail('faculty', emails, programFull)
@@ -1151,10 +1140,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
                     const data = response[0].result.projects;
                     const {emails, programFull} = response[2].result;
                     this.exportDisabled = false;
-                    if (localStorage.getItem('allocationMap')) {
-                        this.discardAllocation();
-                        this.projects = new MatTableDataSource(data);
-                    }
+                    this.projects = new MatTableDataSource(data);
                     this.selectIncluded();
                     this.publishStudents = true;
                     this.mailer

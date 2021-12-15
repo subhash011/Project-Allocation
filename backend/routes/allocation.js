@@ -250,7 +250,7 @@ router.post("/start/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please Sign-In again.",
-            result: null
+            result: e.toString()
         });
     }
 });

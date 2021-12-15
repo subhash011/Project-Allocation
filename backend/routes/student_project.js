@@ -5,7 +5,7 @@ const Project = require("../models/Project");
 const Faculty = require("../models/Faculty");
 const Student = require("../models/Student");
 const Admin = require("../models/Admin_Info");
-const { STAGES } = require("../commons/constants");
+const { STAGES, REORDER } = require("../commons/constants");
 
 async function canUpdateProject(res, idToken, id) {
     try {
@@ -32,29 +32,15 @@ async function canUpdateProject(res, idToken, id) {
             return false;
         }
         return {
-            student: student,
-            toSort: admin.maxStage > STAGES.STUDENT_PREFERENCES
+            student: student
         };
     } catch (e) {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
-}
-
-function isSubsequence(arrayA, arrayB) {
-    let b = 0;
-    for (let i = 0; i < arrayA.length; i++) {
-        if (arrayA[i] === arrayB[b]) {
-            b++;
-            if (b === arrayB.length) {
-                break;
-            }
-        }
-    }
-    return b === arrayB.length;
 }
 
 // fetch all non opted projects
@@ -107,7 +93,7 @@ router.get("/not_preference/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -167,7 +153,7 @@ router.get("/preference/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -227,31 +213,36 @@ router.post("/preference/:id", async (req, res) => {
             },
             {
                 updateMany: {
-                    filter: { _id: { $nin: projectIds }, not_students_id: { $ne: studentID } },
+                    filter: { _id: { $nin: projectIds }, not_students_id: { $ne: studentID }, stream: student.stream },
                     update: { $push: { not_students_id: studentID } }
                 }
             },
             {
                 updateMany: {
-                    filter: { _id: { $nin: projectIds } },
+                    filter: { _id: { $nin: projectIds }, stream: student.stream },
                     update: { $pull: { students_id: studentID } }
                 }
             }
         ]);
-        const projects = await Project.find().populate({
-            path: "not_students_id",
+        const projects = await Project.find({ stream: student.stream }).populate({
+            path: "students_id",
             select: "_id gpa",
             model: Student
         });
-        if (obj.toSort) {
-            let promises = [];
-            for (let project of projects) {
+        let promises = [];
+        for (let project of projects) {
+            if (project.reorder === REORDER.NONE)
+                continue;
+            if (project.reorder === REORDER.BOTH || project.reorder === REORDER.OPTED) {
                 project.students_id.sort((a, b) => b.gpa - a.gpa);
+                promises.push(project.save());
+            }
+            if (project.reorder === REORDER.BOTH || project.reorder === REORDER.NOT_OPTED) {
                 project.not_students_id.sort((a, b) => b.gpa - a.gpa);
                 promises.push(project.save());
             }
-            await Promise.all(promises);
         }
+        await Promise.all(promises);
         const preferences = student.projects_preference.map((val) => {
                 return {
                     _id: val._id,
@@ -273,11 +264,10 @@ router.post("/preference/:id", async (req, res) => {
             }
         });
     } catch (e) {
-        console.log(e)
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -319,14 +309,16 @@ router.post("/append/preference/:id", async (req, res) => {
             select: "_id gpa",
             model: Student
         });
-        if (obj.toSort) {
-            let promises = [];
-            for (let project of projects) {
+        let promises = [];
+        for (let project of projects) {
+            if (project.reorder === REORDER.NONE)
+                continue;
+            if (project.reorder === REORDER.BOTH || project.reorder === REORDER.OPTED) {
                 project.students_id.sort((a, b) => b.gpa - a.gpa);
                 promises.push(project.save());
             }
-            await Promise.all(promises);
         }
+        await Promise.all(promises);
         res.status(200).json({
             statusCode: 200,
             message: "Added projects to your preferences.",
@@ -338,7 +330,7 @@ router.post("/append/preference/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -375,19 +367,14 @@ router.post("/remove/preference/:id", async (req, res) => {
                 }
             }
         ]);
-        const projects = await Project.findById(projectId).populate({
+        const project = await Project.findById(projectId).populate({
             path: "not_students_id",
             select: "_id gpa",
             model: Student
         });
-
-        if (obj.toSort) {
-            let promises = [];
-            for (let project of [projects]) {
-                project.not_students_id.sort((a, b) => b.gpa - a.gpa);
-                promises.push(project.save());
-            }
-            await Promise.all(promises);
+        if (project.reorder === REORDER.NOT_OPTED || project.reorder === REORDER.BOTH) {
+            project.not_students_id.sort((a, b) => b.gpa - a.gpa);
+            await project.save();
         }
         res.status(200).json({
             statusCode: 200,
@@ -398,7 +385,7 @@ router.post("/remove/preference/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -408,9 +395,9 @@ router.post("/add/preference/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        let project = req.body.preference;
+        let projectId = req.body.preference;
         let updateResult = {
-            $push: { projects_preference: project }
+            $push: { projects_preference: projectId }
         };
         let obj = await canUpdateProject(res, idToken, id);
 
@@ -420,7 +407,7 @@ router.post("/add/preference/:id", async (req, res) => {
 
         let student = obj.student;
         await Student.findByIdAndUpdate(student._id, updateResult);
-        let _id = mongoose.Types.ObjectId(project);
+        let _id = mongoose.Types.ObjectId(projectId);
         await Project.bulkWrite([
             {
                 updateOne: {
@@ -435,14 +422,14 @@ router.post("/add/preference/:id", async (req, res) => {
                 }
             }
         ]);
-        let projects = await Project.findById(_id).populate({ path: "students_id", select: "_id gpa", model: Student });
-        if (obj.toSort) {
-            let promises = [];
-            for (let project of [projects]) {
-                project.students_id.sort((a, b) => b.gpa - a.gpa);
-                promises.push(project.save());
-            }
-            await Promise.all(promises);
+        const project = await Project.findById(projectId).populate({
+            path: "not_students_id",
+            select: "_id gpa",
+            model: Student
+        });
+        if (project.reorder === REORDER.OPTED || project.reorder === REORDER.BOTH) {
+            project.students_id.sort((a, b) => b.gpa - a.gpa);
+            await project.save();
         }
         res.status(200).json({
             statusCode: 200,
@@ -455,62 +442,7 @@ router.post("/add/preference/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
-        });
-    }
-});
-
-// test if the projects and students collections tally.
-router.get("/assert/order", async (req, res) => {
-    try {
-        let students = await Student.find({
-            stream: "UGCSE",
-            isRegistered: true
-        }).lean().select("_id name gpa roll_no").sort([["gpa", -1]]);
-        let projects = await Project.find({ stream: "UGCSE" }).lean().populate({
-            path: "students_id",
-            select: "_id name gpa roll_no",
-            model: Student
-        }).populate({
-            path: "not_students_id",
-            select: "_id name gpa roll_no",
-            model: Student
-        });
-        let a = students.map(val => val._id.toString());
-        let ans = {};
-        let overall = true;
-        for (let project of projects) {
-            ans[project._id] = [true, true, true];
-            let so = project.students_id.sort((a, b) => b.gpa - a.gpa);
-            let sno = project.not_students_id.sort((a, b) => b.gpa - a.gpa);
-            so = so.map(value => value._id.toString());
-            sno = sno.map(value => value._id.toString());
-            if (so.length + sno.length !== a.length) {
-                ans[project._id][2] = false;
-                overall = false;
-            }
-            if (!isSubsequence(a, so)) {
-                ans[project._id][0] = false;
-                overall = false;
-            }
-            if (!isSubsequence(a, sno)) {
-                ans[project._id][1] = false;
-                overall = false;
-            }
-        }
-        res.status(200).json({
-            statusCode: 200,
-            message: "success",
-            result: {
-                overall,
-                ans
-            }
-        });
-    } catch (e) {
-        res.status(500).json({
-            statusCode: 500,
-            message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });

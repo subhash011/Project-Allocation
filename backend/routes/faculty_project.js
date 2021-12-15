@@ -12,7 +12,7 @@ router.post("/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         const program = req.body.program;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } }).lean().select("_id");
         if (!faculty) {
             res.status(404).json({
                 statusCode: 404,
@@ -21,18 +21,18 @@ router.post("/:id", async (req, res) => {
             });
             return;
         }
-        let projects = await Project.find({faculty_id: faculty._id, stream: program}).lean();
+        let projects = await Project.find({ faculty_id: faculty._id, stream: program }).lean();
 
         res.status(200).json({
             statusCode: 200,
             message: "success",
-            result: {projects}
+            result: { projects }
         });
     } catch (e) {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try again",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -43,7 +43,7 @@ router.post("/add/:id", async (req, res) => {
         const idToken = req.headers.authorization;
         const project_details = req.body;
         const program = project_details.program;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
+        let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } });
         if (!faculty) {
             res.status(401).json({
                 statusCode: 401,
@@ -60,7 +60,7 @@ router.post("/add/:id", async (req, res) => {
             stream: project_details.program,
             faculty_id: faculty._id
         });
-        let admin = await Admin.findOne({stream: program}).lean().select("project_cap student_cap studentsPerFaculty");
+        let admin = await Admin.findOne({ stream: program }).lean().select("project_cap student_cap studentsPerFaculty");
         if (!admin) {
             res.status(200).json({
                 statusCode: 200,
@@ -71,7 +71,7 @@ router.post("/add/:id", async (req, res) => {
             });
             return;
         }
-        let projects = await Project.find({faculty_id: faculty._id, stream: program});
+        let projects = await Project.find({ faculty_id: faculty._id, stream: program });
         const count = projects.length;
         let student_count = 0;
 
@@ -116,7 +116,7 @@ router.post("/add/:id", async (req, res) => {
                     }
                 });
             } else {
-                let students = await Student.find({stream: program}).sort([["gpa", -1]]).lean().select("_id");
+                let students = await Student.find({ stream: program }).sort([["gpa", -1]]).lean().select("_id");
                 project.not_students_id = students.map(val => val._id);
                 project = await project.save();
                 faculty.project_list.push(project._id);
@@ -135,7 +135,7 @@ router.post("/add/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -145,7 +145,7 @@ router.post("/applied/:id", async (req, res) => {
         const id = req.params.id;
         const project_id = req.body.project;
         const idToken = req.headers.authorization;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } }).lean().select("_id");
         if (!faculty) {
             res.status(401).json({
                 statusCode: 401,
@@ -170,7 +170,6 @@ router.post("/applied/:id", async (req, res) => {
             message: "success",
             result: {
                 students: project["students_id"],
-                reorder: project["reorder"],
                 non_students: project["not_students_id"]
             }
         });
@@ -188,7 +187,7 @@ router.post("/include_projects/:id", async (req, res) => {
         const id = req.params.id;
         let projects = req.body.projects.map((val) => mongoose.Types.ObjectId(val));
         const idToken = req.headers.authorization;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } }).lean().select("_id");
         if (!faculty) {
             res.status(401).json({
                 statusCode: 401,
@@ -201,12 +200,12 @@ router.post("/include_projects/:id", async (req, res) => {
         let conditions = {
             faculty_id: faculty_id
         };
-        await Project.updateMany(conditions, {isIncluded: false});
+        await Project.updateMany(conditions, { isIncluded: false });
         conditions = {
-            _id: {$in: projects},
+            _id: { $in: projects },
             faculty_id: faculty_id
         };
-        await Project.updateMany(conditions, {isIncluded: true});
+        await Project.updateMany(conditions, { isIncluded: true });
         res.status(200).json({
             statusCode: 200,
             message: "success",
@@ -218,7 +217,7 @@ router.post("/include_projects/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });
@@ -232,16 +231,16 @@ router.post("/save_preference/:id", async (req, res) => {
         const stream = req.body.stream;
         const index = req.body.index;
         let reorder = req.body.reorder;
-        let admin = await Admin.findOne({stream: stream}).lean().select("stage");
+        let admin = await Admin.findOne({ stream: stream }).lean().select("stage");
         if (admin.stage !== STAGES.FACULTY_PREFERENCES) {
             res.status(200).json({
                 statusCode: 200,
                 message: "You cannot edit preferences now.",
-                result: {reorder, updated: false}
+                result: { reorder, updated: false }
             });
             return;
         }
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } }).lean().select("_id");
         if (!faculty) {
             res.status(401).json({
                 statusCode: 401,
@@ -251,29 +250,55 @@ router.post("/save_preference/:id", async (req, res) => {
             return;
         }
         if (index === 0) {
-            if (reorder === REORDER.BOTH) reorder = REORDER.NOT_OPTED;
-            else if (reorder === REORDER.OPTED) reorder = REORDER.NONE;
-            await Project.findByIdAndUpdate(project_id, {students_id: students, reorder: reorder});
+            const project = await Project.findOneAndUpdate({ _id: project_id }, [
+                    {
+                        $set: {
+                            reorder: {
+                                $switch: {
+                                    branches: [
+                                        { case: { $eq: [ "$reorder", REORDER.OPTED] }, then: REORDER.NONE },
+                                        { case: { $eq: [ "$reorder", REORDER.NONE] }, then: REORDER.NONE }
+                                    ],
+                                    default: REORDER.NOT_OPTED
+                                }
+                            },
+                            students_id: students.map(mongoose.Types.ObjectId)
+                        }
+                    }
+            ], {new: true});
             res.status(200).json({
                 statusCode: 200,
                 message: "Your preferences are saved",
-                result: {reorder, updated: true}
+                result: { reorder: project.reorder, updated: true }
             });
         } else if (index === 1) {
-            if (reorder === REORDER.BOTH) reorder = REORDER.NOT_OPTED;
-            else if (reorder === REORDER.NOT_OPTED) reorder = REORDER.NONE;
-            await Project.findByIdAndUpdate(project_id, {not_students_id: students, reorder: reorder});
+            const project = await Project.findOneAndUpdate({ _id: project_id }, [
+                {
+                    $set: {
+                        reorder: {
+                            $switch: {
+                                branches: [
+                                    { case: { $eq: [ "$reorder", REORDER.NOT_OPTED] }, then: REORDER.NONE },
+                                    { case: { $eq: [ "$reorder", REORDER.NONE] }, then: REORDER.NONE }
+                                ],
+                                default: REORDER.OPTED
+                            }
+                        },
+                        not_students_id: students.map(mongoose.Types.ObjectId)
+                    }
+                }
+            ], {new: true});
             res.status(200).json({
                 statusCode: 200,
                 message: "Your preferences are saved",
-                result: {reorder, updated: true}
+                result: { reorder: project.reorder, updated: true }
             });
         }
     } catch (e) {
         res.status(500).json({
             statusCode: 500,
-            message: "Session timed out! Please Sign-In again.",
-            result: null
+            message: "Internal Server Error! Please Sign-In again.",
+            result: e.toString()
         });
     }
 });
@@ -283,7 +308,7 @@ router.post("/update/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const idToken = req.headers.authorization;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}}).lean().select("_id");
+        let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } }).lean().select("_id");
         if (!faculty) {
             res.status(404).json({
                 statusCode: 404,
@@ -298,17 +323,17 @@ router.post("/update/:id", async (req, res) => {
         const duration = Number(project.duration);
         const studentIntake = Number(project.studentIntake);
         const description = project.description;
-        project = await Project.findById({_id: project_id});
+        project = await Project.findById({ _id: project_id });
         project.title = title;
         project.duration = duration;
         project.studentIntake = studentIntake;
         project.description = description;
         const stream = project.stream;
-        let admin = await Admin.findOne({stream: stream})
-                               .select({
-                                   student_cap: 1,
-                                   studentsPerFaculty: 1
-                               });
+        let admin = await Admin.findOne({ stream: stream })
+            .select({
+                student_cap: 1,
+                studentsPerFaculty: 1
+            });
         if (!admin) {
             res.status(200).json({
                 statusCode: 200,
@@ -319,7 +344,7 @@ router.post("/update/:id", async (req, res) => {
             });
             return;
         }
-        let projects = await Project.find({faculty_id: project.faculty_id, stream: stream});
+        let projects = await Project.find({ faculty_id: project.faculty_id, stream: stream });
         let student_count = 0;
         for (const proj of projects) {
             if (proj._id.toString() === project_id.toString()) {
@@ -358,9 +383,7 @@ router.post("/update/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: `Internal Server Error! Please try again`,
-            result: {
-                updated: false
-            }
+            result: e.toString()
         });
     }
 });
@@ -370,7 +393,7 @@ router.delete("/delete/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         const projectId = req.headers.body;
-        let faculty = await Faculty.findOne({google_id: {id: id, idToken: idToken}});
+        let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } });
         if (!faculty) {
             res.status(401).json({
                 statusCode: 401,
@@ -379,18 +402,18 @@ router.delete("/delete/:id", async (req, res) => {
             });
             return;
         }
-        let project = await Project.findByIdAndRemove({_id: projectId});
+        let project = await Project.findByIdAndRemove({ _id: projectId });
         let students_id = project.students_id;
         let faculty_id = project.faculty_id;
         let facUpdate = {
-            $pull: {project_list: projectId}
+            $pull: { project_list: projectId }
         };
         let studUpdate = {
-            $pull: {projects_preference: projectId}
+            $pull: { projects_preference: projectId }
         };
         let promises = [];
         promises.push(Faculty.findByIdAndUpdate(faculty_id, facUpdate));
-        promises.push(Student.updateMany({_id: {$in: students_id}}, studUpdate));
+        promises.push(Student.updateMany({ _id: { $in: students_id } }, studUpdate));
         await Promise.all(promises);
         res.status(200).json({
             statusCode: 200,
@@ -403,7 +426,7 @@ router.delete("/delete/:id", async (req, res) => {
         res.status(500).json({
             statusCode: 500,
             message: "Internal Server Error! Please try-again.",
-            result: null
+            result: e.toString()
         });
     }
 });

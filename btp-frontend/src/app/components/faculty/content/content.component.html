@@ -139,7 +139,7 @@
         <mat-tab-group [(selectedIndex)]="index" animationDuration="0" color="accent" dynamicHeight="true">
             <mat-tab label="Students who opted">
                 <app-student-table
-                        (newReorder)="changeReorder($event)"
+                        (reorderChange)="reorderChange.emit($event)"
                         *ngIf="studentList"
                         [adminStage]="adminStage"
                         [index]="index"
@@ -150,7 +150,7 @@
 
             <mat-tab *ngIf="adminStage >= 2" label="Students who did not opt">
                 <app-student-table
-                        (newReorder)="changeReorder($event)"
+                        (reorderChange)="reorderChange.emit($event)"
                         *ngIf="nonStudentList"
                         [adminStage]="adminStage"
                         [index]="index"

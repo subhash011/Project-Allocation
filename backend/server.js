@@ -2,6 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const compression = require("compression");
+const moment = require("moment-timezone");
+const morgan = require("morgan");
+const rfs = require("rotating-file-stream");
 require("dotenv/config");
 
 // start the server
@@ -10,6 +13,41 @@ const MemoryStore = require('memorystore')(session)
 const cors = require("cors");
 const path = require("path");
 const app = express();
+
+const originalSend = app.response.send
+
+app.response.send = function sendOverWrite(body) {
+    originalSend.call(this, body)
+    this.__custombody__ = body
+}
+
+let requestId = 1;
+morgan.token('res-body', (_req, res) =>
+    JSON.stringify(res.__custombody__),
+)
+
+morgan.token('date', (req, res, tz) => {
+    return moment().tz('Asia/Kolkata').format('LTS');
+})
+
+morgan.token('id', (req, res, tz) => {
+    return requestId++;
+})
+
+const errorLogStream = rfs.createStream('error.log', {
+    interval: '1d',
+    path: path.join(__dirname, 'logs')
+})
+
+const responseLogStream = rfs.createStream('response.log', {
+    interval: '1d',
+    path: path.join(__dirname, 'logs')
+})
+
+const accessLogStream = rfs.createStream('access.log', {
+    interval: '1d',
+    path: path.join(__dirname, 'logs')
+})
 
 //express session
 app.use(
@@ -26,9 +64,27 @@ app.use(
 
 app.use(cors());
 app.use(compression());
-
 //use body-parser
 app.use(bodyparser.json({ limit: "50mb", extended: true }));
+
+// log only 4xx and 5xx responses
+app.use(morgan('[id] :method :url :status\n:res-body\n', {
+    stream: errorLogStream,
+    skip: function (req, res) { return res.statusCode < 400 }
+}))
+
+// log success responses
+app.use(morgan('[:id] :method :url :status\n:res-body\n', {
+    stream: responseLogStream,
+    skip: function (req, res) { return res.statusCode >= 400 }
+}))
+
+// log all requests to access.log
+app.use(morgan('[:id] :remote-addr - [:date[clf]] ":method :url HTTP/:http-version" :status', {
+    stream: accessLogStream
+}))
+
+
 mongoose.set("useFindAndModify", false);
 
 const { PORT = 8080, NODE_ENV = "DEV" } = process.env;

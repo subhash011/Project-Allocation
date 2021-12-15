@@ -159,25 +159,6 @@ export class FacultyComponent implements OnInit {
         this.empty = true;
     }
 
-    sortWithReorder() {
-         if (this.reorder === 0) {
-            this.studentList.sort((a, b) => {
-                return b.gpa - a.gpa;
-            });
-            this.nonStudentList.sort((a, b) => {
-                return b.gpa - a.gpa;
-            });
-        } else if (this.reorder === -1) {
-            this.nonStudentList.sort((a, b) => {
-                return b.gpa - a.gpa;
-            });
-        } else if (this.reorder === 1) {
-            this.studentList.sort((a, b) => {
-                return b.gpa - a.gpa;
-            });
-        }
-    }
-
     changeReorder(event) {
         this.reorder = event[0];
         for (const project of this.projects) {
@@ -206,7 +187,6 @@ export class FacultyComponent implements OnInit {
                     this.studentList = responseAPI.result.students;
                     this.nonStudentList = responseAPI.result.non_students;
                     this.reorder = responseAPI.result.reorder;
-                    this.sortWithReorder();
                     this.studentData[project._id] = this.studentList;
                     this.nonStudentData[project._id] = this.nonStudentList;
                     this.project = project;
@@ -217,7 +197,6 @@ export class FacultyComponent implements OnInit {
             this.studentList = this.studentData[project._id];
             this.nonStudentList = this.nonStudentData[project._id];
             this.reorder = project.reorder;
-            this.sortWithReorder();
             this.project = project;
             this.add = false;
             this.empty = false;

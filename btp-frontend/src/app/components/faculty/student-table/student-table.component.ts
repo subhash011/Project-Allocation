@@ -83,7 +83,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
     @Input() public adminStage;
     @Input() public index;
     @Input() public reorder;
-    @Output() newReorder = new EventEmitter<any>();
+    @Output() reorderChange = new EventEmitter<any>();
     public fields = [
         'Name', 'CGPA', 'Roll', 'Index', 'Actions'
     ];
@@ -127,7 +127,7 @@ export class StudentTableComponent implements OnInit, OnChanges {
                 .subscribe((responseAPI: HttpResponseAPI) => {
                     if (responseAPI.result.updated) {
                         this.reorder = responseAPI.result.reorder;
-                        this.newReorder.emit([
+                        this.reorderChange.emit([
                             this.reorder, this.project._id, this.students.data, this.index
                         ]);
                     }
