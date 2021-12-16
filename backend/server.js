@@ -5,49 +5,43 @@ const compression = require("compression");
 const moment = require("moment-timezone");
 const morgan = require("morgan");
 const rfs = require("rotating-file-stream");
-require("dotenv/config");
-
-// start the server
+const requestId = require('express-request-id')();
 const session = require("express-session");
 const MemoryStore = require('memorystore')(session)
 const cors = require("cors");
 const path = require("path");
+require("dotenv/config");
 const app = express();
 
-const originalSend = app.response.send
+app.use(requestId);
 
-app.response.send = function sendOverWrite(body) {
-    originalSend.call(this, body)
-    this.__custombody__ = body
-}
+const genLogStream = (filename) => {
 
-let requestId = 1;
-morgan.token('res-body', (_req, res) =>
-    JSON.stringify(res.__custombody__),
-)
+    return rfs.createStream((time, index) => {
+        if (!time) return filename;
+        const year = time.getFullYear().toString();
+        const month = moment(time).tz("Asia/Kolkata").format("MMMM");
+        const date = moment().subtract(1, 'days').format('DD-MM-YYYY');
+        const dir = path.join(year, month, date)
+        const fullPath = path.join(__dirname, "logs", dir);
+        if (!fs.existsSync(fullPath)) fs.mkdirSync(fullPath, { recursive: true });
+        return `${dir}/${index}-${filename}`;
+    }, {
+        size: "10M",
+        interval: "1d",
+        path: path.join(__dirname, "logs")
+    });
+};
 
-morgan.token('date', (req, res, tz) => {
-    return moment().tz('Asia/Kolkata').format('LTS');
-})
 
-morgan.token('id', (req, res, tz) => {
-    return requestId++;
-})
+const errorLogStream = genLogStream("error.log");
 
-const errorLogStream = rfs.createStream('error.log', {
-    interval: '1d',
-    path: path.join(__dirname, 'logs')
-})
+errorLogStream.on("error", (err) => {
+    console.error(err);
+});
 
-const responseLogStream = rfs.createStream('response.log', {
-    interval: '1d',
-    path: path.join(__dirname, 'logs')
-})
-
-const accessLogStream = rfs.createStream('access.log', {
-    interval: '1d',
-    path: path.join(__dirname, 'logs')
-})
+const responseLogStream = genLogStream("response.log");
+const accessLogStream = genLogStream("access.log");
 
 //express session
 app.use(
@@ -67,8 +61,27 @@ app.use(compression());
 //use body-parser
 app.use(bodyparser.json({ limit: "50mb", extended: true }));
 
+const originalSend = app.response.send
+
+app.response.send = function sendOverWrite(body) {
+    originalSend.call(this, body)
+    this.__custombody__ = body
+}
+
+morgan.token('res-body', (_req, res) =>
+    JSON.stringify(res.__custombody__),
+)
+
+morgan.token('date', () => {
+    return moment().tz('Asia/Kolkata').format('llll');
+})
+
+morgan.token('id', (req) => {
+    return req.id;
+})
+
 // log only 4xx and 5xx responses
-app.use(morgan('[id] :method :url :status\n:res-body\n', {
+app.use(morgan('[:id] :method :url :status\n:res-body\n', {
     stream: errorLogStream,
     skip: function (req, res) { return res.statusCode < 400 }
 }))
@@ -80,7 +93,7 @@ app.use(morgan('[:id] :method :url :status\n:res-body\n', {
 }))
 
 // log all requests to access.log
-app.use(morgan('[:id] :remote-addr - [:date[clf]] ":method :url HTTP/:http-version" :status', {
+app.use(morgan('[:id] :remote-addr - [:date] ":method :url HTTP/:http-version" :status', {
     stream: accessLogStream
 }))
 
@@ -138,6 +151,7 @@ const mail = require("./routes/email");
 app.use("/api/email", mail);
 
 const backup = require("./routes/backup");
+const fs = require("fs");
 app.use("/api/backup", backup);
 
 app.get("*", (req, res) => {

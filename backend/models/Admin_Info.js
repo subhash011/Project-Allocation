@@ -44,10 +44,6 @@ const UserSchema = new mongoose.Schema({
     },
     startDate: {
         type: Date
-    },
-    maxStage: {
-        type: Number,
-        default: 0
     }
 });
 

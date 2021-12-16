@@ -980,7 +980,6 @@ router.post("/update_stage/:id", async (req, res) => {
         const id = req.params.id;
         const idToken = req.headers.authorization;
         const currentStage = req.body.stage;
-        const promises = [];
 
         let faculty = await Faculty.findOne({ google_id: { id: id, idToken: idToken } }).lean().select("_id isAdmin");
         if (!(faculty && faculty.isAdmin)) {
@@ -993,7 +992,6 @@ router.post("/update_stage/:id", async (req, res) => {
         }
         let admin = await Admin.findOne({admin_id: faculty._id});
         admin.stage = currentStage + 1;
-        admin.maxStage = Math.max(admin.maxStage, currentStage + 1);
         await admin.save();
         res.status(200).json({
             statusCode: 200,

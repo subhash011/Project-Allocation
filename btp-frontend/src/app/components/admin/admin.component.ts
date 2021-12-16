@@ -200,6 +200,38 @@ export class ActiveProjects implements PipeTransform {
     providers: []
 })
 export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
+
+    constructor(
+        private userService: UserService,
+        private formBuilder: FormBuilder,
+        private dialog: MatDialog,
+        private snackBar: MatSnackBar,
+        private mailer: MailService,
+        private projectService: ProjectsService,
+        private exportService: ExporttocsvService
+    ) {
+        this.firstFormGroup = this.formBuilder.group({
+            firstCtrl: [this.dateSet[0]]
+        });
+        this.secondFormGroup = this.formBuilder.group({
+            secondCtrl: [this.dateSet[1]]
+        });
+        this.thirdFormGroup = this.formBuilder.group({
+            thirdCtrl: [this.dateSet[2]]
+        });
+        this.fourthFormGroup = this.formBuilder.group({
+            fourthCtrl: [this.dateSet[3]]
+        });
+        this.fifthFormGroup = this.formBuilder.group({
+            fifthCtrl: [this.projectCap, Validators.min(1)]
+        });
+        this.sixthFormGroup = this.formBuilder.group({
+            sixthCtrl: [this.studentCap, Validators.min(1)]
+        });
+        this.seventhFormGroup = this.formBuilder.group({
+            seventhCtrl: [this.studentsPerFaculty, Validators.min(1)]
+        });
+    }
     public details; // For displaying the projects tab
     public fileToUpload: File = null;
     projectTableHeight: number = window.innerHeight * 0.6;
@@ -280,38 +312,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogRefLoad: any;
     closeDialog = finalize(() => this.dialogRefLoad.close());
 
-    constructor(
-        private userService: UserService,
-        private formBuilder: FormBuilder,
-        private dialog: MatDialog,
-        private snackBar: MatSnackBar,
-        private mailer: MailService,
-        private projectService: ProjectsService,
-        private exportService: ExporttocsvService
-    ) {
-        this.firstFormGroup = this.formBuilder.group({
-            firstCtrl: [this.dateSet[0]]
-        });
-        this.secondFormGroup = this.formBuilder.group({
-            secondCtrl: [this.dateSet[1]]
-        });
-        this.thirdFormGroup = this.formBuilder.group({
-            thirdCtrl: [this.dateSet[2]]
-        });
-        this.fourthFormGroup = this.formBuilder.group({
-            fourthCtrl: [this.dateSet[3]]
-        });
-        this.fifthFormGroup = this.formBuilder.group({
-            fifthCtrl: [this.projectCap, Validators.min(1)]
-        });
-        this.sixthFormGroup = this.formBuilder.group({
-            sixthCtrl: [this.studentCap, Validators.min(1)]
-        });
-        this.seventhFormGroup = this.formBuilder.group({
-            seventhCtrl: [this.studentsPerFaculty, Validators.min(1)]
-        });
-    }
-
     @HostListener('window:resize', ['$event']) onResize(event) {
         if (event.target.innerHeight <= 1400) {
             this.projectTableHeight = event.target.innerHeight * 0.6;
@@ -353,7 +353,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
         this.sixthFormGroup.controls.sixthCtrl.setValue(this.studentCap);
         this.seventhFormGroup.controls.seventhCtrl.setValue(this.studentsPerFaculty);
     }
-
     ngOnInit() {
         this.exportDisabled = false;
         this.dialogRefLoad = this.dialog.open(LoaderComponent, {

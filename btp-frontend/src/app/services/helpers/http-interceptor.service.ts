@@ -27,6 +27,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                     this.localAuthService.signOut();
                 }
                 return throwError(error);
-            }));
+            })
+        );
     }
 }

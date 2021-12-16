@@ -20,7 +20,7 @@ async function canUpdateProject(res, idToken, id) {
             return false;
         }
         let admin = await Admin.findOne({stream: student.stream})
-            .lean().select("stage maxStage");
+            .lean().select("stage");
         if (admin.stage !== STAGES.STUDENT_PREFERENCES) {
             res.status(200).json({
                 statusCode: 200,
