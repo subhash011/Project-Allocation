@@ -9,7 +9,7 @@
   
   - Step 1: You need to combine both the certificates (.crt and .ca-bundle files) into a single .crt file. You can do this by ``` cat <filename>.crt <filename>.ca-bundle >> <filename-bundle>.crt```.
   
-  - Step 2: Copy the combined .crt file to ```/etc/nginx/ssl```.
+  - Step 2: Copy the combined .crt file to ```/etc/nginx/ssl```. Also copy the <keyname>.key file to ```/etc/nginx/ssl```.
   
   - Step 3: Navigate to ```cd /etc/nginx/conf.d/``` and open ProjectAllocation.conf using a text editor (``` vim ProjectAllocation.conf ```).
   
@@ -25,6 +25,7 @@
   ```
 
    >  ssl_certificate **/etc/nginx/ssl/<filename-bundle>.crt**;
+   >  ssl_certificate_key **/etc/nginx/ssl/<keyname>.key**;
  
  ```
       ssl_certificate_key /path/to/your_private.key;
