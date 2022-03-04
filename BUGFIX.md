@@ -25,6 +25,7 @@
   ```
 
    >  ssl_certificate **/etc/nginx/ssl/<filename-bundle>.crt**;
+  
    >  ssl_certificate_key **/etc/nginx/ssl/<keyname>.key**;
  
  ```
