@@ -81,24 +81,10 @@ router.get("/assert/order", async (req, res) => {
     }
 });
 
-function onlyUnique(value, index, self) {
-    return self.indexOf(value) === index;
-}
-
 router.get("/remove_duplicates", async (req, res) => {
     try {
-        let programs = await Programs.find({});
-        const promises = [];
-        programs = programs.map(val => val.short);
-        for (const program of programs) {
-            let projects = await Project.find({stream: program});
-            for (const project of projects) {
-                project.not_students_id = project.not_students_id.filter(onlyUnique);
-                project.students_id = project.students_id.filter(onlyUnique);
-                promises.push(project.save());
-            }
-        }
-        await Promise.all(promises);
+        await Project.updateMany({}, [{$set: {students_id: {$setUnion: ["$students_id", []]}}}]);
+        await Project.updateMany({}, [{$set: {not_students_id: {$setUnion: ["$not_students_id", []]}}}]);
         res.status(200).send("Done");
     } catch (e) {
         res.status(500).send(e.toString());

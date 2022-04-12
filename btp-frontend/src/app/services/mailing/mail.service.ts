@@ -13,7 +13,6 @@ export class MailService {
     constructor(private http: HttpClient) {
     }
 
-    // TODO try and remove user from local storage here
     allocateMail(mails, program) {
         const idToken = localStorage.getItem('idToken');
         const name = localStorage.getItem('name');

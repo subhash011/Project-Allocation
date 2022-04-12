@@ -6,8 +6,6 @@ const moment = require("moment-timezone");
 const morgan = require("morgan");
 const rfs = require("rotating-file-stream");
 const requestId = require('express-request-id')();
-const session = require("express-session");
-const MemoryStore = require('memorystore')(session)
 const cors = require("cors");
 const path = require("path");
 require("dotenv/config");
@@ -43,22 +41,8 @@ errorLogStream.on("error", (err) => {
 const responseLogStream = genLogStream("response.log");
 const accessLogStream = genLogStream("access.log");
 
-//express session
-app.use(
-    session({
-        cookie: { maxAge: 60000, secure: true, sameSite: "none" },
-        secret: "woot",
-        resave: false,
-        saveUninitialized: false,
-        store: new MemoryStore({
-            checkPeriod: 86400000
-        }),
-    })
-);
-
 app.use(cors());
 app.use(compression());
-//use body-parser
 app.use(bodyparser.json({ limit: "50mb", extended: true }));
 
 const originalSend = app.response.send
