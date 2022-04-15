@@ -34,7 +34,7 @@
     "angularx-social-login": "^3.5.4",
     "file-saver": "^2.0.5",
     "jquery": "^3.5.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "node-sass": "^7.0.0",
     "rxjs": "^6.6.3",
     "t-writer.js": "^1.0.4",
