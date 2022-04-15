@@ -1,0 +1,3 @@
+[submodule "pal-config"]
+	path = pal-config
+	url = https://github.com/subhash011/pal-config.git
